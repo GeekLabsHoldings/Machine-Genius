@@ -1,0 +1,10 @@
+.title_of_page {
+    color: #2A2B2A;
+    font-size: clamp(20px, calc(2vw + 0.1rem), 1000px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    width: 100%;
+    padding-bottom: clamp(20px, calc(1.5vw + 0.1rem), 1000px);
+    border-bottom: 2px solid #2A2B2A;
+}

@@ -1,0 +1,17 @@
+.Side_Nav_Wrapper{
+    width:  clamp(300px , calc(18vw + 0.1rem) , 1000px );
+    height: 100vh;
+    background: transparent;
+}
+
+.Side_Nav_Wrapper.close{
+    width: clamp(70px , calc(6vw + 0.1rem) , 300px );
+}
+
+.main_Wrapper{
+    width: 100%;
+    height: 100vh;
+    background: #FFFFFB;
+    border-radius:  clamp(0.5rem, calc(4.3vw + 0.1rem) , 1000px ) 0 0 0 ;
+    padding: clamp(20px, calc( 2vw + 0.1rem ) ,1400px) clamp(20px, calc( 3.5vw + 0.1rem ) ,1400px) ;
+}
