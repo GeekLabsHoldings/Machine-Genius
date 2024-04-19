@@ -1,6 +1,6 @@
-'use client'
-import React, { useState } from 'react'
-import styles from './CustomSelectInput.module.css'
+'use client';
+import React, { useState } from 'react';
+import styles from './CustomSelectInput.module.css';
 
 const customSelectInput = () => {
 
