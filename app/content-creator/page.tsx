@@ -16,12 +16,12 @@ const contentCreator = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-col justify-center items-center w-full h-full">
-        <div className="flex flex-col justify-center items-center w-[30vw] m-auto h-full">
+        <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] m-auto h-full">
           <label className={styles.select_label}>I am writing a</label>
           <CustomSelectInput label="Select Content Type" options={options} />
         </div>
 
-        <div className="flex justify-end items-center">
+        <div className="flex justify-end items-center w-full">
           <CustomBtn
             word="Next"
             btnColor="black"
