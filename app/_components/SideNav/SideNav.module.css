@@ -5,6 +5,7 @@
     padding: clamp(20px, calc(2.5vw + 0.1rem), 1000px) clamp(20px, calc(1.5vw + 0.1rem), 1000px);
     height: 100%;
 }
+
 .side_Nav.close{
     width: 100%;
     padding: clamp(16px, calc(2.5vw + 0.1rem), 1000px) clamp(16px, calc(0.9vw + 0.1rem), 1000px);
