@@ -6,4 +6,13 @@ export interface IBtn {
     icon?: ReactElement,
     href:string
 }
-// HTMLImageElement
+
+export interface IArticle {
+    title:string,
+    sectionsNo : number,
+    sectionData: string[]
+}
+
+export interface IArticleProps {
+    withSelect:boolean
+}

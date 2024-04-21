@@ -1,0 +1,29 @@
+.articleHeader h1{
+    font-size: 32px;
+    font-weight: 700;
+}
+.articlePreview{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: 1.2rem;
+    height: 75vh;
+    overflow-y: auto;
+    position: relative
+}
+.articleContent{
+    text-align: justify;
+}
+.articleContent p::selection {
+    background:rgba(243, 111, 36, 1);
+  }
+.articleContent p{
+    font-size: 16px;
+    font-weight: 300;
+}
+.selectedText{
+    padding: 0.8rem;
+    border: 1px solid rgba(42, 43, 42, 0.5);
+    border-radius: 0.6rem;
+    
+
+}
