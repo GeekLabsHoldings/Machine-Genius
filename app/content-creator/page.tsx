@@ -11,7 +11,7 @@ const contentCreator = () => {
   return (
     <div>
       <TitleOfPage title='Templates'/>
-      <CustomSelectInput />
+      <CustomSelectInput label={''} options={[]} />
       <CustomBtn word='test' icon={ReloadIcon} btnColor='black'/>
     </div>
   )
