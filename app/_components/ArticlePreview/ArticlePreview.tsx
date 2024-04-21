@@ -3,6 +3,7 @@ import styles from './ArticlePreview.module.css';
 import {ArticlePreviewData} from '../../data/data';
 import { IArticleProps } from '@/app/interfaces/interfaces';
 import { useEffect, useState } from 'react';
+import { title } from 'process';
 
 interface ISelectedTxt {
   selectedText:string[]
@@ -11,15 +12,14 @@ interface ISelectedTxt {
 const ArticlePreview = ({withSelect}:IArticleProps)=>{
 
 const [selectedText,setSelectedText]= useState<ISelectedTxt['selectedText']>([]);
+const [equalData,setEqualData] = useState<string[]>([]);
 
   document.addEventListener('mouseup', e => {
     const selected = window.getSelection() as Selection
     setSelectedText([...selectedText, selected.toString()]);
+    // checkEqual;
 
   });
-
-  // ArticlePreviewData.every(article => article === selectedText)
-
 
   const renderSelectedTxt = selectedText.map(oneTxt =>(
     <div className={`${styles.selectedText} mb-3`}>
@@ -27,6 +27,17 @@ const [selectedText,setSelectedText]= useState<ISelectedTxt['selectedText']>([])
   </div>
 
   ))
+  // const checkEqual = ArticlePreviewData.map((article)=>{
+  //     const data = article.sectionData
+  //     for(let i =0;i<data.length;i++){
+  //       for(let j=0 ; j < selectedText.length;j++){
+  //         if(data === selectedText){
+  //           setEqualData([...equalData,data[i]])
+  //           console.log(equalData);
+  //         }
+  //       }
+  //     }
+  // });
   const renderArticleData = ArticlePreviewData.map(article =>(
       <div className='flex flex-col gap-8 '>
       <div className={`flex justify-between text-center ${styles.articleHeader} `}>
