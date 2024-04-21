@@ -2,6 +2,8 @@
 import React, { useState } from 'react'
 import styles from './contentCreator.module.css'
 import SideNav from '../_components/SideNav/SideNav';
+import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
+
 
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
@@ -10,10 +12,10 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
       <div className={`${styles.Side_Nav_Wrapper} ${isSideNavOpen ? '' : styles.close}`}>
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} />
       </div>
-      <div className={styles.main_Wrapper}>
+      <div className={styles.Page_Wrapper}>
+        <TitleOfPage title="Templates" />
         {children}
       </div>
-
     </div>
   )
 }
