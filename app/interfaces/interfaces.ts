@@ -5,4 +5,13 @@ export interface IBtn {
     btnColor:'white'|'black'|null,
     icon?: ReactElement
 }
-// HTMLImageElement
+
+export interface IArticle {
+    title:string,
+    sectionsNo : number,
+    sectionData: string[]
+}
+
+export interface IArticleProps {
+    withSelect:boolean
+}
