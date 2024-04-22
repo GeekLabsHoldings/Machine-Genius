@@ -13,19 +13,19 @@ const ChooseContent = () => {
         "PST Canada"
       ]
 
-      
+
   return (
     <div className="flex flex-col h-full">
 
-      <div className="flex flex-col justify-center items-center w-[30vw] m-auto h-full ">
-        <label className={styles.select_label}>For This Brand</label>
+      <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] m-auto h-full ">
+        <label className={styles.select_label}>Select Content Type</label>
         <CustomSelectInput label="Select Content Type" options={options} />
       </div>
 
 
       <div className="flex justify-between items-center">
-        <CustomBtn word="Back" btnColor="white" href="/content-creator" />
-        <CustomBtn word="Next" btnColor="black" href="/content-creator/choose-content" />
+        <CustomBtn word="Back" btnColor="white" href="/content-creator/choose-brand" />
+        <CustomBtn word="Next" btnColor="black" href="/content-creator/working-on-article" />
       </div>
 
     </div>

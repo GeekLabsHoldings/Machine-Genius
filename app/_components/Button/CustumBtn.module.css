@@ -6,6 +6,7 @@
     color: rgba(42, 43, 42, 1);
     background-color: rgba(255, 255, 251, 1);
     border: 1px solid #2A2B2A;
+    transition: all 0.3s;
 }
 .whiteBtn:hover{
     background-color: #2A2B2A;
@@ -77,6 +78,6 @@
     fill: #2A2B2A;
 }
 
-.blackBtn span{
+.blackBtn span , .whiteBtn span{
     transition: none;
 }
