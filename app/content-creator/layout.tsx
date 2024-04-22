@@ -14,7 +14,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
       </div>
       <div className={styles.Page_Wrapper}>
         <TitleOfPage title="Templates"  />
-        <div className='py-5 h-full'>
+        <div className='h-full'>
         {children}
         </div>
       </div>

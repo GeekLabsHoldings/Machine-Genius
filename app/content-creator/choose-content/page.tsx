@@ -17,7 +17,7 @@ const ChooseContent = () => {
   return (
     <div className="flex flex-col h-full">
 
-      <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] m-auto h-full ">
+      <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] py-[2vw] m-auto h-full ">
         <label className={styles.select_label}>Select Content Type</label>
         <CustomSelectInput label="Select Content Type" options={options} />
       </div>

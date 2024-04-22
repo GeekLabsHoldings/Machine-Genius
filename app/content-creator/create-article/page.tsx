@@ -10,7 +10,7 @@ const CreateArticle = () => {
     const renderSelectedTxt = selectedText.map(oneTxt => (
         <div>
             <div className={`mb-3`}>
-                <ArticleWithCheck article={oneTxt} />
+                <ArticleWithCheck article={oneTxt} name="selected-articles" />
             </div>
         </div>
     ))
