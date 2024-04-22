@@ -6,6 +6,7 @@
     display: flex;
     justify-content: space-between;
     text-align: center;
+    user-select: none;
 }
 .articlePreviewData{
     display: flex;
@@ -20,16 +21,49 @@
     overflow-y: auto;
     position: relative
 }
+.articlesToSelect h3{
+    user-select: none;
+}
 .articleContent{
     text-align: justify;
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
-.articleContent p::selection {
+
+.beginSelection{
+    user-select: auto !important;
+ 
+}
+.beginSelection::selection{
     background:rgba(243, 111, 36, 1);
-  }
+}
+
 .articleContent p{
     font-size: 16px;
     font-weight: 300;
+    user-select: none;
+    
 }
+.articlePreview::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .articlePreview::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-top-right-radius: 1.4rem;
+    border-bottom-right-radius:  1.4rem;
+  }
+   
+  /* Handle */
+  .articlePreview::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-top-right-radius: 1.4rem;
+    border-bottom-right-radius: 1.4rem;
+  }
+  
+  /* Handle on hover */
+  .articlePreview::-webkit-scrollbar-thumb:hover {
+    background: #2A2B2A; 
+  }

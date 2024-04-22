@@ -1,7 +1,6 @@
 .article_with_check{
     display: flex;
     align-items: center;
-
 }
 
 .article_with_check label.article{
