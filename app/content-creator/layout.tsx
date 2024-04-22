@@ -13,8 +13,10 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} />
       </div>
       <div className={styles.Page_Wrapper}>
-        <TitleOfPage title="Templates" />
+        <TitleOfPage title="Templates"  />
+        <div className='py-5'>
         {children}
+        </div>
       </div>
     </div>
   )

@@ -7,6 +7,7 @@ export interface IBtn {
     href:string
 }
 
+
 export interface IArticle {
     title:string,
     sectionsNo : number,
@@ -14,5 +15,7 @@ export interface IArticle {
 }
 
 export interface IArticleProps {
-    withSelect:boolean
+    withSelect:boolean,
+    selectedText:string[],
+    setSelectedText:(val:string[])=>void
 }

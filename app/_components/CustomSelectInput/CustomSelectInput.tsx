@@ -7,7 +7,7 @@ interface Iprops{
     options : string[]
 }
 
-const customSelectInput = (props:Iprops) => {
+const CustomSelectInput = (props:Iprops) => {
 
     const [isActive, setIsActive] = useState(false);
     const [selected, setIsSelected] = useState(props.label);
@@ -52,4 +52,4 @@ const customSelectInput = (props:Iprops) => {
     )
 }
 
-export default customSelectInput
+export default CustomSelectInput

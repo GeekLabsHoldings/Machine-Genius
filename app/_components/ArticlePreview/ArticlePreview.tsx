@@ -4,15 +4,12 @@ import {ArticlePreviewData} from '../../data/data';
 import { IArticleProps } from '@/app/interfaces/interfaces';
 import { useEffect, useState } from 'react';
 import { title } from 'process';
+import ArticleWithCheck from '../ArticleWithCheck/ArticleWithCheck';
+import CustomSelectInput from '../CustomSelectInput/CustomSelectInput';
+import { SelectArticleData } from '../../data/data';
 
-interface ISelectedTxt {
-  selectedText:string[]
-}
 
-const ArticlePreview = ({withSelect}:IArticleProps)=>{
-
-const [selectedText,setSelectedText]= useState<ISelectedTxt['selectedText']>([]);
-const [equalData,setEqualData] = useState<string[]>([]);
+const ArticlePreview = ({withSelect,selectedText,setSelectedText}:IArticleProps)=>{
 
   document.addEventListener('mouseup', e => {
     const selected = window.getSelection() as Selection
@@ -21,12 +18,8 @@ const [equalData,setEqualData] = useState<string[]>([]);
 
   });
 
-  const renderSelectedTxt = selectedText.map(oneTxt =>(
-    <div className={`${styles.selectedText} mb-3`}>
-    <p>{oneTxt}</p>
-  </div>
 
-  ))
+
   // const checkEqual = ArticlePreviewData.map((article)=>{
   //     const data = article.sectionData
   //     for(let i =0;i<data.length;i++){
@@ -39,8 +32,9 @@ const [equalData,setEqualData] = useState<string[]>([]);
   //     }
   // });
   const renderArticleData = ArticlePreviewData.map(article =>(
-      <div className='flex flex-col gap-8 '>
-      <div className={`flex justify-between text-center ${styles.articleHeader} `}>
+      <div className={` px-8 pt-14 pb-8 ${styles.articlePreview}`}>
+        <div className={`${styles.articlePreviewData}`}>
+      <div className={`${styles.articleHeader} `}>
           <h1 className="mx-auto">{article.title}</h1>
          <div> 
          {withSelect ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,24 +43,24 @@ const [equalData,setEqualData] = useState<string[]>([]);
           </div>
         </div>
 
-        <div className={`${styles.articleContent} flex flex-col gap-4 `}>
+        <div className={`${styles.articleContent} `}>
         {article.sectionData.map((singleData)=>(
           <p >{singleData}</p>
         ))}
           </div>
       </div>
+      </div>
     ))
   
 return(
- <div className='flex justify-between'>
-     <div className={` w-3/5 px-8 pt-14 pb-8 ${styles.articlePreview}`}>
+
+     <div className={`${styles.articlesToSelect} flex flex-col gap-4`}>
+      <h3>Articles</h3>
+      <CustomSelectInput label='Select Article' options={SelectArticleData}/>
   {renderArticleData}
     </div>
-    <div className={` w-2/6 px-8 pt-14 pb-8 ${styles.articlePreview}`}>
-      <h2>Selections</h2>
-      {renderSelectedTxt}
-    </div>
- </div>
+
+
 )
 }
 

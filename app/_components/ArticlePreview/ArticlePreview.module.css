@@ -1,17 +1,30 @@
-.articleHeader h1{
+.articleHeader h1,.articlesToSelect h3{
     font-size: 32px;
     font-weight: 700;
+}
+.articleHeader{
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+.articlePreviewData{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 .articlePreview{
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
     border-radius: 1.2rem;
-    height: 75vh;
+    height: 64vh;
     overflow-y: auto;
     position: relative
 }
 .articleContent{
     text-align: justify;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 .articleContent p::selection {
     background:rgba(243, 111, 36, 1);
@@ -19,11 +32,4 @@
 .articleContent p{
     font-size: 16px;
     font-weight: 300;
-}
-.selectedText{
-    padding: 0.8rem;
-    border: 1px solid rgba(42, 43, 42, 0.5);
-    border-radius: 0.6rem;
-    
-
 }

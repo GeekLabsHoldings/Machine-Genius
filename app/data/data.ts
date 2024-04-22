@@ -10,3 +10,5 @@ export const ArticlePreviewData:IArticle[] = [{
         
     ]
 }]
+
+export const SelectArticleData:string[] = ["Canada Hates People ","Canada Hates People ","Canada Hates People ","Canada Hates People ","Canada Hates People ","Canada Hates People " ]

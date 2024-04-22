@@ -1,0 +1,19 @@
+
+.selectionsParent{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: 1.2rem;
+    height: 70vh;
+    overflow-y: auto;
+    position: relative;
+    padding-right: 32px;
+    padding-left: 32px;
+    padding-top: 56px;
+    padding-bottom: 32px;
+    
+}
+.selectionsHeader h2{
+    font-size: 32px;
+    font-weight: 700;
+
+}

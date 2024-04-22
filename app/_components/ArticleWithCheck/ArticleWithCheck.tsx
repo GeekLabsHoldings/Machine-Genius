@@ -6,7 +6,7 @@ interface IProps {
 }
 
 
-const ArticleWithChecked = ({ article }: IProps) => {
+const ArticleWithCheck = ({ article }: IProps) => {
 
 
   return (
@@ -14,11 +14,12 @@ const ArticleWithChecked = ({ article }: IProps) => {
     <div className={styles.article_with_check}>
       <input type="checkbox" name="check-article" id="" />
       <label className={styles.article}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore */}
+        {article}
       </label>
     </div>
 
   )
 }
 
-export default ArticleWithChecked
+export default ArticleWithCheck
