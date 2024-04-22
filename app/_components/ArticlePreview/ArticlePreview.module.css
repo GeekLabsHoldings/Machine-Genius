@@ -19,7 +19,14 @@
     border-radius: 1.2rem;
     height: 64vh;
     overflow-y: auto;
-    position: relative
+    position: relative;
+    padding-right: 32px;
+    padding-left: 32px;
+    padding-top: 56px;
+    padding-bottom: 32px;
+}.articleHeader svg{
+    width: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
+    height: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
 }
 .articlesToSelect h3{
     user-select: none;
@@ -37,6 +44,9 @@
 }
 .beginSelection::selection{
     background:rgba(243, 111, 36, 1);
+}
+.highlightedBefore{
+    background-color: #FEEDE0;
 }
 
 .articleContent p{
