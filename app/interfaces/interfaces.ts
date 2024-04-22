@@ -15,7 +15,7 @@ export interface IArticle {
 }
 
 export interface IArticleProps {
-    withSelect:boolean,
+    withEdit:boolean,
     selectedText:string[],
     setSelectedText:(val:string[])=>void
 }

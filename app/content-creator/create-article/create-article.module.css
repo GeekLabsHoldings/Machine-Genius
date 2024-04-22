@@ -2,15 +2,36 @@
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
     border-radius: 1.2rem;
-    height: 100%;
+    height: 70vh;
     overflow-y: auto;
     position: relative;
     padding-right: 32px;
     padding-left: 32px;
     padding-top: 56px;
     padding-bottom: 32px;
-    
 }
+.selectionsParent::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .selectionsParent::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-top-right-radius: 1.4rem;
+    border-bottom-right-radius:  1.4rem;
+  }
+   
+  /* Handle */
+  .selectionsParent::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-top-right-radius: 1.4rem;
+    border-bottom-right-radius: 1.4rem;
+  }
+  
+  /* Handle on hover */
+  .selectionsParent::-webkit-scrollbar-thumb:hover {
+    background: #2A2B2A; 
+  }
 .selectionsHeader h2{
     font-size: 32px;
     font-weight: 700;
@@ -21,10 +42,9 @@
     display: flex;
     align-items: center;
 }
-.article_with_check input{
+.checkSelection input{
     width: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
     height: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
     position: relative;
-    display: none;
     margin:  0 clamp(10px, calc(1.4vw + 0.1rem), 600px) 0 0;
 }
