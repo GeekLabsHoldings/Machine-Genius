@@ -2,17 +2,18 @@
 import styles from './ArticleWithCheck.module.css'
 
 interface IProps {
-  article: string
+  article : string,
+  name : string
 }
 
 
-const ArticleWithCheck = ({ article }: IProps) => {
+const ArticleWithCheck = ({ article , name }: IProps) => {
 
 
   return (
 
       article ? <div className={styles.article_with_check}>
-      <input type="checkbox" name="check-article" id="" />
+      <input type="checkbox" name={name} id="" />
       <label className={styles.article}>
         {article}
       </label>

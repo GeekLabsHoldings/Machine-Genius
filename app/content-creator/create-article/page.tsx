@@ -6,14 +6,14 @@ import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 const CreateArticle = () => {
-  const [selectedText, setSelectedText] = useState<string[]>([]);
-  const renderSelectedTxt = selectedText.map((oneTxt) => (
-    <div>
-      <div className={`mb-3`}>
-        <ArticleWithCheck article={oneTxt} />
-      </div>
-    </div>
-  ));
+    const [selectedText, setSelectedText] = useState<string[]>([]);
+    const renderSelectedTxt = selectedText.map(oneTxt => (
+        <div>
+            <div className={`mb-3`}>
+                <ArticleWithCheck article={oneTxt} name="selected-articles" />
+            </div>
+        </div>
+    ))
 
   return (
     <div className="flex flex-col h-full">
