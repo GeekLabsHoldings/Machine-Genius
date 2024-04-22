@@ -1,4 +1,5 @@
 'use client'
+import CustomCheckBox from '../CustomCheckBox/CustomCheckBox'
 import styles from './ArticleWithCheck.module.css'
 
 interface IProps {
@@ -13,10 +14,10 @@ const ArticleWithCheck = ({ article , name }: IProps) => {
   return (
 
       article ? <div className={styles.article_with_check}>
-      <input type="checkbox" name={name} id="" />
-      <label className={styles.article}>
-        {article}
-      </label>
+        <CustomCheckBox name={name} value={article} />
+        <label className={styles.article}>
+          {article}
+        </label>
       </div> : null
 
   )
