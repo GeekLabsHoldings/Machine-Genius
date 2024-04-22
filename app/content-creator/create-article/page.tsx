@@ -1,6 +1,6 @@
-"use client";
+'use client'
 import { useState } from "react";
-import styles from "./create-article.module.css";
+import styles from './create-article.module.css'
 import ArticleWithCheck from "../../_components/ArticleWithCheck/ArticleWithCheck";
 import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
