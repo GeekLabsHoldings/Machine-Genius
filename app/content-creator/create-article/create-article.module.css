@@ -1,9 +1,8 @@
-
 .selectionsParent{
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
     border-radius: 1.2rem;
-    height: 70vh;
+    height: 100%;
     overflow-y: auto;
     position: relative;
     padding-right: 32px;
@@ -15,5 +14,17 @@
 .selectionsHeader h2{
     font-size: 32px;
     font-weight: 700;
+    user-select: none;
 
+}
+.article_with_check{
+    display: flex;
+    align-items: center;
+}
+.article_with_check input{
+    width: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
+    height: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
+    position: relative;
+    display: none;
+    margin:  0 clamp(10px, calc(1.4vw + 0.1rem), 600px) 0 0;
 }
