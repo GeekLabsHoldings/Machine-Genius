@@ -15,7 +15,9 @@ export interface IArticle {
 }
 
 export interface IArticleProps {
+    height:string,
+    beginSelect?:boolean,
     withEdit:boolean,
-    selectedText:string[],
-    setSelectedText:(val:string[])=>void
+    selectedText?:string[],
+    setSelectedText?:(val:string[])=>void
 }

@@ -17,7 +17,6 @@
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
-    height: 64vh;
     overflow-y: auto;
     position: relative;
     padding-right: clamp(16px, calc(1.6vw + 0.1rem), 80px);
@@ -29,18 +28,8 @@
     width: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
     height: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
 }
-.articlesToSelect{
-    display: flex;
-    flex-direction: column;
-    gap:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
-}
-.articlesToSelect h3{
-    user-select: none;
-}
-.highlightSvg svg{
-    width: clamp(14px, calc(1.6vw + 0.1rem), 80px);
-    height: clamp(14px, calc(1.3vw + 0.1rem), 80px);
-}
+
+
 .articleContent{
     text-align: justify;
     display: flex;

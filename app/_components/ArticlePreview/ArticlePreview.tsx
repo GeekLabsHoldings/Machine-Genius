@@ -7,16 +7,18 @@ import CustomSelectInput from '../CustomSelectInput/CustomSelectInput';
 import { SelectArticleData } from '../../data/data';
 
 
-const ArticlePreview = ({withEdit,selectedText,setSelectedText}:IArticleProps)=>{
-  const [beginSelect,setBeginSelect] = useState(false);
+const ArticlePreview = ({withEdit,selectedText,setSelectedText,beginSelect,height}:IArticleProps)=>{
+
   const [highlightedBefore , setHighlightedBefore] = useState<string[]>([]);
 
 {beginSelect ?  document.addEventListener('mouseup', e => {
   const selected = window.getSelection() as Selection
-  setSelectedText([...selectedText, selected.toString()]);
+  if(selectedText&& setSelectedText){
+    setSelectedText([...selectedText, selected.toString()]);
+  }
   const DetectEqual = ArticlePreviewData.map((article)=>(
     article.sectionData.map((everyData)=>(
-      setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText.filter(element => everyData.includes(element)))])
+      setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
     ))
   ))
 
@@ -24,7 +26,7 @@ const ArticlePreview = ({withEdit,selectedText,setSelectedText}:IArticleProps)=>
 
 
   const renderArticleData = ArticlePreviewData.map(article =>(
-      <div className={` ${styles.articlePreview}`}>
+      <div className={` ${styles.articlePreview} ${height}`}>
         <div className={`${styles.articlePreviewData}`}>
       <div className={`${styles.articleHeader} `}>
           <h1 className="mx-auto">{article.title}</h1>
@@ -48,18 +50,7 @@ const ArticlePreview = ({withEdit,selectedText,setSelectedText}:IArticleProps)=>
 
 return(
 
-     <div className={`${styles.articlesToSelect}`}>
-      <h3>Articles</h3>
-      <div className="flex items-center gap-3">
-      <div className='w-11/12'>
-      <CustomSelectInput label='Select Article' options={SelectArticleData}/>
-      </div>
-      <div className={`w-1/12 flex justify-end cursor-pointern ${styles.highlightSvg}`} onClick={()=>{setBeginSelect(true)}}>
-      <svg viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 26.6436L5.51027 28.4211L7.46523 26.4532L3.76819 22.7319L0 26.6436ZM6.87185 13.3208C6.58154 13.5787 6.37108 13.9153 6.26557 14.2903C6.16006 14.6653 6.16396 15.0629 6.27682 15.4357L6.99648 17.8132L4.18785 20.6409L9.49463 25.9825L12.2994 23.1593L14.6564 23.8854C15.4135 24.1185 16.2363 23.8848 16.7602 23.287L18.7207 20.9756L9.16155 11.3536L6.87185 13.3208ZM29.1131 4.40048L25.6279 0.892285C24.4979 -0.245102 22.6841 -0.302276 21.4852 0.761838L10.5082 10.1962L19.8705 19.6206L29.2427 8.5709C30.3004 7.36412 30.2436 5.53842 29.1131 4.40048Z" fill="#F36F24"/>
-      </svg>
-      </div>
-      </div>
+     <div>
   {renderArticleData}
     </div>
 

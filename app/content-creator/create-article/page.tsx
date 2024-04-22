@@ -5,8 +5,11 @@ import ArticleWithCheck from "../../_components/ArticleWithCheck/ArticleWithChec
 import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { SelectArticleData } from "@/app/data/data";
 
 const CreateArticle = () => {
+    const [beginSelect,setBeginSelect] = useState(false);
     const [selectedText, setSelectedText] = useState<string[]>([]);
     const renderSelectedTxt = selectedText.map(oneTxt => (
         <div>
@@ -21,7 +24,22 @@ const CreateArticle = () => {
       <div className="flex flex-col justify-center items-center m-auto h-full py-[1.4vw]" >
         <div className="flex justify-between gap-[2vw]">
           <div className="w-7/12">
+            <div className={`${styles.articlesToSelect}`}>
+            <h3>Articles</h3>
+                <div className="flex items-center gap-3">
+                <div className='w-11/12'>
+                <CustomSelectInput label='Select Article' options={SelectArticleData}/>
+                </div>
+                <div className={`w-1/12 flex justify-end cursor-pointern ${styles.highlightSvg}`} onClick={()=>{setBeginSelect(true)}}>
+                <svg viewBox="0 0 30 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 26.6436L5.51027 28.4211L7.46523 26.4532L3.76819 22.7319L0 26.6436ZM6.87185 13.3208C6.58154 13.5787 6.37108 13.9153 6.26557 14.2903C6.16006 14.6653 6.16396 15.0629 6.27682 15.4357L6.99648 17.8132L4.18785 20.6409L9.49463 25.9825L12.2994 23.1593L14.6564 23.8854C15.4135 24.1185 16.2363 23.8848 16.7602 23.287L18.7207 20.9756L9.16155 11.3536L6.87185 13.3208ZM29.1131 4.40048L25.6279 0.892285C24.4979 -0.245102 22.6841 -0.302276 21.4852 0.761838L10.5082 10.1962L19.8705 19.6206L29.2427 8.5709C30.3004 7.36412 30.2436 5.53842 29.1131 4.40048Z" fill="#F36F24"/>
+                </svg>
+                </div>
+                </div>
+            </div>
             <ArticlePreview
+              height="h-[64vh]"
+              beginSelect={beginSelect}
               withEdit={false}
               selectedText={selectedText}
               setSelectedText={setSelectedText}
@@ -57,7 +75,7 @@ const CreateArticle = () => {
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/content-creator/create-article"}
+          href={"/content-creator/final-article"}
         />
       </div>
     </div>

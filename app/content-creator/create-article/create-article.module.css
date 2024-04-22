@@ -30,7 +30,18 @@
     border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
     border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
   }
-  
+  .articlesToSelect{
+    display: flex;
+    flex-direction: column;
+    gap:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+}
+.articlesToSelect h3{
+    user-select: none;
+}
+.highlightSvg svg{
+    width: clamp(14px, calc(1.6vw + 0.1rem), 80px);
+    height: clamp(14px, calc(1.3vw + 0.1rem), 80px);
+}
   /* Handle on hover */
   .selectionsParent::-webkit-scrollbar-thumb:hover {
     background: #2A2B2A; 
