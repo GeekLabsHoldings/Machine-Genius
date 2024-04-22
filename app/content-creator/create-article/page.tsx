@@ -4,6 +4,7 @@ import styles from './create-article.module.css'
 import ArticleWithCheck from "../../_components/ArticleWithCheck/ArticleWithCheck";
 import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
 const CreateArticle = () => {
     const [selectedText, setSelectedText] = useState<string[]>([]);
@@ -30,7 +31,7 @@ const CreateArticle = () => {
           <div className={`w-5/12 ${styles.selectionsHeader}`}>
            <div className="flex justify-between items-center">
            <div className={`${styles.checkSelection} items-center flex`}>
-                <input type="checkbox" name="check-article" id="check" />
+                <CustomCheckBox value={""}/>
                 <h2>Selections</h2>
             </div>
             <div className={styles.deleteSvg}>
