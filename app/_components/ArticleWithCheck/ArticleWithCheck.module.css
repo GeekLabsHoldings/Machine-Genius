@@ -10,6 +10,9 @@
     width: 100%;
     transition: all 0.3s;
 }
+.article{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+}
 
 .article_with_check input{
     width: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);

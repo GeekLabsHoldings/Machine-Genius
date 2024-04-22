@@ -1,5 +1,5 @@
 .articleHeader h1,.articlesToSelect h3{
-    font-size: 32px;
+    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
     font-weight: 700;
 }
 .articleHeader{
@@ -11,31 +11,41 @@
 .articlePreviewData{
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: clamp(16px, calc(1.6vw + 0.1rem), 80px);
 }
 .articlePreview{
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
-    border-radius: 1.2rem;
+    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
     height: 64vh;
     overflow-y: auto;
     position: relative;
-    padding-right: 32px;
-    padding-left: 32px;
-    padding-top: 56px;
-    padding-bottom: 32px;
-}.articleHeader svg{
+    padding-right: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    padding-left: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    padding-top: clamp(24px, calc(3.3vw + 0.1rem),140px);
+    padding-bottom: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+}
+.articleHeader svg{
     width: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
     height: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
 }
+.articlesToSelect{
+    display: flex;
+    flex-direction: column;
+    gap:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+}
 .articlesToSelect h3{
     user-select: none;
+}
+.highlightSvg svg{
+    width: clamp(14px, calc(1.6vw + 0.1rem), 80px);
+    height: clamp(14px, calc(1.3vw + 0.1rem), 80px);
 }
 .articleContent{
     text-align: justify;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
 }
 
 .beginSelection{
@@ -50,27 +60,27 @@
 }
 
 .articleContent p{
-    font-size: 16px;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 500px);
     font-weight: 300;
     user-select: none;
     
 }
 .articlePreview::-webkit-scrollbar {
-    width: 10px;
+    width: clamp(10px, calc( 0.19vw + 0.1rem), 40px);
   }
   
   /* Track */
   .articlePreview::-webkit-scrollbar-track {
     background: #f1f1f1; 
-    border-top-right-radius: 1.4rem;
-    border-bottom-right-radius:  1.4rem;
+    border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+    border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
   }
    
   /* Handle */
   .articlePreview::-webkit-scrollbar-thumb {
     background: #888; 
-    border-top-right-radius: 1.4rem;
-    border-bottom-right-radius: 1.4rem;
+    border-top-right-radius:clamp(10px, calc(0.8vw + 0.1rem), 200px);
+    border-bottom-right-radius:clamp(10px, calc(0.8vw + 0.1rem), 200px);
   }
   
   /* Handle on hover */
