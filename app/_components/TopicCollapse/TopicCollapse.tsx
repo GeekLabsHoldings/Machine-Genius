@@ -5,7 +5,7 @@ import styles from './TopicCollapse.module.css'
 interface IProps {
     children: React.ReactNode
     title: string,
-    date: string
+    date?: string
 }
 
 const TopicColapse = (props: IProps) => {
@@ -16,8 +16,8 @@ const TopicColapse = (props: IProps) => {
         <div className={`${styles.topic_collapse} topic_collapse ${isCollapseOpen ? styles.open : ''}`}>
             <div className={`${styles.collapse_header}  collapse_header`} onClick={()=>setIsCollapseOpen(!isCollapseOpen)}>
                 <div>
-                    <h6>Canada Hates People</h6>
-                    <p>April 16th 2024</p>
+                    <h6>{props.title}</h6>
+                    {props.date && <p>{props.date}</p> }
                 </div>
                 <label htmlFor='toggle-fav' className={`${styles.toggle_fav} toggle_fav`}>
                     <input type="checkbox" name="toggle-fav" id="toggle-fav" />

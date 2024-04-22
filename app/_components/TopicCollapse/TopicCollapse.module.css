@@ -1,3 +1,11 @@
+.topic_collapse {
+    margin-bottom: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+}
+
+.topic_collapse:last-child {
+    margin-bottom: 0;
+}
+
 .topic_collapse .collapse_header {
     display: flex;
     align-items: center;
