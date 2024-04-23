@@ -11,19 +11,19 @@ import { SelectArticleData } from '../../data/data';
 const ArticlePreview = ({withEdit,selectedText,setSelectedText,beginSelect,height}:IArticleProps)=>{
 
   const [highlightedBefore , setHighlightedBefore] = useState<string[]>([]);
-// enable highlighting of text
-{beginSelect ?  document.addEventListener('mouseup', e => {
-  const selected = window.getSelection() as Selection
-  if(selectedText&& setSelectedText){
-    setSelectedText([...selectedText, selected.toString()]);
-  }
-  const DetectEqual = ArticlePreviewData.map((article)=>(
-    article.sectionData.map((everyData)=>(
-      setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
-    ))
-  ))
 
-}) : null}
+// {beginSelect ?  document.addEventListener('mouseup', e => {
+//   const selected = window.getSelection() as Selection
+//   if(selectedText&& setSelectedText){
+//     setSelectedText([...selectedText, selected.toString()]);
+//   }
+//   const DetectEqual = ArticlePreviewData.map((article)=>(
+//     article.sectionData.map((everyData)=>(
+//       setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
+//     ))
+//   ))
+
+// }) : null}
 
 // return article data 
   const renderArticleData = ArticlePreviewData.map(article =>(

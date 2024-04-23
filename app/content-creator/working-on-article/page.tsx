@@ -13,7 +13,7 @@ const WorkingOnArticle = () => {
 
             <div className="flex justify-between items-center">
                 <CustomBtn word="Back" btnColor="white" href="/content-creator/choose-content" />
-                <CustomBtn word="Next" btnColor="black" href="/content-creator/create-article" />
+                <CustomBtn word="Next" btnColor="black" href="/content-creator/choose-articles" />
             </div>
 
         </div>

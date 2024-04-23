@@ -1,72 +1,85 @@
-.selectionsParent{
-    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
-    border: 1px solid transparent;
-    border-radius: 1.2rem;
-    height: 70vh;
-    overflow-y: auto;
-    position: relative;
-    padding-right:  clamp(16px, calc(1.6vw + 0.1rem), 80px);
-    padding-left:  clamp(16px, calc(1.6vw + 0.1rem), 80px);
-    padding-top: clamp(24px, calc(3.3vw + 0.1rem),140px);
-    padding-bottom:  clamp(16px, calc(1.6vw + 0.1rem), 80px);
+.selectionsParent {
+  box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+  border: 1px solid transparent;
+  border-radius: 1.2rem;
+  height: 70vh;
+  overflow-y: auto;
+  position: relative;
+  padding-right: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  padding-left: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  padding-top: clamp(24px, calc(3.3vw + 0.1rem), 140px);
+  padding-bottom: clamp(16px, calc(1.6vw + 0.1rem), 80px);
 }
-.singleArticle{
-    margin-bottom: clamp(10px, calc( 0.6vw + 0.1rem), 60px);
+
+.singleArticle {
+  margin-bottom: clamp(10px, calc(0.6vw + 0.1rem), 60px);
 }
+
 .selectionsParent::-webkit-scrollbar {
-    width: 10px;
-  }
-  
-  /* Track */
-  .selectionsParent::-webkit-scrollbar-track {
-    background: #f1f1f1; 
-    border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
-    border-bottom-right-radius:  clamp(10px, calc(0.8vw + 0.1rem), 200px);
-  }
-   
-  /* Handle */
-  .selectionsParent::-webkit-scrollbar-thumb {
-    background: #888; 
-    border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
-    border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
-  }
-  .articlesToSelect{
-    display: flex;
-    flex-direction: column;
-    gap:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+  width: 10px;
 }
-.articlesToSelect h3{
-    user-select: none;
+
+/* Track */
+.selectionsParent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+  border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
 }
-.highlightSvg svg{
-    width: clamp(14px, calc(1.6vw + 0.1rem), 80px);
-    height: clamp(14px, calc(1.3vw + 0.1rem), 80px);
+
+/* Handle */
+.selectionsParent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+  border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
 }
-  /* Handle on hover */
-  .selectionsParent::-webkit-scrollbar-thumb:hover {
-    background: #2A2B2A; 
-  }
-  .selectionsHeader{
-    display: flex;
-    flex-direction: column;
-    gap:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
-  }
-.selectionsHeader h2{
-    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
-    font-weight: 700;
-    user-select: none;
+
+.articlesToSelect {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, calc(0.7vw + 0.1rem), 60px);
 }
-.deleteSvg{
-    width: clamp(12px, calc( 1vw + 0.1rem ) , 100px);
-    height: clamp(14px, calc( 1.4vw + 0.1rem ) , 100px);
+
+.articlesToSelect h3 {
+  font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  font-weight: 700;
+  user-select: none;
 }
-.article_with_check{
-    display: flex;
-    align-items: center;
+
+.highlightSvg svg {
+  width: clamp(14px, calc(1.6vw + 0.1rem), 80px);
+  height: clamp(14px, calc(1.3vw + 0.1rem), 80px);
 }
-.checkSelection input{
-    width: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
-    height: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
-    position: relative;
-    margin:  0 clamp(10px, calc(1.4vw + 0.1rem), 600px) 0 0;
+
+/* Handle on hover */
+.selectionsParent::-webkit-scrollbar-thumb:hover {
+  background: #2A2B2A;
+}
+
+.selectionsHeader {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+}
+
+.selectionsHeader h2 {
+  font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  font-weight: 700;
+  user-select: none;
+}
+
+.deleteSvg {
+  width: clamp(12px, calc(1vw + 0.1rem), 100px);
+  height: clamp(14px, calc(1.4vw + 0.1rem), 100px);
+}
+
+.article_with_check {
+  display: flex;
+  align-items: center;
+}
+
+.checkSelection input {
+  width: clamp(10px, calc(1.4vw + 0.1rem), 600px);
+  height: clamp(10px, calc(1.4vw + 0.1rem), 600px);
+  position: relative;
+  margin: 0 clamp(10px, calc(1.4vw + 0.1rem), 600px) 0 0;
 }
