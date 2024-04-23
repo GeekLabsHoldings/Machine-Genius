@@ -1,0 +1,20 @@
+.properityAndResult{
+    display: flex;
+    justify-content: space-between;
+}
+.properityAndResult p{
+    color: rgba(136, 136, 136, 1);
+    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    font-weight: 300;
+}
+.greenColor svg{
+    fill: #5FA85B;
+}
+.redColor svg{
+    fill: rgba(233, 49, 62, 1);
+}
+.greenColor svg, .redColor svg{
+    width: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
+    height: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
+
+}

@@ -1,0 +1,20 @@
+.logoAndTitle{
+    display: flex;
+    flex-direction: column;
+    gap:  clamp(10px, calc(1.2vw + 0.1rem), 60px);
+    text-align: center;
+
+}
+.logoAndTitle h1{
+    font-weight: 700;
+    font-size:  clamp(16px, calc(2vw + 0.1rem), 80px);
+}
+.logoAndTitle p{
+    font-weight: 500;
+    font-size:  clamp(16px, calc(1.4vw + 0.1rem), 80px);
+    color:  rgba(0, 0, 0, 0.2);
+}
+.logoAndTitle svg{
+    width: clamp(40px, calc(4.5vw + 0.1rem),300px);
+    height:  clamp(56px, calc(5.2vw + 0.1rem),400px);
+}

@@ -13,7 +13,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} />
       </div>
       <div className={styles.Page_Wrapper}>
-        <TitleOfPage title="Templates"  />
+        <TitleOfPage title="Create"  />
         <div className='h-full'>
         {children}
         </div>

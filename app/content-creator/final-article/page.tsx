@@ -14,12 +14,12 @@ const FinalArticle = ()=>{
                 <CustomBtn
                 word={"Back"}
                 btnColor="white"
-                href={"/content-creator/work-on-article"}
+                href={"/content-creator/create-article"}
                 />
                 <CustomBtn
                 word={"Next"}
                 btnColor="black"
-                href={"/content-creator/final-article"}
+                href={"/content-creator/genuis-checker"}
                 />
             </div>
         </div>
