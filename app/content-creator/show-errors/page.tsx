@@ -1,8 +1,6 @@
 import ArticlePreview from '@/app/_components/ArticlePreview/ArticlePreview'
 import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './show-errors.module.css'
-import TopicColapse from '@/app/_components/TopicCollapse/TopicCollapse'
-import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithCheck'
 import ErrorCollapse from '@/app/_components/ErrorCollapse/ErrorCollapse'
 
 const ShowErrors = () => {
