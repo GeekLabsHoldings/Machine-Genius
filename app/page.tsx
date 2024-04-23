@@ -1,15 +1,12 @@
-import Image from "next/image";
+
 import Link from "next/link";
-import ArticlePreview from "./_components/ArticlePreview/ArticlePreview";
+// import ArticlePreview from "./_components/ArticlePreview/ArticlePreview";
 
 export default function Home() {
   return (
     <>
-
-      <h1>hello machine genius</h1>
-      <Link href="content-creator">content creator</Link>
-
-
+      <h1 className="text-white">hello machine genius</h1>
+      <Link href="content-creator" className="text-white">content creator</Link>
     </>
   );
 }
