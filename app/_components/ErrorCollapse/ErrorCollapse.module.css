@@ -1,0 +1,53 @@
+.topic_collapse {
+    margin-bottom: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+}
+
+.topic_collapse:last-child {
+    margin-bottom: 0;
+}
+
+.topic_collapse .collapse_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--dark);
+    padding: clamp(8px, calc(0.8vw + 0.1rem), 1000px) clamp(10px, calc(1.4vw + 0.1rem), 600px);
+    border-radius: clamp(0.625rem, calc(0.5vw + 0.1rem), 1000px);
+    cursor: pointer;
+}
+
+.topic_collapse .collapse_header h6 {
+    font-size: clamp(10px, calc(1vw + 0.1rem), 1000px);
+    font-weight: 700;
+    color: var(--white);
+}
+
+.topic_collapse .collapse_header p {
+    font-size: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+    font-weight: 300;
+    color: var(--white);
+    margin-top: clamp(4px, calc(0.2vw + 0.1rem), 100px);
+}
+
+.topic_collapse .collapse_header label.toggle_fav {
+    position: relative;
+}
+
+.topic_collapse .collapse_header label.toggle_fav svg {
+    width: clamp(10px, calc(1.5vw + 0.1rem), 600px);
+    height: clamp(10px, calc(1.5vw + 0.1rem), 600px);
+}
+
+.topic_collapse .collapse_body {
+    font-size: clamp(10px, calc(0.9vw + 0.1rem), 1000px);
+    text-align: justify;
+    border: 1px solid var(--dark);
+    border-radius: 0 0 clamp(0.625rem, calc(0.5vw + 0.1rem), 1000px) clamp(0.625rem, calc(0.5vw + 0.1rem), 1000px);
+    transform: translateY(clamp(-0.625rem, calc(-0.5vw + -0.1rem), 1000px));
+    padding: clamp(10px, calc(1.7vw + 0.1rem), 600px) clamp(10px, calc(1.2vw + 0.1rem), 600px) clamp(10px, calc(1.2vw + 0.1rem), 600px);
+    display: none;
+}
+
+.topic_collapse.open .collapse_body {
+    display: block;
+}

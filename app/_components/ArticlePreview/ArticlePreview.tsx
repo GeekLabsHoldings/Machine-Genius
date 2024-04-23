@@ -7,28 +7,28 @@ import CustomSelectInput from '../CustomSelectInput/CustomSelectInput';
 import { SelectArticleData } from '../../data/data';
 
 
-const ArticlePreview = ({withEdit,selectedText,setSelectedText,beginSelect,height}:IArticleProps)=>{
+const ArticlePreview = ({ withEdit, selectedText, setSelectedText, beginSelect, height }: IArticleProps) => {
 
-  const [highlightedBefore , setHighlightedBefore] = useState<string[]>([]);
+  const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
 
-// {beginSelect ?  document.addEventListener('mouseup', e => {
-//   const selected = window.getSelection() as Selection
-//   if(selectedText&& setSelectedText){
-//     setSelectedText([...selectedText, selected.toString()]);
-//   }
-//   const DetectEqual = ArticlePreviewData.map((article)=>(
-//     article.sectionData.map((everyData)=>(
-//       setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
-//     ))
-//   ))
+  // {beginSelect ?  document.addEventListener('mouseup', e => {
+  //   const selected = window.getSelection() as Selection
+  //   if(selectedText&& setSelectedText){
+  //     setSelectedText([...selectedText, selected.toString()]);
+  //   }
+  //   const DetectEqual = ArticlePreviewData.map((article)=>(
+  //     article.sectionData.map((everyData)=>(
+  //       setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
+  //     ))
+  //   ))
 
-// }) : null}
+  // }) : null}
 
 
-  const renderArticleData = ArticlePreviewData.map(article =>(
-      <div className={` ${styles.articlePreview} ${height}`}>
-        <div className={`${styles.articlePreviewData}`}>
-      <div className={`${styles.articleHeader} `}>
+  const renderArticleData = ArticlePreviewData.map(article => (
+    <div className={` ${styles.articlePreview} ${height}`}>
+      <div className={`${styles.articlePreviewData}`}>
+        <div className={`${styles.articleHeader} `}>
           <h1 className="mx-auto">{article.title}</h1>
           <div className='cursor-pointer' >
             {withEdit ? <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,19 +41,18 @@ const ArticlePreview = ({withEdit,selectedText,setSelectedText,beginSelect,heigh
           {article.sectionData.map((singleData) => (
             // setHighlightedBefore([...highlightedBefore,selectedText.filter(element => article.sectionData.includes(element))]);
             // highlightedBefore.length ? highlightedBefore.map((ele)=>(<p className={styles.highlightedBefore}>{ele}</p>)) : <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p> 
-            <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p>
+            <p className={beginSelect ? styles.beginSelection : ''} >{singleData}</p>
           ))}
         </div>
       </div>
     </div>
   ))
 
-return(
+  return (
 
-     <div>
-  {renderArticleData}
-    </div>
-
+    <>
+      {renderArticleData}
+    </>
 
   )
 }

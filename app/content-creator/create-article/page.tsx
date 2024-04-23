@@ -75,7 +75,7 @@ const CreateArticle = () => {
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/content-creator/final-article"}
+          href={"/content-creator/working-on-article-after-create"}
         />
       </div>
     </div>
