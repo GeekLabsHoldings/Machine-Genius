@@ -2,6 +2,7 @@ import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './working-on-article.module.css'
 import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle'
 
+// loading page for final article page while collecting all wanted parts together to form the article
 const WorkingOnArticle = () => {
     return (
         <div className="flex flex-col h-full">

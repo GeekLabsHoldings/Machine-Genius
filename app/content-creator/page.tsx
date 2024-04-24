@@ -1,6 +1,5 @@
 import CustomSelectInput from "../_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "../_components/Button/CustomBtn";
-
 import styles from "./contentCreator.module.css";
 
 const options = [

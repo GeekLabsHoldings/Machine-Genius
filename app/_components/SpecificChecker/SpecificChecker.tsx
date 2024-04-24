@@ -5,10 +5,13 @@ interface ICheckerProps {
 
 import styles from './SpecificChecker.module.css';
 
+// component for type of check and result of check
 const SpecificChecker = ({word,pass}:ICheckerProps)=>{
     return(
         <div className={`${styles.properityAndResult}`}>
+            {/* type of check */}
             <p>{word}</p>
+            {/* right icon with green or red background based on the recieved result */}
             <div className={pass ? styles.greenColor : styles.redColor} >
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_i_623_11864)">

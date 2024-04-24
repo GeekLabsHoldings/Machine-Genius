@@ -4,6 +4,7 @@ import styles from './show-errors.module.css'
 import TopicColapse from '@/app/_components/TopicCollapse/TopicCollapse'
 import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithCheck'
 
+// page that displays the errors in the article 
 const ShowErrors = () => {
     return (
         <>
@@ -11,8 +12,7 @@ const ShowErrors = () => {
             <div className="flex flex-col h-full">
                 <div className="flex justify-center items-start py-[2vw] h-[90%] gap-[2rem]">
                     <div className={'w-1/2'}>
-
-                        <ArticlePreview height="h-[58vh]" withEdit={true} />
+                        <ArticlePreview yourNewArticle={true} height="h-[58vh]" withEdit={true} />
                     </div>
                     <div className={styles.scripts_wrapper + ' w-1/2'}>
                         <div className={styles.header}>

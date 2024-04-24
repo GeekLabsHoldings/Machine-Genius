@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 
+// custom button props 
 export interface IBtn {
     word:string,
     btnColor:'white'|'black'|null,
@@ -7,17 +8,19 @@ export interface IBtn {
     href:string
 }
 
-
+// article data properities
 export interface IArticle {
     title:string,
     sectionsNo : number,
     sectionData: string[]
 }
 
+// preview article component props
 export interface IArticleProps {
     height:string,
     beginSelect?:boolean,
     withEdit:boolean,
     selectedText?:string[],
-    setSelectedText?:(val:string[])=>void
+    setSelectedText?:(val:string[])=>void,
+    yourNewArticle:boolean
 }
