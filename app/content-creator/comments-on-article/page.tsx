@@ -12,6 +12,7 @@ const CommentsOnArticle = () => {
             <h3>Articles</h3>
           </div>
           {/* display your article  */}
+          {/* yourNewArticle should be true but till fixing selection bug */}
           <ArticlePreview
             yourNewArticle={false}
             height="h-[65vh]"
@@ -27,6 +28,7 @@ const CommentsOnArticle = () => {
             {/* return comments on article */}
             <div className={`${styles.commentsParent}`}>
               <TopicColapse forComments={true}
+              managerStatus="online"
                 replyTxt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun"
                 date="April 16th 2024"
                 svgBtn={
@@ -111,6 +113,7 @@ const CommentsOnArticle = () => {
                 title={"Emily"}
               />
                             <TopicColapse forComments={true}
+                            managerStatus="away"
                 date="April 16th 2024"
                 svgBtn={
                   <svg
@@ -192,6 +195,7 @@ const CommentsOnArticle = () => {
                 title={"Manar"}
               />
               <TopicColapse forComments={true}
+              managerStatus="offline"
                 date="April 16th 2024"
                 svgBtn={
                   <svg
