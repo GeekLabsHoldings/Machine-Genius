@@ -1,5 +1,6 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
+export type personStatus = 'online' | 'offline' | 'away'
 // custom button props 
 export interface IBtn {
     word:string,
@@ -21,4 +22,13 @@ export interface IArticleProps {
     beginSelect?:boolean,
     withEdit:boolean,
     yourNewArticle:boolean
+}
+
+export interface ICommentData {
+    managerStatus: personStatus,
+    replyTxt?:string,
+    replyDate?:string,
+    ownerName?:string,
+    ownerStatus?:personStatus,
+    title:string
 }
