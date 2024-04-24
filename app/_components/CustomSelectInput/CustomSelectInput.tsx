@@ -3,14 +3,14 @@ import React, { useState } from 'react'
 import styles from './CustomSelectInput.module.css'
 
 interface Iprops{
-    label : string
+    label? : string
     options : string[]
 }
 
 const CustomSelectInput = (props:Iprops) => {
 
     const [isActive, setIsActive] = useState(false);
-    const [selected, setIsSelected] = useState(props.label);
+    const [selected, setIsSelected] = useState(props.label? props.label : props.options[1]);
 
     const handleSelectedItem = (e:any)=>{
         console.log(e.innerText);
