@@ -12,7 +12,7 @@
 }
 
 .side_Nav .user_info {
-    padding: clamp(8px, calc(0.9vw + 0.1rem), 550px) clamp(12px, calc(1.2vw + 0.1rem), 550px);
+    padding: clamp(8px, calc(0.8vw + 0.1rem), 550px) clamp(12px, calc(1vw + 0.1rem), 550px);
     border-radius:  clamp(0.9375rem , calc(0.9vw + 0.1rem), 550px) ;
     background: #FFFFFB;
     width: 100%;
@@ -25,9 +25,9 @@
 }
 
 .side_Nav .user_info .avatar {
-    width: clamp(25px, calc(1.8vw + 0.1rem), 2000px);
-    height: clamp(30px, calc(2.5vw + 0.1rem), 2000px);
-    border-radius: clamp(0.23rem, calc(0.2vw + 0.1rem), 550px)  clamp(2.42613rem, calc(1.5vw + 0.1rem), 550px) clamp(0.23rem, calc(0.2vw + 0.1rem), 550px) clamp(0.23rem, calc(0.2vw + 0.1rem), 550px);
+    width: clamp(25px, calc(1.6vw + 0.1rem), 2000px);
+    height: clamp(30px, calc(2.3vw + 0.1rem), 2000px);
+    border-radius: clamp(0.23rem, calc(0.2vw + 0.1rem), 550px)  clamp(2.42613rem, calc(1.2vw + 0.1rem), 550px) clamp(0.23rem, calc(0.2vw + 0.1rem), 550px) clamp(0.23rem, calc(0.2vw + 0.1rem), 550px);
     background-color: #2A2B2A;
 }
 

@@ -15,6 +15,7 @@ const GenuisChecker = ()=>{
                             <SpecificChecker pass={false} word='Plagiarism Checker'/>
                             <SpecificChecker pass={true} word='AI Checker'/>
                     </div>
+                    <CustomBtn word={"Results"} btnColor="black" href="/content-creator/show-errors"/>
                 </div>
             </div>
             </div>

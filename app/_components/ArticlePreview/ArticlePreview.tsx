@@ -9,20 +9,20 @@ import { SelectArticleData } from '../../data/data';
 // Article preview component contains article title and content
 const ArticlePreview = ({withEdit,selectedText,setSelectedText,beginSelect,height,yourNewArticle}:IArticleProps)=>{
 
-  const [highlightedBefore , setHighlightedBefore] = useState<string[]>([]);
+  const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
 
-{beginSelect ?  document.addEventListener('mouseup', e => {
-  const selected = window.getSelection() as Selection
-  if(selectedText&& setSelectedText){
-    setSelectedText([...selectedText, selected.toString()]);
-  }
-  const DetectEqual = ArticlePreviewData.map((article)=>(
-    article.sectionData.map((everyData)=>(
-      setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
-    ))
-  ))
+  // {beginSelect ?  document.addEventListener('mouseup', e => {
+  //   const selected = window.getSelection() as Selection
+  //   if(selectedText&& setSelectedText){
+  //     setSelectedText([...selectedText, selected.toString()]);
+  //   }
+  //   const DetectEqual = ArticlePreviewData.map((article)=>(
+  //     article.sectionData.map((everyData)=>(
+  //       setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
+  //     ))
+  //   ))
 
-}) : null}
+  // }) : null}
 
 // return article data 
   const renderArticleData = ArticlePreviewData.map(article =>(
@@ -71,7 +71,6 @@ return(
 
     </div>
     </div>
-
 
   )
 }

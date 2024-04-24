@@ -1,6 +1,7 @@
 .properityAndResult{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .properityAndResult p{
     color: rgba(136, 136, 136, 1);

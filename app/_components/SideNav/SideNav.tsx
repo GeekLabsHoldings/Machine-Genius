@@ -44,8 +44,8 @@ const SideNav = ({ isSideNavOpen, setIsSideNavOpen }: { isSideNavOpen: boolean, 
     return (
         <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`}>
             <div>
-                <div className={styles.user_info + " flex items-center"}>
-                    <div className={`${styles.avatar_logo} flex items-start gap-[1vw]`}>
+                <div className={styles.user_info + " flex items-center justify-between"}>
+                    <div className={`${styles.avatar_logo} flex items-center gap-[0.6vw]`}>
                         <div className={styles.avatar + " " + styles.active}>
 
                         </div>

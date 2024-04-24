@@ -2,8 +2,6 @@ import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './chooseArticles.module.css'
 import TopicColapse from '@/app/_components/TopicCollapse/TopicCollapse'
 import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithCheck'
-import ArticlePreview from '@/app/_components/ArticlePreview/ArticlePreview'
-
 const chooseArticles = () => {
     return (
         <div className="flex flex-col h-full">
