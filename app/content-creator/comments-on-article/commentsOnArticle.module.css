@@ -1,0 +1,52 @@
+.commentsParent {
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: 1.2rem;
+    height: 70vh;
+    overflow-y: auto;
+    position: relative;
+    padding-right: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    padding-left: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    padding-top: clamp(24px, calc(2vw + 0.1rem), 140px);
+    padding-bottom: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  }
+  
+  .commentsParent::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .commentsParent::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+    border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+  }
+  
+  /* Handle */
+  .commentsParent::-webkit-scrollbar-thumb {
+    background: #888;
+    border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+    border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+  }
+  .commentsHeader {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  }
+  
+  .commentsHeader h2 {
+    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    font-weight: 700;
+    user-select: none;
+  }
+  .yourArticle {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  }
+  
+  .yourArticle h3 {
+    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    font-weight: 700;
+    user-select: none;
+  }

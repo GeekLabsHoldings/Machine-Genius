@@ -3,15 +3,17 @@ import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './show-errors.module.css'
 import ErrorCollapse from '@/app/_components/ErrorCollapse/ErrorCollapse'
 
+
 // page that displays the errors in the article 
 const ShowErrors = () => {
+   
     return (
         <>
 
             <div className="flex flex-col h-full">
                 <div className="flex justify-center items-start py-[2vw] h-[90%] gap-[2rem]">
                     <div className={'w-1/2'}>
-                        <ArticlePreview yourNewArticle={true} height="h-[58vh]" withEdit={true} />
+                        <ArticlePreview yourNewArticle={true} height="h-[65vh]" withEdit={true} />
                     </div>
                     <div className={styles.scripts_wrapper + ' w-2/5'}>
                         <div className={styles.header}>

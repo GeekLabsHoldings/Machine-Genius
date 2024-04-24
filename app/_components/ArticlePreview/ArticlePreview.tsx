@@ -11,16 +11,16 @@ const ArticlePreview = ({withEdit,beginSelect,height,yourNewArticle}:IArticlePro
 
   const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
 
-  // {beginSelect ?  document.addEventListener('mouseup', e => {
-  //   const selected = window.getSelection() as Selection
-  //     setSelectedText([...selectedText, selected.toString()]);
-  //   const DetectEqual = ArticlePreviewData.map((article)=>(
-  //     article.sectionData.map((everyData)=>(
-  //       setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
-  //     ))
-  //   ))
+  {beginSelect ?  document.addEventListener('mouseup', e => {
+    const selected = window.getSelection() as Selection
+      setSelectedText([...selectedText, selected.toString()]);
+    const DetectEqual = ArticlePreviewData.map((article)=>(
+      article.sectionData.map((everyData)=>(
+        setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
+      ))
+    ))
 
-  // }) : null}
+  }) : null}
 
 // return article data 
   const renderArticleData = ArticlePreviewData.map(article =>(

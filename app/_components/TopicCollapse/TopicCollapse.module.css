@@ -67,3 +67,17 @@
 .topic_collapse.open .collapse_body {
     display: block;
 }
+.separator{
+    padding-bottom: clamp(4px, calc(0.4vw + 0.1rem), 100px); 
+    margin-bottom: clamp(4px, calc(0.4vw + 0.1rem), 100px);
+    border-bottom: 1px solid black;
+}
+.onlineStatus svg circle {
+    fill: #5FA85B;
+}
+.offlineStatus svg circle {
+    fill: #E9313E;
+}
+.awayStatus svg circle {
+    fill: #E1C655;
+}
