@@ -60,9 +60,9 @@ const ImagesForGeneratingTitles = () => {
           href={"/content-creator/choose-articles"}
         />
         <CustomBtn
-          word={"Next"}
+          word={"Schedule"}
           btnColor="black"
-          href={"/content-creator/working-on-article-after-create"}
+          href={"/content-creator/schedule-script"}
         />
       </div>
     </div>
