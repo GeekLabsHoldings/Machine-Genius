@@ -12,7 +12,7 @@ const ScriptApproved = () => {
 
             <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] py-[2vw] m-auto space-y-[2vw] h-full">
                 <LogoAndTitle needTxt={true} textNeeded='Hold on tight.' title='Script is yet to be approved' />
-                <CustomBtn word="Dashboard" btnColor="black" href="/dashboard" />
+                <CustomBtn word="Dashboard" btnColor="black" href="/content-creator/comments-on-article" />
             </div>
 
 

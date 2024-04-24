@@ -281,12 +281,12 @@ const CommentsOnArticle = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/choose-articles"}
+          href={"/content-creator/script-approved"}
         />
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/content-creator/working-on-article-after-create"}
+          href={"/content-creator/generating-titles"}
         />
       </div>
     </div>
