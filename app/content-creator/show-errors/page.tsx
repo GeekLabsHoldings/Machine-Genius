@@ -11,9 +11,9 @@ const ShowErrors = () => {
         <>
 
             <div className="flex flex-col h-full">
-                <div className="flex justify-center items-start py-[2vw] h-[90%] gap-[2rem]">
-                    <div className={'w-1/2'}>
-                        <ArticlePreview yourNewArticle={true} height="h-[65vh]" withEdit={true} />
+                <div className="flex justify-center items-start py-[2vw] h-full gap-[2rem]">
+                    <div className={'w-3/5 h-full'}>
+                        <ArticlePreview yourNewArticle={true} height="h-full" withEdit={true} />
                     </div>
                     <div className={styles.scripts_wrapper + ' w-2/5'}>
                         <div className={styles.header}>

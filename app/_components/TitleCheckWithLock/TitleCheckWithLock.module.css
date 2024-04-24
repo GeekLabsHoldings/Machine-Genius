@@ -1,0 +1,62 @@
+label.title_check {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(0.625rem, calc(1vw + 0.1rem), 1000px);
+    font-size: clamp(0.625rem, calc(1.2vw + 0.1rem), 1000px);
+    font-weight: 700;
+    color: var(--dark);
+    border: 1px solid var(--dark);
+    width: 100%;
+    border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
+}
+
+label.title_check>input[type=radio] {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
+label.title_check:has(>input[type=radio]:checked) {
+    background-color: var(--dark);
+    color: var(--white);
+}
+
+label.toggle_locked {
+    position: relative;
+}
+
+label.toggle_locked input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(10px, calc(1.5vw + 0.1rem), 200px);
+    height: clamp(10px, calc(1.5vw + 0.1rem), 200px);
+    z-index: 2;
+    opacity: 0;
+}
+
+label.toggle_locked svg {
+    width: clamp(10px, calc(1.5vw + 0.1rem), 600px);
+    height: clamp(10px, calc(1.5vw + 0.1rem), 600px);
+}
+
+label.toggle_locked svg path {
+    fill: var(--dark);
+}
+label.toggle_locked input:checked+svg path {
+    fill: var(--orange);
+}
+
+label.title_check:has(>input[type=radio]:checked) label.toggle_locked svg path{
+    fill: var(--white);
+}
+
+label.title_check:has(>input[type=radio]:checked) label.toggle_locked input:checked+svg path {
+    fill: var(--orange);
+}
