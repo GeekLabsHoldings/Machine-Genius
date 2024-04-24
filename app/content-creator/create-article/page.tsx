@@ -7,13 +7,20 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { SelectArticleData } from "@/app/data/data";
+import { useGlobalContext } from "@/app/context/store";
+
 
 // page for article creation so you can highlight text and keep it in selection section
 const CreateArticle = () => {
+    // const [selectedText, setSelectedText] = useState<string[]>([]);
+
+        // state keeps selected text to display them in selection section
+  const {selectedText,setSelectedText} = useGlobalContext();
+
   // state to enable text selection when click on highlight button
     const [beginSelect,setBeginSelect] = useState(false);
-    // state keeps sselected text to display them in selection section
-    const [selectedText, setSelectedText] = useState<string[]>([]);
+
+  
     // return selected text in selections
     const renderSelectedTxt = selectedText.map(oneTxt => (
         <div>
@@ -49,8 +56,6 @@ const CreateArticle = () => {
               height="h-[58vh]"
               beginSelect={beginSelect}
               withEdit={false}
-              selectedText={selectedText}
-              setSelectedText={setSelectedText}
             />
           </div>
             {/* selections part */}

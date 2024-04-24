@@ -3,19 +3,17 @@ import styles from './ArticlePreview.module.css';
 import { ArticlePreviewData } from '../../data/data';
 import { IArticleProps } from '@/app/interfaces/interfaces';
 import { useState } from 'react';
-import CustomSelectInput from '../CustomSelectInput/CustomSelectInput';
-import { SelectArticleData } from '../../data/data';
+import { useGlobalContext } from '@/app/context/store';
 
 // Article preview component contains article title and content
-const ArticlePreview = ({withEdit,selectedText,setSelectedText,beginSelect,height,yourNewArticle}:IArticleProps)=>{
+const ArticlePreview = ({withEdit,beginSelect,height,yourNewArticle}:IArticleProps)=>{
+  const {selectedText,setSelectedText} = useGlobalContext();
 
   const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
 
   // {beginSelect ?  document.addEventListener('mouseup', e => {
   //   const selected = window.getSelection() as Selection
-  //   if(selectedText&& setSelectedText){
   //     setSelectedText([...selectedText, selected.toString()]);
-  //   }
   //   const DetectEqual = ArticlePreviewData.map((article)=>(
   //     article.sectionData.map((everyData)=>(
   //       setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
@@ -30,8 +28,6 @@ const ArticlePreview = ({withEdit,selectedText,setSelectedText,beginSelect,heigh
           {article.sectionData.map((singleData) => (
             // setHighlightedBefore([...highlightedBefore,selectedText.filter(element => article.sectionData.includes(element))]);
             // highlightedBefore.length ? highlightedBefore.map((ele)=>(<p className={styles.highlightedBefore}>{ele}</p>)) : <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p> 
-
-
             // highlight text with orange color
             <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p>
           ))}
