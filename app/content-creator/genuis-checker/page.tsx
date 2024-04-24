@@ -2,6 +2,7 @@
 import SpecificChecker from '@/app/_components/SpecificChecker/SpecificChecker';
 import styles from './genuis-checker.module.css';
 import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle';
+import CustomBtn from '@/app/_components/Button/CustomBtn';
 
 // loading page for article ready page to display all the results of checking
 const GenuisChecker = ()=>{
