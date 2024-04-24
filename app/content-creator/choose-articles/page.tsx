@@ -2,7 +2,9 @@ import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './chooseArticles.module.css'
 import TopicColapse from '@/app/_components/TopicCollapse/TopicCollapse'
 import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithCheck'
+
 const chooseArticles = () => {
+
     return (
         <div className="flex flex-col h-full">
             <div className="flex justify-center items-start py-[2vw] h-[90%] gap-[2rem]">
