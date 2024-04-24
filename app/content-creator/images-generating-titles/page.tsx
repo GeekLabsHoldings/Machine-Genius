@@ -1,41 +1,38 @@
-// const ImagesForGeneratingTitles = ()=>{
-
-// }
-
-// export default ImagesForGeneratingTitles
 
 import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
-import styles from "./commentsOnArticle.module.css";
+import styles from "./images-generating-titles.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { SelectArticleData } from "@/app/data/data";
 
-const CommentsOnArticle = () => {
+const ImagesForGeneratingTitles = () => {
+
   return (
     <div className="flex flex-col h-full">
-      <div className="flex justify-center m-auto h-[80vh] py-[1.4vw] w-full gap-[2vw]">
-        <div className="w-7/12 flex flex-col gap-[1vw]">
-          <div className={`${styles.yourArticle}`}>
-            <h3>Articles</h3>
+      <div className="flex justify-between m-auto h-[80vh] py-[1.4vw] w-full gap-[10vw]">
+        <div className="w-6/12 flex flex-col gap-[2vw]">
+          <div className="flex flex-col gap-[1.5vw]">
+          <div className={`${styles.yourThumbnail}`}>
+            <h3>Thumbnail</h3>
           </div>
-          {/* display your article  */}
-          {/* yourNewArticle should be true but till fixing selection bug */}
-          <ArticlePreview
-            yourNewArticle={false}
-            height="h-[65vh]"
-            withEdit={false}
-          />
-        </div>
-        {/* comments part */}
-        <div className={`w-5/12`}>
-          <div className="flex flex-col gap-[1vw]">
-            <div className={` ${styles.commentsHeader}`}>
-              <h2>Comments</h2>
+          <CustomSelectInput label={"Select Thumbnail"} options={SelectArticleData}/>
+          </div>
+          <div className="flex flex-col gap-[1.5vw]">
+            <h5>Preview</h5>
+            <div className={`${styles.imageHolder} h-[25vh]`}>
+
             </div>
-            {/* return comments on article */}
-            <div className={`${styles.commentsParent}`}>
+          </div>
+  
    
-            </div>
-          </div>
+         
+        </div>
+
+        {/* Article part */}
+        <div className={`w-6/12`}>
+           {/* yourNewArticle should be true but till fixing selection bug */}
+          <ArticlePreview height="h-[75vh]" withEdit={false} yourNewArticle={false}/>
         </div>
       </div>
       {/* buttons to move to last or next page */}
@@ -55,4 +52,4 @@ const CommentsOnArticle = () => {
   );
 };
 
-export default CommentsOnArticle;
+export default ImagesForGeneratingTitles;

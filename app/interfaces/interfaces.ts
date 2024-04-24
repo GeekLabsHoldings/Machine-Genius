@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode } from "react";
 
-type personStatus = 'online' | 'offline' | 'away'
+export type personStatus = 'online' | 'offline' | 'away'
 // custom button props 
 export interface IBtn {
     word:string,

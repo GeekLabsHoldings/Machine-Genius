@@ -1,6 +1,7 @@
 "use client"
 import { ReactNode, useState } from 'react';
 import styles from './TopicCollapse.module.css'
+import { personStatus } from '@/app/interfaces/interfaces';
 
 
 
@@ -29,11 +30,11 @@ const TopicColapse = (props: IProps) => {
                 <div className='flex items-center gap-[0.5vw]'>
                             <h6>{props.title}</h6>
                             {/* in comments page we need the status of manager who commented on title */}
-                            <div className={props.managerStatus === 'online' ? styles.onlineStatus : props.managerStatus === 'offline' ? styles.offlineStatus : styles.awayStatus }>
+                            {props.forComments ? <div className={props.managerStatus === 'online' ? styles.onlineStatus : props.managerStatus === 'offline' ? styles.offlineStatus : styles.awayStatus }>
                             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="5.5" cy="5.5" r="5.5"/>
                             </svg>
-                            </div>
+                            </div> : null}
                         </div>
                         {/* if you need the date of comment or article */}
                     {props.date && <p>{props.date}</p> }
