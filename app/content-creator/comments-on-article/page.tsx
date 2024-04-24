@@ -12,6 +12,7 @@ const CommentsOnArticle = () => {
             <h3>Articles</h3>
           </div>
           {/* display your article  */}
+          {/* yourNewArticle should be true but till fixing selection bug */}
           <ArticlePreview
             yourNewArticle={false}
             height="h-[65vh]"

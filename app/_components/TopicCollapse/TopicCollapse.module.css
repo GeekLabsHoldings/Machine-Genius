@@ -63,7 +63,15 @@
     padding: clamp(10px, calc(1.9vw + 0.1rem), 600px) clamp(10px, calc(1.4vw + 0.1rem), 600px) clamp(10px, calc(1.4vw + 0.1rem), 600px);
     display: none;
 }
+.replyInput:focus{
+    border: transparent !important;
+}
+.replyInput::placeholder {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 300;
 
+}
 .topic_collapse.open .collapse_body {
     display: block;
 }
