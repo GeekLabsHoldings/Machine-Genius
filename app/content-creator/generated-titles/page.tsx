@@ -10,30 +10,38 @@ const ReGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" width="13" height
 const GeneratedTitles = () => {
   return (
     <div className="flex flex-col h-full">
-    <div className="flex justify-center items-start py-[2vw] h-full gap-[2rem]">
-        <div className={styles.titles_wrapper + ' w-1/2'}>
-            <div className={styles.header}>
-                <h6>Titles Generated</h6>
-                <CustomBtn word="Re-Generate" btnColor="black" href="/content-creator/generated-titles" icon={ReGenerateIcon}/>
+        <div className="flex justify-center py-[2vw] h-[90%] gap-[2vw]">
+            <div className={styles.titles_wrapper + ' w-1/2 h-full'}>
+                <div className={styles.header}>
+                    <h6>Titles Generated</h6>
+                    <CustomBtn word="Re-Generate" btnColor="black" href="/content-creator/generated-titles" icon={ReGenerateIcon}/>
+                </div>
+                <div className={styles.titles_container + " h-full space-y-[1vw]"}>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                </div>
             </div>
-            <div className={styles.titles_container + " space-y-[1vw]"}>
-                <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+            <div className={styles.add_title_wrapper + ' w-1/2 h-full flex flex-col items-center justify-center'}>
+                <label htmlFor="add-title">Create My Own</label>
+                <input type="text" id='add-title' />
             </div>
         </div>
-        <div className={styles.add_title_wrapper + ' w-1/2 h-full flex flex-col items-center justify-center'}>
-            <label htmlFor="add-title">Create My Own</label>
-            <input type="text" id='add-title' />
-        </div>
-    </div>
 
-    <div className="flex justify-between w-full">
-        <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/working-on-article"} />
-        <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create-article"} />
+        <div className="flex justify-between w-full">
+            <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/working-on-article"} />
+            <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create-article"} />
+        </div>
     </div>
-</div>
   )
 }
 
