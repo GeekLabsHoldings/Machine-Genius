@@ -2,6 +2,8 @@
 import { ReactNode, useState } from 'react';
 import styles from './TopicCollapse.module.css'
 
+type personStatus = 'online' | 'offline' | 'away'
+
 interface IProps {
     children: React.ReactNode
     title: string,
@@ -10,8 +12,9 @@ interface IProps {
     replyTxt?:string,
     replyDate?:string,
     ownerName?:string,
-    ownerStatus?:'online' | 'offline' | 'away',
-    forComments:boolean
+    ownerStatus?:personStatus,
+    forComments:boolean,
+    managerStatus?:personStatus
 }
 
 const TopicColapse = (props: IProps) => {
@@ -22,7 +25,14 @@ const TopicColapse = (props: IProps) => {
         <div className={`${styles.topic_collapse} topic_collapse ${isCollapseOpen ? styles.open : ''}`}>
             <div className={`${styles.collapse_header}  collapse_header`} onClick={()=>setIsCollapseOpen(!isCollapseOpen)}>
                 <div>
-                    <h6>{props.title}</h6>
+                <div className='flex items-center gap-[0.5vw]'>
+                            <h6>{props.title}</h6>
+                            <div className={props.managerStatus === 'online' ? styles.onlineStatus : props.managerStatus === 'offline' ? styles.offlineStatus : styles.awayStatus }>
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="5.5" cy="5.5" r="5.5"/>
+                            </svg>
+                            </div>
+                        </div>
                     {props.date && <p>{props.date}</p> }
                 </div>
                 <label htmlFor='toggle-fav' className={`${styles.toggle_fav} toggle_fav`}>
