@@ -30,8 +30,8 @@
   }
   .commentsHeader {
     display: flex;
-    flex-direction: column;
-    gap: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+    justify-content: space-between;
+    align-items: center;
   }
   
   .commentsHeader h2 {

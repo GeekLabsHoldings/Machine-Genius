@@ -1,4 +1,4 @@
-import { IArticle } from "../interfaces/interfaces";
+import { IArticle, ICommentData } from "../interfaces/interfaces";
 
 // article data returned from genuis search
 export const ArticlePreviewData: IArticle[] = [
@@ -22,3 +22,23 @@ export const SelectArticleData: string[] = [
   "Canada Hates People ",
   "Canada Hates People ",
 ];
+
+export const CommentsData:ICommentData[] =[{
+  managerStatus: 'online',
+  replyTxt:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun',
+  replyDate:'April 16th 2024',
+  ownerName:'John',
+  ownerStatus:'online',
+  title:'Emily'
+},{
+  managerStatus: 'away',
+  title:'Manar'
+
+},
+{
+  managerStatus: 'offline',
+  title:'Ash'
+
+}
+
+]

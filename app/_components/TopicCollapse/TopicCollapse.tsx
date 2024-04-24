@@ -2,7 +2,7 @@
 import { ReactNode, useState } from 'react';
 import styles from './TopicCollapse.module.css'
 
-type personStatus = 'online' | 'offline' | 'away'
+
 
 interface IProps {
     children: React.ReactNode

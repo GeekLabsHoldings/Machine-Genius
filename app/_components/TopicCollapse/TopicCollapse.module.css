@@ -64,7 +64,7 @@
     display: none;
 }
 .replyInput:focus{
-    border: transparent !important;
+    outline: none;
 }
 .replyInput::placeholder {
     color: #000000;
