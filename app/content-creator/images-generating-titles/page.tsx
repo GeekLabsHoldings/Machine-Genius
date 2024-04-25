@@ -57,7 +57,7 @@ const ImagesForGeneratingTitles = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/choose-articles"}
+          href={"/content-creator/generated-titles"}
         />
         <CustomBtn
           word={"Schedule"}

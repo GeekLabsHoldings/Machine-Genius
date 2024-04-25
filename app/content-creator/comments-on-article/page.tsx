@@ -102,7 +102,7 @@ const CommentsOnArticle = () => {
           {/* yourNewArticle should be true but till fixing selection bug */}
           <ArticlePreview
             yourNewArticle={false}
-            height="h-[65vh]"
+            height="h-full"
             withEdit={false}
           />
         </div>
@@ -117,7 +117,7 @@ const CommentsOnArticle = () => {
             <div className={`${styles.commentsParent}`}>
               {renderCommentsData}
 
-              {/* <TopicColapse forComments={true}
+              <TopicColapse forComments={true}
               managerStatus="online"
                 replyTxt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun"
                 date="April 16th 2024"
@@ -365,7 +365,7 @@ const CommentsOnArticle = () => {
                 }
 
                 title={"Ash"}
-              /> */}
+              />
             </div>
           </div>
         </div>

@@ -1,3 +1,8 @@
+.titles-wrapper{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
 label.title_check {
     position: relative;
     display: flex;
@@ -20,6 +25,8 @@ label.title_check>input[type=radio] {
     top: 0;
     left: 0;
     opacity: 0;
+    cursor: pointer;
+
 }
 
 label.title_check:has(>input[type=radio]:checked) {
@@ -37,7 +44,8 @@ label.toggle_locked input {
     left: 0;
     width: clamp(10px, calc(1.5vw + 0.1rem), 200px);
     height: clamp(10px, calc(1.5vw + 0.1rem), 200px);
-    z-index: 2;
+    z-index: 3;
+    cursor: pointer;
     opacity: 0;
 }
 
@@ -46,10 +54,10 @@ label.toggle_locked svg {
     height: clamp(10px, calc(1.5vw + 0.1rem), 600px);
 }
 
-label.toggle_locked svg path {
-    fill: var(--dark);
+label.title_check label.toggle_locked svg path {
+    fill: #DFDFDF;
 }
-label.toggle_locked input:checked+svg path {
+label.title_check label.toggle_locked input[type=checkbox]:checked+svg path {
     fill: var(--orange);
 }
 
@@ -57,6 +65,6 @@ label.title_check:has(>input[type=radio]:checked) label.toggle_locked svg path{
     fill: var(--white);
 }
 
-label.title_check:has(>input[type=radio]:checked) label.toggle_locked input:checked+svg path {
+label.title_check:has(>input[type=radio]:checked) label.toggle_locked input[type=checkbox]:checked+svg path {
     fill: var(--orange);
 }

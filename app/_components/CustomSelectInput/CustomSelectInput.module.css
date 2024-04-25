@@ -39,8 +39,9 @@
     border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
     color: #000;
     font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
-    overflow: hidden;
+    overflow: auto;
     background: var(--white);
+    max-height: clamp(250px , calc(15vw + 0.1rem), 1000px);
     z-index: 9999999;
 }
 

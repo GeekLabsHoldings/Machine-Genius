@@ -6,7 +6,7 @@ const GeneratingTitles = () => {
     return (
         <div className="flex flex-col h-full">
 
-            <div className="flex flex-col justify-center items-center min-w-[24rem] py-[2vw] m-auto h-full">
+            <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] m-auto h-full">
                 <LogoAndTitle needTxt={false} title='Generating Titles..' />
                 <CustomBtn word="Generated Titles" btnColor="white" href="/content-creator/generated-titles" />
             </div>
