@@ -15,7 +15,7 @@ const LogoAndTitle = ({title,needTxt,textNeeded}:ILogoAndTitle)=>{
                         <defs>
                             <linearGradient id="paint0_linear_756_669" x1="35" y1="40.5" x2="35" y2="103.5" gradientUnits="userSpaceOnUse">
                                 <stop stop-color="#2B2B2B" />
-                                <stop offset="1" stop-color="#F36F24" />
+                                <stop offset="10" stop-color="#F36F24" />
                             </linearGradient>
                         </defs>
                     </svg>

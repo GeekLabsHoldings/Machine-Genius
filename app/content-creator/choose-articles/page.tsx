@@ -116,7 +116,7 @@ const chooseArticles = () => {
             </div>
 
             <div className="flex justify-between w-full">
-                <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/working-on-article"} />
+                <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/choose-content"} />
                 <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create-article"} />
             </div>
         </div>

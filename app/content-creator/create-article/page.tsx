@@ -25,10 +25,29 @@ const CreateArticle = () => {
   const renderSelectedTxt = selectedText.map(oneTxt => (
     <div>
       <div className={`${styles.singleArticle}`}>
-        <ArticleWithCheck article={oneTxt} name="selected-articlesas" />
+        <ArticleWithCheck article={oneTxt} name="selected-articles" />
       </div>
     </div>
   ))
+
+  const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    // Get all checkbox elements
+    var checkboxes = document.querySelectorAll('input[name="selected-articles"]');
+
+    if (e.target.checked) {
+      // Loop through each checkbox and set checked property to false
+      checkboxes.forEach(function (checkbox: any) {
+        checkbox.checked = true;
+      });
+    } else {
+      // Loop through each checkbox and set checked property to true
+      checkboxes.forEach(function (checkbox: any) {
+        checkbox.checked = false;
+      });
+    }
+
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -63,7 +82,7 @@ const CreateArticle = () => {
             <div className="flex justify-between items-center">
               <div className={`${styles.checkSelection} items-center flex`}>
                 {/* to select all of highlighted text */}
-                <CustomCheckBox value={""} />
+                <CustomCheckBox value={""} onChange={(e) => handleCheckAllSelectedText(e)} />
                 <h2>Selections</h2>
               </div>
               {/* delete button to delete selected highlighted text */}

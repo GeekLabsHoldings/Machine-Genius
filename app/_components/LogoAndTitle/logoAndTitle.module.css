@@ -18,3 +18,31 @@
     width: clamp(40px, calc(4.5vw + 0.1rem),300px);
     height:  clamp(56px, calc(5.2vw + 0.1rem),400px);
 }
+
+  /* CSS for the animated gradient background */
+  @keyframes gradientAnimation {
+    0% {
+      stop-color: #F36F24;
+    }
+    50% {
+      stop-color: #2B2B2B;
+    }
+    100% {
+      stop-color: #F36F24;
+    }
+  }
+
+  /* Apply the animation to the linear gradient */
+  .logoAndTitle linearGradient stop {
+    animation: gradientAnimation 2s infinite;
+  }
+
+  /* Apply the animation to the linear gradient */
+  /* .logoAndTitle linearGradient stop:first-child {
+    animation: gradientAnimation 1s infinite;
+  } */
+
+    /* Apply the animation to the linear gradient */
+    .logoAndTitle linearGradient stop:last-child {
+        animation: gradientAnimation 2s infinite reverse;
+      }
