@@ -4,7 +4,7 @@ import styles from './CustomSelectInput.module.css'
 
 interface Iprops{
     label? : string
-    options : string[]
+    options : string[] | number[]
 }
 
 const CustomSelectInput = (props:Iprops) => {
