@@ -6,43 +6,48 @@ import { useState } from 'react';
 import { useGlobalContext } from '@/app/context/store';
 
 // Article preview component contains article title and content
-const ArticlePreview = ({withEdit,beginSelect,height,yourNewArticle}:IArticleProps)=>{
-  const {selectedText,setSelectedText} = useGlobalContext();
+const ArticlePreview = ({ withEdit, beginSelect, height, yourNewArticle }: IArticleProps) => {
+  const { selectedText, setSelectedText } = useGlobalContext();
 
   const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
 
-  {beginSelect ?  document.addEventListener('mouseup', e => {
-    const selected = window.getSelection() as Selection
-      setSelectedText([...selectedText, selected.toString()]);
-    const DetectEqual = ArticlePreviewData.map((article)=>(
-      article.sectionData.map((everyData)=>(
-        setHighlightedBefore([...highlightedBefore,JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
+  const handleSelectedText = () => {
+    const selection = window.getSelection();
+    if (selection) {
+      const selectedText = selection.toString();
+      setSelectedText(prev => [...prev, selectedText]);
+    }
+
+    const DetectEqual = ArticlePreviewData.map((article) => (
+      article.sectionData.map((everyData) => (
+        setHighlightedBefore([...highlightedBefore, JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
       ))
     ))
+  }
 
-  }) : null}
 
-// return article data 
-  const renderArticleData = ArticlePreviewData.map(article =>(
-        <div className={`${styles.articleContent} `}>
-          {article.sectionData.map((singleData) => (
-            // setHighlightedBefore([...highlightedBefore,selectedText.filter(element => article.sectionData.includes(element))]);
-            // highlightedBefore.length ? highlightedBefore.map((ele)=>(<p className={styles.highlightedBefore}>{ele}</p>)) : <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p> 
-            // highlight text with orange color
-            <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p>
-          ))}
-        </div>
+
+  // return article data 
+  const renderArticleData = ArticlePreviewData.map(article => (
+    <div className={`${styles.articleContent} `}>
+      {article.sectionData.map((singleData) => (
+        // setHighlightedBefore([...highlightedBefore,selectedText.filter(element => article.sectionData.includes(element))]);
+        // highlightedBefore.length ? highlightedBefore.map((ele)=>(<p className={styles.highlightedBefore}>{ele}</p>)) : <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p> 
+        // highlight text with orange color
+        <p className={beginSelect ? styles.beginSelection : ''} onMouseUp={handleSelectedText}>{singleData}</p>
+      ))}
+    </div>
 
   ))
-// return highlighted parts that are wanted to be in my article
-  const renderWantedParts = selectedText?.map((singlePart)=>(
-      <p>{singlePart}</p>
-    ))
-  
+  // return highlighted parts that are wanted to be in my article
+  const renderWantedParts = selectedText?.map((singlePart) => (
+    <p>{singlePart}</p>
+  ))
+
 
   // return article title
-  const renderArticleTitle = ArticlePreviewData.map((article)=>(
-      <div className={`${styles.articleHeader} `}>
+  const renderArticleTitle = ArticlePreviewData.map((article) => (
+    <div className={`${styles.articleHeader} `}>
       <h1 className="mx-auto">{article.title}</h1>
       <div className='cursor-pointer' >
         {/* enable edit on article data */}
@@ -52,18 +57,18 @@ const ArticlePreview = ({withEdit,beginSelect,height,yourNewArticle}:IArticlePro
       </div>
     </div>
 
-    ))
-  
+  ))
 
-return(
 
-  <div className={` ${styles.articlePreview} ${height}`}>
-  <div className={`${styles.articlePreviewData}`}>
-      {renderArticleTitle}
-      {yourNewArticle ? <div className={`${styles.articleContent} `}> {renderWantedParts} </div> : <div>{renderArticleData}</div>}
-      
+  return (
 
-    </div>
+    <div className={` ${styles.articlePreview} ${height}`}>
+      <div className={`${styles.articlePreviewData}`}>
+        {renderArticleTitle}
+        {yourNewArticle ? <div className={`${styles.articleContent} `}> {renderWantedParts} </div> : <div>{renderArticleData}</div>}
+
+
+      </div>
     </div>
 
   )
