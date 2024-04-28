@@ -7,6 +7,10 @@
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
 }
+.imgWrapper img{
+    width: 100%;
+    height: 100%;
+}
 .generatingInput input{
     border-bottom: 1px solid black;
     width: 100%;
