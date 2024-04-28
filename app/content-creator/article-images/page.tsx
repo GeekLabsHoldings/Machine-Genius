@@ -28,13 +28,13 @@ const ArticleImages = () => {
     // }
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files[0];
-        const reader = new FileReader();
+        const file = event.target.files ? event.target.files[0] : null;
+        const reader:any = new FileReader();
         let img = event.target.nextElementSibling
         let label = event.target.previousElementSibling
         reader.onloadend = () => {
             label?.classList.add('hidden')
-            img?.setAttribute('src', reader.result);
+            img?.setAttribute('src', reader.result? reader.result : '');
         };
 
         if (file) {
