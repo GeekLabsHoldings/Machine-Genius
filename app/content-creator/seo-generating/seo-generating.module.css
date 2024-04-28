@@ -18,9 +18,14 @@
     border: 1px solid transparent;
     border-radius: clamp(5px, calc(0.5vw + 0.1rem), 60px);
 }
-.seoGeneratingInput input:focus{
+.seoGeneratingInput input:focus, .seoGeneratingInput textarea:focus{
     outline: none;
 }
 .redProgress{
     color: red;
+}
+.seoGeneratingInput textarea{
+    height: 7vh;
+    overflow-y: auto;
+    resize: none;
 }

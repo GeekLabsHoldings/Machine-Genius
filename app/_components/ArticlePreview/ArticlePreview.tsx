@@ -53,8 +53,6 @@ const ArticlePreview = ({withEdit,beginSelect,height,yourNewArticle}:IArticlePro
     </div>
 
     ))
-    console.log(yourNewArticle)
-    console.log(selectedText)
   
 
 return(
