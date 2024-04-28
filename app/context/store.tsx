@@ -12,7 +12,7 @@ const GlobalContext = createContext<contextProps>({
     setSelectedText:(): string[] => []
 })
 
-export const GlobalContextProvider = ({children}) =>{
+export const GlobalContextProvider = ({children}:any) =>{
     const [selectedText,setSelectedText]= useState<string[]>([])
     return(
         <GlobalContext.Provider value={{selectedText,setSelectedText}}>{children}</GlobalContext.Provider>

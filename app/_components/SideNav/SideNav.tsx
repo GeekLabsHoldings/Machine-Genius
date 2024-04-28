@@ -42,7 +42,7 @@ const SideNav = ({ isSideNavOpen, setIsSideNavOpen }: { isSideNavOpen: boolean, 
 
 
     return (
-        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`}>
+        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)} onMouseLeave={() => setIsSideNavOpen(!isSideNavOpen)}>
             <div>
                 <div className={styles.user_info + " flex items-center justify-between"}>
                     <div className={`${styles.avatar_logo} flex items-center gap-[0.6vw]`}>
@@ -73,12 +73,12 @@ const SideNav = ({ isSideNavOpen, setIsSideNavOpen }: { isSideNavOpen: boolean, 
             </div>
             <div className={styles.logo_toggle_side_nav}>
                 <Image src={logo_text_image} alt='logo' />
-                <button onClick={() => setIsSideNavOpen(!isSideNavOpen)}>
+                {/* <button onClick={() => setIsSideNavOpen(!isSideNavOpen)}>
                     <svg viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M-0.000110561 1.39996C-0.000110629 0.626759 0.62665 -1.71737e-06 1.39985 -1.78496e-06C2.17304 -1.85256e-06 2.7998 0.626759 2.7998 1.39996L2.7998 23.7993C2.7998 24.5724 2.17304 25.1992 1.39985 25.1992C0.626652 25.1992 -0.000108535 24.5724 -0.000108603 23.7993L-0.000110561 1.39996Z" fill="#FFFFFB" />
                         <path d="M16.3893 4.60971C16.936 5.1564 16.936 6.04285 16.3893 6.58953L11.7794 11.1995L26.5991 11.1994C27.3722 11.1994 27.999 11.8262 27.999 12.5994C27.999 13.3726 27.3722 13.9994 26.5991 13.9994L11.7794 13.9994L16.3893 18.6093C16.936 19.156 16.936 20.0424 16.3893 20.5891C15.8426 21.1358 14.9562 21.1358 14.4095 20.5891L7.40972 13.5893C6.86304 13.0426 6.86304 12.1562 7.40972 11.6095L14.4095 4.60971C14.9562 4.06303 15.8426 4.06303 16.3893 4.60971Z" fill="#FFFFFB" />
                     </svg>
-                </button>
+                </button> */}
             </div>
         </div>
     )
