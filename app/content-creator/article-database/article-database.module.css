@@ -1,0 +1,64 @@
+.box{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+    overflow-y: auto;
+
+    height: 70vh;
+}
+.filters h5{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-weight: 600;
+
+}
+.articleDatabase h3{
+    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    font-weight: 700;
+}
+
+.changeOrder{
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(7px, calc(0.5vw + 0.1rem), 200px) clamp(20px, calc(0.6vw + 0.1rem), 200px);
+    background: var(--white);
+    border: 1px solid #000000;
+    border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
+    color: #000;
+    font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
+    font-weight: 400;
+    
+}
+.changeOrder svg{
+    width: clamp(18px, calc(0.8vw + 0.1rem), 100px);
+}
+.tableHeader{
+    border-bottom: 1px solid #2A2B2A;
+}
+.tableHeader li,.tableBody li{
+    text-align: center;
+    font-weight: 700;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+}
+.tableBody {
+    border-bottom: 1px solid #2A2B2A4A;
+}
+.viewsDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5vw;
+}
+.viewsDiv svg{
+    width: 1vw;
+    height: 1vh;
+}
+.edit a{
+    text-decoration: underline;
+}
+.tableBody li span{
+    padding: 0.1vw 0.3vw;
+    border-radius: 0.1vw;
+}

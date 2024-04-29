@@ -1,4 +1,11 @@
-import { IArticle, ICommentData } from "../interfaces/interfaces";
+import {
+  IArticle,
+  ICommentData,
+  ITranscriptData,
+  TApproval,
+  TBrands,
+  TContentType,
+} from "../interfaces/interfaces";
 
 // article data returned from genuis search
 export const ArticlePreviewData: IArticle[] = [
@@ -22,23 +29,72 @@ export const SelectArticleData: string[] = [
   "Canada Hates People ",
   "Canada Hates People ",
 ];
+export const TranscriptData: ITranscriptData[] = [
+  {
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    minutes: "0:00 - 0:40",
+  },
+  {
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    minutes: "3:00 - 4:40",
+  },
+  {
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    minutes: "0:00 - 0:40",
+  },
+  {
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    minutes: "0:00 - 0:40",
+  },
+  {
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    minutes: "0:00 - 0:40",
+  },
+  {
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    minutes: "0:00 - 0:40",
+  },
+  {
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+    minutes: "0:00 - 0:40",
+  },
+];
+export const CommentsData: ICommentData[] = [
+  {
+    managerStatus: "online",
+    replyTxt:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun",
+    replyDate: "April 16th 2024",
+    ownerName: "John",
+    ownerStatus: "online",
+    title: "Emily",
+  },
+  {
+    managerStatus: "away",
+    title: "Manar",
+  },
+  {
+    managerStatus: "offline",
+    title: "Ash",
+  },
+];
 
-export const CommentsData:ICommentData[] =[{
-  managerStatus: 'online',
-  replyTxt:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun',
-  replyDate:'April 16th 2024',
-  ownerName:'John',
-  ownerStatus:'online',
-  title:'Emily'
-},{
-  managerStatus: 'away',
-  title:'Manar'
+export const ArticleNames: string[] = [
+  "Pacific Allies ABANDON USA For China!",
+  "Pacific Allies ABANDON USA For China!",
+  "Pacific Allies ABANDON USA For China!",
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!',
+  'Pacific Allies ABANDON USA For China!'
+];
 
-},
-{
-  managerStatus: 'offline',
-  title:'Ash'
-
-}
-
-]
+export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
+export const ContentType:TContentType[] =["Script" , "Article"]
+export const ApprovalStatus:TApproval[] = ['Approved','Pending','Rejected']

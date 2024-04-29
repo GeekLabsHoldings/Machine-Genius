@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mux/mux-player-react": "^2.5.0",
     "jquery": "^3.5.0",
     "next": "14.2.1",
+    "next-video": "^1.0.4",
     "react": "^18",
     "react-dom": "^18"
   },

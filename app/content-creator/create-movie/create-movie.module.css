@@ -1,0 +1,57 @@
+.box{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 70vh;
+}
+.box::-webkit-scrollbar {
+    width: clamp(10px, calc( 0.19vw + 0.1rem), 40px);
+  }
+
+  .box::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-top-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+    border-bottom-right-radius: clamp(10px, calc(0.8vw + 0.1rem), 200px);
+  }
+
+  .box::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-top-right-radius:clamp(10px, calc(0.8vw + 0.1rem), 200px);
+    border-bottom-right-radius:clamp(10px, calc(0.8vw + 0.1rem), 200px);
+  }
+  
+  .box::-webkit-scrollbar-thumb:hover {
+    background: #2A2B2A; 
+  }
+.script p{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-weight: 400;
+
+}
+.script p::selection {
+    background-color: #F36F2487;
+    padding: 0.2vw 0.8vw;
+  }
+.script span{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-weight: 700;
+    color: #A6A6A6;
+}
+.createMovie{
+    display: flex;
+    flex-direction: column;
+    padding-top: 1vw;
+    gap: 1vw;
+}
+.createMovie h3{
+    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+    font-weight: 700;
+}
+
+
+.movieWrapper{
+    background-color: #2A2B2A;
+    box-shadow: 0px -77px 27px -21px #000000 inset;
+}

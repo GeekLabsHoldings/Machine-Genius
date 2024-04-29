@@ -26,3 +26,15 @@ export interface ICommentData {
     ownerStatus?:personStatus,
     title:string
 }
+
+export interface ITranscriptData{
+    text:string,
+    minutes : string
+}
+
+
+
+
+export type TBrands = 'PST USA' | 'PST Asia' | 'Investocracy' | 'Street Politics' | 'Canada'
+export type TContentType = 'Script' | 'Article'
+export type TApproval = 'Pending' | 'Approved' | 'Rejected'
