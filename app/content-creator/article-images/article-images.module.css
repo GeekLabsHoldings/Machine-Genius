@@ -13,16 +13,21 @@
     height: 100%;
     display: none;
 }
-.generatingInput input{
-    border-bottom: 1px solid black;
-    width: 100%;
-    padding: clamp(6px, calc( 0.3vw + 0.1rem), 60px);
+
+.imgWrapper input{
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
+    z-index: 2;
+}
+
+.generatingInput input{
+    border-bottom: 1px solid black;
+    width: 100%;
+    padding: clamp(6px, calc( 0.3vw + 0.1rem), 60px);
 }
 .generatingInput input:focus{
     outline: none;
