@@ -46,7 +46,6 @@ const ArticleImages = () => {
         <div className="flex flex-col ">
             <div className="flex justify-center items-center h-[80vh] w-full gap-[10vw] ">
                 <div className="w-5/12 flex flex-col gap-[1vw]">
-
                     <div className={`${styles.header}`}>
                         <h3>Article Images</h3>
                     </div>
@@ -65,14 +64,12 @@ const ArticleImages = () => {
                                     <img src="" alt="" />
                                 </div>
 
-
                                 <div className={styles.generatingInput}>
                                     <input type="text" placeholder="Alt Text" />
                                 </div>
-
                             </div>
-                            <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw] ">
 
+                            <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw] ">
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden h-[15vh] `}>
                                     <label className='cursor-pointer' htmlFor="second-img">
                                         <svg width="50" height="44" viewBox="0 0 50 44" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -104,9 +101,7 @@ const ArticleImages = () => {
                                 <div className={styles.generatingInput}>
                                     <input type="text" placeholder="Alt Text" />
                                 </div>
-
                             </div>
-
 
                         </div>
 
@@ -146,8 +141,8 @@ const ArticleImages = () => {
                                 <div className={styles.generatingInput}>
                                     <input type="text" placeholder="Alt Text" />
                                 </div>
-
                             </div>
+
                             <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw]">
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden h-[15vh] `}>
                                     <label className='cursor-pointer' htmlFor="sixth-img">
@@ -170,7 +165,6 @@ const ArticleImages = () => {
                         </div>
 
                     </div>
-
 
                 </div>
 
