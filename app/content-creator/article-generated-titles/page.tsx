@@ -17,7 +17,7 @@ const GeneratedTitles = () => {
         
         // const families = fontFaces.map(font => font.family);
       
-        // // converted to set then to array to remove duplicates
+        // converted to set then to array to remove duplicates
         // return [...new Set(families)];
       }
 
