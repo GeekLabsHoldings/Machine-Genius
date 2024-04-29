@@ -5,7 +5,7 @@
 .imgWrapper{
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
-    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 600px);
     position: relative;
 }
 .imgWrapper img{
