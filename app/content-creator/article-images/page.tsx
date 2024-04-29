@@ -30,10 +30,11 @@ const ArticleImages = () => {
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
         const reader:any = new FileReader();
-        let img = event.target.nextElementSibling
+        let img:any = event.target.nextElementSibling
         let label = event.target.previousElementSibling
         reader.onloadend = () => {
             label?.classList.add('hidden')
+            img.style.display = "block";
             img?.setAttribute('src', reader.result? reader.result : '');
         };
 
