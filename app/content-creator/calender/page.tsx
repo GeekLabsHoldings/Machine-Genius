@@ -72,7 +72,6 @@ export default function Calendar() {
                     dayMaxEvents= {2}
                     aspectRatio={1}
                     
-                    
                 />
                 </div>
     )

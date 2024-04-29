@@ -180,6 +180,8 @@
 .full-calender .fc-theme-standard .fc-popover-header {
     background: transparent;
     justify-content: center;
+    padding-bottom: clamp(8px, calc(0.6vw + 0.1rem), 500px);
+    border-bottom: 1px solid var(--dark);
 }
 
 .full-calender .fc .fc-popover-close {
