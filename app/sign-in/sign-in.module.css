@@ -1,0 +1,89 @@
+.fullPage{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2A2B2A;
+    color: var(--white);
+    font-weight: 700;
+    font-size: clamp(24px, calc(3.6vw + 0.1rem),140px);
+    transition: 2s;
+}
+.fullPage svg rect{
+    background-color: red;
+    height: clamp(56px, calc(8vw + 0.1rem),200px);
+    width: clamp(56px, calc(17.5vw + 0.1rem),350px);
+}
+.fullPage svg{
+    position: absolute;
+    z-index: 1;
+}
+.fullPage h1{
+    position: relative;
+    background-color: var(--dark);
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    height: clamp(56px, calc(10vw + 0.1rem),200px);
+    width: clamp(56px, calc(22vw + 0.1rem),800px);
+    z-index: 2;
+}
+.fullPage h1::after{
+    content: "";
+    position: absolute;
+    width: 2%;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    display: none;
+    transform:  translateX(-50%);
+    background-color: var(--white);
+}
+
+.animatedSec svg{
+    animation: moveUp 2s 3s ;
+}
+
+.animatedSec h1::after{
+    display: flex;
+    width: 100%;
+    animation: expand 2s ;
+}
+.fullPage a{
+    opacity: 0;
+}
+.animatedSec .animatedContent a{
+    animation: fadeInAnimation 4s 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes moveUp
+{
+  0% {
+    top: 0;
+  
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+@keyframes expand
+{
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
