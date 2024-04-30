@@ -14,7 +14,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
       </div>
       <div className={styles.Page_Wrapper}>
         <TitleOfPage title="Create"  />
-        <div className='h-full'>
+        <div className='h-full pb-[2vw]'>
         {children}
         </div>
       </div>
