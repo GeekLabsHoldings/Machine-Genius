@@ -33,19 +33,19 @@ const CreateArticle = () => {
   const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     // Get all checkbox elements
-    var checkboxes = document.querySelectorAll('input[name="selected-articles"]');
+    // var checkboxes = document.querySelectorAll('input[name="selected-articles"]');
 
-    if (e.target.checked) {
-      // Loop through each checkbox and set checked property to false
-      checkboxes.forEach(function (checkbox: any) {
-        checkbox.checked = true;
-      });
-    } else {
-      // Loop through each checkbox and set checked property to true
-      checkboxes.forEach(function (checkbox: any) {
-        checkbox.checked = false;
-      });
-    }
+    // if (e.target.checked) {
+    //   // Loop through each checkbox and set checked property to false
+    //   checkboxes.forEach(function (checkbox: any) {
+    //     checkbox.checked = true;
+    //   });
+    // } else {
+    //   // Loop through each checkbox and set checked property to true
+    //   checkboxes.forEach(function (checkbox: any) {
+    //     checkbox.checked = false;
+    //   });
+    // }
 
   }
 
