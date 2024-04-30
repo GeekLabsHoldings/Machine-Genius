@@ -21,6 +21,25 @@
   transition: all 0.3s;
 }
 
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+*::-webkit-scrollbar-track {
+  background: var(--white);
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+  background: var(--dark);
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--dark);
+}
+
 body{
   background-color: #2A2B2A;
   color: #000;
@@ -38,6 +57,7 @@ img{
 .page-wrapper{
   height: 100%;
 }
+
 .articleRow.selected{
   background-color: #2A2B2A;
   color: var(--white);

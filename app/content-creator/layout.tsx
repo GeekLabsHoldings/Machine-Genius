@@ -7,6 +7,7 @@ import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
 
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
+  
   return (
     <div className='w-full h-100vh p-0 flex'>
       <div className={`${styles.Side_Nav_Wrapper} ${isSideNavOpen ? '' : styles.close}`}>
@@ -14,7 +15,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
       </div>
       <div className={styles.Page_Wrapper}>
         <TitleOfPage title="Create"  />
-        <div className='h-full pb-[2vw]'>
+        <div className='h-full'>
         {children}
         </div>
       </div>

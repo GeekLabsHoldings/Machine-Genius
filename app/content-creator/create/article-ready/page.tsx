@@ -9,7 +9,7 @@ const ArticleReady = ()=>{
             <LogoAndTitle title="Your Script  Is Ready!" needTxt={false}/>
 
             {/* button leads you to show errors page */}
-            <CustomBtn word={"Results"} btnColor="black" href={"/content-creator/create/show-errors"}/>
+            <CustomBtn word={"Results"} btnColor="black" href={"/content-creator/create/article-comments"}/>
         
         </div>
         </div>

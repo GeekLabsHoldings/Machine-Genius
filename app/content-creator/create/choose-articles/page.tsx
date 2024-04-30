@@ -7,7 +7,7 @@ const chooseArticles = () => {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="flex justify-center items-start py-[2vw] h-[90%] gap-[2rem]">
+            <div className="flex justify-center items-start py-[2vw] h-full gap-[2rem]">
                 <div className={styles.scripts_wrapper + ' w-1/2'}>
                     <div className={styles.header}>
                         <h6>Scripts</h6>

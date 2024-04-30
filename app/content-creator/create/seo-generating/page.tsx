@@ -27,7 +27,7 @@ const SEOGenerating = () => {
 
   return (
     <div className="flex flex-col ">
-      <div className="flex justify-center items-start h-[80vh] w-full gap-[10vw] py-[2vw]">
+      <div className="flex justify-center items-start h-[78vh] w-full gap-[10vw] py-[2vw]">
         <div className="w-5/12 flex flex-col justify-between gap-[0.5vw] h-full">
 
           <div className={`${styles.yourSEO}`}>

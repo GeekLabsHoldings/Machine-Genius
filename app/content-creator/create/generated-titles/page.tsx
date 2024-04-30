@@ -9,8 +9,8 @@ const ReGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" width="13" height
 
 const GeneratedTitles = () => {
   return (
-    <div className="flex flex-col h-full">
-        <div className="flex justify-center py-[2vw] h-[90%] gap-[2vw]">
+    <div className="flex flex-col justify-between h-[90%]">
+        <div className="flex justify-center py-[2vw] h-[95%] gap-[2vw]">
             <div className={styles.titles_wrapper + ' w-1/2 h-full'}>
                 <div className={styles.header}>
                     <h6>Titles Generated</h6>
@@ -37,7 +37,7 @@ const GeneratedTitles = () => {
             </div>
         </div>
 
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between">
             <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/generating-titles"} />
             <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/images-generating-titles"} />
         </div>

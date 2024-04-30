@@ -34,10 +34,7 @@ const ImagesForGeneratingTitles = () => {
             <div className="flex justify-center items-center h-[80vh] py-[1.4vw] w-full gap-[10vw] ">
                 <div className="flex flex-col gap-[2vw]">
                     <LogoAndTitle title={"Your Script Has Been Scheduled!"} needTxt={false} />
-                    <div className="flex justify-center gap-[1.5vw]">
-                        <CustomBtn word="Dashboard" btnColor="black" href={"/dashboard"} />
-                        <CustomBtn word="Convert To Article" btnColor="black" href={"/content-creator/create/article-generated-titles"} />
-                    </div>
+                    <CustomBtn word="Dashboard" btnColor="black" href={"/content-creator/dashboard"} style={{width:'max-content' , margin:'auto'}} />
                 </div>
             </div>
         </div> :     <div className="flex flex-col h-full">
@@ -45,7 +42,7 @@ const ImagesForGeneratingTitles = () => {
         <div className="w-5/12 flex flex-col gap-[2vw]">
           <div className="flex flex-col gap-[1.5vw]">
           <div className={`${styles.yourThumbnail}`}>
-            <h3>Thumbnail</h3>
+            <h3>Feature Image</h3>
           </div>
           <CustomSelectInput label={"Select Thumbnail"} options={SelectArticleData}/>
           </div>

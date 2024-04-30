@@ -12,14 +12,14 @@ const ChooseContent = () => {
   const router = useRouter()
 
   const handleNavigate = () => {
-    setIsLoading(true)
 
-    setTimeout(() => {
-      // Your action here
-      router.push('/content-creator/create/choose-articles')
-      
-  }, 3000); // 3000 milliseconds = 3 seconds
+      setIsLoading(true)
 
+      setTimeout(() => {
+        // Your action here
+        router.push('/content-creator/create/choose-articles')
+        
+    }, 1500); // 3000 milliseconds = 3 seconds
 
   }
 

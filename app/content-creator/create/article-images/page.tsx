@@ -182,9 +182,9 @@ const ArticleImages = () => {
                     href={"/content-creator/create/choose-articles"}
                 />
                 <CustomBtn
-                    word={"Schedule"}
+                    word={"next"}
                     btnColor="black"
-                    href={"/content-creator/create/schedule-script"}
+                    href={"/content-creator/create/feature-image"}
                 />
             </div>
         </div>

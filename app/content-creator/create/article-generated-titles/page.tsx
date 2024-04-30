@@ -1,6 +1,5 @@
-"use client"
 import CustomBtn from '@/app/_components/Button/CustomBtn'
-import styles from './article-generated-titles.module.css'
+import styles from './generated-titles.module.css'
 import TitleCheckWithLock from '@/app/_components/TitleCheckWithLock/TitleCheckWithLock'
 
 const ReGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -9,24 +8,9 @@ const ReGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" width="13" height
 
 
 const GeneratedTitles = () => {
-
-    function listFontFamilies() {
-        // const fontFaces = document.fonts;
-
-        // console.log(fontFaces);
-        
-        // const families = fontFaces.map(font => font.family);
-      
-        // converted to set then to array to remove duplicates
-        // return [...new Set(families)];
-      }
-
-      listFontFamilies()
-
-
   return (
-    <div className="flex flex-col h-full">
-        <div className="flex justify-center py-[2vw] h-[90%] gap-[2vw]">
+    <div className="flex flex-col justify-between h-[90%]">
+        <div className="flex justify-center py-[2vw] h-[95%] gap-[2vw]">
             <div className={styles.titles_wrapper + ' w-1/2 h-full'}>
                 <div className={styles.header}>
                     <h6>Titles Generated</h6>
@@ -53,9 +37,9 @@ const GeneratedTitles = () => {
             </div>
         </div>
 
-        <div className="flex justify-between w-full">
-            <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/schedule-script"} />
-            <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/seo-generating"} />
+        <div className="flex justify-between">
+            <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/generating-titles"} />
+            <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/article-images-generating-titles"} />
         </div>
     </div>
   )

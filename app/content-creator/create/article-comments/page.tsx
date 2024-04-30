@@ -7,7 +7,12 @@ import { CommentsData } from "@/app/data/data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
+
+
 const CommentsOnArticle = () => {
+
+
 
   const renderCommentsData = CommentsData.map((oneCommentData) => (
     <TopicColapse forComments={true}
@@ -108,7 +113,7 @@ const CommentsOnArticle = () => {
 
     setTimeout(() => {
       // Your action here
-      router.push('/content-creator/create/generated-titles')
+      router.push('/content-creator/create/article-images')
 
     }, 1500); // 3000 milliseconds = 3 seconds
 
@@ -117,11 +122,15 @@ const CommentsOnArticle = () => {
   return (
 
     <div className="flex flex-col h-[100%]">
-      {IsLoading ?
-
-        <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-full">
-          <LogoAndTitle needTxt={false} title='Generating Titles..' />
-        </div> : <div className="flex justify-center h-[90%] py-[1.4vw] w-full gap-[2vw]">
+      {IsLoading ?            <div className="flex flex-col justify-center items-center m-auto h-full py-[1.4vw]" >
+                <div className={`${styles.genuisWorking} m-auto`}>
+                    <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
+                    <div className={`${styles.allCheckers} w-full`}>
+                        <SpecificChecker pass={true} word='Grammar Checker' />
+                        <SpecificChecker pass={true} word='Plagiarism Checker' />
+                        <SpecificChecker pass={true} word='AI Checker' />
+                    </div>                </div>
+            </div>: <div className="flex justify-center h-[90%] py-[1.4vw] w-full gap-[2vw]">
           <div className="w-7/12 flex flex-col gap-[1vw]">
             <div className={`${styles.yourArticle}`}>
               <h3>Articles</h3>
