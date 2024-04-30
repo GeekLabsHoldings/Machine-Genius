@@ -38,3 +38,7 @@ img{
 .page-wrapper{
   height: 100%;
 }
+.articleRow.selected{
+  background-color: #2A2B2A;
+  color: var(--white);
+}

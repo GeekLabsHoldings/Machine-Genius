@@ -42,7 +42,20 @@
     font-weight: 700;
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
 }
-.tableBody {
+
+.tableBody{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.2vh 0;
+}
+.tableBody li ul{
+    text-align: center;
+}
+.tableBody li ,.tableBody li ul , .tableBody li div h6 ,.tableBody li a ,.tableBody li span{
+    transition: 0.1s;
+}
+.borderBottom:not(:last-child) {
     border-bottom: 1px solid #2A2B2A4A;
 }
 .viewsDiv{
@@ -51,6 +64,17 @@
     align-items: center;
     gap: 0.5vw;
 }
+ .contentType{
+    display: flex;
+    justify-content: center;
+}
+.contentType ul li{
+   text-align: left;
+}
+.contentType ul{
+    list-style: inside;
+}
+
 .viewsDiv svg{
     width: 1vw;
     height: 1vh;
@@ -61,4 +85,5 @@
 .tableBody li span{
     padding: 0.1vw 0.3vw;
     border-radius: 0.1vw;
+    font-weight: 500;
 }
