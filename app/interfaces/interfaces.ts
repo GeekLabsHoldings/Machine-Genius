@@ -32,6 +32,16 @@ export interface ITranscriptData{
     minutes : string
 }
 
+export interface IyourArticle{
+    id:number,
+    articleName:string,
+    brand: TBrands,
+    contentType: TContentType[],
+    views:string,
+    approvals: TApproval,
+    date:string,
+    editBtn: string
+}
 
 
 
