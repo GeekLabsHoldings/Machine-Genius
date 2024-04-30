@@ -4,7 +4,7 @@ import { withNextVideo } from "next-video/process";
  * 
  */
 const nextConfig = {
-    // output: 'export',
+    output: 'export',
 };
 
 export default withNextVideo(nextConfig);
