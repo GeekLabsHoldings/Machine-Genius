@@ -1,10 +1,11 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './CustomSelectInput.module.css'
 
 interface Iprops{
     label? : string
-    options : string[] | number[]
+    options : string[] | number[],
+    setSelected ? : any
 }
 
 const CustomSelectInput = (props:Iprops) => {
@@ -12,10 +13,17 @@ const CustomSelectInput = (props:Iprops) => {
     const [isActive, setIsActive] = useState(false);
     const [selected, setIsSelected] = useState(props.label? props.label : props.options[1]);
 
+    useEffect(()=>{
+        props.setSelected(selected)
+            
+    },[selected])
+
     const handleSelectedItem = (e:any)=>{
         console.log(e.innerText);
         setIsSelected(e.innerText)
     }
+
+
 
     return (
         <div className={styles.dropdown}>

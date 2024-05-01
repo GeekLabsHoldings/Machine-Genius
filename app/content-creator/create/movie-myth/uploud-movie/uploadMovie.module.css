@@ -1,0 +1,12 @@
+.uploud_movie{
+    gap: clamp(12px, calc(0.9vw + 0.1rem), 1400px);
+}
+.uploud_movie input{
+    padding: clamp(6px, calc(0.35vw + 0.1rem), 600px) clamp(12px, calc(0.9vw + 0.1rem), 1400px);
+    font-size: clamp(12px, calc(0.9vw + 0.1rem), 1400px);
+    border-radius: 0.4rem;
+    border: 1px solid var(--dark);
+    outline: none;
+    width: 100%;
+    background: var(--white);
+}
