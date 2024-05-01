@@ -40,7 +40,7 @@ const ChooseContent = () => {
                 <LogoAndTitle needTxt={true} textNeeded='Hold on tight.' title='Genius is working on your article..'/>
             </div> : <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] py-[2vw] m-auto h-full ">
         <label className={styles.select_label}>Select Content Type</label>
-        <CustomSelectInput label="Select Content Type" options={options} />
+        <CustomSelectInput label="Select Content Type" options={options}  />
       </div>}
 
 

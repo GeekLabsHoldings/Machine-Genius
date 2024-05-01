@@ -33,6 +33,7 @@ const Dashboard = () => {
 
   ))
   return (
+
     <div className={`${styles.dashboard} pageHeader flex h-full w-full pt-[0.75vw] gap-[3vw]`}>
       <div className="w-1/2 flex flex-col gap-[0.7vw]">
         <h3>Tasks Over View</h3>
@@ -236,6 +237,8 @@ const Dashboard = () => {
       </div>
         
     </div>
+
+
   )
 }
 

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useState } from 'react';
 import CustomBtn from '../_components/Button/CustomBtn';
 import styles from './sign-in.module.css';

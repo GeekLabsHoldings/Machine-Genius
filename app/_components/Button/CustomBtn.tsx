@@ -6,7 +6,7 @@ import { AnchorHTMLAttributes, ButtonHTMLAttributes, LinkHTMLAttributes, ReactEl
 // custom button props 
 type IBtn =  React.DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> & {
     word:string,
-    btnColor:'white'|'black'|null,
+    btnColor:'white'|'black',
     icon?: ReactElement,
     href?:string
 }

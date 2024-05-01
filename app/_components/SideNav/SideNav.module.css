@@ -4,6 +4,8 @@
     justify-content: space-between;
     padding: clamp(20px, calc(2.5vw + 0.1rem), 1000px) clamp(20px, calc(1.5vw + 0.1rem), 1000px);
     height: 100%;
+
+    animation: slideDown 1s ease 0s 1;
 }
 
 .side_Nav.close{
@@ -225,3 +227,14 @@
     width: clamp(0.5rem, calc(1.3vw + 0.1rem), 1000px);
     transform: rotateY(180deg);
 }
+
+
+
+
+
+
+
+@keyframes slideDown {
+    0%   {transform: translateY(-110%);}
+    100% {transform: translateY(0)}
+  }
