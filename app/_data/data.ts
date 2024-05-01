@@ -1,12 +1,13 @@
 import {
   IArticle,
   ICommentData,
+  ITasks,
   ITranscriptData,
   IyourArticle,
   TApproval,
   TBrands,
   TContentType,
-} from "../interfaces/interfaces";
+} from "../_interfaces/interfaces";
 
 // article data returned from genuis search
 export const ArticlePreviewData: IArticle[] = [
@@ -95,6 +96,21 @@ export const ArticleNames: string[] = [
   'Pacific Allies ABANDON USA For China!',
   'Pacific Allies ABANDON USA For China!'
 ];
+
+export const TasksInDashboard:ITasks[] = [
+  {
+    taskType:'Assigned',
+    tasks:['Canada','Street Politics','PST USA']
+  },
+  {
+    taskType:'Inprogress',
+    tasks:['Investocracy']
+  },
+  {
+    taskType:'Tasks Done',
+    tasks:['PST Asia']
+  }
+]
 
 export const ContentTypeFilter=['All','Script']
 

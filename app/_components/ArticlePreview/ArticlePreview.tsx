@@ -1,9 +1,9 @@
 'use client';
 import styles from './ArticlePreview.module.css';
-import { ArticlePreviewData } from '../../data/data';
-import { IArticleProps } from '@/app/interfaces/interfaces';
+import { ArticlePreviewData } from '../../_data/data';
+import { IArticleProps } from '@/app/_interfaces/interfaces';
 import { useState } from 'react';
-import { useGlobalContext } from '@/app/context/store';
+import { useGlobalContext } from '@/app/_context/store';
 
 // Article preview component contains article title and content
 const ArticlePreview = ({ withEdit, beginSelect, height, yourNewArticle }: IArticleProps) => {

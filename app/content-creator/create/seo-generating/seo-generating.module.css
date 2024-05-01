@@ -1,7 +1,4 @@
-.yourSEO h3{
-    font-size:clamp(16px, calc(1.6vw + 0.1rem), 80px);
-    font-weight: 700;
-}
+
 .everySec h5{
     font-size: clamp(10px, calc(0.8vw + 0.1rem), 80px);
     font-weight: 600;

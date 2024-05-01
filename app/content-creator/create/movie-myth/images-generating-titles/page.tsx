@@ -4,7 +4,7 @@ import styles from "./images-generating-titles.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import { SelectArticleData } from "@/app/data/data";
+import { SelectArticleData } from "@/app/_data/data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";

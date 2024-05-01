@@ -3,7 +3,7 @@ import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import styles from "./commentsOnArticle.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
-import { CommentsData } from "@/app/data/data";
+import { CommentsData } from "@/app/_data/data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";

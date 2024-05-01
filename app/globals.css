@@ -62,3 +62,7 @@ img{
   background-color: #2A2B2A;
   color: var(--white);
 }
+.pageHeader h3{
+  font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  font-weight: 700;
+}

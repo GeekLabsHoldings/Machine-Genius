@@ -1,7 +1,7 @@
 "use client"
 import { ReactNode, useState } from 'react';
 import styles from './TopicCollapse.module.css'
-import { personStatus } from '@/app/interfaces/interfaces';
+import { personStatus } from '@/app/_interfaces/interfaces';
 
 
 

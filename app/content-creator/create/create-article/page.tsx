@@ -6,8 +6,8 @@ import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import { SelectArticleData } from "@/app/data/data";
-import { useGlobalContext } from "@/app/context/store";
+import { SelectArticleData } from "@/app/_data/data";
+import { useGlobalContext } from "@/app/_context/store";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 

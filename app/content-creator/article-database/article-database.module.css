@@ -3,17 +3,12 @@
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
     overflow-y: auto;
-
     height: 70vh;
 }
 .filters h5{
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
     font-weight: 600;
 
-}
-.articleDatabase h3{
-    font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
-    font-weight: 700;
 }
 
 .changeOrder{

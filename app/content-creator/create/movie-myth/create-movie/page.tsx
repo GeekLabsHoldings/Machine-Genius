@@ -2,7 +2,7 @@
 import VideoPlayer from '@/app/_components/VideoPlayer/VideoPlayer'
 import styles from './create-movie.module.css'
 import CustomBtn from '@/app/_components/Button/CustomBtn'
-import { TranscriptData } from '@/app/data/data'
+import { TranscriptData } from '@/app/_data/data'
 
 const CreateMovie = () => {
     const renderTranscriptData = TranscriptData.map((transcript) => (
