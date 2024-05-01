@@ -22,7 +22,6 @@ export default function RootLayout({
           {children}
         </div>
         </GlobalContextProvider>
-
       </body>
     </html>
   );

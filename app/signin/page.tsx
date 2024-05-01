@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomBtn from '../_components/Button/CustomBtn';
 import styles from './signin.module.css';
 import logoTextImg from '@/public/assets/welcome logo.svg'
@@ -18,15 +18,22 @@ const SignIn = () => {
         let logInLogo:any = document.querySelector('.signin-wrapper img')
         logInLogo.style.transform = 'scale(150)'
 
-            router.push('/content-creator/create')
+        setTimeout(() => {
+            // Your action here
+            router.push('/content-creator/dashboard')
       
+          }, 500); // 3000 milliseconds = 3 seconds
         
     }
+
+    useEffect(()=>{
+        setStartAnimation(true)
+    },[])
 
 
     return (
 
-        <div className='flex items-center justify-center w-[100vw] h-[100vh] relative overflow-hidden' onClick={() => { setStartAnimation(true) }}>
+        <div className='flex items-center justify-center w-[100vw] h-[100vh] relative overflow-hidden' >
 
 
             <div className={`${styles.welcomePart} welcom-wrapper ${StartAnimation ? styles.startAnimation : ''} ${ShowSignInForm ? styles.hide : ''}`}>
