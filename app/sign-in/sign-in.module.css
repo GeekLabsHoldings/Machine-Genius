@@ -11,7 +11,7 @@
     transition: 2s;
 }
 .fullPage svg rect{
-    background-color: red;
+
     height: clamp(56px, calc(8vw + 0.1rem),200px);
     width: clamp(56px, calc(17.5vw + 0.1rem),350px);
 }

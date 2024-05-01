@@ -1,0 +1,14 @@
+.arrowBorder{
+    border: 1px solid var(--dark);
+}
+.iconButton{
+    background-color: var(--dark);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 0.2vw;
+    color: var(--white);
+}
+.iconButton:disabled{
+    background-color: #D9D9D9;
+  
+}

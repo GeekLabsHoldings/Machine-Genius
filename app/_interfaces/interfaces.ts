@@ -43,8 +43,12 @@ export interface IyourArticle{
     editBtn: string
 }
 
+export interface ITasks{
+    taskType: TasksType,
+    tasks:TBrands[]
+}
 
-
+export type TasksType = 'Assigned' | 'Inprogress' | 'Tasks Done'
 export type TBrands = 'PST USA' | 'PST Asia' | 'Investocracy' | 'Street Politics' | 'Canada'
 export type TContentType = 'Script' | 'Article'
 export type TApproval = 'Pending' | 'Approved' | 'Rejected'

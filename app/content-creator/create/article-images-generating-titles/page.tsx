@@ -3,7 +3,7 @@ import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import styles from "./images-generating-titles.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import { SelectArticleData } from "@/app/data/data";
+import { SelectArticleData } from "@/app/_data/data";
 
 const ImagesForGeneratingTitles = () => {
 
@@ -15,7 +15,7 @@ const ImagesForGeneratingTitles = () => {
       <div className="flex justify-between m-auto h-[78vh] py-[1.4vw] w-full gap-[10vw]">
         <div className="w-5/12 flex flex-col gap-[2vw]">
           <div className="flex flex-col gap-[1.5vw]">
-          <div className={`${styles.yourThumbnail}`}>
+          <div className={`${styles.yourThumbnail} pageHeader`}>
             <h3>Thumbnail</h3>
           </div>
           <CustomSelectInput label={"Select Thumbnail"} options={SelectArticleData}/>

@@ -3,7 +3,7 @@ import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import styles from "./commentsOnArticle.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
-import { CommentsData } from "@/app/data/data";
+import { CommentsData } from "@/app/_data/data";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
@@ -123,7 +123,7 @@ const CommentsOnArticle = () => {
           <LogoAndTitle needTxt={false} title='Generating Titles..' />
         </div> : <div className="flex justify-center h-[90%] py-[1.4vw] w-full gap-[2vw]">
           <div className="w-7/12 flex flex-col gap-[1vw]">
-            <div className={`${styles.yourArticle}`}>
+            <div className={`${styles.yourArticle} pageHeader`}>
               <h3>Articles</h3>
             </div>
             {/* display your article  */}

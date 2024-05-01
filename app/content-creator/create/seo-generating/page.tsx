@@ -2,7 +2,7 @@
 import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview"
 import CustomBtn from "@/app/_components/Button/CustomBtn"
 import styles from './seo-generating.module.css'
-import { ArticlePreviewData } from '../../../data/data'
+import { ArticlePreviewData } from '../../../_data/data'
 import { useState } from "react";
 
 const SEOGenerating = () => {
@@ -30,7 +30,7 @@ const SEOGenerating = () => {
       <div className="flex justify-center items-start h-[78vh] w-full gap-[10vw] py-[2vw]">
         <div className="w-5/12 flex flex-col justify-between gap-[0.5vw] h-full">
 
-          <div className={`${styles.yourSEO}`}>
+          <div className={`${styles.yourSEO} pageHeader`}>
             <h3>SEO</h3>
           </div>
 

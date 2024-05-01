@@ -7,7 +7,7 @@ import {
   Brands,
   ContentTypeFilter,
   YourArticles,
-} from "@/app/data/data";
+} from "@/app/_data/data";
 import { useState } from "react";
 import $ from 'jquery'
 
@@ -82,7 +82,7 @@ const ArticleDatabase = () => {
       <div
         className={`${styles.articleDatabase} flex flex-col justify-center items-center h-[85vh] w-full gap-[1vw] `}
       >
-        <div className={`flex flex-col gap-[0.7vw] w-full`}>
+        <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
           <h3>Filter By:</h3>
           <div className={`${styles.filters} flex justify-between`}>
             <div className="flex flex-col w-2/12 gap-[0.3vw]">

@@ -47,7 +47,7 @@ const ArticleImages = () => {
         <div className="flex flex-col ">
             <div className="flex justify-center items-center h-[80vh] w-full gap-[10vw] ">
                 <div className="w-5/12 flex flex-col gap-[1vw]">
-                    <div className={`${styles.header}`}>
+                    <div className={`${styles.header} pageHeader`}>
                         <h3>Article Images</h3>
                     </div>
                     <div className="w-full flex">

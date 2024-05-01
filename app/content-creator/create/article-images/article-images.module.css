@@ -1,7 +1,4 @@
-.header{
-    font-size:clamp(16px, calc(1.6vw + 0.1rem), 80px);
-    font-weight: 700;
-}
+
 .imgWrapper{
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
