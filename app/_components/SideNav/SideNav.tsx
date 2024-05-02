@@ -6,7 +6,25 @@ import logo_white_image from '../../../public/assets/logo white.svg'
 import logo_text_image from '../../../public/assets/logo text.svg'
 import Image from 'next/image'
 import Link from 'next/link'
+import CustomSelectInput from '../CustomSelectInput/CustomSelectInput'
 
+
+const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+<path d="M20.5001 9.28571H11.2144V0H9.7858V9.28571H0.500084V10.7143H9.7858V20H11.2144V10.7143H20.5001V9.28571Z" fill="#FFFFFB"/>
+<path d="M6.92865 20H1.21437C1.0926 20 0.972851 19.9689 0.866493 19.9096C0.760135 19.8503 0.6707 19.7648 0.606682 19.6612C0.542664 19.5577 0.506189 19.4394 0.500721 19.3178C0.495253 19.1961 0.520974 19.0751 0.57544 18.9662L3.43258 13.2519C3.49852 13.1412 3.59207 13.0496 3.70407 12.9859C3.81607 12.9223 3.94269 12.8888 4.07151 12.8888C4.20034 12.8888 4.32695 12.9223 4.43896 12.9859C4.55096 13.0496 4.64451 13.1412 4.71044 13.2519L7.56758 18.9662C7.62205 19.0751 7.64777 19.1961 7.6423 19.3178C7.63684 19.4394 7.60036 19.5577 7.53634 19.6612C7.47232 19.7648 7.38289 19.8503 7.27653 19.9096C7.17017 19.9689 7.05042 20 6.92865 20ZM2.37023 18.5714H5.7728L4.07151 15.1688L2.37023 18.5714Z" fill="#FFFFFB"/>
+<path d="M19.0715 7.14286H14.7858C14.4071 7.14242 14.0439 6.99177 13.7761 6.72396C13.5083 6.45614 13.3577 6.09303 13.3572 5.71429V1.42857C13.3577 1.04982 13.5083 0.686714 13.7761 0.418899C14.0439 0.151084 14.4071 0.00043481 14.7858 0H19.0715C19.4503 0.00043481 19.8134 0.151084 20.0812 0.418899C20.349 0.686714 20.4996 1.04982 20.5001 1.42857V5.71429C20.4996 6.09303 20.349 6.45614 20.0812 6.72396C19.8134 6.99177 19.4503 7.14242 19.0715 7.14286ZM14.7858 1.42857V5.71429H19.0722L19.0715 1.42857H14.7858Z" fill="#FFFFFB"/>
+<path d="M4.07151 7.14286C3.36515 7.14286 2.67465 6.9334 2.08733 6.54096C1.50002 6.14853 1.04226 5.59075 0.771944 4.93816C0.501631 4.28556 0.430905 3.56747 0.568709 2.87468C0.706514 2.18189 1.04666 1.54552 1.54613 1.04605C2.04561 0.546576 2.68197 0.20643 3.37476 0.0686256C4.06755 -0.0691788 4.78565 0.00154743 5.43824 0.27186C6.09083 0.542173 6.64861 0.999932 7.04105 1.58725C7.43348 2.17457 7.64294 2.86507 7.64294 3.57143C7.64183 4.51829 7.26519 5.42605 6.59566 6.09558C5.92613 6.76511 5.01837 7.14174 4.07151 7.14286ZM4.07151 1.42857C3.6477 1.42857 3.2334 1.55425 2.88101 1.78971C2.52861 2.02517 2.25396 2.35984 2.09177 2.75139C1.92958 3.14295 1.88715 3.57381 1.96983 3.98948C2.05251 4.40515 2.2566 4.78698 2.55629 5.08666C2.85597 5.38634 3.23779 5.59043 3.65346 5.67311C4.06914 5.7558 4.49999 5.71336 4.89155 5.55117C5.28311 5.38898 5.61777 5.11433 5.85323 4.76194C6.08869 4.40955 6.21437 3.99525 6.21437 3.57143C6.21375 3.0033 5.98778 2.45862 5.58605 2.05689C5.18433 1.65516 4.63964 1.4292 4.07151 1.42857Z" fill="#FFFFFB"/>
+<path d="M4 15L6.16506 18.75H1.83494L4 15Z" fill="#FFFFFB"/>
+<path d="M6.5 3.5C6.5 4.88071 5.38071 6 4 6C2.61929 6 1.5 4.88071 1.5 3.5C1.5 2.11929 2.61929 1 4 1C5.38071 1 6.5 2.11929 6.5 3.5Z" fill="#FFFFFB"/>
+<path d="M14.5 1H19.5V6H14.5V1Z" fill="#FFFFFB"/>
+<path d="M13.9894 17.2489C13.3369 16.9004 13.3369 16.0996 13.9894 15.7511L18.8793 13.1397C19.5817 12.7646 20.5 13.1889 20.5 13.8886V19.1114C20.5 19.8111 19.5817 20.2354 18.8793 19.8603L13.9894 17.2489Z" fill="#FFFFFB"/>
+</svg>
+
+
+const rols = [
+    'SEO',
+    'Vedio'
+]
 const sideNavLinks = [
     {
         name: "Dashboard", path: "/content-creator/dashboard", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
@@ -42,7 +60,7 @@ const SideNav = ({ isSideNavOpen, setIsSideNavOpen }: { isSideNavOpen: boolean, 
 
 
     return (
-        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)} onMouseLeave={() => setIsSideNavOpen(!isSideNavOpen)}>
+        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)} >
             <div>
                 <div className={styles.user_info + " flex items-center justify-between"}>
                     <div className={`${styles.avatar_logo} flex items-center gap-[0.6vw]`}>
@@ -59,6 +77,10 @@ const SideNav = ({ isSideNavOpen, setIsSideNavOpen }: { isSideNavOpen: boolean, 
                         <Image src={logo_white_image} alt='logo' />
                     </div>
                 </div>
+                <div className={styles.line}></div>
+
+                <CustomSelectInput options={rols} icon={rolsIcon} theme="dark" whenSideNavClosed={!isSideNavOpen}/>
+
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
                     {sideNavLinks.map(ele => (
