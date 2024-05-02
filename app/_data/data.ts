@@ -80,6 +80,7 @@ export const CommentsData: ICommentData[] = [
     title: "Ash",
   },
 ];
+export const Positions = ["Intern","Full-Time","Senior"]
 
 export const ArticleNames: string[] = [
   "Pacific Allies ABANDON USA For China!",

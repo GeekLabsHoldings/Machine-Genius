@@ -20,7 +20,7 @@ export const SimplePagination =()=> {
   };
  
   return (
-    <div className="flex items-center gap-8">
+    <div className="flex items-center gap-[1vw]">
 
       <IconButton
               className={styles.iconButton}

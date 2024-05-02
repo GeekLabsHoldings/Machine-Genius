@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import SignIn from "./signin/page";
 // import ArticlePreview from "./_components/ArticlePreview/ArticlePreview";
 
 export default function Home() {
@@ -14,8 +15,7 @@ export default function Home() {
 
   return (
     <>
-      <h1 className="text-white">hello machine genius</h1>
-      <Link href="signin" className="text-white"> Sign In</Link>
+      <SignIn />
     </>
   );
 }
