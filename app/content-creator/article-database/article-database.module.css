@@ -6,7 +6,7 @@
     height: 70vh;
 }
 .filters h5{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 600;
 
 }
@@ -35,7 +35,7 @@
 .tableHeader li,.tableBody li{
     text-align: center;
     font-weight: 700;
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
 }
 
 .tableBody{

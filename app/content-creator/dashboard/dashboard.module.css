@@ -24,7 +24,7 @@
     border-bottom: 1px solid #DBDBD7;
 }
 .rightBorder h5, .leaderboard h5{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 400;
 }
 .coloredTxt{
@@ -32,7 +32,7 @@
     padding: 0.1vw 0.3vw;
     border-radius: 0.2vw;
     font-weight: 500;
-    font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 100px);
 }
 .events{
     display: flex;
@@ -41,7 +41,7 @@
     border-left: 2px solid #828282;
 }
 .events h5, .events p{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
 }
 .events h5{
     font-weight: 700;
@@ -65,7 +65,7 @@
 .profileAndStatus p{
     color: #828282;
     font-weight: 400;
-    font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 100px);
 }
 .movedStatus svg, .cutBox svg{
     width: clamp(10px, calc( 0.5vw + 0.1rem), 60px);
@@ -105,6 +105,12 @@
     transform: translate(-50%,-50%);
     font-size: clamp(10px, calc( 4vw + 0.1rem), 500px);
     font-weight: 400;
+}
+.halfHeader{
+    height: clamp(24px, calc(2vw + 0.1rem),140px);
+}
+.halfHeader p{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
 }
 .animated{
     position: relative;
@@ -147,7 +153,7 @@
     color: var(--white);
 }
 .waysToTakeBonus p, .waysToTakeBonus span{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 400;
 }
 .waysToTakeBonus span{
@@ -164,7 +170,12 @@
     font-weight: 700;
     font-size: clamp(10px, calc(0.7vw + 0.1rem), 60px);
 }
-
+.movedChat{
+    position: absolute;
+    bottom: 0;
+    right: clamp(20px, calc(3.5vw + 0.1rem), 1400px);
+    width: clamp(56px, calc(60vw + 0.1rem),3000px);
+}
 @keyframes spin {
     from {
         transform:rotate(0deg);

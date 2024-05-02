@@ -1,5 +1,5 @@
 .whiteBtn{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 700;
     position: relative;
     border-radius: 0.4rem;
@@ -16,7 +16,7 @@
     border: 1px solid var(--white);
 }
 .blackBtn{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 700;
     position: relative;
     border-radius: 0.4rem;

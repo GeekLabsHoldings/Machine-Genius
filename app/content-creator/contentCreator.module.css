@@ -16,4 +16,5 @@
     padding: clamp(20px, calc( 2vw + 0.1rem ) ,1400px) clamp(20px, calc( 3.5vw + 0.1rem ) ,1400px);
     display: flex;
     flex-direction: column;
+    position: relative;
 }

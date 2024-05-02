@@ -41,8 +41,24 @@ const Dashboard = () => {
   ))
   return (
     <div className={`${styles.dashboard} flex h-full w-full pt-[0.75vw] gap-[2vw]`}>
+      <div className={`${styles.movedChat} flex justify-end `}>
+          <div
+            className={`${styles.cutBox} w-1/3 h-[5vh] flex items-center gap-[0.3vw] px-[0.5vw]`}>
+            <svg
+              viewBox="0 0 11 11"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <circle cx="5.5" cy="5.5" r="5.5" fill="#5FA85B" />
+            </svg>
+            <h5>Chat</h5>
+          </div>
+        </div>
+        
       <div className="w-1/2 flex flex-col gap-[0.9vw]">
+        <div className={styles.halfHeader}>
         <h3>Tasks Over View</h3>
+        </div>
+
         <div className={`${styles.box} flex h-[20vh]`}>{renderTasksSec}</div>
         <div className="flex justify-between items-center">
           <h3>Announcements</h3>
@@ -105,12 +121,13 @@ const Dashboard = () => {
         
       </div>
 
-      <div className="w-1/2 flex flex-col gap-[0.9vw]">
-        <div className="flex justify-between">
+      <div className="w-1/2 flex flex-col gap-[0.9vw] relative ">
+        <div className="flex justify-between m-0">
           <h3>Leaderboard</h3>
-          <div className='flex flex-col items-end'>
-            <p>20 March 2024</p>
-            <p>2:30 PM</p>
+          
+          <div className={`${styles.halfHeader} flex flex-col items-end m-0`}>
+            <p >20 March 2024</p>
+            <p >2:30 PM</p>
           </div>
         </div>
 
@@ -428,18 +445,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="flex justify-end">
-          <div
-            className={`${styles.cutBox} w-1/3 h-[5vh] flex items-center gap-[0.3vw] px-[0.5vw]`}>
-            <svg
-              viewBox="0 0 11 11"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <circle cx="5.5" cy="5.5" r="5.5" fill="#5FA85B" />
-            </svg>
-            <h5>Chat</h5>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

@@ -26,7 +26,7 @@
     background: #2A2B2A; 
   }
 .script p{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 400;
 
 }
@@ -35,7 +35,7 @@
     padding: 0.2vw 0.8vw;
   }
 .script span{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 700;
     color: #A6A6A6;
 }

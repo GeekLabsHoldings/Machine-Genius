@@ -84,7 +84,7 @@ img{
   justify-content: space-between;
 }
 .css-i5q14k-MuiDayCalendar-header span{
-  font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px); 
+  font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px); 
   color: #2A2B2A;
   font-weight: 500;
   width: clamp(16px, calc(1.6vw + 0.1rem), 80px);
@@ -92,7 +92,7 @@ img{
 }
 .css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root{
   color: #BDBDBD;
-  font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+  font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 100px);
   font-weight: 500;
   width: clamp(16px, calc(1.5vw + 0.1rem), 80px);
   height: clamp(16px, calc(1.5vw + 0.1rem), 80px);
