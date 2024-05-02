@@ -1,28 +1,32 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './CustomSelectInput.module.css'
+import { useRouter } from 'next/navigation';
 
-interface Iprops{
-    label? : string
-    options : string[] | number[],
-    setSelected ? : any
+interface Iprops {
+    label?: string | number,
+    options: string[] | number[],
 }
 
-const CustomSelectInput = (props:Iprops) => {
+const CustomSelectInput = (props: Iprops) => {
 
     const [isActive, setIsActive] = useState(false);
-    const [selected, setIsSelected] = useState(props.label? props.label : props.options[1]);
+    const [selected, setIsSelected] = useState(props.label ? props.label : props.options[1]);
+    const router = useRouter();
 
-    useEffect(()=>{
-        props.setSelected(selected)
-            
-    },[selected])
 
-    const handleSelectedItem = (e:any)=>{
+
+    const handleSelectedItem = (e: any) => {
         console.log(e.innerText);
-        setIsSelected(e.innerText)
+        setIsSelected(e.innerText);
+        setIsActive(false)
     }
 
+    useEffect(()=>{
+        if (selected == "Movie Myth") {
+            router.push('/content-creator/create/movie-myth/uploud-movie')
+        }
+    },[selected])
 
 
     return (
@@ -42,19 +46,20 @@ const CustomSelectInput = (props:Iprops) => {
                 className={styles.dropdown_content}
                 style={{ display: isActive ? "block" : "none" }}
             >
-                { props.options.map((ele , idx)=>(
+                {props.options.map((ele, idx) => (
                     <div
-                    onClick={(e) => {
-                        handleSelectedItem(e.target);
-                        setIsActive(!isActive);
-                    }}
-                    className={styles.item}
-                    key={idx}
-                >
-                    {ele}
-                </div>
-                ))  }
-                
+                        onClick={(e) => {
+                            handleSelectedItem(e.target);
+                            setIsActive(!isActive);
+
+                        }}
+                        className={styles.item}
+                        key={idx}
+                    >
+                        {ele}
+                    </div>
+                ))}
+
             </div>
         </div>
     )

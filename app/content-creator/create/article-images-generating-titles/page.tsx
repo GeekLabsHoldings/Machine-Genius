@@ -35,7 +35,7 @@ const ImagesForGeneratingTitles = () => {
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Title</h5>
             <div className={styles.generatingInput}>
-            <input type="text" placeholder="Canada Hates People" />
+            <input type="text" placeholder="Canada Loves People" />
             </div>
          
           </div>

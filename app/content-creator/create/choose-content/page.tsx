@@ -24,12 +24,10 @@ const ChooseContent = () => {
   }
 
     const options = [
-        "PST",
-        "Street Politics",
-        "Movie Myth",
-        "Investorcracy",
-        "Mega Projects",
-        "PST Canada"
+        "Script",
+        "Article",
+        "Documentary",
+        "Trends Article"
       ]
 
 

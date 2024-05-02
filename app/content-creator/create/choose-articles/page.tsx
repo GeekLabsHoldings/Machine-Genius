@@ -7,7 +7,7 @@ const chooseArticles = () => {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="flex justify-center items-start py-[2vw] h-full gap-[2rem]">
+            <div className="flex justify-center items-start py-[2vw] h-[89%] gap-[2rem]">
                 <div className={styles.scripts_wrapper + ' w-1/2'}>
                     <div className={styles.header}>
                         <h6>Scripts</h6>
@@ -34,7 +34,7 @@ const chooseArticles = () => {
                                 <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
                             </filter>
                         </defs>
-                    </svg>} title='Canada Hates People' date='April 16th 2024' >
+                    </svg>} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
@@ -55,7 +55,7 @@ const chooseArticles = () => {
                                 <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
                             </filter>
                         </defs>
-                    </svg>} title='Canada Hates People' date='April 16th 2024' >
+                    </svg>} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
@@ -75,7 +75,7 @@ const chooseArticles = () => {
                                 <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
                             </filter>
                         </defs>
-                    </svg>} title='Canada Hates People' date='April 16th 2024' >
+                    </svg>} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
@@ -95,7 +95,7 @@ const chooseArticles = () => {
                                 <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
                             </filter>
                         </defs>
-                    </svg>} title='Canada Hates People' date='April 16th 2024' >
+                    </svg>} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
@@ -106,7 +106,7 @@ const chooseArticles = () => {
                         <h6>Preview</h6>
                     </div>
                     <div className={styles.selected_article_container}>
-                        <h6>Canada Hates People</h6>
+                        <h6>Canada Loves People</h6>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae labore recusandae tempora eveniet eius, veritatis corporis hic itaque doloribus nemo expedita excepturi nesciunt laborum accusamus perspiciatis, asperiores ipsam officia?</p>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae labore recusandae tempora eveniet eius, veritatis corporis hic itaque doloribus nemo expedita excepturi nesciunt laborum accusamus perspiciatis, asperiores ipsam officia?</p>

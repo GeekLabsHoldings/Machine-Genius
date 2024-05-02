@@ -1,3 +1,17 @@
+@font-face {
+    font-family: 'CustomFont';
+    src: url('../../public/fonts/LTSaeada-Bold.otf') format('woff2'),
+         url('../../public/fonts/LTSaeada-Black.otf') format('woff2'),
+         url('../../public/fonts/LTSaeada-ExtraBold.otf') format('woff2'),
+         url('../../public/fonts/LTSaeada-SemiBold.otf') format('woff2'),
+
+    /* Add additional font formats if necessary */
+    /* Specify the correct path to the font files */
+  }
+
+
+
+
 .welcomePart{
     display: flex;
     align-items: center;
@@ -23,7 +37,10 @@
     font-size: clamp(32px, calc(3vw + 0.1rem),800px);
     font-style: normal;
     font-weight: 700;
+    padding-bottom: clamp(6px, calc(0.3vw + 0.1rem),800px);
     margin-bottom: clamp(6px, calc(0.3vw + 0.1rem),800px);
+    font-family: 'CustomFont', sans-serif;
+    
 }
 
 .welcomePart h1::after{
@@ -35,7 +52,7 @@
     left: 50%;
     transform:  translateX(-50%);
     background-color: var(--white);
-    transition: all 1s 0s ease-in-out;
+    transition: all 1s 0s ease-in-out ;
 }
 
 .welcomePart img{
@@ -64,7 +81,7 @@
 
 .welcomePart a{
     opacity: 0;
-    transition: opacity 0.5s 2.3s , background-color 0.3s 0s ;
+    transition: opacity 0.5s 2s , background-color 0.3s 0s ;
 }
 .welcomePart.startAnimation a{
     opacity: 1;
@@ -111,12 +128,13 @@
     width: clamp(2rem, calc(2.5vw + 0.1rem) , 800px );
     transition: transform 0.8s;
     position: relative;
-    z-index: 999999999;
+    z-index: 99;
 }
 
 .signin_wrapper .logo_title h3{
     font-size: clamp(1rem, calc(2.5vw + 0.1rem) , 800px );
     font-weight: 700;
+    font-family: 'CustomFont', sans-serif;
 }
 
 .signin_wrapper .form_group input{
@@ -126,6 +144,7 @@
     padding: clamp(0.5rem, calc(0.5vw + 0.1rem) , 800px ) 0;
     font-size: clamp(1rem, calc(1vw + 0.1rem) , 800px );
     width: clamp(300px , calc( 20vw + 0.1rem ) , 2000px);
+    background-color: var(--white);
 }
 
 .signin_wrapper .form_group{
@@ -138,4 +157,38 @@
 
 .signin_wrapper a{
     margin-top: clamp(30px, calc( 1.5vw + 0.1rem ) ,400px);
+}
+
+
+/* =========================================== */
+
+.hi_message{
+    visibility: hidden;
+    display: flex;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%) scale(0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: opacity 1s 0.5s , transform 1s 0.5s;
+}
+
+.hi_message h2{
+    font-size: clamp(30px, calc( 2.8vw + 0.1rem ) ,800px);
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: clamp(25px, calc( 2vw + 0.1rem ) ,800px);
+    text-align: center;
+    font-family: 'CustomFont', sans-serif;
+
+}
+
+.hi_message.show{
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50% , -50%) scale(1);
 }
