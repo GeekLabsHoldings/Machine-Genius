@@ -17,18 +17,18 @@ const GeneratedTitles = () => {
                     <CustomBtn word="Re-Generate" btnColor="black" href="/content-creator/generated-titles" icon={ReGenerateIcon}/>
                 </div>
                 <div className={styles.titles_container + " h-full space-y-[1vw]"}>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
-                    <TitleCheckWithLock title='Canada Hates People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
+                    <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
                 </div>
             </div>
             <div className={styles.add_title_wrapper + ' w-1/2 h-full flex flex-col items-center justify-center'}>

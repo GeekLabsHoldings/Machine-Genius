@@ -43,22 +43,22 @@ const ShowErrors = () => {
                                 <h6>(3)</h6>
                             </div>
                             <div className={styles.select_article_container}>
-                                <ErrorCollapse title='Canada Hates People' >
+                                <ErrorCollapse title='Canada Loves People' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
-                                <ErrorCollapse title='Canada Hates People' >
+                                <ErrorCollapse title='Canada Loves People' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
-                                <ErrorCollapse title='Canada Hates People' >
+                                <ErrorCollapse title='Canada Loves People' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
-                                <ErrorCollapse title='Canada Hates People' >
+                                <ErrorCollapse title='Canada Loves People' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
-                                <ErrorCollapse title='Canada Hates People' >
+                                <ErrorCollapse title='Canada Loves People' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
-                                <ErrorCollapse title='Canada Hates People' >
+                                <ErrorCollapse title='Canada Loves People' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
                             </div>

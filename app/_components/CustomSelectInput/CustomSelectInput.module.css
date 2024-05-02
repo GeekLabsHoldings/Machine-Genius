@@ -12,22 +12,58 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: clamp(7px, calc(0.4vw + 0.1rem), 200px) clamp(20px, calc(1.6vw + 0.1rem), 200px);
+    justify-content: start;
+    padding: clamp(7px, calc(0.4vw + 0.1rem), 200px) clamp(20px, calc(1.2vw + 0.1rem), 200px);
     background: var(--white);
-    border: 1px solid #000000;
+    border: 1px solid var(--dark);
     border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
-    color: #000;
+    color: var(--dark);
     font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
     font-weight: 400;
+    gap: clamp(0.5rem, calc(1.5vw + 0.1rem), 1000px);
+    position: relative;
+}
+
+.dropdown.dark .dropdown_btn{
+    padding: 0 clamp(8px, calc(0.5vw + 0.1rem), 1000px);
+    background-color: var(--dark);
+    color: var(--white);
+    font-weight: 500;
 }
 
 .dropdown .dropdown_btn svg{
-    width: clamp(18px, calc(0.8vw + 0.1rem), 100px);
+    width: clamp(15px, calc(1.1vw + 0.1rem), 1000px);
 }
-.dropdown .dropdown_btn.open svg{
-    transform: rotateX(180deg);
+
+.dropdown .dropdown_btn .toggleIcon{
+    width: clamp(14px, calc(1vw + 0.1rem), 100px);
+    position: absolute;
+    right: clamp(20px, calc(1.2vw + 0.1rem), 200px);
+    top: 50%;
+    transform: translateY(-50%);
 }
+
+.dropdown.dark .dropdown_btn .toggleIcon{
+    width: clamp(14px, calc(0.8vw + 0.1rem), 100px);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.dropdown.onClose .dropdown_btn{
+    justify-content: center;
+}
+.dropdown.onClose .dropdown_btn .toggleIcon , .dropdown.onClose .dropdown_btn span{
+    display: none;
+}
+.dropdown .dropdown_btn.open .toggleIcon{
+    transform: translateY(-50%) rotateX(180deg);
+}
+
+.dropdown.dark .dropdown_btn svg path{
+    fill: var(--white);
+}
+
 
 .dropdown_content {
     position: absolute;
@@ -53,6 +89,11 @@
     font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
 }
 
+.dropdown.onClose .dropdown_content .item {
+    padding: clamp(0.4rem, calc(0.4vw + 0.1rem), 500px);
+    text-align: center;
+    font-size: clamp(0.6rem, calc(0.7vw + 0.1rem), 1000px);
+}
 .dropdown_content .item:hover {
     background-color: var(--orange);
     color: var(--white);

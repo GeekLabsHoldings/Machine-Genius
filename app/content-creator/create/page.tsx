@@ -1,15 +1,12 @@
+
 import CustomSelectInput from "../../_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "../../_components/Button/CustomBtn";
 import styles from "./Create.module.css";
 
 const options = [
-  "PST",
-  "Street Politics",
-  "Movie Myth",
-  "Investorcracy",
-  "Mega Projects",
-  "PST Canada",
-];
+  "Script",
+  "Article"
+]
 
 const Create = () => {
   return (

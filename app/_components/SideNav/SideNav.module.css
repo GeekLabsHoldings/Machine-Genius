@@ -24,6 +24,7 @@
 
 .side_Nav .avatar_logo{
     width: 100%;
+
 }
 
 .side_Nav .user_info .avatar {
@@ -54,6 +55,7 @@
     font-style: normal;
     font-weight: 700;
     visibility: visible;
+    text-wrap: nowrap;
     transition: all 0.5s 0.3s;
 }
 
@@ -62,6 +64,7 @@
     color: #828282;
     font-weight: 400;
     visibility: visible;
+    text-wrap: nowrap;
     transition: all 0.1s 0.3s;
 }
 

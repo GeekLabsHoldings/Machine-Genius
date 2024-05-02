@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["video.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["video.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/_components/CustomSelectInput/CustomSelectInput.tsx"],
   "exclude": ["node_modules"]
 }

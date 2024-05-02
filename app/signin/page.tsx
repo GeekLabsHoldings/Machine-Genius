@@ -11,24 +11,28 @@ const SignIn = () => {
 
     const [StartAnimation, setStartAnimation] = useState(false)
     const [ShowSignInForm, setShowSignInForm] = useState(false)
+    const [ShowWelcomeMesage, setShowWelcomeMesage] = useState(false)
+
     const router = useRouter()
-    
+
 
     const handleLogin = () => {
-        let logInLogo:any = document.querySelector('.signin-wrapper img')
-        logInLogo.style.transform = 'scale(150)'
+        let logInLogo: any = document.querySelector('.signin-wrapper img')
+        logInLogo.style.transform = 'scale(150)';
+        setShowWelcomeMesage(true)
 
-        setTimeout(() => {
-            // Your action here
-            router.push('/content-creator/dashboard')
-      
-          }, 500); // 3000 milliseconds = 3 seconds
-        
+
+        // setTimeout(() => {
+        //     // Your action here
+        //     router.push('')
+
+        // }, 500); // 3000 milliseconds = 3 seconds
+
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setStartAnimation(true)
-    },[])
+    }, [])
 
 
     return (
@@ -57,8 +61,16 @@ const SignIn = () => {
                     <input type="password" name='email' placeholder='Password' />
                 </div>
 
-                <CustomBtn word='Sign In' btnColor='black' onClick={handleLogin}/>
+                <CustomBtn word='Sign In' btnColor='black' onClick={handleLogin} />
 
+            </div>
+
+            <div className={ `${styles.hi_message} ${ShowWelcomeMesage ? styles.show :''}`}>
+                <h2>
+                    Hi Mostafa, <br/>
+                    Let’s have a productive day!
+                </h2>
+                <CustomBtn btnColor='black' word='Dashboard' href='/content-creator/dashboard' />
             </div>
         </div>
     )
