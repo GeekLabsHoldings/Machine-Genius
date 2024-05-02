@@ -3,6 +3,9 @@ import styles from './dashboard.module.css';
 import { TasksInDashboard } from '@/app/_data/data';
 import { SimplePagination } from '@/app/_components/Pagination/pagination';
 import EmblaCarousel from '@/app/_components/EmploymentCarousel/EmploymentCarousel';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 
 const Dashboard = () => {
@@ -66,7 +69,7 @@ const Dashboard = () => {
             </div>
         </div>
         <h3>Up Coming Events</h3>
-        <div>
+        <div className='flex'>
           <div className={`${styles.events} w-1/3 ps-[0.4vw] h-[20vh]`}>
             <div>
             <h5>This Week</h5>
@@ -79,6 +82,11 @@ const Dashboard = () => {
             <p>Sham El Neseem</p>
             </div>
           </div>
+        </div>
+        <div className='w-2/3'>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateCalendar />
+            </LocalizationProvider>
         </div>
       </div>
 
