@@ -1,0 +1,43 @@
+.videoDatabase{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+    overflow: hidden;
+   padding: clamp(5px, calc( 0.3vw + 0.1rem), 60px);
+}
+.videoWrapper{
+    overflow-y: auto;
+}
+  /* Track */
+  .videoWrapper::-webkit-scrollbar-track {
+    background: transparent; 
+}
+  /* Handle */
+  .videoWrapper::-webkit-scrollbar-thumb {
+    background: #2A2B2A; 
+    width: clamp(2px, calc( 0.08vw + 0.1rem), 40px);
+    border-radius: 10vw ;
+}
+.tableBody{
+    padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(10px, calc( 0.5vw + 0.1rem), 60px) !important;
+}
+.tableHeader{
+    border-bottom: 1px solid #2A2B2A;
+}
+.tableHeader li{
+    text-align: center;
+    font-weight: 700;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
+}
+.tableBody li{
+    text-align: center;
+    font-weight: 500;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
+
+}
+.tableBody li span{
+    padding: 0.1vw 0.3vw;
+    border-radius: 0.1vw;
+    font-weight: 500;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
+}

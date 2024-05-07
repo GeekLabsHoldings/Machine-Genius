@@ -30,7 +30,6 @@
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
     font-weight: 700;
 }
-
 .changeOrder{
     width: 100%;
     cursor: pointer;
@@ -66,16 +65,11 @@
     align-items: center;
     padding: 0.2vh 0;
 }
-.tableBody li ul{
-    text-align: center;
-}
-.tableBody li ,.tableBody li ul , .tableBody li div h6 ,.tableBody li a ,.tableBody li span{
+
+.tableBody li , .tableBody li div h6 ,.tableBody li a ,.tableBody li span{
     transition: 0.1s;
 }
-.borderBottom:not(:last-child) {
-    border-bottom: 1px solid #2A2B2A4A;
-    
-}
+
 .viewsDiv{
     display: flex;
     justify-content: center;

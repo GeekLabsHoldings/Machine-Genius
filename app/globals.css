@@ -157,3 +157,6 @@ img{
   justify-content: center;
   align-items: center;
 }
+.borderBottom:not(:last-child) {
+  border-bottom: 1px solid #2A2B2A4A;
+}

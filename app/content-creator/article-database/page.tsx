@@ -8,7 +8,6 @@ import {
   ContentTypeFilter,
   YourArticles,
 } from "@/app/_data/data";
-// import { useState } from "react";
 import $ from 'jquery'
 
 const ArticleDatabase = () => {
@@ -27,7 +26,7 @@ const ArticleDatabase = () => {
   const renderYourArticles = YourArticles.map((oneArticle , idx) => (
     <ul
     key={idx}
-      className = { `${styles.tableBody} ${styles.borderBottom} articleRow ` } 
+      className = { `${styles.tableBody} borderBottom articleRow ` } 
       onClick={(e)=>{handleSelectedBg(e)}}
     >
       <li className="w-[2%]">{oneArticle.id}</li>

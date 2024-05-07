@@ -1,5 +1,6 @@
 import {
   IArticle,
+  IAssignedVideos,
   ICommentData,
   ITasks,
   ITranscriptData,
@@ -246,6 +247,113 @@ export const YourArticles:IyourArticle[] =[
     date:'12 March  2024',
     editBtn:'Edit'
   },
+]
+
+export const VideoDatabase:IAssignedVideos[] = [
+  {
+    id:1,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Sherry',
+    videoStatus:'Convert Audio'
+
+  },
+  {
+    id:2,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Kamel',
+    videoStatus:'Convert Audio'
+
+  },
+  {
+    id:3,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Yara',
+    videoStatus:'Convert Audio'
+
+  },
+  {
+    id:4,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Sherry',
+    videoStatus:'Continue'
+
+  },
+  {
+    id:5,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Yara',
+    videoStatus:'Continue'
+
+  },
+  {
+    id:6,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Manar',
+    videoStatus:'Continue'
+
+  },
+  {
+    id:7,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Sherry',
+    videoStatus:'Convert Audio'
+
+  },
+  {
+    id:8,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Yara',
+    videoStatus:'Convert Audio'
+
+  },
+  {
+    id:9,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Sherry',
+    videoStatus:'Continue'
+
+  },
+  {
+    id:10,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Manar',
+    videoStatus:'Continue'
+
+  },
+  {
+    id:11,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Sherry',
+    videoStatus:'Convert Audio'
+
+  },
+  {
+    id:12,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Kamel',
+    videoStatus:'Convert Audio'
+
+  },
+  {
+    id:13,
+    title:'Pacific Allies ABANDON USA For China!',
+    date:'12 March  2024',
+    assignedTo: 'Manar',
+    videoStatus:'Convert Audio'
+
+  }
 ]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
 export const ContentType:TContentType[] =["Script" , "Article"]

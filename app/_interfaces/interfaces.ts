@@ -48,6 +48,15 @@ export interface ITasks{
     tasks:TBrands[]
 }
 
+export interface IAssignedVideos {
+    id:number,
+    title:string,
+    date: string,
+    assignedTo : TCompanyEmployees,
+    videoStatus : 'Convert Audio' | 'Continue'
+}
+
+export type TCompanyEmployees = 'Sherry' | 'Yara' | 'Kamel' | 'Manar'
 export type TasksType = 'Assigned' | 'Inprogress' | 'Tasks Done'
 export type TBrands = 'PST USA' | 'PST Asia' | 'Investocracy' | 'Street Politics' | 'Canada'
 export type TContentType = 'Script' | 'Article'
