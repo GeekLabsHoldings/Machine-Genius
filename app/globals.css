@@ -85,13 +85,16 @@ img{
 }
 .css-i5q14k-MuiDayCalendar-header span{
   font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px); 
+  font-family: "DM Sans", sans-serif;
   color: #2A2B2A;
   font-weight: 500;
   width: clamp(16px, calc(1.6vw + 0.1rem), 80px);
   height: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  font-weight: 700;
 }
 .css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root{
-  color: #BDBDBD;
+  color:  #ACACAC;
+  font-family: "DM Sans", sans-serif;
   font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 100px);
   font-weight: 500;
   width: clamp(16px, calc(1.5vw + 0.1rem), 80px);
@@ -117,6 +120,7 @@ img{
 .css-dplwbx-MuiPickersCalendarHeader-label{
   font-size: clamp(10px, calc(0.8vw + 0.1rem), 60px);
   font-weight: 700;
+  font-family: "DM Sans", sans-serif;
 }
 .css-1nkg345-MuiButtonBase-root-MuiIconButton-root-MuiPickersArrowSwitcher-button, .css-kg9q0s-MuiButtonBase-root-MuiIconButton-root-MuiPickersArrowSwitcher-button{
   background-color: var(--dark);
