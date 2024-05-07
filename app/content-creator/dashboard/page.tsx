@@ -14,7 +14,7 @@ const Dashboard = () => {
   const OPTIONS: EmblaOptionsType = { axis: "y", loop: true };
   
   const renderTasksSec = TasksInDashboard.map((tasks,idx)=>(
-    <div className={`${styles.rightBorder} w-1/3 my-[0.7vw] text-center px-[0.75vw] flex flex-col gap-[0.8vw] `} key={idx}>
+    <div className={`${styles.rightBorder} w-1/3 my-[0.7vw] text-center px-[0.75vw] flex flex-col gap-[0.8vw]`} key={idx}>
     <h5 className={`${styles.bottomBorder} pb-[0.7vw] `}>{tasks.taskType} </h5>
     <div className='flex flex-col gap-[0.25vw] items-center'>
     {
@@ -39,6 +39,7 @@ const Dashboard = () => {
     </div>
 
   ))
+
   return (
     <div className={`${styles.dashboard} flex h-full w-full pt-[0.75vw] gap-[2vw]`}>
       <div className={`${styles.movedChat} flex justify-end `}>
@@ -60,6 +61,7 @@ const Dashboard = () => {
         </div>
 
         <div className={`${styles.box} flex h-[20vh]`}>{renderTasksSec}</div>
+
         <div className="flex justify-between items-center">
           <h3>Announcements</h3>
           <SimplePagination />
@@ -385,7 +387,6 @@ const Dashboard = () => {
               />
             </svg>
             <div className={`${styles.movedQuestion}`}>
-              {/* <p>?</p> */}
               <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"  
               viewBox="0 0 512 512">
             <g>

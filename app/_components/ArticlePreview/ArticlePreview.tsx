@@ -62,8 +62,8 @@ const ArticlePreview = ({ withEdit, beginSelect, height, yourNewArticle }: IArti
 
   return (
 
-    <div className={` ${styles.articlePreview} ${height}`}>
-      <div className={`${styles.articlePreviewData}`}>
+    <div className={` ${styles.articlePreview} ${height} `}>
+      <div className={`${styles.articlePreviewData} `}>
         {renderArticleTitle}
         {yourNewArticle ? <div className={`${styles.articleContent} `}> {renderWantedParts} </div> : <div>{renderArticleData}</div>}
 

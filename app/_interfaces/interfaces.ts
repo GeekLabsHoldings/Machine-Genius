@@ -36,7 +36,7 @@ export interface IyourArticle{
     id:number,
     articleName:string,
     brand: TBrands,
-    contentType: TContentType[],
+    contentType: TContentType,
     views:string,
     approvals: TApproval,
     date:string,
