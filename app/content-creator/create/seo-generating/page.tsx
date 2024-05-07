@@ -132,9 +132,9 @@ const SEOGenerating = () => {
           href={"/content-creator/create/choose-articles"}
         />
         <CustomBtn
-          word={"Schedule"}
+          word={"Next"}
           btnColor="black"
-          href={"/content-creator/create/schedule-script"}
+          href={"/content-creator/create/make-article-style"}
         />
       </div>
     </div>

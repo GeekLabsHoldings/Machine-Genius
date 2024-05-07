@@ -135,6 +135,7 @@
     font-size: clamp(1rem, calc(2.5vw + 0.1rem) , 800px );
     font-weight: 700;
     font-family: 'CustomFont', sans-serif;
+    color: var(--dark);
 }
 
 .signin_wrapper .form_group input{

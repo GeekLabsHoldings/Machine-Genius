@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './SideNav.module.css'
 import logo_image from '../../../public/assets/logo.svg'
 import logo_white_image from '../../../public/assets/logo white.svg'
@@ -56,8 +56,12 @@ const sideNavLinks = [
     }
 ]
 
-const SideNav = ({ isSideNavOpen, setIsSideNavOpen }: { isSideNavOpen: boolean, setIsSideNavOpen: any }) => {
+const SideNav = ({ isSideNavOpen, setIsSideNavOpen , CurrentPage ,setCurrentPage }: { isSideNavOpen: boolean, setIsSideNavOpen: any ,CurrentPage: string, setCurrentPage: any }) => {
 
+
+    const handleCurrentPageTitle = (name:string)=>{
+            setCurrentPage(name)
+    }
 
     return (
         <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)} onMouseLeave={() => setIsSideNavOpen(!isSideNavOpen)} >
@@ -85,7 +89,7 @@ const SideNav = ({ isSideNavOpen, setIsSideNavOpen }: { isSideNavOpen: boolean, 
                 <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
                     {sideNavLinks.map(ele => (
                         <li key={ele.name}>
-                            <Link href={ele.path} >
+                            <Link href={ele.path} onClick={()=>handleCurrentPageTitle(ele.name)}>
                                 {ele.icon}
                                 <p>{ele.name}</p>
                             </Link>
