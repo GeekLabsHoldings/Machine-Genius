@@ -10,22 +10,26 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--dark);
+    border: 1px solid var(--dark);
+    background: var(--white);
     padding: clamp(8px, calc(0.8vw + 0.1rem), 1000px) clamp(10px, calc(1.4vw + 0.1rem), 600px);
     border-radius: clamp(0.625rem, calc(0.5vw + 0.1rem), 1000px);
     cursor: pointer;
+    position: relative;
+    z-index: 2;
+    transition: none;
 }
 
 .topic_collapse .collapse_header h6 {
     font-size: clamp(10px, calc(1vw + 0.1rem), 1000px);
     font-weight: 700;
-    color: var(--white);
+    color: var(--dark);
 }
 
 .topic_collapse .collapse_header p {
     font-size: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
     font-weight: 300;
-    color: var(--white);
+    color: var(--dark);
     margin-top: clamp(4px, calc(0.2vw + 0.1rem), 100px);
 }
 
@@ -50,4 +54,25 @@
 
 .topic_collapse.open .collapse_body {
     display: block;
+}
+
+.topic_collapse.open .collapse_header {
+    background: var(--dark);
+}
+
+
+.topic_collapse.open .collapse_header h6 {
+    color: var(--white);
+}
+
+.topic_collapse.open .collapse_header p {
+    color: var(--white);
+}
+
+.topic_collapse .collapse_header:hover {
+    border: 2px solid var(--dark);
+}
+
+.topic_collapse.open .collapse_header:hover {
+    border: 1px solid var(--dark);
 }

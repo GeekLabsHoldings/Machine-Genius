@@ -1,5 +1,6 @@
 .topic_collapse {
     margin-bottom: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+    position: relative;
 }
 
 .topic_collapse:last-child {
@@ -10,30 +11,34 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--dark);
+    background: var(--white);
+    border: 1px solid var(--dark);
     padding: clamp(8px, calc(0.5vw + 0.1rem), 1000px) clamp(10px, calc(1.4vw + 0.1rem), 600px);
     border-radius: clamp(0.625rem, calc(0.5vw + 0.1rem), 1000px);
     cursor: pointer;
+    transition: none;
 }
 
 .topic_collapse .collapse_header h6 {
     font-size: clamp(10px, calc(1vw + 0.1rem), 1000px);
     font-weight: 700;
-    color: var(--white);
+    color: var(--dark);
     margin-bottom: clamp(4px, calc(0.2vw + 0.1rem), 100px);
 }
 
 .topic_collapse .collapse_header p {
     font-size: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
     font-weight: 300;
-    color: var(--white);
+    color: var(--dark);
 }
 
-.topic_collapse .collapse_header label.toggle_fav {
-    position: relative;
+.topic_collapse label.toggle_fav {
+    position: absolute;
+    right: clamp(10px, calc(1.4vw + 0.1rem), 600px);
+    top: clamp(10px, calc(1.1vw + 0.1rem), 1000px);
 }
 
-.topic_collapse .collapse_header label.toggle_fav input {
+.topic_collapse label.toggle_fav input {
     position: absolute;
     top: 0;
     left: 0;
@@ -43,16 +48,16 @@
     opacity: 0;
 }
 
-.topic_collapse .collapse_header label.toggle_fav svg {
+.topic_collapse label.toggle_fav svg {
     width: clamp(10px, calc(1.5vw + 0.1rem), 600px);
     height: clamp(10px, calc(1.5vw + 0.1rem), 600px);
 }
 
-.topic_collapse .collapse_header label.toggle_fav svg path {
+.topic_collapse label.toggle_fav svg path {
     fill: var(--white);
 }
 
-.topic_collapse .collapse_header label.toggle_fav input:checked+svg path {
+.topic_collapse label.toggle_fav input:checked+svg path {
     fill: var(--orange);
 }
 
@@ -76,6 +81,18 @@
 .topic_collapse.open .collapse_body {
     display: block;
 }
+
+.topic_collapse.open .collapse_header {
+    background: var(--dark);
+}
+
+.topic_collapse.open .collapse_header h6 {
+    color: var(--white);
+}
+
+.topic_collapse.open .collapse_header p {
+    color: var(--white);
+}
 .separator{
     padding-bottom: clamp(4px, calc(0.4vw + 0.1rem), 100px); 
     margin-bottom: clamp(4px, calc(0.4vw + 0.1rem), 100px);
@@ -89,4 +106,15 @@
 }
 .awayStatus svg circle {
     fill: #E1C655;
+}
+
+
+
+.topic_collapse .collapse_header:hover {
+    border: 2px solid var(--dark) 
+}
+
+
+.topic_collapse.open .collapse_header:hover {
+    border: 1px solid var(--dark) 
 }

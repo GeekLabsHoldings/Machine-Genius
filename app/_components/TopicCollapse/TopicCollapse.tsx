@@ -24,6 +24,11 @@ const TopicColapse = (props: IProps) => {
     
     return (
         <div className={`${styles.topic_collapse} topic_collapse ${isCollapseOpen ? styles.open : ''}`}>
+            {/* the icon of check box button related to page and it enables you to put the article title in loved articles or put the comment to comments taken into consideration  */}
+            <label htmlFor='toggle-fav' className={`${styles.toggle_fav} toggle_fav`}>
+                    <input type="checkbox" name="toggle-fav" id="toggle-fav" />
+                    {props.svgBtn}
+                </label>
             <div className={`${styles.collapse_header}  collapse_header`} onClick={()=>setIsCollapseOpen(!isCollapseOpen)}>
                 <div>
                     {/* the title part is apparent by default */}
@@ -39,11 +44,7 @@ const TopicColapse = (props: IProps) => {
                         {/* if you need the date of comment or article */}
                     {props.date && <p>{props.date}</p> }
                 </div>
-                {/* the icon of check box button related to page and it enables you to put the article title in loved articles or put the comment to comments taken into consideration  */}
-                <label htmlFor='toggle-fav' className={`${styles.toggle_fav} toggle_fav`}>
-                    <input type="checkbox" name="toggle-fav" id="toggle-fav" />
-                    {props.svgBtn}
-                </label>
+                
             </div>
             {/* this part appears when click on title and expand */}
             <div className={props.replyTxt ? `${styles.collapse_body } flex flex-col gap-[0.4vw]` : styles.collapse_body } >

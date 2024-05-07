@@ -39,7 +39,7 @@ const GeneratedTitles = () => {
 
         <div className="flex justify-between">
             <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/generating-titles"} />
-            <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/article-images-generating-titles"} />
+            <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/seo-generating"} />
         </div>
     </div>
   )
