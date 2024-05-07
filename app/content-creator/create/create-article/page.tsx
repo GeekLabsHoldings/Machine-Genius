@@ -70,12 +70,12 @@ const CreateArticle = () => {
 
   return (
 
-    <div className="flex flex-col h-full">
-      {IsLoading ? <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] py-[2vw] m-auto h-full">
+    <div className="flex flex-col">
+      {IsLoading ? <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
         <LogoAndTitle needTxt={true} textNeeded='Hold on tight.' title='Genius is working on your article..' />
       </div>
-        : <div className="flex flex-col justify-center items-center m-auto h-full" >
-          <div className="flex justify-between h-[95%] gap-[2vw]">
+        : <div className="flex flex-col justify-center items-center h-[75vh] py-[1.5vw]" >
+          <div className="flex justify-between gap-[2vw] h-full">
             <div className="w-7/12 flex flex-col gap-[2vw]">
               <div className={`${styles.articlesToSelect}`}>
                 <h3>Articles</h3>

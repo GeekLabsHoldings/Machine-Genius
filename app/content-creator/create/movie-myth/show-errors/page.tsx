@@ -31,9 +31,9 @@ const ShowErrors = () => {
     return (
         <>
 
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col ">
 
-                    <div className="flex justify-center items-start py-[2vw] h-[78vh] gap-[2rem]">
+                    <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
                         <div className={'w-3/5 h-full'}>
                             <ArticlePreview yourNewArticle={true} height="h-full" withEdit={true} />
                         </div>

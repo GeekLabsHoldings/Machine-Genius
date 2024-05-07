@@ -105,8 +105,8 @@ const MakeArticleStyle = () => {
 
 
     return (
-        <div className="flex flex-col h-full">
-            {IsLoading ? <div className="flex flex-col justify-center items-center mx-auto h-full py-[1.4vw]" >
+        <div className="flex flex-col">
+            {IsLoading ? <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]" >
                 <div className={`${styles.genuisWorking} m-auto`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
                     <div className={`${styles.allCheckers} w-full`}>
@@ -116,7 +116,7 @@ const MakeArticleStyle = () => {
                     </div>
                 </div>
             </div> : <>
-                <div className="flex justify-center py-[2vw] h-[90%] gap-[2vw]">
+                <div className="flex justify-center h-[75vh] py-[1.5vw] gap-[2vw]">
                     <div className={styles.article_wrapper + ' w-2/3 h-full'}>
                         <div className={styles.header}>
                             <h6>Article Preview</h6>

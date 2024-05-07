@@ -7,11 +7,11 @@ import { useRouter } from 'next/navigation'
 
 const ChooseBrand = () => {
 
-  const [SelectedValue, setSelectedValue] = useState<string | number>()
+  const [SelectedValue, setSelectedValue] = useState<string|number>('')
 
-  // const handleBrandName = (value:string|number)=>{
-  //   setSelectedValue(value)
-  // }
+  const handleBrandName = (value:string|number)=>{
+    setSelectedValue(value)
+  }
   
   const router = useRouter()
 
@@ -26,15 +26,15 @@ const ChooseBrand = () => {
 
 
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   console.log(SelectedValue);
+    console.log(SelectedValue);
 
-  //   if (SelectedValue === 'Movie Myth') {
-  //     router.push('/content-creator/create/movie-myth/uploud-movie')
-  //   }
+    if (SelectedValue === 'Movie Myth') {
+      router.push('/content-creator/create/movie-myth/uploud-movie')
+    }
 
-  // }, [SelectedValue])
+  }, [SelectedValue])
 
 
 
@@ -43,9 +43,9 @@ const ChooseBrand = () => {
   return (
     <div className="flex flex-col h-full">
 
-      <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] py-[2vw] m-auto h-full ">
+      <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw] ">
         <label className={styles.select_label}>For This Brand</label>
-        <CustomSelectInput label="Select Content Type" options={options}  />
+        <CustomSelectInput label="Select Content Type" options={options} handleBrandName={handleBrandName} />
       </div>
 
 

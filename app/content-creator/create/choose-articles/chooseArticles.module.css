@@ -22,7 +22,7 @@
     border: 1px solid transparent;
     border-radius: clamp(10px,  calc( 1.4vw + 0.1rem ) , 1000px);
     padding: clamp(10px,  calc( 1.4vw + 0.1rem ) , 1000px);
-    height: 90%;
+    height: 100%;
     overflow-y: auto;
 }
 

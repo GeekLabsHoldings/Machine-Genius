@@ -32,7 +32,7 @@ const ShowErrors = () => {
         <>
 
             <div className="flex flex-col h-full">
-                {IsLoading ? <div className="flex flex-col justify-center items-center m-auto h-full py-[1.4vw]" >
+                {IsLoading ? <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.5vw]" >
                     <div className={`${styles.genuisWorking} m-auto`}>
                         <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
                         <div className={`${styles.allCheckers} w-full`}>
@@ -43,7 +43,7 @@ const ShowErrors = () => {
                         <CustomBtn word={"Request Approval"} btnColor="black" href="/content-creator/create/script-approved" />
                     </div>
                 </div> : <>
-                    <div className="flex justify-center items-start py-[2vw] h-[78vh] gap-[2rem]">
+                    <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
                         <div className={'w-3/5 h-full'}>
                             <ArticlePreview yourNewArticle={true} height="h-full" withEdit={true} />
                         </div>

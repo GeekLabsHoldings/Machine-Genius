@@ -27,9 +27,9 @@ const FinalArticle = () => {
 
     return (
 
-         <div className="flex flex-col h-full">
+         <div className="flex flex-col">
 
-            { IsLoading ? <div className="flex flex-col justify-center items-center m-auto h-full py-[1.4vw]" >
+            { IsLoading ? <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]" >
                 <div className={`${styles.genuisWorking} m-auto`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
                     <div className={`${styles.allCheckers} w-full`}>
@@ -39,7 +39,7 @@ const FinalArticle = () => {
                     </div>
                     <CustomBtn word={"Results"} btnColor="black" href="/content-creator/create/movie-myth/show-errors" />
                 </div>
-            </div> : <><div className="flex flex-col justify-center items-center m-auto h-full py-[1.4vw] w-11/12 " >
+            </div> : <><div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] w-11/12 " >
                 {/* section to display article */}
                 <div className="w-4/5 mx-auto h-full">
                     <ArticlePreview yourNewArticle={true} height="h-full" withEdit={false} />

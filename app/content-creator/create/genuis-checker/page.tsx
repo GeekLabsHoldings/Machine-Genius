@@ -7,8 +7,8 @@ import CustomBtn from '@/app/_components/Button/CustomBtn';
 // loading page for article ready page to display all the results of checking
 const GenuisChecker = () => {
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex flex-col justify-center items-center m-auto h-full py-[1.4vw]" >
+        <div className="flex flex-col">
+            <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]" >
                 <div className={`${styles.genuisWorking} m-auto`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
                     <div className={`${styles.allCheckers} w-full`}>

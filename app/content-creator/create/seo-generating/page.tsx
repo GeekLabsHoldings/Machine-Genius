@@ -27,7 +27,7 @@ const SEOGenerating = () => {
 
   return (
     <div className="flex flex-col ">
-      <div className="flex justify-center items-start h-[78vh] w-full gap-[10vw] py-[2vw]">
+      <div className="flex justify-center items-start w-full gap-[10vw] h-[75vh] py-[1.5vw]">
         <div className="w-5/12 flex flex-col justify-between gap-[0.5vw] h-full">
 
           <div className={`${styles.yourSEO} pageHeader`}>
@@ -38,7 +38,6 @@ const SEOGenerating = () => {
             <h5>Main Keyword</h5>
             <div className={`${styles.seoGeneratingInput} `}>
               <input type="text" onChange={(e) => { setKeyword(e.target.value); searchForWord() }} />
-
             </div>
           </div>
 

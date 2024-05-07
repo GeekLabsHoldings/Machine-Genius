@@ -32,11 +32,11 @@ const ChooseContent = () => {
 
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
 
-      {IsLoading ?             <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] py-[2vw] m-auto h-full">
+      {IsLoading ?             <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
                 <LogoAndTitle needTxt={true} textNeeded='Hold on tight.' title='Genius is working on your article..'/>
-            </div> : <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] py-[2vw] m-auto h-full ">
+            </div> : <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw]">
         <label className={styles.select_label}>Select Content Type</label>
         <CustomSelectInput label="Select Content Type" options={options}  />
       </div>}
