@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { EmblaOptionsType } from 'embla-carousel'
-import Autoplay from 'embla-carousel-autoplay'
+
 import useEmblaCarousel from 'embla-carousel-react'
 import styles from './newCarousel.module.css'
 
@@ -12,7 +12,7 @@ type PropType = {
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
   const { slides, options } = props
-  const [emblaRef, emblaApi] = useEmblaCarousel(options, [Autoplay()])
+  const [emblaRef, emblaApi] = useEmblaCarousel(options, [])
 
   return (
     <section className={styles.embla}>

@@ -27,12 +27,12 @@ const ArticleDatabase = () => {
   const renderYourArticles = YourArticles.map((oneArticle , idx) => (
     <ul
     key={idx}
-      className = { `${styles.tableBody} ${styles.borderBottom} articleRow` } 
+      className = { `${styles.tableBody} ${styles.borderBottom} articleRow ` } 
       onClick={(e)=>{handleSelectedBg(e)}}
     >
-      <li className="w-[4vw]">{oneArticle.id}</li>
-      <li className="w-[20vw]">{oneArticle.articleName}</li>
-      <li className="w-[15vw]">
+      <li className="w-[2%]">{oneArticle.id}</li>
+      <li className="w-3/12 ">{oneArticle.articleName}</li>
+      <li className="w-1/12 ">
         <span
           className={
             oneArticle.brand === "PST USA"
@@ -49,14 +49,10 @@ const ArticleDatabase = () => {
           {oneArticle.brand}
         </span>
       </li>
-      <li className={`w-[10vw] ${styles.contentType}`}>
-        <ul>
-          {oneArticle.contentType.map((type , idx) => (
-            <li key={idx}>{type}</li>
-          ))}
-        </ul>
+      <li className={`w-2/12  ${styles.contentType}`}>
+          {oneArticle.contentType}
       </li>
-      <li className="w-[10vw]">
+      <li className="w-1/12 ">
         <div className={`${styles.viewsDiv} flex`}>
           <h6>{oneArticle.views}</h6>
           <svg
@@ -71,7 +67,7 @@ const ArticleDatabase = () => {
           </svg>
         </div>
       </li>
-      <li className="w-[10vw] "><span className={
+      <li className="w-2/12  "><span className={
             oneArticle.approvals === "Pending"
               ? "bg-[#E1C655B2]"
               : oneArticle.approvals === "Approved"
@@ -79,20 +75,19 @@ const ArticleDatabase = () => {
               : "bg-[#E9313EB2]"
             
           }>{oneArticle.approvals}</span></li>
-      <li className="w-[15vw] ">{oneArticle.date}</li>
-      <li className={`w-[6vw] ${styles.edit}`}>
+      <li className="w-1/12 ">{oneArticle.date}</li>
+      <li className={` w-1/12 ${styles.edit}`}>
         <a href="#">{oneArticle.editBtn}</a>
       </li>
     </ul>
   ));
+
   return (
-    <div className="flex flex-col gap-[1vw]">
-      <div
-        className={`${styles.articleDatabase} flex flex-col justify-center items-center h-[85vh] w-full gap-[1vw] `}
-      >
-        <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
+      <div className={`${styles.articleDatabase} w-full h-full pt-[0.5vw]`}>
+        
+          <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
           <h3>Filter By:</h3>
-          <div className={`${styles.filters} flex justify-between`}>
+          <div className={`${styles.filters} flex gap-[1vw]`}>
             <div className="flex flex-col w-2/12 gap-[0.3vw]">
               <h5>Article Name</h5>
               <CustomSelectInput label="All" options={ArticleNames} />
@@ -109,7 +104,7 @@ const ArticleDatabase = () => {
               <h5>Approvals</h5>
               <CustomSelectInput label="All" options={ApprovalStatus}/>
             </div>
-            <div className="flex flex-col w-[10vw] gap-[0.3vw]">
+            <div className="flex flex-col w-[10%] gap-[0.3vw]">
               <h5>Views</h5>
 
               <div className={`${styles.changeOrder} `}>
@@ -130,7 +125,7 @@ const ArticleDatabase = () => {
                 </svg>
               </div>
             </div>
-            <div className="flex flex-col w-[10vw] gap-[0.3vw]">
+            <div className="flex flex-col w-[10%] gap-[0.3vw]">
               <h5>Date</h5>
               <div className={`${styles.changeOrder} `}>
                 <h5>Date</h5>
@@ -152,27 +147,28 @@ const ArticleDatabase = () => {
             </div>
           </div>
         </div>
+     
 
-        <div className={`${styles.box} w-full px-[0.5vw]`}>
-          <div>
-            <ul
+         <div className={`${styles.box} w-full px-[0.5vw] `}>
+           <div className={`${styles.tableContent}`}>
+           <ul
               className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
             >
-              <li className="w-[4vw]">#</li>
-              <li className="w-[20vw]">Article Name</li>
-              <li className="w-[15vw]">Brand</li>
-              <li className="w-[10vw]">Content Type</li>
-              <li className="w-[10vw]">Views</li>
-              <li className="w-[10vw]">Approvals</li>
-              <li className="w-[15vw]">Date</li>
-              <li className="w-[6vw]">Edit</li>
+              <li className="w-[2%]">#</li>
+              <li className="w-3/12 ">Article Name</li>
+              <li className="w-1/12 ">Brand</li>
+              <li className="w-2/12 ">Content Type</li>
+              <li className="w-1/12 ">Views</li>
+              <li className="w-2/12 ">Approvals</li>
+              <li className="w-1/12 ">Date</li>
+              <li className="w-1/12">Edit</li>
             </ul>
 
             {renderYourArticles}
-          </div>
-        </div>
+           </div>
+        </div>  
       </div>
-    </div>
+  
   );
 };
 

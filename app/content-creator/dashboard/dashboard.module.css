@@ -9,10 +9,15 @@
     font-weight: 700;
 }
 .smallBox{
-    width: 20vw;
+    width: clamp(14px, calc(20vw + 0.1rem), 800px);
+    display: flex;
+    align-items: center;
     border-radius: clamp(10px, calc(0.3vw + 0.1rem), 60px); 
     box-shadow:  2px 2px 4px 2px #DFDFDF ;
     border: 1px solid transparent;
+    gap: clamp(14px, calc(1vw + 0.1rem), 80px);
+    height: clamp(14px, calc(2vw + 0.1rem), 80px);
+    padding: clamp(14px, calc(1vw + 0.1rem), 80px);
 }
 .rightBorder:not(:last-child){
     border-right: 1px solid #DBDBD7;
@@ -23,22 +28,26 @@
 .bottomBorder{
     border-bottom: 1px solid #DBDBD7;
 }
+.leaderboard{
+    width: clamp(160px, calc(27vw + 0.1rem), 900px) ;
+}
 .rightBorder h5, .leaderboard h5{
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
-    font-weight: 400;
+    font-weight: 600;
 }
 .coloredTxt{
     width: max-content;
-    padding: 0.1vw 0.3vw;
-    border-radius: 0.2vw;
+    padding: clamp(2px, calc(0.1vw + 0.1rem), 20px) clamp(5px, calc(0.35vw + 0.1rem), 20px);
+    border-radius: clamp(5px, calc(0.2vw + 0.1rem), 60px);
     font-weight: 500;
     font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 100px);
 }
 .events{
     display: flex;
     flex-direction: column;
-    gap: 1.5vw;
+    gap: 1vw;
     border-left: 2px solid #828282;
+    padding-top: 0.5vw;
 }
 .events h5, .events p{
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
@@ -46,6 +55,7 @@
 .events h5{
     font-weight: 700;
 }
+
 .events p{
     font-weight: 400;
 }
@@ -89,9 +99,7 @@
     font-weight: 400;
     color: var(--white);
 }
-.movedQuestion{
-    /* width: clamp(56px, calc(5.42vw + 0.1rem),140px);
-    height: clamp(56px, calc(5.3vw + 0.1rem),140px); */
+.movedQuestion {
     width: clamp(56px, calc(4.92vw + 0.1rem),140px);
     height: clamp(56px, calc(4.7vw + 0.1rem),140px);
     display: flex;
@@ -103,8 +111,18 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    font-size: clamp(10px, calc( 4vw + 0.1rem), 500px);
-    font-weight: 400;
+    overflow: hidden;
+}
+.movedQuestion svg{
+    width: clamp(20px, calc(2.5vw + 0.1rem),140px) !important;
+    height: clamp(20px, calc(2.2vw + 0.1rem),140px) !important;
+    animation: none !important;
+
+}
+.movedQuestion svg path{
+    fill: var(--dark) !important;
+
+
 }
 .halfHeader{
     height: clamp(24px, calc(2vw + 0.1rem),140px);
@@ -119,6 +137,7 @@
     align-items: center;
     border-right: 1px solid #DBDBD7;
     box-sizing: border-box;
+    width: clamp(160px, calc(15vw + 0.1rem), 800px);
 }
 .animated svg{
     width:  clamp(56px, calc(9vw + 0.1rem),140px);
@@ -174,7 +193,7 @@
     position: absolute;
     bottom: 0;
     right: clamp(20px, calc(3.5vw + 0.1rem), 1400px);
-    width: clamp(56px, calc(60vw + 0.1rem),3000px);
+    width: clamp(56px, calc(50vw + 0.1rem),3000px);
 }
 @keyframes spin {
     from {
