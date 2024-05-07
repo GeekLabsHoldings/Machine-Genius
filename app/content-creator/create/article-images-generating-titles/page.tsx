@@ -11,9 +11,9 @@ const ImagesForGeneratingTitles = () => {
 
 
   return (
-<div className="flex flex-col h-full">
-      <div className="flex justify-between m-auto h-[78vh] py-[1.4vw] w-full gap-[10vw]">
-        <div className="w-5/12 flex flex-col gap-[2vw]">
+<div className="flex flex-col">
+      <div className="flex justify-between m-auto h-[75vh] py-[1.5vw] w-full gap-[10vw]">
+        <div className="w-5/12 flex flex-col gap-[1.5vw]">
           <div className="flex flex-col gap-[1.5vw]">
           <div className={`${styles.yourThumbnail} pageHeader`}>
             <h3>Thumbnail</h3>
@@ -31,7 +31,7 @@ const ImagesForGeneratingTitles = () => {
             </div>
           </div>
 
-          <div className="w-6/12 flex flex-col gap-[2vw]">
+          <div className="w-full lg:w-6/12 flex flex-col gap-[2vw]">
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Title</h5>
             <div className={styles.generatingInput}>

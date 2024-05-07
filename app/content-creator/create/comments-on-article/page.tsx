@@ -116,12 +116,12 @@ const CommentsOnArticle = () => {
 
   return (
 
-    <div className="flex flex-col h-[100%]">
+    <div className="flex flex-col">
       {IsLoading ?
 
-        <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-full">
+        <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
           <LogoAndTitle needTxt={false} title='Generating Titles..' />
-        </div> : <div className="flex justify-center h-[90%] py-[1.4vw] w-full gap-[2vw]">
+        </div> : <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
           <div className="w-7/12 flex flex-col gap-[1vw]">
             <div className={`${styles.yourArticle} pageHeader`}>
               <h3>Articles</h3>

@@ -14,14 +14,14 @@ const CreateMovie = () => {
 
     return (
         <div className="flex flex-col gap-[1vw]">
-            <div className="flex justify-center items-center h-full w-full gap-[2vw] ">
-                <div className={`${styles.createMovie} w-5/12 `}>
+            <div className="flex justify-center items-center h-[75vh] py-[1.5vw] w-full gap-[2vw] ">
+                <div className={`${styles.createMovie} w-5/12  h-full`}>
                     <h3>Transcribe</h3>
                     <div className={`${styles.box} flex flex-col px-[1.5vw] pt-[4vw] pb-[1.5vw] gap-[1vw]`}>
                         {renderTranscriptData}
                     </div>
                 </div>
-                <div className={`${styles.createMovie} w-7/12 `}>
+                <div className={`${styles.createMovie} w-7/12 h-full`}>
                     <h3>Preview</h3>
                     <div className={`${styles.box} flex justify-center items-center ${styles.movieWrapper} `}>
                         <VideoPlayer videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />

@@ -30,8 +30,8 @@ const ImagesForGeneratingTitles = () => {
 
   return (
     <>
-      {IsLoading ?         <div className="flex flex-col h-full">
-            <div className="flex justify-center items-center h-[80vh] py-[1.4vw] w-full gap-[10vw] ">
+      {IsLoading ?         <div className="flex flex-col">
+            <div className="flex justify-center items-centerh-[75vh] py-[1.5vw] w-full gap-[10vw] ">
                 <div className="flex flex-col gap-[2vw]">
                     <LogoAndTitle title={"Your Script Has Been Scheduled!"} needTxt={false} />
                     <div className="flex justify-center gap-[1.5vw]">
@@ -40,7 +40,7 @@ const ImagesForGeneratingTitles = () => {
                 </div>
             </div>
         </div> :     <div className="flex flex-col h-full">
-      <div className="flex justify-between m-auto h-[78vh] py-[1.4vw] w-full gap-[10vw]">
+      <div className="flex justify-between mx-auto h-[75vh] py-[1.5vw] w-full gap-[10vw]">
         <div className="w-5/12 flex flex-col gap-[2vw]">
           <div className="flex flex-col gap-[1.5vw]">
           <div className={`${styles.yourThumbnail}`}>

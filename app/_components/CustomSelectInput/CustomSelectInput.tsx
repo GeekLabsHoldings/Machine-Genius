@@ -8,7 +8,8 @@ interface Iprops {
     options: string[] | number[],
     icon? :any ,
     theme? : 'dark',
-    whenSideNavClosed?:boolean
+    whenSideNavClosed?:boolean,
+    handleBrandName ?: (value:string|number)=>void
 }
 
 const CustomSelectInput = (props: Iprops) => {
@@ -22,14 +23,17 @@ const CustomSelectInput = (props: Iprops) => {
     const handleSelectedItem = (e: any) => {
         console.log(e.innerText);
         setIsSelected(e.innerText);
-        setIsActive(false)
+        setIsActive(false);
+        if (props.handleBrandName) {
+          props.handleBrandName(e.innerText)
+        }
     }
 
-    useEffect(()=>{
-        if (selected == "Movie Myth") {
-            router.push('/content-creator/create/movie-myth/uploud-movie')
-        }
-    },[selected])
+    // useEffect(()=>{
+    //     if (selected == "Movie Myth") {
+    //         router.push('/content-creator/create/movie-myth/uploud-movie')
+    //     }
+    // },[selected])
 
 
     return (

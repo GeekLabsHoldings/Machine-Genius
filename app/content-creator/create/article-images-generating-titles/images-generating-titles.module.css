@@ -17,6 +17,7 @@
     border-bottom: 1px solid black;
     width: 100%;
     padding: clamp(6px, calc( 0.3vw + 0.1rem), 60px);
+    background-color: var(--white);
 }
 .generatingInput input:focus{
     outline: none;

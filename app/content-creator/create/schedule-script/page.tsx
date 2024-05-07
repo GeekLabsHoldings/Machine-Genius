@@ -6,8 +6,8 @@ const ScheduleScript = () => {
 
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-center items-center h-[80vh] py-[1.4vw] w-full gap-[10vw] ">
+        <div className="flex flex-col">
+            <div className="flex justify-center items-center h-[75vh] py-[1.5vw] w-full gap-[10vw] ">
                 <div className="flex flex-col gap-[2vw]">
                     <LogoAndTitle title={"Your Script Has Been Scheduled!"} needTxt={false} />
                     <div className="flex justify-center gap-[1.5vw]">

@@ -6,8 +6,8 @@ import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithChec
 const chooseArticles = () => {
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex justify-center items-start py-[2vw] h-[89%] gap-[2rem]">
+        <div className="flex flex-col">
+            <div className="flex justify-center items-start gap-[2rem] h-[75vh] py-[1.5vw]">
                 <div className={styles.scripts_wrapper + ' w-1/2'}>
                     <div className={styles.header}>
                         <h6>Scripts</h6>

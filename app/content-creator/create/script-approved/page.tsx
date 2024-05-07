@@ -6,11 +6,11 @@ import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithChec
 
 const ScriptApproved = () => {
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
 
 
 
-            <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] py-[2vw] m-auto space-y-[2vw] h-full">
+            <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto space-y-[2vw] h-[75vh] py-[1.5vw]">
                 <LogoAndTitle needTxt={true} textNeeded='Hold on tight.' title='Script is yet to be approved' />
                 <CustomBtn word="Dashboard" btnColor="black" href="/content-creator/create/comments-on-article" />
             </div>

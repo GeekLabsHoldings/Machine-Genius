@@ -121,8 +121,8 @@ const CommentsOnArticle = () => {
 
   return (
 
-    <div className="flex flex-col h-[100%]">
-      {IsLoading ?            <div className="flex flex-col justify-center items-center m-auto h-full py-[1.4vw]" >
+    <div className="flex flex-col">
+      {IsLoading ?            <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.4vw]" >
                 <div className={`${styles.genuisWorking} m-auto`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
                     <div className={`${styles.allCheckers} w-full`}>
@@ -130,7 +130,7 @@ const CommentsOnArticle = () => {
                         <SpecificChecker pass={true} word='Plagiarism Checker' />
                         <SpecificChecker pass={true} word='AI Checker' />
                     </div>                </div>
-            </div>: <div className="flex justify-center h-[90%] py-[1.4vw] w-full gap-[2vw]">
+            </div>: <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
           <div className="w-7/12 flex flex-col gap-[1vw]">
             <div className={`${styles.yourArticle}`}>
               <h3>Articles</h3>

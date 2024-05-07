@@ -4,6 +4,11 @@
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 600px);
     position: relative;
+    padding:  clamp(20px, calc(1.5vw + 0.1rem), 600px) 0;
+}
+.imgWrapper label svg{
+  width: clamp(20px, calc(1.8vw + 0.1rem), 600px);
+  height: clamp(20px, calc(1.8vw + 0.1rem), 600px);
 }
 .imgWrapper img{
     width: 100%;
@@ -25,6 +30,7 @@
     border-bottom: 1px solid black;
     width: 100%;
     padding: clamp(6px, calc( 0.3vw + 0.1rem), 60px);
+    background-color: var(--white);
 }
 .generatingInput input:focus{
     outline: none;
