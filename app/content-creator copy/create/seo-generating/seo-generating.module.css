@@ -1,0 +1,29 @@
+
+.everySec h5{
+    font-size: clamp(10px, calc(0.8vw + 0.1rem), 80px);
+    font-weight: 600;
+
+}
+.seoGeneratingInput{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: clamp(5px, calc(0.3vw + 0.1rem), 60px);
+    padding: clamp(5px, calc( 0.3vw + 0.1rem), 600px);
+}
+.seoGeneratingInput input,.seoGeneratingInput textarea{
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: clamp(5px, calc(0.3vw + 0.1rem), 60px);
+    font-size: clamp(12px, calc(0.75vw + 0.1rem), 600px);
+}
+.seoGeneratingInput input:focus, .seoGeneratingInput textarea:focus{
+    outline: none;
+}
+.redProgress{
+    color: red;
+}
+.seoGeneratingInput textarea{
+    height: 7vh;
+    overflow-y: auto;
+    resize: none;
+}

@@ -23,8 +23,6 @@
 
 *::-webkit-scrollbar {
   width: 5px;
-  position: relative;
-  right: 10px;
 }
 
 /* Track */
@@ -35,6 +33,7 @@
 /* Handle */
 *::-webkit-scrollbar-thumb {
   background: var(--dark);
+  border-radius: 20px;
 }
 
 /* Handle on hover */

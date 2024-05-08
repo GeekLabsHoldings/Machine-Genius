@@ -1,0 +1,101 @@
+.article_wrapper , .style_options_wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px,  calc( 1vw + 0.1rem ) , 1000px);
+}
+
+.article_wrapper .header , .style_options_wrapper .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.article_wrapper .header h6 , .style_options_wrapper .header h6{
+    font-weight: 700;
+    font-size: clamp(14px,  calc( 2vw + 0.1rem ) , 900px);
+}
+
+.style_options_wrapper .style_options_container{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: clamp(10px,  calc( 1.4vw + 0.1rem ) , 1000px);
+    padding: clamp(10px,  calc( 1.4vw + 0.1rem ) , 800px) clamp(10px,  calc( 2.5vw + 0.1rem ) , 1000px);
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5vw;
+}
+
+.style_options_wrapper .style_options_container label{
+    display: block;
+    font-size: clamp(10px,  calc( 1.2vw + 0.1rem ) , 1000px);
+    font-style: normal;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: clamp(10px,  calc( 0.6vw + 0.1rem ) , 1000px);
+}
+
+.style_options_wrapper .custom_radio_input {
+    display: flex;
+    border: 1px solid var(--dark);
+    border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
+    width: 100%;
+    overflow: hidden;
+}
+
+.style_options_wrapper .custom_radio_input label{
+    width: 33.3333%;
+    position: relative;
+    text-align: center;
+    margin-bottom: 0;
+    padding: clamp(5px,  calc( 0.3vw + 0.1rem ) , 1000px);
+}
+
+.style_options_wrapper .custom_radio_input label input{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+.style_options_wrapper .custom_radio_input label svg{
+    margin: auto;
+    width: clamp(20px,  calc( 2vw + 0.1rem ) , 500px);
+}
+.style_options_wrapper .custom_radio_input label svg path{
+    fill: var(--dark);
+}
+
+.style_options_wrapper .custom_radio_input label:has(>input[type=radio]:checked){
+    background-color: var(--orange);
+    color: var(--white);
+}
+
+.style_options_wrapper .custom_radio_input label:has(>input[type=radio]:checked) svg path{
+    fill: var(--white);
+}
+
+
+.style_options_wrapper .choose_image_input{
+    position: relative;
+    width: clamp(20px,  calc( 2.5vw + 0.1rem ) , 500px);
+    height: clamp(20px,  calc( 2.5vw + 0.1rem ) , 500px);
+}
+
+.style_options_wrapper .choose_image_input svg ,.style_options_wrapper .choose_image_input input{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.style_options_wrapper .choose_image_input input{
+    opacity: 0;
+    z-index: 2;
+}

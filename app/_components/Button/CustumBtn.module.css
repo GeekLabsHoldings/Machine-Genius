@@ -84,3 +84,8 @@
 .blackBtn span , .whiteBtn span{
     transition: none;
 }
+
+
+.blackBtn svg , .whiteBtn svg{
+    width: clamp(10px, calc( 0.8vw + 0.1rem), 600px);
+}

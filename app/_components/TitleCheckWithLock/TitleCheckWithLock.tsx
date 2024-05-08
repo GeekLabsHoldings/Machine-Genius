@@ -4,14 +4,14 @@ import styles from './TitleCheckWithLock.module.css'
 
 interface IProps {
   checkName: string
-  title: string
+  title: string,
 }
 const TitleCheckWithLock = ({ checkName, title }: IProps) => {
 
   const [isLocked, setIsLocked] = useState<boolean>(false)
   return (
-    <label className={styles.title_check}>
-      <input type="radio" name={checkName} value={title} />
+    <label className={styles.title_check} >
+      <input type="radio" name={checkName} value={title}/>
 
       {title}
 
