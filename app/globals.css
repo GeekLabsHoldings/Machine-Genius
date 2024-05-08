@@ -59,10 +59,15 @@ img{
   height: 100%;
 }
 
-.articleRow.selected{
+.articleRow.selected, .assignedVideo.selected{
   background-color: #2A2B2A;
   color: var(--white);
 }
+.videoStatusBtn.clicked{
+  color: rgba(42, 43, 42, 1);
+  background-color:rgba(255, 255, 251, 1) ;
+}
+
 .pageHeader h3{
   font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
   font-weight: 700;

@@ -3,13 +3,17 @@ import CustomBtn from '@/app/_components/Button/CustomBtn';
 import styles from './video-creation.module.css';
 import { VideoDatabase } from '@/app/_data/data';
 import $ from 'jquery';
+
 const VideoCreation = ()=>{
     const handleSelectedBg = (e: any)=>{
         $('.assignedVideo').removeClass('selected')
+        $('.videoStatusBtn').removeClass('clicked')
         $(e.target).parents('.assignedVideo').toggleClass('selected')
+        $(e.target).toggleClass('selected')
+        $(e.target).find('.videoStatusBtn').toggleClass('clicked')
     }
-    const renderVideosData = VideoDatabase.map((video)=>(
-        <ul className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e)}}>
+    const renderVideosData = VideoDatabase.map((video,idx)=>(
+        <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e);console.log(e.target)}}>
                 <li className="w-[5%]">{video.id}</li>
                 <li className="w-3/12">{video.title}</li>
                 <li className="w-2/12">{video.date}</li>
@@ -28,7 +32,7 @@ const VideoCreation = ()=>{
             {video.assignedTo}
             </span>
         </li>
-                <li className="w-2/12"> <CustomBtn width='w-full' word={video.videoStatus} btnColor='black' /> </li>
+                <li className="w-2/12 "> <CustomBtn class='videoStatusBtn' width='w-full' word={video.videoStatus} href={video.videoStatus === 'Convert Audio' ? 'convert-audio' : ''} btnColor='black' /> </li>
         </ul>
     ))
 

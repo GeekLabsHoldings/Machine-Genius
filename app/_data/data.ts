@@ -355,6 +355,34 @@ export const VideoDatabase:IAssignedVideos[] = [
 
   }
 ]
+
+export const VideosTemplates = [
+  {
+  brand:'PST Finance',
+  videoTypes:['Educational','Educational']
+},
+{
+  brand:'PST Markets',
+  videoTypes:['Educational','Educational','Educational','Educational']
+},
+{
+  brand:'PST Mega',
+  videoTypes:['Educational','Educational','Educational']
+},
+{
+  brand:'PST Originals',
+  videoTypes:['Educational','Educational','Educational']
+},
+{
+  brand:'PST Finance',
+  videoTypes:['Educational','Educational']
+},
+{
+  brand:'PST Originals',
+  videoTypes:['Educational','Educational','Educational']
+},
+
+]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
 export const ContentType:TContentType[] =["Script" , "Article"]
 export const ApprovalStatus:TApproval[] = ['Approved','Pending','Rejected']
