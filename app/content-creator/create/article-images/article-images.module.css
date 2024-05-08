@@ -6,10 +6,12 @@
     position: relative;
     height: clamp(50px, calc(5.5vw + 0.1rem), 6000px);
 }
+
 .imgWrapper label svg{
   width: clamp(20px, calc(1.8vw + 0.1rem), 600px);
   height: clamp(20px, calc(1.8vw + 0.1rem), 600px);
 }
+
 .imgWrapper img{
     width: 100%;
     height: 100%;
