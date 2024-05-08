@@ -14,7 +14,7 @@ const CreateMovie = () => {
 
     return (
         <div className="flex flex-col gap-[1vw]">
-            <div className="flex justify-center items-center h-[75vh] py-[1.5vw] w-full gap-[2vw] ">
+            <div className="flex justify-center items-center pageHeader h-[75vh] py-[1.5vw] w-full gap-[2vw] ">
                 <div className={`${styles.createMovie} w-5/12  h-full`}>
                     <h3>Transcribe</h3>
                     <div className={`${styles.box} flex flex-col px-[1.5vw] pt-[4vw] pb-[1.5vw] gap-[1vw]`}>

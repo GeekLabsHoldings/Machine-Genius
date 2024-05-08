@@ -3,26 +3,32 @@
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
     overflow: hidden;
-   padding: clamp(5px, calc( 0.3vw + 0.1rem), 60px);
+   position: relative;
 }
-.videoWrapper{
+
+.tableBody{
+    padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(10px, calc( 0.5vw + 0.1rem), 60px) !important;
+    position: absolute;
+    top: 8.1%;
+    left: 0;
     overflow-y: auto;
+    height: 70vh;
+    width: 99%;
 }
-  /* Track */
-  .videoWrapper::-webkit-scrollbar-track {
+.tableBody::-webkit-scrollbar-track {
     background: transparent; 
 }
-  /* Handle */
-  .videoWrapper::-webkit-scrollbar-thumb {
+
+.tableBody::-webkit-scrollbar-thumb {
     background: #2A2B2A; 
     width: clamp(2px, calc( 0.08vw + 0.1rem), 40px);
     border-radius: 10vw ;
 }
-.tableBody{
-    padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(10px, calc( 0.5vw + 0.1rem), 60px) !important;
-}
 .tableHeader{
     border-bottom: 1px solid #2A2B2A;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 .tableHeader li{
     text-align: center;

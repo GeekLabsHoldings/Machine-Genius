@@ -7,7 +7,7 @@
 }
 .logoAndTitle h1{
     font-weight: 700;
-    font-size:  clamp(16px, calc(2vw + 0.1rem), 80px);
+    font-size:  clamp(16px, calc(2.5vw + 0.1rem), 80px);
 }
 .logoAndTitle p{
     font-weight: 500;
