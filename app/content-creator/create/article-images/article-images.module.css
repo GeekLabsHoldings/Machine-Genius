@@ -4,7 +4,7 @@
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 600px);
     position: relative;
-    padding:  clamp(20px, calc(1.5vw + 0.1rem), 600px) 0;
+    height: clamp(50px, calc(5.5vw + 0.1rem), 6000px);
 }
 .imgWrapper label svg{
   width: clamp(20px, calc(1.8vw + 0.1rem), 600px);
