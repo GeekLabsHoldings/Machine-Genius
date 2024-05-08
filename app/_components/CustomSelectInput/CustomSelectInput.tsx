@@ -16,9 +16,12 @@ const CustomSelectInput = (props: Iprops) => {
 
     const [isActive, setIsActive] = useState(false);
     const [selected, setIsSelected] = useState(props.label ? props.label : props.options[1]);
-    const router = useRouter();
 
-
+    useEffect(()=>{
+        if (props.whenSideNavClosed) {
+            setIsActive(false)
+        }
+    },[props.whenSideNavClosed])
 
     const handleSelectedItem = (e: any) => {
         console.log(e.innerText);

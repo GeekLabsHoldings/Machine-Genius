@@ -37,19 +37,15 @@ export default function Calendar() {
         setSelectedEvent('');
     };
 
-    const handleEventBackgroundColor = () => {
-        return "#F36F24"
-    }
 
     const today = new Date();
-
     const month = today.getMonth() + 1; // Note: Month is zero-based (0 for January, 1 for February, etc.)
     const day = today.getDate();
 
 
     const arrowLeft = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-    <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-    </svg> ;
+        <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+    </svg>;
 
     // useEffect(() => {
     //     console.log(handleEventBackgroundColor());
@@ -77,22 +73,21 @@ export default function Calendar() {
                 }}
                 initialView="dayGridMonth"
                 events={calenderEvents}
-                // eventMouseLeave={()=>console.log('leave')}
-                // eventBackgroundColor={handleEventBackgroundColor()}
                 eventClick={(e) => handleEventClick(e)}
                 height={'100%'}
                 eventBorderColor='transparent'
                 dayMaxEvents={3}
                 buttonText={{ today: `${day} / ${month}` }}
-
+                droppable={true}
             />
 
-            {selectedEvent ? 
+            {selectedEvent ? <>
+                <div className="event-content-overlay" onClick={handleCloseEvent} > </div>
                 <div className="event-content" >
-                    <span className='close-event-content' onClick={handleCloseEvent}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                    <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                    </svg>
+                    <span className='close-event-content' onClick={handleCloseEvent} >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                            <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
 
                     </span>
                     <div className="event-content-header">
@@ -101,7 +96,8 @@ export default function Calendar() {
                     </div>
                     <Image src={eventContentImg} height={100} alt='' />
                     <p>{selectedEvent.extendedProps.article}</p>
-                </div> : null
+                </div>
+            </> : null
             }
         </div>
     )
