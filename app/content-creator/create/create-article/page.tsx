@@ -76,8 +76,8 @@ const CreateArticle = () => {
       </div>
         : <div className="flex flex-col justify-center items-center h-[75vh] py-[1.5vw]" >
           <div className="flex justify-between gap-[2vw] h-full">
-            <div className="w-7/12 flex flex-col gap-[2vw]">
-              <div className={`${styles.articlesToSelect}`}>
+            <div className="w-7/12 flex flex-col justify-between h-full">
+              <div className={`${styles.articlesToSelect} h-[15%]`}>
                 <h3>Articles</h3>
                 <div className="flex items-center gap-3">
                   <div className='w-11/12'>
@@ -95,7 +95,7 @@ const CreateArticle = () => {
               {/* display chosen article  */}
               <ArticlePreview
                 yourNewArticle={false}
-                height="h-[58vh]"
+                height="h-[80%]"
                 beginSelect={beginSelect}
                 withEdit={false}
               />

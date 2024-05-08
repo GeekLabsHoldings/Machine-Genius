@@ -32,12 +32,6 @@ const CustomSelectInput = (props: Iprops) => {
         }
     }
 
-    // useEffect(()=>{
-    //     if (selected == "Movie Myth") {
-    //         router.push('/content-creator/create/movie-myth/uploud-movie')
-    //     }
-    // },[selected])
-
 
     return (
         <div className={`${styles.dropdown} ${props.theme === 'dark' ? styles.dark : null} ${props.whenSideNavClosed ? styles.onClose : null}`}>

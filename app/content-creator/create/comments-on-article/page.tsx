@@ -118,21 +118,23 @@ const CommentsOnArticle = () => {
 
     <div className="flex flex-col">
       {IsLoading ?
-
         <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
           <LogoAndTitle needTxt={false} title='Generating Titles..' />
         </div> : <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
-          <div className="w-7/12 flex flex-col gap-[1vw]">
-            <div className={`${styles.yourArticle} pageHeader`}>
-              <h3>Articles</h3>
+          <div className="w-7/12 h-full">
+            <div className="flex flex-col gap-[1vw] h-full">
+              <div className={`${styles.yourArticle} pageHeader`}>
+                <h3>Articles</h3>
+              </div>
+              {/* display your article  */}
+              {/* yourNewArticle should be true but till fixing selection bug */}
+              <ArticlePreview
+                yourNewArticle={false}
+                height="h-full"
+                withEdit={false}
+              />
             </div>
-            {/* display your article  */}
-            {/* yourNewArticle should be true but till fixing selection bug */}
-            <ArticlePreview
-              yourNewArticle={false}
-              height="h-full"
-              withEdit={false}
-            />
+
           </div>
           {/* comments part */}
           <div className={`w-5/12 h-full`}>
@@ -403,7 +405,7 @@ const CommentsOnArticle = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/create/script-approved"}
+          href={"/content-creator/create/show-errors"}
         />
         <CustomBtn
           word={"Generate Titles"}

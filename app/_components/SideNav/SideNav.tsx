@@ -9,7 +9,7 @@ import Link from 'next/link'
 import CustomSelectInput from '../CustomSelectInput/CustomSelectInput'
 
 
-const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fill="none">
 <path d="M20.5001 9.28571H11.2144V0H9.7858V9.28571H0.500084V10.7143H9.7858V20H11.2144V10.7143H20.5001V9.28571Z" fill="#FFFFFB"/>
 <path d="M6.92865 20H1.21437C1.0926 20 0.972851 19.9689 0.866493 19.9096C0.760135 19.8503 0.6707 19.7648 0.606682 19.6612C0.542664 19.5577 0.506189 19.4394 0.500721 19.3178C0.495253 19.1961 0.520974 19.0751 0.57544 18.9662L3.43258 13.2519C3.49852 13.1412 3.59207 13.0496 3.70407 12.9859C3.81607 12.9223 3.94269 12.8888 4.07151 12.8888C4.20034 12.8888 4.32695 12.9223 4.43896 12.9859C4.55096 13.0496 4.64451 13.1412 4.71044 13.2519L7.56758 18.9662C7.62205 19.0751 7.64777 19.1961 7.6423 19.3178C7.63684 19.4394 7.60036 19.5577 7.53634 19.6612C7.47232 19.7648 7.38289 19.8503 7.27653 19.9096C7.17017 19.9689 7.05042 20 6.92865 20ZM2.37023 18.5714H5.7728L4.07151 15.1688L2.37023 18.5714Z" fill="#FFFFFB"/>
 <path d="M19.0715 7.14286H14.7858C14.4071 7.14242 14.0439 6.99177 13.7761 6.72396C13.5083 6.45614 13.3577 6.09303 13.3572 5.71429V1.42857C13.3577 1.04982 13.5083 0.686714 13.7761 0.418899C14.0439 0.151084 14.4071 0.00043481 14.7858 0H19.0715C19.4503 0.00043481 19.8134 0.151084 20.0812 0.418899C20.349 0.686714 20.4996 1.04982 20.5001 1.42857V5.71429C20.4996 6.09303 20.349 6.45614 20.0812 6.72396C19.8134 6.99177 19.4503 7.14242 19.0715 7.14286ZM14.7858 1.42857V5.71429H19.0722L19.0715 1.42857H14.7858Z" fill="#FFFFFB"/>
@@ -25,6 +25,7 @@ const rols = [
     'Content Creator',
     'Video'
 ]
+
 const sideNavLinks = [
     {
         name: "Dashboard", path: "/content-creator/dashboard", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
@@ -56,7 +57,7 @@ const sideNavLinks = [
     }
 ]
 
-const SideNav = ({ isSideNavOpen, setIsSideNavOpen , CurrentPage ,setCurrentPage }: { isSideNavOpen: boolean, setIsSideNavOpen: any ,CurrentPage: string, setCurrentPage: any }) => {
+const SideNav = ({ isSideNavOpen, setIsSideNavOpen ,setCurrentPage }: { isSideNavOpen: boolean, setIsSideNavOpen: any , setCurrentPage: any }) => {
 
 
     const handleCurrentPageTitle = (name:string)=>{
