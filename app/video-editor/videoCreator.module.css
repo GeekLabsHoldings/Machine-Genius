@@ -1,4 +1,4 @@
-.Side_Nav_Wrapper{
+/* .Side_Nav_Wrapper{
     width:  clamp(300px , calc(18vw + 0.1rem) , 1000px );
     height: 100vh;
     background: transparent;
@@ -17,4 +17,4 @@
     display: flex;
     flex-direction: column;
     position: relative;
-}
+} */
