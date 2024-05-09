@@ -37,7 +37,7 @@ const SignIn = () => {
 
     return (
 
-        <div className='flex items-center justify-center w-[100vw] h-[100vh] relative overflow-hidden' >
+        <div className='flex items-center justify-center w-[100vw] h-[100vh] fixed top-0 left-0 overflow-hidden' style={{zIndex:999999999999999999 , background:"var(--dark)"}}>
 
 
             <div className={`${styles.welcomePart} welcom-wrapper ${StartAnimation ? styles.startAnimation : ''} ${ShowSignInForm ? styles.hide : ''}`}>
