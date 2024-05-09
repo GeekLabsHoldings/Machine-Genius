@@ -49,7 +49,7 @@ const VideoTemplates = ()=>{
             </div>
            <div className='flex justify-between'>
            <CustomBtn word='Back' btnColor={'white'} href='/video-editor/create/converted-article'/>
-            <CustomBtn word='Use Template' btnColor='black'/>
+            <CustomBtn word='Use Template' btnColor='black' href='/video-editor/create/footage-preview'/>
            </div>
 
 

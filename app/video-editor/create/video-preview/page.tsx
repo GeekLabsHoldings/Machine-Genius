@@ -1,4 +1,4 @@
-
+'use client'
 import VideoPlayer from '@/app/_components/VideoPlayer/VideoPlayer';
 import styles from './video-preview.module.css'
 import CustomBtn from '@/app/_components/Button/CustomBtn';
@@ -41,8 +41,8 @@ const VideoPreview = ()=>{
                       
             </div>
             <div className='flex justify-between'>
-                    <CustomBtn word='Back' btnColor='white'/>
-                    <CustomBtn word='Next' href='video-ready' btnColor='black'/>
+                    <CustomBtn word='Back' btnColor='white' href='/video-editor/create/footage-preview' />
+                    <CustomBtn word='Next' btnColor='black' href='/video-editor/create/video-ready' />
 
                         </div>
 
