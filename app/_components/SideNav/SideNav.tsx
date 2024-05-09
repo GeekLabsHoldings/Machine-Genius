@@ -84,7 +84,7 @@ const SideNav = ({ isSideNavOpen, setIsSideNavOpen ,setCurrentPage }: { isSideNa
                 </div>
                 <div className={styles.line}></div>
 
-                <CustomSelectInput options={rols} icon={rolsIcon} theme="dark" whenSideNavClosed={!isSideNavOpen}/>
+                <CustomSelectInput options={rols} icon={rolsIcon} theme="dark" whenSideNavClosed={!isSideNavOpen} />
 
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
