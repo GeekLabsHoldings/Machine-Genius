@@ -1,4 +1,5 @@
 "use client";
+<<<<<<< HEAD
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./article-database.module.css";
 import {
@@ -7,10 +8,21 @@ import {
   Brands,
   ContentTypeFilter,
   YourArticles,
+=======
+import styles from './video-database.module.css';
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import {
+    ApprovalStatus,
+    ArticleNames,
+    Brands,
+    ContentTypeFilter,
+    VideosDatabase
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
 } from "@/app/_data/data";
 import $ from 'jquery'
 
 const ArticleDatabase = () => {
+<<<<<<< HEAD
 
   // const [SelectedValue, setSelectedValue] = useState<string | number>()
   // const handleBrandName = (value:string|number)=>{
@@ -18,17 +30,24 @@ const ArticleDatabase = () => {
   // }
   
 
+=======
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
     const handleSelectedBg = (e: any)=>{
         $('.articleRow').removeClass('selected')
         $(e.target).parents('.articleRow').toggleClass('selected')
     }
 
+<<<<<<< HEAD
   const renderYourArticles = YourArticles.map((oneArticle , idx) => (
+=======
+  const renderVideos = VideosDatabase.map((oneVideo , idx) => (
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
     <ul
     key={idx}
       className = { `${styles.tableBody} borderBottom articleRow ` } 
       onClick={(e)=>{handleSelectedBg(e)}}
     >
+<<<<<<< HEAD
       <li className="w-[2%]">{oneArticle.id}</li>
       <li className="w-3/12 ">{oneArticle.articleName}</li>
       <li className="w-1/12 ">
@@ -41,10 +60,25 @@ const ArticleDatabase = () => {
               : oneArticle.brand === "PST Asia"
               ? "bg-[#E1C655B2]"
               : oneArticle.brand === "Investocracy"
+=======
+      <li className="w-[5%]">{oneVideo.id}</li>
+      <li className="w-[25%] ">{oneVideo.title}</li>
+      <li className="w-[12%] ">
+        <span
+          className={
+            oneVideo.brand === "PST USA"
+              ? "bg-[#31B2E9B2]"
+              : oneVideo.brand === "Canada"
+              ? "bg-[#E9313EB2]"
+              : oneVideo.brand === "PST Asia"
+              ? "bg-[#E1C655B2]"
+              : oneVideo.brand === "Investocracy"
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
               ? "bg-[#5FA85BB5]"
               : "bg-[#F36F24B2]"
           }
         >
+<<<<<<< HEAD
           {oneArticle.brand}
         </span>
       </li>
@@ -54,6 +88,15 @@ const ArticleDatabase = () => {
       <li className="w-1/12 ">
         <div className={`${styles.viewsDiv} flex`}>
           <h6>{oneArticle.views}</h6>
+=======
+          {oneVideo.brand}
+        </span>
+      </li>
+      
+      <li className="w-[12%] ">
+        <div className={`${styles.viewsDiv} flex`}>
+          <h6>{oneVideo.views}</h6>
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 21 11"
@@ -61,11 +104,16 @@ const ArticleDatabase = () => {
           >
             <path
               d="M19.9494 2.76915e-06L1.04883 1.11645e-06C0.857472 0.000420716 0.669902 0.037347 0.506307 0.106803C0.342711 0.176259 0.209287 0.275614 0.120398 0.394177C0.0315084 0.512738 -0.00947862 0.646018 0.00184339 0.779666C0.0131673 0.913315 0.0763711 1.04227 0.184657 1.15266L9.63492 10.703C10.0266 11.099 10.9695 11.099 11.3622 10.703L20.8125 1.15266C20.9219 1.0425 20.986 0.913482 20.998 0.779611C21.0099 0.64574 20.9692 0.51214 20.8802 0.393327C20.7912 0.274514 20.6574 0.17503 20.4933 0.105687C20.3292 0.0363435 20.1411 -0.000207976 19.9494 2.76915e-06Z"
+<<<<<<< HEAD
               fill={oneArticle.views === '300' ? '#E9313E':'#5FA85B' }
+=======
+              fill={oneVideo.views === '300' ? '#E9313E':'#5FA85B' }
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
             />
           </svg>
         </div>
       </li>
+<<<<<<< HEAD
       <li className="w-2/12  "><span className={
             oneArticle.approvals === "Pending"
               ? "bg-[#E1C655B2]"
@@ -78,6 +126,38 @@ const ArticleDatabase = () => {
       <li className={` w-1/12 ${styles.edit}`}>
         <a href="#">{oneArticle.editBtn}</a>
       </li>
+=======
+
+      <li className="w-[12%]  "><span className={
+            oneVideo.approvals === "Pending"
+              ? "bg-[#E1C655B2]"
+              : oneVideo.approvals === "Approved"
+              ? "bg-[#5FA85BB5]"
+              : "bg-[#E9313EB2]"
+            
+          }>{oneVideo.approvals}</span></li>
+
+      <li className={`w-[12%]  ${styles.contentType}`}>
+      <span
+          className={
+            oneVideo.publish === "Published"
+              ? "bg-[#5FA85BB5]"
+              : oneVideo.publish === "Uploading"
+              ? "bg-[#E1C655B2]"
+              : "bg-[#E9313EB2]"
+          }
+        >
+          {oneVideo.publish}
+        </span>
+      </li>
+      
+
+      <li className="w-[12%] ">{oneVideo.date}</li>
+      <li className={` w-[12%] ${styles.edit}`}>
+        <a href="#">{oneVideo.edit}</a>
+      </li>
+
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
     </ul>
   ));
 
@@ -88,7 +168,11 @@ const ArticleDatabase = () => {
           <h3>Filter By:</h3>
           <div className={`${styles.filters} flex gap-[1vw]`}>
             <div className="flex flex-col w-2/12 gap-[0.3vw]">
+<<<<<<< HEAD
               <h5>Article Name</h5>
+=======
+              <h5>Script Name</h5>
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
               <CustomSelectInput label="All" options={ArticleNames} />
             </div>
             <div className="flex flex-col w-2/12 gap-[0.3vw]">
@@ -153,6 +237,7 @@ const ArticleDatabase = () => {
            <ul
               className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
             >
+<<<<<<< HEAD
               <li className="w-[2%]">#</li>
               <li className="w-3/12 ">Article Name</li>
               <li className="w-1/12 ">Brand</li>
@@ -164,6 +249,19 @@ const ArticleDatabase = () => {
             </ul>
 
             {renderYourArticles}
+=======
+              <li className="w-[5%]">#</li>
+              <li className="w-[25%] ">Article Name</li>
+              <li className="w-[12%] ">Brand</li>
+              <li className="w-[12%] ">Views</li>
+              <li className="w-[12%] ">Approvals</li>
+              <li className="w-[12%] ">Publish</li>
+              <li className="w-[12%] ">Date</li>
+              <li className="w-[12%]">Edit</li>
+            </ul>
+
+            {renderVideos}
+>>>>>>> fa5d0258532131cfc49774209176df7312a3705f
            </div>
         </div>  
       </div>

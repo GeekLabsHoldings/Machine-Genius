@@ -1,4 +1,4 @@
-'use client';
+
 import VideoPlayer from '@/app/_components/VideoPlayer/VideoPlayer';
 import styles from './video-preview.module.css'
 import CustomBtn from '@/app/_components/Button/CustomBtn';

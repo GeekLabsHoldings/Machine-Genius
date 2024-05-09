@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import { VideosTemplates } from '@/app/_data/data';
 import styles from './video-templates.module.css'
 import CustomBtn from '@/app/_components/Button/CustomBtn';
@@ -48,7 +48,7 @@ const VideoTemplates = ()=>{
                 </div>
             </div>
            <div className='flex justify-between'>
-           <CustomBtn word='Back' btnColor={'white'}/>
+           <CustomBtn word='Back' btnColor={'white'} href='/video-editor/create/converted-article'/>
             <CustomBtn word='Use Template' btnColor='black'/>
            </div>
 
