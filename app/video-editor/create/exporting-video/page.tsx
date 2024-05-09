@@ -1,4 +1,3 @@
-'use client';
 
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 

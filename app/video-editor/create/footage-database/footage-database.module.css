@@ -1,0 +1,79 @@
+.articleDatabase{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(18px, calc(1vw + 0.1rem), 100px);
+}
+.box{
+    box-shadow: 0px 2px 4px 2px rgba(42, 43, 42, 0.2);
+    border: 1px solid transparent;
+    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+}
+.tableContent{
+    overflow-y: auto;
+    height: 63vh;
+    border-right: 1px solid #C1C2BE;
+}
+
+.tableContent::-webkit-scrollbar-track {
+    background: transparent; 
+}
+
+.tableContent::-webkit-scrollbar-thumb {
+    background: #2A2B2A; 
+    width: clamp(2px, calc( 0.08vw + 0.1rem), 40px);
+    border-radius: 10vw ;
+}
+.filters h5{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+    font-weight: 700;
+}
+
+.tableHeader{
+    border-bottom: 1px solid #2A2B2A;
+}
+.tableBody{
+    padding: clamp(10px, calc( 0.2vw + 0.1rem), 60px) 0 !important;
+}
+.tableHeader li,.tableBody li{
+    text-align: center;
+    font-weight: 700;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
+}
+
+.tableBody{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.2vh 0;
+}
+
+.tableBody li ,.tableBody li span{
+    transition: 0.1s;
+}
+
+.edit a{
+    text-decoration: underline;
+}
+.tableBody li span{
+    padding: 0.1vw 0.3vw;
+    border-radius: 0.1vw;
+    font-weight: 500;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
+}
+.videosSection{
+    padding: clamp(14px, calc(1vw + 0.1rem), 80px) clamp(14px, calc(1.8vw + 0.1rem), 80px);
+    padding-bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 63vh;
+}
+.videoHolder{
+    border: 1px solid var(--dark);
+    border-radius: 1vw;
+    height: 19vh;
+    overflow: hidden;
+}

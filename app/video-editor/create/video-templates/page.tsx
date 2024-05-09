@@ -1,4 +1,4 @@
-'use client';
+
 import { VideosTemplates } from '@/app/_data/data';
 import styles from './video-templates.module.css'
 import CustomBtn from '@/app/_components/Button/CustomBtn';

@@ -55,9 +55,20 @@ export interface IAssignedVideos {
     assignedTo : TCompanyEmployees,
     videoStatus : 'Convert Audio' | 'Continue'
 }
+export interface IVideoDatabase{
+    id:number,
+    title:string,
+    brand:TBrands,
+    views:string,
+    approvals:TApproval,
+    publish: TPublish,
+    date:string,
+    edit:string
+}
 
 export type TCompanyEmployees = 'Sherry' | 'Yara' | 'Kamel' | 'Manar'
 export type TasksType = 'Assigned' | 'Inprogress' | 'Tasks Done'
 export type TBrands = 'PST USA' | 'PST Asia' | 'Investocracy' | 'Street Politics' | 'Canada'
 export type TContentType = 'Script' | 'Article'
 export type TApproval = 'Pending' | 'Approved' | 'Rejected'
+export type TPublish = 'Not Published' | 'Uploading' | 'Published'

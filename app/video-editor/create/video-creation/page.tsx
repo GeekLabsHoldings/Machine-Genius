@@ -1,7 +1,7 @@
-'use client';
+
 import CustomBtn from '@/app/_components/Button/CustomBtn';
 import styles from './video-creation.module.css';
-import { VideoDatabase } from '@/app/_data/data';
+import { AssignedVideos } from '@/app/_data/data';
 import $ from 'jquery';
 
 const VideoCreation = ()=>{
@@ -12,7 +12,7 @@ const VideoCreation = ()=>{
         $(e.target).toggleClass('selected')
         $(e.target).find('.videoStatusBtn').toggleClass('clicked')
     }
-    const renderVideosData = VideoDatabase.map((video,idx)=>(
+    const renderVideosData = AssignedVideos.map((video,idx)=>(
         <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e);console.log(e.target)}}>
                 <li className="w-[5%]">{video.id}</li>
                 <li className="w-3/12">{video.title}</li>

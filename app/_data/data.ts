@@ -4,6 +4,7 @@ import {
   ICommentData,
   ITasks,
   ITranscriptData,
+  IVideoDatabase,
   IyourArticle,
   TApproval,
   TBrands,
@@ -249,7 +250,7 @@ export const YourArticles:IyourArticle[] =[
   },
 ]
 
-export const VideoDatabase:IAssignedVideos[] = [
+export const AssignedVideos:IAssignedVideos[] = [
   {
     id:1,
     title:'Pacific Allies ABANDON USA For China!',
@@ -382,6 +383,151 @@ export const VideosTemplates = [
   videoTypes:['Educational','Educational','Educational']
 },
 
+]
+export const VideosDatabase:IVideoDatabase[] =[
+  {
+    id:1,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'PST USA',
+    views:'300',
+    approvals:'Pending',
+    publish:'Not Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:2,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'PST Asia',
+    views:'12.1K',
+    approvals:'Pending',
+    publish:'Uploading',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:3,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'Investocracy',
+    views:'300',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:4,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'PST USA',
+    views:'300',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:5,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'Street Politics',
+    views:'12.1K',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:6,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'PST USA',
+    views:'300',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:7,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'PST Asia',
+    views:'12.1K',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:8,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'Canada',
+    views:'300',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:9,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'Investocracy',
+    views:'12.1K',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:10,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'PST USA',
+    views:'300',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:11,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'Canada',
+    views:'12.1K',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:12,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'PST USA',
+    views:'300',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
+  {
+    id:13,
+    title:'Pacific Allies ABANDON USA For China!',
+    brand:'Street Politics',
+    views:'12.1K',
+    approvals:'Approved',
+    publish:'Published',
+    date:'12 March  2024',
+    edit:'Edit'
+  
+  },
 ]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
 export const ContentType:TContentType[] =["Script" , "Article"]
