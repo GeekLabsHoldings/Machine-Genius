@@ -7,11 +7,11 @@ import SignIn from "./signin/page";
 
 export default function Home() {
 
-  const router = useRouter()
+  // const router = useRouter()
 
-  useEffect(()=>{
-    router.push('signin')
-  })
+  // useEffect(()=>{
+  //   router.push('signin')
+  // })
 
   return (
     <>

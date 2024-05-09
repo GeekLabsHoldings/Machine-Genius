@@ -10,25 +10,38 @@
     user-select: none;
 }
 
-.audio_player{
+.audio_player {
     border-radius: clamp(14px, calc(0.6vw + 0.1rem), 80px);
     padding: clamp(12px, calc(1vw + 0.1rem), 800px);
     border: 2px solid #000;
     overflow: hidden;
 }
-.audio_player p{
+
+.audio_player p {
     font-size: clamp(10px, calc(0.7vw + 0.1rem), 800px);
     text-align: justify;
     margin-bottom: clamp(12px, calc(1vw + 0.1rem), 80px);
 }
 
-.selected_words{
-    
+.selected_words {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, calc(1.2vw + 0.1rem), 800px);
 }
 
-.selected_words .header h6{
-    font-size: clamp(10px, calc(1.1vw + 0.1rem), 800px);
+.selected_words .header h6 {
+    font-size: clamp(10px, calc(1.2vw + 0.1rem), 800px);
+    font-weight: 700;
 }
-.selected_words .header svg{
+
+.selected_words .header svg {
     width: clamp(10px, calc(1.1vw + 0.1rem), 800px);
+}
+
+.selected_words_body {
+    border-radius: 20px;
+    border: 2px solid #DBDBD7;
+    background: var(--Foundation-Primary-Normal, #FFFFFB);
+    box-shadow: -1px 2px 8.7px 0px rgba(0, 0, 0, 0.25) inset;
+    padding: clamp(10px, calc(1vw + 0.1rem), 800px) clamp(20px, calc(2.5vw + 0.1rem), 800px);
 }
