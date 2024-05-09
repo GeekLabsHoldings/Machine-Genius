@@ -9,7 +9,7 @@ const ChooseBrand = () => {
 
   const [SelectedValue, setSelectedValue] = useState<string|number>('')
 
-  const handleBrandName = (value:string|number)=>{
+  const getValue = (value:string|number)=>{
     setSelectedValue(value)
   }
   
@@ -45,7 +45,7 @@ const ChooseBrand = () => {
 
       <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw] ">
         <label className={styles.select_label}>For This Brand</label>
-        <CustomSelectInput label="Select Content Type" options={options} handleBrandName={handleBrandName} />
+        <CustomSelectInput label="Select Content Type" options={options} getValue={getValue} />
       </div>
 
 

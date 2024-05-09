@@ -9,7 +9,7 @@ interface Iprops {
     icon? :any ,
     theme? : 'dark',
     whenSideNavClosed?:boolean,
-    handleBrandName ?: (value:string|number)=>void
+    getValue ?: (value:string|number)=>void
 }
 
 const CustomSelectInput = (props: Iprops) => {
@@ -27,8 +27,8 @@ const CustomSelectInput = (props: Iprops) => {
         console.log(e.innerText);
         setIsSelected(e.innerText);
         setIsActive(false);
-        if (props.handleBrandName) {
-          props.handleBrandName(e.innerText)
+        if (props.getValue) {
+          props.getValue(e.innerText)
         }
     }
 

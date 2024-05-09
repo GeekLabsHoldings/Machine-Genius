@@ -15,7 +15,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} setCurrentPage={setCurrentPage} />
       </div>
       <div className={styles.Page_Wrapper}>
-        <TitleOfPage title={CurrentPage}  />
+        <TitleOfPage title={CurrentPage} />
         <div className='h-full'>
         {children}
         </div>
@@ -25,3 +25,4 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
 }
 
 export default layout
+ 
