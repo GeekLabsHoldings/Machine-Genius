@@ -39,8 +39,8 @@ const VideoReady = ()=>{
                 
       </div>
       <div className='flex justify-between'>
-              <CustomBtn word='Back' btnColor='white'/>
-              <CustomBtn word='Next' btnColor='black'/>
+              <CustomBtn word='Back' btnColor='white' href='/video-editor/create/video-preview' />
+              <CustomBtn word='Next' btnColor='black' href='/video-editor/create/exporting-video' />
 
                   </div>
 
