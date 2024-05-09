@@ -1,8 +1,0 @@
-.select_label{
-    font-size: clamp(20px, calc(2vw + 0.1rem), 1000px);
-    text-align: center;
-    font-weight: 700;
-    line-height: normal;
-    width: 100%;
-    padding-bottom: clamp(10px, calc(1.4vw + 0.1rem), 1000px);
-}

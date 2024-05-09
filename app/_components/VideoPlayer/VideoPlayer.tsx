@@ -8,7 +8,7 @@ interface videoProps {
 const VideoPlayer = ({videoUrl,autoplay= true }:videoProps)=>{
     return(
         <div className={styles.videoWrapper}>
-        <Video className='w-full h-full' src={videoUrl} controls accentColor='#F36F24' autoPlay={autoplay} muted />
+            <Video className='w-full h-full' src={videoUrl} controls accentColor='#F36F24' autoPlay={autoplay} muted />
         </div>
     )
 }
