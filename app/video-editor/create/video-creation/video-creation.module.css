@@ -3,14 +3,9 @@
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
     overflow: hidden;
-   position: relative;
 }
-
 .tableBody{
     padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(10px, calc( 0.5vw + 0.1rem), 60px) !important;
-    position: absolute;
-    top: 8.1%;
-    left: 0;
     overflow-y: auto;
     height: 70vh;
     width: 99%;
@@ -26,9 +21,6 @@
 }
 .tableHeader{
     border-bottom: 1px solid #2A2B2A;
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 .tableHeader li{
     text-align: center;

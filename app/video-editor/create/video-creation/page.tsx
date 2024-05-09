@@ -1,4 +1,4 @@
-
+'use client';
 import CustomBtn from '@/app/_components/Button/CustomBtn';
 import styles from './video-creation.module.css';
 import { AssignedVideos } from '@/app/_data/data';
@@ -32,7 +32,7 @@ const VideoCreation = ()=>{
             {video.assignedTo}
             </span>
         </li>
-                <li className="w-2/12 "> <CustomBtn class='videoStatusBtn' width='w-full' word={video.videoStatus} href={video.videoStatus === 'Convert Audio' ? 'convert-audio' : ''} btnColor='black' /> </li>
+                <li className="w-2/12 "> <CustomBtn class='videoStatusBtn' width='w-full' word={video.videoStatus} href={video.videoStatus === 'Convert Audio' ? 'converted-article' : ''} btnColor='black' /> </li>
         </ul>
     ))
 

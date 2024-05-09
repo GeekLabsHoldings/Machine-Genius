@@ -7,10 +7,6 @@ import CustomAudioPlayer from '@/app/_components/customAudioPlayer/CustomAudioPl
 
 const convertedArticle = () => {
 
-
-
-
-
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-end h-[75vh] py-[1.5vw] w-full gap-[2vw]">
@@ -59,12 +55,12 @@ const convertedArticle = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/create/script-approved"}
+          href={"/video-editor/create/video-creation"}
         />
         <CustomBtn
           word={"Generate Titles"}
           btnColor="black"
-          href={"/content-creator/create/script-approved"}
+          href={"/video-editor/create/video-templates"}
         />
       </div>
     </div>
