@@ -98,9 +98,11 @@ const CommentsOnArticle = () => {
   ))
 
 
+  // loading state that make loading show or hidden
   const [IsLoading, setIsLoading] = useState(false);
 
   const router = useRouter()
+
 
   const handleNavigate = () => {
 

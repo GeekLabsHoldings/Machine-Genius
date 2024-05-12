@@ -6,6 +6,7 @@ import { ArticlePreviewData } from '../../../_data/data'
 import { useState } from "react";
 
 const SEOGenerating = () => {
+  
   const [keyword, setKeyword] = useState<string>('');
   const [noOfMatched, setNoOfMatched] = useState<number>(0);
 

@@ -35,7 +35,7 @@ const ChooseBrand = () => {
 
     // navigate to movie myth if user select movie myth option 
     if (SelectedValue === 'Movie Myth') {
-      router.push('/content-creator/create/movie-myth/uploud-movie')
+      router.push('/content-creator/create/movie-myth')
     }
 
   }, [SelectedValue])
