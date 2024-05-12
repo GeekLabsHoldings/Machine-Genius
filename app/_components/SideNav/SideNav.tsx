@@ -24,21 +24,25 @@ const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fil
 
 const rols = [
     'Content Creator',
-    'Video Editor'
+    'Video Editor',
+    'Social Media'
 ]
 
 
 
 const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage }: { sideNavLinks: { name: string, path: string, icon: any }[], isSideNavOpen: boolean, setIsSideNavOpen: any, setCurrentPage: any }) => {
 
+    // current role
     const [SelectedRole, setSelectedRole] = useState<string | number>('')
 
     const router = useRouter()
 
+    // function that get role value from select option by send it as a prop
     const getRole = (value: string | number) => {
         setSelectedRole(value)
     }
 
+    // function that get current 
     const handleCurrentPageTitle = (name: string) => {
         setCurrentPage(name)
     }
@@ -48,6 +52,8 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/content-creator/dashboard')
         } else if (SelectedRole === 'Video Editor') {
             router.push('/video-editor/dashboard')
+        }else if (SelectedRole === 'Social Media') {
+            router.push('/social-media/dashboard')
         }
     }, [SelectedRole])
 
