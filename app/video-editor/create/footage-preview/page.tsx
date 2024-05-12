@@ -26,7 +26,7 @@ const FootagePreview = () => {
       className={`w-full h-full flex flex-col ${styles.footagePreview}`}
     >
       <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
-        <div className="w-1/2 h-full">
+        <div className="w-1/2">
           <ArticlePreview
             height="h-full"
             withEdit={false}
@@ -34,7 +34,7 @@ const FootagePreview = () => {
           />
         </div>
 
-        <div className="w-1/2 flex flex-col gap-[1vw] h-full">
+        <div className="w-1/2 flex flex-col gap-[1vw]">
           <div className="flex justify-between">
             <h3>Footage Found</h3>
             <SimplePagination />
@@ -42,7 +42,7 @@ const FootagePreview = () => {
           <div className="flex gap-[0.6vw]">
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" type="radio" name="choose-footage"/>
+                <CustomCheckBox value="" type="checkbox" name="choose-footage"/>
               </div>
               <VideoPlayer
                 video={video}
@@ -53,7 +53,7 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" type="radio" name="choose-footage" />
+                <CustomCheckBox value="" type="checkbox" name="choose-footage" />
               </div>
               <VideoPlayer
                 video={video}
@@ -64,7 +64,7 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" type="radio" name="choose-footage" />
+                <CustomCheckBox value="" type="checkbox" name="choose-footage" />
               </div>
               <VideoPlayer
                 video={video}
