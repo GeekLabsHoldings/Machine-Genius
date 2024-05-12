@@ -1,12 +1,13 @@
-'use client'
+'use client';
+import CustomBtn from "@/app/_components/Button/CustomBtn"
+import styles from './movie-script.module.css'
+// page enables you to have a look to your article
 import VideoPlayer from '@/app/_components/VideoPlayer/VideoPlayer'
-import styles from './create-movie.module.css'
-import CustomBtn from '@/app/_components/Button/CustomBtn'
 import { TranscriptData } from '@/app/_data/data'
 
-const CreateMovie = () => {
+const MovieScript = () => {
     const renderTranscriptData = TranscriptData.map((transcript) => (
-        <div className={`flex flex-col  ${styles.script} items-end  `}>
+        <div className={`flex flex-col ${styles.script} items-end  `}>
             <p>{transcript.text}</p>
             <span>{transcript.minutes}</span>
         </div>
@@ -16,9 +17,11 @@ const CreateMovie = () => {
         <div className="flex flex-col gap-[1vw]">
             <div className="flex justify-center items-center pageHeader h-[75vh] py-[1.5vw] w-full gap-[2vw] ">
                 <div className={`${styles.createMovie} w-5/12  h-full`}>
-                    <h3>Transcribe</h3>
-                    <div className={`${styles.box} flex flex-col px-[1.5vw] pt-[4vw] pb-[1.5vw] gap-[1vw]`}>
+                    <h3>Script</h3>
+                    <div className={`${styles.box} px-[1.5vw] pt-[2.5vw] pb-[1.5vw] `}>
+                        <div className={`${styles.dataWrapper}  flex flex-col gap-[1vw] `}>
                         {renderTranscriptData}
+                        </div>
                     </div>
                 </div>
                 {/* section to display your selected movie */}
@@ -31,11 +34,11 @@ const CreateMovie = () => {
             </div>
             {/* buttons lead you to last and next page */}
             <div className="flex justify-between w-full">
-                <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/movie-myth/upload-movie"} />
-                <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/movie-myth/movie-script"} />
+                <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/movie-myth/create-movie"} />
+                <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/movie-myth/final-movie"} />
             </div>
         </div>
     )
 }
 
-export default CreateMovie
+export default MovieScript

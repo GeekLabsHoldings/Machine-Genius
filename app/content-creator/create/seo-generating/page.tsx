@@ -129,7 +129,7 @@ const SEOGenerating = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/create/choose-articles"}
+          href={"/content-creator/create/article-generated-titles"}
         />
         <CustomBtn
           word={"Next"}

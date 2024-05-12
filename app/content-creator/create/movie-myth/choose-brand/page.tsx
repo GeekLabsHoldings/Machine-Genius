@@ -1,7 +1,7 @@
 'use client'
 import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './ChooseBrand.module.css'
-import CustomSelectInput from '../../../_components/CustomSelectInput/CustomSelectInput'
+import CustomSelectInput from '../../../../_components/CustomSelectInput/CustomSelectInput'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -48,8 +48,8 @@ const ChooseBrand = () => {
 
 
       <div className="flex justify-between items-center">
-        <CustomBtn word="Back" btnColor="white" href="/content-creator/create" />
-        <CustomBtn word="Next" btnColor="black" href="/content-creator/create/choose-content" />
+        <CustomBtn word="Back" btnColor="white" href="/content-creator/create/movie-myth" />
+        <CustomBtn word="Next" btnColor="black" href="/content-creator/create/movie-myth/upload-movie" />
       </div>
 
     </div>

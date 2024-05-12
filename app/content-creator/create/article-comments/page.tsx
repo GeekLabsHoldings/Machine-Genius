@@ -158,6 +158,7 @@ const CommentsOnArticle = () => {
                   managerStatus="online"
                   replyTxt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun"
                   date="April 16th 2024"
+                  // to mark the comment as read
                   svgBtn={
                     <svg
                       width="24"
@@ -229,6 +230,7 @@ const CommentsOnArticle = () => {
                         dolor sit amet, consectetur adipiscing elit, sed do
                         eiusmod tempor incididunt ut labore...
                       </p>
+                      {/* date of comment */}
                       <div className="flex justify-end">
                         <p>April 16th 2024</p>
                       </div>
@@ -242,6 +244,7 @@ const CommentsOnArticle = () => {
                 <TopicColapse forComments={true}
                   managerStatus="away"
                   date="April 16th 2024"
+                  // to mark the comment as read
                   svgBtn={
                     <svg
                       width="24"
@@ -313,6 +316,7 @@ const CommentsOnArticle = () => {
                         dolor sit amet, consectetur adipiscing elit, sed do
                         eiusmod tempor incididunt ut labore...
                       </p>
+                      {/* date of comment */}
                       <div className="flex justify-end">
                         <p>April 16th 2024</p>
                       </div>
@@ -324,6 +328,7 @@ const CommentsOnArticle = () => {
                 <TopicColapse forComments={true}
                   managerStatus="offline"
                   date="April 16th 2024"
+                  // to mark the comment as read
                   svgBtn={
                     <svg
                       width="24"
@@ -395,6 +400,7 @@ const CommentsOnArticle = () => {
                         dolor sit amet, consectetur adipiscing elit, sed do
                         eiusmod tempor incididunt ut labore...
                       </p>
+                      {/* date of comment */}
                       <div className="flex justify-end">
                         <p>April 16th 2024</p>
                       </div>

@@ -66,7 +66,7 @@ const ShowErrors = () => {
                     </div>
 
                     <div className="flex justify-between w-full">
-                        <CustomBtn word={"Back"} btnColor="white" href="/content-creator/create/movie-myth/final-article" />
+                        <CustomBtn word={"Back"} btnColor="white" href="/content-creator/create/movie-myth/final-movie" />
                         <CustomBtn word={"Fix & Check"} btnColor="black" href='/content-creator/create/movie-myth/article-ready' />
                     </div>
 

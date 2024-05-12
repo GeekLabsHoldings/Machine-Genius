@@ -28,7 +28,7 @@ const FinalArticle = () => {
     return (
 
          <div className="flex flex-col">
-
+            {/* loading screen */}
             { IsLoading ? <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]" >
                 <div className={`${styles.genuisWorking}`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />

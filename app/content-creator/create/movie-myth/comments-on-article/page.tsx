@@ -85,6 +85,7 @@ const CommentsOnArticle = () => {
             dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore...
           </p>
+          {/* the date of comment */}
           <div className="flex justify-end">
             <p>April 16th 2024</p>
           </div>
@@ -404,7 +405,7 @@ const CommentsOnArticle = () => {
             <CustomBtn
               word={"Back"}
               btnColor="white"
-              href={"/content-creator/create/script-approved"}
+              href={"/content-creator/create/movie-myth/article-ready"}
             />
             <CustomBtn
               word={"Generate Titles"}

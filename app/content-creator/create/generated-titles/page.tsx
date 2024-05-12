@@ -13,7 +13,6 @@ const ReGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 1
 const GeneratedTitles = () => {
 
     const [isCreateMyOwnDisabled, setIsCreateMyOwnDisabled] = useState(true)
-    
 
   return (
     <div className="flex flex-col justify-between">
@@ -23,6 +22,7 @@ const GeneratedTitles = () => {
                     <h6>Titles Generated</h6>
                     <CustomBtn word="Re-Generate" btnColor="black" href="/content-creator/generated-titles" icon={ReGenerateIcon}/>
                 </div>
+                {/* titles section */}
                 <div className={`${styles.titles_container} ${isCreateMyOwnDisabled?'':'opacity-60'} h-full`} onClick={()=>setIsCreateMyOwnDisabled(true)}>
                     <div className='h-full overflow-y-auto p-[1vw] space-y-[1vw]'>
                         <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles'/>
@@ -32,7 +32,9 @@ const GeneratedTitles = () => {
                     </div>
                 </div>
             </div>
+            
             <div className={styles.line}></div>
+            {/* section to create your own title */}
             <div className={` ${isCreateMyOwnDisabled ? styles.add_title_wrapper + " " + styles.disabled : styles.add_title_wrapper} w-1/2 h-full flex flex-col items-center justify-center`}
                             onClick={()=>setIsCreateMyOwnDisabled(false)}>
                 <label htmlFor="add-title">Create My Own</label>
@@ -40,9 +42,10 @@ const GeneratedTitles = () => {
             </div>
         </div>
 
+            {/* buttons to navigate to last and next page */}
         <div className="flex justify-between">
-            <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/generating-titles"} />
-            <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/images-generating-titles"} />
+            <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/article-comments"} />
+            <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/article-images-generating"} />
         </div>
     </div>
   )

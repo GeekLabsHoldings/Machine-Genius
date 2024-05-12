@@ -27,6 +27,9 @@ const ArticleImages = () => {
     //     )) 
     // }
 
+
+
+// function to select image from your device
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
         const reader:any = new FileReader();
@@ -44,6 +47,7 @@ const ArticleImages = () => {
     };
 
     return (
+        // page to add images to your article
         <div className="flex flex-col ">
             <div className="flex justify-center items-start h-[75vh] py-[1.5vw] w-full gap-[10vw] ">
                 <div className="w-5/12 flex flex-col gap-[1vw]">
@@ -52,9 +56,8 @@ const ArticleImages = () => {
                     </div>
                     <div className="w-full flex">
                         <div className="w-1/2 flex flex-col  gap-[1.2vw]">
-
+                            {/* image holder to show the selected image */}
                             <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw] ">
-                                
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden relative`}>
                                     <label className='cursor-pointer' htmlFor="first-img">
                                         <svg viewBox="0 0 50 44" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,6 +73,7 @@ const ArticleImages = () => {
                                 </div>
                             </div>
 
+                            {/* image holder to show the selected image */}
                             <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw] ">
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden `}>
                                     <label className='cursor-pointer' htmlFor="second-img">
@@ -81,13 +85,12 @@ const ArticleImages = () => {
                                     <img src="" alt="" />
                                 </div>
 
-
                                 <div className={styles.generatingInput}>
                                     <input type="text" placeholder="Alt Text" />
                                 </div>
-
                             </div>
 
+                            {/* image holder to show the selected image */}
                             <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw]">
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden `}>
                                     <label className='cursor-pointer' htmlFor="third-img">
@@ -107,6 +110,8 @@ const ArticleImages = () => {
                         </div>
 
                         <div className="w-1/2 flex flex-col gap-[1.2vw]">
+
+                            {/* image holder to show the selected image */}
                             <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw]">
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden `}>
                                     <label className='cursor-pointer' htmlFor="forth-img">
@@ -124,6 +129,8 @@ const ArticleImages = () => {
                                 </div>
 
                             </div>
+
+                            {/* image holder to show the selected image */}
                             <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw]">
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden `}>
                                     <label className='cursor-pointer' htmlFor="fifth-img">
@@ -141,7 +148,8 @@ const ArticleImages = () => {
                                     <input type="text" placeholder="Alt Text" />
                                 </div>
                             </div>
-
+                            
+                            {/* image holder to show the selected image */}
                             <div className="w-11/12 mx-auto flex flex-col gap-[0.8vw]">
                                 <div className={`${styles.imgWrapper} flex justify-center items-center overflow-hidden `}>
                                     <label className='cursor-pointer' htmlFor="sixth-img">
@@ -179,7 +187,7 @@ const ArticleImages = () => {
                 <CustomBtn
                     word={"Back"}
                     btnColor="white"
-                    href={"/content-creator/create/choose-articles"}
+                    href={"/content-creator/create/article-comments"}
                 />
                 <CustomBtn
                     word={"next"}

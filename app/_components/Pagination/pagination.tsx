@@ -4,6 +4,7 @@ import styles from './pagination.module.css';
 import { IconButton } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
  
+// customized arrows component to handle pagination
 export const SimplePagination =()=> {
   const [active, setActive] = React.useState(1);
  

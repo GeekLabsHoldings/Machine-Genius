@@ -9,7 +9,7 @@
 }
 
 .article_with_check label.article{
-    padding:clamp(10px,  calc( 1vw + 0.1rem ), 6000px);
+    padding:clamp(10px,  calc( 0.5vw + 0.1rem ), 6000px) clamp(10px,  calc( 1vw + 0.1rem ), 6000px);
     border: 1px solid var(--dark);
     border-radius: clamp(5px, calc(0.4vw + 0.1rem), 1000px);
     font-size: clamp(10px,  calc( 0.8vw + 0.1rem ), 6000px);

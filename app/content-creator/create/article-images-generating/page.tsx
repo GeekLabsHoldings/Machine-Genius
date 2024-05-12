@@ -2,53 +2,32 @@
 import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import styles from "./images-generating-titles.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { SelectArticleData } from "@/app/_data/data";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ImagesForGeneratingTitles = () => {
+  const date = new Date();
+  const currentHours = date.getHours() ;
+  const amOrPm = currentHours > 12 ? 'PM' : 'AM';
+  const hours = currentHours % 12 ;
+  const currentTime = hours+ ":" + date.getMinutes() + " " + amOrPm + " " + "GMT"
 
 
-  const [IsLoading, setIsLoading] = useState(false);
-
-  const router = useRouter()
-
-  const handleNavigate = () => {
-
-    setIsLoading(true)
-
-    // setTimeout(() => {
-    //   // Your action here
-    //   router.push('/content-creator/create/generated-titles')
-
-    // }, 1500); // 3000 milliseconds = 3 seconds
-
-  }
+  // page to publish article
 
   return (
-    <>
-      {IsLoading ?         <div className="flex flex-col">
-            <div className="flex justify-center items-center h-[75vh] py-[1.5vw] w-full gap-[10vw] ">
-                <div className="flex flex-col gap-[1.5vw]">
-                    <LogoAndTitle title={"Your Script Has Been Scheduled!"} needTxt={false} />
-                    <div className="flex justify-center gap-[1.5vw]">
-                        <CustomBtn word="Dashboard" btnColor="black" href={"/dashboard"} />
-                        <CustomBtn word="Convert To Article" btnColor="black" href={"/content-creator/create/article-generated-titles"} />
-                    </div>
-                </div>
-            </div>
-        </div> :     <div className="flex flex-col">
+<div className="flex flex-col">
       <div className="flex justify-between m-auto h-[75vh] py-[1.5vw] w-full gap-[10vw]">
         <div className="w-5/12 flex flex-col gap-[1.5vw]">
+          {/* Thumbnail of article */}
           <div className="flex flex-col gap-[1.5vw]">
           <div className={`${styles.yourThumbnail} pageHeader`}>
             <h3>Thumbnail</h3>
           </div>
           <CustomSelectInput label={"Select Thumbnail"} options={SelectArticleData}/>
           </div>
+
+{/* preview of selected Thumbnail */}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Preview</h5>
             <div className={`${styles.imageHolder} h-[20vh] flex justify-center items-center`}>
@@ -61,6 +40,7 @@ const ImagesForGeneratingTitles = () => {
           </div>
 
           <div className="w-full lg:w-6/12 flex flex-col gap-[2vw]">
+            {/* put the title of article */}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Title</h5>
             <div className={styles.generatingInput}>
@@ -68,10 +48,10 @@ const ImagesForGeneratingTitles = () => {
             </div>
          
           </div>
+            {/* select wanted upload time and the default value is current time */}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Upload Time</h5>
-            <CustomSelectInput label={"8:30 PM GMT"} options={SelectArticleData}/>
-         
+            <CustomSelectInput label={currentTime} options={SelectArticleData}/>
           </div>
           </div>
 
@@ -93,11 +73,10 @@ const ImagesForGeneratingTitles = () => {
         <CustomBtn
           word={"Schedule"}
           btnColor="black"
-          onClick={handleNavigate}
+          href="/content-creator/create/schedule-script"
         />
       </div>
-    </div>}
-    </>
+    </div>
 
   );
 };
