@@ -14,6 +14,7 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 // page for article creation so you can highlight text and keep it in selection section
 const CreateArticle = () => {
+
   // const [selectedText, setSelectedText] = useState<string[]>([]);
 
   // state keeps selected text to display them in selection section
@@ -38,12 +39,12 @@ const CreateArticle = () => {
     var checkboxes = document.querySelectorAll('input[name="selected-articles"]');
 
     if (e.target.checked) {
-      // Loop through each checkbox and set checked property to false
+      // Loop through each checkbox and set checked property to true
       checkboxes.forEach(function (checkbox: any) {
         checkbox.checked = true;
       });
     } else {
-      // Loop through each checkbox and set checked property to true
+      // Loop through each checkbox and set checked property to false
       checkboxes.forEach(function (checkbox: any) {
         checkbox.checked = false;
       });
@@ -51,26 +52,24 @@ const CreateArticle = () => {
 
   }
 
-
+// state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
 
-  const router = useRouter()
+  const router = useRouter();
 
+ // show loading page before navigate to next page
   const handleNavigate = () => {
-
     setIsLoading(true)
-
     setTimeout(() => {
-      // Your action here
       router.push('/content-creator/create/final-article')
-
-    }, 1500); // 3000 milliseconds = 3 seconds
+    }, 1500); 
 
   }
 
   return (
 
     <div className="flex flex-col">
+            {/* check on loading state to render the correct content based on it */}
       {IsLoading ? <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
         <LogoAndTitle needTxt={true} textNeeded='Hold on tight.' title='Genius is working on your article..' />
       </div>

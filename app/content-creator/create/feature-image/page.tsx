@@ -10,8 +10,10 @@ import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ImagesForGeneratingTitles = () => {
+  // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter()
+  // to handle loading content before navigation to next page
   const handleNavigate = () => {
     setIsLoading(true)
 
@@ -22,6 +24,7 @@ const ImagesForGeneratingTitles = () => {
     // }, 1500); // 3000 milliseconds = 3 seconds
 
   }
+  // return current time in our format
   const date = new Date();
   const currentHours = date.getHours() ;
   const amOrPm = currentHours > 12 ? 'PM' : 'AM';
@@ -30,6 +33,7 @@ const ImagesForGeneratingTitles = () => {
 
   return (
     <>
+     {/* check on loading state to render the correct content based on it */}
       {IsLoading ? <div className="flex flex-col">
             <div className="flex justify-center items-center h-[75vh] py-[1.5vw] w-full gap-[10vw] ">
                 <div className="flex flex-col gap-[2vw]">

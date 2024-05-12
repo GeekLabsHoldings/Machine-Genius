@@ -8,10 +8,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const FinalMovie = ()=>{
+    // state to handle content while page is loading its content
     const [IsLoading, setIsLoading] = useState(false);
 
     const router = useRouter()
-  
+  // show loading page before navigate to next page
     const handleNavigate = () => {
       setIsLoading(true)
     }

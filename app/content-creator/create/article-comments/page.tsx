@@ -12,8 +12,7 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 
 const CommentsOnArticle = () => {
 
-
-
+  // render all comments from database
   const renderCommentsData = CommentsData.map((oneCommentData) => (
     <TopicColapse forComments={true}
       managerStatus={oneCommentData.managerStatus}
@@ -102,26 +101,25 @@ const CommentsOnArticle = () => {
     />
   ))
 
-
+// state to be true before content of page appeared
   const [IsLoading, setIsLoading] = useState(false);
 
-  const router = useRouter()
+  const router = useRouter();
 
+  // show loading page before navigate to next page
   const handleNavigate = () => {
-
     setIsLoading(true)
-
     setTimeout(() => {
-      // Your action here
       router.push('/content-creator/create/article-images')
 
-    }, 1500); // 3000 milliseconds = 3 seconds
+    }, 1500);
 
   }
 
   return (
 
     <div className="flex flex-col">
+      {/* check on loading state to render the correct content based on it */}
       {IsLoading ? <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.4vw]" >
         <div className={`${styles.genuisWorking} m-auto`}>
           <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
@@ -129,7 +127,7 @@ const CommentsOnArticle = () => {
             <SpecificChecker pass={true} word='Grammar Checker' />
             <SpecificChecker pass={true} word='Plagiarism Checker' />
             <SpecificChecker pass={true} word='AI Checker' />
-          </div>                </div>
+          </div> </div>
       </div> : <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
         <div className="w-7/12 flex flex-col gap-[1vw]">
           <div className={`${styles.yourArticle}`}>

@@ -6,6 +6,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import { SelectArticleData } from "@/app/_data/data";
 
 const ImagesForGeneratingTitles = () => {
+  // make current time in desired format
   const date = new Date();
   const currentHours = date.getHours() ;
   const amOrPm = currentHours > 12 ? 'PM' : 'AM';

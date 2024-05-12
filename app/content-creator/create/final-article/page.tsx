@@ -8,13 +8,12 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from './final-artical.module.css'
 // page enables you to have a look to your article
 const FinalArticle = () => {
-
+// state to handle content while page is loading its content
     const [IsLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
-    const router = useRouter()
-  
+// show loading page before navigate to next page
     const handleNavigate = () => {
-  
       setIsLoading(true)
   
     //   setTimeout(() => {

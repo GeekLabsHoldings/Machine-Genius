@@ -11,15 +11,12 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ImagesForGeneratingTitles = () => {
 
-
+// state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
-
   const router = useRouter()
-
+// show loading page before navigate to next page
   const handleNavigate = () => {
-
     setIsLoading(true)
-
     // setTimeout(() => {
     //   // Your action here
     //   router.push('/content-creator/create/generated-titles')
@@ -27,6 +24,7 @@ const ImagesForGeneratingTitles = () => {
     // }, 1500); // 3000 milliseconds = 3 seconds
 
   }
+  // make current time in wanted format
   const date = new Date();
   const currentHours = date.getHours() ;
   const amOrPm = currentHours > 12 ? 'PM' : 'AM';

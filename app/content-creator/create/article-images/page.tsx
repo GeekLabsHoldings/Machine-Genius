@@ -19,22 +19,18 @@ const ArticleImages = () => {
     //         setImages([...images, {id:event.target.id,image:URL.createObjectURL(event.target.files[0])}])
     //     }
     // };
-
     // const renderSpecificImg = (elementId:imgStore['id']) =>{
-
     //     return images.map((image)=>(
     //         image.id === elementId ? <img src={image['image']} alt="" /> :  null
     //     )) 
     // }
 
-
-
-// function to select image from your device
+// function to handle display of our image and hide label icon
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files ? event.target.files[0] : null;
         const reader:any = new FileReader();
-        let img:any = event.target.nextElementSibling
-        let label = event.target.previousElementSibling
+        let img:any = event.target.nextElementSibling ;
+        let label = event.target.previousElementSibling ;
         reader.onloadend = () => {
             label?.classList.add('hidden')
             img.style.display = "block";

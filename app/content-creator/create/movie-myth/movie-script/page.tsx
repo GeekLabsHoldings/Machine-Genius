@@ -6,6 +6,7 @@ import VideoPlayer from '@/app/_components/VideoPlayer/VideoPlayer'
 import { TranscriptData } from '@/app/_data/data'
 
 const MovieScript = () => {
+    // return script data 
     const renderTranscriptData = TranscriptData.map((transcript) => (
         <div className={`flex flex-col ${styles.script} items-end  `}>
             <p>{transcript.text}</p>
@@ -16,6 +17,7 @@ const MovieScript = () => {
     return (
         <div className="flex flex-col gap-[1vw]">
             <div className="flex justify-center items-center pageHeader h-[75vh] py-[1.5vw] w-full gap-[2vw] ">
+                {/* script section */}
                 <div className={`${styles.createMovie} w-5/12  h-full`}>
                     <h3>Script</h3>
                     <div className={`${styles.box} px-[1.5vw] pt-[2.5vw] pb-[1.5vw] `}>
