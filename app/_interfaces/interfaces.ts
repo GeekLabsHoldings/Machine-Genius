@@ -65,7 +65,14 @@ export interface IVideoDatabase{
     date:string,
     edit:string
 }
-
+export interface IRedditData {
+    subReddit:string,
+    link:string,
+    subscribers:string,
+    niche:string,
+    brand:TBrands,
+    engagement:string
+}
 export type TCompanyEmployees = 'Sherry' | 'Yara' | 'Kamel' | 'Manar'
 export type TasksType = 'Assigned' | 'Inprogress' | 'Tasks Done'
 export type TBrands = 'PST USA' | 'PST Asia' | 'Investocracy' | 'Street Politics' | 'Canada'
