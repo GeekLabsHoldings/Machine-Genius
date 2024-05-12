@@ -5,10 +5,32 @@ import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithChec
 
 const chooseArticles = () => {
 
+    const favIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
+        <g filter="url(#filter0_i_623_11960)">
+            <path d="M11.3675 3.38104C7.17949 -2.47623 0 -0.121939 0 5.8532C0 11.8284 11.9659 20 11.9659 20C11.9659 20 23.3333 11.5004 23.3333 5.8532C23.3333 0.205986 16.7522 -2.47621 12.5641 3.38104L11.9659 3.84887L11.3675 3.38104Z" />
+        </g>
+        <defs>
+            <filter id="filter0_i_623_11960" x="0" y="0" width="23.333" height="21.1111" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                <feOffset dy="1.11111" />
+                <feGaussianBlur stdDeviation="1.66667" />
+                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
+            </filter>
+        </defs>
+    </svg>
+
+
     return (
         <div className="flex flex-col">
             <div className="flex justify-center items-start gap-[2rem] h-[75vh] py-[1.5vw]">
+                {/* scripts wrapper */}
                 <div className={styles.scripts_wrapper + ' w-1/2'}>
+
+                    {/* scripts header that  */}
                     <div className={styles.header}>
                         <h6>Scripts</h6>
                         <span>
@@ -18,89 +40,27 @@ const chooseArticles = () => {
                         </span>
                     </div>
                     <div className={styles.select_article_container}>
-                        <TopicColapse forComments={false} svgBtn={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
-                        <g filter="url(#filter0_i_623_11960)">
-                            <path d="M11.3675 3.38104C7.17949 -2.47623 0 -0.121939 0 5.8532C0 11.8284 11.9659 20 11.9659 20C11.9659 20 23.3333 11.5004 23.3333 5.8532C23.3333 0.205986 16.7522 -2.47621 12.5641 3.38104L11.9659 3.84887L11.3675 3.38104Z" />
-                        </g>
-                        <defs>
-                            <filter id="filter0_i_623_11960" x="0" y="0" width="23.333" height="21.1111" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                                <feOffset dy="1.11111" />
-                                <feGaussianBlur stdDeviation="1.66667" />
-                                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
-                            </filter>
-                        </defs>
-                    </svg>} title='Canada Loves People' date='April 16th 2024' >
+                        <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
-                        <TopicColapse forComments={false} svgBtn={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
-                        <g filter="url(#filter0_i_623_11960)">
-                            <path d="M11.3675 3.38104C7.17949 -2.47623 0 -0.121939 0 5.8532C0 11.8284 11.9659 20 11.9659 20C11.9659 20 23.3333 11.5004 23.3333 5.8532C23.3333 0.205986 16.7522 -2.47621 12.5641 3.38104L11.9659 3.84887L11.3675 3.38104Z" />
-                        </g>
-                        <defs>
-                            <filter id="filter0_i_623_11960" x="0" y="0" width="23.333" height="21.1111" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                                <feOffset dy="1.11111" />
-                                <feGaussianBlur stdDeviation="1.66667" />
-                                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
-                            </filter>
-                        </defs>
-                    </svg>} title='Canada Loves People' date='April 16th 2024' >
+                        <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
-                        <TopicColapse forComments={false} svgBtn={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
-                        <g filter="url(#filter0_i_623_11960)">
-                            <path d="M11.3675 3.38104C7.17949 -2.47623 0 -0.121939 0 5.8532C0 11.8284 11.9659 20 11.9659 20C11.9659 20 23.3333 11.5004 23.3333 5.8532C23.3333 0.205986 16.7522 -2.47621 12.5641 3.38104L11.9659 3.84887L11.3675 3.38104Z" />
-                        </g>
-                        <defs>
-                            <filter id="filter0_i_623_11960" x="0" y="0" width="23.333" height="21.1111" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                                <feOffset dy="1.11111" />
-                                <feGaussianBlur stdDeviation="1.66667" />
-                                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
-                            </filter>
-                        </defs>
-                    </svg>} title='Canada Loves People' date='April 16th 2024' >
+                        <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
-                        <TopicColapse forComments={false} svgBtn={<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
-                        <g filter="url(#filter0_i_623_11960)">
-                            <path d="M11.3675 3.38104C7.17949 -2.47623 0 -0.121939 0 5.8532C0 11.8284 11.9659 20 11.9659 20C11.9659 20 23.3333 11.5004 23.3333 5.8532C23.3333 0.205986 16.7522 -2.47621 12.5641 3.38104L11.9659 3.84887L11.3675 3.38104Z" />
-                        </g>
-                        <defs>
-                            <filter id="filter0_i_623_11960" x="0" y="0" width="23.333" height="21.1111" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                                <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                                <feOffset dy="1.11111" />
-                                <feGaussianBlur stdDeviation="1.66667" />
-                                <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
-                                <feBlend mode="normal" in2="shape" result="effect1_innerShadow_623_11960" />
-                            </filter>
-                        </defs>
-                    </svg>} title='Canada Loves People' date='April 16th 2024' >
+                        <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
                     </div>
                 </div>
+
+                {/* preview wrapper */}
                 <div className={styles.preview_wrapper + ' w-1/2'}>
                     <div className={styles.header}>
                         <h6>Preview</h6>
@@ -110,11 +70,12 @@ const chooseArticles = () => {
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae labore recusandae tempora eveniet eius, veritatis corporis hic itaque doloribus nemo expedita excepturi nesciunt laborum accusamus perspiciatis, asperiores ipsam officia?</p>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae labore recusandae tempora eveniet eius, veritatis corporis hic itaque doloribus nemo expedita excepturi nesciunt laborum accusamus perspiciatis, asperiores ipsam officia?</p>
-                        
+
                     </div>
                 </div>
             </div>
 
+            {/* buttons to move to last or next page */}
             <div className="flex justify-between w-full">
                 <CustomBtn word={"Back"} btnColor="white" href={"/content-creator/create/choose-content"} />
                 <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/create-article"} />

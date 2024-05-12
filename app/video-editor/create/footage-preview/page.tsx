@@ -23,18 +23,18 @@ const FootagePreview = () => {
 
   return (
     <div
-      className={`w-full h-full flex flex-col py-[4vh] ${styles.footagePreview}`}
+      className={`w-full h-full flex flex-col ${styles.footagePreview}`}
     >
-      <div className="flex gap-[2vw] h-[77vh] ">
-        <div className="w-1/2">
+      <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
+        <div className="w-1/2 h-full">
           <ArticlePreview
-            height="h-[75vh]"
+            height="h-full"
             withEdit={false}
             yourNewArticle={false}
           />
         </div>
 
-        <div className="w-1/2 flex flex-col gap-[1vw]">
+        <div className="w-1/2 flex flex-col gap-[1vw] h-full">
           <div className="flex justify-between">
             <h3>Footage Found</h3>
             <SimplePagination />

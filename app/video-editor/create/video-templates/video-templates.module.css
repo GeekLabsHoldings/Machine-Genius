@@ -2,7 +2,7 @@
     border: 1px solid var(--dark);
     border-radius: 1rem;
     padding: 0 clamp(10px, calc( 0.5vw + 0.1rem), 60px);
-    height: 65vh;
+    height: 100%;
     overflow: hidden;
 }
 .brandsAndTypesWrapper{

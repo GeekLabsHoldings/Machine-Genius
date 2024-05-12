@@ -31,7 +31,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
         </svg>
     },
     {
-        name: "Article Database", path: "/video-editor/article-database", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 19" fill="none">
+        name: "Video Database", path: "/video-editor/article-database", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 19" fill="none">
             <path d="M0 0.583252H20V2.83325H0V0.583252ZM1.36364 3.73325V18.5833H18.6364V3.73325H1.36364ZM13.1818 7.78325H6.36364V6.43325H13.1818V7.78325Z" />
         </svg>
     },

@@ -12,10 +12,6 @@ import $ from 'jquery'
 
 const ArticleDatabase = () => {
 
-  // const [SelectedValue, setSelectedValue] = useState<string | number>()
-  // const handleBrandName = (value:string|number)=>{
-  //   setSelectedValue(value)
-  // }
   
 
     const handleSelectedBg = (e: any)=>{

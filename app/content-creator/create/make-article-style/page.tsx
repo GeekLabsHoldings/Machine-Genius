@@ -121,7 +121,7 @@ const MakeArticleStyle = () => {
                         <div className={styles.header}>
                             <h6>Article Preview</h6>
                         </div>
-                        <ArticlePreview height="h-full" withEdit={false} yourNewArticle={false} />
+                        <ArticlePreview height="h-[90%]" withEdit={false} yourNewArticle={false} />
                     </div>
                     <div className={styles.style_options_wrapper + ' w-1/3 h-full'}>
                         <div className={styles.header}>
