@@ -42,7 +42,7 @@ const FootagePreview = () => {
           <div className="flex gap-[0.6vw]">
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" />
+                <CustomCheckBox value="" type="radio" name="choose-footage"/>
               </div>
               <VideoPlayer
                 video={video}
@@ -53,7 +53,7 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" />
+                <CustomCheckBox value="" type="radio" name="choose-footage" />
               </div>
               <VideoPlayer
                 video={video}
@@ -64,7 +64,7 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" />
+                <CustomCheckBox value="" type="radio" name="choose-footage" />
               </div>
               <VideoPlayer
                 video={video}

@@ -15,7 +15,6 @@ const CustomAudioPlayer = () => {
       autoPlayAfterSrcChange={true}
       // other props here
       className="custom_audio_player"
-          
       
     />
   )
