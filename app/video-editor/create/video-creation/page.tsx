@@ -5,7 +5,7 @@ import { AssignedVideos } from '@/app/_data/data';
 import $ from 'jquery';
 
 const VideoCreation = ()=>{
-
+// add effect on selected task (change background color and text color)
     const handleSelectedBg = (e: any)=>{
         $('.assignedVideo').removeClass('selected')
         $('.videoStatusBtn').removeClass('clicked')
@@ -14,6 +14,7 @@ const VideoCreation = ()=>{
         $(e.target).find('.videoStatusBtn').toggleClass('clicked')
     }
     
+    // render assigned videos to every one and its status of completetion
     const renderVideosData = AssignedVideos.map((video,idx)=>(
         <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e);console.log(e.target)}}>
                 <li className="w-[5%]">{video.id}</li>
@@ -42,9 +43,10 @@ const VideoCreation = ()=>{
     return(
         <div className={`w-full h-full pageHeader flex flex-col gap-[1vw]  ${styles.createVideo}`}>
             <h3 className='pt-[1vw]'>Assigned Videos</h3>
-
+        {/* render assigned videos in table */}
             <div className={styles.videoDatabase}>
             <div className={`${styles.videoWrapper} flex flex-col h-[70vh]`}>
+                {/* table header */}
             <ul className={`${styles.tableHeader} w-full flex justify-between items-center text-center py-[2vh]`}>
                 <li className="w-[5%]">#</li>
                 <li className="w-3/12">Script Title</li>
@@ -52,11 +54,12 @@ const VideoCreation = ()=>{
                 <li className="w-2/12">Assigned To</li>
                 <li className="w-2/12">Edit</li>
             </ul>
-
+        {/* table body */}
             <div className={`${styles.tableBody} flex flex-col`}>
             {renderVideosData}
             </div>
         </div>
+        
             </div>
             
 

@@ -8,8 +8,10 @@ import { useEffect, useState } from "react";
 import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
 
 const FootagePreview = () => {
+  // state that holds video url when click on it to display it in preview section
   const [video, setVideo] = useState<string>("");
 
+// render video in every update in its url 
   const renderVideo = () => {
     return (
       <div>
@@ -26,6 +28,7 @@ const FootagePreview = () => {
       className={`w-full h-full flex flex-col ${styles.footagePreview}`}
     >
       <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
+        
         <div className="w-1/2">
           <ArticlePreview
             height="h-full"
@@ -39,6 +42,7 @@ const FootagePreview = () => {
             <h3>Footage Found</h3>
             <SimplePagination />
           </div>
+          {/* holds sample of footage */}
           <div className="flex gap-[0.6vw]">
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
@@ -74,6 +78,7 @@ const FootagePreview = () => {
               />
             </div>
           </div>
+          {/* preview footage in large area */}
           <h3>Footage Preview</h3>
           <div className={styles.videoPreview}>{renderVideo()}</div>
 
@@ -97,6 +102,7 @@ const FootagePreview = () => {
           </div>
         </div>
       </div>
+      {/* buttons lead you to last and next page */}
       <div className="flex justify-between">
         <CustomBtn word="Back" btnColor={"white"}  href='/video-editor/create/video-templates' />
         <CustomBtn word="Next" btnColor={"black"}  href='/video-editor/create/video-preview'/>

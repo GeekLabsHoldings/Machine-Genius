@@ -3,6 +3,7 @@ import { VideosTemplates } from '@/app/_data/data';
 import styles from './video-templates.module.css'
 import CustomBtn from '@/app/_components/Button/CustomBtn';
 const VideoTemplates = () => {
+    // return video types based on the brand
     const renderVideoTypes = VideosTemplates.map((brandAndType) => (
         <div className={`${styles.secRow} flex justify-around`}>
             <h4 className='w-1/3 text-center'>{brandAndType.brand}</h4>
@@ -13,6 +14,7 @@ const VideoTemplates = () => {
             </div>
         </div>
     ))
+    
     return (
         <div className="w-full h-full flex flex-col pt-[1vw] pageHeader">
             <h3>Choose a template for your video.</h3>
@@ -47,6 +49,7 @@ const VideoTemplates = () => {
 
                 </div>
             </div>
+            {/* buttons lead to last or next page */}
             <div className='flex justify-between'>
                 <CustomBtn word='Back' btnColor={'white'} href='/video-editor/create/converted-article' />
                 <CustomBtn word='Use Template' btnColor='black' href='/video-editor/create/footage-preview' />

@@ -1,6 +1,7 @@
-import CustomBtn from "@/app/_components/Button/CustomBtn"
-import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer"
-import styles from './video-ready.module.css'
+import CustomBtn from "@/app/_components/Button/CustomBtn";
+import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
+import styles from './video-ready.module.css';
+
 const VideoReady = ()=>{
     return(
         <div className={`w-full h-full py-[1vw] pageHeader `}>
@@ -10,6 +11,7 @@ const VideoReady = ()=>{
                   <h5 className='w-4/5'>Make sure to watch the video carefully before uploading, if there are any errors in your video, you can quick edit them from the options below </h5>
                   <div className={`${styles.borderRight} flex flex-col gap-[1vw]`}>
                   <h4>Video Preview:</h4> 
+                  {/* display final video here */}
                   <div className={`${styles.videoHolder} flex justify-center items-center `}>
                   <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
                   </div>
@@ -38,6 +40,7 @@ const VideoReady = ()=>{
                   </div>
                 
       </div>
+      {/* buttons lead to last or next page */}
       <div className='flex justify-between'>
               <CustomBtn word='Back' btnColor='white' href='/video-editor/create/video-preview' />
               <CustomBtn word='Next' btnColor='black' href='/video-editor/create/exporting-video' />
