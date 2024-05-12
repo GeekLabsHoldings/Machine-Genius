@@ -32,8 +32,6 @@
     width: clamp(14px, calc( 1.5vw + 0.1rem ) , 70px);
     height: clamp(14px, calc( 1.5vw + 0.1rem ) , 70px);
 }
-
-
 .articleContent{
     text-align: justify;
     display: flex;

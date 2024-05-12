@@ -19,13 +19,17 @@ const ArticlePreview = ({ withEdit, beginSelect, height, yourNewArticle }: IArti
     }
 
     const DetectEqual = ArticlePreviewData.map((article) => (
-      article.sectionData.map((everyData) => (
-        setHighlightedBefore([...highlightedBefore, JSON.stringify(selectedText?.filter(element => everyData.includes(element)))])
-      ))
+      article.sectionData.map((everyData) => {
+        // setHighlightedBefore([...highlightedBefore, JSON.stringify(selectedText?.filter(element =>  everyData.match(element)))])
+
+
+        console.log(highlightedBefore)
+  }
+    )
     ))
   }
 
-
+  console.log(highlightedBefore);
 
   // return article data 
   const renderArticleData = ArticlePreviewData.map(article => (
@@ -66,8 +70,6 @@ const ArticlePreview = ({ withEdit, beginSelect, height, yourNewArticle }: IArti
       <div className={`${styles.articlePreviewData} `}>
         {renderArticleTitle}
         {yourNewArticle ? <div className={`${styles.articleContent} `}> {renderWantedParts} </div> : <div>{renderArticleData}</div>}
-
-
       </div>
     </div>
 

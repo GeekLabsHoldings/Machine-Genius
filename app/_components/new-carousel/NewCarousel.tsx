@@ -1,9 +1,10 @@
 'use client'
 import React from 'react'
 import { EmblaOptionsType } from 'embla-carousel'
-
 import useEmblaCarousel from 'embla-carousel-react'
 import styles from './newCarousel.module.css'
+
+// carousel component has a wheel shape
 
 type PropType = {
   slides: string[]

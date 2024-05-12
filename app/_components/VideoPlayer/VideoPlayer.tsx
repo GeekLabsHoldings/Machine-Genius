@@ -3,6 +3,8 @@ import { ReactNode, useState } from 'react';
 import styles from './VideoPlayer.module.css'
 import Video from 'next-video';
 
+// video player component to take video url and play it with streaming as chunks
+
 interface videoProps {
     videoUrl:string,
     autoplay?:boolean,
@@ -12,7 +14,6 @@ interface videoProps {
 const VideoPlayer = ({videoUrl,autoplay= true ,setVideo ,video}:videoProps)=>{
     console.log(video);
    const handleVideo = ()=>{
-
     if(setVideo){
      
         setVideo(videoUrl)

@@ -6,20 +6,29 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import { SelectArticleData } from "@/app/_data/data";
 
 const ImagesForGeneratingTitles = () => {
+  // make current time in desired format
+  const date = new Date();
+  const currentHours = date.getHours() ;
+  const amOrPm = currentHours > 12 ? 'PM' : 'AM';
+  const hours = currentHours % 12 ;
+  const currentTime = hours+ ":" + date.getMinutes() + " " + amOrPm + " " + "GMT"
 
 
-
+  // page to publish article
 
   return (
 <div className="flex flex-col">
       <div className="flex justify-between m-auto h-[75vh] py-[1.5vw] w-full gap-[10vw]">
         <div className="w-5/12 flex flex-col gap-[1.5vw]">
+          {/* Thumbnail of article */}
           <div className="flex flex-col gap-[1.5vw]">
           <div className={`${styles.yourThumbnail} pageHeader`}>
             <h3>Thumbnail</h3>
           </div>
           <CustomSelectInput label={"Select Thumbnail"} options={SelectArticleData}/>
           </div>
+
+{/* preview of selected Thumbnail */}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Preview</h5>
             <div className={`${styles.imageHolder} h-[20vh] flex justify-center items-center`}>
@@ -32,6 +41,7 @@ const ImagesForGeneratingTitles = () => {
           </div>
 
           <div className="w-full lg:w-6/12 flex flex-col gap-[2vw]">
+            {/* put the title of article */}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Title</h5>
             <div className={styles.generatingInput}>
@@ -39,10 +49,10 @@ const ImagesForGeneratingTitles = () => {
             </div>
          
           </div>
+            {/* select wanted upload time and the default value is current time */}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Upload Time</h5>
-            <CustomSelectInput label={"8:30 PM GMT"} options={SelectArticleData}/>
-         
+            <CustomSelectInput label={currentTime} options={SelectArticleData}/>
           </div>
           </div>
 
@@ -59,12 +69,12 @@ const ImagesForGeneratingTitles = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/create/make-article-style"}
+          href={"/content-creator/create/generated-titles"}
         />
         <CustomBtn
           word={"Schedule"}
           btnColor="black"
-          href="/content-creator/create/make-article-style"
+          href="/content-creator/create/schedule-script"
         />
       </div>
     </div>

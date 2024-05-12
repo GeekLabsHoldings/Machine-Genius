@@ -11,15 +11,12 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ImagesForGeneratingTitles = () => {
 
-
+// state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
-
   const router = useRouter()
-
+// show loading page before navigate to next page
   const handleNavigate = () => {
-
     setIsLoading(true)
-
     // setTimeout(() => {
     //   // Your action here
     //   router.push('/content-creator/create/generated-titles')
@@ -27,10 +24,18 @@ const ImagesForGeneratingTitles = () => {
     // }, 1500); // 3000 milliseconds = 3 seconds
 
   }
+  // make current time in wanted format
+  const date = new Date();
+  const currentHours = date.getHours() ;
+  const amOrPm = currentHours > 12 ? 'PM' : 'AM';
+  const hours = currentHours % 12 ;
+  const currentTime = hours+ ":" + date.getMinutes() + " " + amOrPm + " " + "GMT"
+
 
   return (
     <>
-      {IsLoading ?         <div className="flex flex-col">
+    {/* loading page appear in the end */}
+      {IsLoading ? <div className="flex justify-center items-center h-full">
             <div className="flex justify-center items-centerh-[75vh] py-[1.5vw] w-full gap-[10vw] ">
                 <div className="flex flex-col gap-[2vw]">
                     <LogoAndTitle title={"Your Script Has Been Scheduled!"} needTxt={false} />
@@ -39,15 +44,17 @@ const ImagesForGeneratingTitles = () => {
                     </div>
                 </div>
             </div>
-        </div> :     <div className="flex flex-col h-full">
+        </div> : <div className="flex flex-col h-full">
       <div className="flex justify-between mx-auto h-[75vh] py-[1.5vw] w-full gap-[10vw]">
         <div className="w-5/12 flex flex-col gap-[2vw]">
           <div className="flex flex-col gap-[1.5vw]">
+            {/* to upload thumbnail of your movie */}
           <div className={`${styles.yourThumbnail}`}>
             <h3>Thumbnail</h3>
           </div>
           <CustomSelectInput label={"Select Thumbnail"} options={SelectArticleData}/>
           </div>
+          {/* preview the thumbnail */}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Preview</h5>
             <div className={`${styles.imageHolder} h-[20vh] flex justify-center items-center`}>
@@ -58,7 +65,7 @@ const ImagesForGeneratingTitles = () => {
 
             </div>
           </div>
-
+{/* add the title of movie */}
           <div className="w-6/12 flex flex-col gap-[2vw]">
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Title</h5>
@@ -67,9 +74,10 @@ const ImagesForGeneratingTitles = () => {
             </div>
          
           </div>
+          {/* add desired time to upload video and the default time is current time*/}
           <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
             <h5>Upload Time</h5>
-            <CustomSelectInput label={"8:30 PM GMT"} options={SelectArticleData}/>
+            <CustomSelectInput label={currentTime} options={SelectArticleData}/>
          
           </div>
           </div>

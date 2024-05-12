@@ -6,10 +6,11 @@ import { ArticlePreviewData } from '../../../_data/data'
 import { useState } from "react";
 
 const SEOGenerating = () => {
-  
+  // state holds keyWord that seo searching for
   const [keyword, setKeyword] = useState<string>('');
+  // state holds number of repeation of keyword in article
   const [noOfMatched, setNoOfMatched] = useState<number>(0);
-
+// function detect matched words in article to keyword
   const searchForWord = () => {
     const matchedWords: string[] = []
     ArticlePreviewData.map((article) => (
@@ -34,7 +35,7 @@ const SEOGenerating = () => {
           <div className={`${styles.yourSEO} pageHeader`}>
             <h3>SEO</h3>
           </div>
-
+    {/* enter your keyword of this article */}
           <div className={`flex flex-col gap-[0.4vw] ${styles.everySec}`}>
             <h5>Main Keyword</h5>
             <div className={`${styles.seoGeneratingInput} `}>
@@ -55,7 +56,7 @@ const SEOGenerating = () => {
               <input name="heading-title" type="text" />
             </div>
           </div>
-
+{/* progress bar based on number of repeation of keyword in article  */}
           <div className={`flex flex-col gap-[0.4vw] ${styles.everySec}`}>
             <div className="flex justify-between items-center">
               <h5>Keyword Density</h5>
@@ -130,7 +131,7 @@ const SEOGenerating = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/create/choose-articles"}
+          href={"/content-creator/create/article-generated-titles"}
         />
         <CustomBtn
           word={"Next"}

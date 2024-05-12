@@ -8,13 +8,12 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from './final-artical.module.css'
 // page enables you to have a look to your article
 const FinalArticle = () => {
-
+// state to handle content while page is loading its content
     const [IsLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
-    const router = useRouter()
-  
+// show loading page before navigate to next page
     const handleNavigate = () => {
-  
       setIsLoading(true)
   
     //   setTimeout(() => {
@@ -28,7 +27,7 @@ const FinalArticle = () => {
     return (
 
          <div className="flex flex-col">
-
+            {/* loading screen */}
             { IsLoading ? <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]" >
                 <div className={`${styles.genuisWorking}`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />

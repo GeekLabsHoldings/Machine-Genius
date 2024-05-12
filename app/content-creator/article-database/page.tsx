@@ -13,7 +13,7 @@ import $ from 'jquery'
 const ArticleDatabase = () => {
 
   
-
+// to apply effect in selected article when click on it
     const handleSelectedBg = (e: any)=>{
         $('.articleRow').removeClass('selected')
         $(e.target).parents('.articleRow').toggleClass('selected')
@@ -79,7 +79,8 @@ const ArticleDatabase = () => {
 
   return (
       <div className={`${styles.articleDatabase} w-full h-full pt-[0.5vw]`}>
-        
+
+        {/* filters options to filter and edit data in table */}
           <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
           <h3>Filter By:</h3>
           <div className={`${styles.filters} flex gap-[1vw]`}>
@@ -143,7 +144,7 @@ const ArticleDatabase = () => {
           </div>
         </div>
      
-
+        {/* // table has all articles and its data  */}
          <div className={`${styles.box} w-full px-[0.5vw] `}>
            <div className={`${styles.tableContent}`}>
            <ul

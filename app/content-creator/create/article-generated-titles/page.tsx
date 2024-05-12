@@ -11,9 +11,8 @@ const ReGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 1
 
 const GeneratedTitles = () => {
 
-    // state that make create my title disabled or abled
+    // state that make create my title disabled or enabled
     const [isCreateMyOwnDisabled, setIsCreateMyOwnDisabled] = useState(true)
-
 
     return (
         <div className="flex flex-col justify-between">

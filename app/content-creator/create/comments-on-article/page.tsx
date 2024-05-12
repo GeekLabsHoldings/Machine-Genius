@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 const CommentsOnArticle = () => {
 
+// return all comments in our database
   const renderCommentsData = CommentsData.map((oneCommentData) => (
     <TopicColapse forComments={true}
       managerStatus={oneCommentData.managerStatus}
@@ -97,28 +98,23 @@ const CommentsOnArticle = () => {
     />
   ))
 
-
-  // loading state that make loading show or hidden
+// state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
 
-  const router = useRouter()
+  const router = useRouter();
 
-
+ // show loading page before navigate to next page
   const handleNavigate = () => {
-
     setIsLoading(true)
-
     setTimeout(() => {
-      // Your action here
       router.push('/content-creator/create/generated-titles')
-
-    }, 1500); // 3000 milliseconds = 3 seconds
-
+    }, 1500); 
   }
 
   return (
 
     <div className="flex flex-col">
+      {/* check on loading state to render the correct content based on it */}
       {IsLoading ?
         <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
           <LogoAndTitle needTxt={false} title='Generating Titles..' />

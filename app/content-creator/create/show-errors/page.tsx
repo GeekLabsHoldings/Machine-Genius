@@ -13,15 +13,16 @@ import SpecificChecker from '@/app/_components/SpecificChecker/SpecificChecker'
 const ShowErrors = () => {
 
     // loading state that make loading show or hide
+// state to handle content while page is loading its content
     const [IsLoading, setIsLoading] = useState(false);
 
     
     // const router = useRouter()
+    const router = useRouter()
+// show loading page before navigate to next page
 
     const handleNavigate = () => {
-
         setIsLoading(true)
-
         //   setTimeout(() => {
         //     // Your action here
         //     router.push('/content-creator/create/final-article')
@@ -32,8 +33,8 @@ const ShowErrors = () => {
 
     return (
         <>
-
             <div className="flex flex-col h-full">
+                {/* loading screen */}
                 {IsLoading ? <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.5vw]" >
                     <div className={`${styles.genuisWorking} m-auto`}>
                         <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
@@ -89,7 +90,7 @@ const ShowErrors = () => {
                             </div>
                         </div>
                     </div>
-
+{/* buttons lead you to last or next page */}
                     <div className="flex justify-between w-full">
                         <CustomBtn word={"Back"} btnColor="white" href="/content-creator/create/final-article" />
                         <CustomBtn word={"Fix & Check"} btnColor="black" onClick={handleNavigate} />
