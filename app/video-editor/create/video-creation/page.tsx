@@ -5,6 +5,7 @@ import { AssignedVideos } from '@/app/_data/data';
 import $ from 'jquery';
 
 const VideoCreation = ()=>{
+
     const handleSelectedBg = (e: any)=>{
         $('.assignedVideo').removeClass('selected')
         $('.videoStatusBtn').removeClass('clicked')
@@ -12,6 +13,7 @@ const VideoCreation = ()=>{
         $(e.target).toggleClass('selected')
         $(e.target).find('.videoStatusBtn').toggleClass('clicked')
     }
+    
     const renderVideosData = AssignedVideos.map((video,idx)=>(
         <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e);console.log(e.target)}}>
                 <li className="w-[5%]">{video.id}</li>

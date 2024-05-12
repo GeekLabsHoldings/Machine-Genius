@@ -12,10 +12,6 @@ import $ from 'jquery'
 
 const ArticleDatabase = () => {
 
-  // const [SelectedValue, setSelectedValue] = useState<string | number>()
-  // const handleBrandName = (value:string|number)=>{
-  //   setSelectedValue(value)
-  // }
   
 // to apply effect in selected article when click on it
     const handleSelectedBg = (e: any)=>{

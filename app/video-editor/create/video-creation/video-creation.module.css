@@ -26,16 +26,19 @@
     text-align: center;
     font-weight: 700;
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
+    transition: all 0s;
 }
 .tableBody li{
     text-align: center;
     font-weight: 500;
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
-
+    transition: all 0s;
 }
 .tableBody li span{
     padding: 0.1vw 0.3vw;
     border-radius: 0.1vw;
     font-weight: 500;
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
+    transition: all 0s;
+
 }

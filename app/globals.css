@@ -50,14 +50,6 @@ img{
   width: 100%;
 }
 
-.main-wrapper{
-  height: 100vh;
-  overflow: hidden;
-}
-
-.page-wrapper{
-  height: 100%;
-}
 
 .articleRow.selected, .assignedVideo.selected{
   background-color: #2A2B2A;

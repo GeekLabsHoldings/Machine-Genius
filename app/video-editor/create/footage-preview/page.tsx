@@ -23,12 +23,12 @@ const FootagePreview = () => {
 
   return (
     <div
-      className={`w-full h-full flex flex-col py-[4vh] ${styles.footagePreview}`}
+      className={`w-full h-full flex flex-col ${styles.footagePreview}`}
     >
-      <div className="flex gap-[2vw] h-[77vh] ">
+      <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
         <div className="w-1/2">
           <ArticlePreview
-            height="h-[75vh]"
+            height="h-full"
             withEdit={false}
             yourNewArticle={false}
           />
@@ -42,7 +42,7 @@ const FootagePreview = () => {
           <div className="flex gap-[0.6vw]">
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" />
+                <CustomCheckBox value="" type="checkbox" name="choose-footage"/>
               </div>
               <VideoPlayer
                 video={video}
@@ -53,7 +53,7 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" />
+                <CustomCheckBox value="" type="checkbox" name="choose-footage" />
               </div>
               <VideoPlayer
                 video={video}
@@ -64,7 +64,7 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" />
+                <CustomCheckBox value="" type="checkbox" name="choose-footage" />
               </div>
               <VideoPlayer
                 video={video}

@@ -37,8 +37,7 @@ const SignIn = () => {
 
     return (
 
-        <div className='flex items-center justify-center w-[100vw] h-[100vh] relative overflow-hidden' >
-
+        <div className='flex items-center justify-center w-[100vw] h-[100vh] fixed top-0 left-0 overflow-hidden' style={{ zIndex: 99999999999999, background: "var(--dark)" }}>
 
             <div className={`${styles.welcomePart} welcom-wrapper ${StartAnimation ? styles.startAnimation : ''} ${ShowSignInForm ? styles.hide : ''}`}>
                 <h1>Welcome To </h1>
@@ -65,9 +64,9 @@ const SignIn = () => {
 
             </div>
 
-            <div className={ `${styles.hi_message} ${ShowWelcomeMesage ? styles.show :''}`}>
+            <div className={`${styles.hi_message} ${ShowWelcomeMesage ? styles.show : ''}`}>
                 <h2>
-                    Hi Mostafa, <br/>
+                    Hi Mostafa, <br />
                     Let’s have a productive day!
                 </h2>
                 <CustomBtn btnColor='black' word='Dashboard' href='/content-creator/dashboard' />

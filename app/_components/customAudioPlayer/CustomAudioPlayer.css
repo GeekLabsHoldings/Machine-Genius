@@ -56,3 +56,12 @@
 .custom_audio_player .iconify > path {
     fill: var(--dark);
 }
+
+.custom_audio_player .rhap_volume-indicator {
+    box-sizing: border-box;
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    background: var(--dark);
+}

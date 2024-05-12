@@ -122,37 +122,37 @@ const CommentsOnArticle = () => {
   return (
 
     <div className="flex flex-col">
-      {IsLoading ?            <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.4vw]" >
-                <div className={`${styles.genuisWorking} m-auto`}>
-                    <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
-                    <div className={`${styles.allCheckers} w-full`}>
-                        <SpecificChecker pass={true} word='Grammar Checker' />
-                        <SpecificChecker pass={true} word='Plagiarism Checker' />
-                        <SpecificChecker pass={true} word='AI Checker' />
-                    </div>                </div>
-            </div>: <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
-          <div className="w-7/12 flex flex-col gap-[1vw]">
-            <div className={`${styles.yourArticle}`}>
-              <h3>Articles</h3>
-            </div>
-            {/* display your article  */}
-            {/* yourNewArticle should be true but till fixing selection bug */}
-            <ArticlePreview
-              yourNewArticle={false}
-              height="h-full"
-              withEdit={false}
-            />
+      {IsLoading ? <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.4vw]" >
+        <div className={`${styles.genuisWorking} m-auto`}>
+          <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
+          <div className={`${styles.allCheckers} w-full`}>
+            <SpecificChecker pass={true} word='Grammar Checker' />
+            <SpecificChecker pass={true} word='Plagiarism Checker' />
+            <SpecificChecker pass={true} word='AI Checker' />
+          </div>                </div>
+      </div> : <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
+        <div className="w-7/12 flex flex-col gap-[1vw]">
+          <div className={`${styles.yourArticle}`}>
+            <h3>Articles</h3>
           </div>
-          {/* comments part */}
-          <div className={`w-5/12 h-full`}>
-            <div className="flex flex-col gap-[1vw] h-full">
-              <div className={` ${styles.commentsHeader}`}>
-                <h2>Comments</h2>
-                <h2>({CommentsData.length})</h2>
-              </div>
-              {/* return comments on article */}
-              <div className={`${styles.commentsParent}`}>
-                {renderCommentsData}
+          {/* display your article  */}
+          {/* yourNewArticle should be true but till fixing selection bug */}
+          <ArticlePreview
+            yourNewArticle={false}
+            height="h-full"
+            withEdit={false}
+          />
+        </div>
+        {/* comments part */}
+        <div className={`w-5/12 h-full`}>
+          <div className="flex flex-col gap-[1vw] h-full">
+            <div className={` ${styles.commentsHeader}`}>
+              <h2>Comments</h2>
+              <h2>({CommentsData.length})</h2>
+            </div>
+            {/* return comments on article */}
+            <div className={`${styles.commentsParent}`}>
+              {renderCommentsData}
 
                 <TopicColapse forComments={true}
                   managerStatus="online"
@@ -407,12 +407,13 @@ const CommentsOnArticle = () => {
                     </div>
                   }
 
-                  title={"Ash"}
-                />
-              </div>
+                title={"Ash"}
+              />
             </div>
           </div>
-        </div>}
+        </div>
+      </div>}
+
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
         <CustomBtn
