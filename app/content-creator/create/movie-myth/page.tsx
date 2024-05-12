@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
-const page = () => {
+const MovieMyth = () => {
 // loading state that make loading show or hidden
 const [IsLoading, setIsLoading] = useState(false);
 
