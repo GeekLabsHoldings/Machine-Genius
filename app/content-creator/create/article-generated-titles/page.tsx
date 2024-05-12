@@ -28,7 +28,7 @@ const GeneratedTitles = () => {
                     </div>
 
                     {/* generated titles container */}
-                    <div className={`${styles.titles_container} ${isCreateMyOwnDisabled ? '' : 'opacity-50'} h-full`} onClick={() => setIsCreateMyOwnDisabled(true)}>
+                    <div className={`${styles.titles_container} ${isCreateMyOwnDisabled ? '' : 'opacity-40'} h-full`} onClick={() => setIsCreateMyOwnDisabled(true)}>
                         <div className='h-full overflow-y-auto p-[1vw] space-y-[1vw]'>
                             {/* titles with lock */}
                             <TitleCheckWithLock title='Canada Loves People' checkName='generated-titles' />

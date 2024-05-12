@@ -5,6 +5,7 @@ import ArticleWithCheck from '@/app/_components/ArticleWithCheck/ArticleWithChec
 
 const chooseArticles = () => {
 
+    // favorite icon 
     const favIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
         <g filter="url(#filter0_i_623_11960)">
             <path d="M11.3675 3.38104C7.17949 -2.47623 0 -0.121939 0 5.8532C0 11.8284 11.9659 20 11.9659 20C11.9659 20 23.3333 11.5004 23.3333 5.8532C23.3333 0.205986 16.7522 -2.47621 12.5641 3.38104L11.9659 3.84887L11.3675 3.38104Z" />
@@ -39,20 +40,30 @@ const chooseArticles = () => {
                             </svg>
                         </span>
                     </div>
+
+                    {/* topics container */}
                     <div className={styles.select_article_container}>
+                        {/* topic collapse */}
                         <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
+                            {/* article with check */}
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
+
+                        {/* topic collapse */}
                         <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
+
+                        {/* topic collapse */}
                         <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                         </TopicColapse>
+
+                        {/* topic collapse */}
                         <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />

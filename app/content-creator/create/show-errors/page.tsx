@@ -11,9 +11,13 @@ import SpecificChecker from '@/app/_components/SpecificChecker/SpecificChecker'
 
 // page that displays the errors in the article 
 const ShowErrors = () => {
+
+    // loading state that make loading show or hide
 // state to handle content while page is loading its content
     const [IsLoading, setIsLoading] = useState(false);
 
+    
+    // const router = useRouter()
     const router = useRouter()
 // show loading page before navigate to next page
 
@@ -51,22 +55,35 @@ const ShowErrors = () => {
                                 <h6>Errors</h6>
                                 <h6>(3)</h6>
                             </div>
-                            <div className={styles.select_article_container}>
+
+                            <div className={styles.errors_container}>
+
+                                {/* error Collapse */}
                                 <ErrorCollapse title='Plagiarism' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
+
+                                {/* error Collapse */}
                                 <ErrorCollapse title='Plagiarism' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
+
+                                {/* error Collapse */}
                                 <ErrorCollapse title='Plagiarism' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
+
+                                {/* error Collapse */}
                                 <ErrorCollapse title='Plagiarism' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
+
+                                {/* error Collapse */}
                                 <ErrorCollapse title='Plagiarism' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>
+
+                                {/* error Collapse */}
                                 <ErrorCollapse title='Plagiarism' >
                                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque doloribus ratione non similique velit modi eum repudiandae, nam saepe amet quaerat quasi placeat, dolore molestiae magnam iure earum ipsam. Soluta.
                                 </ErrorCollapse>

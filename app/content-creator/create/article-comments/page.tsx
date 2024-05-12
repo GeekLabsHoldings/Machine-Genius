@@ -137,7 +137,7 @@ const CommentsOnArticle = () => {
           {/* yourNewArticle should be true but till fixing selection bug */}
           <ArticlePreview
             yourNewArticle={false}
-            height="h-full"
+            height="h-[90%]"
             withEdit={false}
           />
         </div>

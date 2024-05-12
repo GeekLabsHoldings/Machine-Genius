@@ -22,7 +22,7 @@ export default function RootLayout({
 
 
   return (
-    <html lang="en">
+    <html lang="en" >
       <body className={inter.className}>
         <GlobalContextProvider>
           <div className={styles.main_wrapper}>
