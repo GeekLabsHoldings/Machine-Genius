@@ -1,3 +1,4 @@
+import { URLPattern } from "next/server";
 import { ReactElement, ReactNode } from "react";
 
 export type personStatus = 'online' | 'offline' | 'away'
@@ -67,7 +68,7 @@ export interface IVideoDatabase{
 }
 export interface IRedditData {
     subReddit:string,
-    link:string,
+    link: string,
     subscribers:string,
     niche:string,
     brand:TBrands,

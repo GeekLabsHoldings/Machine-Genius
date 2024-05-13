@@ -2,6 +2,7 @@ import {
   IArticle,
   IAssignedVideos,
   ICommentData,
+  IRedditData,
   ITasks,
   ITranscriptData,
   IVideoDatabase,
@@ -527,6 +528,106 @@ export const VideosDatabase:IVideoDatabase[] =[
     date:'12 March  2024',
     edit:'Edit'
   
+  },
+]
+
+export const RedditPosts : IRedditData[] =[
+  {
+    subReddit:'Stocks Today',
+    link: new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'300K',
+    niche:'Politics',
+    brand:'PST USA',
+    engagement:'26%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'23K',
+    niche:'Politics',
+    brand:'PST Asia',
+    engagement:'80%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'2K',
+    niche:'Politics',
+    brand:'Investocracy',
+    engagement:'25%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'50k',
+    niche:'Politics',
+    brand:'PST USA',
+    engagement:'90%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'300K',
+    niche:'Politics',
+    brand:'Canada',
+    engagement:'66%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'50k',
+    niche:'Politics',
+    brand:'Canada',
+    engagement:'15%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'2K',
+    niche:'Politics',
+    brand:'PST USA',
+    engagement:'26%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'50k',
+    niche:'Politics',
+    brand:'Investocracy',
+    engagement:'80%'
+  },
+
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'300K',
+    niche:'Politics',
+    brand:'Canada',
+    engagement:'25%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'50k',
+    niche:'Politics',
+    brand:'Investocracy',
+    engagement:'90%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'2K',
+    niche:'Politics',
+    brand:'Street Politics',
+    engagement:'66%'
+  },
+  {
+    subReddit:'Stocks Today',
+    link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+    subscribers:'50K',
+    niche:'Politics',
+    brand:'Canada',
+    engagement:'15%'
   },
 ]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']

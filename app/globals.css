@@ -156,5 +156,5 @@ img{
   align-items: center;
 }
 .borderBottom:not(:last-child) {
-  border-bottom: 1px solid #2A2B2A4A;
+  border-bottom: 1px solid rgba(42, 43, 42, 0.29);
 }
