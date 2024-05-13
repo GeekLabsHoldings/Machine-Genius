@@ -1,0 +1,103 @@
+.add_post_wrapper h6 {
+    font-family: "DM Sans";
+    font-size: clamp(16px, calc(1.2vw + 0.1rem), 1000px);
+    margin-bottom: clamp(8px, calc(0.6vw + 0.1rem), 1000px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.add_post_wrapper > h6 {
+    font-family: "DM Sans";
+    font-size: clamp(16px, calc(1.2vw + 0.1rem), 1000px);
+    margin-bottom: clamp(16px, calc(1vw + 0.1rem), 1000px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.post_content{
+    margin-bottom: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+}
+
+.post_content textarea{
+    width: 100%;
+    font-size: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+    margin-bottom: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+    border-bottom: 1px solid var(--dark);
+    outline: none;
+    padding:  0 0 clamp(16px, calc(1vw + 0.1rem), 1000px) 0;
+    background-color: transparent;
+}
+
+.post_content a{
+    margin-left: auto;
+}
+
+.post_content a svg{
+    width: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+    height: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+}
+
+.post_content span{
+    font-size: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+    display: block;
+    text-align: right;
+}
+
+.suggestions{
+    height: 100%;
+    margin-bottom: clamp(10px, calc(0.6vw + 0.1rem), 1000px) ;
+}
+
+.suggestions .item{
+    position: relative;
+    padding: clamp(10px, calc(0.6vw + 0.1rem), 1000px) 0 clamp(10px, calc(0.6vw + 0.1rem), 1000px) clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+    display: flex;
+    align-items: center;
+    gap: 6%;
+    border: 1px solid var(--dark);
+    border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+    -webkit-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+    -moz-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+    -ms-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+    -o-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+}
+.suggestions .item::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    width: 1px;
+    background-color: var(--dark);
+    height: 60%;
+    left : 87%;
+}
+
+.suggestions .item p{
+    width: 84%;
+    font-size: clamp(10px, calc(0.75vw + 0.1rem), 1000px);
+    text-align: justify;
+}
+
+.suggestions .item a{
+    margin: 0 5.5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.suggestions .item svg{
+    width: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
+    height: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
+}
+
+.suggestions .item svg path{
+    fill: var(--dark);
+}

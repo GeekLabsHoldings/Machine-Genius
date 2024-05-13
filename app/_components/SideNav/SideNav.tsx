@@ -52,7 +52,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/content-creator/dashboard')
         } else if (SelectedRole === 'Video Editor') {
             router.push('/video-editor/dashboard')
-        }else if (SelectedRole === 'Social Media') {
+        } else if (SelectedRole === 'Social Media') {
             router.push('/social-media/dashboard')
         }
     }, [SelectedRole])
@@ -76,13 +76,23 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                         <Image src={logo_white_image} alt='logo' />
                     </div>
                 </div>
+
+                <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
+                    <li>
+                        <Link href={sideNavLinks[0].path} onClick={() => handleCurrentPageTitle(sideNavLinks[0].name)}>
+                            {sideNavLinks[0].icon}
+                            <p>{sideNavLinks[0].name}</p>
+                        </Link>
+                    </li>
+                </ul>
+
                 <div className={styles.line}></div>
 
                 <CustomSelectInput options={rols} icon={rolsIcon} theme="dark" whenSideNavClosed={!isSideNavOpen} getValue={getRole} />
 
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
-                    {sideNavLinks.map(ele => (
+                    {sideNavLinks.slice(1).map(ele => (
                         <li key={ele.name}>
                             <Link href={ele.path} onClick={() => handleCurrentPageTitle(ele.name)}>
                                 {ele.icon}

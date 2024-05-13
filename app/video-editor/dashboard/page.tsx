@@ -10,6 +10,8 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { EmblaOptionsType } from "embla-carousel";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import EmblaCarousel from '@/app/_components/new-carousel/NewCarousel';
+
+// dashboard component for dashboard page which be shown to every content-creator after login
 const Dashboard = () => {
   const OPTIONS: EmblaOptionsType = { axis: "y", loop: true };
   
@@ -39,12 +41,22 @@ const Dashboard = () => {
     </div>
 
   ))
+  // get current date and current time in our format
+  const date = new Date();
+  const month = date.toLocaleString('default', { month: 'long' });
+  const currentHours = date.getHours() ;
+  const amOrPm = currentHours > 12 ? 'PM' : 'AM';
+  const hours = currentHours % 12 ;
+  const currentDate = date.getDate() + " " + month + " " + date.getFullYear();
+  const currentTime = hours+ ":" + date.getMinutes() + " " + amOrPm
+
 
   return (
     <div className={`${styles.dashboard} flex h-full w-full pt-[0.75vw] gap-[2vw]`}>
+      {/* chat section in the end of page */}
       <div className={`${styles.movedChat} flex justify-end `}>
           <div
-            className={`${styles.cutBox} w-1/3 h-[5vh] flex items-center gap-[0.3vw] px-[0.5vw]`}>
+            className={`${styles.cutBox} w-1/3 h-[5vh] flex items-center gap-[0.3vw] px-[0.5vw] cursor-pointer`}>
             <svg
               viewBox="0 0 11 11"
               fill="none"
@@ -59,14 +71,16 @@ const Dashboard = () => {
         <div className={styles.halfHeader}>
         <h3>Tasks Over View</h3>
         </div>
-
+{/* his/her tasks over view */}
         <div className={`${styles.box} flex h-[20vh]`}>{renderTasksSec}</div>
-
+{/* annoucements section to display any annoucement he/she needs to know */}
         <div className="flex justify-between items-center">
           <h3>Announcements</h3>
           <SimplePagination />
         </div>
+
         <div className={`${styles.box} flex p-[0.8vw] h-[13vh] bg-[#2A2B2A]`}>
+          {/* annoucement owner and his status */}
           <div className={`w-1/6 flex items-center gap-[0.25vw] ${styles.profileAndStatus}`}>
             <div className={`relative`}>
               <svg
@@ -100,8 +114,8 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
-  <div className='flex'>
-     
+{/* calendar and upcoming events in every month */}
+        <div className='flex'>
               <div className='w-1/2 flex flex-col gap-[1.2vw]'>
               <h3 >Up Coming Events</h3>
                 <div className={`${styles.events} ps-[1vw] h-[25vh]`}>
@@ -119,6 +133,7 @@ const Dashboard = () => {
                 </div>
              
               </div>
+              {/* calendar */}
               <div className='w-1/2 flex justify-end items-end pb-[0.2vw] '>
               <LocalizationProvider dateAdapter={AdapterDayjs}  >
                     <DateCalendar slots={{rightArrowIcon:ArrowRightIcon,leftArrowIcon:ArrowLeftIcon}} dayOfWeekFormatter={(weekday) => `${weekday.format('ddd')}`} />
@@ -131,13 +146,13 @@ const Dashboard = () => {
       <div className="w-1/2 flex flex-col gap-[0.9vw] relative ">
         <div className="flex justify-between m-0">
           <h3>Leaderboard</h3>
-          
+          {/* display current date and time */}
           <div className={`${styles.halfHeader} flex flex-col items-end m-0`}>
-            <p >20 March 2024</p>
-            <p >2:30 PM</p>
+            <p >{currentDate}</p>
+            <p>{currentTime}</p>
           </div>
         </div>
-
+{/* display the employee of the month */}
         <div className={`${styles.box} flex h-[20vh] justify-between`}>
           <div className={`${styles.animated} my-[1vw]`}>
             <svg
@@ -428,7 +443,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
+{/* display ways to get points */}
         <h3>Bonus Points</h3>
         <div className={`${styles.bonusBox} bg-[#2A2B2A] flex h-[15vh]`}>
           <div
@@ -454,7 +469,7 @@ const Dashboard = () => {
             <p>Written article reached 1000 Views</p>
           </div>
         </div>
-
+{/* display career progression from internship to senior */}
         <h3>Career Progression</h3>
         <div className={`${styles.box} h-[8.6vw] p-[2vw] flex items-center bg-[#2A2B2A]`}>
           <div className={`w-1/2 ${styles.waysToTakeBonus} flex flex-col gap-[1vw] justify-center ${styles.careerSec}`}>
