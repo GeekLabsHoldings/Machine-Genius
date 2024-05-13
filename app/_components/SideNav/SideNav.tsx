@@ -92,7 +92,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
 
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
-                    {sideNavLinks.map(ele => (
+                    {sideNavLinks.slice(1).map(ele => (
                         <li key={ele.name}>
                             <Link href={ele.path} onClick={() => handleCurrentPageTitle(ele.name)}>
                                 {ele.icon}
