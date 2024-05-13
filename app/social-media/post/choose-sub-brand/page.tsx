@@ -53,7 +53,7 @@ const ChooseSubBrand = () => {
 
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
-        <CustomBtn word="Back" btnColor="white" href="/social-media/post" />
+        <CustomBtn word="Back" btnColor="white" href="/social-media/post/choose-brand" />
         <CustomBtn word="Next" btnColor="black" href="/social-media/post/twitter-post" />
       </div>
 
