@@ -20,6 +20,7 @@
     width: 100%;
     justify-content: space-between;
     min-height: clamp(40px, calc(4.2vw + 0.1rem), 550px);
+    margin-bottom: clamp(16px, calc(1.2vw + 0.1rem), 1000px) ;
 }
 
 .side_Nav .avatar_logo{
@@ -127,7 +128,7 @@
 .side_Nav .line {
     width: 100%;
     height: 1px;
-    margin: clamp(20px, calc(1.5vw + 0.1rem), 1000px) 0;
+    margin: clamp(16px, calc(1vw + 0.1rem), 1000px) 0;
     background: #fff;
 }
 
