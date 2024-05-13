@@ -17,7 +17,7 @@ const Facebook = () => {
 
     const router = useRouter();
     const handleNavigate = ()=>{
-        router.push('/content-creator/create/article-images')
+        router.push('/social-media/share')
     }
 
 // to apply effect in selected article when click on it

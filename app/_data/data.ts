@@ -630,6 +630,9 @@ export const RedditPosts : IRedditData[] =[
     engagement:'15%'
   },
 ]
+export const Platforms =[
+  'Reddit','Telegram','Facebook'
+]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
 export const ContentType:TContentType[] =["Script" , "Article"]
 export const ApprovalStatus:TApproval[] = ['Approved','Pending','Rejected']
