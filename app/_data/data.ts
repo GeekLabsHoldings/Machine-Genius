@@ -644,6 +644,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'reddit',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'PST USA',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:300000,
     engagement:'26%'
   },
@@ -653,6 +656,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'telegram',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'PST Asia',
+    niche:'Politics',
+    Campaign_type:'Must Approve' ,
     followers:23000,
     engagement:'80%'
   },
@@ -662,6 +668,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'facebook',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Investocracy',
+    niche:'Politics',
+    Campaign_type:'Must Approve' ,
     followers:2000,
     engagement:'25%'
   },
@@ -671,6 +680,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'reddit',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'PST USA',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:50000,
     engagement:'90%'
   },
@@ -680,6 +692,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'telegram',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Canada',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:300000,
     engagement:'66%'
   },
@@ -689,6 +704,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'facebook',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Canada',
+    niche:'Politics',
+    Campaign_type:'Must Approve' ,
     followers:50000,
     engagement:'15%'
   },
@@ -698,6 +716,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'telegram',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'PST USA',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:2000,
     engagement:'26%'
   },
@@ -707,6 +728,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'facebook',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Investocracy',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:50000,
     engagement:'80%'
   },
@@ -716,6 +740,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'reddit',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Canada',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:300000,
     engagement:'25%'
   },
@@ -725,6 +752,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'reddit',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Investocracy',
+    niche:'Politics',
+    Campaign_type:'Must Approve' ,
     followers:50000,
     engagement:'90%'
   },
@@ -734,6 +764,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'telegram',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Street Politics',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:2000,
     engagement:'66%'
   },
@@ -743,6 +776,9 @@ export const AccountsData:IAccounts[] = [
     account_type: 'facebook',
     user_name:'@Johndoe' ,
     link:'https://www.reddit.com/?rdt=45713' ,
+    brand:'Canada',
+    niche:'Politics',
+    Campaign_type:'Auto Comment' ,
     followers:50000,
     engagement:'15%'
   }

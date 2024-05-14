@@ -87,6 +87,9 @@ export interface IAccounts {
     account_type: 'facebook'|'telegram'|'reddit',
     user_name:string ,
     link:string ,
+    brand:TBrands,
+    niche:string,
+    Campaign_type:'Auto Comment' | 'Must Approve',
     followers:number,
     engagement:Percentage
 }

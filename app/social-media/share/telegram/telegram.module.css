@@ -13,16 +13,16 @@
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
  
 }
-.tableContent{
+.tableBodyWrapper{
     overflow-y: auto;
     height: 60vh;
 }
   /* Track */
-.tableContent::-webkit-scrollbar-track {
+.tableBodyWrapper::-webkit-scrollbar-track {
     background: transparent; 
 }
   /* Handle */
-.tableContent::-webkit-scrollbar-thumb {
+.tableBodyWrapper::-webkit-scrollbar-thumb {
     background: #2A2B2A; 
     width: clamp(2px, calc( 0.08vw + 0.1rem), 40px);
     border-radius: 10vw ;

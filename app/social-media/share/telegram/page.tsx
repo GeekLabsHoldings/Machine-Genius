@@ -83,7 +83,7 @@ const Telegram = () => {
           </svg>
             </div>
 
-        <div className="flex justify-between">
+        <div className="flex justify-between items-end">
         <div className={`${styles.redditPage} w-8/12 flex gap-[1vw]`}>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
               <h5>Sub Reddit</h5>
@@ -201,8 +201,9 @@ const Telegram = () => {
               </div></li>
              
             </ul>
+            <div className={styles.tableBodyWrapper}>
           {renderTelegramPosts}
-
+          </div>
            </div>
         </div>  
            <div className=' flex items-end pb-[6vw]  w-[5%] justify-center'>

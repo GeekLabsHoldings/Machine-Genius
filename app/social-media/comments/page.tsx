@@ -30,10 +30,10 @@ const Comments = () => {
                     <input type="radio" name="tabs" className="tab" aria-label="Account Lists" />
                     <div className="tab-content h-[75vh]">Tab content 1</div>
 
-                    <input type="radio" name="tabs" className="tab" aria-label="All Campaigns" />
+                    <input type="radio" name="tabs" className="tab" aria-label="All Campaigns" defaultChecked />
                     <div className="tab-content h-[75vh]">Tab content 2</div>
 
-                    <input type="radio" name="tabs" className="tab" aria-label="Notifications" defaultChecked />
+                    <input type="radio" name="tabs" className="tab" aria-label="Notifications"  />
                     <div className="tab-content h-[75vh]">
                         <div className='py-[1.5vw] grid grid-cols-2 gap-[2vw] h-full'>
                             <div className='flex flex-col h-full'>
@@ -141,7 +141,6 @@ const Comments = () => {
 
                     </div>
                 </div>
-
             </div>
         </div>
     )
