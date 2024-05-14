@@ -9,7 +9,8 @@ interface Iprops {
     icon? :any ,
     theme? : 'dark',
     whenSideNavClosed?:boolean,
-    getValue ?: (value:string|number)=>void
+    getValue ?: (value:string|number)=>void,
+    paddingVal ? : string
 }
 
 const CustomSelectInput = (props: Iprops) => {
@@ -39,7 +40,7 @@ const CustomSelectInput = (props: Iprops) => {
                 onClick={(e) => {
                     setIsActive(!isActive);
                 }}
-                className={`${styles.dropdown_btn}  ${isActive ? styles.open : ''} `}
+                className={`${styles.dropdown_btn} ${props.paddingVal ? props.paddingVal : `py-[0.2vw] px-[1.2vw]`} ${isActive ? styles.open : ''} `}
             >
                 {props.icon}
                 <span>{selected}</span>

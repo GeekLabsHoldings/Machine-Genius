@@ -1,4 +1,5 @@
 import {
+  IAccounts,
   IArticle,
   IAssignedVideos,
   ICommentData,
@@ -124,7 +125,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
     contentType:'Script',
-    views:'300',
+    views:300,
     approvals:'Pending',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -134,7 +135,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'PST Asia',
     contentType:'Script',
-    views:'12.1K',
+    views:12100,
     approvals:'Pending',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -144,7 +145,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'Investocracy',
     contentType:'Article',
-    views:'300',
+    views:300,
     approvals:'Rejected',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -154,7 +155,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
     contentType:'Article',
-    views:'300',
+    views:300,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -164,7 +165,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'Street Politics',
     contentType:'Script',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -174,7 +175,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'PST Asia',
     contentType:'Article',
-    views:'300',
+    views:300,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -184,7 +185,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
     contentType:'Script',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -194,7 +195,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'Canada',
     contentType:'Script',
-    views:'300',
+    views:300,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -204,7 +205,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'Investocracy',
     contentType:'Script',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -214,7 +215,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
     contentType:'Article',
-    views:'300',
+    views:300,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -224,7 +225,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'Canada',
     contentType:'Article',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -234,7 +235,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
     contentType:'Article',
-    views:'300',
+    views:300,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -244,7 +245,7 @@ export const YourArticles:IyourArticle[] =[
     articleName:'Pacific Allies ABANDON USA For China!',
     brand:'Street Politics',
     contentType:'Script',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     date:'12 March  2024',
     editBtn:'Edit'
@@ -385,12 +386,13 @@ export const VideosTemplates = [
 },
 
 ]
+
 export const VideosDatabase:IVideoDatabase[] =[
   {
     id:1,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
-    views:'300',
+    views:300,
     approvals:'Pending',
     publish:'Not Published',
     date:'12 March  2024',
@@ -401,7 +403,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:2,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'PST Asia',
-    views:'12.1K',
+    views:12100,
     approvals:'Pending',
     publish:'Uploading',
     date:'12 March  2024',
@@ -412,7 +414,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:3,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'Investocracy',
-    views:'300',
+    views:300,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -423,7 +425,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:4,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
-    views:'300',
+    views:300,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -434,7 +436,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:5,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'Street Politics',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -445,7 +447,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:6,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
-    views:'300',
+    views:300,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -456,7 +458,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:7,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'PST Asia',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -467,7 +469,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:8,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'Canada',
-    views:'300',
+    views:300,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -478,7 +480,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:9,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'Investocracy',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -489,7 +491,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:10,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
-    views:'300',
+    views:300,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -500,7 +502,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:11,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'Canada',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -511,7 +513,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:12,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'PST USA',
-    views:'300',
+    views:300,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -522,7 +524,7 @@ export const VideosDatabase:IVideoDatabase[] =[
     id:13,
     title:'Pacific Allies ABANDON USA For China!',
     brand:'Street Politics',
-    views:'12.1K',
+    views:12100,
     approvals:'Approved',
     publish:'Published',
     date:'12 March  2024',
@@ -535,7 +537,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link: new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'300K',
+    subscribers:300000,
     niche:'Politics',
     brand:'PST USA',
     engagement:'26%'
@@ -543,7 +545,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'23K',
+    subscribers:23000,
     niche:'Politics',
     brand:'PST Asia',
     engagement:'80%'
@@ -551,7 +553,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'2K',
+    subscribers:2000,
     niche:'Politics',
     brand:'Investocracy',
     engagement:'25%'
@@ -559,7 +561,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'50k',
+    subscribers:50000,
     niche:'Politics',
     brand:'PST USA',
     engagement:'90%'
@@ -567,7 +569,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'300K',
+    subscribers:300000,
     niche:'Politics',
     brand:'Canada',
     engagement:'66%'
@@ -575,7 +577,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'50k',
+    subscribers:50000,
     niche:'Politics',
     brand:'Canada',
     engagement:'15%'
@@ -583,7 +585,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'2K',
+    subscribers:2000,
     niche:'Politics',
     brand:'PST USA',
     engagement:'26%'
@@ -591,7 +593,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'50k',
+    subscribers:50000,
     niche:'Politics',
     brand:'Investocracy',
     engagement:'80%'
@@ -600,7 +602,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'300K',
+    subscribers:300000,
     niche:'Politics',
     brand:'Canada',
     engagement:'25%'
@@ -608,7 +610,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'50k',
+    subscribers:50000,
     niche:'Politics',
     brand:'Investocracy',
     engagement:'90%'
@@ -616,7 +618,7 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'2K',
+    subscribers:2000,
     niche:'Politics',
     brand:'Street Politics',
     engagement:'66%'
@@ -624,14 +626,126 @@ export const RedditPosts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link:new URL("https://www.reddit.com/?rdt=45713").toString(),
-    subscribers:'50K',
+    subscribers:50000,
     niche:'Politics',
     brand:'Canada',
     engagement:'15%'
   },
 ]
+
 export const Platforms =[
   'Reddit','Telegram','Facebook'
+]
+
+export const AccountsData:IAccounts[] = [
+  {
+    id:1,
+    account_name:'John Doe',
+    account_type: 'reddit',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:300000,
+    engagement:'26%'
+  },
+  {
+    id:2,
+    account_name:'John Doe',
+    account_type: 'telegram',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:23000,
+    engagement:'80%'
+  },
+  {
+    id:3,
+    account_name:'John Doe',
+    account_type: 'facebook',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:2000,
+    engagement:'25%'
+  },
+  {
+    id:4,
+    account_name:'John Doe',
+    account_type: 'reddit',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:50000,
+    engagement:'90%'
+  },
+  {
+    id:5,
+    account_name:'John Doe',
+    account_type: 'telegram',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:300000,
+    engagement:'66%'
+  },
+  {
+    id:6,
+    account_name:'John Doe',
+    account_type: 'facebook',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:50000,
+    engagement:'15%'
+  },
+  {
+    id:7,
+    account_name:'John Doe',
+    account_type: 'telegram',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:2000,
+    engagement:'26%'
+  },
+  {
+    id:8,
+    account_name:'John Doe',
+    account_type: 'facebook',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:50000,
+    engagement:'80%'
+  },
+  {
+    id:9,
+    account_name:'John Doe',
+    account_type: 'reddit',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:300000,
+    engagement:'25%'
+  },
+  {
+    id:10,
+    account_name:'John Doe',
+    account_type: 'reddit',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:50000,
+    engagement:'90%'
+  },
+  {
+    id:11,
+    account_name:'John Doe',
+    account_type: 'telegram',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:2000,
+    engagement:'66%'
+  },
+  {
+    id:12,
+    account_name:'John Doe',
+    account_type: 'facebook',
+    user_name:'@Johndoe' ,
+    link:'https://www.reddit.com/?rdt=45713' ,
+    followers:50000,
+    engagement:'15%'
+  }
 ]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
 export const ContentType:TContentType[] =["Script" , "Article"]

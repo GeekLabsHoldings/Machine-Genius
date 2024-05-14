@@ -37,7 +37,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: clamp(4px, calc(0.1vw + 0.1rem), 200px) clamp(10px, calc(0.2vw + 0.1rem), 200px);
+    padding: clamp(4px, calc(0.2vw + 0.1rem), 200px) clamp(20px, calc(0.6vw + 0.1rem), 200px);
     background: var(--white);
     border: 1px solid #000000;
     border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
@@ -45,8 +45,6 @@
     font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
     font-weight: 400;
 }
-
-
 .changeOrder svg{
     width: clamp(18px, calc(0.8vw + 0.1rem), 100px);
 }
@@ -68,11 +66,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: clamp(10px, calc( 0.1vw + 0.1rem), 60px) 0 !important;
+    padding: clamp(10px, calc( 0.7vw + 0.1rem), 60px) 0 !important;
 
 }
 .tableBody li ,.tableBody li span{
     transition: 0.1s;
+}
+.tableBody li > input, .tableHeader li > input{
+    margin: 0;
+    
 }
 
 .tableBody li span{

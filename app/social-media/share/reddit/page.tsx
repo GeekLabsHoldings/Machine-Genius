@@ -36,7 +36,7 @@ const Reddit = () => {
       <li className="w-2/12">{onePost.subReddit}</li>
       <li className="w-3/12 "><a href={onePost.link}>{onePost.link}</a></li>
       <li className={`w-2/12 `}>
-          {onePost.subscribers}
+      {onePost.subscribers > 999 ? (onePost.subscribers / 100) / 10.0 + "k" : onePost.subscribers}
       </li>
       <li className="w-1/12 ">
           {onePost.niche}
@@ -83,15 +83,15 @@ const Reddit = () => {
         <div className={`${styles.redditPage} w-8/12 flex gap-[1vw]`}>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
               <h5>Sub Reddit</h5>
-              <CustomSelectInput label="All" options={ArticleNames} />
+              <CustomSelectInput label="All" options={ArticleNames} paddingVal='py-[0.2vw] px-[0.5vw]'/>
             </div>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
               <h5>Niche</h5>
-              <CustomSelectInput label="All" options={Brands}/>
+              <CustomSelectInput label="All" options={Brands} paddingVal='py-[0.2vw] px-[0.5vw]'/>
             </div>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
               <h5>Brand</h5>
-              <CustomSelectInput label="All" options={Brands} />
+              <CustomSelectInput label="All" options={Brands} paddingVal='py-[0.2vw] px-[0.5vw]'/>
             </div>
             
             <div className={`flex flex-col w-[25%] gap-[0.3vw] `}>
@@ -137,7 +137,9 @@ const Reddit = () => {
           </div>
           <div>
   
-            <BasicModal/>
+          <BasicModal btnWord='Add To List' btnIcon={<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z" fill="#FFFFFB"/>
+</svg>} btnColor={'black'} modalTitle='Add To List' forWhat={'add_post'}/>
           </div>
         </div>
           

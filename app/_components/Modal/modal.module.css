@@ -3,8 +3,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    width: clamp(56px, calc(22vw + 0.1rem),800px);
-    height:  clamp(360px, calc(24vw + 0.1rem),3000px);
+    min-width: clamp(56px, calc(22vw + 0.1rem),800px);
+    height: fit-content;
     background-color: var(--white);
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
     border: 1px solid #DBDBD7;
@@ -14,9 +14,7 @@
     flex-direction: column;
     gap: 1.5vw;
 }
-.modalBox .dropdown .dropdown_btn{
-    padding: 2px;
-}
+
 .modal{
     background-color: rgba(255, 255, 251, 0.58);
 }
@@ -63,4 +61,17 @@
     font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
     font-weight: 400;
     color: red;
+}
+.removeSec{
+    padding-bottom: clamp(5px, calc( 0.8vw + 0.1rem), 60px) ;
+    border-bottom: 1px solid var(--dark);
+    height: 15vh;
+    overflow-y: auto;
+}
+.removeSec h4{
+    text-decoration: underline;
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-weight: 700;
+    padding-bottom: 0.8vw;
+
 }

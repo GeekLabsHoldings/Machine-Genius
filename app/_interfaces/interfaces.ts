@@ -2,7 +2,13 @@ import { URLPattern } from "next/server";
 import { ReactElement, ReactNode } from "react";
 
 export type personStatus = 'online' | 'offline' | 'away'
-
+type Percentage = `${number}%`
+export type TCompanyEmployees = 'Sherry' | 'Yara' | 'Kamel' | 'Manar'
+export type TasksType = 'Assigned' | 'Inprogress' | 'Tasks Done'
+export type TBrands = 'PST USA' | 'PST Asia' | 'Investocracy' | 'Street Politics' | 'Canada'
+export type TContentType = 'Script' | 'Article'
+export type TApproval = 'Pending' | 'Approved' | 'Rejected'
+export type TPublish = 'Not Published' | 'Uploading' | 'Published'
 
 // article data properities
 export interface IArticle {
@@ -38,7 +44,7 @@ export interface IyourArticle{
     articleName:string,
     brand: TBrands,
     contentType: TContentType,
-    views:string,
+    views:number,
     approvals: TApproval,
     date:string,
     editBtn: string
@@ -60,7 +66,7 @@ export interface IVideoDatabase{
     id:number,
     title:string,
     brand:TBrands,
-    views:string,
+    views:number,
     approvals:TApproval,
     publish: TPublish,
     date:string,
@@ -69,14 +75,20 @@ export interface IVideoDatabase{
 export interface IRedditData {
     subReddit:string,
     link: string,
-    subscribers:string,
+    subscribers:number,
     niche:string,
     brand:TBrands,
-    engagement:string
+    engagement:Percentage
 }
-export type TCompanyEmployees = 'Sherry' | 'Yara' | 'Kamel' | 'Manar'
-export type TasksType = 'Assigned' | 'Inprogress' | 'Tasks Done'
-export type TBrands = 'PST USA' | 'PST Asia' | 'Investocracy' | 'Street Politics' | 'Canada'
-export type TContentType = 'Script' | 'Article'
-export type TApproval = 'Pending' | 'Approved' | 'Rejected'
-export type TPublish = 'Not Published' | 'Uploading' | 'Published'
+
+export interface IAccounts {
+    id:number,
+    account_name:string,
+    account_type: 'facebook'|'telegram'|'reddit',
+    user_name:string ,
+    link:string ,
+    followers:number,
+    engagement:Percentage
+}
+
+
