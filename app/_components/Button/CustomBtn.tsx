@@ -22,7 +22,7 @@ return(
     <Link className = {`${props.btnColor === 'white' ? styles.whiteBtn  : styles.blackBtn } ${props.class} ${props.width ? props.width : 'w-fit'} `} {...props} href={props.href?props.href:''}>
     <div className={styles.iconAndTxtBtn}>
     {props.icon ? props.icon : null}
-    <span>{props.word}</span>
+    {props.word ?  <span>{props.word}</span> : null}
     </div>
     </Link>
 )

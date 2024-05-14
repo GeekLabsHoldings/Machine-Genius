@@ -154,7 +154,7 @@ const Share = ()=>{
       </div>
         <CustomBtn icon={<svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.08333 16.5C7.08333 17.3284 7.71757 18 8.5 18C9.28242 18 9.91667 17.3284 9.91667 16.5V10.5H15.5833C16.3658 10.5 17 9.82845 17 9C17 8.17155 16.3658 7.5 15.5833 7.5H9.91667V1.5C9.91667 0.671565 9.28242 0 8.5 0C7.71757 0 7.08333 0.671565 7.08333 1.5V7.5H1.41667C0.63427 7.5 0 8.17155 0 9C0 9.82845 0.63427 10.5 1.41667 10.5H7.08333V16.5Z" fill="#FFFFFB"/>
-        </svg> } btnColor='black'/>
+        </svg> } btnColor='black'  href='./share/telegram'/>
        </div>
 
        <div className={`${styles.platformBox} h-[15vh] flex flex-col gap-[0.8vw]`}>
