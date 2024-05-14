@@ -115,7 +115,7 @@ const TwitterPost = () => {
 
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
-        <CustomBtn word="Back" btnColor="white" href="/social-media/post/choose-sub-brand" />
+        <CustomBtn word="Back" btnColor="white" href="/social-media/post/twitter" />
         <CustomBtn word="Next" btnColor="black" href="/social-media/post/schadule-post" />
       </div>
 

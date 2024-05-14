@@ -7,6 +7,8 @@ import Image from 'next/image'
 import postImage from '@/public/assets/post-img.svg'
 import postImage2 from '@/public/assets/post-img2.svg'
 import CustomSelectInput from '@/app/_components/CustomSelectInput/CustomSelectInput'
+import { useRouter } from 'next/navigation'
+import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle'
 
 
 const reGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -14,123 +16,142 @@ const reGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" width="13" height
 </svg>
 
 const addIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M6.66667 14.6667C6.66667 15.4031 7.2636 16 8 16C8.7364 16 9.33333 15.4031 9.33333 14.6667V9.33333H14.6667C15.4031 9.33333 16 8.7364 16 8C16 7.2636 15.4031 6.66667 14.6667 6.66667H9.33333V1.33333C9.33333 0.596947 8.7364 0 8 0C7.2636 0 6.66667 0.596947 6.66667 1.33333V6.66667H1.33333C0.59696 6.66667 0 7.2636 0 8C0 8.7364 0.59696 9.33333 1.33333 9.33333H6.66667V14.6667Z" fill="#FFFFFB"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M6.66667 14.6667C6.66667 15.4031 7.2636 16 8 16C8.7364 16 9.33333 15.4031 9.33333 14.6667V9.33333H14.6667C15.4031 9.33333 16 8.7364 16 8C16 7.2636 15.4031 6.66667 14.6667 6.66667H9.33333V1.33333C9.33333 0.596947 8.7364 0 8 0C7.2636 0 6.66667 0.596947 6.66667 1.33333V6.66667H1.33333C0.59696 6.66667 0 7.2636 0 8C0 8.7364 0.59696 9.33333 1.33333 9.33333H6.66667V14.6667Z" fill="#FFFFFB" />
 </svg>
 
-const acountOptions = ["Investocracy" , "Street Suite"];
-const UploudOptions = ["8:30 PM GMT" , "9:30 PM GMT"];
+const acountOptions = ["Investocracy", "Street Suite"];
+const UploudOptions = ["8:30 PM GMT", "9:30 PM GMT"];
 
 const SchadulePost = () => {
 
   const [PostText, setPostText] = useState<string>("Stocks, the heartbeat of the market! Whether you're a seasoned investor or just getting started, understanding trends and staying informed is key to navigating this thrilling financial landscape.  #stockstoday")
 
-  const handleAddHashTags = (e:any)=>{
-    setPostText( prev => prev + " " + e.target.innerText)
+
+  // loading state that show and hide loading
+  const [IsLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+
+  const handleNavigate = () => {
+
+    setIsLoading(true)
+
+    // setTimeout(() => {
+    //   // Your action here
+    //   router.push('/social-media/post/schadual-post')
+
+    // }, 1500); // 3000 milliseconds = 3 seconds
+
   }
 
   return (
     <div className="flex flex-col h-full">
 
-      <div className={"flex flex-col w-full h-[75vh] py-[1vw] " + styles.add_post_wrapper}>
-        <h6>Twitter Post</h6>
+      {IsLoading ? <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto space-y-[2vw] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle needTxt={true} title='Your tweet has been published!' />
+        <CustomBtn word="Dashboard" btnColor="black" href="/social-media/dashboard" />
+      </div> : <>
+        <div className={"flex flex-col w-full h-[75vh] py-[1vw] " + styles.add_post_wrapper}>
+          <h6>Twitter Post</h6>
 
-        <div className="grid grid-cols-2 gap-[2vw] w-full h-full">
+          <div className="grid grid-cols-2 gap-[2vw] w-full h-full">
 
-          <div className={styles.post_images + " flex flex-col"}>
-            <h6>Image Selection</h6>
+            <div className={styles.post_images + " flex flex-col"}>
+              <h6>Image Selection</h6>
 
-            <div className={styles.image_selection}>
-              <div className={styles.image_option}>
-                <div className={styles.isSelected}>selected</div>
-                <Image src={postImage} alt="post image" />
-                <input type="checkbox" name="post-images" id="" />
-              </div>
-              <div className={styles.image_option}>
-                <div className={styles.isSelected}>selected</div>
-                <Image src={postImage2} alt="post image" />
-                <input type="checkbox" name="post-images" id="" />
-              </div>
-              <div className={styles.image_option}>
-                <div className={styles.isSelected}>selected</div>
-                <Image src={postImage} alt="post image" />
-                <input type="checkbox" name="post-images" id="" />
-              </div>
-            </div>
-            <CustomBtn btnColor='black' word='Re-Generate' icon={reGenerateIcon}/>
-
-
-            <div className={styles.schadule_post}>
-              <h6>Schedule</h6>
-
-              <label htmlFor="">Account</label>
-              <CustomSelectInput options={acountOptions}/>
-
-              <label htmlFor="" className='mt-[0.5vw]'>Upload Time</label>
-              <CustomSelectInput options={UploudOptions}/>
-
-              <CustomBtn btnColor='black' word='Schadule'/>
-
-            </div>
-
-
-          </div>
-
-          <div className='h-full'>
-            <div className={styles.post_view_screens + " flex gap-[1vw] h-full"}>
-              <div className={styles.desctop_screen + " w-2/3 h-full"}>
-                <h6>Desktop View</h6>
-                <div className={styles.desctop_view}>
-                  <div className={styles.avatar}>
-                    <Image src={profileImg} alt='avatar'/>
-                    <div className={styles.avatar_info}>
-                      <p>Investocracy
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" fill="none">
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M5.21234 0.91996C6.08846 -0.306653 7.91149 -0.306653 8.78768 0.91996L8.92718 1.11524C9.08132 1.33112 9.34026 1.44671 9.60389 1.41742L10.2256 1.34833C11.6249 1.19287 12.8071 2.37516 12.6517 3.77437L12.5826 4.3961C12.5533 4.65976 12.6689 4.91865 12.8848 5.07285L13.0801 5.21234C14.3066 6.08846 14.3066 7.91149 13.0801 8.78768L12.8848 8.92718C12.6689 9.08132 12.5533 9.34026 12.5826 9.60389L12.6517 10.2256C12.8071 11.6249 11.6249 12.8071 10.2256 12.6517L9.60389 12.5826C9.34026 12.5533 9.08132 12.6689 8.92718 12.8848L8.78768 13.0801C7.91149 14.3066 6.08853 14.3066 5.21234 13.0801L5.07285 12.8848C4.91865 12.6689 4.65976 12.5533 4.39609 12.5826L3.77437 12.6517C2.37516 12.8071 1.19287 11.6249 1.34833 10.2256L1.41742 9.60389C1.44671 9.34026 1.33112 9.08132 1.11524 8.92718L0.91996 8.78768C-0.306653 7.91149 -0.306653 6.08853 0.91996 5.21234L1.11524 5.07285C1.33112 4.91865 1.44671 4.65976 1.41742 4.39609L1.34833 3.77437C1.19287 2.37516 2.37516 1.19287 3.77437 1.34833L4.3961 1.41742C4.65976 1.44671 4.91865 1.33112 5.07285 1.11524L5.21234 0.91996ZM9.71468 5.01762C10.0006 5.3036 10.0006 5.76728 9.71468 6.05323L6.91814 8.84977C6.55895 9.20903 5.97649 9.20903 5.6173 8.84977L4.28533 7.51781C3.99936 7.23185 3.99936 6.76817 4.28533 6.48221C4.57132 6.19625 5.03497 6.19625 5.32095 6.48221L6.26772 7.42899L8.67908 5.01762C8.96504 4.73165 9.42872 4.73165 9.71468 5.01762Z" fill="#31B2E9" />
-                        </svg>
-                      </p>
-                      <span>@Investocrasy</span>
-                    </div>
-                  </div>
-
-                  <p>{PostText}</p>
-
-                  <Image src={postImage} alt='' />
+              <div className={styles.image_selection}>
+                <div className={styles.image_option}>
+                  <div className={styles.isSelected}>selected</div>
+                  <Image src={postImage} alt="post image" />
+                  <input type="checkbox" name="post-images" id="" />
+                </div>
+                <div className={styles.image_option}>
+                  <div className={styles.isSelected}>selected</div>
+                  <Image src={postImage2} alt="post image" />
+                  <input type="checkbox" name="post-images" id="" />
+                </div>
+                <div className={styles.image_option}>
+                  <div className={styles.isSelected}>selected</div>
+                  <Image src={postImage} alt="post image" />
+                  <input type="checkbox" name="post-images" id="" />
                 </div>
               </div>
-              <div className={styles.mobile_screen + " w-1/3"}>
-                <h6>Mobile View</h6>
-                <div className={styles.mobile_view}>
-                <div className={styles.avatar}>
-                    <Image src={profileImg} alt='avatar'/>
-                    <div className={styles.avatar_info}>
-                      <p>Investocracy
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" fill="none">
-                          <path fill-rule="evenodd" clip-rule="evenodd" d="M5.21234 0.91996C6.08846 -0.306653 7.91149 -0.306653 8.78768 0.91996L8.92718 1.11524C9.08132 1.33112 9.34026 1.44671 9.60389 1.41742L10.2256 1.34833C11.6249 1.19287 12.8071 2.37516 12.6517 3.77437L12.5826 4.3961C12.5533 4.65976 12.6689 4.91865 12.8848 5.07285L13.0801 5.21234C14.3066 6.08846 14.3066 7.91149 13.0801 8.78768L12.8848 8.92718C12.6689 9.08132 12.5533 9.34026 12.5826 9.60389L12.6517 10.2256C12.8071 11.6249 11.6249 12.8071 10.2256 12.6517L9.60389 12.5826C9.34026 12.5533 9.08132 12.6689 8.92718 12.8848L8.78768 13.0801C7.91149 14.3066 6.08853 14.3066 5.21234 13.0801L5.07285 12.8848C4.91865 12.6689 4.65976 12.5533 4.39609 12.5826L3.77437 12.6517C2.37516 12.8071 1.19287 11.6249 1.34833 10.2256L1.41742 9.60389C1.44671 9.34026 1.33112 9.08132 1.11524 8.92718L0.91996 8.78768C-0.306653 7.91149 -0.306653 6.08853 0.91996 5.21234L1.11524 5.07285C1.33112 4.91865 1.44671 4.65976 1.41742 4.39609L1.34833 3.77437C1.19287 2.37516 2.37516 1.19287 3.77437 1.34833L4.3961 1.41742C4.65976 1.44671 4.91865 1.33112 5.07285 1.11524L5.21234 0.91996ZM9.71468 5.01762C10.0006 5.3036 10.0006 5.76728 9.71468 6.05323L6.91814 8.84977C6.55895 9.20903 5.97649 9.20903 5.6173 8.84977L4.28533 7.51781C3.99936 7.23185 3.99936 6.76817 4.28533 6.48221C4.57132 6.19625 5.03497 6.19625 5.32095 6.48221L6.26772 7.42899L8.67908 5.01762C8.96504 4.73165 9.42872 4.73165 9.71468 5.01762Z" fill="#31B2E9" />
-                        </svg>
-                      </p>
-                      <span>@Investocrasy</span>
+              <CustomBtn btnColor='black' word='Re-Generate' icon={reGenerateIcon} />
+
+
+              <div className={styles.schadule_post}>
+                <h6>Schedule</h6>
+
+                <label htmlFor="">Account</label>
+                <CustomSelectInput options={acountOptions} />
+
+                <label htmlFor="" className='mt-[0.5vw]'>Upload Time</label>
+                <CustomSelectInput options={UploudOptions} />
+
+                <CustomBtn btnColor='black' word='Schadule' />
+
+              </div>
+
+
+            </div>
+
+            <div className='h-full'>
+              <div className={styles.post_view_screens + " flex gap-[1vw] h-full"}>
+                <div className={styles.desctop_screen + " w-2/3 h-full"}>
+                  <h6>Desktop View</h6>
+                  <div className={styles.desctop_view}>
+                    <div className={styles.avatar}>
+                      <Image src={profileImg} alt='avatar' />
+                      <div className={styles.avatar_info}>
+                        <p>Investocracy
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.21234 0.91996C6.08846 -0.306653 7.91149 -0.306653 8.78768 0.91996L8.92718 1.11524C9.08132 1.33112 9.34026 1.44671 9.60389 1.41742L10.2256 1.34833C11.6249 1.19287 12.8071 2.37516 12.6517 3.77437L12.5826 4.3961C12.5533 4.65976 12.6689 4.91865 12.8848 5.07285L13.0801 5.21234C14.3066 6.08846 14.3066 7.91149 13.0801 8.78768L12.8848 8.92718C12.6689 9.08132 12.5533 9.34026 12.5826 9.60389L12.6517 10.2256C12.8071 11.6249 11.6249 12.8071 10.2256 12.6517L9.60389 12.5826C9.34026 12.5533 9.08132 12.6689 8.92718 12.8848L8.78768 13.0801C7.91149 14.3066 6.08853 14.3066 5.21234 13.0801L5.07285 12.8848C4.91865 12.6689 4.65976 12.5533 4.39609 12.5826L3.77437 12.6517C2.37516 12.8071 1.19287 11.6249 1.34833 10.2256L1.41742 9.60389C1.44671 9.34026 1.33112 9.08132 1.11524 8.92718L0.91996 8.78768C-0.306653 7.91149 -0.306653 6.08853 0.91996 5.21234L1.11524 5.07285C1.33112 4.91865 1.44671 4.65976 1.41742 4.39609L1.34833 3.77437C1.19287 2.37516 2.37516 1.19287 3.77437 1.34833L4.3961 1.41742C4.65976 1.44671 4.91865 1.33112 5.07285 1.11524L5.21234 0.91996ZM9.71468 5.01762C10.0006 5.3036 10.0006 5.76728 9.71468 6.05323L6.91814 8.84977C6.55895 9.20903 5.97649 9.20903 5.6173 8.84977L4.28533 7.51781C3.99936 7.23185 3.99936 6.76817 4.28533 6.48221C4.57132 6.19625 5.03497 6.19625 5.32095 6.48221L6.26772 7.42899L8.67908 5.01762C8.96504 4.73165 9.42872 4.73165 9.71468 5.01762Z" fill="#31B2E9" />
+                          </svg>
+                        </p>
+                        <span>@Investocrasy</span>
+                      </div>
                     </div>
+
+                    <p>{PostText}</p>
+
+                    <Image src={postImage} alt='' />
                   </div>
+                </div>
+                <div className={styles.mobile_screen + " w-1/3"}>
+                  <h6>Mobile View</h6>
+                  <div className={styles.mobile_view}>
+                    <div className={styles.avatar}>
+                      <Image src={profileImg} alt='avatar' />
+                      <div className={styles.avatar_info}>
+                        <p>Investocracy
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.21234 0.91996C6.08846 -0.306653 7.91149 -0.306653 8.78768 0.91996L8.92718 1.11524C9.08132 1.33112 9.34026 1.44671 9.60389 1.41742L10.2256 1.34833C11.6249 1.19287 12.8071 2.37516 12.6517 3.77437L12.5826 4.3961C12.5533 4.65976 12.6689 4.91865 12.8848 5.07285L13.0801 5.21234C14.3066 6.08846 14.3066 7.91149 13.0801 8.78768L12.8848 8.92718C12.6689 9.08132 12.5533 9.34026 12.5826 9.60389L12.6517 10.2256C12.8071 11.6249 11.6249 12.8071 10.2256 12.6517L9.60389 12.5826C9.34026 12.5533 9.08132 12.6689 8.92718 12.8848L8.78768 13.0801C7.91149 14.3066 6.08853 14.3066 5.21234 13.0801L5.07285 12.8848C4.91865 12.6689 4.65976 12.5533 4.39609 12.5826L3.77437 12.6517C2.37516 12.8071 1.19287 11.6249 1.34833 10.2256L1.41742 9.60389C1.44671 9.34026 1.33112 9.08132 1.11524 8.92718L0.91996 8.78768C-0.306653 7.91149 -0.306653 6.08853 0.91996 5.21234L1.11524 5.07285C1.33112 4.91865 1.44671 4.65976 1.41742 4.39609L1.34833 3.77437C1.19287 2.37516 2.37516 1.19287 3.77437 1.34833L4.3961 1.41742C4.65976 1.44671 4.91865 1.33112 5.07285 1.11524L5.21234 0.91996ZM9.71468 5.01762C10.0006 5.3036 10.0006 5.76728 9.71468 6.05323L6.91814 8.84977C6.55895 9.20903 5.97649 9.20903 5.6173 8.84977L4.28533 7.51781C3.99936 7.23185 3.99936 6.76817 4.28533 6.48221C4.57132 6.19625 5.03497 6.19625 5.32095 6.48221L6.26772 7.42899L8.67908 5.01762C8.96504 4.73165 9.42872 4.73165 9.71468 5.01762Z" fill="#31B2E9" />
+                          </svg>
+                        </p>
+                        <span>@Investocrasy</span>
+                      </div>
+                    </div>
 
-                  <p>{PostText}</p>
+                    <p>{PostText}</p>
 
-                  <Image src={postImage} alt='' />
+                    <Image src={postImage} alt='' />
 
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
 
         </div>
 
-      </div>
 
+        {/* buttons to move to last or next page */}
+        <div className="flex justify-between items-center">
+          <CustomBtn word="Back" btnColor="white" href="/social-media/post/choose-sub-brand" />
+          <CustomBtn word="Publish " btnColor="black" onClick={handleNavigate} />
+        </div>
+      </>}
 
-      {/* buttons to move to last or next page */}
-      <div className="flex justify-between items-center">
-        <CustomBtn word="Back" btnColor="white" href="/social-media/post/choose-sub-brand" />
-        <CustomBtn word="Publish " btnColor="black" href="/social-media/post/schadual-post" />
-      </div>
 
     </div>
   )
