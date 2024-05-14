@@ -162,7 +162,7 @@ const redditIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20
              <ul
                 className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
               >
-        <li className='w-[5%] flex justify-center items-center' ><CustomCheckBox onClick={(e)=>{handleCheckAllSelectedText(e)}}/></li>
+        <li className='w-[5%] flex justify-center items-center' ><CustomCheckBox onChange={(e)=>{handleCheckAllSelectedText(e)}}/></li>
 
                 <li className="w-[22%] flex justify-center">
                 <div className="flex items-center gap-[0.7vw]">

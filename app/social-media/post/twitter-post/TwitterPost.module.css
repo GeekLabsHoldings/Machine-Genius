@@ -48,8 +48,7 @@
 
 .suggestions .item {
     position: relative;
-    height: clamp(50px, calc(4.5vw + 0.1rem), 1000px);
-    height: clamp(50px, calc(4.4vw + 0.1rem), 1000px);
+    min-height: clamp(50px, calc(4.4vw + 0.1rem), 1000px);
     padding: clamp(10px, calc(0.6vw + 0.1rem), 1000px) 0 clamp(10px, calc(0.6vw + 0.1rem), 1000px) clamp(10px, calc(0.6vw + 0.1rem), 1000px);
     display: flex;
     align-items: center;
@@ -81,6 +80,9 @@
     width: 84%;
     font-size: clamp(10px, calc(0.75vw + 0.1rem), 1000px);
     text-align: justify;
+    max-height: 7vh;
+    overflow-y: auto;
+    padding-right: 0.5vw;
 }
 
 .suggestions .item a {
@@ -99,6 +101,49 @@
 
 .suggestions .item svg path {
     fill: var(--dark);
+}
+
+
+.suggestions .item:hover {
+    background-color: var(--dark);
+    cursor: pointer;
+}
+
+.suggestions .item:hover p {
+    color: var(--white);
+}
+
+.suggestions .item:hover p::-webkit-scrollbar-track {
+    background: var(--dark);
+  }
+  
+  /* Handle */
+.suggestions .item:hover p::-webkit-scrollbar-thumb {
+    background: var(--white);
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+}
+  
+  /* Handle on hover */
+.suggestions .item:hover p::-webkit-scrollbar-thumb:hover {
+    background: var(--white);
+  }
+
+
+.suggestions .item:hover {
+    background-color: var(--dark);
+    cursor: pointer;
+}
+
+.suggestions .item:hover::after {
+    background-color: var(--white);
+}
+
+.suggestions .item:hover svg path {
+    fill: var(--white);
 }
 
 
@@ -128,6 +173,7 @@
 .desctop_screen .desctop_view .avatar img {
     width: clamp(40px, calc(2.2vw + 0.1rem), 1000px);
     height: clamp(40px, calc(2.2vw + 0.1rem), 1000px);
+    border-radius: 50%;
 }
 
 .desctop_screen .avatar_info{
