@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './CustomSelectInput.module.css'
-import { useRouter } from 'next/navigation';
 
 interface Iprops {
     label?: string | number,
@@ -50,6 +49,7 @@ const CustomSelectInput = (props: Iprops) => {
             <div
                 className={styles.dropdown_content}
                 style={{ display: isActive ? "block" : "none" }}
+                onMouseLeave={()=> setIsActive(false)}
             >
                 {props.options.map((ele, idx) => (
                     <div

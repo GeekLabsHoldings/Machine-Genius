@@ -14,7 +14,7 @@ const addIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" v
 </svg>
 
 const SuggetionPosts = ['Stocks, the heartbeat of the marketStocks, the heartbeat of the market! ! Whether you are a seasoned investor or just getting started, understanding trends and staying informed is key to navigating this thrilling financial landscape.',
-  'Whether you are a seasoned investor or just getting started, understanding trends and staying. Whether you are a seasoned investor or just getting started, understanding trends and staying. Whether you are a seasoned investor or just getting started, understanding trends and staying.',
+  'Whether you are a seasoned investor or just getting started, understanding trends and staying. Whether you are a seasoned investor or just getting started, understanding trends and staying. Whether you are a seasoned investor or just getting started',
   'Stocks, the heartbeat of the marketStocks, the heartbeat of the market!'
 ]
 
