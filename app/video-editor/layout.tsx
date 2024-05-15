@@ -9,17 +9,18 @@ import styles from './videoCreator.module.css';
 // Import components
 import SideNav from '../_components/SideNav/SideNav';
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
-import { usePathname } from 'next/navigation';
+// import { usePathname } from 'next/navigation';
 
 // Define the layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
 
   // get path from usePathname hook from next/navigation
-  const path = usePathname();
+  // const path = usePathname();
 
   // State variables to manage side nav and current page
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>(path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1));
+  const [CurrentPage, setCurrentPage] = useState<string>('Video Editor');
+  // path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1)
 
   // Array of side nav links
   const sideNavLinks = [

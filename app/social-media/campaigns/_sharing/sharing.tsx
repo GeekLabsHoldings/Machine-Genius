@@ -30,7 +30,7 @@ const Sharing = ()=>{
    
           <li className="w-[20%] ">{oneCampaign.date}</li>
           <li className={` w-[20%] flex justify-center`}>
-           <CustomBtn href='./campaigns/share-campaign' class='videoStatusBtn' paddingVal='py-[0.3vw] px-[3vw]' word={oneCampaign.shareBtn} btnColor='black'/>
+           <CustomBtn href='/social-media/campaigns/share-campaign' class='videoStatusBtn' paddingVal='py-[0.3vw] px-[3vw]' word={oneCampaign.shareBtn} btnColor='black'/>
           </li>
         </ul>
       ));

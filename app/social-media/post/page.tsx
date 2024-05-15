@@ -28,7 +28,7 @@ const Post = () => {
           <CustomBtn
             word="Next" // Button text
             btnColor="black" // Button color
-            href="post/choose-brand" // Navigation link
+            href="/social-media/post/choose-brand" // Navigation link
           />
         </div>
       </div>

@@ -28,7 +28,7 @@ const SchadulePost = () => {
   const [PostText, setPostText] = useState<string>("Stocks, the heartbeat of the market! Whether you're a seasoned investor or just getting started, understanding trends and staying informed is key to navigating this thrilling financial landscape.  #stockstoday");
   const [IsLoading, setIsLoading] = useState(false); // Loading state
 
-  const router = useRouter(); // useRouter hook for navigation
+  // const router = useRouter(); // useRouter hook for navigation
 
   // Function to handle navigation
   const handleNavigate = () => {
