@@ -29,7 +29,7 @@ const Comments = () => {
             <div className={"flex flex-col w-full h-[80vh] py-[1vw] " + styles.comments_wrapper}>
                 <div className={"tabs " + styles.tabs}>
                     <input type="radio" name="tabs" className="tab" aria-label="Account Lists" />
-                    <div className="tab-content h-[75vh]"><AccountList /></div>
+                    <div className="tab-content h-[75vh]"> <AccountList /></div>
 
                     <input type="radio" name="tabs" className="tab" aria-label="All Campaigns" defaultChecked />
                     <div className="tab-content h-[75vh]">Tab content 2</div>
