@@ -53,7 +53,7 @@ const AccountList = () => {
       <li className="w-[16%] ">
         <a href="#">{oneAccount.link}</a>
       </li>
-      <li className="w-[16%]  ">
+      <li className="w-[16%]  "> 
         <span
           className={
             oneAccount.brand === "PST USA"
