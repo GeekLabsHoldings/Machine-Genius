@@ -12,16 +12,16 @@
     border: 1px solid transparent;
     border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
 }
-.tableBodyWrapper{
+.tableContentWrapper{
     overflow-y: auto;
-    height: 50vh;
+    height: 64vh;
 }
   /* Track */
-  .tableBodyWrapper::-webkit-scrollbar-track {
+  .tableContentWrapper::-webkit-scrollbar-track {
     background: transparent; 
 }
   /* Handle */
-  .tableBodyWrapper::-webkit-scrollbar-thumb {
+  .tableContentWrapper::-webkit-scrollbar-thumb {
     background: #2A2B2A; 
     width: clamp(2px, calc( 0.08vw + 0.1rem), 40px);
     border-radius: 10vw ;
@@ -51,7 +51,7 @@
     border-bottom: 1px solid #2A2B2A;
 }
 .tableBody{
-    padding: clamp(10px, calc( 0.1vw + 0.1rem), 60px) 0 !important;
+    padding: clamp(4px, calc( 0.2vw + 0.1rem), 60px) 0 !important;
 }
 .tableHeader li,.tableBody li{
     text-align: center;
@@ -91,9 +91,7 @@
     width: 1vw;
     height: 1vh;
 }
-.edit a{
-    text-decoration: underline;
-}
+
 .tableBody li span{
     padding: 0.1vw 0.3vw;
     border-radius: 0.1vw;

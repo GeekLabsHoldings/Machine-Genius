@@ -49,8 +49,6 @@ body{
 img{
   width: 100%;
 }
-
-
 .articleRow.selected, .assignedVideo.selected{
   background-color: #2A2B2A;
   color: var(--white);

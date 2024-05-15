@@ -2,6 +2,7 @@ import {
   IAccounts,
   IArticle,
   IAssignedVideos,
+  ICampaigns,
   ICommentData,
   IRedditData,
   ITasks,
@@ -806,6 +807,100 @@ export const AccountsData:IAccounts[] = [
     status:'Finished',
     comments: 2,
   }
+]
+
+export const Campaigns:ICampaigns[] = [
+{
+  id:1,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:2,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:3,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:4,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:5,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:6,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:7,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:8,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:9,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:10,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:11,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:12,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:13,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
 ]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
 export const ContentType:TContentType[] =["Script" , "Article"]

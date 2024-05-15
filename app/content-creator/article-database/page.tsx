@@ -160,7 +160,9 @@ const ArticleDatabase = () => {
               <li className="w-1/12">Edit</li>
             </ul>
 
+            <div className={styles.tableBodyWrapper}>
             {renderYourArticles}
+            </div>
            </div>
         </div>  
       </div>

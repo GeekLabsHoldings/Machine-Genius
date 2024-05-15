@@ -16,7 +16,7 @@ const VideoCreation = ()=>{
     
     // render assigned videos to every one and its status of completetion
     const renderVideosData = AssignedVideos.map((video,idx)=>(
-        <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e);console.log(e.target)}}>
+        <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e)}}>
                 <li className="w-[5%]">{video.id}</li>
                 <li className="w-3/12">{video.title}</li>
                 <li className="w-2/12">{video.date}</li>

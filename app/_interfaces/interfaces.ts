@@ -96,4 +96,11 @@ export interface IAccounts {
     engagement:Percentage
 }
 
+export interface ICampaigns{
+    id:number,
+    content:string,
+    link:string,
+    date:string,
+    shareBtn:string
+}
 
