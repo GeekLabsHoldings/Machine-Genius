@@ -25,7 +25,8 @@ const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fil
 const rols = [
     'Content Creator',
     'Video Editor',
-    'Social Media'
+    'Social Media',
+    'HR'
 ]
 
 
@@ -54,6 +55,8 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/video-editor/dashboard')
         } else if (SelectedRole === 'Social Media') {
             router.push('/social-media/dashboard')
+        } else if (SelectedRole === 'HR') {
+            router.push('/hr')
         }
     }, [SelectedRole])
 
