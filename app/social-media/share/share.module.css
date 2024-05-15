@@ -12,7 +12,7 @@
 }
 .selection h5{
     font-weight: 600;
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+    font-size: clamp(12px, calc( 0.9vw + 0.1rem), 60px);
 }
 .platformBox{
     padding: 1vw 2vw;

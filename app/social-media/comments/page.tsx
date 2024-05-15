@@ -5,6 +5,7 @@ import styles from './Comments.module.css'
 import profileImg from '@/public/assets/man-img.svg'
 import CustomBtn from '@/app/_components/Button/CustomBtn'
 import CustomSelectInput from '@/app/_components/CustomSelectInput/CustomSelectInput'
+import AccountList from './account-list/page'
 
 
 const reGenerateIcon = <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -28,7 +29,7 @@ const Comments = () => {
             <div className={"flex flex-col w-full h-[80vh] py-[1vw] " + styles.comments_wrapper}>
                 <div className={"tabs " + styles.tabs}>
                     <input type="radio" name="tabs" className="tab" aria-label="Account Lists" />
-                    <div className="tab-content h-[75vh]">Tab content 1</div>
+                    <div className="tab-content h-[75vh]"> <AccountList /></div>
 
                     <input type="radio" name="tabs" className="tab" aria-label="All Campaigns" defaultChecked />
                     <div className="tab-content h-[75vh]">Tab content 2</div>
