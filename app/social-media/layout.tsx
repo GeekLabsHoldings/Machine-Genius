@@ -5,13 +5,17 @@ import React, { useState } from 'react';
 import styles from './socialMedia.module.css';
 import SideNav from '../_components/SideNav/SideNav';
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
+import { usePathname } from 'next/navigation';
 
 // Functional component for layout
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
 
-  // State variables for managing side navigation and current page
+  // get path from usePathname hook from next/navigation
+  const path = usePathname();
+
+  // State variables to manage side nav and current page
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>('Social Media');
+  const [CurrentPage, setCurrentPage] = useState<string>(path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1));
 
   // Array of side navigation links with their corresponding icons
   const sideNavLinks = [

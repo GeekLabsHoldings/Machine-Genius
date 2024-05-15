@@ -7,6 +7,7 @@ import { useState } from 'react'; // React useState hook for managing state
 import profileImg from '@/public/assets/post-profile.svg'; // Profile image
 import Image from 'next/image'; // Next.js Image component for optimized image loading
 import postImage from '@/public/assets/post-img.svg'; // Post image
+import postImage2 from '@/public/assets/post-img2.svg'; // Post image2
 import CustomSelectInput from '@/app/_components/CustomSelectInput/CustomSelectInput'; // Custom select input component
 import { useRouter } from 'next/navigation'; // Next.js useRouter for client-side navigation
 import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle'; // Logo and title component
@@ -36,7 +37,7 @@ const SchadulePost = () => {
 
   return (
     <div className="flex flex-col h-full">
-      
+
       {/* Conditional rendering based on loading state */}
       {IsLoading ? (
         // Display loading message and dashboard button
@@ -58,6 +59,19 @@ const SchadulePost = () => {
 
                 <div className={styles.image_selection}>
                   {/* Image options */}
+                  {/* Image option */}
+                  <div className={styles.image_option}>
+                    <div className={styles.isSelected}>selected</div>
+                    <Image src={postImage} alt="post image" />
+                    <input type="checkbox" name="post-images" id="" />
+                  </div>
+                  {/* Image option */}
+                  <div className={styles.image_option}>
+                    <div className={styles.isSelected}>selected</div>
+                    <Image src={postImage} alt="post image" />
+                    <input type="checkbox" name="post-images" id="" />
+                  </div>
+                  {/* Image option */}
                   <div className={styles.image_option}>
                     <div className={styles.isSelected}>selected</div>
                     <Image src={postImage} alt="post image" />
@@ -123,7 +137,7 @@ const SchadulePost = () => {
                         <div className={styles.avatar_info}>
                           <p>Investocracy
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" fill="none">
-                            {/* SVG icon */}
+                              {/* SVG icon */}
                             </svg>
                           </p>
                           <span>@Investocrasy</span>

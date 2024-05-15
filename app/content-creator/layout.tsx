@@ -2,17 +2,21 @@
 
 'use client'
 // Import necessary dependencies
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './contentCreator.module.css'
 import SideNav from '../_components/SideNav/SideNav'; // Importing the SideNav component
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage'; // Importing the TitleOfPage component
+import { usePathname } from 'next/navigation';
 
 // Define a layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
 
+  // get path from usePathname hook from next/navigation
+  const path = usePathname();
+
   // State variables to manage side nav and current page
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>('Content Creator');
+  const [CurrentPage, setCurrentPage] = useState<string>(path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1));
 
   // Array containing navigation links for the side navigation bar
   const sideNavLinks = [
@@ -41,6 +45,9 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
       </svg>
   }
   ]
+
+
+
 
   // Return the layout structure
   return (
