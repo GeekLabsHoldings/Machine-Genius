@@ -24,7 +24,7 @@ const Create = () => {
           <CustomBtn
             word="Next"
             btnColor="black"
-            href="create/choose-brand"
+            href="/content-creator/create/choose-brand"
           />
         </div>
       </div>

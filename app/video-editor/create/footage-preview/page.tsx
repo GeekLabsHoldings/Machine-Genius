@@ -84,7 +84,7 @@ const FootagePreview = () => {
 
           <div className="flex flex-col gap-[0.3vw]">
             <h5>PM is Racist?</h5>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-end">
               <div className="flex flex-col gap-[0.3vw]">
                 <div className="flex gap-[0.4vw]">
                   <h5>Source:</h5>

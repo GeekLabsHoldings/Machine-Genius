@@ -1,10 +1,10 @@
 .videoPreview h5{
     font-weight: 400;
-    font-size: clamp(10px, calc(0.9vw + 0.1rem), 60px);
+    font-size: clamp(10px, calc(0.9vw + 0.1rem), 600px);
 }
 .videoPreview h4 , .access h4{
     font-weight: 700;
-    font-size: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
+    font-size: clamp(14px, calc( 1.1vw + 0.1rem ) , 700px);
 }
 .videoHolder{
     border: 1px solid var(--dark);
@@ -16,7 +16,7 @@
     border: 1px solid transparent;
     border-radius: 1vw;
     box-shadow: 0px 0px 10px 0px rgba(17, 17, 17, 0.425) inset;
-    padding:clamp(14px, calc( 1.1vw + 0.1rem ) , 70px)  clamp(14px, calc( 1.4vw + 0.1rem ) , 70px) ;
+    padding:clamp(14px, calc( 0.9vw + 0.1rem ) , 700px)  clamp(14px, calc( 1.1vw + 0.1rem ) , 700px) ;
     display: flex;
     flex-direction: column;
     gap: 0.5vw;
@@ -24,6 +24,15 @@
 .box h5{
     font-weight: 700;
     font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 60px);
+}
+.box p{
+  font-size: clamp(10px,calc(.7vw + .1rem),60px);
+}
+.box > a {
+  font-size: clamp(10px, calc( 0.6vw + 0.1rem), 100px);
+}
+.box > a > div{
+  padding: clamp(6px, calc( 0.3vw + 0.1rem), 60px) clamp(24px, calc(3vw + 0.1rem),140px);
 }
 .borderRight{
     padding-right: 2vw;

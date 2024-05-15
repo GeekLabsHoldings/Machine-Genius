@@ -19,7 +19,7 @@ const VideoPreview = ()=>{
                         </div>
                         </div>
                 {/* edit boxes */}
-                        <div className={`${styles.access} w-1/3 ps-[2vw] flex flex-col gap-[1vw]`}>
+                        <div className={`${styles.access} w-1/3 ps-[2vw] flex flex-col gap-[0.8vw]`}>
                             <h4>Quick Acss</h4>
                             <div className={`${styles.box}`}>
                                 <h5>Edit Footage</h5>

@@ -38,7 +38,7 @@ const ImagesForGeneratingTitles = () => {
                 <div className="flex flex-col gap-[1.5vw]">
                     <LogoAndTitle title={"Your Script Has Been Scheduled!"} needTxt={false} />
                     <div className="flex justify-center gap-[1.5vw]">
-                        <CustomBtn word="Dashboard" btnColor="black" href={"/dashboard"} />
+                        <CustomBtn word="Dashboard" btnColor="black" href={"/content-creator/dashboard"} />
                         <CustomBtn word="Convert To Article" btnColor="black" href={"/content-creator/create/article-generated-titles"} />
                     </div>
                 </div>

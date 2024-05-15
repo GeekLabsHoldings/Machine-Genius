@@ -46,6 +46,10 @@ body{
   color: #000;
 }
 
+input,textarea{
+  background-color: transparent;
+}
+
 img{
   width: 100%;
 }

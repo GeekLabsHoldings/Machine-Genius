@@ -5,7 +5,7 @@ import { GlobalContextProvider } from './_context/store'; // Importing GlobalCon
 import styles from './mainLayout.module.css'; // Importing styles for the main layout
 
 // Initializing Inter font with Latin subset
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 // Metadata for the page
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" >
-      <body className={inter.className}>
+      <body>
         <GlobalContextProvider>
           <div className={styles.main_wrapper}>
             <div className='w-full h-100vh p-0 flex'>

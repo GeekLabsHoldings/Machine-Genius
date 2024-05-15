@@ -6,7 +6,7 @@ const VideoReady = ()=>{
     return(
         <div className={`w-full h-full py-[1vw] pageHeader `}>
         <h3 className='pb-[0.8vw]'>What’s Next?</h3>
-          <div className='flex pb-[0.9vw h-[72vh] '>
+          <div className='flex pb-[0.9vw h-[66vh] '>
               <div className={`w-2/3 flex flex-col gap-[1vw] ${styles.videoPreview}`}>
                   <h5 className='w-4/5'>Make sure to watch the video carefully before uploading, if there are any errors in your video, you can quick edit them from the options below </h5>
                   <div className={`${styles.borderRight} flex flex-col gap-[1vw]`}>
@@ -23,7 +23,6 @@ const VideoReady = ()=>{
                           <h5>Upload</h5>
                           <p>Make sure to watch the video carefully before uploading, if there are any errors in your video, you can quick edit them from the options below </p>
                           <CustomBtn width='w-full' word='Upload' btnColor='black'/>
-
                       </div>
                       <div className={`${styles.box}`}>
                           <h5>Schedule</h5>
