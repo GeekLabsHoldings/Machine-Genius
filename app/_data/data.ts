@@ -643,6 +643,8 @@ export const AccountsData:IAccounts[] = [
     account_name:'John Doe',
     account_type: 'reddit',
     user_name:'@Johndoe' ,
+    status:'Running',
+    comments: 2,
     link:'https://www.reddit.com/?rdt=45713' ,
     brand:'PST USA',
     niche:'Politics',
@@ -660,7 +662,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:23000,
-    engagement:'80%'
+    engagement:'80%',
+    status:'Paused',
+    comments: 2,
   },
   {
     id:3,
@@ -672,7 +676,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:2000,
-    engagement:'25%'
+    engagement:'25%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:4,
@@ -684,7 +690,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:50000,
-    engagement:'90%'
+    engagement:'90%',
+    status:'Running',
+    comments: 2,
   },
   {
     id:5,
@@ -696,7 +704,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:300000,
-    engagement:'66%'
+    engagement:'66%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:6,
@@ -708,7 +718,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:50000,
-    engagement:'15%'
+    engagement:'15%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:7,
@@ -720,7 +732,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:2000,
-    engagement:'26%'
+    engagement:'26%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:8,
@@ -732,7 +746,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:50000,
-    engagement:'80%'
+    engagement:'80%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:9,
@@ -744,7 +760,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:300000,
-    engagement:'25%'
+    engagement:'25%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:10,
@@ -756,7 +774,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:50000,
-    engagement:'90%'
+    engagement:'90%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:11,
@@ -768,7 +788,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:2000,
-    engagement:'66%'
+    engagement:'66%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:12,
@@ -780,7 +802,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:50000,
-    engagement:'15%'
+    engagement:'15%',
+    status:'Finished',
+    comments: 2,
   }
 ]
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']

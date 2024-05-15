@@ -85,6 +85,8 @@ export interface IAccounts {
     id:number,
     account_name:string,
     account_type: 'facebook'|'telegram'|'reddit',
+    status:'Running'|'Finished'|'Paused',
+    comments: number,
     user_name:string ,
     link:string ,
     brand:TBrands,
