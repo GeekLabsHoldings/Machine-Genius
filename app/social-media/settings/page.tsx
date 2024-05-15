@@ -85,7 +85,7 @@ const redditIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20
           {/* filters options to filter and edit data in table */}
             <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>     
               <h3>Accounts</h3>
-          <div className="flex justify-between">
+          <div className="flex justify-between items-end">
           <div className={`${styles.redditPage} w-8/12 flex gap-[1vw]`}>
               <div className="flex flex-col w-1/3 gap-[0.3vw]">
                 <h5>Account Name</h5>

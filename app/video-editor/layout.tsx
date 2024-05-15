@@ -1,16 +1,27 @@
 'use client'
-// Import necessary dependencies
-import React, { useState } from 'react'
-import styles from './videoCreator.module.css'
+
+// Import React and useState from React library
+import React, { useState } from 'react';
+
+// Import CSS styles
+import styles from './videoCreator.module.css';
+
+// Import components
 import SideNav from '../_components/SideNav/SideNav';
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
+import { usePathname } from 'next/navigation';
 
-
+// Define the layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
- // State variables to manage the side navigation and current page
+
+  // get path from usePathname hook from next/navigation
+  const path = usePathname();
+
+  // State variables to manage side nav and current page
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>('Video Editor');
-// Array of objects representing side navigation links
+  const [CurrentPage, setCurrentPage] = useState<string>(path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1));
+
+  // Array of side nav links
   const sideNavLinks = [
     {
       name: "Dashboard", path: "/video-editor/dashboard", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
@@ -42,13 +53,18 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
     }
   ]
 
+  // Return the layout component
   return (
     <>
+      {/* Side nav wrapper */}
       <div className={`${styles.Side_Nav_Wrapper} ${isSideNavOpen ? '' : styles.close}`}>
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} setCurrentPage={setCurrentPage} sideNavLinks={sideNavLinks} />
       </div>
+      {/* Main page wrapper */}
       <div className={styles.Page_Wrapper}>
+        {/* Title of the current page */}
         <TitleOfPage title={CurrentPage} />
+        {/* Children components */}
         <div className='h-full'>
           {children}
         </div>
@@ -57,4 +73,5 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
   )
 }
 
-export default layout
+// Export the layout component
+export default layout;

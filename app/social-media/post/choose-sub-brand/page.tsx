@@ -1,23 +1,26 @@
-'use client'
-import CustomBtn from '@/app/_components/Button/CustomBtn'
-import styles from './ChooseSubBrand.module.css'
-import CustomSelectInput from '../../../_components/CustomSelectInput/CustomSelectInput'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+'use client' // Indicate that this component is intended for client-side rendering
 
+import CustomBtn from '@/app/_components/Button/CustomBtn' // Custom button component
+import styles from './ChooseSubBrand.module.css' // Stylesheet for ChooseSubBrand component
+import CustomSelectInput from '../../../_components/CustomSelectInput/CustomSelectInput' // Custom select input component
+import { useEffect, useState } from 'react' // Importing useEffect and useState hooks from React
+import { useRouter } from 'next/navigation' // Importing useRouter hook from Next.js
+
+// ChooseSubBrand component
 const ChooseSubBrand = () => {
 
-  // selected option from custom select
+  // State to store the selected value from custom select
   const [SelectedValue, setSelectedValue] = useState<string | number>('')
 
-  // function that get select value by sending to custom select as a prop
+  // Function to update the selected value
   const getValue = (value: string | number) => {
     setSelectedValue(value)
   }
 
+  // Router instance
   const router = useRouter()
 
-  // select options 
+  // Options for the select input
   const options = [
     "PST",
     "Street Politics",
@@ -27,36 +30,35 @@ const ChooseSubBrand = () => {
     "PST Canada"
   ]
 
+  // useEffect hook to perform side effects when the SelectedValue changes
   useEffect(() => {
-
     console.log(SelectedValue);
 
-    // navigate to movie myth if user select movie myth option 
+    // Navigate to the appropriate page based on the selected sub-brand
+    // Example:
     // if (SelectedValue === 'Movie Myth') {
     //   router.push('/content-creator/create/movie-myth')
     // }
 
   }, [SelectedValue])
 
-
-
-
-
   return (
     <div className="flex flex-col h-full">
 
-      {/* chhose brand select */}
+      {/* Select input to choose the sub-brand */}
       <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw] ">
         <label className={styles.select_label}>For This Sub-Brand</label>
+        {/* Custom select input component */}
         <CustomSelectInput label="Select Options" options={options} getValue={getValue} />
       </div>
 
-      {/* buttons to move to last or next page */}
+      {/* Buttons to navigate */}
       <div className="flex justify-between items-center">
+        {/* Button to navigate back */}
         <CustomBtn word="Back" btnColor="white" href="/social-media/post/choose-brand" />
+        {/* Button to navigate to the next page */}
         <CustomBtn word="Next" btnColor="black" href="/social-media/post/twitter-post" />
       </div>
-
     </div>
   )
 }
