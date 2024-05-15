@@ -1,6 +1,7 @@
 
 
 'use client'
+// Import necessary dependencies
 import React, { useState } from 'react'
 import styles from './contentCreator.module.css'
 import SideNav from '../_components/SideNav/SideNav'; // Importing the SideNav component

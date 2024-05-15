@@ -5,16 +5,14 @@ import { useRouter } from "next/navigation";
 import {
   ArticleNames,
   Brands,
-  RedditPosts,
+  Posts,
 } from "@/app/_data/data";
 import $ from 'jquery'
-import CustomBtn from '@/app/_components/Button/CustomBtn';
-import { Modal } from '@mui/material';
 import BasicModal from '@/app/_components/Modal/modal';
 import { useState } from 'react';
 
 const Facebook = () => {
-
+// handle navigation to move back to share main page 
     const router = useRouter();
     const handleNavigate = ()=>{
         router.push('/social-media/share')
@@ -26,7 +24,8 @@ const Facebook = () => {
         $(e.target).parents('.articleRow').toggleClass('selected')
     }
 
-  const renderFacebookPosts = RedditPosts.map((onePost , idx) => (
+    // return all facebook posts
+  const renderFacebookPosts = Posts.map((onePost , idx) => (
     <ul
     key={idx}
       className = { `${styles.tableBody} borderBottom articleRow ` } 
@@ -59,6 +58,8 @@ const Facebook = () => {
 
     </ul>
   ));
+  
+// for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder,setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder,setengagementOrder] = useState<boolean>(true);
 
@@ -146,6 +147,7 @@ const Facebook = () => {
      
         {/* // table has all reddit posts and its data  */}
         <div className="flex w-full">
+          {/* display facebook posts */}
         <div className={`${styles.box} w-full px-[0.5vw] `}>
            <div className={`${styles.tableContent}`}>
            <ul
@@ -201,6 +203,7 @@ const Facebook = () => {
           </div>
            </div>
         </div>  
+        {/* for chat */}
            <div className=' flex items-end pb-[6vw] w-[5%] justify-center'>
            <svg xmlns="http://www.w3.org/2000/svg" width="43" height="43" viewBox="0 0 43 43" fill="none">
         <circle cx="21.5" cy="21.5" r="21.5" fill="#2A2B2A"/>

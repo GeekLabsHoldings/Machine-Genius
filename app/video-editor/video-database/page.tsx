@@ -7,7 +7,7 @@ import {
   Brands,
   ContentTypeFilter,
   YourArticles,
-} from "@/app/_data/data";
+} from "@/app/_data/data";  // Importing data from another file 
 import $ from 'jquery'
 
 const ArticleDatabase = () => {
@@ -17,12 +17,13 @@ const ArticleDatabase = () => {
   //   setSelectedValue(value)
   // }
   
-
+   // Function to handle background color change when an article row is selected
     const handleSelectedBg = (e: any)=>{
         $('.articleRow').removeClass('selected')
         $(e.target).parents('.articleRow').toggleClass('selected')
     }
 
+    // Rendering the list of articles
   const renderYourArticles = YourArticles.map((oneArticle , idx) => (
     <ul
     key={idx}
@@ -53,6 +54,7 @@ const ArticleDatabase = () => {
       </li>
       <li className="w-1/12 ">
         <div className={`${styles.viewsDiv} flex`}>
+          {/* change the form of numbers by adding K instead of 1000 */}
           <h6>{oneArticle.views > 999 ? (oneArticle.views / 100)/10.0 + 'K' : oneArticle.views}</h6>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +85,7 @@ const ArticleDatabase = () => {
 
   return (
       <div className={`${styles.articleDatabase} w-full h-full pt-[0.5vw]`}>
-        
+        {/* Custom select input for filtering */}
           <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
           <h3>Filter By:</h3>
           <div className={`${styles.filters} flex gap-[1vw]`}>
@@ -108,6 +110,7 @@ const ArticleDatabase = () => {
 
               <div className={`${styles.changeOrder} `}>
                 <h5>Views</h5>
+                 {/* Icon for changing the order */}
                 <svg
                   width="16"
                   height="16"

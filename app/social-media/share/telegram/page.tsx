@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   ArticleNames,
   Brands,
-  RedditPosts,
+  Posts,
 } from "@/app/_data/data";
 import $ from 'jquery'
 import CustomBtn from '@/app/_components/Button/CustomBtn';
@@ -14,6 +14,7 @@ import BasicModal from '@/app/_components/Modal/modal';
 import { useState } from 'react';
 
 const Telegram = () => {
+  // handle navigation to move back to share main page 
     const router = useRouter();
     const handleNavigate = ()=>{
         router.push('/social-media/share')
@@ -25,7 +26,7 @@ const Telegram = () => {
         $(e.target).parents('.articleRow').toggleClass('selected')
     }
 
-  const renderTelegramPosts = RedditPosts.map((onePost , idx) => (
+  const renderTelegramPosts = Posts.map((onePost , idx) => (
     <ul
     key={idx}
       className = { `${styles.tableBody} borderBottom articleRow ` } 
@@ -58,6 +59,7 @@ const Telegram = () => {
 
     </ul>
   ));
+// for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder,setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder,setengagementOrder] = useState<boolean>(true);
 
@@ -140,7 +142,7 @@ const Telegram = () => {
             </div>
           </div>
           <div>
-  
+  {/* modal to enable you to add post */}
           <BasicModal btnWord='Add To List' btnIcon={<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
   <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z" fill="#FFFFFB"/>
 </svg>} btnColor={'black'} modalTitle='Add To List' forWhat={'add_post'}/>
@@ -149,7 +151,7 @@ const Telegram = () => {
           
         </div>
      
-        {/* // table has all reddit posts and its data  */}
+        {/* // table has all telegram posts and its data  */}
         <div className="flex w-full">
         <div className={`${styles.box} w-full px-[0.5vw] `}>
            <div className={`${styles.tableContent}`}>
@@ -206,6 +208,7 @@ const Telegram = () => {
           </div>
            </div>
         </div>  
+        {/* for chat */}
            <div className=' flex items-end pb-[6vw]  w-[5%] justify-center'>
            <svg xmlns="http://www.w3.org/2000/svg" width="43" height="43" viewBox="0 0 43 43" fill="none">
         <circle cx="21.5" cy="21.5" r="21.5" fill="#2A2B2A"/>

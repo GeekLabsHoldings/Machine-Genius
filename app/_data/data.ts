@@ -2,6 +2,7 @@ import {
   IAccounts,
   IArticle,
   IAssignedVideos,
+  ICampaigns,
   ICommentData,
   IRedditData,
   ITasks,
@@ -35,6 +36,7 @@ export const SelectArticleData: string[] = [
   "Canada Loves People ",
   "Canada Loves People ",
 ];
+// Data for transcript of video content
 export const TranscriptData: ITranscriptData[] = [
   {
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -65,6 +67,7 @@ export const TranscriptData: ITranscriptData[] = [
     minutes: "0:00 - 0:40",
   },
 ];
+// Data for comments
 export const CommentsData: ICommentData[] = [
   {
     managerStatus: "online",
@@ -84,8 +87,10 @@ export const CommentsData: ICommentData[] = [
     title: "Ash",
   },
 ];
+// Array of positions
 export const Positions = ["Intern","Full-Time","Senior"]
 
+// Array of article names
 export const ArticleNames: string[] = [
   "Pacific Allies ABANDON USA For China!",
   "Pacific Allies ABANDON USA For China!",
@@ -102,6 +107,7 @@ export const ArticleNames: string[] = [
   'Pacific Allies ABANDON USA For China!'
 ];
 
+// Data for tasks in the dashboard
 export const TasksInDashboard:ITasks[] = [
   {
     taskType:'Assigned',
@@ -117,8 +123,10 @@ export const TasksInDashboard:ITasks[] = [
   }
 ]
 
+// Array for filtering content type
 export const ContentTypeFilter=['All','Script']
 
+// Data for your articles
 export const YourArticles:IyourArticle[] =[
   {
     id:1,
@@ -252,6 +260,7 @@ export const YourArticles:IyourArticle[] =[
   },
 ]
 
+// Data for assigned videos
 export const AssignedVideos:IAssignedVideos[] = [
   {
     id:1,
@@ -359,6 +368,7 @@ export const AssignedVideos:IAssignedVideos[] = [
   }
 ]
 
+// Data for video templates
 export const VideosTemplates = [
   {
   brand:'PST Finance',
@@ -387,6 +397,7 @@ export const VideosTemplates = [
 
 ]
 
+// Data for videos in the database
 export const VideosDatabase:IVideoDatabase[] =[
   {
     id:1,
@@ -533,7 +544,8 @@ export const VideosDatabase:IVideoDatabase[] =[
   },
 ]
 
-export const RedditPosts : IRedditData[] =[
+// Data for posts
+export const Posts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link: new URL("https://www.reddit.com/?rdt=45713").toString(),
@@ -633,16 +645,20 @@ export const RedditPosts : IRedditData[] =[
   },
 ]
 
+// Array of platforms
 export const Platforms =[
   'Reddit','Telegram','Facebook'
 ]
 
+// Data for accounts
 export const AccountsData:IAccounts[] = [
   {
     id:1,
     account_name:'John Doe',
     account_type: 'reddit',
     user_name:'@Johndoe' ,
+    status:'Running',
+    comments: 2,
     link:'https://www.reddit.com/?rdt=45713' ,
     brand:'PST USA',
     niche:'Politics',
@@ -660,7 +676,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:23000,
-    engagement:'80%'
+    engagement:'80%',
+    status:'Paused',
+    comments: 2,
   },
   {
     id:3,
@@ -672,7 +690,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:2000,
-    engagement:'25%'
+    engagement:'25%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:4,
@@ -684,7 +704,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:50000,
-    engagement:'90%'
+    engagement:'90%',
+    status:'Running',
+    comments: 2,
   },
   {
     id:5,
@@ -696,7 +718,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:300000,
-    engagement:'66%'
+    engagement:'66%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:6,
@@ -708,7 +732,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:50000,
-    engagement:'15%'
+    engagement:'15%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:7,
@@ -720,7 +746,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:2000,
-    engagement:'26%'
+    engagement:'26%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:8,
@@ -732,7 +760,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:50000,
-    engagement:'80%'
+    engagement:'80%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:9,
@@ -744,7 +774,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:300000,
-    engagement:'25%'
+    engagement:'25%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:10,
@@ -756,7 +788,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Must Approve' ,
     followers:50000,
-    engagement:'90%'
+    engagement:'90%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:11,
@@ -768,7 +802,9 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:2000,
-    engagement:'66%'
+    engagement:'66%',
+    status:'Finished',
+    comments: 2,
   },
   {
     id:12,
@@ -780,9 +816,109 @@ export const AccountsData:IAccounts[] = [
     niche:'Politics',
     Campaign_type:'Auto Comment' ,
     followers:50000,
-    engagement:'15%'
+    engagement:'15%',
+    status:'Finished',
+    comments: 2,
   }
 ]
+
+// Data for campaigns
+export const Campaigns:ICampaigns[] = [
+{
+  id:1,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:2,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:3,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:4,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:5,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:6,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:7,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:8,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:9,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:10,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:11,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:12,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:13,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+]
+// Array of brands
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
+// Array of content types
 export const ContentType:TContentType[] =["Script" , "Article"]
+// Array of approval statuses
 export const ApprovalStatus:TApproval[] = ['Approved','Pending','Rejected']

@@ -1,6 +1,6 @@
 
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
-
+// shows that video is being converted
 const ConvertingAudio = ()=>{
     return(
         <div className="w-full h-full flex justify-center items-center">
