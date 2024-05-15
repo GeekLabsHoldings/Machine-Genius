@@ -1,0 +1,8 @@
+.templates_wrapper>h6 {
+    font-family: "DM Sans";
+    font-size: clamp(16px, calc(1.1vw + 0.1rem), 1000px);
+    margin-bottom: clamp(16px, calc(1vw + 0.1rem), 1000px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}

@@ -29,11 +29,12 @@ const rols = [
     'Administrative',
     'Customer Service',
     'Creative',
+    'HR'
 ]
 
 
 
-const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage }: { sideNavLinks: { name: string, path: string, icon: any }[], isSideNavOpen: boolean, setIsSideNavOpen: any, setCurrentPage: any }) => {
+const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage }: { sideNavLinks: { name: string, path?: string, icon: any, subLinks?: { name: string, path: string }[] }[], isSideNavOpen: boolean, setIsSideNavOpen: any, setCurrentPage: any }) => {
 
     // current role
     const [SelectedRole, setSelectedRole] = useState<string | number>('')
@@ -46,9 +47,10 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
     }
 
     // function that get current 
-    const handleCurrentPageTitle = (name: string) => {
+    const handleCurrentPageTitle = (name: any) => {
         setCurrentPage(name)
     }
+
 
     useEffect(() => {
         if (SelectedRole === 'Content Creator') {
@@ -59,16 +61,18 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/social-media/dashboard')
         } else if (SelectedRole === 'Administrative') {
             router.push('/administrative/dashboard')
-        }else if (SelectedRole === 'Customer Service') {
+        } else if (SelectedRole === 'Customer Service') {
             router.push('/customer-service/dashboard')
-        }else if (SelectedRole === 'Creative') {
+        } else if (SelectedRole === 'Creative') {
             router.push('/creative/dashboard')
+        } else if (SelectedRole === 'HR') {
+            router.push('/hr/dashboard')
         }
     }, [SelectedRole])
 
 
     return (
-        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)} onMouseLeave={() => setIsSideNavOpen(!isSideNavOpen)} >
+        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)}  >
             <div>
                 <div className={styles.user_info + " flex items-center justify-between"}>
                     <div className={`${styles.avatar_logo} flex items-center gap-[0.6vw]`}>
@@ -88,7 +92,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
 
                 <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
                     <li>
-                        <Link href={sideNavLinks[0].path} onClick={() => handleCurrentPageTitle(sideNavLinks[0].name)}>
+                        <Link href={sideNavLinks[0].path ? sideNavLinks[0].path : ''} onClick={() => handleCurrentPageTitle(sideNavLinks[0].name)}>
                             {sideNavLinks[0].icon}
                             <p>{sideNavLinks[0].name}</p>
                         </Link>
@@ -100,13 +104,25 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                 <CustomSelectInput options={rols} icon={rolsIcon} theme="dark" whenSideNavClosed={!isSideNavOpen} getValue={getRole} />
 
                 <div className={styles.line}></div>
-                <ul className={styles.side_nav_links + " space-y-[0.5vw]"}>
+                <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
                     {sideNavLinks.slice(1).map(ele => (
-                        <li key={ele.name}>
-                            <Link href={ele.path} onClick={() => handleCurrentPageTitle(ele.name)}>
+                        <li key={ele.name} className={ele.subLinks ? styles.has_sub_menu + ' has_sub_menu' : ''}>
+                            <Link href={ele.path ? ele.path : ''} onClick={() => handleCurrentPageTitle((prev: any) => ele.path ? ele.name : prev)}>
                                 {ele.icon}
                                 <p>{ele.name}</p>
+                                {ele.subLinks && <svg className={styles.toggleIcon} xmlns="http://www.w3.org/2000/svg" width="18" height="9" viewBox="0 0 18 9" fill="none">
+                                    <path d="M0.900542 9H17.101C17.265 8.99966 17.4258 8.96945 17.566 8.91262C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242983C9.40578 -0.0809944 8.59756 -0.0809944 8.26095 0.242983L0.160721 8.05692C0.0669606 8.14705 0.0119774 8.25261 0.00174508 8.36214C-0.00848727 8.47167 0.0264226 8.58098 0.102682 8.67819C0.178941 8.7754 0.293633 8.8568 0.434296 8.91353C0.57496 8.97027 0.736215 9.00017 0.900542 9Z" fill="#2A2B2A" />
+                                </svg>}
                             </Link>
+                            <ul className={styles.sub_menu_links}>
+                                {ele.subLinks ? ele.subLinks.map(ele=>(
+                                    <li>
+                                        <Link href={ele.path} onClick={() => handleCurrentPageTitle(ele.name)}>{ele.name}</Link>
+                                    </li>
+                                )):null}
+                                
+                            </ul>
+
                         </li>
                     ))}
                 </ul>
