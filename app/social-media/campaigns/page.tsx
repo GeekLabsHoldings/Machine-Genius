@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './Campaigns.module.css'
 import Sharing from './_sharing/sharing'
 const page = () => {
+  // campaigns page
   return (
     <div className="flex flex-col h-full">
     <div className={"flex flex-col w-full h-[80vh] py-[1vw] " + styles.campaigns_wrapper}>

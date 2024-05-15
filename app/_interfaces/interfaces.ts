@@ -1,6 +1,7 @@
 import { URLPattern } from "next/server";
 import { ReactElement, ReactNode } from "react";
 
+// Define custom type aliases
 export type personStatus = 'online' | 'offline' | 'away'
 type Percentage = `${number}%`
 export type TCompanyEmployees = 'Sherry' | 'Yara' | 'Kamel' | 'Manar'
@@ -10,14 +11,14 @@ export type TContentType = 'Script' | 'Article'
 export type TApproval = 'Pending' | 'Approved' | 'Rejected'
 export type TPublish = 'Not Published' | 'Uploading' | 'Published'
 
-// article data properities
+// Interface for article data properties
 export interface IArticle {
     title:string,
     sectionsNo : number,
     sectionData: string[]
 }
 
-// preview article component props
+// Interface for preview article component props
 export interface IArticleProps {
     height:string,
     beginSelect?:boolean,
@@ -25,6 +26,7 @@ export interface IArticleProps {
     yourNewArticle:boolean
 }
 
+// Interface for comments data
 export interface ICommentData {
     managerStatus: personStatus,
     replyTxt?:string,
@@ -34,11 +36,13 @@ export interface ICommentData {
     title:string
 }
 
+// Interface for transcript data
 export interface ITranscriptData{
     text:string,
     minutes : string
 }
 
+// Interface for user's article data
 export interface IyourArticle{
     id:number,
     articleName:string,
@@ -50,11 +54,13 @@ export interface IyourArticle{
     editBtn: string
 }
 
+// Interface for tasks data
 export interface ITasks{
     taskType: TasksType,
     tasks:TBrands[]
 }
 
+// Interface for assigned videos
 export interface IAssignedVideos {
     id:number,
     title:string,
@@ -62,6 +68,9 @@ export interface IAssignedVideos {
     assignedTo : TCompanyEmployees,
     videoStatus : 'Convert Audio' | 'Continue'
 }
+
+
+// Interface for video database
 export interface IVideoDatabase{
     id:number,
     title:string,
@@ -72,6 +81,7 @@ export interface IVideoDatabase{
     date:string,
     edit:string
 }
+// Interface for Reddit posts data
 export interface IRedditData {
     subReddit:string,
     link: string,
@@ -81,6 +91,7 @@ export interface IRedditData {
     engagement:Percentage
 }
 
+// Interface for social media accounts data
 export interface IAccounts {
     id:number,
     account_name:string,
@@ -96,6 +107,7 @@ export interface IAccounts {
     engagement:Percentage
 }
 
+// Interface for campaigns data
 export interface ICampaigns{
     id:number,
     content:string,

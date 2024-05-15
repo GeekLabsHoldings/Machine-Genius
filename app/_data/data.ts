@@ -36,6 +36,7 @@ export const SelectArticleData: string[] = [
   "Canada Loves People ",
   "Canada Loves People ",
 ];
+// Data for transcript of video content
 export const TranscriptData: ITranscriptData[] = [
   {
     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
@@ -66,6 +67,7 @@ export const TranscriptData: ITranscriptData[] = [
     minutes: "0:00 - 0:40",
   },
 ];
+// Data for comments
 export const CommentsData: ICommentData[] = [
   {
     managerStatus: "online",
@@ -85,8 +87,10 @@ export const CommentsData: ICommentData[] = [
     title: "Ash",
   },
 ];
+// Array of positions
 export const Positions = ["Intern","Full-Time","Senior"]
 
+// Array of article names
 export const ArticleNames: string[] = [
   "Pacific Allies ABANDON USA For China!",
   "Pacific Allies ABANDON USA For China!",
@@ -103,6 +107,7 @@ export const ArticleNames: string[] = [
   'Pacific Allies ABANDON USA For China!'
 ];
 
+// Data for tasks in the dashboard
 export const TasksInDashboard:ITasks[] = [
   {
     taskType:'Assigned',
@@ -118,8 +123,10 @@ export const TasksInDashboard:ITasks[] = [
   }
 ]
 
+// Array for filtering content type
 export const ContentTypeFilter=['All','Script']
 
+// Data for your articles
 export const YourArticles:IyourArticle[] =[
   {
     id:1,
@@ -253,6 +260,7 @@ export const YourArticles:IyourArticle[] =[
   },
 ]
 
+// Data for assigned videos
 export const AssignedVideos:IAssignedVideos[] = [
   {
     id:1,
@@ -360,6 +368,7 @@ export const AssignedVideos:IAssignedVideos[] = [
   }
 ]
 
+// Data for video templates
 export const VideosTemplates = [
   {
   brand:'PST Finance',
@@ -388,6 +397,7 @@ export const VideosTemplates = [
 
 ]
 
+// Data for videos in the database
 export const VideosDatabase:IVideoDatabase[] =[
   {
     id:1,
@@ -534,7 +544,8 @@ export const VideosDatabase:IVideoDatabase[] =[
   },
 ]
 
-export const RedditPosts : IRedditData[] =[
+// Data for posts
+export const Posts : IRedditData[] =[
   {
     subReddit:'Stocks Today',
     link: new URL("https://www.reddit.com/?rdt=45713").toString(),
@@ -634,10 +645,12 @@ export const RedditPosts : IRedditData[] =[
   },
 ]
 
+// Array of platforms
 export const Platforms =[
   'Reddit','Telegram','Facebook'
 ]
 
+// Data for accounts
 export const AccountsData:IAccounts[] = [
   {
     id:1,
@@ -809,6 +822,7 @@ export const AccountsData:IAccounts[] = [
   }
 ]
 
+// Data for campaigns
 export const Campaigns:ICampaigns[] = [
 {
   id:1,
@@ -902,6 +916,9 @@ export const Campaigns:ICampaigns[] = [
   shareBtn:'Share'
 },
 ]
+// Array of brands
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
+// Array of content types
 export const ContentType:TContentType[] =["Script" , "Article"]
+// Array of approval statuses
 export const ApprovalStatus:TApproval[] = ['Approved','Pending','Rejected']

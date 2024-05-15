@@ -5,7 +5,7 @@ import { AssignedVideos } from '@/app/_data/data';
 import $ from 'jquery';
 
 const VideoCreation = ()=>{
-// add effect on selected task (change background color and text color)
+// add effect on selected task (change background color and text color) and apply it on its button
     const handleSelectedBg = (e: any)=>{
         $('.assignedVideo').removeClass('selected')
         $('.videoStatusBtn').removeClass('clicked')
@@ -35,6 +35,7 @@ const VideoCreation = ()=>{
             {video.assignedTo}
             </span>
         </li>
+        {/* lead user to convert article to video or disply it after conversion */}
                 <li className="w-2/12 "> <CustomBtn class='videoStatusBtn' width='w-full' word={video.videoStatus} href={video.videoStatus === 'Convert Audio' ? 'converted-article' : ''} btnColor='black' /> </li>
         </ul>
     ))
@@ -64,6 +65,7 @@ const VideoCreation = ()=>{
             
 
         </div>
+
     )
 }
 

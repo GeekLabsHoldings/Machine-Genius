@@ -1,6 +1,6 @@
 'use client';
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
-
+// loading page before show templates
 const CheckWords = ()=>{
     return(
         <div className="w-full h-full flex justify-center items-center">

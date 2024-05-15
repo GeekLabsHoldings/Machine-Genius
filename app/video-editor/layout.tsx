@@ -1,5 +1,5 @@
 'use client'
-
+// Import necessary dependencies
 import React, { useState } from 'react'
 import styles from './videoCreator.module.css'
 import SideNav from '../_components/SideNav/SideNav';
@@ -7,10 +7,10 @@ import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
 
 
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
-
+ // State variables to manage the side navigation and current page
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
   const [CurrentPage, setCurrentPage] = useState<string>('Video Editor');
-
+// Array of objects representing side navigation links
   const sideNavLinks = [
     {
       name: "Dashboard", path: "/video-editor/dashboard", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">

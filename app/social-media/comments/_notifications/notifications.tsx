@@ -15,7 +15,7 @@ const SuggetionPosts = ['Stocks, the heartbeat of the marketStocks, the heartbea
 ]
 
 const TimeRange = ["1 min", "5 min", "10 min", "15 min", "20 min"]
-
+// it has news and suggestion comments
 const Notifications = ()=>{
     return(
 <div className='py-[1.5vw] grid grid-cols-2 gap-[2vw] h-full'>

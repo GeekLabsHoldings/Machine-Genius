@@ -17,7 +17,7 @@ const VideoReady = ()=>{
                   </div>
                   </div>
                   </div>
-
+                    {/* boxes provide options to user */}
                   <div className={`${styles.access} w-1/3 ps-[2vw] flex flex-col gap-[1vw]`}>
                       <div className={`${styles.box}`}>
                           <h5>Upload</h5>

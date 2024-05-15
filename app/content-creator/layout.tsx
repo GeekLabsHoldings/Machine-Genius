@@ -1,4 +1,5 @@
 'use client'
+// Import necessary dependencies
 import React, { useState } from 'react'
 import styles from './contentCreator.module.css'
 import SideNav from '../_components/SideNav/SideNav';
@@ -7,9 +8,10 @@ import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
 
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
 
+    // State variables to manage the side navigation and current page
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
   const [CurrentPage, setCurrentPage] = useState<string>('Content Creator');
-
+  // Array of objects representing side navigation links
   const sideNavLinks = [
     {
         name: "Dashboard", path: "/content-creator/dashboard", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
@@ -35,9 +37,10 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
         </svg>
     }
 ]
-
+  // Return the layout component
   return (
     <>
+    {/* Side navigation component */}
       <div className={`${styles.Side_Nav_Wrapper} ${isSideNavOpen ? '' : styles.close}`}>
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} setCurrentPage={setCurrentPage} sideNavLinks={sideNavLinks} />
       </div>

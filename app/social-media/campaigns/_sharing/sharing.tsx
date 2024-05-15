@@ -4,7 +4,9 @@ import styles from './sharing.module.css';
 import $ from 'jquery'
 import CustomBtn from '@/app/_components/Button/CustomBtn';
 
+// topics about campaigns
 const Sharing = ()=>{
+    // apply effect on selected/clicked topic (change background and color and apply the same on button)
     const handleSelectedBg = (e: any)=>{
         $('.articleRow').removeClass('selected');
         $('.videoStatusBtn').removeClass('clicked')
@@ -12,7 +14,8 @@ const Sharing = ()=>{
         $(e.target).toggleClass('selected')
         $(e.target).find('.videoStatusBtn').toggleClass('clicked')
     }
-    const renderYourArticles = Campaigns.map((oneCampaign , idx) => (
+    // return campaigns topics
+    const renderTopics = Campaigns.map((oneCampaign , idx) => (
         <ul
         key={idx}
           className = { `${styles.tableBody} borderBottom articleRow ` } 
@@ -27,10 +30,11 @@ const Sharing = ()=>{
    
           <li className="w-[20%] ">{oneCampaign.date}</li>
           <li className={` w-[20%] flex justify-center`}>
-           <CustomBtn class='videoStatusBtn' paddingVal='py-[0.3vw] px-[3vw]' word={oneCampaign.shareBtn} btnColor='black'/>
+           <CustomBtn href='./campaigns/share-campaign' class='videoStatusBtn' paddingVal='py-[0.3vw] px-[3vw]' word={oneCampaign.shareBtn} btnColor='black'/>
           </li>
         </ul>
       ));
+
     return(
         <div className={`${styles.box} w-full px-[0.5vw] `}>
         <div className={`${styles.tableContent}`}>
@@ -58,6 +62,7 @@ const Sharing = ()=>{
             </svg>
             <p>Date</p>
            </li>
+           {/* button to lead you to share about this campaign */}
            <li className="w-[20%] flex items-center justify-center gap-[0.7vw]">
            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="22" viewBox="0 0 20 22" fill="none">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M15.8333 13.3333C14.3583 13.3333 13.0708 14.1042 12.33 15.26L7.86751 12.71C8.15584 12.1433 8.33333 11.5117 8.33333 10.8333C8.33333 10.4142 8.25251 10.0175 8.13751 9.63582L12.78 6.98334C13.5408 7.80834 14.6225 8.33333 15.8333 8.33333C18.135 8.33333 20 6.46833 20 4.16667C20 1.865 18.135 0 15.8333 0C13.5317 0 11.6667 1.865 11.6667 4.16667C11.6667 4.58583 11.7475 4.98249 11.8625 5.36499L7.22 8.01666C6.45917 7.1925 5.3775 6.66667 4.16667 6.66667C1.865 6.66667 0 8.53167 0 10.8333C0 13.135 1.865 15 4.16667 15C5.11667 15 5.98249 14.67 6.68332 14.135L11.7125 17.05C11.6958 17.2 11.6667 17.345 11.6667 17.5C11.6667 19.8017 13.5317 21.6667 15.8333 21.6667C18.135 21.6667 20 19.8017 20 17.5C20 15.1983 18.135 13.3333 15.8333 13.3333Z" fill="black"/>
@@ -68,7 +73,7 @@ const Sharing = ()=>{
          </ul>
 
          <div className={styles.tableContentWrapper}>
-         {renderYourArticles}
+         {renderTopics}
          </div>
         </div>
      </div>

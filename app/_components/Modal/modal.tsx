@@ -1,4 +1,4 @@
-"use client";
+"use client"; //Indicates that this component is meant for client-side rendering.
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -11,11 +11,11 @@ import CustomSelectInput from "../CustomSelectInput/CustomSelectInput";
 import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
 
 interface IProps {
-  btnWord: string;
-  btnIcon?: React.ReactElement;
-  btnColor: "black" | "white";
-  modalTitle: string;
-  forWhat: string;
+  btnWord: string; // Button text.
+  btnIcon?: React.ReactElement; // Optional button icon.
+  btnColor: "black" | "white"; // Button color.
+  modalTitle: string; // Modal title text.
+  forWhat: string; //Purpose of the modal
 }
 
 export default function BasicModal({
@@ -25,21 +25,30 @@ export default function BasicModal({
   modalTitle,
   forWhat,
 }: IProps) {
+  // State for controlling the modal open/close state
   const [open, setOpen] = React.useState(false);
+    // Function to handle modal open.
   const handleOpen = () => setOpen(true);
+  // Function to handle modal close.
   const handleClose = () => setOpen(false);
+
+    // Regular expression to match URL patterns.
   const urlRegex =
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+    // State to track URL validation result.
   const [matchResult, setMatchResult] = React.useState<boolean>(true);
+  // Rendering list of accounts to remove.
   const renderAccountsToRemove = AccountsData.map((account)=>(
       <li>{account.account_name}</li>
   ))
+  // Rendering list of users to remove.
   const renderUsersToRemove = AccountsData.map((account)=>(
     <li>{account.user_name}</li>
 ))
 
   return (
     <div>
+       {/* Conditional rendering of different buttons based on 'forWhat' prop */}
       {forWhat === "add_post" ? (
         <CustomBtn
           word={btnWord}
@@ -73,7 +82,9 @@ export default function BasicModal({
         <Box>
           <div className={`${styles.modalBox}`}>
             <div className={`flex justify-between ${styles.addToListSec}`}>
+              {/* Modal title */}
               <h3>{modalTitle}</h3>
+              {/* Close button */}
               <div
                 onClick={() => {
                   handleClose();
@@ -94,9 +105,10 @@ export default function BasicModal({
                 </svg>
               </div>
             </div>
-
+              {/* Conditional rendering based on 'forWhat' prop */}
             {forWhat === "add_post" ? (
               <>
+              {/* Form fields for adding a post */}
                 <div className="flex flex-col gap-[0.7vw]">
                   <div className="flex flex-col gap-[0.2vw]">
                     <label htmlFor="subreddit">Subreddit Name*</label>
@@ -134,10 +146,11 @@ export default function BasicModal({
                         />
                       </svg>
                     </div>
+                    {/* Display error message if URL validation fails */}
                     {matchResult ? null : <span>Oops</span>}
                   </div>
                 </div>
-
+              {/* Subreddit Details section */}
                 <div className="flex flex-col gap-[0.8vw]">
                   <h3>Subreddit Details</h3>
                   <div className="flex gap-[1vw]">
@@ -159,13 +172,14 @@ export default function BasicModal({
                     </div>
                   </div>
                 </div>
-
+          {/* Create button */}
                 <div className="flex justify-end">
                   <CustomBtn word="Create" btnColor="black" />
                 </div>
               </>
             ) : forWhat === "add_account" ? (
               <>
+              {/* Form fields for adding an account */}
                 <div
                   className={`flex flex-col gap-[0.2vw] ${styles.linkValidation}`}
                 >
@@ -193,6 +207,7 @@ export default function BasicModal({
                       />
                     </svg>
                   </div>
+                  {/* Display error message if URL validation fails */}
                   {matchResult ? null : <span>Oops</span>}
                 </div>
                 <div className="flex gap-[0.5vw]">
@@ -206,6 +221,7 @@ export default function BasicModal({
                   />
                   <CustomBtn
                     btnColor="black"
+                    /* SVG icon for 'Add Account' button */
                     icon={
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -228,6 +244,7 @@ export default function BasicModal({
                 </div>
               </>
             ) : <>
+            {/* List of accounts to remove */}
             <div className={`flex ${styles.removeSec}`}>
               <div className="w-1/2 text-center">
               <h4>Accounts</h4>
@@ -235,6 +252,7 @@ export default function BasicModal({
                 {renderAccountsToRemove}
               </ul>
               </div>
+              {/* List of users to remove */}
               <div className="w-1/2 text-center">
               <h4>Username</h4>
                 <ul className="flex flex-col gap-[0.4vw]">
@@ -242,7 +260,7 @@ export default function BasicModal({
                 </ul>
               </div>
             </div>
-            {/* paddingVal="py-[0.5vw] px-[3vw]" */}
+         {/* Action buttons */}
             <div className="flex gap-[0.5vw] w-full">
               <CustomBtn btnColor={"white"} word="Cancel" width="w-full" paddingVal="px-[0.5vw] py-[0.7vw]" />
               <CustomBtn btnColor={"black"} word="Remove Accounts" width="w-full" paddingVal="px-[0.5vw] py-[0.7vw]"/>

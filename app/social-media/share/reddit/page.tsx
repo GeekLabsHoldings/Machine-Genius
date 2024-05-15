@@ -6,7 +6,7 @@ import {
   ArticleNames,
   Brands,
   ContentTypeFilter,
-  RedditPosts,
+  Posts,
 } from "@/app/_data/data";
 import $ from 'jquery'
 import CustomBtn from '@/app/_components/Button/CustomBtn';
@@ -15,7 +15,7 @@ import BasicModal from '@/app/_components/Modal/modal';
 import { useState } from 'react';
 
 const Reddit = () => {
-
+// handle navigation to move back to share main page 
     const router = useRouter();
     const handleNavigate = ()=>{
       router.push('/social-media/share')
@@ -27,7 +27,7 @@ const Reddit = () => {
         $(e.target).parents('.articleRow').toggleClass('selected')
     }
 
-  const renderRedditPosts = RedditPosts.map((onePost , idx) => (
+  const renderRedditPosts = Posts.map((onePost , idx) => (
     <ul
     key={idx}
       className = { `${styles.tableBody} borderBottom articleRow ` } 
@@ -60,6 +60,7 @@ const Reddit = () => {
 
     </ul>
   ));
+  // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder,setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder,setengagementOrder] = useState<boolean>(true);
 

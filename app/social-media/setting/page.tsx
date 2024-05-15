@@ -9,34 +9,29 @@ import $ from 'jquery'
 import styles from './setting.module.css';
 
 const Setting = ()=>{
-    const [selectAll,setSelectAll] = useState<boolean>(false);
+
+// set all checkboxes to checked when click on select all
     const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
         // Get all checkbox elements
         var checkboxes = document.querySelectorAll('input[name="test"]');
         if (e.target.checked) {
-          // Loop through each checkbox and set checked property to true
+        // Loop through each checkbox and set checked property to true
           checkboxes.forEach(function (checkbox: any) {
             checkbox.checked = true;
           });
         } else {
-          // Loop through each checkbox and set checked property to false
+        // Loop through each checkbox and set checked property to false
           checkboxes.forEach(function (checkbox: any) {
             checkbox.checked = false;
           });
         }
       }
-    useEffect(()=>{
-        if(selectAll){
-            $('input[name:"test"]').prop('checked',true)
-        }
-    },[selectAll])
-    
-
 
     const facebookIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
     <path d="M20.2344 9.99538C20.2344 7.34444 19.1813 4.80208 17.3068 2.92758C15.4323 1.05309 12.8899 4.26716e-06 10.239 4.26716e-06C7.72208 -0.00232006 5.29694 0.944983 3.44799 2.65269C1.59905 4.36039 0.462414 6.70278 0.265142 9.21196C0.0678707 11.7211 0.824482 14.2124 2.38384 16.188C3.9432 18.1637 6.19051 19.4783 8.67687 19.8694V12.884H6.1409V9.99538H8.67829V7.79354C8.67829 5.28899 10.1705 3.90391 12.4537 3.90391C13.5475 3.90391 14.6912 4.09954 14.6912 4.09954V6.55983H13.4304C12.1881 6.55983 11.8026 7.3309 11.8026 8.12053V9.99538H14.5741L14.1315 12.884H11.8011V19.8694C14.1522 19.4971 16.2933 18.2981 17.8392 16.488C19.3851 14.678 20.2344 12.3757 20.2344 9.99538Z" fill="#1877F2"/>
     <path d="M14.1298 12.8839L14.5724 9.99524H11.8009V8.12039C11.8009 7.33076 12.1864 6.55969 13.4287 6.55969H14.6895V4.09797C14.6895 4.09797 13.5458 3.90234 12.452 3.90234C10.1673 3.90234 8.67659 5.28742 8.67659 7.79197V9.99524H6.14062V12.8839H8.67802V19.8692C9.71308 20.0321 10.7672 20.0321 11.8023 19.8692V12.8839H14.1298Z" fill="white"/>
   </svg>
+
   const telegramIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
   <path d="M10.2344 20C15.7572 20 20.2344 15.5228 20.2344 10C20.2344 4.47715 15.7572 0 10.2344 0C4.71153 0 0.234375 4.47715 0.234375 10C0.234375 15.5228 4.71153 20 10.2344 20Z" fill="url(#paint0_linear_908_8728)"/>
   <path d="M15.2237 5.86343C15.3127 5.28809 14.7657 4.83396 14.2541 5.05857L4.06527 9.532C3.69842 9.69307 3.72526 10.2488 4.10574 10.3699L6.2069 11.0391C6.60797 11.1668 7.04219 11.1007 7.3924 10.8588L12.1297 7.58593C12.2725 7.48721 12.4283 7.69036 12.3062 7.81614L8.89619 11.3319C8.5654 11.6729 8.63104 12.2509 9.02897 12.5004L12.8468 14.8945C13.275 15.163 13.8259 14.8933 13.906 14.3758L15.2237 5.86343Z" fill="white"/>
@@ -47,18 +42,18 @@ const Setting = ()=>{
     </linearGradient>
   </defs>
 </svg>
+
 const redditIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
 <path d="M10.2344 0C4.71875 0 0.234375 4.48437 0.234375 10C0.234375 15.5156 4.71875 20 10.2344 20C15.75 20 20.2344 15.5156 20.2344 10C20.2344 4.48437 15.75 0 10.2344 0Z" fill="#FC471E"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M13.1042 4.93522C13.0951 4.9926 13.0904 5.05147 13.0904 5.11147C13.0904 5.71722 13.5701 6.20829 14.1618 6.20829C14.7535 6.20829 15.2333 5.71722 15.2333 5.11147C15.2333 4.50571 14.7535 4.01465 14.1618 4.01465C13.8982 4.01465 13.6568 4.11215 13.47 4.27385L10.6877 3.57129L9.68204 7.68922C8.34426 7.77936 7.14112 8.19408 6.23347 8.82022C5.97576 8.5615 5.62272 8.40193 5.23326 8.40193C4.44428 8.40193 3.80469 9.05672 3.80469 9.86436C3.80469 10.4265 4.11444 10.9145 4.56874 11.1593C4.53592 11.3337 4.51897 11.5117 4.51897 11.6924C4.51897 13.9136 7.07733 15.7141 10.2333 15.7141C13.3892 15.7141 15.9475 13.9136 15.9475 11.6924C15.9475 11.5117 15.9306 11.3337 15.8978 11.1593C16.352 10.9145 16.6618 10.4265 16.6618 9.86436C16.6618 9.05672 16.0223 8.40193 15.2333 8.40193C14.8438 8.40193 14.4908 8.5615 14.233 8.82022C13.2442 8.13807 11.9046 7.70679 10.4223 7.67293L11.2074 4.45802L13.1042 4.93522ZM7.73326 12.0581C8.32497 12.0581 8.80469 11.567 8.80469 10.9612C8.80469 10.3554 8.32497 9.86436 7.73326 9.86436C7.14154 9.86436 6.66183 10.3554 6.66183 10.9612C6.66183 11.567 7.14154 12.0581 7.73326 12.0581ZM12.7333 12.0581C13.325 12.0581 13.8047 11.567 13.8047 10.9612C13.8047 10.3554 13.325 9.86436 12.7333 9.86436C12.1415 9.86436 11.6618 10.3554 11.6618 10.9612C11.6618 11.567 12.1415 12.0581 12.7333 12.0581ZM7.93133 13.2163C7.76726 13.1043 7.54554 13.1496 7.43612 13.3176C7.32669 13.4857 7.37104 13.7127 7.53512 13.8247C8.31233 14.3551 9.27283 14.6203 10.2333 14.6203C11.1937 14.6203 12.1542 14.3551 12.9313 13.8247C13.0955 13.7127 13.1398 13.4857 13.0304 13.3176C12.921 13.1496 12.6993 13.1043 12.5351 13.2163C11.8779 13.6648 11.0556 13.8891 10.2333 13.8891C9.74562 13.8891 9.2579 13.8102 8.80469 13.6525C8.49369 13.5442 8.19883 13.3988 7.93133 13.2163Z" fill="white"/>
 </svg>
-
 
 // to apply effect in selected article when click on it
     const handleSelectedBg = (e: any)=>{
         $('.articleRow').removeClass('selected')
         $(e.target).parents('.articleRow').toggleClass('selected')
     }
-    
+    // return all accounts 
   const renderAccounts = AccountsData.map((oneAccount , idx) => (
     <ul
     key={idx}
@@ -82,11 +77,11 @@ const redditIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20
       <li className="w-[22%] ">{oneAccount.engagement}</li>
     </ul>
   ));
+  // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder,setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder,setengagementOrder] = useState<boolean>(true);
     return (
         <div className={`${styles.postInReddit} w-full h-full pt-[0.5vw]`}>
-  
           {/* filters options to filter and edit data in table */}
             <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>     
               <h3>Accounts</h3>
@@ -145,17 +140,18 @@ const redditIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20
             </div>
 
             <div className='flex gap-[0.5vw]'>
+              {/* open modal to enable you to add account  */}
             <BasicModal btnWord={'Add Account'} btnIcon={<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z" fill="#FFFFFB"/>
                 </svg>} btnColor={'black'} modalTitle={'Add Account'} forWhat={'add_account'}/>
-
+              {/* open modal to enable you to remove selected accounts  */}
             <BasicModal btnWord={'Remove Accounts'} btnColor={'white'} modalTitle={'Remove Accounts?'} forWhat={'remove_account'}/>
             </div>
 
           </div>
           </div>
        
-          {/* // table has all reddit posts and its data  */}
+          {/* // table has all accounts  */}
           <div className="flex w-full">
           <div className={`${styles.box} w-full px-[0.5vw] `}>
              <div className={`${styles.tableContent}`}>
@@ -210,6 +206,7 @@ const redditIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20
   </div>
              </div>
           </div>  
+          {/* for chat */}
              <div className=' flex items-end pb-[6vw]  w-[5%] justify-center'>
              <svg xmlns="http://www.w3.org/2000/svg" width="43" height="43" viewBox="0 0 43 43" fill="none">
           <circle cx="21.5" cy="21.5" r="21.5" fill="#2A2B2A"/>
