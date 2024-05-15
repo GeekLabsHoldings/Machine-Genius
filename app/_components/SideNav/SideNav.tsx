@@ -26,7 +26,9 @@ const rols = [
     'Content Creator',
     'Video Editor',
     'Social Media',
-    'HR'
+    'Administrative',
+    'Customer Service',
+    'Creative',
 ]
 
 
@@ -55,8 +57,12 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/video-editor/dashboard')
         } else if (SelectedRole === 'Social Media') {
             router.push('/social-media/dashboard')
-        } else if (SelectedRole === 'HR') {
-            router.push('/hr')
+        } else if (SelectedRole === 'Administrative') {
+            router.push('/administrative/dashboard')
+        }else if (SelectedRole === 'Customer Service') {
+            router.push('/customer-service/dashboard')
+        }else if (SelectedRole === 'Creative') {
+            router.push('/creative/dashboard')
         }
     }, [SelectedRole])
 

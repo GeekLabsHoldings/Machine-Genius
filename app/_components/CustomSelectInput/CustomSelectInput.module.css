@@ -90,13 +90,13 @@
     width: 100%;
     padding:  clamp(0.4rem, calc(0.4vw + 0.1rem), 500px) clamp(1rem, calc(1vw + 0.1rem), 500px);
     cursor: pointer;
-    font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
+    font-size: clamp(0.8rem, calc(0.7vw + 0.1rem), 1000px);
 }
 
 .dropdown.onClose .dropdown_content .item {
     padding: clamp(0.4rem, calc(0.4vw + 0.1rem), 500px);
     text-align: center;
-    font-size: clamp(0.6rem, calc(0.7vw + 0.1rem), 1000px);
+    font-size: clamp(0.6rem, calc(0.8vw + 0.1rem), 1000px);
 }
 
 .dropdown_content .item:hover {
@@ -123,7 +123,7 @@
     background-color: transparent;
     border: none;
     color: var(--white);
-    padding: clamp(0.7rem, calc(0.9vw + 0.1rem), 500px) 0 0;
+    padding: clamp(0.7rem, calc(0.7vw + 0.1rem), 500px) 0 0;
     box-shadow: none;
 }
 
