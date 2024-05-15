@@ -161,4 +161,6 @@ img{
 .css-1wuw8dw-MuiBreadcrumbs-separator {
   color: #F36F24;
 }
-
+.articleRow.changeSvgBg li span svg path{
+  fill: #FFFFFB;
+}
