@@ -69,6 +69,10 @@
     padding: clamp(10px, calc( 0.7vw + 0.1rem), 60px) 0 !important;
 
 }
+.tableBody li > input , .tableHeader li > input{
+    width: clamp(10px, calc(1.1vw + 0.1rem), 600px);
+    height: clamp(10px, calc(1.1vw + 0.1rem), 600px);
+}
 .tableBody li ,.tableBody li span{
     transition: 0.1s;
 }

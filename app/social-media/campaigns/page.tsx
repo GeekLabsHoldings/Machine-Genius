@@ -1,10 +1,12 @@
-import React from 'react'
+import styles from './Campaigns.module.css'
+
+
 
 const page = () => {
   return (
-    <div>
-      
-    </div>
+      <>
+        
+      </>
   )
 }
 
