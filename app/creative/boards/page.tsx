@@ -1,9 +1,9 @@
 "use client";
 import React, { useRef } from "react";
 import styles from "./boards.module.css";
-import QuarterCircles from "@/app/_components/quarterCircles/QuarterCircles";
+// import QuarterCircles from "@/app/_components/quarterCircles/QuarterCircles";
 import Link from "next/link";
-import Slider from "react-slick";
+// import Slider from "react-slick";
 
 interface ArrowProps {
   className?: string;
@@ -235,10 +235,10 @@ const page = () => {
               Members (4)
             </p>{" "}
             <div className=" flex items-center">
+              {/* <QuarterCircles color={"#EAD787"} />
               <QuarterCircles color={"#EAD787"} />
               <QuarterCircles color={"#EAD787"} />
-              <QuarterCircles color={"#EAD787"} />
-              <QuarterCircles color={"#EAD787"} />
+              <QuarterCircles color={"#EAD787"} /> */}
             </div>{" "}
             <div></div>
           </div>
@@ -290,7 +290,7 @@ const page = () => {
         </div>
 
         <div className="slider-container mb-[1.419vh]">
-          <Slider {...settings}>
+          {/* <Slider {...settings}>
             {project.map((e, i) => (
               <div className="pe-[1.25vw]">
                 <div
@@ -316,7 +316,7 @@ const page = () => {
                 </span>
               </div>
             ))}
-          </Slider>
+          </Slider> */}
         </div>
         <div>
           <div className="w-fit ms-auto">
