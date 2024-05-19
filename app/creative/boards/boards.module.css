@@ -1,0 +1,33 @@
+.members {
+    padding: 0.3vw 0.328vw;
+}
+.members p {
+    font-size: clamp(10px, calc( 0.6vw + 0.1rem), 100px);
+}
+.boards h3 {
+    font-weight: 700;
+    font-size: clamp(16px, calc(1.3vw + 0.1rem), 80px);}
+.boards h4 {
+    font-weight: 700;
+    font-size: clamp(14px, calc(1.2vw + 0.1rem), 80px);}
+.boards .state p {
+    font-size: clamp(12px, calc(1vw + 0.1rem), 70px);
+}
+
+.boards .lastUpdate {
+    font-size: clamp(10px, calc(0.57vw + 0.1rem), 70px);
+    text-align: end;
+}
+.boards .cards {
+    box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(234, 234, 234, 1);
+
+}
+
+.boards button {
+    font-size: 0.757;
+    font-size: clamp(10px, calc(0.757vw + 0.1rem), 70px);
+}
+.boards .templateCards {
+    width: clamp(100px, calc(15vw + 0.1rem), 32vw);
+}
