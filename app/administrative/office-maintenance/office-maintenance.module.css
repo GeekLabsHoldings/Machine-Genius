@@ -1,0 +1,29 @@
+.officeMaintenance .tab,
+.officeMaintenance .cardsTitle {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.officeMaintenance .tab {
+  color: #acacac;
+  cursor: pointer;
+}
+.officeMaintenance .activeTab {
+  color: #2a2b2a;
+}
+
+.cardsTitle {
+  margin: 43px 0 43px;
+}
+
+/* Tabs */
+.tabs {
+  margin-top: 30px;
+}
+.tabs .tab:not(:last-child) {
+  border-right: 1px solid #2a2b2a;
+  padding-right: 10px;
+}
+.tabs .tab:not(:first-child) {
+  padding-left: 10px;
+}
