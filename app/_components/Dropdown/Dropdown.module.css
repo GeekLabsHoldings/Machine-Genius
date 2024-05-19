@@ -1,0 +1,15 @@
+.dropdown {
+  width: clamp(5rem, 17.188rem, 100%);
+}
+
+.dropdown button {
+}
+
+.dropdown__items__container {
+  box-shadow: 0px 4px 4px 0px #00000040;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.dropdown__item:not(:last-child) {
+  border-bottom: 2px solid var(--dark);
+}
