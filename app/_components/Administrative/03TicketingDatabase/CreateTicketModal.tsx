@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import styles from "./UploadReceiptModal.module.css";
+import styles from "./CreateTicketModal.module.css";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "../../Button/CustomBtn";
@@ -12,7 +12,10 @@ interface IProps {
   modalTitle: string; // Modal title text.
 }
 
-export default function UploadReceiptModal({
+const ticketTypeOptions: string[] = ["IT", "System Issue", "Request"];
+
+
+export default function CreateTicketModal({
   modalTitle,
   btnWord,
   btnColor,
@@ -47,7 +50,7 @@ export default function UploadReceiptModal({
         <Box>
           <div className={`${styles.modalBox}`}>
             {/* 1. Modal Head */}
-            <div className={`flex justify-between ${styles.uploadReceipt}`}>
+            <div className={`flex justify-between ${styles.createTicket}`}>
               {/* Modal title */}
               <h3>{modalTitle}</h3>
               {/* Close button */}
@@ -76,34 +79,59 @@ export default function UploadReceiptModal({
 
 
             {/* 2. Modal Body */}         
-              {/* Form fields for adding a post */}
-              <div className="flex flex-col gap-[2vw]">
-                <div className="flex items-center justify-between gap-[0.2vw]">
-                    <div className="flex flex-col gap-2">
-                    <h3>Upload Receipt</h3>
-                  <span>scan7385824.jpg</span>
-                    </div>
-                    <div className="cursor-pointer">
-                    <svg width="35" height="23" viewBox="0 0 35 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M29.5191 10.1199C29.5191 10.1199 30.1836 1.0858 21.9824 0.0555995C14.9536 -0.668743 12.8137 5.9237 12.8137 5.9237C12.8137 5.9237 10.6974 3.86951 7.82541 5.54758C5.25448 7.1492 5.70908 10.0817 5.70908 10.0817C5.70908 10.0817 0 11.2018 0 17.0751C0.126959 22.9411 6.19848 23 6.19848 23H15.7727V16.8002H12.7011L17.8204 11.6337L22.9397 16.8002H19.8681V23H28.5372C28.5372 23 34.1889 23.0062 34.9824 17.4254C35.3602 11.3227 29.5191 10.1199 29.5191 10.1199Z" fill="#A6A6A6"/>
-</svg>
 
-                    </div>
+              {/* Details section */}
+              <div className="flex flex-col gap-[0.8vw]">
+                <h3>Ticket Type</h3>
+                <div className="flex gap-[1vw]">
+                  <div className="flex flex-col gap-[0.3vw] w-full">
+                       <CustomSelectInput
+                      label="IT"
+                      options={ticketTypeOptions}
+                      paddingVal="py-[0.2vw] px-[0.5vw]"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Form fields for adding a post */}
+              <div className="flex flex-col gap-[0.7vw]">
+                <div className="flex flex-col gap-[0.2vw]">
+                  <label htmlFor="subjectLine">Subject Line*</label>
+                  <input
+                    type="text"
+                    id="subjectLine"
+                    required
+                    className={`${styles.input}`}
+                  />
                 </div>
                 <div
-                  className={`flex flex-col gap-2`}
+                  className={`flex flex-col gap-[0.2vw]`}
                 >
-                  <h3>Date Uploaded</h3>
-                  <span style={{color: "#A6A6A6", fontWeight: "700"}}>20 March 2024</span>
+                  <label htmlFor="tiketDescription">Ticket Description*</label>
+                  <div>
+                    <textarea
+                      
+                      id="tiketDescription"
+                      required
+                      className={`${styles.input} w-full`}
+                    />
+                  </div>
+
 
                 </div>
               </div>
 
 
 
-              {/* Upload Receipt button */}
+
+
+
+
+
+              {/* Add Product button */}
               <div className="flex justify-end">
-                <CustomBtn word="Upload Receipts" btnColor="black" style={{ width: '100%' }} />
+                <CustomBtn word="Create" btnColor="black" style={{ width: 'max-content' }} />
               </div>
 
 

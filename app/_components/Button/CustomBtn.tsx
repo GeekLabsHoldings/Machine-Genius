@@ -15,6 +15,21 @@ type IBtn =  React.DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HT
     paddingVal?:string
 }
 
+/**
+ * Renders a custom button component that can navigate to the last or next page with a black or white style,
+ * and can have an icon or not.
+ *
+ * @param {IBtn} props - The props for the custom button component.
+ * @param {string} props.word - The text to display on the button.
+ * @param {string} props.btnColor - The color of the button, either 'white' or 'black'.
+ * @param {ReactElement} props.icon - The icon to display on the button.
+ * @param {string} props.href - The URL to navigate to when the button is clicked.
+ * @param {string} props.widthSize - The width of the button.
+ * @param {string} props.width - The width of the button.
+ * @param {string} props.class - The CSS class to apply to the button.
+ * @param {string} props.paddingVal - The padding value for the button.
+ * @return {JSX.Element} The rendered custom button component.
+ */
 const CustomBtn = (props:IBtn)=>{
 
 
