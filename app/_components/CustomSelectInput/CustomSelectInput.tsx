@@ -5,11 +5,12 @@ import styles from './CustomSelectInput.module.css'
 interface Iprops {
     label?: string | number,
     options: string[] | number[],
-    icon? :any ,
-    theme? : 'dark',
-    whenSideNavClosed?:boolean,
-    getValue ?: (value:string|number)=>void,
-    paddingVal ? : string
+    icon?: any,
+    theme?: 'dark',
+    whenSideNavClosed?: boolean,
+    getValue?: (value: string | number) => void,
+    paddingVal?: string,
+    children?: React.ReactNode
 }
 
 const CustomSelectInput = (props: Iprops) => {
@@ -17,18 +18,18 @@ const CustomSelectInput = (props: Iprops) => {
     const [isActive, setIsActive] = useState(false);
     const [selected, setIsSelected] = useState(props.label ? props.label : props.options[0]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (props.whenSideNavClosed) {
             setIsActive(false)
         }
-    },[props.whenSideNavClosed])
+    }, [props.whenSideNavClosed])
 
     const handleSelectedItem = (e: any) => {
         console.log(e.innerText);
         setIsSelected(e.innerText);
         setIsActive(false);
         if (props.getValue) {
-          props.getValue(e.innerText)
+            props.getValue(e.innerText)
         }
     }
 
@@ -50,22 +51,24 @@ const CustomSelectInput = (props: Iprops) => {
             <div
                 className={styles.dropdown_content}
                 style={{ display: isActive ? "block" : "none" }}
-                onMouseLeave={()=> setIsActive(false)}
+            // onMouseLeave={()=> setIsActive(false)}
             >
-                {props.options.map((ele, idx) => (
-                    <div
-                        onClick={(e) => {
-                            handleSelectedItem(e.target);
-                            setIsActive(!isActive);
+                <div>
+                    {props.options.map((ele, idx) => (
+                        <div
+                            onClick={(e) => {
+                                handleSelectedItem(e.target);
+                                setIsActive(!isActive);
 
-                        }}
-                        className={styles.item}
-                        key={idx}
-                    >
-                        {ele}
-                    </div>
-                ))}
-
+                            }}
+                            className={styles.item}
+                            key={idx}
+                        >
+                            {ele}
+                        </div>
+                    ))}
+                </div>
+                {props.children}
             </div>
         </div>
     )

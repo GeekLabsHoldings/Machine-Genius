@@ -1,0 +1,45 @@
+.add_new_template .header{
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+}
+.add_new_template .template_name {
+    display: flex;
+    align-items: end;
+    gap: 1.5vw;
+}
+
+.add_new_template .template_name svg{
+    width: clamp(16px, calc(2vw + 0.1rem), 1000px);
+    height: clamp(16px, calc(2vw + 0.1rem), 1000px);
+}
+
+.add_new_template .template_name input {
+    border-bottom: 1px solid var(--dark);
+    outline: none;
+    background: transparent;
+    font-size: clamp(16px, calc(1.2vw + 0.1rem), 1000px);
+    padding-bottom: 0.2vw;
+    font-weight: 700;
+}
+
+
+.add_new_template .choose_group{
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    font-size: clamp(12px, calc(0.9vw + 0.1rem), 1000px);
+    color: #ACACAC;
+    text-wrap: nowrap;
+}
+
+.add_new_template .choose_group > div > div:first-child{
+    padding: 0.3vw 4vw 0.3vw 0.8vw;
+    font-size: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+    min-width: clamp(100px, calc(13vw + 0.1rem), 1000px);
+    font-weight: 500;
+}
+
+.add_new_template .choose_group > div > div:first-child > svg{
+    right: clamp(12px, calc(0.9vw + 0.1rem), 1000px);
+}
