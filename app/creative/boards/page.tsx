@@ -3,9 +3,8 @@ import React, { useRef, useState } from "react";
 import styles from "./boards.module.css";
 import Slider from "react-slick";
 import Link from "next/link";
-import QuarterCircles from "@/app/_components/quarterCircles/QuarterCircles";
-import { log } from "console";
-import CustomBtn from "@/Machine-Genius/app/_components/Button/CustomBtn";
+import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 interface ArrowProps {
   className?: string;
