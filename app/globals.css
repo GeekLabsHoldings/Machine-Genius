@@ -152,6 +152,7 @@ img{
   width: clamp(16px, calc(1.5vw + 0.1rem), 80px);
   height: clamp(16px, calc(1.5vw + 0.1rem), 80px);
 }
+
 .pagination_iconButton__7wOJj{
   display: flex;
   justify-content: center;
@@ -163,6 +164,8 @@ img{
 .css-1wuw8dw-MuiBreadcrumbs-separator {
   color: #F36F24;
 }
+
+
 .articleRow.changeSvgBg li span svg path{
   fill: #FFFFFB;
 }
