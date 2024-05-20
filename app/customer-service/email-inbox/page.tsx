@@ -2,9 +2,114 @@ import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
 
+const table = [
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "PST USA",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "PST Asia",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Investocracy",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "PST USA",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Canada",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Canada",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "PST USA",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Investocracy",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Canada",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Investocracy",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Street Politics",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "Canada",
+    dateSent: "12 March 2024",
+  },
+  {
+    customerName: "John Doe",
+    subject:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    brand: "PST USA",
+    dateSent: "12 March 2024",
+  },
+];
+
+const getRandomColor = () => {
+  const colors = [
+    "#31B2E9B2",
+    "#E1C655B2",
+    "#5FA85BB5",
+    "#E9313EB2",
+    "#F36F24B2",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
 function page() {
   return (
-    <div className="flex flex-col gap-9 m-9 w-full h-full bg-white dark:bg-gray-800">
+    <div className="flex flex-col h-full py-[1.5vw]">
       <div>
         <span className="text-lg font-semibold [text-color:var(--dark)]">
           Brand
@@ -37,62 +142,49 @@ function page() {
           </svg>
         </div>
       </div>
-      <div
-        className={`relative overflow-x-auto border-2 [border-color:#DBDBD7] rounded-[20px] p-5 ${styles.table__container}`}
-      >
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase border-b [border-color:var(--dark)]">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                <CheckBox />
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Color
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Category
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Price
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Apple MacBook Pro 17"
-              </th>
-              <td className="px-6 py-4">Silver</td>
-              <td className="px-6 py-4">Laptop</td>
-              <td className="px-6 py-4">$2999</td>
-            </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Microsoft Surface Pro
-              </th>
-              <td className="px-6 py-4">White</td>
-              <td className="px-6 py-4">Laptop PC</td>
-              <td className="px-6 py-4">$1999</td>
-            </tr>
-            <tr className="bg-white dark:bg-gray-800">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Magic Mouse 2
-              </th>
-              <td className="px-6 py-4">Black</td>
-              <td className="px-6 py-4">Accessories</td>
-              <td className="px-6 py-4">$99</td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="h-[75vh] py-[1.5vw] ">
+        <div className={styles.database_table}>
+          <ul className={styles.table_header}>
+            <li className="w-[5%]">
+              <CheckBox />
+            </li>
+            <li className="w-[15%]">
+              <span>Content Name</span>
+            </li>
+            <li className="w-[30%]">
+              <span>Subject</span>
+            </li>
+            <li className="w-[20%]">
+              <span>Brand</span>
+            </li>
+            <li className="w-[20%]">
+              <span>Date</span>
+            </li>
+          </ul>
+
+          <div className={styles.table_body}>
+            {table.map((ele, idx) => (
+              <ul className="w-[100%] group" key={idx}>
+                <li className="w-[5%]">
+                  <CheckBox />
+                </li>
+                <li className="w-[15%]">{ele.customerName}</li>
+                <li className="w-[30%] font-bold">
+                  <p>{ele.subject}</p>
+                </li>
+                <li className="w-[20%]">
+                  <span
+                    className="p-2 rounded-[3px]"
+                    style={{ backgroundColor: getRandomColor() }}
+                  >
+                    {ele.brand}
+                  </span>
+                </li>
+                <li className="w-[20%]">{ele.dateSent}</li>
+              </ul>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
