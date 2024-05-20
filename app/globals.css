@@ -172,5 +172,36 @@ img{
 .boards .slick-initialized .slick-slide{
   display: flex;
   flex-direction: column;
-  gap: 3vh;
+  gap: 1vh;
+}
+
+.fillBtn {
+  /* overflow: hidden; */
+}
+
+.fillBtn::before {
+  content: '';
+  position: absolute; /* Positioning properties */
+  z-index: 0;
+  left: 50%;
+  top: 100%;
+  
+  transform: translate(-50%,-80%);
+  width: 0; /* Dimension properties */
+  height: 0;
+  background-color: white; /* Other styles */
+  border-radius: 50%;
+  transition: all 0.2s;
+  transition: height 0.2s , width 0.4s;
+}
+
+.fillBtn:hover::before {
+  width: 200%;
+  height: 200%;
+}
+.fillBtn:hover {
+  color: #2A2B2A;
+} 
+.fillBtn:hover svg path {
+  fill: #2A2B2A;
 }

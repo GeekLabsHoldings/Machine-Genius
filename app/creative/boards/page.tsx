@@ -1,8 +1,10 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./boards.module.css";
 import Slider from "react-slick";
 import Link from "next/link";
+import QuarterCircles from '@/app/_components/QuarterCircles/QuarterCircles';
+import CustomBtn from "@/Machine-Genius/app/_components/Button/CustomBtn";
 
 interface ArrowProps {
   className?: string;
@@ -10,12 +12,37 @@ interface ArrowProps {
   onClick?: () => void;
 }
 
-
-
 const page = () => {
+ const btnRef = useRef<any>(null)
 
-
+ const [top,setTop] = useState(0)
+ const [left,setLeft] = useState(0)
   
+
+  const fillBtn = document.querySelector(".fillBtn");
+  
+  const sliderRef = useRef<Slider>(null);
+  let position = 0;
+
+  const next = () => {
+    if (sliderRef.current) {
+      position++;
+      sliderRef.current.slickNext();
+      console.log(sliderRef.current);
+      
+    }
+  };
+
+  const previous = () => {
+    if (sliderRef.current) {
+      if (position !== 0 ) {
+        sliderRef.current.slickPrev();
+        position--;
+      }
+    }
+  };
+ 
+
 
   const project = [
     {
@@ -31,13 +58,12 @@ const page = () => {
         >
           <path
             d="M5 0.5C2.23 0.5 0 2.73 0 5.5C0 8.27 2.23 10.5 5 10.5C7.77 10.5 10 8.27 10 5.5C10 2.73 7.77 0.5 5 0.5ZM4.98923 1.20421C5.08479 1.20277 5.17966 1.22052 5.26823 1.2564C5.3568 1.29229 5.43728 1.34558 5.50488 1.41312C5.57249 1.48066 5.62586 1.56108 5.66183 1.64962C5.6978 1.73816 5.71563 1.83302 5.71429 1.92857V4.78571H7.14286C7.23751 4.78438 7.33148 4.80186 7.41932 4.83716C7.50715 4.87245 7.58709 4.92485 7.6545 4.99131C7.72191 5.05777 7.77543 5.13697 7.81197 5.2243C7.8485 5.31162 7.86732 5.40534 7.86732 5.5C7.86732 5.59466 7.8485 5.68838 7.81197 5.7757C7.77543 5.86303 7.72191 5.94223 7.6545 6.00869C7.58709 6.07515 7.50715 6.12755 7.41932 6.16284C7.33148 6.19814 7.23751 6.21562 7.14286 6.21429H5C4.81057 6.21427 4.6289 6.13901 4.49494 6.00506C4.36099 5.87111 4.28573 5.68943 4.28571 5.5V1.92857C4.28304 1.73925 4.35564 1.55661 4.48756 1.42079C4.61947 1.28497 4.79991 1.20707 4.98923 1.20421Z"
-            fill="#FFFFFB"
+            fill="#2A2B2A"
           />
         </svg>
       ),
       stateColor: "#F49864",
-      stateText: "#FFFFFB",
-      bg:"#2A2B2A"
+      stateText: "#2A2B2A",
     },
     {
       name: "ST Suite",
@@ -52,12 +78,12 @@ const page = () => {
         >
           <path
             d="M5 0.5C2.23 0.5 0 2.73 0 5.5C0 8.27 2.23 10.5 5 10.5C7.77 10.5 10 8.27 10 5.5C10 2.73 7.77 0.5 5 0.5ZM4.98923 1.20421C5.08479 1.20277 5.17966 1.22052 5.26823 1.2564C5.3568 1.29229 5.43728 1.34558 5.50488 1.41312C5.57249 1.48066 5.62586 1.56108 5.66183 1.64962C5.6978 1.73816 5.71563 1.83302 5.71429 1.92857V4.78571H7.14286C7.23751 4.78438 7.33148 4.80186 7.41932 4.83716C7.50715 4.87245 7.58709 4.92485 7.6545 4.99131C7.72191 5.05777 7.77543 5.13697 7.81197 5.2243C7.8485 5.31162 7.86732 5.40534 7.86732 5.5C7.86732 5.59466 7.8485 5.68838 7.81197 5.7757C7.77543 5.86303 7.72191 5.94223 7.6545 6.00869C7.58709 6.07515 7.50715 6.12755 7.41932 6.16284C7.33148 6.19814 7.23751 6.21562 7.14286 6.21429H5C4.81057 6.21427 4.6289 6.13901 4.49494 6.00506C4.36099 5.87111 4.28573 5.68943 4.28571 5.5V1.92857C4.28304 1.73925 4.35564 1.55661 4.48756 1.42079C4.61947 1.28497 4.79991 1.20707 4.98923 1.20421Z"
-            fill="#FFFFFB"
+            fill="#2A2B2A"
           />
         </svg>
       ),
       stateColor: "#F49864",
-      stateText: "#FFFFFB",
+      stateText: "#2A2B2A",
     },
     {
       name: "Build Fire",
@@ -186,19 +212,19 @@ const page = () => {
   ];
 
   const settings = {
-    infinite: true,
+    infinite: false,
     speed: 600,
     slidesToShow: 4,
     slidesToScroll: 1,
     rows: 2,
     centerPadding: "60px",
+    swipeToSlide: false,
     responsive: [
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          infinite: true,
           speed: 600,
           rows: 2,
           centerPadding: "60px",
@@ -209,7 +235,6 @@ const page = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          infinite: true,
           speed: 600,
           rows: 2,
           centerPadding: "60px",
@@ -220,7 +245,7 @@ const page = () => {
   return (
     <>
       <div className={`${styles.boards} boards w-full`}>
-        <div className=" flex justify-between mt-4 mb-5">
+        <div className=" flex justify-between my-[1vw]">
           <h3>All Projects</h3>
           <div
             className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
@@ -229,16 +254,18 @@ const page = () => {
               Members (4)
             </p>{" "}
             <div className=" flex items-center">
-            <span className="w-[0.693vw] h-[0.876vw] rounded-tl-sm rounded-tr-3xl rounded-bl-sm rounded-br-sm bg-green-700"></span>            </div>{" "}
+              <QuarterCircles color={"#EAD787"} translate={0} /> <QuarterCircles color={"#6FC9EE"} translate={-40}/>  <QuarterCircles color={"#8DC189"} translate={-80}/>  <QuarterCircles color={"#F06F77"} translate={-120}/> {" "}
+            </div>{" "}
             <div></div>
           </div>
         </div>
         <div className=" flex justify-between items-center">
           {" "}
-          <div className=" flex justify-between gap-2 items-center mb-[0.615vw]">
+          <div className=" flex justify-between gap-2 items-center mb-[1.3vh]">
             <h4>Current Projects</h4>{" "}
             <div className=" flex items-center gap-2">
               <svg
+              onClick={()=>{previous()}}
                 width="29"
                 height="28"
                 viewBox="0 0 29 28"
@@ -255,6 +282,7 @@ const page = () => {
               </svg>
 
               <svg
+              onClick={()=>next()}
                 width="28"
                 height="28"
                 viewBox="0 0 29 28"
@@ -272,130 +300,144 @@ const page = () => {
             </div>
           </div>{" "}
           <Link
-            href={"#"}
+            href="/creative/boards/archivedProjects"
             className="text-[#595958] underline border-[#595958] text-[16px]"
           >
             View All Archived Projects
           </Link>
         </div>
 
-        <div className="slider-container">
-      <Slider {...settings}>
-        {project.map((e,i)=>(
-          <div className="pe-[1.25vw]">
-          <div
-            className={`mb-[0.615vw] ${styles.cards} p-4 rounded-lg`}
-            style={{ background: e.bg ? e.bg : "transparent" }}
-          >
-            <div className=" mb-2">
-              <h3 style={{ color: e.bg ? "white" : "#2A2B2A" }}>
-                {e.name}
-              </h3>
-            </div>
-            <div
-              className={`bg-[${e.stateColor}] rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
-              style={{ background: e.stateColor }}
-            >
-              {e.icon} <p style={{ color: e.stateText }}>{e.state}</p>
-            </div>
-          </div>
-          <span
-            className={`${styles.lastUpdate} text-[#ACACAC] block text-end`}
-          >
-            Last Update 24 Hours Ago
-          </span>
-        </div>
-        ))}
-      </Slider>
-    </div>
-        <div>
-          <div className="w-fit ms-auto">
-            <button className=" bg-[var(--dark)] text-[var(--white)] rounded-md px-[0.757vw] py-[0.946vw] flex items-center">
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-              Create New Board
-            </button>
-          </div>
-        </div>
-        <h3 className="mb-[1.892vw]">Templates</h3>
-        <div className="flex gap-[0.946vw] mb-[1.6vw]">
-          <div className={`${styles.cards} rounded-xl p-4 flex items-center ${styles.templateCards}`}>
-            <h4>Design Sprint</h4>
-          </div>
-          <div className={`${styles.cards} rounded-xl p-4 flex items-center ${styles.templateCards}`}>
-            <h4>Application Design Project</h4>
-          </div>
-          <div className={`${styles.cards} rounded-xl p-4 flex items-center ${styles.templateCards}`}>
-            <h4>Saas Product</h4>
-          </div>
-          <div className={`${styles.cards} rounded-xl p-4 flex items-center ${styles.templateCards}`}>
-            <h4>Research Project</h4>
-          </div>
-        </div>
-      </div>
-      <div>
-          <div className="w-fit ms-auto">
-            <button className=" bg-[var(--dark)] text-[var(--white)] rounded-md px-[0.757vw] py-[0.946vw] flex items-center">
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-              Create New Board
-            </button>
-          </div>
-        </div>
-    </>
-  );
-};
-
-export default page;
-
-
-
-{/* <div className="pe-[1.25vw]">
-                <div
-                  className={`mb-[0.615vw] ${styles.cards} p-4 rounded-lg`}
-                  style={{ background: e.bg ? e.bg : "transparent" }}
-                >
-                  <div className=" mb-2">
-                    <h3 style={{ color: e.bg ? "white" : "#2A2B2A" }}>
-                      {e.name}
-                    </h3>
+        <div className="slider-container py-[1vh]">
+          <Slider ref={sliderRef} {...settings}>
+            {project.map((e, i) => (
+              <div className={`pe-[1.25vw] ${styles.sliderCard} py-3`} key={i}>
+                <Link href={`/creative/boards/projectDetails`}>
+                <div className={`mb-[0.6vw] ${styles.cards} p-4 rounded-3xl cursor-pointer`}>
+                  <div className=" mb-[0.8vh] flex items-center">
+                    <h3 className=" pe-[0.662vw]">{e.name}</h3>
+                    <QuarterCircles color={"#EAD787"} translate={0} /> <QuarterCircles color={"#6FC9EE"} translate={-40}/>  <QuarterCircles color={"#8DC189"} translate={-80}/>  <QuarterCircles color={"#F06F77"} translate={-120}/>
                   </div>
                   <div
                     className={`bg-[${e.stateColor}] rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
                     style={{ background: e.stateColor }}
                   >
-                    {e.icon} <p style={{ color: e.stateText }}>{e.state}</p>
+                    {e.icon}{" "}
+                    <p
+                    className="text-xs font-medium"
+                     
+                    >
+                      {e.state}
+                    </p>
                   </div>
                 </div>
+                </Link>
                 <span
                   className={`${styles.lastUpdate} text-[#ACACAC] block text-end`}
                 >
                   Last Update 24 Hours Ago
                 </span>
-              </div> */}
+              </div>
+            ))}
+          </Slider>
+        </div>
+        <div>
+          <div className="w-fit ms-auto">
+            <button className=" bg-[var(--dark)] text-[var(--white)] rounded-md px-[0.757vw] py-[0.946vw] flex items-center h-[4.5vh]">
+              <svg
+                className="me-[0.61vw]"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
+                  fill="#FFFFFB"
+                />
+              </svg>
+              Create New Board
+            </button>
+          </div>
+        </div>
+        <h3 className="mb-[2.8vh]">Templates</h3>
+        <div className="flex gap-[0.946vw] mb-[1.6vw]">
+          <div
+            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+          >
+            <h4>Design Sprint</h4>
+          </div>
+          <div
+            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+          >
+            <h4>Application Design Project</h4>
+          </div>
+          <div
+            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+          >
+            <h4>Saas Product</h4>
+          </div>
+          <div
+            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+          >
+            <h4>Research Project</h4>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div className="w-fit ms-auto">
+          <CustomBtn btnColor="black" word="New Template" icon={<svg
+              className="me-[0.61vw]"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
+                fill="#FFFFFB"
+              />
+            </svg>} />
+          {/* <button ref={btnRef} onMouseMove={(e)=>{
+            console.log(btnRef.current.offsetTop);
+            console.log(e.pageY - btnRef.current.offsetTop);
+            console.log(e.pageX - btnRef.current.offsetLeft);
+            
+            const x = e.pageX - btnRef.current.offsetLeft - 67
+            const Y = e.pageY - btnRef.current.offsetTop
+            setLeft(prevLeft => e.pageX - btnRef.current.offsetLeft - 67);
+            setTop(prevTop => e.pageY - btnRef.current.offsetTop);
+            
+            
+           
+            
+          }} className={`fillBtn bg-[var(--dark)] text-[var(--white)] rounded-md px-[0.757vw] py-[0.946vw] flex items-center h-[4.5vh] relative before:left-[${left}] before:top-[${top}]`} >
+            <span className=" flex items-center justify-center z-[1] relative "><svg
+              className="me-[0.61vw]"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
+                fill="#FFFFFB"
+              />
+            </svg>
+            Create New Board</span>
+          </button> */}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default page;
