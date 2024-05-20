@@ -18,23 +18,9 @@ interface DropdownProps {
 function Dropdown({ title, items }: DropdownProps) {
   const [open, setOpen] = useState(false);
 
-  const ref = useRef(null);
-  // Close the dropdown when clicking outside of it
-  // const handelOnOutsideClick = (e: any) => {
-  //   if (!ref.current?.contains(e.target))
-  //    return 
-  //   setOpen(false);
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener("click", handelOnOutsideClick);
-  //   return () => {
-  //     document.removeEventListener("click", handelOnOutsideClick);
-  //   };
-  // }, []);
 
   return (
-    <div className={`relative inline-block text-left ${styles.dropdown}`} ref={ref}
+    <div className={`relative inline-block text-left ${styles.dropdown}`}
       onMouseLeave={() => setOpen(false)}
       >
       <button
