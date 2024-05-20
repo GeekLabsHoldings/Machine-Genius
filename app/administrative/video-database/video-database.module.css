@@ -1,0 +1,48 @@
+.videoDatabase .tab,
+.videoDatabase .cardsTitle {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.videoDatabase .tab {
+  color: #acacac;
+  cursor: pointer;
+}
+.videoDatabase .activeTab {
+  color: #2a2b2a;
+}
+
+
+/* Tabs */
+.tabs {
+  margin-top: 20px;
+}
+.tabs .tab:not(:last-child) {
+  border-right: 1px solid #2a2b2a;
+  padding-right: 10px;
+}
+.tabs .tab:not(:first-child) {
+  padding-left: 10px;
+}
+
+.videoDatabasePage h5{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+    font-weight: 700;
+}
+.changeOrder{
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(4px, calc(0.2vw + 0.1rem), 200px) clamp(20px, calc(0.6vw + 0.1rem), 200px);
+    background: var(--white);
+    border: 1px solid #000000;
+    border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
+    color: #000;
+    font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
+    font-weight: 400;
+}
+.changeOrder svg{
+    width: clamp(18px, calc(0.8vw + 0.1rem), 100px);
+}
