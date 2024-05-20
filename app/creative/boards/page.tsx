@@ -186,12 +186,12 @@ const page = () => {
   ];
 
   const settings = {
-    // infinite: true,
+    infinite: true,
     speed: 600,
     slidesToShow: 4,
     slidesToScroll: 1,
     rows: 2,
-    // centerPadding: "60px",
+    centerPadding: "60px",
     responsive: [
       {
         breakpoint: 600,

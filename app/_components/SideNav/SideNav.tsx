@@ -72,7 +72,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
 
 
     return (
-        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)}  >
+        <div className={`${styles.side_Nav} ${isSideNavOpen ? '' : styles.close}`} onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)} onMouseLeave={() => setIsSideNavOpen(!isSideNavOpen)} >
             <div>
                 <div className={styles.user_info + " flex items-center justify-between"}>
                     <div className={`${styles.avatar_logo} flex items-center gap-[0.6vw]`}>
