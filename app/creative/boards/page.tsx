@@ -1,9 +1,8 @@
 "use client";
 import React, { useRef } from "react";
 import styles from "./boards.module.css";
-import QuarterCircles from "@/app/_components/quarterCircles/QuarterCircles";
-import Link from "next/link";
 import Slider from "react-slick";
+import Link from "next/link";
 
 interface ArrowProps {
   className?: string;
@@ -11,17 +10,12 @@ interface ArrowProps {
   onClick?: () => void;
 }
 
+
+
 const page = () => {
 
 
-  let sliderRef = useRef(null);
-  // const next = () => {
-  //   sliderRef.slickNext();
-  // };
-  // const previous = () => {
-  //   sliderRef.slickPrev();
-  // };
-
+  
 
   const project = [
     {
@@ -43,7 +37,7 @@ const page = () => {
       ),
       stateColor: "#F49864",
       stateText: "#FFFFFB",
-      bg: "#2A2B2A",
+      bg:"#2A2B2A"
     },
     {
       name: "ST Suite",
@@ -235,11 +229,7 @@ const page = () => {
               Members (4)
             </p>{" "}
             <div className=" flex items-center">
-              <QuarterCircles color={"#EAD787"} />
-              <QuarterCircles color={"#EAD787"} />
-              <QuarterCircles color={"#EAD787"} />
-              <QuarterCircles color={"#EAD787"} />
-            </div>{" "}
+            <span className="w-[0.693vw] h-[0.876vw] rounded-tl-sm rounded-tr-3xl rounded-bl-sm rounded-br-sm bg-green-700"></span>            </div>{" "}
             <div></div>
           </div>
         </div>
@@ -289,35 +279,35 @@ const page = () => {
           </Link>
         </div>
 
-        <div className="slider-container mb-[1.419vh]">
-          <Slider {...settings}>
-            {project.map((e, i) => (
-              <div className="pe-[1.25vw]">
-                <div
-                  className={`mb-[0.615vw] ${styles.cards} p-4 rounded-lg`}
-                  style={{ background: e.bg ? e.bg : "transparent" }}
-                >
-                  <div className=" mb-2">
-                    <h3 style={{ color: e.bg ? "white" : "#2A2B2A" }}>
-                      {e.name}
-                    </h3>
-                  </div>
-                  <div
-                    className={`bg-[${e.stateColor}] rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
-                    style={{ background: e.stateColor }}
-                  >
-                    {e.icon} <p style={{ color: e.stateText }}>{e.state}</p>
-                  </div>
-                </div>
-                <span
-                  className={`${styles.lastUpdate} text-[#ACACAC] block text-end`}
-                >
-                  Last Update 24 Hours Ago
-                </span>
-              </div>
-            ))}
-          </Slider>
+        <div className="slider-container">
+      <Slider {...settings}>
+        {project.map((e,i)=>(
+          <div className="pe-[1.25vw]">
+          <div
+            className={`mb-[0.615vw] ${styles.cards} p-4 rounded-lg`}
+            style={{ background: e.bg ? e.bg : "transparent" }}
+          >
+            <div className=" mb-2">
+              <h3 style={{ color: e.bg ? "white" : "#2A2B2A" }}>
+                {e.name}
+              </h3>
+            </div>
+            <div
+              className={`bg-[${e.stateColor}] rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
+              style={{ background: e.stateColor }}
+            >
+              {e.icon} <p style={{ color: e.stateText }}>{e.state}</p>
+            </div>
+          </div>
+          <span
+            className={`${styles.lastUpdate} text-[#ACACAC] block text-end`}
+          >
+            Last Update 24 Hours Ago
+          </span>
         </div>
+        ))}
+      </Slider>
+    </div>
         <div>
           <div className="w-fit ms-auto">
             <button className=" bg-[var(--dark)] text-[var(--white)] rounded-md px-[0.757vw] py-[0.946vw] flex items-center">
@@ -383,3 +373,29 @@ const page = () => {
 };
 
 export default page;
+
+
+
+{/* <div className="pe-[1.25vw]">
+                <div
+                  className={`mb-[0.615vw] ${styles.cards} p-4 rounded-lg`}
+                  style={{ background: e.bg ? e.bg : "transparent" }}
+                >
+                  <div className=" mb-2">
+                    <h3 style={{ color: e.bg ? "white" : "#2A2B2A" }}>
+                      {e.name}
+                    </h3>
+                  </div>
+                  <div
+                    className={`bg-[${e.stateColor}] rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
+                    style={{ background: e.stateColor }}
+                  >
+                    {e.icon} <p style={{ color: e.stateText }}>{e.state}</p>
+                  </div>
+                </div>
+                <span
+                  className={`${styles.lastUpdate} text-[#ACACAC] block text-end`}
+                >
+                  Last Update 24 Hours Ago
+                </span>
+              </div> */}
