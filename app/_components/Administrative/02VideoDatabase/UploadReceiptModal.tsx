@@ -49,7 +49,7 @@ export default function UploadReceiptModal({
             {/* 1. Modal Head */}
             <div className={`flex justify-between ${styles.uploadReceipt}`}>
               {/* Modal title */}
-              <h3>{modalTitle}</h3>
+              <h2>{modalTitle}</h2>
               {/* Close button */}
               <div
                 onClick={() => {
