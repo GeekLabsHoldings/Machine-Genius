@@ -16,6 +16,13 @@ const options = ['jop listings', 'tasks', 'offers', 'HR Questions', 'jop listing
 
 const page = () => {
 
+    const [Templates, setTemplates] = useState([{ title: 'title 1', description: 'description1 description1 description1 description1 description1 description1 description1' },
+    { title: 'title 2', description: 'description2 description2 description1 description1 description1 description1 description1' },
+    { title: 'title 3', description: 'description3 description1 description1 description1 description1 description1 description1' },
+    { title: 'title 4', description: 'description4 description1 description1 description1 description1 description1 description1' }
+    ]);
+
+
     // State for controlling the modal open/close state
     const [open, setOpen] = useState(false);
     // Function to handle modal open.
@@ -43,18 +50,23 @@ const page = () => {
                 </div>
 
                 <div className={styles.template_cards + " grid grid-cols-4 gap-[1vw]"}>
-                    <div className={styles.card}>
-                        <div className={styles.card_header}>
-                            <input type="text" placeholder='Card Title*' value={"123 Card"} />
-                            <button><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.0983 15.6111C13.7921 16.3049 14.9168 16.3049 15.6106 15.6111C16.3044 14.9173 16.3044 13.7926 15.6106 13.0988L10.586 8.07422L15.6106 3.04964C16.3044 2.35587 16.3044 1.23112 15.6106 0.537354C14.9168 -0.156415 13.7921 -0.156415 13.0983 0.537353L8.07373 5.56193L3.04915 0.537353C2.3554 -0.156403 1.23063 -0.156415 0.536865 0.537354C-0.156903 1.23112 -0.15689 2.35589 0.536865 3.04964L5.56144 8.07422L0.536865 13.0988C-0.156878 13.7925 -0.156903 14.9173 0.536865 15.6111C1.23063 16.3049 2.35541 16.3048 3.04915 15.6111L8.07373 10.5865L13.0983 15.6111Z" fill="#ACACAC" />
-                            </svg></button>
+                    {Templates.map(( ele ,idx) => (
+                        <div className={styles.card} key={idx}>
+                            <div className={styles.card_header}>
+                                <input type="text" placeholder='Card Title*' value={ele.title} />
+                                <button >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.0983 15.6111C13.7921 16.3049 14.9168 16.3049 15.6106 15.6111C16.3044 14.9173 16.3044 13.7926 15.6106 13.0988L10.586 8.07422L15.6106 3.04964C16.3044 2.35587 16.3044 1.23112 15.6106 0.537354C14.9168 -0.156415 13.7921 -0.156415 13.0983 0.537353L8.07373 5.56193L3.04915 0.537353C2.3554 -0.156403 1.23063 -0.156415 0.536865 0.537354C-0.156903 1.23112 -0.15689 2.35589 0.536865 3.04964L5.56144 8.07422L0.536865 13.0988C-0.156878 13.7925 -0.156903 14.9173 0.536865 15.6111C1.23063 16.3049 2.35541 16.3048 3.04915 15.6111L8.07373 10.5865L13.0983 15.6111Z" fill="#ACACAC" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className={styles.card_body}>
+                                <textarea placeholder='Card Description...' rows={3} value={ele.description} />
+                                <CustomBtn word='Save' btnColor='black' />
+                            </div>
                         </div>
-                        <div className={styles.card_body}>
-                            <textarea placeholder='Card Description...' rows={3} value={"Description Description Description Description Description Description Description Description Description"} />
-                            <CustomBtn word='Save' btnColor='black' />
-                        </div>
-                    </div>
+                    ))}
+
 
                     <div className={styles.card + " " + styles.editable}>
                         <div className={styles.card_header}>
