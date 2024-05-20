@@ -19,7 +19,7 @@ const page = () => {
  const [left,setLeft] = useState(0)
   
 
-  const fillBtn = document.querySelector(".fillBtn");
+  // const fillBtn = document.querySelector(".fillBtn");
   
   const sliderRef = useRef<Slider>(null);
   let position = 0;
