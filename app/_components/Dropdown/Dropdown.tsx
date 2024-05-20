@@ -58,8 +58,9 @@ function Dropdown({ title, items }: DropdownProps) {
               <a
               key={index}
               href="#"
-              className={`block py-2 w-full text-sm [text-color:var(--dark)] font-bold
-              hover:bg-gray-100 hover:text-gray-900 ${styles.dropdown__item}`}
+              className={`block py-2 w-full text-sm [text-color:var(--dark)] 
+              hover:[background-color:var(--orange)]
+               hover:text-gray-100 ${styles.dropdown__item}`}
               role="menuitem"
               onClick={() => setOpen(false)}
               >

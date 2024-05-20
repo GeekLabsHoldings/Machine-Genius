@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import styles from "./OptionsDropdown.module.css";
 import $ from "jquery";
 
 /**
@@ -47,11 +48,11 @@ function OptionsDropdown({ icon, options }: OptionsDropdownProps) {
                     open
                         ? "opacity-100 z-10 translate-y-0"
                         : "opacity-0 -z-10 invisible -translate-y-16"
-                } overflow-clip`}
+                } overflow-clip ${styles.dropdown__items__container}`}
             >
                 <ul>
                     {options.map((option, index) => (
-                        <li key={index} className="py-2 px-4 hover:bg-gray-100">
+                        <li key={index} className={`py-2 px-4 font-bold hover:bg-gray-200 ${styles.dropdown__item}`}>
                             {option}
                         </li>
                     ))}
