@@ -52,7 +52,7 @@ export default function CreateTicketModal({
             {/* 1. Modal Head */}
             <div className={`flex justify-between ${styles.createTicket}`}>
               {/* Modal title */}
-              <h3>{modalTitle}</h3>
+              <h2>{modalTitle}</h2>
               {/* Close button */}
               <div
                 onClick={() => {
