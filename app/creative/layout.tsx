@@ -10,6 +10,8 @@ import styles from './creative.module.css';
 import SideNav from '../_components/SideNav/SideNav';
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
 // import { usePathname } from 'next/navigation';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // Define the layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
