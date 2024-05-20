@@ -6,10 +6,10 @@ interface QuarterCirclesProps {
   translate: number;
 }
 
-const QuarterCircles: React.FC<QuarterCirclesProps> = ({
+const QuarterCircles = ({
   color,
   translate,
-}) => {
+}:QuarterCirclesProps) => {
   return (
     <>
       <span

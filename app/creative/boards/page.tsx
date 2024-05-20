@@ -3,8 +3,7 @@ import React, { useRef, useState } from "react";
 import styles from "./boards.module.css";
 import Slider from "react-slick";
 import Link from "next/link";
-import QuarterCircles from "@/app/_components/quarterCircles/QuarterCircles";
-import { log } from "console";
+import QuarterCircles from '@/app/_components/QuarterCircles/QuarterCircles';
 import CustomBtn from "@/Machine-Genius/app/_components/Button/CustomBtn";
 
 interface ArrowProps {
@@ -312,7 +311,8 @@ const page = () => {
           <Slider ref={sliderRef} {...settings}>
             {project.map((e, i) => (
               <div className={`pe-[1.25vw] ${styles.sliderCard} py-3`} key={i}>
-                <div className={`mb-[0.6vw] ${styles.cards} p-4 rounded-3xl`}>
+                <Link href={`/creative/boards/projectDetails`}>
+                <div className={`mb-[0.6vw] ${styles.cards} p-4 rounded-3xl cursor-pointer`}>
                   <div className=" mb-[0.8vh] flex items-center">
                     <h3 className=" pe-[0.662vw]">{e.name}</h3>
                     <QuarterCircles color={"#EAD787"} translate={0} /> <QuarterCircles color={"#6FC9EE"} translate={-40}/>  <QuarterCircles color={"#8DC189"} translate={-80}/>  <QuarterCircles color={"#F06F77"} translate={-120}/>
@@ -330,6 +330,7 @@ const page = () => {
                     </p>
                   </div>
                 </div>
+                </Link>
                 <span
                   className={`${styles.lastUpdate} text-[#ACACAC] block text-end`}
                 >
