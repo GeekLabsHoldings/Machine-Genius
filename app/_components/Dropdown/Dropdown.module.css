@@ -11,5 +11,14 @@
 }
 
 .dropdown__item:not(:last-child) {
+  position: relative;
+}
+.dropdown__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  bottom: 0;
   border-bottom: 2px solid var(--dark);
 }
