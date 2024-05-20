@@ -1,3 +1,4 @@
+import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
 
@@ -43,18 +44,7 @@ function page() {
           <thead className="text-xs text-gray-700 uppercase border-b [border-color:var(--dark)]">
             <tr>
               <th scope="col" className="px-6 py-3">
-                <div className="w-4 h-4 relative flex items-center justify-center border-[0.67px] [border-color:var(--dark)] rounded-[1.33px] cursor-pointer">
-                  <label
-                    htmlFor="check"
-                    className="border-[0.67px] w-2 h-2 [border-color:var(--dark)] aspect-square rounded-[0.67px]"
-                  >
-                    <input
-                      type="checkbox"
-                      className="absolute inset-0 opacity-0"
-                      id="check"
-                    />
-                  </label>
-                </div>
+                <CheckBox />
               </th>
               <th scope="col" className="px-6 py-3">
                 Color
