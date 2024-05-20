@@ -2,7 +2,6 @@ import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
 import { truncateText } from "@/app/_utils/text";
-import { get } from "jquery";
 
 const table = [
   {
