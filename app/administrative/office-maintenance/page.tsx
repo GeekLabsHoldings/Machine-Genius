@@ -2,9 +2,17 @@
 import React, { useState } from "react";
 import styles from "./office-maintenance.module.css";
 import AdministrativeCard from "../../_components/Administrative/01OfficeMaintenance/AdministrativeCard";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 export default function page() {
   const [activeTab, setActiveTab] = React.useState<number>(1);
+  const annualOptions: string[] = [
+    "Daily",
+    "Weekly",
+    "Monthly",
+    "Yearly",
+  ];
 
   return (
     <section className={`${styles.officeMaintenance}`}>
@@ -44,7 +52,7 @@ export default function page() {
         {/* 1. Tab 1 Content */}
         {activeTab === 1 && (
           <div className={`${styles.tab1}`}>
-            <h3 className={`${styles.cardsTitle}`}>Weekly Checklist</h3>
+            <h3 className={`${styles.cardsTitle} my-[43px]`}>Weekly Checklist</h3>
 
             {/* 1.1 Cards Container */}
             <div className="cards-container grid grid-cols-3 gap-[27px]">
@@ -155,7 +163,21 @@ export default function page() {
         {/* Tab 2 Content */}
         {activeTab === 2 && (
           <div className={`${styles.tab2}`}>
-            <h3 className={`${styles.cardsTitle}`}>Cleaning Supplies</h3>
+            <div className="flex justify-between items-center">        
+                
+                <div className="flex flex-col gap-[0.3vw] my-[43px] w-[393px]">
+                <h3 className={`${styles.cardsTitle}`}>Cleaning Supplies</h3>
+                <CustomSelectInput label="Weekly" options={annualOptions} />
+                </div>
+
+                <CustomBtn
+    btnColor="white"
+    word="Receipts Database"
+    style={{ minWidth: "188px" }}
+/>
+
+
+            </div>
 
             {/* 1.1 Cards Container */}
             <div className="cards-container grid grid-cols-3 gap-[27px]">
@@ -258,7 +280,21 @@ export default function page() {
         {/* Tab 3 Content */}
         {activeTab === 3 && (
           <div className={`${styles.tab3}`}>
-            <h3 className={`${styles.cardsTitle}`}>Food List</h3>
+                        <div className="flex justify-between items-center">        
+                
+                <div className="flex flex-col gap-[0.3vw] my-[43px] w-[393px]">
+                <h3 className={`${styles.cardsTitle}`}>Food List</h3>
+                <CustomSelectInput label="Monthly" options={annualOptions} />
+                </div>
+
+                <CustomBtn
+    btnColor="white"
+    word="Receipts Database"
+    style={{ minWidth: "188px" }}
+/>
+
+
+            </div>
 
             {/* 1.1 Cards Container */}
             <div className="cards-container grid grid-cols-3 gap-[27px]">
