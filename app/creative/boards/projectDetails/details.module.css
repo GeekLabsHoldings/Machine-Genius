@@ -1,0 +1,37 @@
+
+
+.details h4 {
+    font-weight: 700;
+    font-size: clamp(14px, calc(1.66vw + 0.1rem), 80px);
+    margin-left: 23px;
+}
+.details .heading::before {
+    content: "";
+    position: absolute;
+    border: 7px solid black;
+    border-color: transparent black transparent transparent;
+    top: 50%;
+    left: -23px;
+    transform: translateY(-50%);
+    margin-right: 0.568vw;
+    }
+.members {
+    padding: 0.3vw 0.328vw;
+}
+.members p {
+    font-size: clamp(10px, calc( 0.6vw + 0.1rem), 100px);
+}
+.details h5 {
+    font-size: clamp(14px, calc(1.19vw + 0.1rem),75px);
+    font-weight: 700;
+}
+.details .card, .details .smallCard {
+    box-shadow: 0.74px 2.22px 4.88px 0px #00000026;
+    border-radius: 14.79px;
+
+}
+.details h6 {
+    font-size: clamp(12px, calc(0.95vw + 0.1rem),70px);
+    font-weight: 500;
+    
+}
