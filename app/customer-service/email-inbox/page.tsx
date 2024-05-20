@@ -1,6 +1,8 @@
 import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
+import { truncateText } from "@/app/_utils/text";
+import { get } from "jquery";
 
 const table = [
   {
@@ -170,7 +172,7 @@ function page() {
                 </li>
                 <li className="w-[15%]">{ele.customerName}</li>
                 <li className="w-[30%] font-bold">
-                  <p>{ele.subject}</p>
+                  <p>{truncateText(ele.subject, 100)}</p>
                 </li>
                 <li className="w-[20%]">
                   <span
