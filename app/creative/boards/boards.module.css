@@ -18,7 +18,7 @@
     font-size: clamp(10px, calc(0.57vw + 0.1rem), 70px);
     text-align: end;
 }
-.boards .cards {
+.boards .cards,.boards .templateCards {
     box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
     border: 2px solid rgba(234, 234, 234, 1);
 
@@ -30,4 +30,22 @@
 }
 .boards .templateCards {
     width: clamp(100px, calc(15vw + 0.1rem), 32vw);
+}
+.boards .cards:hover, .boards .templateCards:hover {
+ 
+ transition: transform 0.5s;
+ background: var(--dark);
+}
+.boards .cards:hover h3 ,.boards .cards:hover .state p {
+    color: white;
+}
+
+.boards .templateCards:hover h4 {
+    color: white;
+}
+.boards .sliderCard:hover,.boards .templateCards:hover {
+    transform: translateY(-0.378vw);
+}
+.boards .cards:hover svg path {
+    fill : white
 }
