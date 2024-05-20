@@ -11,9 +11,8 @@ import dayjs from "dayjs";
 
 const page = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dateInput,setDateInput] = useState("")
   const [dateCalendar,setDateCalendar] = useState("")
-  var dateInputNew = document.getElementById("myDateInput") as HTMLInputElement;
+  // var dateInputNew = document.getElementById("myDateInput") as HTMLInputElement;
 
   const [checkListData, setCheckListData] = useState([
     "15 mins call with client",
@@ -426,13 +425,12 @@ const page = () => {
                         dayOfWeekFormatter={(weekday) =>
                           `${weekday.format("ddd")}`
                         }
-                        onChange={(value)=>{console.log(value);
-                          dateInputNew?.value == "04/02/2024";
-                        console.log("yes");
-                        console.log(dateInputNew);
-                        
-                        }
-                        }
+                        // onChange={(value)=>{console.log(value);
+                        //   dateInputNew?.value == "04/02/2024";
+                        // console.log("yes");
+                        // console.log(dateInputNew);
+                        // }
+                        // }
                         value={dayjs(dateCalendar)}
                       />
                       <div className=" flex gap-[1.188vw] mb-[2.2vh] px-[1.615vw]">

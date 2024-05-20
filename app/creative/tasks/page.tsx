@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import styles from "./tasks.module.css";
-import CustomBtn from "@/Machine-Genius/app/_components/Button/CustomBtn";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
 export default function VideoDatabaseTable() {
