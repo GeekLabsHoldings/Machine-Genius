@@ -35,3 +35,11 @@
     font-weight: 500;
     
 }
+.details .pChecked {
+    font-size: clamp(12px, calc(0.729vw + 0.1rem),70px);
+    font-weight: 400;
+}
+ .detailsModal {
+    box-shadow: 1px 7px 7.4px 2px #00000033;
+
+}
