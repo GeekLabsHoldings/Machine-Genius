@@ -34,8 +34,8 @@ const page = () => {
                     </div>
                 </div>
 
-                <div className={styles.template_cards}>
-                    <div className={styles.card}>
+                <div className={styles.template_cards + " grid grid-cols-4 gap-[1vw]"}>
+                    <div className={styles.card + " " + styles.editable}>
                         <div className={styles.card_header}>
                             <input type="text" placeholder='Card Title*' />
                             <button><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
@@ -43,12 +43,12 @@ const page = () => {
                             </svg></button>
                         </div>
                         <div className={styles.card_body}>
-                            <textarea placeholder='Card Description...' />
+                            <textarea placeholder='Card Description...' rows={3} />
                             <CustomBtn word='Save' btnColor='black' />
                         </div>
                     </div>
 
-                    <div className={styles.card}>
+                    <div className={styles.card + " " + styles.editable}>
                         <div className={styles.card_header}>
                             <input type="text" placeholder='Card Title*' />
                             <button><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
@@ -56,7 +56,7 @@ const page = () => {
                             </svg></button>
                         </div>
                         <div className={styles.card_body}>
-                            <textarea placeholder='Card Description...' />
+                            <textarea placeholder='Card Description...' rows={3} />
                             <CustomBtn word='Save' btnColor='black' />
                         </div>
                     </div>
