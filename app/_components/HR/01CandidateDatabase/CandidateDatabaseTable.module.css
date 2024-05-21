@@ -110,7 +110,7 @@
 
 .table .table_body ul:hover li {
   color: var(--white);
-  /* font-weight: 700; */
+  font-weight: 700;
   /* text-wrap: wrap; */ /* not supposed to be in hover */
 }
 
@@ -125,6 +125,14 @@
   justify-content: center;
   /* test */
   /* width: 12.5%; Ensure the body items have a fixed width */
+}
+
+.table .table_body ul li a{
+  color: #0066FF;
+}
+
+.table .table_body ul:hover li a{
+  color: #5FA85B;
 }
 
 .table .table_body ul li:first-child {
