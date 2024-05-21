@@ -143,34 +143,34 @@ export default function CandidateDatabaseTable() {
         {/* Table Header */}
         <ul className={styles.table_header}>
           <li className="w-[20%]">
-            <span>Content Name</span>
+            <span>First Name</span>
           </li>
           <li className="w-[20%]">
-            <span>Date Published</span>
+            <span>Last Name</span>
           </li>
           <li className="w-[20%]">
-            <span>Posts</span>
+            <span>Mobile Number</span>
           </li>
           <li className="w-[20%]">
-            <span>Status</span>
+            <span>Email</span>
           </li>
           <li className="w-[20%]">
-            <span>Date Published</span>
+            <span>LinkedIn</span>
           </li>
           <li className="w-[20%]">
-            <span>Posts</span>
+            <span>Role</span>
           </li>
           <li className="w-[20%]">
-            <span>Status</span>
+            <span>CV</span>
           </li>
           <li className="w-[20%]">
-            <span>Date Published</span>
+            <span>Port</span>
           </li>
           <li className="w-[20%]">
-            <span>Posts</span>
+            <span>Lorem</span>
           </li>
           <li className="w-[20%]">
-            <span>Status</span>
+            <span>Lorem</span>
           </li>
         </ul>
 
@@ -179,34 +179,34 @@ export default function CandidateDatabaseTable() {
           {bodyRow.map((e, idx) => (
             <ul key={idx}>
               <li className="w-[20%]">
-                <span>Content Name</span>
+                <span>{e.firstName}</span>
               </li>
               <li className="w-[20%]">
-                <span>Date Published</span>
+                <span>{e.lastName}</span>
               </li>
               <li className="w-[20%]">
-                <span>Posts</span>
+                <span>{e.mobile}</span>
               </li>
               <li className="w-[20%]">
-                <span>Status</span>
+                <span>{e.email}</span>
               </li>
               <li className="w-[20%]">
-                <span>Date Published</span>
+                <span>{e.linkedin}</span>
               </li>
               <li className="w-[20%]">
-                <span>Posts</span>
+                <span>{e.role}</span>
               </li>
               <li className="w-[20%]">
-                <span>Status</span>
+                <span>{e.cv}</span>
               </li>
               <li className="w-[20%]">
-                <span>Date Published</span>
+                <span>{e.port}</span>
               </li>
               <li className="w-[20%]">
-                <span>Posts</span>
+                <span>Lorem</span>
               </li>
               <li className="w-[20%]">
-                <span>Status</span>
+                <span>Lorem</span>
               </li>
             </ul>
           ))}
