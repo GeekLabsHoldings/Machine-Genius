@@ -8,6 +8,7 @@
     border: 1px solid #2A2B2A;
     transition: all 0.3s;
     display: block;
+    overflow: hidden;
 }
 .whiteBtn:hover{
     background-color: #2A2B2A;
@@ -24,25 +25,37 @@
     border: 1px solid #2A2B2A;
     transition: all 0.3s;
     display: block;
+    overflow: hidden;
 }
 .blackBtn svg path{
     fill: #FFFFFB;
 }
+.blackBtn:hover svg path{
+    fill: var(--dark);
+}
 .whiteBtn svg path{
     fill: #2A2B2A;
+}
+.whiteBtn:hover svg path{
+    fill: var(--white);
 }
 .blackBtn:hover{
     color: rgba(42, 43, 42, 1);
     background-color:rgba(255, 255, 251, 1) ;
 }
 .iconAndTxtBtn{
-    /* padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(24px, calc(3vw + 0.1rem),140px); */
-    display: flex;
+    /*padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(24px, calc(3vw + 0.1rem),140px);
+    */display: flex;
     justify-content: center;
     align-items: center;
     gap: clamp(10px, calc( 0.5vw + 0.1rem), 60px);
     position: relative;
     z-index: 2;
+    transition: all 0s;
+    -webkit-transition: all 0s;
+    -moz-transition: all 0s;
+    -ms-transition: all 0s;
+    -o-transition: all 0s;
 }
 .blackBtn::before{
     content: "";
@@ -79,10 +92,14 @@
 }
 
 .blackBtn span , .whiteBtn span{
-    transition: none;
+    transition: all 0s;
+    -webkit-transition: all 0s;
+    -moz-transition: all 0s;
+    -ms-transition: all 0s;
+    -o-transition: all 0s;
 }
 
 
 .blackBtn svg , .whiteBtn svg{
-    width: clamp(10px, calc( 0.8vw + 0.1rem), 600px);
+    width: clamp(10px, calc( 0.7vw + 0.1rem), 600px);
 }

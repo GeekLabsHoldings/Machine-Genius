@@ -1,9 +1,28 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import styles from "./details.module.css";
 import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles";
-import CustomBtn from "@/Machine-Genius/app/_components/Button/CustomBtn";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import dayjs from "dayjs";
 
 const page = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [dateInput,setDateInput] = useState("")
+  const [dateCalendar,setDateCalendar] = useState("")
+  var dateInputNew = document.getElementById("myDateInput") as HTMLInputElement;
+
+  const [checkListData, setCheckListData] = useState([
+    "15 mins call with client",
+    "15 mins call with client",
+    "15 mins call with client",
+  ]);
+
+  const [itemAdded, setItemAdded] = useState("");
+
   return (
     <div className={`${styles.details} mt-[4.6vh] `}>
       <div className=" flex justify-between items-center mb-[0.568vw]">
@@ -299,6 +318,9 @@ const page = () => {
           </div>
 
           <CustomBtn
+            onClick={() => {
+              setIsOpen(true);
+            }}
             width="100%"
             btnColor="white"
             word="Add Card"
@@ -348,11 +370,21 @@ const page = () => {
           />
         </div>
       </div>
-      <div className=" absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 hidden">
-        <div className=" bg-[#FFFFFB] py-[4.7vh] px-[2.034vw] mb-[2.1vh]">
+      <div
+        className={` absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
+          isOpen ? "flex" : "hidden"
+        }`}
+      >
+        <div
+          className={`${styles.detailsModal} bg-[#FFFFFB] py-[4.7vh] px-[2.034vw] mb-[2.1vh] rounded-[20px] `}
+        >
           <div className=" flex justify-between">
             <h3>Kick- Off Call</h3>
             <svg
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              className=" cursor-pointer"
               width="22"
               height="22"
               viewBox="0 0 22 22"
@@ -371,24 +403,164 @@ const page = () => {
             in list{" "}
             <span className=" underline border-[#ACACAC]">On Boarding</span>
           </p>
-          <div className=" flex gap-[1.939vw]">
+          <div className=" flex gap-[1.939vw] mb-[0.6vh]">
             <div>
               <div className=" mb-[2.8vh]">
-                <h6 className=" font-bold mb-[1.99vh]">Description</h6>
+                <h6 className=" font-bold mb-[1.481vh]">Description</h6>
                 <input
                   type="text"
-                  className="bg-[#F8F8F8] w-[14.57vw] h-[16.47vh]"
+                  className="bg-[#F8F8F8] w-[18.57vw] h-[17.47vh]"
                 />
               </div>
               <div>
-                <h6 className=" font-bold mb-[1.99vh]">Due Date</h6>
+                <h6 className=" font-bold mb-[1.481vh]">Due Date</h6>
+                <div className="flex justify-end items-end pb-[0.2vw] w-full">
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <div className="board-add-calendar-card rounded-2xl">
+                      <DateCalendar
+                      defaultValue={dayjs("2014-02-09")}
+                        slots={{
+                          rightArrowIcon: ArrowRightIcon,
+                          leftArrowIcon: ArrowLeftIcon,
+                        }}
+                        dayOfWeekFormatter={(weekday) =>
+                          `${weekday.format("ddd")}`
+                        }
+                        onChange={(value)=>{console.log(value);
+                          dateInputNew?.value == "04/02/2024";
+                        console.log("yes");
+                        console.log(dateInputNew);
+                        
+                        }
+                        }
+                        value={dayjs(dateCalendar)}
+                      />
+                      <div className=" flex gap-[1.188vw] mb-[2.2vh] px-[1.615vw]">
+                        <div>
+                          {/* <p className=" mb-[1.2vh] font-semibold">Start Date</p>
+                          <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">9/10/2024</span> */}
+                          <p className=" mb-[1.2vh] font-semibold">Start Date</p>
+                          <input type="date" name="" id="myDateInput" value={dateCalendar} onChange={(e)=>{
+                            console.log(e.target.value);
+                            setDateCalendar(e.target.value)
+
+                            
+                          }}/>
+                        </div>
+                        <div>
+                          <p className=" mb-[1.2vh] font-semibold">Due Date</p>
+                          <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">9/10/2024</span>
+                        </div>
+                      </div>
+                    </div>
+                  </LocalizationProvider>
+                </div>
               </div>
             </div>
             <div>
-                <div className="font-bold mb-[1.99vh]">
-                    <h6>Check List</h6>
+              <div className="font-bold mb-[1.8vh]">
+                <h6 className=" mb-[1.481vh]">Check List</h6>
+                <div>
+                  <ul className=" max-h-[11vh] overflow-scroll">
+                    {checkListData.map((e, i) => (
+                      <li className=" flex gap-[0.473vw] items-center mb-[1.4vh]">
+                        <svg
+                          width="13"
+                          height="13"
+                          viewBox="0 0 13 13"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="0.5"
+                            y="0.5"
+                            width="12"
+                            height="12"
+                            rx="0.5"
+                            stroke="#2A2B2A"
+                          />
+                        </svg>
+                        <p className={`${styles.pChecked}`}>{e}</p>
+                      </li>
+                    ))}
+                  </ul>
+                  <input
+                    onChange={(e) => {
+                      setItemAdded(e.target.value);
+                    }}
+                    type="text"
+                    placeholder="Add Item"
+                    className="rounded-md border-[1px] border-[#DFDFDF] bg-[#F8F8F8] py-[0.6vh] px-[0.9vw] w-[19.281vw] placeholder:text-[var(--black)] placeholder:text-[0.929vw] placeholder:font-normal mb-[0.926vh]"
+                  />
+                  <div className=" w-fit ms-auto">
+                    <CustomBtn
+                      onClick={() => {
+                        if (itemAdded) {
+                          setCheckListData([...checkListData, itemAdded]);
+                        }
+                      }}
+                      paddingVal="py-[0.5vh] px-[0.7vw]"
+                      btnColor="black"
+                      word="Add"
+                      icon={
+                        <svg
+                          className="me-[0.61vw]"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
+                            fill="#FFFFFB"
+                          />
+                        </svg>
+                      }
+                    />
+                  </div>
                 </div>
+              </div>
+              <div>
+                <h6 className=" mb-[1.481vh]">Assign to</h6>
+                <input
+                  type="text"
+                  placeholder="@username"
+                  className="mb-[2.5vh] border-[1px] border-[var(--dark)] rounded-md py-[1.2vh] px-[1.361vw] placeholder:text-[var(--dark)] placeholder:text-[15px] w-full"
+                />
+                <h6 className=" mb-[1.7vh]">Board Members</h6>
+                <ul>
+                  <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--dark)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
+                    <QuarterCircles color="#6FC9EE" translate={0} />
+                    <p className=" text-white">Shahenda El Naggar</p>
+                  </li>
+                  <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--white)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
+                    <QuarterCircles color="#F36F24B3" translate={0} />
+                    <p className="  text-[var(--dark)]">Yara Hesham</p>
+                  </li>
+                  <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--dark)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
+                    <QuarterCircles color="#E1C655FF" translate={0} />
+                    <p className=" text-white">Mostafa Sakr</p>
+                  </li>
+                  <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--white)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
+                    <QuarterCircles color="#9B5FBFFF" translate={0} />
+                    <p className="  text-[var(--dark)]">Sherry Magdi</p>
+                  </li>
+                </ul>
+              </div>
             </div>
+          </div>
+          <div className="w-fit ms-auto">
+            <CustomBtn
+            onClick={()=>{
+              setIsOpen(false)
+            }}
+              paddingVal="py-[1vh] px-[2.6vw]"
+              btnColor="black"
+              word="Save"
+            />
           </div>
         </div>
       </div>
