@@ -1,0 +1,23 @@
+.chat__chat__aside {
+  width: clamp(10rem, 30%, 100%);
+}
+
+.chat__chat__aside__menu {
+  box-shadow: 0px 4px 4px 0px #00000040;
+  border: 1px solid #dbdbd7;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.chat__chat__aside__menu__item:not(:last-child) {
+  border-bottom: 1px solid #dbdbd7;
+}
+
+.chat__chat__aside__menu__item:not(:first-child) {
+  border-top: 1px solid #dbdbd7;
+}
+
+.chat__chat__aside__menu__profile {
+  border-radius: 3.82px 38.82px 3.82px 3.82px;
+  width: clamp(2rem, 2.466rem, 100%);
+  aspect-ratio: 0.8/1;
+}
