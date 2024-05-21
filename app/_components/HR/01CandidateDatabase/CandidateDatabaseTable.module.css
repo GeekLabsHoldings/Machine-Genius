@@ -111,7 +111,7 @@
 .table .table_body ul:hover li {
   color: var(--white);
   /* font-weight: 700; */
-  text-wrap: wrap;
+  /* text-wrap: wrap; */ /* not supposed to be in hover */
 }
 
 .table .table_body ul li {
