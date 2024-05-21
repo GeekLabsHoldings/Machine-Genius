@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Dropdown.module.css";
 
 interface DropdownProps {
   title: string;
   items: string[];
 }
-
 /**
  * Dropdown component that displays a dropdown menu with a title and a list of items.
  *
@@ -19,21 +18,11 @@ interface DropdownProps {
 function Dropdown({ title, items }: DropdownProps) {
   const [open, setOpen] = useState(false);
 
-  // Close the dropdown when clicking outside of it
-  const handelOnOutsideClick = (e: any) => {
-    if (e.target.closest(`.dropdown__button`)) return;
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handelOnOutsideClick);
-    return () => {
-      document.removeEventListener("click", handelOnOutsideClick);
-    };
-  }, []);
 
   return (
-    <div className={`relative inline-block text-left ${styles.dropdown}`}>
+    <div className={`relative inline-block text-left ${styles.dropdown}`}
+      onMouseLeave={() => setOpen(false)}
+      >
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center w-full justify-between px-4 py-2 border [border-color:var(--dark)] rounded-[5px] dropdown__button"
@@ -52,12 +41,11 @@ function Dropdown({ title, items }: DropdownProps) {
         </svg>
       </button>
       <div
-        className={`absolute w-full mt-2 bg-white rounded-[10px] p-2 transform ${
+        className={`absolute w-full bg-white rounded-[10px] transform ${
           open
             ? "opacity-100 z-10 translate-y-0"
             : "opacity-0 -z-10 invisible -translate-y-16"
         } overflow-clip ${styles.dropdown__items__container}`}
-        onMouseLeave={() => setOpen(false)}
       >
         <div className="">
           <div
@@ -65,16 +53,18 @@ function Dropdown({ title, items }: DropdownProps) {
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="options-menu"
-          >
+            >
             {items.map((item, index) => (
               <a
-                key={index}
-                href="#"
-                className={`block px-4 py-2 text-sm [text-color:var(--dark)] font-bold
-                 hover:bg-gray-100 hover:text-gray-900 ${styles.dropdown__item}`}
-                role="menuitem"
+              key={index}
+              href="#"
+              className={`block py-2 w-full text-sm [text-color:var(--dark)] 
+              hover:[background-color:var(--orange)]
+               hover:text-gray-100 ${styles.dropdown__item}`}
+              role="menuitem"
+              onClick={() => setOpen(false)}
               >
-                {item}
+                <span className="block px-4">{item}</span>
               </a>
             ))}
           </div>
