@@ -16,7 +16,7 @@ export default function page() {
       {/* filters options to filter and edit data in table */}
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader my-[25px]`}>
         <div className="flex justify-between items-end">
-          <div className={`${styles.videoDatabasePage} w-8/12 flex items-end gap-[1vw]`}>
+          <div className={`${styles.ticketingPage} w-8/12 flex items-end gap-[1vw]`}>
             <div className="flex flex-col w-1/4 gap-[0.3vw]">
               <h5>Ticket Type</h5>
               <CustomSelectInput label="All" options={ticketTypeOptions} />
