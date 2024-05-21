@@ -8,16 +8,37 @@
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.chat__chat__aside__menu__item:not(:last-child) {
-  border-bottom: 1px solid #dbdbd7;
+.chat__chat__aside__menu__item:not(:is(:first-child)) > div {
+  border-top: 1px solid #dbdbd7;
 }
 
-.chat__chat__aside__menu__item:not(:first-child) {
-  border-top: 1px solid #dbdbd7;
+.chat__chat__aside__menu__item > div:not(:first-child) {
 }
 
 .chat__chat__aside__menu__profile {
   border-radius: 3.82px 38.82px 3.82px 3.82px;
   width: clamp(2rem, 2.466rem, 100%);
   aspect-ratio: 0.8/1;
+}
+
+.chat__chat__aside__menu ul {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.chat__chat__aside__menu ul::-webkit-scrollbar {
+  display: none;
+}
+
+.chat__chat__aside__menu__item {
+  /* transition: all 0s;
+  -webkit-transition: all 0s;
+  -moz-transition: all 0s;
+  -ms-transition: all 0s;
+  -o-transition: all 0s; */
+} 
+
+.chat__chat__aside__menu__item:hover {
+  color: var(--white);
+  background-color: var(--dark);
 }
