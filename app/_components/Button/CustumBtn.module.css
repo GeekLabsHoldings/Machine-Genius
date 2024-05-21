@@ -8,10 +8,7 @@
     border: 1px solid #2A2B2A;
     transition: all 0.3s;
     display: block;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
+    overflow: hidden;
 }
 .whiteBtn:hover{
     background-color: #2A2B2A;
@@ -28,6 +25,7 @@
     border: 1px solid #2A2B2A;
     transition: all 0.3s;
     display: block;
+    overflow: hidden;
 }
 .blackBtn svg path{
     fill: #FFFFFB;

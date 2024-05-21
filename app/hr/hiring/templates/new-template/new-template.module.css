@@ -135,6 +135,7 @@
 
 .card.editable .card_body>a {
     display: block;
+    z-index: 3;
 }
 
 
