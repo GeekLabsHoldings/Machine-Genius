@@ -205,3 +205,17 @@ img{
 .fillBtn:hover svg path {
   fill: #2A2B2A;
 }
+
+/* edit calendar in boards  */
+.board-add-calendar-card .css-1rtg91x-MuiDateCalendar-root {
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+}
+
+
+.board-add-calendar-card {
+  box-shadow: 0.7px 2.09px 4.61px 0px #00000026;
+  border: 0.7px solid #DFDFDF;
+
+}
