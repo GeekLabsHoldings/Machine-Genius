@@ -139,46 +139,38 @@ export default function CandidateDatabaseTable() {
   return (
     <div className={`${styles.tableContainer} h-[65vh]`}>
       {/* Start Table */}
-      <div className={styles.table + " max-w-full overflow-auto"}>
+      <div className={styles.table + " max-w-full"}>
         {/* Table Header */}
         <ul className={styles.table_header}>
           <li className="w-[20%]">
-            <span>First Name</span>
+            <span>Content Name</span>
           </li>
           <li className="w-[20%]">
-            <span>Last Name</span>
+            <span>Date Published</span>
           </li>
           <li className="w-[20%]">
-            <span>Mobile Number</span>
-          </li>
-          <li className="w-[30%]">
-            <span>Email</span>
-          </li>
-          <li className="w-[30%]">
-            <span>LinkedIn</span>
+            <span>Posts</span>
           </li>
           <li className="w-[20%]">
-            <span>Role</span>
+            <span>Status</span>
           </li>
           <li className="w-[20%]">
-            <span>CV</span>
+            <span>Date Published</span>
           </li>
           <li className="w-[20%]">
-            <span>Port</span>
-          </li>
-
-          {/* test */}
-          <li className="w-[20%]">
-            <span>LinkedIn</span>
+            <span>Posts</span>
           </li>
           <li className="w-[20%]">
-            <span>Role</span>
+            <span>Status</span>
           </li>
           <li className="w-[20%]">
-            <span>CV</span>
+            <span>Date Published</span>
           </li>
           <li className="w-[20%]">
-            <span>Port</span>
+            <span>Posts</span>
+          </li>
+          <li className="w-[20%]">
+            <span>Status</span>
           </li>
         </ul>
 
@@ -186,19 +178,36 @@ export default function CandidateDatabaseTable() {
         <div className={styles.table_body}>
           {bodyRow.map((e, idx) => (
             <ul key={idx}>
-              <li className="w-[20%]">{e.firstName}</li>
-              <li className="w-[20%]">{e.lastName}</li>
-              <li className="w-[20%]">{e.mobile}</li>
-              <li className="w-[30%]">{e.email}</li>
-              <li className="w-[30%]">{e.linkedin}</li>
-              <li className="w-[20%]">{e.role}</li>
-              <li className="w-[20%]">{e.cv}</li>
-              <li className="w-[20%]">{e.port}</li>
-              {/* test */}
-              <li className="w-[20%]">{e.linkedin}</li>
-              <li className="w-[20%]">{e.role}</li>
-              <li className="w-[20%]">{e.cv}</li>
-              <li className="w-[20%]">{e.port}</li>
+              <li className="w-[20%]">
+                <span>Content Name</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Date Published</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Posts</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Status</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Date Published</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Posts</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Status</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Date Published</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Posts</span>
+              </li>
+              <li className="w-[20%]">
+                <span>Status</span>
+              </li>
             </ul>
           ))}
         </div>
