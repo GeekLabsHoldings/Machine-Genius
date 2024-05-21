@@ -1,4 +1,5 @@
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
+import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/customer-service/chat/chat.module.css";
 
 const messages = [
@@ -9,7 +10,7 @@ const messages = [
   },
   {
     name: "John Doe",
-    message: "Hello, how can I help you today?",
+    message: "Hello, how can I help you today? lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     time: "12:00 PM",
   },
   {
@@ -60,10 +61,10 @@ function page() {
             placeholder="Search"
             className="w-full h-min border [border-color:var(--dark)] rounded-[5px] text-sm placeholder:[color:var(--dark)] py-2 px-4 "
           />
-          <ul className="flex flex-col h-[90%] overflow-scroll border-y [border-color:#DBDBD7] mt-5 w-full">
+          <ul className="flex flex-col max-h-[90%] overflow-scroll border-y [border-color:#DBDBD7] mt-5 w-full">
             {messages.map((message, index) => (
               <li
-                className={`flex items-center py-[23px] px=[27px] gap-5 ${styles.chat__chat__aside__menu__item}`}
+                className={`flex py-[23px] px=[27px] gap-5 cursor-pointer ${styles.chat__chat__aside__menu__item}`}
                 key={index}
               >
                 <div
@@ -71,9 +72,9 @@ function page() {
                 >
                   {/* <img src="/images/profile.png" alt="profile" /> */}
                 </div>
-                <div>
-                  <h3 className="font-semibold">{message.name}</h3>
-                  <p className="text-sm">{message.message}</p>
+                <div className="flex flex-col justify-center gap-1">
+                  <h3 className="font-bold text-xl">{message.name}</h3>
+                  <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis max-w-96">{truncateText(message.message, 40)}</p>
                 </div>
               </li>
             ))}
