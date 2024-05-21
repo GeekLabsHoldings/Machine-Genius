@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import styles from "./CandidateDatabaseTable.module.css";
+import { truncateText } from "../../../_utils/text";
+import Link from "next/link";
 
 export default function CandidateDatabaseTable() {
   const bodyRow = [
@@ -191,13 +193,17 @@ export default function CandidateDatabaseTable() {
                 <span>{e.email}</span>
               </li>
               <li className="w-[20%]">
-                <span>{e.linkedin}</span>
+                <Link href={e.linkedin} target="_blank">
+                  <span>{truncateText(e.linkedin, 20)}</span>
+                </Link>
               </li>
               <li className="w-[20%]">
                 <span>{e.role}</span>
               </li>
               <li className="w-[20%]">
-                <span>{e.cv}</span>
+                <Link href="#" target="_blank">
+                  <span>{e.cv}</span>
+                </Link>
               </li>
               <li className="w-[20%]">
                 <span>{e.port}</span>
