@@ -1,6 +1,6 @@
 "use client";
 import CandidateDatabaseTable from "@/app/_components/HR/01CandidateDatabase/CandidateDatabaseTable";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./candidate-database.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
@@ -15,8 +15,8 @@ export default function page() {
     "Front End Dev",
   ];
 
-    const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
-    const [fillColorRight, setFillColorRight] = useState("#2A2B2A");
+  const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
+  const [fillColorRight, setFillColorRight] = useState("#2A2B2A");
 
   const leftArrow = (
     <svg
@@ -52,17 +52,10 @@ export default function page() {
     </svg>
   );
 
-
   function slideRight() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
-      if (table.scrollLeft + table.clientWidth >= table.scrollWidth) {
-        console.log("You can't slide right anymore");
-        setFillColorLeft("#2A2B2A");
-        setFillColorRight("#D9D9D9");
-      } else {
-        table.scrollLeft += 150;
-      }
+      table.scrollLeft += 150;
     } else {
       console.error("Failed to find table with ID 'table'");
     }
@@ -71,19 +64,38 @@ export default function page() {
   function slideLeft() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
-      if (table.scrollLeft <= 0) {
-        console.log("You can't slide left anymore");
-        setFillColorLeft("#D9D9D9");
-        setFillColorRight("#2A2B2A");
-      } else {
-        table.scrollLeft -= 150;  // Or use a dynamic value as previously discussed
-      }
+      table.scrollLeft -= 150;
     } else {
       console.error("Failed to find table with ID 'table'");
     }
   }
 
+  function updateFillColor() {
+    const table = document.getElementById("table") as HTMLTableElement | null;
+    if (table) {
+      // Check if the user can slide right (i.e., not at the far right)
+      if (table.scrollLeft + table.clientWidth < table.scrollWidth) {
+        setFillColorRight("#2A2B2A"); // Enable right arrow
+      } else {
+        setFillColorRight("#D9D9D9"); // Disable right arrow
+      }
 
+      // Check if the user can slide left (i.e., not at the far left)
+      if (table.scrollLeft > 0) {
+        setFillColorLeft("#2A2B2A"); // Enable left arrow
+      } else {
+        setFillColorLeft("#D9D9D9"); // Disable left arrow
+      }
+    }
+  }
+
+  useEffect(() => {
+    const table = document.getElementById("table") as HTMLTableElement | null;
+    table?.addEventListener("scroll", updateFillColor);
+    return () => {
+      table?.removeEventListener("scroll", updateFillColor);
+    };
+  }, []);
 
   return (
     <>
@@ -105,8 +117,22 @@ export default function page() {
 
             {/* BUTTON HERE */}
             <div className="flex gap-2">
-              <div className="cursor-pointer" onClick={()=>{slideLeft()}}>{leftArrow}</div>
-              <div className="cursor-pointer" onClick={()=>{slideRight()}}>{rightArrow}</div>
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  slideLeft();
+                }}
+              >
+                {leftArrow}
+              </div>
+              <div
+                className="cursor-pointer"
+                onClick={() => {
+                  slideRight();
+                }}
+              >
+                {rightArrow}
+              </div>
             </div>
           </div>
         </div>
