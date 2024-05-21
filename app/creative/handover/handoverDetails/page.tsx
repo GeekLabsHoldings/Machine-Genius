@@ -43,7 +43,7 @@ const page = () => {
                 className=" placeholder:text-[0.729vw] placeholder:text-[#1E4AE5] border-b-[1px] border-[var(--dark)] px-[0.938vw] py-[0.625vw] w-[20.677vw] mb-[1.5vw]"
               />
               <svg
-              className=" absolute right-3 top-1/4"
+              className=" absolute right-3 top-1/4 -translate-y-1/4"
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
@@ -68,7 +68,7 @@ const page = () => {
                 className=" placeholder:text-[0.729vw] placeholder:text-[#1E4AE5] border-b-[1px] border-[var(--dark)] px-[0.938vw] py-[0.625vw] w-[20.677vw] mb-[1.5vw]"
               />
               <svg
-              className=" absolute right-3 top-1/4"
+              className=" absolute right-3 top-1/4 -translate-y-1/4"
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
@@ -93,7 +93,7 @@ const page = () => {
                 className=" placeholder:text-[0.729vw] placeholder:text-[#1E4AE5] border-b-[1px] border-[var(--dark)] px-[0.938vw] py-[0.625vw] w-[20.677vw] mb-[1.5vw]"
               />
               <svg
-              className=" absolute right-3 top-1/4"
+              className=" absolute right-3 top-1/4 -translate-y-1/4"
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
