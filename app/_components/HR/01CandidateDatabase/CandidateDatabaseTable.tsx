@@ -22,6 +22,26 @@ export default function CandidateDatabaseTable() {
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
       linkedin: "https://www.linkedin.com/jogndoe",
+      role: "Video Editor",
+      cv: "JohnDoeID.pdf",
+      port: "loream ipsum",
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      mobile: "+0202123456789",
+      email: "johndoe@gmail.com",
+      linkedin: "https://www.linkedin.com/jogndoe",
+      role: "Video Editor",
+      cv: "JohnDoeID.pdf",
+      port: "loream ipsum",
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      mobile: "+0202123456789",
+      email: "johndoe@gmail.com",
+      linkedin: "https://www.linkedin.com/jogndoe",
       role: "Graphic Designer",
       cv: "JohnDoeID.pdf",
       port: "loream ipsum",
@@ -53,6 +73,36 @@ export default function CandidateDatabaseTable() {
       email: "johndoe@gmail.com",
       linkedin: "https://www.linkedin.com/jogndoe",
       role: "Front End Dev",
+      cv: "JohnDoeID.pdf",
+      port: "loream ipsum",
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      mobile: "+0202123456789",
+      email: "johndoe@gmail.com",
+      linkedin: "https://www.linkedin.com/jogndoe",
+      role: "Video Editor",
+      cv: "JohnDoeID.pdf",
+      port: "loream ipsum",
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      mobile: "+0202123456789",
+      email: "johndoe@gmail.com",
+      linkedin: "https://www.linkedin.com/jogndoe",
+      role: "Video Editor",
+      cv: "JohnDoeID.pdf",
+      port: "loream ipsum",
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      mobile: "+0202123456789",
+      email: "johndoe@gmail.com",
+      linkedin: "https://www.linkedin.com/jogndoe",
+      role: "Video Editor",
       cv: "JohnDoeID.pdf",
       port: "loream ipsum",
     },
@@ -139,7 +189,7 @@ export default function CandidateDatabaseTable() {
   ];
 
   return (
-    <div className={`${styles.tableContainer} h-[65vh]`}>
+    <div className={`${styles.tableContainer} h-[72vh]`}>
       {/* Start Table */}
       <div className={styles.table + " max-w-full"} id="table">
         {/* Table Header */}
