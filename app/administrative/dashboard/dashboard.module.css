@@ -140,8 +140,8 @@
     width: clamp(160px, calc(15vw + 0.1rem), 800px);
 }
 .animated svg{
-    width:  clamp(56px, calc(9vw + 0.1rem),140px);
-    height:  clamp(56px, calc(10vw + 0.1rem),140px);
+    width: clamp(56px, calc(7vw + 0.1rem), 1400px);
+    height: clamp(56px, calc(7vw + 0.1rem), 1400px);
     animation-name: spin;
     animation-duration: 5000ms;
     animation-iteration-count: infinite;

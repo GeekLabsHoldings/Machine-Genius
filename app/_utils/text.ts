@@ -6,5 +6,5 @@
  * @returns {string} The truncated text with an ellipsis at the end.
  */
 export function truncateText(text: string, length: number): string {
-  return text.slice(0, length) + "...";
+  return text.length > length ? text.slice(0, length) + " ..." : text;
 }

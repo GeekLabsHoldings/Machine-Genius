@@ -14,7 +14,7 @@ interface IProps {
   btnWord: string; // Button text.
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
-  modalTitle: string; // Modal title text.
+  modalTitle?: string; // Modal title text.
   forWhat: string; //Purpose of the modal
 }
 
@@ -25,6 +25,7 @@ export default function BasicModal({
   modalTitle,
   forWhat,
 }: IProps) {
+  
   // State for controlling the modal open/close state
   const [open, setOpen] = React.useState(false);
     // Function to handle modal open.

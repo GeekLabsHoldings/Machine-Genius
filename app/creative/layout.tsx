@@ -36,6 +36,14 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
     </svg>
     },
     {
+      name: "Tasks", path: "/creative/tasks", icon: <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
+      <rect width="9.44373" height="9.01447" rx="1" fill="#FFFFFB"/>
+      <rect y="11.9863" width="9.44373" height="9.01447" rx="1" fill="#FFFFFB"/>
+      <rect x="12.5547" width="9.44373" height="9.01447" rx="1" fill="#FFFFFB"/>
+      <rect x="12.5547" y="11.9863" width="9.44373" height="9.01447" rx="1" fill="#FFFFFB"/>
+    </svg>
+    },
+    {
       name: "Calendar", path: "/creative/calendar", icon: <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M12.375 14H14.4375V4.2H12.375V14ZM20.625 0L15.8125 3.26689V14.9331L20.625 18.2C21.384 18.2 22 17.5728 22 16.8V1.4C22 0.6272 21.384 0 20.625 0ZM0 9.1C0 11.7131 1.76069 13.4036 4.13806 13.867L4.125 14V19.6C4.125 20.3728 4.741 21 5.5 21H7.5625C8.3215 21 8.9375 20.3728 8.9375 19.6V14H11V4.2H5.5C2.46262 4.2 0 6.0074 0 9.1Z" fill="#FFFFFB"/>
     </svg>

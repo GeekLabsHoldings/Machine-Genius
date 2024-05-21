@@ -45,7 +45,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -55,7 +55,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -65,7 +65,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -106,7 +106,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -116,7 +116,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
             </div>
@@ -143,7 +143,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -153,7 +153,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -163,7 +163,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
             </div>
@@ -190,7 +190,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -200,7 +200,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -210,7 +210,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
             </div>
@@ -235,7 +235,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -245,7 +245,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -255,7 +255,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
               <div className={styles.item}>
@@ -265,7 +265,7 @@ const page = () => {
                 </div>
                 <div className={styles.item_body}>
                   <div className={styles.line}></div>
-                  <CustomBtn btnColor='black' word='View Template' width='w-full' />
+                  <CustomBtn btnColor='black' word='View Template' width='w-full' href='/hr/hiring/templates/view-template'/>
                 </div>
               </div>
 

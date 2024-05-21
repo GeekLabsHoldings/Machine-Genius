@@ -1,8 +1,9 @@
 .dropdown {
-  width: clamp(5rem, 17.188rem, 100%);
+  width: clamp(7rem, 100%, 100%);
 }
 
 .dropdown__items__container {
+  width: 100%;
   box-shadow: 0px 4px 4px 0px #00000040;
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
