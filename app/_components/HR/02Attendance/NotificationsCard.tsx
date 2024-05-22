@@ -8,8 +8,8 @@ interface IProps{
 
 export default function NotificationsCard(props:IProps) {
   return (
-    <div className={`w-[229px] rounded-[11px] border border-[#2A2B2A] py-[20px] px-[25px] bg-[${props.bgColor}]`}>
-        <div className="flex flex-col gap-[15px]">
+    <div className={`w-full rounded-[11px] border border-[#2A2B2A] py-[15px] px-[25px] ${props.bgColor}`}>
+        <div className="flex flex-col gap-[10px]">
             <p className='font-bold'>John Doe</p>
             <div className='flex justify-between'>
                 <div>

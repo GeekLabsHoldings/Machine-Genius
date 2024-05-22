@@ -1,12 +1,12 @@
 "use client";
-import AttendanceTable from '@/app/_components/HR/02Attendance/AttendanceTable';
-import NotificationsCard from '@/app/_components/HR/02Attendance/NotificationsCard';
+// import AttendanceTable from '@/app/_components/HR/02Attendance/AttendanceTable';
+import NotificationsGrid from '@/app/_components/HR/02Attendance/NotificationsGrid';
 import React from 'react';
 
 
 export default function page() {
   return (
     // <AttendanceTable />
-    <NotificationsCard />
+    <NotificationsGrid />
   )
 }
