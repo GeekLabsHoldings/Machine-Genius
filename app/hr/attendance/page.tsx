@@ -1,6 +1,6 @@
 "use client";
 // import AttendanceTable from '@/app/_components/HR/02Attendance/AttendanceTable';
-import NotificationsGrid from '@/app/_components/HR/02Attendance/NotificationsGrid';
+import NotificationsGrid from '@/app/_components/HR/02Attendance/NotificationsAttendanceGrid';
 import React from 'react';
 
 

@@ -1,0 +1,22 @@
+.NotificationsCard {
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  height: 6vw;
+}
+
+.NotificationsCard:hover {
+  height: 8.5vw;
+}
+
+.NotificationsCard .NotificationsCardBtn {
+  height: 0;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  transform: translateY(100%);
+}
+
+.NotificationsCard:hover .NotificationsCardBtn {
+  height: auto;
+  overflow: visible;
+  transform: translateY(0%);
+}
