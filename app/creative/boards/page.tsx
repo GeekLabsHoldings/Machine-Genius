@@ -1,11 +1,13 @@
-"use client";
-import React, { useRef, useState } from "react";
-import styles from "./boards.module.css";
-import Slider from "react-slick";
-import Link from "next/link";
-import QuarterCircles from '@/app/_components/QuarterCircles/QuarterCircles';
-import CustomBtn from "@/app/_components/Button/CustomBtn";
+"use client"; // Next.js directive to enable client-side rendering
 
+import React, { useRef, useState } from "react";
+import styles from "./boards.module.css"; // Importing CSS module for styling
+import Slider from "react-slick"; // Importing Slider component from react-slick
+import Link from "next/link"; // Next.js Link component for client-side navigation
+import QuarterCircles from '@/app/_components/QuarterCircles/QuarterCircles'; // Custom component import
+import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom button component import
+
+// Interface defining the properties for the Arrow component
 interface ArrowProps {
   className?: string;
   style?: React.CSSProperties;
@@ -13,36 +15,37 @@ interface ArrowProps {
 }
 
 const page = () => {
- const btnRef = useRef<any>(null)
+  // References to HTML elements and components
+  const btnRef = useRef<any>(null); // Reference for the button element
+  const sliderRef = useRef<Slider>(null); // Reference for the slider component
 
- const [top,setTop] = useState(0)
- const [left,setLeft] = useState(0)
-  
+  // State variables to track the position of the button
+  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(0);
 
-  // const fillBtn = document.querySelector(".fillBtn");
-  
-  const sliderRef = useRef<Slider>(null);
+  // Variable to track the current position of the slider
   let position = 0;
 
+  // Function to navigate to the next slide in the slider
   const next = () => {
     if (sliderRef.current) {
       position++;
-      sliderRef.current.slickNext();
-      console.log(sliderRef.current);
-      
+      sliderRef.current.slickNext(); // Move to the next slide
+      console.log(sliderRef.current); // Log the current state of the slider
     }
   };
 
+  // Function to navigate to the previous slide in the slider
   const previous = () => {
     if (sliderRef.current) {
-      if (position !== 0 ) {
-        sliderRef.current.slickPrev();
+      if (position !== 0) {
+        sliderRef.current.slickPrev(); // Move to the previous slide
         position--;
       }
     }
   };
- 
 
+  // Data for the projects to be displayed in the slider
 
   const project = [
     {
@@ -244,25 +247,35 @@ const page = () => {
   };
   return (
     <>
+      {/* Container for the boards */}
       <div className={`${styles.boards} boards w-full`}>
+        {/* Section for displaying members */}
         <div className=" flex justify-between my-[1vw]">
           <h3>All Projects</h3>
+          {/* Container for member icons */}
           <div
             className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
           >
+            {/* Text indicating the number of members */}
             <p className=" text-white text-[0.568vw] font-medium me-2">
               Members (4)
             </p>{" "}
+            {/* Member icons */}
             <div className=" flex items-center">
               <QuarterCircles color={"#EAD787"} translate={0} /> <QuarterCircles color={"#6FC9EE"} translate={-40}/>  <QuarterCircles color={"#8DC189"} translate={-80}/>  <QuarterCircles color={"#F06F77"} translate={-120}/> {" "}
             </div>{" "}
+            {/* Empty div */}
             <div></div>
           </div>
         </div>
+        
+        {/* Section for current projects */}
         <div className=" flex justify-between items-center">
           {" "}
+          {/* Container for project title and navigation buttons */}
           <div className=" flex justify-between gap-2 items-center mb-[1.3vh]">
             <h4>Current Projects</h4>{" "}
+            {/* Navigation buttons */}
             <div className=" flex items-center gap-2">
               <svg
               onClick={()=>{previous()}}
@@ -273,6 +286,7 @@ const page = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 className=" cursor-pointer"
               >
+                {/* SVG path for previous button */}
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -290,6 +304,7 @@ const page = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 className=" cursor-pointer"
               >
+                {/* SVG path for next button */}
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -299,6 +314,7 @@ const page = () => {
               </svg>
             </div>
           </div>{" "}
+          {/* Link to view all archived projects */}
           <Link
             href="/creative/boards/archivedProjects"
             className="text-[#595958] underline border-[#595958] text-[16px]"
@@ -306,6 +322,8 @@ const page = () => {
             View All Archived Projects
           </Link>
         </div>
+
+        {/* Container for project slider */}
 
         <div className="slider-container py-[1vh]">
           <Slider ref={sliderRef} {...settings}>

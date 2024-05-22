@@ -240,67 +240,77 @@ const page = () => {
   return (
     <>
       <div className={`${styles.handover} boards w-full`}>
-        <div className=" flex justify-between my-[1vw]">
-          <h3>All Projects</h3>
-          <div
-            className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
-          >
-            <p className=" text-white text-[0.568vw] font-medium me-2">
-              Members (4)
-            </p>{" "}
-            <div className=" flex items-center">
-              <QuarterCircles color={"#EAD787"} translate={0} /> <QuarterCircles color={"#6FC9EE"} translate={-40}/>  <QuarterCircles color={"#8DC189"} translate={-80}/>  <QuarterCircles color={"#F06F77"} translate={-120}/> {" "}
-            </div>{" "}
-            <div></div>
-          </div>
-        </div>
-        <div className=" flex justify-between items-center">
-          {" "}
-          <div className=" flex justify-between gap-2 items-center mb-[1.3vh]">
-            <h4>Current Projects</h4>{" "}
-            <div className=" flex items-center gap-2">
-              <svg
-              onClick={()=>{previous()}}
-                width="29"
-                height="28"
-                viewBox="0 0 29 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className=" cursor-pointer"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M14.3587 19.7181C14.7009 19.3768 14.7009 18.823 14.3587 18.4808L10.7529 14.875L20.0156 14.875C20.4969 14.875 20.8906 14.483 20.8906 14C20.8906 13.5161 20.4969 13.125 20.0156 13.125L10.7529 13.125L14.3587 9.51915C14.7009 9.17702 14.7009 8.62227 14.3587 8.2819C14.0184 7.93977 13.4636 7.93977 13.1215 8.2819L8.17252 13.2308C7.96252 13.4408 7.89689 13.7279 7.94502 14C7.89689 14.2721 7.96252 14.5591 8.17252 14.7691L13.1215 19.7181C13.4636 20.0602 14.0184 20.0602 14.3587 19.7181ZM0.765626 24.5L0.765625 3.5C0.765625 1.56712 2.33275 -6.85012e-08 4.26562 -1.5299e-07L25.2656 -1.07093e-06C27.1994 -1.15546e-06 28.7656 1.56712 28.7656 3.5L28.7656 24.5C28.7656 26.4329 27.1994 28 25.2656 28L4.26563 28C2.33275 28 0.765626 26.4329 0.765626 24.5Z"
-                  fill="#D9D9D9"
-                />
-              </svg>
+      <div className=" flex justify-between my-[1vw]">
+  {/* Title: All Projects */}
+  <h3>All Projects</h3>
+  <div
+    className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
+  >
+    {/* Number of members */}
+    <p className=" text-white text-[0.568vw] font-medium me-2">
+      Members (4)
+    </p>{" "}
+    {/* Quarter Circles representing member avatars */}
+    <div className=" flex items-center">
+      <QuarterCircles color={"#EAD787"} translate={0} /> <QuarterCircles color={"#6FC9EE"} translate={-40}/>  <QuarterCircles color={"#8DC189"} translate={-80}/>  <QuarterCircles color={"#F06F77"} translate={-120}/> {" "}
+    </div>{" "}
+  </div>
+</div>
+<div className=" flex justify-between items-center">
+  {/* Flex container for title and navigation */}
+  {" "}
+  {/* Flex container for title and navigation */}
+  <div className=" flex justify-between gap-2 items-center mb-[1.3vh]">
+    {/* Title: Current Projects */}
+    <h4>Current Projects</h4>{" "}
+    {/* Navigation arrows */}
+    <div className=" flex items-center gap-2">
+      <svg
+      onClick={()=>{previous()}}
+        width="29"
+        height="28"
+        viewBox="0 0 29 28"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className=" cursor-pointer"
+      >
+        {/* Arrow icon */}
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M14.3587 19.7181C14.7009 19.3768 14.7009 18.823 14.3587 18.4808L10.7529 14.875L20.0156 14.875C20.4969 14.875 20.8906 14.483 20.8906 14C20.8906 13.5161 20.4969 13.125 20.0156 13.125L10.7529 13.125L14.3587 9.51915C14.7009 9.17702 14.7009 8.62227 14.3587 8.2819C14.0184 7.93977 13.4636 7.93977 13.1215 8.2819L8.17252 13.2308C7.96252 13.4408 7.89689 13.7279 7.94502 14C7.89689 14.2721 7.96252 14.5591 8.17252 14.7691L13.1215 19.7181C13.4636 20.0602 14.0184 20.0602 14.3587 19.7181ZM0.765626 24.5L0.765625 3.5C0.765625 1.56712 2.33275 -6.85012e-08 4.26562 -1.5299e-07L25.2656 -1.07093e-06C27.1994 -1.15546e-06 28.7656 1.56712 28.7656 3.5L28.7656 24.5C28.7656 26.4329 27.1994 28 25.2656 28L4.26563 28C2.33275 28 0.765626 26.4329 0.765626 24.5Z"
+          fill="#D9D9D9"
+        />
+      </svg>
 
-              <svg
-              onClick={()=>next()}
-                width="28"
-                height="28"
-                viewBox="0 0 29 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className=" cursor-pointer"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M14.6413 19.7181C14.2991 19.3768 14.2991 18.823 14.6413 18.4808L18.2471 14.875L8.98438 14.875C8.50313 14.875 8.10938 14.483 8.10938 14C8.10938 13.5161 8.50313 13.125 8.98438 13.125L18.2471 13.125L14.6413 9.51915C14.2991 9.17702 14.2991 8.62227 14.6413 8.2819C14.9816 7.93977 15.5364 7.93977 15.8785 8.2819L20.8275 13.2308C21.0375 13.4408 21.1031 13.7279 21.055 14C21.1031 14.2721 21.0375 14.5591 20.8275 14.7691L15.8785 19.7181C15.5364 20.0602 14.9816 20.0602 14.6413 19.7181ZM28.2344 24.5L28.2344 3.5C28.2344 1.56712 26.6673 -6.85012e-08 24.7344 -1.5299e-07L3.73438 -1.07093e-06C1.80063 -1.15546e-06 0.234377 1.56712 0.234377 3.5L0.234376 24.5C0.234376 26.4329 1.80063 28 3.73438 28L24.7344 28C26.6672 28 28.2344 26.4329 28.2344 24.5Z"
-                  fill="#2A2B2A"
-                />
-              </svg>
-            </div>
-          </div>{" "}
-          <Link
-            href=""
-            className="text-[#595958] underline border-[#595958] text-[16px]"
-          >
-            View All Archived Projects
-          </Link>
-        </div>
+      <svg
+      onClick={()=>next()}
+        width="28"
+        height="28"
+        viewBox="0 0 29 28"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className=" cursor-pointer"
+      >
+        {/* Arrow icon */}
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M14.6413 19.7181C14.2991 19.3768 14.2991 18.823 14.6413 18.4808L18.2471 14.875L8.98438 14.875C8.50313 14.875 8.10938 14.483 8.10938 14C8.10938 13.5161 8.50313 13.125 8.98438 13.125L18.2471 13.125L14.6413 9.51915C14.2991 9.17702 14.2991 8.62227 14.6413 8.2819C14.9816 7.93977 15.5364 7.93977 15.8785 8.2819L20.8275 13.2308C21.0375 13.4408 21.1031 13.7279 21.055 14C21.1031 14.2721 21.0375 14.5591 20.8275 14.7691L15.8785 19.7181C15.5364 20.0602 14.9816 20.0602 14.6413 19.7181ZM28.2344 24.5L28.2344 3.5C28.2344 1.56712 26.6673 -6.85012e-08 24.7344 -1.5299e-07L3.73438 -1.07093e-06C1.80063 -1.15546e-06 0.234377 1.56712 0.234377 3.5L0.234376 24.5C0.234376 26.4329 1.80063 28 3.73438 28L24.7344 28C26.6672 28 28.2344 26.4329 28.2344 24.5Z"
+          fill="#2A2B2A"
+        />
+      </svg>
+    </div>
+  </div>{" "}
+  {/* View All Archived Projects link */}
+  <Link
+    href=""
+    className="text-[#595958] underline border-[#595958] text-[16px]"
+  >
+    View All Archived Projects
+  </Link>
+</div>
+
 
         <div className="slider-container py-[1vh]">
           <Slider ref={sliderRef} {...settings}>

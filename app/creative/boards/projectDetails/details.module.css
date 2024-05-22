@@ -43,3 +43,13 @@
     box-shadow: 1px 7px 7.4px 2px #00000033;
 
 }
+#myDateInput1:focus-visible, #myDateInput1:focus-within, #myDateInput1:focus {
+    border: 0 !important;
+    outline: 0 !important;
+    outline-offset: 0 !important;
+    transition: none !important;
+}
+
+.details .overlay {
+    border-top-left-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 1000px);
+}

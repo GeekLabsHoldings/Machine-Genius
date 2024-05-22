@@ -133,14 +133,17 @@ export default function VideoDatabaseTable() {
       <div className=" flex items-center justify-between">
         <div className=" flex gap-[0.938vw]">
           <div className="mb-[3vh]">
+            {/* Staff Member */}
             <h5 className=" mb-[1vh] font-semibold">Staff Member</h5>
             <div className="w-[11.927vw]">
+              {/* CustomSelectInput for staff members */}
             <CustomSelectInput options={["All",...bodyRow.map((e,i)=>e.assignedTo)]} />
             </div>
           </div>
           <div className="mb-[3vh]">
             <h5 className=" mb-[1vh] font-semibold">Projects</h5>
             <div className="w-[11.927vw]">
+              {/* CustomSelectInput for projects */}
             <CustomSelectInput options={["All",...bodyRow.map((e,i)=>e.project)]} />
             </div>
           </div>
@@ -165,6 +168,7 @@ export default function VideoDatabaseTable() {
             </div>
           </div>
         </div>
+        {/* Button to create a new task */}
         <CustomBtn
           word="Create New Task"
           btnColor="black"

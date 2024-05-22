@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CustomSelectInput from '../CustomSelectInput/CustomSelectInput'
 import { useRouter } from 'next/navigation'
+import $ from "jquery";
 
 
 const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fill="none">
@@ -29,7 +30,8 @@ const rols = [
     'Administrative',
     'Customer Service',
     'Creative',
-    'HR'
+    'HR',
+    'Acounting'
 ]
 
 
@@ -52,6 +54,10 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
     }
 
 
+    $(`.${styles.has_sub_menu}`).on("click" , (e)=>{
+        console.log(e.target);
+    })
+
     useEffect(() => {
         if (SelectedRole === 'Content Creator') {
             router.push('/content-creator/dashboard')
@@ -67,6 +73,8 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/creative/dashboard')
         } else if (SelectedRole === 'HR') {
             router.push('/hr/dashboard')
+        } else if (SelectedRole === 'Acounting') {
+            router.push('/acounting/dashboard')
         }
     }, [SelectedRole])
 

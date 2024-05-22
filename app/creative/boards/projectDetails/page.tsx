@@ -6,29 +6,61 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 const page = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [dateCalendar,setDateCalendar] = useState("")
-  // var dateInputNew = document.getElementById("myDateInput") as HTMLInputElement;
+  const router = useRouter();
 
+  const [startDate,setStartDate] = useState("2024-04-04")
+  const [dueDate,setDueDate] = useState("2024-04-04")
+  const [counter,setCounter] = useState(0)
+
+  // handle change in date input
+
+  function handleDateInput(e:any) {
+    setCounter((prev:number)=>prev+1)
+    
+    if (counter % 2 == 0 ) {      
+      setStartDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
+    console.log(counter);
+
+    } else if (counter % 2 != 0 ) {
+      setDueDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
+    console.log(counter);
+
+    }
+  }
+
+  // State for handling modal visibility and date selection
+  const [isOpen, setIsOpen] = useState(false);
+
+  // State for managing list of tasks
   const [checkListData, setCheckListData] = useState([
     "15 mins call with client",
     "15 mins call with client",
     "15 mins call with client",
   ]);
 
+  // State for managing newly added task
   const [itemAdded, setItemAdded] = useState("");
 
   return (
     <div className={`${styles.details} mt-[4.6vh] `}>
-      <div className=" flex justify-between items-center mb-[0.568vw]">
-        <h4 className={`${styles.heading} relative`}>ST Suite</h4>
+      {/* Container for the details */}
+      <div className=" flex justify-between items-center mb-[0.568vw] ">
+        {/* Title and member information */}
+        <h4
+          onClick={() => {
+            router.back();
+          }}
+          className={`${styles.heading} relative cursor-pointer`}
+        >
+          ST Suite
+        </h4>
         <div
           className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
         >
+          {/* Member count and color indicators */}
           <p className=" text-white text-[0.568vw] font-medium me-2">
             Members (4)
           </p>{" "}
@@ -41,12 +73,16 @@ const page = () => {
           <div></div>
         </div>
       </div>
+      {/* Grid layout for individual cards */}
       <div className=" grid grid-cols-4 gap-[1.142vw]">
+        {/* First card */}
         <div
           className={`${styles.card} md:col-span-1 col-span-2 md:self-start self-stretch px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7]`}
         >
+          {/* Card title */}
           <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A]">
             <h5>On Boarding</h5>
+            {/* Dummy icon */}
             <svg
               width="6"
               height="21"
@@ -59,12 +95,16 @@ const page = () => {
               <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
             </svg>
           </div>
+          {/* Sub-cards */}
           <div className="my-[2.1vh]">
+            {/* First sub-card */}
             <div
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] mb-[1.2vh]`}
             >
               <h6 className=" mb-[1.6vh] font-medium">Kick off Call</h6>
+              {/* Details */}
               <div className=" flex justify-between items-center">
+                {/* Date and Task Status */}
                 <div className="flex items-center">
                   <span className=" px-[0.426vw] py-[0.5vh] bg-[#E1C655B2] text-[0.8vw] rounded-[3.43px] font-medium me-[0.642vw]">
                     May 9
@@ -96,6 +136,7 @@ const page = () => {
                     0/4 Tasks
                   </p>
                 </div>
+                {/* Quarter Circles */}
                 <QuarterCircles color="#6FC9EE" translate={0} />
               </div>
             </div>
@@ -104,6 +145,7 @@ const page = () => {
             >
               <h6>Website Goals</h6>
             </div>
+            {/* Brief */}
             <div
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] flex justify-between`}
             >
@@ -116,6 +158,9 @@ const page = () => {
             </div>
           </div>
           <CustomBtn
+          onClick={() => {
+            setIsOpen(true);
+          }}
             width="100%"
             btnColor="white"
             word="Add Card"
@@ -138,6 +183,7 @@ const page = () => {
             }
           />
         </div>
+        {/* Card */}
         <div
           className={`${styles.card} md:col-span-1 col-span-2 px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7] md:self-start self-stretch`}
         >
@@ -156,6 +202,7 @@ const page = () => {
             </svg>
           </div>
           <div className="my-[2.1vh]">
+            {/* UX Research details */}
             <div
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] mb-[1.2vh]`}
             >
@@ -276,6 +323,9 @@ const page = () => {
             </div>
           </div>
           <CustomBtn
+          onClick={() => {
+            setIsOpen(true);
+          }}
             width="100%"
             btnColor="white"
             word="Add Card"
@@ -298,6 +348,7 @@ const page = () => {
             }
           />
         </div>
+        {/* Card */}
         <div
           className={`${styles.card} md:col-span-1 col-span-2 px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7] md:self-start self-stretch`}
         >
@@ -370,8 +421,8 @@ const page = () => {
         </div>
       </div>
       <div
-        className={` absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
-          isOpen ? "flex" : "hidden"
+        className={` ${styles.overlay}  absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
+          isOpen ? "flex" : "hidden" // Conditional rendering based on isOpen state
         }`}
       >
         <div
@@ -379,9 +430,10 @@ const page = () => {
         >
           <div className=" flex justify-between">
             <h3>Kick- Off Call</h3>
+            {/* Close button */}
             <svg
               onClick={() => {
-                setIsOpen(false);
+                setIsOpen(false); // Function to close the modal
               }}
               className=" cursor-pointer"
               width="22"
@@ -416,38 +468,33 @@ const page = () => {
                 <div className="flex justify-end items-end pb-[0.2vw] w-full">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className="board-add-calendar-card rounded-2xl">
-                      <DateCalendar
-                      defaultValue={dayjs("2014-02-09")}
-                        slots={{
-                          rightArrowIcon: ArrowRightIcon,
-                          leftArrowIcon: ArrowLeftIcon,
-                        }}
-                        dayOfWeekFormatter={(weekday) =>
-                          `${weekday.format("ddd")}`
-                        }
-                        // onChange={(value)=>{console.log(value);
-                        //   dateInputNew?.value == "04/02/2024";
-                        // console.log("yes");
-                        // console.log(dateInputNew);
-                        // }
-                        // }
-                        value={dayjs(dateCalendar)}
-                      />
+                      <DateCalendar onChange={(e)=>{handleDateInput(e)}} />
                       <div className=" flex gap-[1.188vw] mb-[2.2vh] px-[1.615vw]">
                         <div>
                           {/* <p className=" mb-[1.2vh] font-semibold">Start Date</p>
                           <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">9/10/2024</span> */}
-                          <p className=" mb-[1.2vh] font-semibold">Start Date</p>
-                          <input type="date" name="" id="myDateInput" value={dateCalendar} onChange={(e)=>{
-                            console.log(e.target.value);
-                            setDateCalendar(e.target.value)
-
-                            
-                          }}/>
+                          <p className=" mb-[1.2vh] font-semibold">
+                            Start Date
+                          </p>
+                          <input
+                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            type="text"
+                            name=""
+                            id="myDateInput1"
+                            readOnly
+                            value={startDate}
+                          />
                         </div>
                         <div>
                           <p className=" mb-[1.2vh] font-semibold">Due Date</p>
-                          <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">9/10/2024</span>
+                          <input
+                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            type="text"
+                            readOnly
+                            name=""
+                            id="myDateInput2"
+                            value={dueDate}
+                          />
                         </div>
                       </div>
                     </div>
@@ -552,9 +599,9 @@ const page = () => {
           </div>
           <div className="w-fit ms-auto">
             <CustomBtn
-            onClick={()=>{
-              setIsOpen(false)
-            }}
+              onClick={() => {
+                setIsOpen(false);
+              }}
               paddingVal="py-[1vh] px-[2.6vw]"
               btnColor="black"
               word="Save"

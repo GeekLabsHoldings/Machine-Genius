@@ -25,7 +25,7 @@ const page = () => {
         <div className="tab-content h-[75vh] py-[1.5vw] ">
           <div className={styles.database_table}>
             <ul className={styles.table_header}>
-              <li className='w-[5%]'><span>#</span></li>
+              <li className='w-[5%]'><span>#sdfsdf</span></li>
               <li className='w-[35%]'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 18" fill="none">
                   <path d="M0 3.33301H17.7778C19.0051 3.33301 20 4.32793 20 5.55523H0V3.33301Z" fill="#222222" />

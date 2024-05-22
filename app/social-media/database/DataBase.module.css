@@ -36,6 +36,14 @@
     color: var(--dark);
 }
 
+.tabs input[type='radio'] + div{
+    display: none;
+}
+
+.tabs input[type='radio']:checked + div {
+    display: block;
+}
+
 
 .database_table{
     border-radius: clamp(16px, calc(1vw + 0.1rem), 1000px);
