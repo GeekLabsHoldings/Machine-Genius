@@ -6,22 +6,33 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 
 const page = () => {
   const router = useRouter();
 
-  const [tryy,setTryy] = useState("2024-04-04")
+  const [startDate,setStartDate] = useState("2024-04-04")
+  const [dueDate,setDueDate] = useState("2024-04-04")
+  const [counter,setCounter] = useState(0)
 
-  const dateInputNew = document.getElementById(
-    "myDateInput"
-  ) as HTMLInputElement;
+  // handle change in date input
+
+  function handleDateInput(e:any) {
+    setCounter((prev:number)=>prev+1)
+    
+    if (counter % 2 == 0 ) {      
+      setStartDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
+    console.log(counter);
+
+    } else if (counter % 2 != 0 ) {
+      setDueDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
+    console.log(counter);
+
+    }
+  }
 
   // State for handling modal visibility and date selection
   const [isOpen, setIsOpen] = useState(false);
-  const [dateCalendar, setDateCalendar] = useState("");
 
   // State for managing list of tasks
   const [checkListData, setCheckListData] = useState([
@@ -147,6 +158,9 @@ const page = () => {
             </div>
           </div>
           <CustomBtn
+          onClick={() => {
+            setIsOpen(true);
+          }}
             width="100%"
             btnColor="white"
             word="Add Card"
@@ -309,6 +323,9 @@ const page = () => {
             </div>
           </div>
           <CustomBtn
+          onClick={() => {
+            setIsOpen(true);
+          }}
             width="100%"
             btnColor="white"
             word="Add Card"
@@ -404,7 +421,7 @@ const page = () => {
         </div>
       </div>
       <div
-        className={` absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
+        className={` ${styles.overlay}  absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
           isOpen ? "flex" : "hidden" // Conditional rendering based on isOpen state
         }`}
       >
@@ -451,13 +468,7 @@ const page = () => {
                 <div className="flex justify-end items-end pb-[0.2vw] w-full">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className="board-add-calendar-card rounded-2xl">
-                      <DateCalendar onChange={(e)=>{console.log(e);
-                        console.log(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M}` : e.$M}-${e.$D + 1 < 10 ? `0${e.$D}` : e.$D} eeeeeeeeee`);
-                        setTryy(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M}` : e.$M}-${e.$D + 1 < 10 ? `0${e.$D}` : e.$D}`);
-                        
-                      }
-
-                      } />
+                      <DateCalendar onChange={(e)=>{handleDateInput(e)}} />
                       <div className=" flex gap-[1.188vw] mb-[2.2vh] px-[1.615vw]">
                         <div>
                           {/* <p className=" mb-[1.2vh] font-semibold">Start Date</p>
@@ -466,21 +477,24 @@ const page = () => {
                             Start Date
                           </p>
                           <input
-                            type="date"
+                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            type="text"
                             name=""
-                            id="myDateInput"
-                            value={tryy}
-                            onChange={(e) => {
-                              console.log(e.target.value);
-                              setDateCalendar(e.target.value);
-                            }}
+                            id="myDateInput1"
+                            readOnly
+                            value={startDate}
                           />
                         </div>
                         <div>
                           <p className=" mb-[1.2vh] font-semibold">Due Date</p>
-                          <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">
-                            9/10/2024
-                          </span>
+                          <input
+                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            type="text"
+                            readOnly
+                            name=""
+                            id="myDateInput2"
+                            value={dueDate}
+                          />
                         </div>
                       </div>
                     </div>
