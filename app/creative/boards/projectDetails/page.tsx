@@ -11,10 +11,13 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 
 const page = () => {
+  const router = useRouter();
 
-const router = useRouter();
+  const [tryy,setTryy] = useState("2024-04-04")
 
-
+  const dateInputNew = document.getElementById(
+    "myDateInput"
+  ) as HTMLInputElement;
 
   // State for handling modal visibility and date selection
   const [isOpen, setIsOpen] = useState(false);
@@ -32,58 +35,63 @@ const router = useRouter();
 
   return (
     <div className={`${styles.details} mt-[4.6vh] `}>
-  {/* Container for the details */}
-  <div  className=" flex justify-between items-center mb-[0.568vw] ">
-    {/* Title and member information */}
-    <h4 onClick={()=>{
-    router.back()
-  }} className={`${styles.heading} relative cursor-pointer`}>ST Suite</h4>
-    <div
-      className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
-    >
-      {/* Member count and color indicators */}
-      <p className=" text-white text-[0.568vw] font-medium me-2">
-        Members (4)
-      </p>{" "}
-      <div className=" flex items-center">
-        <QuarterCircles color={"#EAD787"} translate={0} />{" "}
-        <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
-        <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
-        <QuarterCircles color={"#F06F77"} translate={-120} />{" "}
-      </div>{" "}
-      <div></div>
-    </div>
-  </div>
-  {/* Grid layout for individual cards */}
-  <div className=" grid grid-cols-4 gap-[1.142vw]">
-    {/* First card */}
-    <div
-      className={`${styles.card} md:col-span-1 col-span-2 md:self-start self-stretch px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7]`}
-    >
-      {/* Card title */}
-      <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A]">
-        <h5>On Boarding</h5>
-        {/* Dummy icon */}
-        <svg
-          width="6"
-          height="21"
-          viewBox="0 0 6 21"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+      {/* Container for the details */}
+      <div className=" flex justify-between items-center mb-[0.568vw] ">
+        {/* Title and member information */}
+        <h4
+          onClick={() => {
+            router.back();
+          }}
+          className={`${styles.heading} relative cursor-pointer`}
         >
-          <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
-          <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
-          <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
-        </svg>
-      </div>
-      {/* Sub-cards */}
-      <div className="my-[2.1vh]">
-        {/* First sub-card */}
+          ST Suite
+        </h4>
         <div
-          className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] mb-[1.2vh]`}
+          className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
         >
-          <h6 className=" mb-[1.6vh] font-medium">Kick off Call</h6>
-          {/* Details */}
+          {/* Member count and color indicators */}
+          <p className=" text-white text-[0.568vw] font-medium me-2">
+            Members (4)
+          </p>{" "}
+          <div className=" flex items-center">
+            <QuarterCircles color={"#EAD787"} translate={0} />{" "}
+            <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
+            <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
+            <QuarterCircles color={"#F06F77"} translate={-120} />{" "}
+          </div>{" "}
+          <div></div>
+        </div>
+      </div>
+      {/* Grid layout for individual cards */}
+      <div className=" grid grid-cols-4 gap-[1.142vw]">
+        {/* First card */}
+        <div
+          className={`${styles.card} md:col-span-1 col-span-2 md:self-start self-stretch px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7]`}
+        >
+          {/* Card title */}
+          <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A]">
+            <h5>On Boarding</h5>
+            {/* Dummy icon */}
+            <svg
+              width="6"
+              height="21"
+              viewBox="0 0 6 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
+              <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
+              <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
+            </svg>
+          </div>
+          {/* Sub-cards */}
+          <div className="my-[2.1vh]">
+            {/* First sub-card */}
+            <div
+              className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] mb-[1.2vh]`}
+            >
+              <h6 className=" mb-[1.6vh] font-medium">Kick off Call</h6>
+              {/* Details */}
               <div className=" flex justify-between items-center">
                 {/* Date and Task Status */}
                 <div className="flex items-center">
@@ -443,38 +451,36 @@ const router = useRouter();
                 <div className="flex justify-end items-end pb-[0.2vw] w-full">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className="board-add-calendar-card rounded-2xl">
-                      <DateCalendar
-                      defaultValue={dayjs("2014-02-09")}
-                        slots={{
-                          rightArrowIcon: ArrowRightIcon,
-                          leftArrowIcon: ArrowLeftIcon,
-                        }}
-                        dayOfWeekFormatter={(weekday) =>
-                          `${weekday.format("ddd")}`
-                        }
-                        // onChange={(value)=>{console.log(value);
-                        //   dateInputNew?.value == "04/02/2024";
-                        // console.log("yes");
-                        // console.log(dateInputNew);
-                        // }
-                        // }
-                        value={dayjs(dateCalendar)}
-                      />
+                      <DateCalendar onChange={(e)=>{console.log(e);
+                        console.log(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M}` : e.$M}-${e.$D + 1 < 10 ? `0${e.$D}` : e.$D} eeeeeeeeee`);
+                        setTryy(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M}` : e.$M}-${e.$D + 1 < 10 ? `0${e.$D}` : e.$D}`);
+                        
+                      }
+
+                      } />
                       <div className=" flex gap-[1.188vw] mb-[2.2vh] px-[1.615vw]">
                         <div>
                           {/* <p className=" mb-[1.2vh] font-semibold">Start Date</p>
                           <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">9/10/2024</span> */}
-                          <p className=" mb-[1.2vh] font-semibold">Start Date</p>
-                          <input type="date" name="" id="myDateInput" value={dateCalendar} onChange={(e)=>{
-                            console.log(e.target.value);
-                            setDateCalendar(e.target.value)
-
-                            
-                          }}/>
+                          <p className=" mb-[1.2vh] font-semibold">
+                            Start Date
+                          </p>
+                          <input
+                            type="date"
+                            name=""
+                            id="myDateInput"
+                            value={tryy}
+                            onChange={(e) => {
+                              console.log(e.target.value);
+                              setDateCalendar(e.target.value);
+                            }}
+                          />
                         </div>
                         <div>
                           <p className=" mb-[1.2vh] font-semibold">Due Date</p>
-                          <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">9/10/2024</span>
+                          <span className=" bg-[#F8F8F8] inline-block py-[1vh] px-[0.677vw] border-[1px] border-[#DFDFDF] rounded-md w-[7.76vw]">
+                            9/10/2024
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -579,9 +585,9 @@ const router = useRouter();
           </div>
           <div className="w-fit ms-auto">
             <CustomBtn
-            onClick={()=>{
-              setIsOpen(false)
-            }}
+              onClick={() => {
+                setIsOpen(false);
+              }}
               paddingVal="py-[1vh] px-[2.6vw]"
               btnColor="black"
               word="Save"
