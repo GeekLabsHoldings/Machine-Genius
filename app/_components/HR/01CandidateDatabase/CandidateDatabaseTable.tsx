@@ -189,7 +189,7 @@ export default function CandidateDatabaseTable() {
   ];
 
   return (
-    <div className={`${styles.tableContainer} h-[72vh]`}>
+    <div className={`${styles.tableContainer} h-[68vh]`}>
       {/* Start Table */}
       <div className={styles.table + " max-w-full"} id="table">
         {/* Table Header */}

@@ -1,0 +1,18 @@
+.colTitle{
+color: var(--dark);
+ font-size: 24px;
+ font-weight: 700;
+ margin-bottom: 20px;
+}
+
+.colContent{
+    height: 100%;
+}
+.colContent::after{
+    position: absolute;
+    content: "";
+    height: 90%;
+    width: 1px;
+    background-color: var(--dark);
+    left: calc(100% + 1vw);
+}
