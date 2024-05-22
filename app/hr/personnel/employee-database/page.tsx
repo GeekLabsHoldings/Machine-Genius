@@ -78,7 +78,6 @@ export default function page() {
       } else {
         setFillColorRight("#D9D9D9"); // Disable right arrow
       }
-
       // Check if the user can slide left (i.e., not at the far left)
       if (table.scrollLeft > 0) {
         setFillColorLeft("#2A2B2A"); // Enable left arrow
@@ -106,9 +105,7 @@ export default function page() {
           className={`flex flex-col gap-[0.7vw] w-full pageHeader mt-[10px] mb-[25px]`}
         >
           <div className="flex justify-between items-end">
-            <div
-              className={`w-8/12 flex items-end gap-[1vw]`}
-            >
+            <div className={`w-8/12 flex items-end gap-[1vw]`}>
               <div className="flex flex-col w-1/4 gap-[0.3vw]">
                 <CustomSelectInput label="All Roles" options={rolesOptions} />
               </div>
