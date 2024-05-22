@@ -10,8 +10,25 @@ font-weight: 700;
 font-size: clamp(12px, calc(0.8vw + 0.1rem), 80px);
 font-weight: 700;
 }
-.projectInformation {
+.projectInformation , .timeline {
     border: 2px solid #E6E6E2;
     box-shadow: 1px 3px 6.6px 0px #00000026;
 
+}
+.projectDeadline p {
+    font-weight: 400;
+    font-size: clamp(10px,calc(0.6vw + 00.1rem) , 70px);
+}
+.handoverDetails input:focus-visible {
+    outline: none;
+}
+.projectInformation svg {
+    width: clamp(10px, calc(0.6vw + 0.1rem), 100px);
+    height: clamp(10px, calc(0.6vw + 0.1rem), 100px);
+}
+.projectDeadline span.remaining {
+    font-size: clamp(10px , calc(0.662vw + 0.1rem), 60px);
+}
+.projectDeadline a {
+    font-size: clamp(12px , calc(0.8vw + 0.1rem), 60px);
 }

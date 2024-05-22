@@ -1,0 +1,60 @@
+.timelineProgress h4 {
+  font-size: clamp(14px, calc(0.71vw + 0.1rem), 80px);
+  font-weight: 400;
+}
+.timelineProgress span {
+  background-color: white;
+  width: 1.21vw;
+  height: 1.21vw;
+  border-radius: 100%;
+  border: 1px solid #acacac;
+  display: flex;
+   justify-content: center;
+  align-items: center;
+  z-index: 2;
+  position: relative;
+}
+.timelineProgress span::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    background-color: #acacac;
+    transform: translateX(-50%);
+    width: 3px;
+}
+.timelineProgress span.completed::before {
+    background-color: black;
+}
+.timelineProgress span.completed {
+    background-color: black;
+    border: none;
+}
+/* .timelineProgress::before {
+    content: "";
+    width: 0.1vw;
+    height: 85%;
+    left: calc((1.21vw / 2) + 1rem);
+    transform: translateX(-50%);
+    top: 1.3rem;
+    position: absolute;
+    background-color: #acacac;
+    z-index: 1;
+} */
+.timelineProgress span svg {
+    display: none;
+}
+.timelineProgress span.completed svg.completed {
+    display: block;
+}
+.timelineProgress span.current svg.current {
+    display: block;
+}
+
+.timelineProgress span.step svg.step {
+    display: block;
+}
+.timelineProgress svg {
+    width: clamp(8px, calc(0.5vw + 0.1rem), 100px);
+    height: clamp(8px, calc(0.5vw + 0.1rem), 100px);
+}
