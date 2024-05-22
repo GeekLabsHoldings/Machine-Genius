@@ -3,7 +3,7 @@ import CustomBtn from '@/app/_components/Button/CustomBtn' // Custom button comp
 import styles from './ChooseBrand.module.css' // Stylesheet for ChooseBrand component
 import CustomSelectInput from '../../../_components/CustomSelectInput/CustomSelectInput' // Custom select input component
 import { useEffect, useState } from 'react' // Importing useEffect and useState hooks from React
-import { useRouter } from 'next/navigation' // Importing useRouter hook from Next.js
+// import { useRouter } from 'next/navigation' // Importing useRouter hook from Next.js
 
 // ChooseBrand component
 const ChooseBrand = () => {
@@ -17,7 +17,7 @@ const ChooseBrand = () => {
   }
 
   // Router instance
-  const router = useRouter()
+  // const router = useRouter()
 
   // Options for the select input
   const options = [

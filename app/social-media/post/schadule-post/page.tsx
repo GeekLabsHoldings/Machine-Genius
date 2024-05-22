@@ -7,9 +7,9 @@ import { useState } from 'react'; // React useState hook for managing state
 import profileImg from '@/public/assets/post-profile.svg'; // Profile image
 import Image from 'next/image'; // Next.js Image component for optimized image loading
 import postImage from '@/public/assets/post-img.svg'; // Post image
-import postImage2 from '@/public/assets/post-img2.svg'; // Post image2
+// import postImage2 from '@/public/assets/post-img2.svg'; // Post image2
 import CustomSelectInput from '@/app/_components/CustomSelectInput/CustomSelectInput'; // Custom select input component
-import { useRouter } from 'next/navigation'; // Next.js useRouter for client-side navigation
+// import { useRouter } from 'next/navigation'; // Next.js useRouter for client-side navigation
 import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle'; // Logo and title component
 
 // SVG icon components

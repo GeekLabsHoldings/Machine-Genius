@@ -4,7 +4,7 @@ import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './show-errors.module.css'
 import ErrorCollapse from '@/app/_components/ErrorCollapse/ErrorCollapse'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle'
 import SpecificChecker from '@/app/_components/SpecificChecker/SpecificChecker'
 
@@ -18,7 +18,7 @@ const ShowErrors = () => {
 
     
     // const router = useRouter()
-    const router = useRouter()
+    // const router = useRouter()
 // show loading page before navigate to next page
 
     const handleNavigate = () => {

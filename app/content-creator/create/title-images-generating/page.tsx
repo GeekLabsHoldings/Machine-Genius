@@ -6,7 +6,7 @@ import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { SelectArticleData } from "@/app/_data/data";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ImagesForGeneratingTitles = () => {
@@ -20,7 +20,7 @@ const ImagesForGeneratingTitles = () => {
 // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
 
-  const router = useRouter()
+  // const router = useRouter()
 // show loading page before navigate to next page
   const handleNavigate = () => {
     setIsLoading(true)

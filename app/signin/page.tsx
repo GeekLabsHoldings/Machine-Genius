@@ -5,7 +5,7 @@ import styles from './signin.module.css'; // Stylesheet for SignIn component
 import logoTextImg from '@/public/assets/welcome logo.svg' // Image asset for welcome logo text
 import logo_image from '@/public/assets/logo.svg' // Image asset for logo
 import Image from 'next/image'; // Image component from Next.js
-import { useRouter } from 'next/navigation'; // Importing useRouter hook from Next.js
+// import { useRouter } from 'next/navigation'; // Importing useRouter hook from Next.js
 
 // SignIn component
 const SignIn = () => {
@@ -18,7 +18,7 @@ const SignIn = () => {
     const [ShowWelcomeMesage, setShowWelcomeMesage] = useState(false)
 
     // Router instance
-    const router = useRouter()
+    // const router = useRouter()
 
     // Function to handle login action
     const handleLogin = () => {
