@@ -1,7 +1,7 @@
 "use client";
 
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
-import styles from "./id.module.css";
+import styles from "./email.module.css";
 import { useRouter } from "next/navigation";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
@@ -54,7 +54,7 @@ function page() {
         </div>
       </header>
       <div className="w-full flex justify-end mt-4">
-        <CustomBtn word="Reply" btnColor="black" />
+        <CustomBtn word="Reply" btnColor="black" href="/customer-service/email-inbox/email/reply" />
       </div>
       <div className="p-8 text-xl">
         <div className="mb-11">

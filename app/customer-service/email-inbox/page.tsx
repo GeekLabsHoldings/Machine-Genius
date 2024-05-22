@@ -184,7 +184,7 @@ function page() {
           <div className={styles.table_body}>
             {table.map((ele, idx) => (
               <ul className="w-[100%] group relative" key={idx}>
-                <Link href="/customer-service/email-inbox/id" className="absolute inset-0 z-[1]">
+                <Link href="/customer-service/email-inbox/email" className="absolute inset-0 z-[1]">
                   </Link>
                 <li className="w-[5%]">
                   <CheckBox />
