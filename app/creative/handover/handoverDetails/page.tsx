@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./handoverDetails.module.css";
 import TimelineProgress from "@/app/_components/timelineProgress/TimelineProgress";
 import Link from "next/link";
-import CustomBtn from "@/Machine-Genius/app/_components/Button/CustomBtn";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
 
 const page = () => {
