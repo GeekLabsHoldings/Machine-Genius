@@ -3,6 +3,7 @@ import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
 import { truncateText } from "@/app/_utils/text";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
+import Link from "next/link";
 
 const table = [
   {
@@ -182,7 +183,9 @@ function page() {
 
           <div className={styles.table_body}>
             {table.map((ele, idx) => (
-              <ul className="w-[100%] group" key={idx}>
+              <ul className="w-[100%] group relative" key={idx}>
+                <Link href="/customer-service/email-inbox/id" className="absolute inset-0 z-[1]">
+                  </Link>
                 <li className="w-[5%]">
                   <CheckBox />
                 </li>

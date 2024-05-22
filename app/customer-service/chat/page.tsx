@@ -86,8 +86,8 @@ function page() {
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
       {/* 
-    chat aside menu 
-*/}
+        chat aside menu 
+      */}
       <div className={`flex flex-col h-full ${styles.chat__chat__aside}`}>
         <div>
           <h2 className="mb-5 text-2xl font-semibold">Chats</h2>
@@ -178,10 +178,10 @@ function page() {
           </div>
         </div>
         <div className="flex items-center justify-between px-[18px] py-[21px] border-t border-[var(--dark)]">
-          <input
-            type="text"
+          <textarea
             placeholder="Type a message"
-            className="flex-1 border md:max-w-[90%] lg:max-w-[85%] text-3xl:max-w-[80%] [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
+            className="flex-1 resize-none border md:max-w-[90%] lg:max-w-[85%] text-3xl:max-w-[80%] [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
+            rows={1}
           />
           <button>
             <svg

@@ -9,7 +9,7 @@ function CheckBox() {
   return (
     <div
       onClick={() => setChecked((prev) => !prev)}
-      className="w-4 h-4 relative flex items-center justify-center border-[0.67px] [border-color:var(--dark)] rounded-[1.33px] cursor-pointer group-hover:border-white"
+      className="w-4 h-4 aspect-square relative z-[3] flex items-center justify-center border-[0.67px] [border-color:var(--dark)] rounded-[1.33px] cursor-pointer group-hover:border-white"
     >
       <label
         htmlFor="check"

@@ -1,0 +1,3 @@
+.email__title {
+   width: clamp(10rem, 25rem, 100%); 
+}
