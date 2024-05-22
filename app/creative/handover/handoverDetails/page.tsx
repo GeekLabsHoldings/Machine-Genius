@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import styles from "./handoverDetails.module.css";
 import TimelineProgress from "@/app/_components/timelineProgress/TimelineProgress";
@@ -7,14 +7,17 @@ import CustomBtn from "@/Machine-Genius/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
 
 const page = () => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <div
       className={`${styles.handoverDetails} flex flex-col h-[85vh] pt-[1.5vw] `}
     >
-      <div onClick={()=>{
-      router.back()
-    }} className=" flex items-center gap-[0.625vw] mb-[2.8vh] cursor-pointer w-fit">
+      <div
+        onClick={() => {
+          router.back();
+        }}
+        className=" flex items-center gap-[0.625vw] mb-[2.8vh] cursor-pointer w-fit"
+      >
         <svg
           width="11"
           height="22"
@@ -31,23 +34,27 @@ const page = () => {
       </div>
       <div className=" flex gap-[3.49vw]">
         <div className="px-[5px] ">
-          <div className=" ">
+          <div>
+            {/* Project Information Section */}
             <h4 className=" mb-[1.3vw]">Project Information</h4>
             <div
               className={`${styles.projectInformation} p-[1.5vw] rounded-2xl`}
             >
+              {/* Project Name */}
               <h5 className=" mb-[1.1vh]">Project Name</h5>
               <input
                 type="text"
                 placeholder="ST Suite"
                 className=" placeholder:text-[0.729vw] placeholder:text-[var(--dark)] border-[1px] rounded-md border-[var(--dark)] px-[0.7vw] py-[0.35vw] w-[20.677vw] mb-[1.5vw]"
               />
+              {/* Flow Name */}
               <h5 className="mb-[0.2vh]">Flow Name*</h5>
               <input
                 type="text"
                 placeholder="ST Suite"
                 className=" placeholder:text-[0.729vw] placeholder:text-[var(--dark)] border-b-[1px] border-[var(--dark)] px-[0.938vw] py-[0.625vw] w-[20.677vw] mb-[1.5vw]"
               />
+              {/* Figma Link */}
               <h5 className="mb-[0.2vh]">Figma Link*</h5>
               <div className="relative ">
                 <input
@@ -73,6 +80,7 @@ const page = () => {
                   />
                 </svg>
               </div>
+              {/* Design System Link */}
               <h5 className="mb-[0.2vh]">Design System Link*</h5>
               <div className="relative">
                 <input
@@ -98,6 +106,7 @@ const page = () => {
                   />
                 </svg>
               </div>
+              {/* Site map */}
               <h5 className="mb-[0.2vh]">Site map*</h5>
               <div className="relative">
                 <input
@@ -123,6 +132,7 @@ const page = () => {
                   />
                 </svg>
               </div>
+              {/* Assets & Resources */}
               <h5 className="mb-[0.2vh]">Assets & Resources</h5>
               <input
                 type="text"
@@ -133,12 +143,15 @@ const page = () => {
           </div>
         </div>
         <div className=" flex justify-between w-full">
+          {/* Project Deadline Section */}
           <div className={`${styles.projectDeadline}  self-stretch`}>
             <h4 className=" mb-[1.3vw]">Project Deadline</h4>
+            {/* Deadline Info */}
             <div className=" bg-[var(--dark)] py-7 px-11 rounded-2xl mb-9">
               <h5 className="mb-4 text-white">Front End Handover Deadline</h5>
               <div className=" flex gap-[4vw] text-white items-center ">
                 <p>20th of March 2024</p>
+                {/* Remaining Time */}
                 <span
                   className={`${styles.remaining} bg-[#E1C655B2] rounded-sm px-4 py-1 text-[var(--dark)]`}
                 >
@@ -146,12 +159,14 @@ const page = () => {
                 </span>
               </div>
             </div>
+            {/* Project Milestones */}
             <h4 className=" mb-4">Project Mile Stones</h4>
             <div
               className={`${styles.timeline} py-5 px-4 rounded-2xl relative mb-4 `}
             >
               <TimelineProgress />
             </div>
+            {/* Link to Project Submission History */}
             <Link
               href={"#"}
               className="text-right ms-auto block underline border-[#595958] text-[#595958]"
@@ -159,6 +174,7 @@ const page = () => {
               View Project Submission History
             </Link>
           </div>
+          {/* Submit Button */}
           <div className=" flex items-end">
             <CustomBtn btnColor="black" word="Submit" />{" "}
           </div>

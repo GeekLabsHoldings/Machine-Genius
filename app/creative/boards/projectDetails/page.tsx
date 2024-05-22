@@ -8,63 +8,84 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 const page = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [dateCalendar,setDateCalendar] = useState("")
-  // var dateInputNew = document.getElementById("myDateInput") as HTMLInputElement;
 
+const router = useRouter();
+
+
+
+  // State for handling modal visibility and date selection
+  const [isOpen, setIsOpen] = useState(false);
+  const [dateCalendar, setDateCalendar] = useState("");
+
+  // State for managing list of tasks
   const [checkListData, setCheckListData] = useState([
     "15 mins call with client",
     "15 mins call with client",
     "15 mins call with client",
   ]);
 
+  // State for managing newly added task
   const [itemAdded, setItemAdded] = useState("");
 
   return (
     <div className={`${styles.details} mt-[4.6vh] `}>
-      <div className=" flex justify-between items-center mb-[0.568vw]">
-        <h4 className={`${styles.heading} relative`}>ST Suite</h4>
-        <div
-          className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
+  {/* Container for the details */}
+  <div  className=" flex justify-between items-center mb-[0.568vw] ">
+    {/* Title and member information */}
+    <h4 onClick={()=>{
+    router.back()
+  }} className={`${styles.heading} relative cursor-pointer`}>ST Suite</h4>
+    <div
+      className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
+    >
+      {/* Member count and color indicators */}
+      <p className=" text-white text-[0.568vw] font-medium me-2">
+        Members (4)
+      </p>{" "}
+      <div className=" flex items-center">
+        <QuarterCircles color={"#EAD787"} translate={0} />{" "}
+        <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
+        <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
+        <QuarterCircles color={"#F06F77"} translate={-120} />{" "}
+      </div>{" "}
+      <div></div>
+    </div>
+  </div>
+  {/* Grid layout for individual cards */}
+  <div className=" grid grid-cols-4 gap-[1.142vw]">
+    {/* First card */}
+    <div
+      className={`${styles.card} md:col-span-1 col-span-2 md:self-start self-stretch px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7]`}
+    >
+      {/* Card title */}
+      <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A]">
+        <h5>On Boarding</h5>
+        {/* Dummy icon */}
+        <svg
+          width="6"
+          height="21"
+          viewBox="0 0 6 21"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <p className=" text-white text-[0.568vw] font-medium me-2">
-            Members (4)
-          </p>{" "}
-          <div className=" flex items-center">
-            <QuarterCircles color={"#EAD787"} translate={0} />{" "}
-            <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
-            <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
-            <QuarterCircles color={"#F06F77"} translate={-120} />{" "}
-          </div>{" "}
-          <div></div>
-        </div>
+          <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
+          <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
+          <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
+        </svg>
       </div>
-      <div className=" grid grid-cols-4 gap-[1.142vw]">
+      {/* Sub-cards */}
+      <div className="my-[2.1vh]">
+        {/* First sub-card */}
         <div
-          className={`${styles.card} md:col-span-1 col-span-2 md:self-start self-stretch px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7]`}
+          className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] mb-[1.2vh]`}
         >
-          <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A]">
-            <h5>On Boarding</h5>
-            <svg
-              width="6"
-              height="21"
-              viewBox="0 0 6 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
-            </svg>
-          </div>
-          <div className="my-[2.1vh]">
-            <div
-              className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] mb-[1.2vh]`}
-            >
-              <h6 className=" mb-[1.6vh] font-medium">Kick off Call</h6>
+          <h6 className=" mb-[1.6vh] font-medium">Kick off Call</h6>
+          {/* Details */}
               <div className=" flex justify-between items-center">
+                {/* Date and Task Status */}
                 <div className="flex items-center">
                   <span className=" px-[0.426vw] py-[0.5vh] bg-[#E1C655B2] text-[0.8vw] rounded-[3.43px] font-medium me-[0.642vw]">
                     May 9
@@ -96,6 +117,7 @@ const page = () => {
                     0/4 Tasks
                   </p>
                 </div>
+                {/* Quarter Circles */}
                 <QuarterCircles color="#6FC9EE" translate={0} />
               </div>
             </div>
@@ -104,6 +126,7 @@ const page = () => {
             >
               <h6>Website Goals</h6>
             </div>
+            {/* Brief */}
             <div
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] flex justify-between`}
             >
@@ -138,6 +161,7 @@ const page = () => {
             }
           />
         </div>
+        {/* Card */}
         <div
           className={`${styles.card} md:col-span-1 col-span-2 px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7] md:self-start self-stretch`}
         >
@@ -156,6 +180,7 @@ const page = () => {
             </svg>
           </div>
           <div className="my-[2.1vh]">
+            {/* UX Research details */}
             <div
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] mb-[1.2vh]`}
             >
@@ -298,6 +323,7 @@ const page = () => {
             }
           />
         </div>
+        {/* Card */}
         <div
           className={`${styles.card} md:col-span-1 col-span-2 px-[1.419vw] py-[2.4vh] border-[1.48px] boreder-[#DBDBD7] md:self-start self-stretch`}
         >
@@ -371,7 +397,7 @@ const page = () => {
       </div>
       <div
         className={` absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
-          isOpen ? "flex" : "hidden"
+          isOpen ? "flex" : "hidden" // Conditional rendering based on isOpen state
         }`}
       >
         <div
@@ -379,9 +405,10 @@ const page = () => {
         >
           <div className=" flex justify-between">
             <h3>Kick- Off Call</h3>
+            {/* Close button */}
             <svg
               onClick={() => {
-                setIsOpen(false);
+                setIsOpen(false); // Function to close the modal
               }}
               className=" cursor-pointer"
               width="22"
