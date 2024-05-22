@@ -13,13 +13,10 @@
     border: 2px solid #D9D9D9;
     border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
     box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    height: max-content;
 }
 
-.view_template_wrapper .card:hover {
-    box-shadow: 3px 3px 0px 0px var(--dark);
-    border: 2px solid var(--dark);
-
-}
 .view_template_wrapper .card .card_header {
     display: flex;
     align-items: center;
@@ -35,18 +32,19 @@
 }
 
 .view_template_wrapper .card .card_body{
-    max-height: 15vh;
+    max-height: 20vh;
     overflow-y: auto;
     padding: 0.2vw;
-}
-
-.view_template_wrapper .card .card_body ul{
-    list-style: circle;
 }
 
 .view_template_wrapper .card .card_body p , .view_template_wrapper .card .card_body ul li {
     font-size: clamp(16px, calc(0.7vw + 0.1rem), 1000px);
     text-align: justify;
+    padding-right: 1vw;
+}
+
+.view_template_wrapper .card .card_body p:not(:last-child){
+    margin-bottom: 0.5vw;
 }
 
 .view_template_wrapper .card .card_body ul li {
@@ -72,4 +70,43 @@
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
+}
+
+.view_template_wrapper .card .card_actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5vw;
+    margin-top: 1.5vw;
+    display: none;
+}
+
+.view_template_wrapper .card .card_actions > a > div{
+    padding: 0.4vw;
+    font-size: clamp(12px, calc(0.6vw + 0.1rem), 1000px);
+    width: clamp(100px, calc(6vw + 0.1rem), 1000px);
+}
+
+.view_template_wrapper .card.disabled{
+    position: relative;
+}
+
+.view_template_wrapper .card.disabled::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: #ffffff93;
+}
+
+.view_template_wrapper .card.editable .card_actions{
+    display: flex;
+}
+
+
+.view_template_wrapper .card.editable .card_body{
+    max-height: unset;
+    overflow-y: unset;
 }

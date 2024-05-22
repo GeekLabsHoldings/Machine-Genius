@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CustomSelectInput from '../CustomSelectInput/CustomSelectInput'
 import { useRouter } from 'next/navigation'
+import $ from "jquery";
 
 
 const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fill="none">
@@ -51,6 +52,10 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
         setCurrentPage(name)
     }
 
+
+    $(`.${styles.has_sub_menu}`).on("click" , (e)=>{
+        console.log(e.target);
+    })
 
     useEffect(() => {
         if (SelectedRole === 'Content Creator') {
