@@ -24,19 +24,42 @@ function OptionsDropdown({
   openIndecator,
 }: OptionsDropdownProps) {
   const [open, setOpen] = useState(false);
+  const [dropdownDirection, setDropdownDirection] = useState<"left" | "right">(
+    "right"
+  );
 
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    document.addEventListener("click", (e) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (
         $(ref.current!).find(e.target as any).length === 0 &&
         !$(ref.current!).is(e.target as any)
       ) {
         setOpen(false);
       }
-    });
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
+
+  useEffect(() => {
+    if (open && ref.current) {
+      const boundingRect = ref.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const spaceToLeft = boundingRect.left;
+      const spaceToRight = viewportWidth - boundingRect.right;
+
+      if (spaceToLeft > spaceToRight) {
+        setDropdownDirection("left");
+      } else {
+        setDropdownDirection("right");
+      }
+    }
+  }, [open]);
 
   return (
     <div
@@ -62,17 +85,19 @@ function OptionsDropdown({
       )}
 
       <div
-        className={`absolute -left-3 top-11 min-w-40 bg-white rounded-[10px] shadow-lg transform ${
+        className={`absolute top-11 min-w-40 bg-white rounded-[10px] shadow-lg transform ${
           open
             ? "opacity-100 z-10 translate-y-0"
             : "opacity-0 -z-10 invisible -translate-y-16"
-        } overflow-clip ${styles.dropdown__items__container}`}
+        } ${dropdownDirection === "left" ? "-right-3" : "-left-3"} ${
+          styles.dropdown__items__container
+        }`}
       >
         <ul>
           {options.map((option, index) => (
             <li
               key={index}
-              className={`py-2 px-4 font-bold w-max hover:bg-gray-200 ${styles.dropdown__item}`}
+              className={`py-2 px-4 font-bold min-w-max w-full hover:bg-gray-200 ${styles.dropdown__item}`}
             >
               {option}
             </li>

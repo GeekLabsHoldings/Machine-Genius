@@ -4,7 +4,6 @@ import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
 import { truncateText } from "@/app/_utils/text";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 
-
 const table = [
   {
     customerName: "John Doe",
@@ -148,7 +147,9 @@ function page() {
           Brand
         </span>
         <div className="flex items-center gap-5 mt-2 shrink-0 grow">
-          <Dropdown title="Filter by" items={["All", "Unread", "Read"]} />
+          <div className={styles.dropdown__container}>
+            <Dropdown title="Filter by" items={["All", "Unread", "Read"]} />
+          </div>
           <OptionsDropdown
             icon={files}
             options={["Mark as Read", "Mark as Unread", "Delete"]}

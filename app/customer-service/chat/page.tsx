@@ -131,8 +131,8 @@ function page() {
       </div>
 
       {/*
-    chat main section / chat Box
-*/}
+        chat main section / chat Box
+      */}
       <div className={`flex flex-col h-full ${styles.chat__box__container}`}>
         <div
           className={`flex justify-between items-center ${styles.chat__box__header}`}
