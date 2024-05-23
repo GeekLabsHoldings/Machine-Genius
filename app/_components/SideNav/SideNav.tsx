@@ -31,7 +31,7 @@ const rols = [
     'Customer Service',
     'Creative',
     'HR',
-    // 'Acounting'
+    'Acounting'
 ]
 
 
@@ -73,10 +73,9 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/creative/dashboard')
         } else if (SelectedRole === 'HR') {
             router.push('/hr/dashboard')
+        }else if (SelectedRole === 'Acounting') {
+            router.push('/acounting/dashboard')
         }
-        //  else if (SelectedRole === 'Acounting') {
-        //     router.push('/acounting/dashboard')
-        // }
     }, [SelectedRole])
 
 
