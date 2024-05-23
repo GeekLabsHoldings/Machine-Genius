@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CustomSelectInput from '../CustomSelectInput/CustomSelectInput'
 import { useRouter } from 'next/navigation'
+import $ from 'jquery'
 
 
 const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fill="none">
@@ -63,15 +64,19 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                 // Select all elements with the class 'hoverable'
                 const hoverableElements:NodeListOf<HTMLDivElement> = document.querySelectorAll(`.${styles.has_sub_menu}`);
 
+                console.log(hoverableElements);
+                
                 // Add a mouseover event listener to each element
                 hoverableElements.forEach(element => {
         
                   element.addEventListener('click', function() {
                     console.log(element);
-                    if (element.classList.contains(`${styles.open}`)) {
-                    element.classList.remove(`${styles.open}`);
+                    $(element).addClass("open")
+
+                    if (element.classList.contains(`open`)) {
+                    element.classList.remove(`open`);
                     }else{
-                        element.classList.add(`${styles.open}`);
+                        element.classList.add(`open`);
                     }
                   });
         
