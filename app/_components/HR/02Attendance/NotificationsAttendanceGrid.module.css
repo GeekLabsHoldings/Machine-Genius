@@ -8,8 +8,14 @@
 .colContent::after {
   position: absolute;
   content: "";
-  height: 90%;
+  height: 106%;
   width: 1px;
   background-color: var(--dark);
   left: calc(100% + 1vw);
+  top: -3%;
+}
+
+.cardContainer::-webkit-scrollbar {
+  display: none;
+  width: 0;
 }
