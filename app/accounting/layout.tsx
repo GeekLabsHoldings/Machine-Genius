@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 
 // Import CSS styles
-import styles from './acounting.module.css';
+import styles from './accounting.module.css';
 
 // Import components
 import SideNav from '../_components/SideNav/SideNav';

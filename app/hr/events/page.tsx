@@ -7,28 +7,18 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Importing custom button component
 import eventContentImg from "../../../public/assets/calender event content img.png"; // Importing event content image
 import Image from "next/image"; // Importing Next.js Image component for optimized image loading
-import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox"; // Importing custom checkbox component
 
 // Calendar component definition
 export default function Calendar() {
   // Options for brand and content type select inputs
-  const brandOptions: string[] = [
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-  ];
-  const contentTypeOptions: string[] = [
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
+  const eventsOptions: string[] = [
+    "event 1",
+    "event 2",
+    "event 3",
+    "event 4",
+    "event 5",
+    "event 6",
+    "event 7",
   ];
 
   // Array of calendar events
@@ -145,16 +135,21 @@ export default function Calendar() {
   const month = today.getMonth() + 1; // Note: Month is zero-based (0 for January, 1 for February, etc.)
   const day = today.getDate();
 
-  // SVG icon for arrow left
-  const arrowLeft = (
+  // add Icon for button   
+  const addIcon = (
     <svg
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-6 h-6"
     >
-      {" "}
-      /* SVG path */{" "}
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
+        fill="#FFFFFB"
+      />
     </svg>
   );
 
@@ -162,18 +157,19 @@ export default function Calendar() {
   return (
     <div className="pt-[1.5vw] h-full w-full full-calender">
       {/* Filters section */}
-      <div className="grid grid-cols-3 lg:grid-cols-4 gap-[1vw] filters">
-        <CustomSelectInput label="Brand Name" options={brandOptions} />
-        <CustomSelectInput label="Content Type" options={contentTypeOptions} />
-        <CustomBtn
-          btnColor="white"
-          word="Clear"
-          onClick={() => console.log("clear")}
-          style={{ width: "max-content" }}
-        />
+      <div className="flex justify-between filters">
+        <div className="w-[30%] flex items-center gap-[2vw]">
+        <h3 className="font-bold text-[32px]">Calendar</h3>
+        <CustomSelectInput label="All Events" options={eventsOptions} />
+        </div>
         <div className="flex items-center justify-end">
-          <CustomCheckBox value={"Show Events Only"} name="show-events-only" />
-          <label htmlFor="">Show Events Only</label>
+          <CustomBtn
+            btnColor="black"
+            word="New Entry"
+            width="max-content"
+            icon={addIcon}
+            paddingVal="py-[0.5vw] px-[1vw]"
+          />
         </div>
       </div>
       {/* FullCalendar component */}
@@ -195,9 +191,10 @@ export default function Calendar() {
       {/* Selected event content */}
       {selectedEvent ? (
         <>
-          <div className="event-content-overlay" onClick={handleCloseEvent}>
-            {" "}
-          </div>
+          <div
+            className="event-content-overlay"
+            onClick={handleCloseEvent}
+          ></div>
           <div className="event-content">
             <span className="close-event-content" onClick={handleCloseEvent}>
               <svg
@@ -206,14 +203,13 @@ export default function Calendar() {
                 fill="currentColor"
                 className="w-6 h-6"
               >
-                {" "}
-                /* SVG path */{" "}
+                /* SVG path */
               </svg>
             </span>
             <div className="event-content-header">
               <h3>{selectedEvent.extendedProps?.articleTitle}</h3>
               <p>
-                {selectedEvent.startStr}{" "}
+                {selectedEvent.startStr}
                 <span style={{ background: selectedEvent.backgroundColor }}>
                   Canada
                 </span>

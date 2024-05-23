@@ -76,21 +76,7 @@ function SubscriptionsCreator({
 
             {/* 2. Modal Body */}
 
-            {/* Details section */}
-            {/* <div className="flex flex-col gap-[0.8vw]">
-                <h3>Ticket Type</h3>
-                <div className="flex gap-[1vw]">
-                  <div className="flex flex-col gap-[0.3vw] w-full">
-                       <CustomSelectInput
-                      label="IT"
-                      options={ticketTypeOptions}
-                      paddingVal="py-[0.2vw] px-[0.5vw]"
-                      />
-                  </div>
-                </div>
-              </div> */}
 
-            {/* Form fields for adding a post */}
             <div className="flex flex-col gap-[0.7vw]">
               <div className="flex flex-col gap-[0.2vw]">
                 <label htmlFor="subjectLine" className="xl">
@@ -143,7 +129,7 @@ function SubscriptionsCreator({
               </div>
             </div>
 
-            {/* Add Product button */}
+            {/* Add subscriptions button */}
             <div className="flex justify-end">
               <CustomBtn
                 word="Add Subscription"

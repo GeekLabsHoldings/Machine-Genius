@@ -3,56 +3,56 @@ import React from "react";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./SurveysResultsTable.module.css";
 
+/**
+ * Renders a table component displaying surveys results.
+ *
+ * @return {JSX.Element} The rendered table component.
+ */
 export default function SurveysResultsTable() {
+  // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       newStatus: true,
       template: "Monthly Feedback Template",
-      dateSent:
-        "March 20 2023",
+      dateSent: "March 20 2023",
       answered: "6",
       missed: "6",
     },
     {
-        newStatus: false,
-        template: "Monthly Feedback Template",
-        dateSent:
-          "March 20 2023",
-        answered: "6",
-        missed: "6",
-      },
-      {
-        newStatus: false,
-        template: "Monthly Feedback Template",
-        dateSent:
-          "March 20 2023",
-        answered: "6",
-        missed: "6",
-      },
-      {
-        newStatus: false,
-        template: "Monthly Feedback Template",
-        dateSent:
-          "March 20 2023",
-        answered: "6",
-        missed: "6",
-      },
-      {
-          newStatus: false,
-          template: "Monthly Feedback Template",
-          dateSent:
-            "March 20 2023",
-          answered: "6",
-          missed: "6",
-        },
-        {
-          newStatus: false,
-          template: "Monthly Feedback Template",
-          dateSent:
-            "March 20 2023",
-          answered: "6",
-          missed: "6",
-        },
+      newStatus: false,
+      template: "Monthly Feedback Template",
+      dateSent: "March 20 2023",
+      answered: "6",
+      missed: "6",
+    },
+    {
+      newStatus: false,
+      template: "Monthly Feedback Template",
+      dateSent: "March 20 2023",
+      answered: "6",
+      missed: "6",
+    },
+    {
+      newStatus: false,
+      template: "Monthly Feedback Template",
+      dateSent: "March 20 2023",
+      answered: "6",
+      missed: "6",
+    },
+    {
+      newStatus: false,
+      template: "Monthly Feedback Template",
+      dateSent: "March 20 2023",
+      answered: "6",
+      missed: "6",
+    },
+    {
+      newStatus: false,
+      template: "Monthly Feedback Template",
+      dateSent: "March 20 2023",
+      answered: "6",
+      missed: "6",
+    },
   ];
 
   const newRibbon = (

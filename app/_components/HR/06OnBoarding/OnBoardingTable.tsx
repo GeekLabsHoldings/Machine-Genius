@@ -4,7 +4,14 @@ import styles from "./OnBoardingTable.module.css";
 import { truncateText } from "../../../_utils/text";
 import Link from "next/link";
 
+/**
+ * Renders a table component displaying a list of employees.
+ *
+ * @return {JSX.Element} The rendered table component.
+ */
 export default function OnBoardingTable() {
+  // An array of objects representing the rows of the table body.
+
   const bodyRow = [
     {
       firstName: "John",

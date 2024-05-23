@@ -3,6 +3,11 @@ import React from "react";
 import NotificationsCard from "@/app/_components/HR/02Attendance/NotificationsCard";
 import styles from "./NotificationsAttendanceGrid.module.css";
 
+/**
+ * Renders a grid of notifications for different degrees of attendance.
+ *
+ * @return {JSX.Element} The rendered grid of Attendance Notifications.
+ */
 export default function NotificationsAttendanceGrid() {
   return (
     <>     

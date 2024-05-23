@@ -2,7 +2,13 @@
 import React from "react";
 import styles from "./AttendanceTable.module.css";
 
+/**
+ * Renders an attendance table component.
+ *
+ * @return {JSX.Element} The rendered attendance table component.
+ */
 export default function AttendanceTable() {
+  // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       firstName: "John",

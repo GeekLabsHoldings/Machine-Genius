@@ -14,7 +14,16 @@ interface IProps {
 
 const ticketTypeOptions: string[] = ["IT", "System Issue", "Request"];
 
-
+/**
+ * Renders a modal for creating a ticket.
+ *
+ * @param {IProps} props - The props object containing the following properties:
+ *   - modalTitle: The title of the modal.
+ *   - btnWord: The word to be displayed on the button.
+ *   - btnColor: The color of the button.
+ *   - btnIcon: An optional icon to be displayed on the button.
+ * @return {ReactElement} The rendered modal component.
+ */
 export default function CreateTicketModal({
   modalTitle,
   btnWord,

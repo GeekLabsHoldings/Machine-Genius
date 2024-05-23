@@ -3,7 +3,13 @@ import React from "react";
 import styles from "./RequiredPapersTable.module.css";
 import Link from "next/link";
 
+/**
+ * Renders a table component displaying required papers for employees.
+ *
+ * @return {JSX.Element} The table component.
+ */
 export default function RequiredPapersTable() {
+    // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       name: "John Doe",

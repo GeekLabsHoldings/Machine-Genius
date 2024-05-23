@@ -3,6 +3,11 @@ import React from "react";
 import NotificationsCard from "@/app/_components/HR/02Attendance/NotificationsCard";
 import styles from "./NotificationsBreakGrid.module.css";
 
+/**
+ * Renders a grid of notifications cards with different background colors and button text.
+ *
+ * @return {JSX.Element} The rendered break notifications grid.
+ */
 export default function NotificationsBreakGrid() {
   return (
     <>

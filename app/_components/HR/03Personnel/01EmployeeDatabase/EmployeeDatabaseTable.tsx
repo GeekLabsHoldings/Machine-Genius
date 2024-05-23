@@ -4,7 +4,13 @@ import styles from "./EmployeeDatabaseTable.module.css";
 import { truncateText } from "../../../../_utils/text";
 import Link from "next/link";
 
+/**
+ * Renders an employee database table.
+ *
+ * @return {JSX.Element} The rendered employee database table.
+ */
 export default function EmployeeDatabaseTable() {
+  // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       firstName: "John",

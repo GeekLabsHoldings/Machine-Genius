@@ -2,7 +2,14 @@
 import React from "react";
 import styles from "./ResearchTable.module.css";
 
+/**
+ * Renders a table component for displaying research data.
+ *
+ * @return {JSX.Element} The rendered ResearchTable component.
+ */
 export default function ResearchTable() {
+  // An array of objects representing the rows of the table body.
+
   const bodyRow = [
     {
       newStatus: true,
