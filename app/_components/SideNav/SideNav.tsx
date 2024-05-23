@@ -30,7 +30,8 @@ const rols = [
     'Customer Service',
     'Creative',
     'HR',
-    'Acounting'
+    'Acounting',
+    'Newsletter'
 ]
 
 
@@ -53,26 +54,35 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
     }
 
 
-        // Select all elements with the class 'hoverable'
-        const hoverableElements:NodeListOf<HTMLDivElement> = document.querySelectorAll(`.${styles.has_sub_menu}`);
 
-        // Add a mouseover event listener to each element
-        hoverableElements.forEach(element => {
-
-          element.addEventListener('click', function() {
-            console.log(element);
-            if (element.classList.contains(`${styles.open}`)) {
-            element.classList.remove(`${styles.open}`);
-            }else{
-                element.classList.add(`${styles.open}`);
-
-            }
-          });
-
-        })
 
 
     useEffect(() => {
+
+
+                // Select all elements with the class 'hoverable'
+                const hoverableElements:NodeListOf<HTMLDivElement> = document.querySelectorAll(`.${styles.has_sub_menu}`);
+
+                // Add a mouseover event listener to each element
+                hoverableElements.forEach(element => {
+        
+                  element.addEventListener('click', function() {
+                    console.log(element);
+                    if (element.classList.contains(`${styles.open}`)) {
+                    element.classList.remove(`${styles.open}`);
+                    }else{
+                        element.classList.add(`${styles.open}`);
+                    }
+                  });
+        
+                })
+
+
+
+
+
+
+
         if (SelectedRole === 'Content Creator') {
             router.push('/content-creator/dashboard')
         } else if (SelectedRole === 'Video Editor') {
@@ -87,8 +97,10 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/creative/dashboard')
         } else if (SelectedRole === 'HR') {
             router.push('/hr/dashboard')
-        }else if (SelectedRole === 'Acounting') {
-            router.push('/acounting/dashboard')
+        }else if (SelectedRole === 'Accounting') {
+            router.push('/accounting/dashboard')
+        }else if (SelectedRole === 'Newsletter') {
+            router.push('/newsletter/dashboard')
         }
     }, [SelectedRole])
 
