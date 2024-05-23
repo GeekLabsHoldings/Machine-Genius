@@ -50,7 +50,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
         <path d="M9.16537 5.83335H10.832C11.9808 5.83335 12.9154 4.8987 12.9154 3.75001V2.08334C12.9154 0.934644 11.9807 0 10.832 0H9.16537C8.01668 0 7.08203 0.934644 7.08203 2.08334V3.75001C7.08203 4.89865 8.01668 5.83335 9.16537 5.83335ZM8.7487 2.08334C8.7487 1.85304 8.93507 1.66667 9.16537 1.66667H10.832C11.0624 1.66667 11.2487 1.85304 11.2487 2.08334V2.91667C11.2487 3.14698 11.0624 3.33334 10.832 3.33334H9.16537C8.93507 3.33334 8.7487 3.14698 8.7487 2.91667V2.08334Z" fill="#FFFFFB" />
       </svg>, subLinks: [{ name: 'Employee Database', path: "/hr/personnel/employee-database" },
       { name: 'Required Papers ', path: "/hr/personnel/required-papers" },
-      { name: 'Complaints', path: "/hr/personnel/Complaints" },
+      { name: 'Complaints', path: "/hr/personnel/complaints" },
       { name: 'Exit Interviews', path: "/hr/personnel/exit-interviews" },
       { name: 'Surveys', path: "/hr/personnel/surveys" }]
     },
