@@ -6,25 +6,17 @@ import {
   Brands,
   Posts,
 } from "@/app/_data/data";
-import $ from 'jquery'
 import BasicModal from '@/app/_components/Modal/modal';
 import { useState } from 'react';
 import Link from 'next/link';
 
 const Facebook = () => {
 
-  // to apply effect in selected article when click on it
-  const handleSelectedBg = (e: any) => {
-    $('.articleRow').removeClass('selected')
-    $(e.target).parents('.articleRow').toggleClass('selected')
-  }
-
   // return all facebook posts
   const renderFacebookPosts = Posts.map((onePost, idx) => (
     <ul
       key={idx}
       className={`${styles.tableBody} borderBottom articleRow `}
-      onClick={(e) => { handleSelectedBg(e) }}
     >
       <li className="w-2/12">{onePost.subReddit}</li>
       <li className="w-3/12 "><a href={onePost.link}>{onePost.link}</a></li>

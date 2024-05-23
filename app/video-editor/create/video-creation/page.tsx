@@ -2,21 +2,13 @@
 import CustomBtn from '@/app/_components/Button/CustomBtn';
 import styles from './video-creation.module.css';
 import { AssignedVideos } from '@/app/_data/data';
-import $ from 'jquery';
 
 const VideoCreation = ()=>{
-// add effect on selected task (change background color and text color) and apply it on its button
-    const handleSelectedBg = (e: any)=>{
-        $('.assignedVideo').removeClass('selected')
-        $('.videoStatusBtn').removeClass('clicked')
-        $(e.target).parents('.assignedVideo').toggleClass('selected')
-        $(e.target).toggleClass('selected')
-        $(e.target).find('.videoStatusBtn').toggleClass('clicked')
-    }
+
     
     // render assigned videos to every one and its status of completetion
     const renderVideosData = AssignedVideos.map((video,idx)=>(
-        <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center' onClick={(e)=>{handleSelectedBg(e)}}>
+        <ul key={idx} className='borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center'>
                 <li className="w-[5%]">{video.id}</li>
                 <li className="w-3/12">{video.title}</li>
                 <li className="w-2/12">{video.date}</li>

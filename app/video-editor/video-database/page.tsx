@@ -8,7 +8,7 @@ import {
   ContentTypeFilter,
   YourArticles,
 } from "@/app/_data/data";  // Importing data from another file 
-import $ from 'jquery'
+
 
 const ArticleDatabase = () => {
 
@@ -17,18 +17,12 @@ const ArticleDatabase = () => {
   //   setSelectedValue(value)
   // }
   
-   // Function to handle background color change when an article row is selected
-    const handleSelectedBg = (e: any)=>{
-        $('.articleRow').removeClass('selected')
-        $(e.target).parents('.articleRow').toggleClass('selected')
-    }
 
     // Rendering the list of articles
   const renderYourArticles = YourArticles.map((oneArticle , idx) => (
     <ul
     key={idx}
-      className = { `${styles.tableBody} borderBottom articleRow ` } 
-      onClick={(e)=>{handleSelectedBg(e)}}
+      className = { `${styles.tableBody} borderBottom articleRow ` }
     >
       <li className="w-[2%]">{oneArticle.id}</li>
       <li className="w-3/12 ">{oneArticle.articleName}</li>
