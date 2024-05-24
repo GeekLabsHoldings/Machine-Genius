@@ -6,26 +6,25 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Slider from "react-slick"; // Importing Slider component from react-slick
 
 const page = () => {
-
-  let sliderRef:any = useRef(null);
-  const next = () => {
-    sliderRef.slickNext();
-  };
-  const previous = () => {
-    sliderRef.slickPrev();
-  };
+  // // References to HTML elements and components
+  // const btnRef = useRef<any>(null); // Reference for the button element
+  // const sliderRef = useRef<Slider>(null); // Reference for the slider component
 
 
   function SampleNextArrow(props: any) {
-    const {onClick } = props;
+    const {onClick , className } = props;
+    
     return (
+      <div
+        onClick={onClick}
+        className={`custom_arrows ${className}`}
+      >
         <svg
           width="34"
           height="34"
           viewBox="0 0 34 34"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={onClick}
         >
           <path
             fill-rule="evenodd"
@@ -34,35 +33,44 @@ const page = () => {
             fill="black"
           />
         </svg>
+      </div>
     );
   }
   function SamplePrevArrow(props: any) {
-    const {onClick } = props;
+    const {onClick , className} = props;
     return (
+      <div
+        onClick={onClick}
+        className={`custom_arrows ${className}`}
+      >
         <svg
           width="34"
           height="34"
           viewBox="0 0 34 34"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={onClick}
         >
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
             d="M16.5059 23.9434C16.9213 23.529 16.9213 22.8565 16.5059 22.441L12.1274 18.0625L23.375 18.0625C23.9594 18.0625 24.4375 17.5865 24.4375 17C24.4375 16.4124 23.9594 15.9375 23.375 15.9375L12.1274 15.9375L16.5059 11.559C16.9213 11.1435 16.9213 10.4699 16.5059 10.0566C16.0926 9.64115 15.419 9.64115 15.0035 10.0566L8.99409 16.066C8.73909 16.321 8.65939 16.6696 8.71783 17C8.65939 17.3304 8.73909 17.679 8.99409 17.934L15.0035 23.9434C15.419 24.3588 16.0926 24.3588 16.5059 23.9434ZM1.30041e-06 29.75L1.85773e-07 4.25C8.318e-08 1.90294 1.90294 -8.318e-08 4.25 -1.85773e-07L29.75 -1.30041e-06C32.0981 -1.40305e-06 34 1.90294 34 4.25L34 29.75C34 32.0971 32.0981 34 29.75 34L4.25 34C1.90294 34 1.40301e-06 32.0971 1.30041e-06 29.75Z"
-            fill="#D9D9D9"
+            fill="black"
           />
         </svg>
+      </div>
     );
   }
 
-  const settings = {
+  const settings:any = {
     infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
+    centerPadding:30,
+    nextArrow: <SampleNextArrow  />,
+    prevArrow: <SamplePrevArrow  />,
   };
+
 
   return (
     <div className={`${styles.emailList} pt-[1vw] overflow-hidden`}>
@@ -89,14 +97,14 @@ const page = () => {
                   ]}
                 />
               </div>
-              <div className=" flex items-end gap-3">
-                <SamplePrevArrow  onClick={previous} />
-                <SampleNextArrow  onClick={next} />
-              </div>
+              {/* <div className=" flex items-end gap-3">
+                <SamplePrevArrow />
+                <SampleNextArrow />
+              </div> */}
             </div>
             <div className="sliderAudience w-[87vw]">
               <div className="slider-container ">
-                <Slider ref={slider => {sliderRef = slider}} {...settings}>
+                <Slider {...settings}>
                   <div
                     className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
                   >

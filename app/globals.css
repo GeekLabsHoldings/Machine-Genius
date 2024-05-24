@@ -235,3 +235,32 @@ img {
   margin: 0 10px; /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
+
+.custom_arrows.slick-arrow{
+  width: unset !important;
+  height: unset !important;
+  position: absolute !important;
+  top: unset !important;
+  bottom: calc(100% + 1.1vw) !important;
+  transform: translate(0,0) !important;
+  -webkit-transform: translate(0,0) !important;
+  -moz-transform: translate(0,0) !important;
+  -ms-transform: translate(0,0) !important;
+  -o-transform: translate(0,0) !important;
+}
+
+.custom_arrows.slick-next{
+  right: 0vw;
+}
+.custom_arrows.slick-prev{
+  left: unset !important;
+  right: 2.5vw ;
+}
+
+.custom_arrows.slick-arrow.slick-next > svg > path , .custom_arrows.slick-arrow.slick-prev > svg > path{
+  fill: #000000;
+
+}
+.custom_arrows.slick-arrow.slick-next.slick-disabled > svg > path , .custom_arrows.slick-arrow.slick-prev.slick-disabled > svg > path{
+  fill: #D9D9D9;
+}

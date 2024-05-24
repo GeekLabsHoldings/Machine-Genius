@@ -63,16 +63,3 @@
   .info:not(:last-child) {
     margin-bottom: 0.7vw;
   }
-
-
-  /* .custom_arrows{
-    position: absolute;
-    bottom: calc(100% + 1.1vw);
-  }
-
-  .custom_arrows.next_arrow{
-    right: 0vw;
-  }
-  .custom_arrows.prev_arrow{
-    right: 2.5vw ;
-  } */
