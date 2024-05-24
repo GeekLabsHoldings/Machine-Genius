@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import styles from "./Surveys.module.css";
 import TemplateBox from "@/app/_components/HR/03Personnel/00General/TemplateBox";
+import SurveysResultsTable from "@/app/_components/HR/03Personnel/05Surveys/SurveysResultsTable";
+import SurveysScheduledTable from "@/app/_components/HR/03Personnel/05Surveys/SurveysScheduledTable";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -102,6 +104,22 @@ export default function Page() {
             <TemplateBox title="Content Writer Interview" />
             <TemplateBox title="Social Media Interview" />
           </div>
+        </div>
+      )}
+
+      {/* 2. Tab 2 Content */}
+      {activeTab === 2 && (
+        <div className={`${styles.tab2}`}>
+          {/* Tab Content */}
+          <SurveysResultsTable />
+        </div>
+      )}
+
+      {/* 3. Tab 3 Content */}
+      {activeTab === 3 && (
+        <div className={`${styles.tab3}`}>
+          {/* Tab Content */}
+          <SurveysScheduledTable />
         </div>
       )}
     </section>
