@@ -257,6 +257,11 @@ img {
   right: 2.5vw ;
 }
 
+.custom_arrows.slick-arrow > svg {
+  width: clamp(10px, calc(1.5vw + 0.1rem), 50px);
+  height: clamp(10px, calc(1.5vw + 0.1rem), 50px);
+}
+
 .custom_arrows.slick-arrow.slick-next > svg > path , .custom_arrows.slick-arrow.slick-prev > svg > path{
   fill: #000000;
 
