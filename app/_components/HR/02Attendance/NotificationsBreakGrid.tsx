@@ -126,7 +126,7 @@ export default function NotificationsBreakGrid() {
 
         {/* Fifth Column */}
         <div className={`flex flex-col`}>
-          <h2 className={`text-center ${styles.colTitle}`}>Termination</h2>
+          <h2 className={`text-center ${styles.colTitle}`}>Fifth Degree</h2>
           <div>
             {/* Notifications Cards */}
             <div
