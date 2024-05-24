@@ -21,8 +21,16 @@
       "@/*": ["./*"]
     },
     "target": "es2015",
-      "downlevelIteration": true
+    "downlevelIteration": true
   },
-  "include": ["video.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/_components/CustomSelectInput/CustomSelectInput.tsx", "app/video-editor/create/converted-article/page.tsx"],
+  "include": [
+    "video.d.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/_components/CustomSelectInput/CustomSelectInput.tsx",
+    "app/video-editor/create/converted-article/page.tsx"
+  ],
   "exclude": ["node_modules"]
 }
