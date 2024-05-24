@@ -3,24 +3,63 @@ import React from "react";
 import styles from "./ComplaintsTable.module.css";
 import { truncateText } from "@/app/_utils/text";
 import RequestedByCard from "./RequestedByCard";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 export default function ComplaintsTable() {
   const bodyRow = [
     {
+      complaintId: "1",
       newStatus: true,
       complaintIssue: "Finance",
       complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Sherry",
+      requestedByColor: "#FAC5A5",
       urgencyLevel: "High",
-      preview: "",
     },
     {
+      complaintId: "2",
       newStatus: false,
       complaintIssue: "Bullying",
       complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Shahenda",
+      requestedByColor: "#DFCCE8",
       urgencyLevel: "Mid",
-      preview: "",
+    },
+    {
+      complaintId: "3",
+      newStatus: false,
+      complaintIssue: "Finance",
+      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      requestedBy: "Farah",
+      requestedByColor: "#A6DEF3",
+      urgencyLevel: "Low",
+    },
+    {
+      complaintId: "4",
+      newStatus: false,
+      complaintIssue: "Finance",
+      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      requestedBy: "Sherry",
+      requestedByColor: "#FAC5A5",
+      urgencyLevel: "Low",
+    },
+    {
+      complaintId: "5",
+      newStatus: false,
+      complaintIssue: "Finance",
+      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      requestedBy: "Manar",
+      requestedByColor: "#C5E1C2",
+      urgencyLevel: "Mid",
+    },
+    {
+      complaintId: "6",
+      newStatus: false,
+      complaintIssue: "Harassment",
+      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      requestedBy: "Kamel",
+      requestedByColor: "#F2E3A1",
+      urgencyLevel: "Low",
     },
   ];
 
@@ -64,16 +103,18 @@ export default function ComplaintsTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
-            <ul className="w-[100%] relative" key={idx}>
+          {bodyRow.map((e) => (
+            <ul className="w-[100%] relative" key={e.complaintId}>
               <div className="absolute">{e.newStatus && newRibbon}</div>
               <li className="w-[20%]">{e.complaintIssue}</li>
               <li className="w-[30%]">{truncateText(e.complaintDescription, 35)}</li>
               <li className="w-[20%]">
-                <RequestedByCard name={e.requestedBy} color={"#FAC5A5"} />
+                <RequestedByCard name={e.requestedBy} color={e.requestedByColor} />
               </li>
               <li className={`w-[15%] ${e.urgencyLevel === "High" ? styles.highUrgencyLevel : e.urgencyLevel === "Mid" ? styles.midUrgencyLevel : ""}`}>{e.urgencyLevel}</li>
-              <li className="w-[15%]">{e.preview}</li>
+              <li className="w-[15%]">
+                  <CustomBtn btnColor="black" word="Preview" href={`/hr/personnel/complaints/complaintDetails/`} />
+              </li>    
             </ul>
           ))}
         </div>
