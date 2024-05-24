@@ -5,9 +5,7 @@ import styles from "./NotificationsAttendanceGrid.module.css";
 
 export default function NotificationsAttendanceGrid() {
   return (
-    <>
-      <h1>NotificationsAttendanceGrid</h1>
-
+    <>     
       {/* Notifications Container */}
       <div className="grid grid-cols-5 gap-[2vw] h-[80vh]">
         {/* First Column */}
