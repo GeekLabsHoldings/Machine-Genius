@@ -37,7 +37,6 @@ export default function AddNewProductModal({
 
   const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
 
-
   return (
     <>
       <CustomBtn
@@ -82,64 +81,53 @@ export default function AddNewProductModal({
               </div>
             </div>
 
-
-
-
-            {/* 2. Modal Body */}         
-              {/* Form fields for adding a post */}
-              <div className="flex flex-col gap-[0.7vw]">
-                <div className="flex flex-col gap-[0.2vw]">
-                  <label htmlFor="productName">Product Name*</label>
+            {/* 2. Modal Body */}
+            {/* Form fields for adding a post */}
+            <div className="flex flex-col gap-[0.7vw]">
+              <div className="flex flex-col gap-[0.2vw]">
+                <label htmlFor="productName">Product Name*</label>
+                <input
+                  type="text"
+                  id="productName"
+                  required
+                  className={`${styles.input}`}
+                />
+              </div>
+              <div className={`flex flex-col gap-[0.2vw]`}>
+                <label htmlFor="productPrice">Product Price*</label>
+                <div>
                   <input
                     type="text"
-                    id="productName"
+                    id="productPrice"
                     required
-                    className={`${styles.input}`}
+                    className={`${styles.input} w-full`}
                   />
                 </div>
-                <div
-                  className={`flex flex-col gap-[0.2vw]`}
-                >
-                  <label htmlFor="productPrice">Product Price*</label>
-                  <div>
-                    <input
-                      type="text"
-                      id="productPrice"
-                      required
-                      className={`${styles.input} w-full`}
-                    />
-                  </div>
+              </div>
+            </div>
 
-
+            {/* Details section */}
+            <div className="flex flex-col gap-[0.8vw]">
+              <h3>Product Type*</h3>
+              <div className="flex gap-[1vw]">
+                <div className="flex flex-col w-1/2 gap-[0.3vw]">
+                  <CustomSelectInput
+                    label="Drinks"
+                    options={productTypeOptions}
+                    paddingVal="py-[0.2vw] px-[0.5vw]"
+                  />
                 </div>
               </div>
+            </div>
 
-
-
-
-              {/* Details section */}
-              <div className="flex flex-col gap-[0.8vw]">
-                <h3>Product Type*</h3>
-                <div className="flex gap-[1vw]">
-                  <div className="flex flex-col w-1/2 gap-[0.3vw]">
-                       <CustomSelectInput
-                      label="Drinks"
-                      options={productTypeOptions}
-                      paddingVal="py-[0.2vw] px-[0.5vw]"
-                    />
-                  </div>
-                </div>
-              </div>
-
-
-
-              {/* Add Product button */}
-              <div className="flex justify-end">
-                <CustomBtn word="Add Product" btnColor="black" style={{ width: 'max-content' }} />
-              </div>
-
-
-           
+            {/* Add Product button */}
+            <div className="flex justify-end">
+              <CustomBtn
+                word="Add Product"
+                btnColor="black"
+                style={{ width: "max-content" }}
+              />
+            </div>
           </div>
         </Box>
       </Modal>

@@ -27,8 +27,10 @@ export default function page() {
     <section>
       {/* Back To Complaint Table Button */}
       <div className="flex items-center justify-between gap-4 mt-[1.5vh]">
+        {/* Back to Exit Interviews */}
         <div className="flex items-center gap-4">
           <Link href="/hr/personnel/exit-interviews/">
+            {/* Back button icon */}
             <svg
               width="11"
               height="22"
@@ -42,10 +44,12 @@ export default function page() {
               />
             </svg>
           </Link>
+          {/* Title for Monthly Feedback Template */}
           <span className="text-[36px] font-bold">
             Monthly Feedback Template
           </span>
         </div>
+        {/* Modify Template Button */}
         <div>
           <CustomBtn
             word={"Modify Template"}
@@ -60,10 +64,15 @@ export default function page() {
       <div className="flex justify-between gap-[3vw]">
         {/* Question Container */}
         <div className=" flex-grow">
+          {/* Template Preview Title */}
           <h3 className="font-bold text-[20px] my-[2.5vh]">Template Preview</h3>
+          {/* Questions Container */}
           <div className={styles.questionContainer}>
+            {/* Questions Title */}
             <h3 className="font-bold text-[20px] mb-[1.5vh]">Questions:</h3>
+            {/* Space between questions */}
             <div className="space-y-6">
+              {/* Question 1 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
@@ -71,6 +80,7 @@ export default function page() {
                 >
                   1. Tell me more about yourself:
                 </label>
+                {/* Textarea for answering question 1 */}
                 <textarea
                   name="tell-me-about-yourself"
                   id="tell-me-about-yourself"
@@ -78,6 +88,7 @@ export default function page() {
                   rows={5}
                 ></textarea>
               </div>
+              {/* Question 2 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
@@ -85,6 +96,7 @@ export default function page() {
                 >
                   2. Where do you see yourself in 5 years?
                 </label>
+                {/* Textarea for answering question 2 */}
                 <textarea
                   name="where-do-you-see-yourself"
                   id="where-do-you-see-yourself"
@@ -92,15 +104,18 @@ export default function page() {
                   rows={5}
                 ></textarea>
               </div>
+              {/* Question 3 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
                   htmlFor="exp-in-pr"
                 >
-                  3. Do you have experience in Pr?
+                  3. Do you have experience in PR?
                 </label>
+                {/* Input field for answering question 3 */}
                 <input name="exp-in-pr" id="exp-in-pr" type="text"></input>
               </div>
+              {/* Question 4 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
@@ -108,6 +123,7 @@ export default function page() {
                 >
                   4. Do you have experience in Adobe After Effects?
                 </label>
+                {/* Input field for answering question 4 */}
                 <input
                   name="exp-in-after-effects"
                   id="exp-in-after-effects"
@@ -120,19 +136,24 @@ export default function page() {
 
         {/* Schedule Survey */}
         <div className=" flex-grow space-y-6">
+          {/* Schedule Survey Title */}
           <h3 className="font-bold text-[20px]">Schedule Survey</h3>
+          {/* Date Selection */}
           <div className="w-1/2">
             <label className="font-bold block mb-[1.5vh]">Date</label>
+            {/* Custom select input for selecting date */}
             <CustomSelectInput options={[""]} label={"20 March 2020"} />
           </div>
+          {/* Time Selection */}
           <div className="w-1/2">
             <label className="font-bold block mb-[1.5vh]">Time</label>
+            {/* Custom select input for selecting time */}
             <CustomSelectInput options={[""]} label={"3:00 PM GMT"} />
           </div>
         </div>
       </div>
 
-      {/* save button */}
+      {/* Save Button */}
       <div className="flex justify-end">
         <CustomBtn word={"Schedule"} btnColor="black" />
       </div>

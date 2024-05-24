@@ -9,7 +9,6 @@ import styles from "./ResearchTable.module.css";
  */
 export default function ResearchTable() {
   // An array of objects representing the rows of the table body.
-
   const bodyRow = [
     {
       newStatus: true,

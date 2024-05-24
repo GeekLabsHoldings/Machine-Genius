@@ -39,7 +39,6 @@ export default function CreateTicketModal({
 
   const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
 
-
   return (
     <>
       <CustomBtn
@@ -84,67 +83,53 @@ export default function CreateTicketModal({
               </div>
             </div>
 
+            {/* 2. Modal Body */}
 
-
-
-            {/* 2. Modal Body */}         
-
-              {/* Details section */}
-              <div className="flex flex-col gap-[0.8vw]">
-                <h3>Ticket Type</h3>
-                <div className="flex gap-[1vw]">
-                  <div className="flex flex-col gap-[0.3vw] w-full">
-                       <CustomSelectInput
-                      label="IT"
-                      options={ticketTypeOptions}
-                      paddingVal="py-[0.2vw] px-[0.5vw]"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Form fields for adding a post */}
-              <div className="flex flex-col gap-[0.7vw]">
-                <div className="flex flex-col gap-[0.2vw]">
-                  <label htmlFor="subjectLine">Subject Line*</label>
-                  <input
-                    type="text"
-                    id="subjectLine"
-                    required
-                    className={`${styles.input}`}
+            {/* Details section */}
+            <div className="flex flex-col gap-[0.8vw]">
+              <h3>Ticket Type</h3>
+              <div className="flex gap-[1vw]">
+                <div className="flex flex-col gap-[0.3vw] w-full">
+                  <CustomSelectInput
+                    label="IT"
+                    options={ticketTypeOptions}
+                    paddingVal="py-[0.2vw] px-[0.5vw]"
                   />
                 </div>
-                <div
-                  className={`flex flex-col gap-[0.2vw]`}
-                >
-                  <label htmlFor="tiketDescription">Ticket Description*</label>
-                  <div>
-                    <textarea
-                      
-                      id="tiketDescription"
-                      required
-                      className={`${styles.input} w-full`}
-                    />
-                  </div>
+              </div>
+            </div>
 
-
+            {/* Form fields for adding a post */}
+            <div className="flex flex-col gap-[0.7vw]">
+              <div className="flex flex-col gap-[0.2vw]">
+                <label htmlFor="subjectLine">Subject Line*</label>
+                <input
+                  type="text"
+                  id="subjectLine"
+                  required
+                  className={`${styles.input}`}
+                />
+              </div>
+              <div className={`flex flex-col gap-[0.2vw]`}>
+                <label htmlFor="tiketDescription">Ticket Description*</label>
+                <div>
+                  <textarea
+                    id="tiketDescription"
+                    required
+                    className={`${styles.input} w-full`}
+                  />
                 </div>
               </div>
+            </div>
 
-
-
-
-
-
-
-
-              {/* Add Product button */}
-              <div className="flex justify-end">
-                <CustomBtn word="Create" btnColor="black" style={{ width: 'max-content' }} />
-              </div>
-
-
-           
+            {/* Add Product button */}
+            <div className="flex justify-end">
+              <CustomBtn
+                word="Create"
+                btnColor="black"
+                style={{ width: "max-content" }}
+              />
+            </div>
           </div>
         </Box>
       </Modal>

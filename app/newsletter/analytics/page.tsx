@@ -108,28 +108,29 @@ const page = () => {
                 <li className="w-[15%]">Letter Name</li>
                 <li className="w-[15%]">Letter Name</li>
               </ul>
-              <div className={`${styles.tableBody} max-h-[50vh] overflow-y-auto`}>
-              {data.map((e, i) => (
-                <div >
-                  <div className=" bg-[#E1C655] text-white text-end px-[1.5vw] py-[0.3vw] ">
-                    {e.date}
+              <div
+                className={`${styles.tableBody} max-h-[50vh] overflow-y-auto`}
+              >
+                {data.map((e, i) => (
+                  <div>
+                    <div className=" bg-[#E1C655] text-white text-end px-[1.5vw] py-[0.3vw] ">
+                      {e.date}
+                    </div>
+                    {e.info.map((info, i) => (
+                      <ul
+                        className={` px-[5.4vw] border-b-[1px] border-b-[#D9D9D9] `}
+                      >
+                        <li className="w-[40%] underline border-b-[#D9D9D9]">
+                          {info.letterName}
+                        </li>
+                        <li className="w-[15%]">{info.OpenRate}</li>
+                        <li className="w-[15%]">{info.LinkClicks}</li>
+                        <li className="w-[15%]">{info.Audience}</li>
+                        <li className="w-[15%]">{info.Unsubscribes}</li>
+                      </ul>
+                    ))}
                   </div>
-                  {e.info.map((info, i) => (
-                    <ul
-                      className={` px-[5.4vw] border-b-[1px] border-b-[#D9D9D9] `}
-                    >
-                      <li className="w-[40%] underline border-b-[#D9D9D9]">
-                        {info.letterName}
-                      </li>
-                      <li className="w-[15%]">{info.OpenRate}</li>
-                      <li className="w-[15%]">{info.LinkClicks}</li>
-                      <li className="w-[15%]">{info.Audience}</li>
-                      <li className="w-[15%]">{info.Unsubscribes}</li>
-
-                    </ul>
-                  ))}
-                </div>
-              ))}
+                ))}
               </div>
             </div>
           </div>
@@ -141,7 +142,7 @@ const page = () => {
           className="tab"
           aria-label="Audience Growth"
         />
-         <div className={`tab-content py-[1.419vw]`}>
+        <div className={`tab-content py-[1.419vw]`}>
           <div className="w-[14.191vw] mb-[1.6vw]">
             <h3 className=" mb-[0.8vw]">Brand</h3>
             <CustomSelectInput label="Street Politics" options={options} />
