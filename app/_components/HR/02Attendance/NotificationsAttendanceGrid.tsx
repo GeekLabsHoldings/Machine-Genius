@@ -3,10 +3,10 @@ import React from "react";
 import NotificationsCard from "@/app/_components/HR/02Attendance/NotificationsCard";
 import styles from "./NotificationsAttendanceGrid.module.css";
 
-export default function NotificationsGrid() {
+export default function NotificationsAttendanceGrid() {
   return (
     <>
-      <h1>NotificationsGrid</h1>
+      <h1>NotificationsAttendanceGrid</h1>
 
       {/* Notifications Container */}
       <div className="grid grid-cols-5 gap-[2vw] h-[80vh]">
