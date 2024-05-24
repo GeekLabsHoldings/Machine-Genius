@@ -1,10 +1,12 @@
 "use client"
-import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import styles from "./analytics.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import TasksChart from "@/app/_components/graph/ComparisonChart";
+const TasksChart = dynamic(() => import("@/app/_components/graph/ComparisonChart"), {
+  ssr:false
+})
 
-const page = () => {
+
   const options = ["Script", "Article", "Documentary", "Trends Article"];
 
   const data = [
@@ -76,6 +78,9 @@ const page = () => {
     },
   ];
 
+const page = () => {
+
+
   return (
     <div className={`${styles.analytics} pt-[1vw] overflow-hidden`}>
       <div className={"tabs " + styles.tabs}>
@@ -143,8 +148,7 @@ const page = () => {
           </div>
           <div>
             <h3 className=" mb-[1.1vw]">Audience Growth Graph</h3>
-            <TasksChart/>
-            
+            <TasksChart />
           </div>
         </div>
       </div>
