@@ -3,6 +3,7 @@ import AttendanceTable from "@/app/_components/HR/02Attendance/AttendanceTable";
 import NotificationsAttendanceGrid from "@/app/_components/HR/02Attendance/NotificationsAttendanceGrid";
 import React, { useEffect, useState } from "react";
 import styles from "./attendance.module.css";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
 export default function page() {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -95,6 +96,7 @@ export default function page() {
       {/* Container */}
       <div>
         {/* Tabs */}
+        <div className="flex justify-between items-end mt-[30px]">
         <div role="tablist" className={`${styles.tabs} flex`}>
           <a
             role="tab"
@@ -123,6 +125,14 @@ export default function page() {
           >
             Notifications
           </a>
+        </div>
+
+            {activeTab === 2 && (
+                        <div className="w-[20%] flex">
+          <CustomSelectInput label="Late Arrivals" options={[]} />
+          </div>
+            )}
+
         </div>
 
         {/* 1. Tab 1 Content */}

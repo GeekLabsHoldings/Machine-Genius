@@ -17,9 +17,6 @@
 }
 
 /* Tabs */
-.tabs {
-  margin-top: 30px;
-}
 .tabs .tab:not(:last-child) {
   border-right: 1px solid var(--dark);
   padding-right: 10px;
