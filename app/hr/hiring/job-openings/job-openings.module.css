@@ -213,6 +213,7 @@
 
 .database_table .table_body ul:hover li > a:hover{
     background-color: var(--dark);
+    border-color: var(--white);
 }
 
 .database_table .table_body ul:hover li > a:hover::before{
@@ -221,4 +222,7 @@
 
 .database_table .table_body ul:hover li > a > div{
     color: var(--dark);
+}
+.database_table .table_body ul:hover li > a:hover > div{
+    color: var(--white);
 }
