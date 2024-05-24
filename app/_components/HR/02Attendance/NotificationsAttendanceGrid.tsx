@@ -7,14 +7,14 @@ export default function NotificationsAttendanceGrid() {
   return (
     <>     
       {/* Notifications Container */}
-      <div className="grid grid-cols-5 gap-[2vw] h-[80vh]">
+      <div className="grid grid-cols-5 gap-[2vw] h-[70vh]">
         {/* First Column */}
         <div className={`flex flex-col`}>
           <h2 className={`text-center ${styles.colTitle}`}>First Degree</h2>
           <div className={`relative ${styles.colContent}`}>
             {/* Notifications Cards */}
             <div
-              className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw]`}
+              className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw]`}
             >
               <NotificationsCard
                 bgColor="bg-[#FFFFFB]"
@@ -62,7 +62,7 @@ export default function NotificationsAttendanceGrid() {
           <div className={`relative ${styles.colContent} `}>
             {/* Notifications Cards */}
             <div
-              className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
+              className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
             >
               <NotificationsCard
                 bgColor="bg-[#EFE2A7]"
@@ -86,7 +86,7 @@ export default function NotificationsAttendanceGrid() {
           <div className={`relative ${styles.colContent} `}>
             {/* Notifications Cards */}
             <div
-              className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
+              className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
             >
               <NotificationsCard
                 bgColor="bg-[#F9B68F]"
@@ -102,7 +102,7 @@ export default function NotificationsAttendanceGrid() {
           <div className={`relative ${styles.colContent} `}>
             {/* Notifications Cards */}
             <div
-              className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
+              className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
             >
               <NotificationsCard
                 bgColor="bg-[#F28389]"
@@ -130,7 +130,7 @@ export default function NotificationsAttendanceGrid() {
           <div>
             {/* Notifications Cards */}
             <div
-              className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw] text-white`}
+              className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw] text-white`}
             >
               <NotificationsCard
                 bgColor="bg-[#E9313E]"
