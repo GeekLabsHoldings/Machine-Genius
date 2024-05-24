@@ -55,36 +55,14 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
     }
 
 
-
+    const handleToggleSubMenu = (e:any)=>{
+        console.log($(e.target).parents(`.${styles.has_sub_menu}`));
+        $(`.${styles.has_sub_menu}`).not($(e.target).parents(`.${styles.has_sub_menu}`)).removeClass(`${styles.open}`)
+        $(e.target).parents(`.${styles.has_sub_menu}`).toggleClass(`${styles.open}`)
+    }
 
 
     useEffect(() => {
-
-
-                // Select all elements with the class 'hoverable'
-                const hoverableElements:NodeListOf<HTMLDivElement> = document.querySelectorAll(`.${styles.has_sub_menu}`);
-
-                console.log(hoverableElements);
-                
-                // Add a mouseover event listener to each element
-                hoverableElements.forEach(element => {
-        
-                  element.addEventListener('click', function() {
-                    console.log(element);
-                    $(element).addClass("open")
-
-                    if (element.classList.contains(`open`)) {
-                    element.classList.remove(`open`);
-                    }else{
-                        element.classList.add(`open`);
-                    }
-                  });
-        
-                })
-
-
-
-
 
 
 
@@ -145,7 +123,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
                     {sideNavLinks.slice(1).map(ele => (
-                        <li key={ele.name} className={ele.subLinks ? styles.has_sub_menu : ''}>
+                        <li key={ele.name} className={ele.subLinks ? styles.has_sub_menu : ''} onClick={e=>handleToggleSubMenu(e)}>
                             <Link href={ele.path ? ele.path : ''} onClick={() => handleCurrentPageTitle((prev: any) => ele.path ? ele.name : prev)}>
                                 {ele.icon}
                                 <p>{ele.name}</p>

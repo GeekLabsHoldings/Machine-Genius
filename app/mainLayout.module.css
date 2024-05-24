@@ -13,10 +13,12 @@
     width:  clamp(300px , calc(18vw + 0.1rem) , 1000px );
     height: 100vh;
     background: transparent;
+  transition: all 0.3s;
 }
 
 .Side_Nav_Wrapper.close{
     width: clamp(70px , calc(6vw + 0.1rem) , 300px );
+  transition: all 0.3s;
 }
 
 .Page_Wrapper{
@@ -28,4 +30,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
+  transition: all 0.3s;
+
 }

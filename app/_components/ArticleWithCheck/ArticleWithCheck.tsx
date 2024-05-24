@@ -17,6 +17,7 @@ const ArticleWithCheck = ({ article , name, accsentColor}: IProps) => {
       <CustomCheckBox name={name} value={article} />
       <label
         className={`${styles.article}`}
+        style={{"--orange" : accsentColor}}
       >
         {article}
       </label>
