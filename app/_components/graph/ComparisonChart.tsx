@@ -1,7 +1,7 @@
 'use client'
 import ReactApexChart from "react-apexcharts";
 
-const TasksChart: React.FC<Props> = ({ tasks }) => {
+const TasksChart = () => {
   const options: any = {
     chart: {
       height: 350,
