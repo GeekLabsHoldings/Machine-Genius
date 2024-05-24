@@ -29,7 +29,7 @@ const page = () => {
 
       <div className={"tabs " + styles.tabs}>
         <input type="radio" name="tabs" className="tab" aria-label="All Hiring" />
-        <div className="tab-content h-[75vh] py-[1.5vw] flex flex-col ">
+        <div className="tab-content h-[70vh] py-[1.5vw] flex flex-col ">
           <p>These are all the hiring requests and unfinished hiring processes, requested by team managers and approved by OP ( Operation Manager).
             Make sure to go through every request in detail to find and hire the best candidate for the requested role! </p>
           <div className={styles.database_table}>
@@ -88,7 +88,7 @@ const page = () => {
         </div>
 
         <input type="radio" name="tabs" className="tab" aria-label="Hiring Requests" />
-        <div className="tab-content h-[75vh] py-[1.5vw] flex flex-col ">
+        <div className="tab-content h-[70vh] py-[1.5vw] flex flex-col ">
           <p>These are all the hiring requests and unfinished hiring processes, requested by team managers and approved by OP ( Operation Manager).
             Make sure to go through every request in detail to find and hire the best candidate for the requested role! </p>
           <div className={styles.database_table}>
@@ -147,7 +147,7 @@ const page = () => {
         </div>
 
         <input type="radio" name="tabs" className="tab" aria-label="In Process Hiring" defaultChecked />
-        <div className="tab-content h-[75vh] py-[1.5vw] flex flex-col ">
+        <div className="tab-content h-[70vh] py-[1.5vw] flex flex-col ">
           <p>These are all the hiring requests and unfinished hiring processes, requested by team managers and approved by OP ( Operation Manager).
             Make sure to go through every request in detail to find and hire the best candidate for the requested role! </p>
           <div className={styles.database_table}>

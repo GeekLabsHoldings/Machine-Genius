@@ -200,14 +200,21 @@
 
 .database_table .table_body ul:hover li > a{
     background-color: var(--white);
+    transition: all 0.3s;
 }
 
 .database_table .table_body ul:hover li > a::before{
     background-color: var(--dark);
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
 }
 
 .database_table .table_body ul:hover li > a > div{
     color: var(--dark);
+    transition: all 0.3s;
 }
 
 
