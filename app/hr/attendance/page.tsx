@@ -4,6 +4,7 @@ import NotificationsAttendanceGrid from "@/app/_components/HR/02Attendance/Notif
 import React, { useEffect, useState } from "react";
 import styles from "./attendance.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import NotificationsBreakGrid from "@/app/_components/HR/02Attendance/NotificationsBreakGrid";
 
 export default function page() {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -92,75 +93,88 @@ export default function page() {
 
   return (
     <section className={`${styles.attendance}`}>
-
       {/* Container */}
       <div>
         {/* Tabs */}
         <div className="flex justify-between items-end mt-[30px]">
-        <div role="tablist" className={`${styles.tabs} flex`}>
-          <a
-            role="tab"
-            className={`${styles.tab} ${
-              activeTab === 1 ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab(1)}
-          >
-            Today’s Attendance
-          </a>
-          <a
-            role="tab"
-            className={`${styles.tab} ${
-              activeTab === 2 ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab(2)}
-          >
-            Attendance Database
-          </a>
-          <a
-            role="tab"
-            className={`${styles.tab} ${
-              activeTab === 3 ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab(3)}
-          >
-            Notifications
-          </a>
-        </div>
-
-            {activeTab === 2 && (
-                        <div className="w-[20%] flex">
-          <CustomSelectInput label="Late Arrivals" options={[]} />
+          <div role="tablist" className={`${styles.tabs} flex`}>
+            <a
+              role="tab"
+              className={`${styles.tab} ${
+                activeTab === 1 ? styles.activeTab : ""
+              }`}
+              onClick={() => setActiveTab(1)}
+            >
+              Today’s Attendance
+            </a>
+            <a
+              role="tab"
+              className={`${styles.tab} ${
+                activeTab === 2 ? styles.activeTab : ""
+              }`}
+              onClick={() => setActiveTab(2)}
+            >
+              Attendance Database
+            </a>
+            <a
+              role="tab"
+              className={`${styles.tab} ${
+                activeTab === 3 ? styles.activeTab : ""
+              }`}
+              onClick={() => setActiveTab(3)}
+            >
+              Notifications
+            </a>
           </div>
-            )}
 
+          {activeTab === 2 && (
+            <div className="w-[20%] flex">
+              <CustomSelectInput label="Late Arrivals" options={[]} />
+            </div>
+          )}
+
+          {activeTab === 3 && (
+            <div className="w-[20%] flex">
+              <CustomSelectInput label="Exceeding Breaks" options={[]} />
+            </div>
+          )}
         </div>
 
         {/* 1. Tab 1 Content */}
         {activeTab === 1 && (
           <div className={`${styles.tab1}`}>
-          <div className={`${styles.tabHeader} my-[25px] flex justify-between`}>
-            <p>These are all the hiring requests and unfinished hiring processes, requested by team managers and approved by OP ( Operation Manager).<br/>Make sure to go through every request in detail to find and hire the best candidate for the requested role!</p>
+            <div
+              className={`${styles.tabHeader} my-[25px] flex justify-between`}
+            >
+              <p>
+                These are all the hiring requests and unfinished hiring
+                processes, requested by team managers and approved by OP (
+                Operation Manager).
+                <br />
+                Make sure to go through every request in detail to find and hire
+                the best candidate for the requested role!
+              </p>
 
-            {/* BUTTON HERE */}
-            <div className="flex gap-2">
-              <div
-                className="cursor-pointer"
-                onClick={() => {
-                  slideLeft();
-                }}
-              >
-                {leftArrow}
-              </div>
-              <div
-                className="cursor-pointer"
-                onClick={() => {
-                  slideRight();
-                }}
-              >
-                {rightArrow}
+              {/* BUTTON HERE */}
+              <div className="flex gap-2">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    slideLeft();
+                  }}
+                >
+                  {leftArrow}
+                </div>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    slideRight();
+                  }}
+                >
+                  {rightArrow}
+                </div>
               </div>
             </div>
-          </div>
 
             {/* Today’s Attendance Table */}
             <AttendanceTable />
@@ -170,9 +184,20 @@ export default function page() {
         {/* Tab 2 Content */}
         {activeTab === 2 && (
           <div className={`${styles.tab2}`}>
-          <div className={`${styles.tabHeader} my-[25px]`}>
-            <p>This policy ensures that employees can only access the system from one designated computer and IP address. Tardiness triggers a series of escalating warnings: verbal, written, and then deductions from pay. Termination occurs after the fifth instance. The cycle resets every <span className="font-semibold">90 days</span>.<br/><span className="font-semibold">Notifications are sent to HR and the team leader throughout the process.</span></p>
-          </div>
+            <div className={`${styles.tabHeader} my-[25px]`}>
+              <p>
+                This policy ensures that employees can only access the system
+                from one designated computer and IP address. Tardiness triggers
+                a series of escalating warnings: verbal, written, and then
+                deductions from pay. Termination occurs after the fifth
+                instance. The cycle resets every{" "}
+                <span className="font-semibold">90 days</span>.<br />
+                <span className="font-semibold">
+                  Notifications are sent to HR and the team leader throughout
+                  the process.
+                </span>
+              </p>
+            </div>
 
             {/* Attendance Database Notifications */}
             <NotificationsAttendanceGrid />
@@ -182,21 +207,23 @@ export default function page() {
         {/* Tab 3 Content */}
         {activeTab === 3 && (
           <div className={`${styles.tab3}`}>
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-[0.3vw] my-[43px] w-[393px]">
-                <h3 className={`${styles.cardsTitle}`}>Food List</h3>
-                {/* <CustomSelectInput label="Monthly" options={annualOptions} /> */}
-              </div>
-
-              {/* <CustomBtn
-                btnColor="white"
-                word="Receipts Database"
-                style={{ minWidth: "188px" }}
-              /> */}
+            <div className={`${styles.tabHeader} my-[25px]`}>
+              <p>
+                This policy ensures that employees can only access the system
+                from one designated computer and IP address. Tardiness triggers
+                a series of escalating warnings: verbal, written, and then
+                deductions from pay. Termination occurs after the fifth
+                instance. The cycle resets every{" "}
+                <span className="font-semibold">90 days</span>.<br />
+                <span className="font-semibold">
+                  Notifications are sent to HR and the team leader throughout
+                  the process.
+                </span>
+              </p>
             </div>
 
-            {/* 1.1 Cards Container */}
-
+            {/* Attendance Database Notifications */}
+            <NotificationsBreakGrid />
           </div>
         )}
       </div>
