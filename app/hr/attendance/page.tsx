@@ -160,20 +160,11 @@ export default function page() {
         {/* Tab 2 Content */}
         {activeTab === 2 && (
           <div className={`${styles.tab2}`}>
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-[0.3vw] my-[43px] w-[393px]">
-                <h3 className={`${styles.cardsTitle}`}>Cleaning Supplies</h3>
-                {/* <CustomSelectInput label="Weekly" options={annualOptions} /> */}
-              </div>
+          <div className={`${styles.tabHeader} my-[25px]`}>
+            <p>This policy ensures that employees can only access the system from one designated computer and IP address. Tardiness triggers a series of escalating warnings: verbal, written, and then deductions from pay. Termination occurs after the fifth instance. The cycle resets every <span className="font-semibold">90 days</span>.<br/><span className="font-semibold">Notifications are sent to HR and the team leader throughout the process.</span></p>
+          </div>
 
-              {/* <CustomBtn
-                btnColor="white"
-                word="Receipts Database"
-                style={{ minWidth: "188px" }}
-              /> */}
-            </div>
-
-            {/* Attendance Notifications */}
+            {/* Attendance Database Notifications */}
             <NotificationsAttendanceGrid />
           </div>
         )}
