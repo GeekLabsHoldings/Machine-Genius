@@ -13,6 +13,7 @@
   overflow: hidden;
 }
 
+/* ===== Table Header ===== */
 .table .table_header {
   position: relative;
   display: flex;
@@ -39,7 +40,7 @@
 .table .table_header li {
   font-size: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   padding: clamp(16px, calc(1.1vw + 0.1rem), 1000px)
     clamp(16px, calc(1.5vw + 0.1rem), 1000px);
   display: flex;
@@ -48,10 +49,7 @@
   gap: 0.5vw;
 }
 
-.table .table_header li svg {
-  width: 1vw;
-}
-
+/* ===== Table Body ===== */
 .table .table_body {
   height: 100%;
   max-height: 100%;
@@ -94,7 +92,7 @@
 .table .table_body ul li {
   font-size: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
   font-style: normal;
-  font-weight: 300;
+  font-weight: 500;
   padding: clamp(7px, calc(0.7vw + 0.1rem), 1000px)
     clamp(10px, calc(1.2vw + 0.1rem), 1000px);
   display: flex;
@@ -109,47 +107,10 @@
 .table .table_body ul:hover li {
   color: var(--white);
 }
-.table .table_body ul:hover li svg path {
-  fill: var(--white);
-}
 
-.table .table_body ul li .status_page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4vw;
-  transition: all 0s;
-  -webkit-transition: all 0s;
-  -moz-transition: all 0s;
-  -ms-transition: all 0s;
-  -o-transition: all 0s;
+.highUrgencyLevel {
+  color: #e9313e;
 }
-
-.table .table_body ul li .status_page {
-  font-size: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
-  padding: clamp(3px, calc(0.2vw + 0.1rem), 1000px)
-    clamp(10px, calc(0.4vw + 0.1rem), 1000px);
-  border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -webkit-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -moz-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -ms-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -o-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-}
-
-.type {
-  width: fit-content;
-  padding: 8px;
-  border-radius: 3px;
-}
-
-.Snacks {
-  background-color: #f36f24b2;
-}
-
-.Cleaning {
-  background-color: #e1c655b2;
-}
-
-.Drinks {
-  background-color: #31b2e9b2;
+.midUrgencyLevel {
+  color: #e1c655;
 }
