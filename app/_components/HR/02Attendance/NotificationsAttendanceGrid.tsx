@@ -59,7 +59,7 @@ export default function NotificationsGrid() {
 
         {/* Second Column */}
         <div className={`flex flex-col`}>
-          <h2 className={`text-center ${styles.colTitle}`}>First Degree</h2>
+          <h2 className={`text-center ${styles.colTitle}`}>Second Degree</h2>
           <div className={`relative ${styles.colContent} `}>
             <div
               className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
@@ -82,7 +82,7 @@ export default function NotificationsGrid() {
 
         {/* Third Column */}
         <div className={`flex flex-col`}>
-          <h2 className={`text-center ${styles.colTitle}`}>First Degree</h2>
+          <h2 className={`text-center ${styles.colTitle}`}>Third Degree</h2>
           <div className={`relative ${styles.colContent} `}>
             <div
               className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
@@ -97,7 +97,7 @@ export default function NotificationsGrid() {
 
         {/* Fourth Column */}
         <div className={`flex flex-col`}>
-          <h2 className={`text-center ${styles.colTitle}`}>First Degree</h2>
+          <h2 className={`text-center ${styles.colTitle}`}>Fourth Degree</h2>
           <div className={`relative ${styles.colContent} `}>
             <div
               className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer}  pb-[0.7vw]`}
@@ -124,7 +124,7 @@ export default function NotificationsGrid() {
 
         {/* Fifth Column */}
         <div className={`flex flex-col`}>
-          <h2 className={`text-center ${styles.colTitle}`}>First Degree</h2>
+          <h2 className={`text-center ${styles.colTitle}`}>Termination</h2>
           <div className={``}>
             <div
               className={`space-y-[0.7vw] h-[70vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw] text-white`}
