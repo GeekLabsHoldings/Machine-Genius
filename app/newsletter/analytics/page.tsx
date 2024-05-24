@@ -148,8 +148,8 @@ const page = () => {
             <h3 className=" mb-[0.8vw]">Brand</h3>
             <CustomSelectInput label="Street Politics" options={options} />
           </div>
-          <div>
-            <h3 className=" mb-[1.1vw]">Audience Growth Graph</h3>
+          <div className=" w-[50%">
+            <h3 className=" mb-[1.1vw]]">Audience Growth Graph</h3>
             <TasksChart />
           </div>
         </div>
