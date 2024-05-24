@@ -145,6 +145,7 @@ export default function page() {
                 icon={addIcon}
                 btnColor="black"
                 paddingVal="py-[0.5vw] px-[1vw]"
+                href="/hr/on-boarding/new-entry/"
               />
             </div>
             {/* Slide Buttons */}
