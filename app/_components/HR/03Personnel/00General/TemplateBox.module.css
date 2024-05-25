@@ -7,7 +7,6 @@
   -moz-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
   -ms-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
   -o-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
-  transition: color none;
 }
 
 .box .header {
