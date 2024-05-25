@@ -180,9 +180,6 @@ img {
   gap: 1vh;
 }
 
-.fillBtn {
-  /* overflow: hidden; */
-}
 
 .fillBtn::before {
   content: "";
