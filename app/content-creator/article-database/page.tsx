@@ -8,22 +8,15 @@ import {
   ContentTypeFilter,
   YourArticles,
 } from "@/app/_data/data";
-import $ from 'jquery'
 
 const ArticleDatabase = () => {
 
-  
-// to apply effect in selected article when click on it
-    const handleSelectedBg = (e: any)=>{
-        $('.articleRow').removeClass('selected')
-        $(e.target).parents('.articleRow').toggleClass('selected')
-    }
 
   const renderYourArticles = YourArticles.map((oneArticle , idx) => (
     <ul
     key={idx}
       className = { `${styles.tableBody} borderBottom articleRow ` } 
-      onClick={(e)=>{handleSelectedBg(e)}}
+      // onClick={(e)=>{handleSelectedBg(e)}}
     >
       <li className="w-[2%]">{oneArticle.id}</li>
       <li className="w-3/12 ">{oneArticle.articleName}</li>

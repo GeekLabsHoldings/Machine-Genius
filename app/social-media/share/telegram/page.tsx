@@ -7,26 +7,16 @@ import {
   Brands,
   Posts,
 } from "@/app/_data/data";
-import $ from 'jquery'
-import CustomBtn from '@/app/_components/Button/CustomBtn';
-import { Modal } from '@mui/material';
 import BasicModal from '@/app/_components/Modal/modal';
 import { useState } from 'react';
 import Link from 'next/link';
 
 const Telegram = () => {
 
-  // to apply effect in selected article when click on it
-  const handleSelectedBg = (e: any) => {
-    $('.articleRow').removeClass('selected')
-    $(e.target).parents('.articleRow').toggleClass('selected')
-  }
-
   const renderTelegramPosts = Posts.map((onePost, idx) => (
     <ul
       key={idx}
       className={`${styles.tableBody} borderBottom articleRow `}
-      onClick={(e) => { handleSelectedBg(e) }}
     >
       <li className="w-2/12">{onePost.subReddit}</li>
       <li className="w-3/12 "><a href={onePost.link}>{onePost.link}</a></li>

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import styles from "./archivedProjects.module.css";
 import Slider from "react-slick";
 import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles";

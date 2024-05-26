@@ -40,10 +40,10 @@ function OptionsDropdown({
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
+    // document.addEventListener("click", handleClickOutside);
+    // return () => {
+    //   document.removeEventListener("click", handleClickOutside);
+    // };
   }, []);
 
   useEffect(() => {

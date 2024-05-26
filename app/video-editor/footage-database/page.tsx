@@ -6,22 +6,16 @@ import {
     ArticleNames,
     VideosDatabase
 } from "@/app/_data/data";
-import $ from 'jquery';
 import VideoPlayer from '@/app/_components/VideoPlayer/VideoPlayer';
 
 const FootageDatabase = () => {
-     // Function to handle the selection background
-    const handleSelectedBg = (e: any)=>{
-        $('.articleRow').removeClass('selected')
-        $(e.target).parents('.articleRow').toggleClass('selected')
-    }
+
 
     // Render the list of videos from the VideosDatabase array
   const renderVideos = VideosDatabase.map((oneVideo , idx) => (
     <ul
     key={idx}
       className = { `${styles.tableBody} borderBottom articleRow ` } 
-      onClick={(e)=>{handleSelectedBg(e)}}
     >
       <li className="w-[20%]">{oneVideo.id}</li>
       <li className="w-[20%] ">

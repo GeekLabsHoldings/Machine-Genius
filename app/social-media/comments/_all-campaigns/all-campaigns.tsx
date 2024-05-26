@@ -2,8 +2,9 @@
 import { AccountsData } from '@/app/_data/data';
 import styles from './all-campaigns.module.css'
 import { useState } from 'react';
-import $ from 'jquery'
 import BasicModal from '@/app/_components/Modal/modal';
+
+
 const AllCampaigns = ()=>{
     const facebookIcon = <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
     <path d="M20.2344 9.99538C20.2344 7.34444 19.1813 4.80208 17.3068 2.92758C15.4323 1.05309 12.8899 4.26716e-06 10.239 4.26716e-06C7.72208 -0.00232006 5.29694 0.944983 3.44799 2.65269C1.59905 4.36039 0.462414 6.70278 0.265142 9.21196C0.0678707 11.7211 0.824482 14.2124 2.38384 16.188C3.9432 18.1637 6.19051 19.4783 8.67687 19.8694V12.884H6.1409V9.99538H8.67829V7.79354C8.67829 5.28899 10.1705 3.90391 12.4537 3.90391C13.5475 3.90391 14.6912 4.09954 14.6912 4.09954V6.55983H13.4304C12.1881 6.55983 11.8026 7.3309 11.8026 8.12053V9.99538H14.5741L14.1315 12.884H11.8011V19.8694C14.1522 19.4971 16.2933 18.2981 17.8392 16.488C19.3851 14.678 20.2344 12.3757 20.2344 9.99538Z" fill="#1877F2" />
@@ -33,20 +34,12 @@ const runningIcon = <svg xmlns="http://www.w3.org/2000/svg" width="10" height="1
 <path d="M5 0.5C2.23 0.5 0 2.73 0 5.5C0 8.27 2.23 10.5 5 10.5C7.77 10.5 10 8.27 10 5.5C10 2.73 7.77 0.5 5 0.5ZM4.98923 1.20421C5.08479 1.20277 5.17966 1.22052 5.26823 1.2564C5.3568 1.29229 5.43728 1.34558 5.50488 1.41312C5.57249 1.48066 5.62586 1.56108 5.66183 1.64962C5.6978 1.73816 5.71563 1.83302 5.71429 1.92857V4.78571H7.14286C7.23751 4.78438 7.33148 4.80186 7.41932 4.83716C7.50715 4.87245 7.58709 4.92485 7.6545 4.99131C7.72191 5.05777 7.77543 5.13697 7.81197 5.2243C7.8485 5.31162 7.86732 5.40534 7.86732 5.5C7.86732 5.59466 7.8485 5.68838 7.81197 5.7757C7.77543 5.86303 7.72191 5.94223 7.6545 6.00869C7.58709 6.07515 7.50715 6.12755 7.41932 6.16284C7.33148 6.19814 7.23751 6.21562 7.14286 6.21429H5C4.81057 6.21427 4.6289 6.13901 4.49494 6.00506C4.36099 5.87111 4.28573 5.68943 4.28571 5.5V1.92857C4.28304 1.73925 4.35564 1.55661 4.48756 1.42079C4.61947 1.28497 4.79991 1.20707 4.98923 1.20421Z" fill="#2A2B2A"/>
 </svg> ;
 
-// apply effect on selected/clicked topic (change background and color and apply the same on button)
-  const handleSelectedBg = (e: any) => {
-    $('.articleRow').removeClass('selected')
-    $(e.target).parents('.articleRow').toggleClass('selected')
-    $('.articleRow').removeClass('changeSvgBg')
-    $(e.target).parents('.articleRow').toggleClass('changeSvgBg')
 
-  }
 //   return data about account , number of comments and campaign type
   const renderAccounts = AccountsData.map((oneAccount, idx) => (
     <ul
       key={idx}
       className={`${styles.tableBody} borderBottom articleRow`}
-      onClick={(e) => { handleSelectedBg(e) }}
     >
       <li className="w-[20%] flex justify-center text-center gap-[1vw]">
         <p>{oneAccount.account_name}</p>
