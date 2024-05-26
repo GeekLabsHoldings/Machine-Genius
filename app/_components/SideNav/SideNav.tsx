@@ -30,12 +30,8 @@ const rols = [
     'Customer Service',
     'Creative',
     'HR',
-<<<<<<< HEAD
-    'Accounting'
-=======
-    'Acounting',
+    'Accounting',
     'Newsletter'
->>>>>>> ec4c9d40d8c2232727247611db1d56f85d9ec88e
 ]
 
 
@@ -103,11 +99,8 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/hr/dashboard')
         }else if (SelectedRole === 'Accounting') {
             router.push('/accounting/dashboard')
-<<<<<<< HEAD
-=======
         }else if (SelectedRole === 'Newsletter') {
             router.push('/newsletter/dashboard')
->>>>>>> ec4c9d40d8c2232727247611db1d56f85d9ec88e
         }
     }, [SelectedRole])
 
