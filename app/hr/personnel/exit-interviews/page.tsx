@@ -22,27 +22,27 @@ export default function Page() {
   );
 
   return (
-    <>
+    <section>
       <div className="flex justify-between items-center my-[1.5vw]">
         <h2 className="text-[32px] font-bold">Templates</h2>
         <div>
           <CustomBtn icon={addIcon} word="New Template" btnColor="black" />
         </div>
       </div>
-      <section className="grid lg:grid-cols-3 xl:grid-cols-4 gap-[2vw] items-start">
+      <div className="grid lg:grid-cols-3 gap-[2vw] items-start">
         <TemplateBox title="Fired Employee Template">
-          <div>
+          {/* <div>
             <p>1. What is your thinking process?</p>
             <p>2. What are your strengths?</p>
             <p>3. Describe your response to a certain situation.</p>
             <p>4. Are you a team player or a one-man show?</p>
             <p>5. What kind of work experiences do you have?</p>
             <p>6. Which editing software do you prefer?</p>
-          </div>
+          </div> */}
         </TemplateBox>
 
         <TemplateBox title="Resigned Employee Template" />
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

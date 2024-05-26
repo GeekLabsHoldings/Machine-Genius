@@ -1,9 +1,13 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import styles from "./expenses.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
 const page = () => {
 
+  const [sorting1,setSorting1] = useState("Ascend") 
+  const [sorting2,setSorting2] = useState("Ascend") 
+  const [sorting3,setSorting3] = useState("Ascend") 
 
     function getRandomBackgroundColor() {
         const colors = [
@@ -182,8 +186,12 @@ const page = () => {
           <div className={`${styles.dataSort} mb-[3vh]`}>
             <h5 className=" mb-[1vh] font-semibold">Quantity</h5>
             <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
-              <span className={`${styles.dataSort}`}>Ascend</span>
+              <span className={`${styles.dataSort}`}>{sorting1}</span>
               <svg
+              onClick={()=>{
+                sorting1 == "Ascend" ? setSorting1("Descend") : setSorting1("Ascend")
+              }}
+              className="cursor-pointer"
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
@@ -202,8 +210,12 @@ const page = () => {
           <div className={`${styles.dataSort} mb-[3vh]`}>
             <h5 className=" mb-[1vh] font-semibold">Price</h5>
             <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
-              <span className={`${styles.dataSort}`}>Ascend</span>
+              <span className={`${styles.dataSort}`}>{sorting2}</span>
               <svg
+              onClick={()=>{
+                sorting2 == "Ascend" ? setSorting2("Descend") : setSorting2("Ascend")
+              }}
+              className="cursor-pointer"
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
@@ -222,8 +234,12 @@ const page = () => {
           <div className={`${styles.dataSort} mb-[3vh]`}>
             <h5 className=" mb-[1vh] font-semibold">Total Price</h5>
             <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
-              <span className={`${styles.dataSort}`}>Ascend</span>
+              <span className={`${styles.dataSort}`}>{sorting3}</span>
               <svg
+              onClick={()=>{
+                sorting3 == "Ascend" ? setSorting3("Descend") : setSorting3("Ascend")
+              }}
+              className="cursor-pointer"
                 width="16"
                 height="16"
                 viewBox="0 0 16 16"
