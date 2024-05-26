@@ -1,4 +1,4 @@
-
+'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './SideNav.module.css'
 import logo_image from '../../../public/assets/logo.svg'
@@ -8,7 +8,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import CustomSelectInput from '../CustomSelectInput/CustomSelectInput'
 import { useRouter } from 'next/navigation'
-import $ from "jquery";
 
 
 const rolsIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fill="none">
@@ -31,7 +30,12 @@ const rols = [
     'Customer Service',
     'Creative',
     'HR',
+<<<<<<< HEAD
     'Accounting'
+=======
+    'Acounting',
+    'Newsletter'
+>>>>>>> ec4c9d40d8c2232727247611db1d56f85d9ec88e
 ]
 
 
@@ -54,11 +58,35 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
     }
 
 
-    $(`.${styles.has_sub_menu}`).on("click" , (e)=>{
-        console.log(e.target);
-    })
+
+
 
     useEffect(() => {
+
+
+                // Select all elements with the class 'hoverable'
+                const hoverableElements:NodeListOf<HTMLDivElement> = document.querySelectorAll(`.${styles.has_sub_menu}`);
+
+                // Add a mouseover event listener to each element
+                hoverableElements.forEach(element => {
+        
+                  element.addEventListener('click', function() {
+                    console.log(element);
+                    if (element.classList.contains(`${styles.open}`)) {
+                    element.classList.remove(`${styles.open}`);
+                    }else{
+                        element.classList.add(`${styles.open}`);
+                    }
+                  });
+        
+                })
+
+
+
+
+
+
+
         if (SelectedRole === 'Content Creator') {
             router.push('/content-creator/dashboard')
         } else if (SelectedRole === 'Video Editor') {
@@ -75,6 +103,11 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
             router.push('/hr/dashboard')
         }else if (SelectedRole === 'Accounting') {
             router.push('/accounting/dashboard')
+<<<<<<< HEAD
+=======
+        }else if (SelectedRole === 'Newsletter') {
+            router.push('/newsletter/dashboard')
+>>>>>>> ec4c9d40d8c2232727247611db1d56f85d9ec88e
         }
     }, [SelectedRole])
 
@@ -114,7 +147,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
                     {sideNavLinks.slice(1).map(ele => (
-                        <li key={ele.name} className={ele.subLinks ? styles.has_sub_menu + ' has_sub_menu' : ''}>
+                        <li key={ele.name} className={ele.subLinks ? styles.has_sub_menu : ''}>
                             <Link href={ele.path ? ele.path : ''} onClick={() => handleCurrentPageTitle((prev: any) => ele.path ? ele.name : prev)}>
                                 {ele.icon}
                                 <p>{ele.name}</p>

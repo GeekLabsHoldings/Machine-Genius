@@ -1,33 +1,27 @@
-"use client";
-import "./calender.css";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import {  useState } from "react";
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import CustomBtn from "@/app/_components/Button/CustomBtn";
-import eventContentImg from "../../../public/assets/calender event content img.png";
-import Image from "next/image";
-import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+"use client"; // Indicates that this file is intended for use on the client side
+import "../../video-editor/calender/calender.css"; // Importing CSS styles for the calendar component
+import FullCalendar from "@fullcalendar/react"; // Importing the FullCalendar component
+import dayGridPlugin from "@fullcalendar/daygrid"; // Importing the dayGridPlugin for FullCalendar
+import { useState } from "react"; // Importing React hooks for state management
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing custom select input component
+import CustomBtn from "@/app/_components/Button/CustomBtn"; // Importing custom button component
+import eventContentImg from "../../../public/assets/calender event content img.png"; // Importing event content image
+import Image from "next/image"; // Importing Next.js Image component for optimized image loading
 
+// Calendar component definition
 export default function Calendar() {
-  const brandOptions: string[] = [
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
+  // Options for brand and content type select inputs
+  const eventsOptions: string[] = [
+    "event 1",
+    "event 2",
+    "event 3",
+    "event 4",
+    "event 5",
+    "event 6",
+    "event 7",
   ];
-  const contentTypeOptions: string[] = [
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-    "Street Politics",
-  ];
+
+  // Array of calendar events
   const calenderEvents = [
     {
       title: "event 1",
@@ -121,57 +115,64 @@ export default function Calendar() {
       articleTitle: "Canada’s PM Quits",
     },
   ];
+
+  // State to manage the selected event
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
+  // Function to handle event click
   const handleEventClick = (info: any) => {
     setSelectedEvent(info.event);
-    console.log(selectedEvent);
+    console.log(selectedEvent); // Log the selected event
   };
 
+  // Function to close the selected event
   const handleCloseEvent = () => {
     setSelectedEvent("");
   };
 
+  // Get today's date for the button text
   const today = new Date();
   const month = today.getMonth() + 1; // Note: Month is zero-based (0 for January, 1 for February, etc.)
   const day = today.getDate();
 
-  const arrowLeft = (
+  // add Icon for button   
+  const addIcon = (
     <svg
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-6 h-6"
     >
       <path
         fill-rule="evenodd"
-        d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
         clip-rule="evenodd"
+        d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
+        fill="#FFFFFB"
       />
     </svg>
   );
 
-  // useEffect(() => {
-  //     console.log(handleEventBackgroundColor());
-
-  // })
-
+  // Render the calendar component
   return (
     <div className="pt-[1.5vw] h-full w-full full-calender">
-      <div className="grid grid-cols-3 lg:grid-cols-4 gap-[1vw] filters">
-        <CustomSelectInput label="Brand Name" options={brandOptions} />
-        <CustomSelectInput label="Content Type" options={contentTypeOptions} />
-        <CustomBtn
-          btnColor="white"
-          word="Clear"
-          onClick={() => console.log("clear")}
-          style={{ width: "max-content" }}
-        />
+      {/* Filters section */}
+      <div className="flex justify-between filters">
+        <div className="w-[30%] flex items-center gap-[2vw]">
+        <h3 className="font-bold text-[32px]">Calendar</h3>
+        <CustomSelectInput label="All Events" options={eventsOptions} />
+        </div>
         <div className="flex items-center justify-end">
-          <CustomCheckBox value={"Show Events Only"} name="show-events-only" />
-          <label htmlFor="">Show Events Only</label>
+          <CustomBtn
+            btnColor="black"
+            word="New Entry"
+            width="max-content"
+            icon={addIcon}
+            paddingVal="py-[0.5vw] px-[1vw]"
+          />
         </div>
       </div>
+      {/* FullCalendar component */}
       <FullCalendar
         plugins={[dayGridPlugin]}
         headerToolbar={{
@@ -187,12 +188,13 @@ export default function Calendar() {
         buttonText={{ today: `${day} / ${month}` }}
         droppable={true}
       />
-
+      {/* Selected event content */}
       {selectedEvent ? (
         <>
-          <div className="event-content-overlay" onClick={handleCloseEvent}>
-            {" "}
-          </div>
+          <div
+            className="event-content-overlay"
+            onClick={handleCloseEvent}
+          ></div>
           <div className="event-content">
             <span className="close-event-content" onClick={handleCloseEvent}>
               <svg
@@ -201,17 +203,13 @@ export default function Calendar() {
                 fill="currentColor"
                 className="w-6 h-6"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
-                  clip-rule="evenodd"
-                />
+                /* SVG path */
               </svg>
             </span>
             <div className="event-content-header">
               <h3>{selectedEvent.extendedProps?.articleTitle}</h3>
               <p>
-                {selectedEvent.startStr}{" "}
+                {selectedEvent.startStr}
                 <span style={{ background: selectedEvent.backgroundColor }}>
                   Canada
                 </span>

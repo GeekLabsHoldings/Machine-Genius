@@ -2,7 +2,13 @@
 import React from "react";
 import styles from "./TicketingDatabaseTable.module.css";
 
+/**
+ * Renders a table component for displaying ticketing database information.
+ *
+ * @returns {JSX.Element} The rendered table component.
+ */
 export default function TicketingDatabaseTable() {
+  // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       newStatus: true,

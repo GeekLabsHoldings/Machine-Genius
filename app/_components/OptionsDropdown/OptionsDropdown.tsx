@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./OptionsDropdown.module.css";
-import $ from "jquery";
+// import $ from "jquery";
 
 /**
  * Props for the OptionsDropdown component.

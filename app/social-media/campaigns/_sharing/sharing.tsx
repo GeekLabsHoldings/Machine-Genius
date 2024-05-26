@@ -1,25 +1,16 @@
 'use client'
 import { Campaigns } from '@/app/_data/data';
 import styles from './sharing.module.css';
-import $ from 'jquery'
 import CustomBtn from '@/app/_components/Button/CustomBtn';
 
 // topics about campaigns
 const Sharing = ()=>{
-    // apply effect on selected/clicked topic (change background and color and apply the same on button)
-    const handleSelectedBg = (e: any)=>{
-        $('.articleRow').removeClass('selected');
-        $('.videoStatusBtn').removeClass('clicked')
-        $(e.target).parents('.articleRow').toggleClass('selected')
-        $(e.target).toggleClass('selected')
-        $(e.target).find('.videoStatusBtn').toggleClass('clicked')
-    }
+
     // return campaigns topics
     const renderTopics = Campaigns.map((oneCampaign , idx) => (
         <ul
         key={idx}
           className = { `${styles.tableBody} borderBottom articleRow ` } 
-          onClick={(e)=>{handleSelectedBg(e)}}
         >
           <li className="w-[5%]">{oneCampaign.id}</li>
           <li className="w-[30%] ">{oneCampaign.content}</li>

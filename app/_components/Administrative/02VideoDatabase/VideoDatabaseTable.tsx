@@ -2,6 +2,11 @@
 import React from 'react';
 import styles from './VideoDatabaseTable.module.css';
 
+/**
+ * Renders a table component displaying Video Database information.
+ *
+ * @return {JSX.Element} The rendered table component.
+ */
 export default function VideoDatabaseTable() {
 
    const bodyRow = [
