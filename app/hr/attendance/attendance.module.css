@@ -1,0 +1,26 @@
+.attendance .tab{
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.attendance .tabHeader {
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.attendance .tab {
+  color: #acacac;
+  cursor: pointer;
+}
+.attendance .activeTab {
+  color: var(--dark);
+}
+
+/* Tabs */
+.tabs .tab:not(:last-child) {
+  border-right: 1px solid var(--dark);
+  padding-right: 10px;
+}
+.tabs .tab:not(:first-child) {
+  padding-left: 10px;
+}

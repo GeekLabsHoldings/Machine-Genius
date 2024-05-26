@@ -131,7 +131,7 @@ export default function VideoDatabaseTable() {
   return (
     <div className={`${styles.task} py-[4.4vh]`}>
       <div className=" flex items-center justify-between">
-        <div className=" flex gap-[0.938vw]">
+        <div className={` flex gap-[0.938vw]`}>
           <div className="mb-[3vh]">
             {/* Staff Member */}
             <h5 className=" mb-[1vh] font-semibold">Staff Member</h5>
@@ -149,8 +149,8 @@ export default function VideoDatabaseTable() {
           </div>
           <div className="mb-[3vh]">
             <h5 className=" mb-[1vh] font-semibold">Deadline</h5>
-            <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
-              <span>Ascend</span>
+            <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
+              <span className={`${styles.dataSort}`}>Ascend</span>
               <svg
                 width="16"
                 height="16"
