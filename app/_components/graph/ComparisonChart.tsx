@@ -1,7 +1,7 @@
 import ReactApexChart, { Props } from "react-apexcharts";
 
 const TasksChart: React.FC<Props> = ({ tasks }) => {
-  const options = {
+  const options:any = {
     chart: {
       height: 350,
       zoom: {
