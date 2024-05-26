@@ -234,7 +234,7 @@ const page = () => {
           </ul>
 
           {/* Table Body */}
-          <div className={`${styles.table_body} w-fit`}>
+          <div className={`${styles.table_body} w-fit overflow-hidden`}>
             {bodyRow.map((e, idx) => (
               <ul className="w-[100%]" key={idx}>
                 <li className="w-[14.2857%] min-w-[230px] ">{e.employeeName}</li>
