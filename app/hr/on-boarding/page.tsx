@@ -117,45 +117,57 @@ export default function page() {
   return (
     <>
       <div className="pageHeader">
-        <h3 className="mt-[25px]">Filter By:</h3>
+        <h3 className="mt-[25px]">Employee Database</h3>
 
         {/* filters options to filter and edit data in table */}
         <div
           className={`flex flex-col gap-[0.7vw] w-full pageHeader mt-[10px] mb-[25px]`}
         >
           <div className="flex justify-between items-end">
-            <div className={`w-8/12 flex items-end gap-[1vw]`}>
-                {/* Search */}
-                <input type="search" name="" id="" placeholder="Employee Name" className="border border-[var(--dark)] rounded-[5px] py-2 px-4" />
+            <div className={`w-8/12 flex items-center gap-[1.2vw]`}>
+              {/* Search */}
+              <input
+                type="search"
+                name=""
+                id=""
+                placeholder="Employee Name"
+                className="border border-[var(--dark)] rounded-[5px] py-[0.3vw] px-[1.2vw] w-1/2"
+              />
+              {/* Filter Options */}
               <div className="flex flex-col w-1/4 gap-[0.3vw]">
                 <CustomSelectInput label="All Roles" options={rolesOptions} />
               </div>
             </div>
 
             {/* BUTTONS Container */}
-                <div className="flex items-center gap-[2vw]">
-                    <div className="">
-                        <CustomBtn word="New Entry" icon={addIcon} btnColor="black" paddingVal="py-[0.5vw] px-[1vw]" />
-                    </div>
-                    <div className="flex gap-2">
+            <div className="flex items-center gap-[2vw]">
+              <div className="">
+                <CustomBtn
+                  word="New Entry"
+                  icon={addIcon}
+                  btnColor="black"
+                  paddingVal="py-[0.5vw] px-[1vw]"
+                />
+              </div>
+              <div className="flex gap-2">
                 <div
-                    className="cursor-pointer"
-                    onClick={() => {
+                  className="cursor-pointer"
+                  onClick={() => {
                     slideLeft();
-                    }}
+                  }}
                 >
-                    {leftArrow}
+                  {leftArrow}
                 </div>
                 <div
-                    className="cursor-pointer"
-                    onClick={() => {
+                  className="cursor-pointer"
+                  onClick={() => {
                     slideRight();
-                    }}
+                  }}
                 >
-                    {rightArrow}
+                  {rightArrow}
                 </div>
-                    </div>
-                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
