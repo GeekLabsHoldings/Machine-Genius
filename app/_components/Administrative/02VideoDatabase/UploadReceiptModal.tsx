@@ -12,6 +12,16 @@ interface IProps {
   modalTitle: string; // Modal title text.
 }
 
+/**
+ * Renders a modal for uploading receipts.
+ *
+ * @param {IProps} props - The component props.
+ * @param {string} props.modalTitle - The title of the modal.
+ * @param {string} props.btnWord - The word displayed on the button.
+ * @param {string} props.btnColor - The color of the button.
+ * @param {string} props.btnIcon - The icon displayed on the button.
+ * @return {JSX.Element} The rendered modal component.
+ */
 export default function UploadReceiptModal({
   modalTitle,
   btnWord,
