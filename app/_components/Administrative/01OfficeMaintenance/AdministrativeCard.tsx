@@ -14,6 +14,18 @@ interface AdministrativeCardProps {
   items: Item[];
 }
 
+/**
+ * Renders an administrative card component with a title, icon, and a list of items.
+ *
+ * @param {Object} props - The properties for the administrative card component.
+ * @param {React.ReactElement} props.icon - The icon to be displayed in the card.
+ * @param {boolean} props.addIcon - Flag indicating whether to add an icon to the card header.
+ * @param {string} props.title - The title of the card.
+ * @param {Array<Object>} props.items - The list of items to be displayed in the card body.
+ * @param {string} props.items[].title - The title of the item.
+ * @param {any} props.items[].info - Additional information about the item (optional).
+ * @return {React.ReactElement} The rendered administrative card component.
+ */
 export default function AdministrativeCard({
   icon,
   addIcon,

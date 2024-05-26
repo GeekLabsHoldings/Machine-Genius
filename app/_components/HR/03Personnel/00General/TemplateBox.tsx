@@ -8,6 +8,14 @@ interface IProps {
   children?: React.ReactNode;
 }
 
+/**
+ * Renders a Template Box component with the given title and children.
+ *
+ * @param {IProps} props - The props object containing the title and children.
+ * @param {string} props.title - The title to be displayed in the TemplateBox.
+ * @param {React.ReactNode} props.children - The content to be rendered inside the TemplateBox.
+ * @return {JSX.Element} The rendered TemplateBox component.
+ */
 export default function TemplateBox({ title, children }: IProps) {
   return (
     <div className={styles.box}>

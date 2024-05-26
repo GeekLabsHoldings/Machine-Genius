@@ -293,10 +293,6 @@
     transform: rotateY(180deg);
 }
 
-.has_sub_menu {
-
-}
-
 .has_sub_menu.open {
     display: block;
 }

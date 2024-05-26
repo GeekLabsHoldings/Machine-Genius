@@ -12,6 +12,16 @@ interface IProps {
   modalTitle: string; // Modal title text.
 }
 
+/**
+ * Renders a modal for adding a new product.
+ *
+ * @param {IProps} props - The props object containing the following properties:
+ *   - modalTitle: The title of the modal.
+ *   - btnWord: The word to display on the button.
+ *   - btnColor: The color of the button.
+ *   - btnIcon: The icon to display on the button (optional).
+ * @return {JSX.Element} The rendered AddNewProductModal component.
+ */
 export default function AddNewProductModal({
   modalTitle,
   btnWord,

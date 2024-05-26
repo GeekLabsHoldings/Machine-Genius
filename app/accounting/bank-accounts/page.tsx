@@ -1,7 +1,9 @@
 "use client";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import SubscriptionsCreator from "../subscriptions/SubscriptionsCreator";
+import BankAccountCreator from "./BankAccountCreator";
 import styles from "./bank-accounts.module.css";
+import Link from "next/link";
+import { truncateText } from "@/app/_utils/text";
 
 const bodyRow = [
   {
@@ -149,8 +151,18 @@ const bodyRow = [
   },
 ];
 
-import Link from "next/link";
-import { truncateText } from "@/app/_utils/text";
+
+
+const getRandomColor = () => {
+  const colors = [
+    "#31B2E9B2",
+    "#E1C655B2",
+    "#5FA85BB5",
+    "#E9313EB2",
+    "#F36F24B2",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
 
 const BankAccountsTable = () => {
   return (
@@ -216,7 +228,11 @@ const BankAccountsTable = () => {
                 </Link>
               </li>
               <li className="w-[10%]">
-                <span>{e.Brand}</span>
+                <span
+                    className="px-2 py-1 rounded-[3px]"
+                    style={{ backgroundColor: getRandomColor() }}
+                  >
+                  {e.Brand}</span>
               </li>
               <li className="w-[10%]">
                   <span>{e.Username}</span>
@@ -275,7 +291,7 @@ function page() {
           <div className="flex gap-2">
             {/* open modal to enable you to Create Ticket  */}
 
-            <SubscriptionsCreator
+            <BankAccountCreator
               btnWord={"Add Bank Account"}
               btnIcon={
                 <svg

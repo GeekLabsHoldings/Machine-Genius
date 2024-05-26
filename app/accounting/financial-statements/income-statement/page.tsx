@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import styles from "./income-statement.module.css";
 import { useRouter } from "next/navigation";
 
@@ -106,9 +105,6 @@ const page = () => {
           Income Statement, Q4, 2024
         </h2>
 
-        <span className="bg-[#5FA85B] rounded p-1 px-4 text-white text-[.7rem] font-semibold">
-          Balanced
-        </span>
       </div>
       <div className={`${styles.statement} pt-[0.8vw] rounded-xl`}>
         <div className="text-center">

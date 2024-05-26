@@ -126,6 +126,14 @@
   /* border-bottom: 1px solid rgba(42, 43, 42, 0.29); */ /* replaced with ::after */
 }
 
+.table ul > li {
+  max-width: 10%;
+}
+
+.table .table_body ul > li {
+  overflow: hidden;
+}
+
 .table .table_body ul::after {
   /* Border Bottom */
   content: "";

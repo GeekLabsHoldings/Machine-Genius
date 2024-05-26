@@ -3,7 +3,13 @@ import React from "react";
 import styles from "./MissingPapersTable.module.css";
 import Link from "next/link";
 
+/**
+ * Renders a table component displaying missing papers for employees.
+ *
+ * @return {JSX.Element} The table component.
+ */
 export default function MissingPapersTable() {
+  // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       name: "John Doe",

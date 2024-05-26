@@ -1,11 +1,12 @@
-"use client";
+"use client"; // Indicates that this file is a client-side component
 
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import styles from "./financial-statements.module.css";
-import { useState } from "react";
-import Link from "next/link";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing a custom select input component
+import styles from "./financial-statements.module.css"; // Importing CSS module for styling
+import { useState } from "react"; // Importing useState hook from React
+import Link from "next/link"; // Importing Link component from Next.js for navigation
 
 function FinancialTable1() {
+  // Data for assets
   const AssetsData = [
     {
       category: "Current Assets",
@@ -33,6 +34,8 @@ function FinancialTable1() {
       total: { March_2023: 48200, March_2024: 48200 },
     },
   ];
+
+  // Data for liabilities and shareholder equity
   const LiabilitiesData = [
     {
       category: "Current Liabilities",
@@ -80,7 +83,8 @@ function FinancialTable1() {
 
   return (
     <>
-      <div className={`${styles.tableContainer} h-[68vh] `}>
+      <div className={`${styles.tableContainer} h-[68vh]`}>
+        {/* Header for the table */}
         <div className="flex flex-col w-full gap-1 py-8 text-center text-xs justify-center items-center">
           <h3 className="text-xs">Juice Box Inc.</h3>
           <h4>
@@ -89,6 +93,8 @@ function FinancialTable1() {
             (In millions)
           </h4>
         </div>
+
+        {/* Table column headers */}
         <header className="flex flex-col">
           <ul className="flex w-full text-center items-center justify-center">
             <li className="w-[50%]"></li>
@@ -104,12 +110,16 @@ function FinancialTable1() {
             </li>
           </ul>
         </header>
+
+        {/* Content section with scrolling */}
         <div className="h-[80%] overflow-y-auto">
+          {/* Header row for assets section */}
           <ul className="flex w-full text-left bg-[#006699] text-[#fffffb] items-center justify-start">
             <li className={`${styles.headerRow}`}>ASSETS:</li>
           </ul>
           {AssetsData.map((item, i) => (
             <>
+              {/* Asset category row */}
               <ul className="flex w-full text-left bg-[#0066994F] text-[#2A2B2A] items-center justify-start">
                 <li className={`${styles.headerRow}`}>{item.category}</li>
               </ul>
@@ -131,6 +141,7 @@ function FinancialTable1() {
                   </li>
                 </ul>
               ))}
+              {/* Total for each asset category */}
               <ul className="flex w-full text-left text-[#2A2B2A] items-center justify-start">
                 <li className="w-[50%]">Total {item.category}</li>
                 <li
@@ -140,7 +151,7 @@ function FinancialTable1() {
                   <span className="absolute left-0">$</span>
                 </li>
                 <li
-                  className={`w-[25%]  relative  border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+                  className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
                 >
                   {item.total.March_2024}
                   <span className="absolute left-0">$</span>
@@ -148,12 +159,14 @@ function FinancialTable1() {
               </ul>
             </>
           ))}
-          {/* LIABILITIES */}
+
+          {/* Header row for liabilities section */}
           <ul className="flex w-full text-left bg-[#006699] text-[#fffffb] items-center justify-start">
             <li className={`${styles.headerRow}`}>LIABILITIES:</li>
           </ul>
           {LiabilitiesData.map((item, i) => (
             <>
+              {/* Liability category row */}
               <ul className="flex w-full text-left bg-[#0066994F] text-[#2A2B2A] items-center justify-start">
                 <li className={`${styles.headerRow}`}>{item.category}</li>
               </ul>
@@ -177,8 +190,9 @@ function FinancialTable1() {
                   </li>
                 </ul>
               ))}
+              {/* Total for each liability category */}
               <ul
-                className={`flex  w-full text-left text-[#2A2B2A] items-center justify-start ${styles.totalAmount}`}
+                className={`flex w-full text-left text-[#2A2B2A] items-center justify-start ${styles.totalAmount}`}
               >
                 <li className="w-[50%]">Total {item.category}</li>
                 <li
@@ -202,40 +216,26 @@ function FinancialTable1() {
   );
 }
 
+
 function FinancialTable() {
+  // Data structure for storing financial data for the years 2024 and 2023
   const data = [
     {
       year: 2024,
       quarters: [
-        {
-          quarter: "Quarter 1",
-        },
-        {
-          quarter: "Quarter 2",
-        },
-        {
-          quarter: "Quarter 3",
-        },
-        {
-          quarter: "Quarter 4",
-        },
+        { quarter: "Quarter 1" },
+        { quarter: "Quarter 2" },
+        { quarter: "Quarter 3" },
+        { quarter: "Quarter 4" },
       ],
     },
     {
       year: 2023,
       quarters: [
-        {
-          quarter: "Quarter 1",
-        },
-        {
-          quarter: "Quarter 2",
-        },
-        {
-          quarter: "Quarter 3",
-        },
-        {
-          quarter: "Quarter 4",
-        },
+        { quarter: "Quarter 1" },
+        { quarter: "Quarter 2" },
+        { quarter: "Quarter 3" },
+        { quarter: "Quarter 4" },
       ],
     },
   ];
@@ -264,16 +264,20 @@ function FinancialTable() {
         <div className={styles.table_body}>
           {data.map((item, i) => (
             <>
+              {/* Mapping through each quarter within the year */}
               {item.quarters.map((e, idx) => (
                 <ul
                   key={idx}
                   className={`group ${i % 2 == 0 ? "bg-[#EAEAEA]" : ""}`}
                 >
+                  {/* Display quarter name */}
                   <li className="w-[25%]">
                     <span>{e.quarter}</span>
                   </li>
+                  {/* Balance Sheet actions */}
                   <li className="w-[25%]">
                     <span className="flex flex-col gap-1 w-full">
+                      {/* Preview button for Balance Sheet */}
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link
                           href={"/accounting/financial-statements/balance-sheet"}
@@ -281,13 +285,16 @@ function FinancialTable() {
                           Preview
                         </Link>
                       </button>
+                      {/* Download as PDF button for Balance Sheet */}
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link href={""}>Download as PDF</Link>
                       </button>
                     </span>
                   </li>
+                  {/* Cash Flow Statement actions */}
                   <li className="w-[25%]">
                     <span className="flex flex-col gap-1 w-full">
+                      {/* Preview button for Cash Flow Statement */}
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link
                           href={
@@ -297,13 +304,16 @@ function FinancialTable() {
                           Preview
                         </Link>
                       </button>
+                      {/* Download as PDF button for Cash Flow Statement */}
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link href={""}>Download as PDF</Link>
                       </button>
                     </span>
                   </li>
+                  {/* Income Statement actions */}
                   <li className="w-[25%]">
                     <span className="flex flex-col gap-1 w-full">
+                      {/* Preview button for Income Statement */}
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link
                           href={
@@ -313,6 +323,7 @@ function FinancialTable() {
                           Preview
                         </Link>
                       </button>
+                      {/* Download as PDF button for Income Statement */}
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link href={""}>Download as PDF</Link>
                       </button>
@@ -320,15 +331,19 @@ function FinancialTable() {
                   </li>
                 </ul>
               ))}
+              {/* Year row */}
               <ul
                 key={i}
                 className={`group ${i % 2 == 0 ? "bg-[#EAEAEA]" : ""}`}
               >
+                {/* Display year */}
                 <li className="w-[25%]">
                   <span className="flex">{item.year}</span>
                 </li>
+                {/* Balance Sheet actions */}
                 <li className="w-[25%]">
                   <span className="flex flex-col gap-1 w-full">
+                    {/* Preview button for Balance Sheet */}
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link
                         href={"/accounting/financial-statements/balance-sheet"}
@@ -336,13 +351,16 @@ function FinancialTable() {
                         Preview
                       </Link>
                     </button>
+                    {/* Download as PDF button for Balance Sheet */}
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link href={""}>Download as PDF</Link>
                     </button>
                   </span>
                 </li>
+                {/* Cash Flow Statement actions */}
                 <li className="w-[25%]">
                   <span className="flex flex-col gap-1 w-full">
+                    {/* Preview button for Cash Flow Statement */}
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link
                         href={
@@ -352,13 +370,16 @@ function FinancialTable() {
                         Preview
                       </Link>
                     </button>
+                    {/* Download as PDF button for Cash Flow Statement */}
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link href={""}>Download as PDF</Link>
                     </button>
                   </span>
                 </li>
+                {/* Income Statement actions */}
                 <li className="w-[25%]">
                   <span className="flex flex-col gap-1 w-full">
+                    {/* Preview button for Income Statement */}
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link
                         href={
@@ -368,6 +389,7 @@ function FinancialTable() {
                         Preview
                       </Link>
                     </button>
+                    {/* Download as PDF button for Income Statement */}
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link href={""}>Download as PDF</Link>
                     </button>
@@ -382,6 +404,7 @@ function FinancialTable() {
     </div>
   );
 }
+
 
 const page = () => {
   const monthOptions: string[] = [
@@ -433,13 +456,7 @@ const page = () => {
                 <CustomSelectInput label="All" options={monthOptions} />
               </div>
             </div>
-            {/* BUTTON MODALS HERE */}
-            <div className="flex gap-2">
-              {/* open modal to enable you to Create Ticket  */}
-              {/* <CreateTicketModal btnWord={'Create Ticket'} btnIcon={<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z" fill="#FFFFFB" />
-                  </svg>} btnColor={'black'} modalTitle={'Create Ticket'} /> */}
-            </div>
+          
           </div>
         </div>
         <div className="flex gap-5">

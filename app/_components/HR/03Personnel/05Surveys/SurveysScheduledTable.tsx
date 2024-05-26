@@ -3,55 +3,54 @@ import React from "react";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./SurveysScheduledTable.module.css";
 
+/**
+ * Renders a table component displaying scheduled surveys.
+ *
+ * @return {JSX.Element} The rendered table component.
+ */
 export default function SurveysScheduledTable() {
+  // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       newStatus: true,
       template: "Monthly Feedback Template",
-      date:
-        "March 20 2023",
+      date: "March 20 2023",
       time: "3:00 PM GMT",
     },
     {
       newStatus: false,
       template: "Monthly Feedback Template",
-      date:
-        "March 20 2023",
+      date: "March 20 2023",
       time: "3:00 PM GMT",
     },
     {
       newStatus: false,
       template: "Monthly Feedback Template",
-      date:
-        "March 20 2023",
+      date: "March 20 2023",
       time: "3:00 PM GMT",
     },
     {
       newStatus: false,
       template: "Monthly Feedback Template",
-      date:
-        "March 20 2023",
+      date: "March 20 2023",
       time: "3:00 PM GMT",
     },
     {
       newStatus: false,
       template: "Monthly Feedback Template",
-      date:
-        "March 20 2023",
+      date: "March 20 2023",
       time: "3:00 PM GMT",
     },
     {
       newStatus: false,
       template: "Monthly Feedback Template",
-      date:
-        "March 20 2023",
+      date: "March 20 2023",
       time: "3:00 PM GMT",
     },
     {
       newStatus: false,
       template: "Monthly Feedback Template",
-      date:
-        "March 20 2023",
+      date: "March 20 2023",
       time: "3:00 PM GMT",
     },
   ];

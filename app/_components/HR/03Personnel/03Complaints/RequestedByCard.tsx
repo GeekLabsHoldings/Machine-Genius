@@ -6,6 +6,14 @@ interface IProps {
   color: string;
 }
 
+/**
+ * Renders a card component displaying the name and color of a person.
+ *
+ * @param {IProps} props - The properties for the component.
+ * @param {string} props.name - The name of the person.
+ * @param {string} props.color - The color of the person.
+ * @return {JSX.Element} The rendered card component.
+ */
 export default function RequestedByCard({ name, color }: IProps) {
   return (
     <div className="flex items-center gap-2 border-[1px] border-[#2A2B2A] rounded-[5px] px-[9px] py-[5px] min-w-[160px]">
