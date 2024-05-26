@@ -1,4 +1,5 @@
 "use client";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 import TemplateBox from "@/app/_components/HR/03Personnel/00General/TemplateBox";
 import React from "react";
 
@@ -35,25 +36,52 @@ export default function Page() {
       />
     </svg>
   );
+  // add Icon for button
+  const addIcon = (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
+        fill="#FFFFFB"
+      />
+    </svg>
+  );
 
   return (
-    <section className="max-h-[85vh]">
-      <div className="flex justify-between items-center my-[1.5vw]">
-        <h2 className="text-[32px] font-bold">Templates</h2>
-        <div className="flex gap-2">
-          <div className="cursor-pointer">{leftArrow}</div>
-          <div className="cursor-pointer">{rightArrow}</div>
+    <section className="flex flex-col justify-between h-[60vh]">
+      <div>
+        <div className="flex justify-between items-center my-[1vw]">
+          <h2 className="text-[24px] font-bold">Interview Templates</h2>
+          <div className="flex gap-2">
+            <div className="cursor-pointer">{leftArrow}</div>
+            <div className="cursor-pointer">{rightArrow}</div>
+          </div>
+        </div>
+        <div className="grid lg:grid-cols-3 gap-[1vw] items-start">
+          <TemplateBox title="Front End Interview" />
+          <TemplateBox title="Back End Interview" />
+          <TemplateBox title="UX/UI Interview" />
+          <TemplateBox title="Video Editor" />
+          <TemplateBox title="Content Writer Interview" />
+          <TemplateBox title="Social Media Interview" />
+          <TemplateBox title="Content Writer Interview" />
+          <TemplateBox title="Social Media Interview" />
         </div>
       </div>
-      <div className="grid lg:grid-cols-3 gap-[2vw] items-start">
-        <TemplateBox title="Front End Interview" />
-        <TemplateBox title="Back End Interview" />
-        <TemplateBox title="UX/UI Interview" />
-        <TemplateBox title="Video Editor" />
-        <TemplateBox title="Content Writer Interview" />
-        <TemplateBox title="Social Media Interview" />
-        <TemplateBox title="Content Writer Interview" />
-        <TemplateBox title="Social Media Interview" />
+      <div className="flex justify-end mt-1">
+        <CustomBtn
+          btnColor="black"
+          word="New Template"
+          icon={addIcon}
+          href="/hr/hiring/interview-questions/new-template"
+        />
       </div>
     </section>
   );
