@@ -1,0 +1,62 @@
+/* box */
+.box {
+  padding: clamp(16px, calc(1vw + 0.1rem), 1000px);
+  border: 2px solid #d9d9d9;
+  border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  -webkit-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  -moz-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  -ms-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  -o-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+}
+
+.box .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--dark);
+  padding: 0 0.5vw 1vw;
+  margin-bottom: 1vw;
+}
+
+.box .header p:first-child {
+  font-size: clamp(16px, calc(0.7vw + 0.1rem), 1000px);
+  font-weight: 900;
+}
+.box .header p:nth-child(2) {
+  font-size: clamp(14px, calc(0.5vw + 0.1rem), 1000px);
+  font-weight: 500;
+}
+
+.box .body {
+  max-height: 25vh;
+  overflow-y: auto;
+  padding: 0.2vw;
+  height: 0;
+}
+
+.box .body::-webkit-scrollbar {
+  width: 0;
+}
+
+/* hover state */
+.box:hover {
+  background-color: #5fa85b;
+  color: white;
+  box-shadow: 3px 3px 0px 0px var(--dark);
+  border: 2px solid var(--dark);
+  width: calc(100% - 3px);
+  padding: 0.6vw 1vw 0.8vw;
+}
+.line {
+  width: 100%;
+  background-color: var(--dark);
+  margin: 1vw 0;
+  height: 0;
+}
+
+/* .box:hover .body {
+  height: 100%;
+} */
+/* .box:hover .line {
+  height: 1px;
+} */

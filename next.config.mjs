@@ -1,4 +1,4 @@
-import { withNextVideo } from "next-video/process";
+// import { withNextVideo } from "next-video/process";
 /** 
  * @type {import('next').NextConfig} 
  * 
@@ -8,4 +8,4 @@ const nextConfig = {
     images: { unoptimized: true }
 };
 
-export default withNextVideo(nextConfig);
+export default nextConfig;

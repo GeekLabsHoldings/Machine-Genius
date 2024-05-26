@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import CandidateDatabaseTable from "@/app/_components/HR/01CandidateDatabase/CandidateDatabaseTable";
+import EmployeeDatabaseTable from "@/app/_components/HR/03Personnel/01EmployeeDatabase/EmployeeDatabaseTable";
 
 export default function page() {
   // options for roles
@@ -134,7 +134,7 @@ export default function page() {
         </div>
       </div>
 
-      <CandidateDatabaseTable />
+      <EmployeeDatabaseTable />
     </>
   );
 }

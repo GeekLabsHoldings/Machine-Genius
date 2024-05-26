@@ -13,6 +13,174 @@ export default function RequiredPapersTable() {
       military: "Not Received",
       gradCert: "JohnDoeID.pdf",
     },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "Not Received",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "Not Received",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "JohnDoeID.pdf",
+      military: "JohnDoeID.pdf",
+      gradCert: "JohnDoeID.pdf",
+    },
+    {
+      name: "John Doe",
+      insurance: "JohnDoeID.pdf",
+      criminalRecord: "JohnDoeID.pdf",
+      idScan: "Not Received",
+      military: "Not Received",
+      gradCert: "JohnDoeID.pdf",
+    },
   ];
 
   return (
@@ -66,6 +234,8 @@ export default function RequiredPapersTable() {
                     style={{
                       color:
                         e.insurance === "Not Received" ? "#E9313E" : "#0066FF",
+                      textDecoration:
+                        e.insurance !== "Not Received" ? "underline" : "none",
                     }}
                   >
                     {e.insurance}
@@ -76,7 +246,13 @@ export default function RequiredPapersTable() {
                 <span
                   style={{
                     color:
-                      e.criminalRecord === "Not Received" ? "#E9313E" : "#0066FF",
+                      e.criminalRecord === "Not Received"
+                        ? "#E9313E"
+                        : "#0066FF",
+                    textDecoration:
+                      e.criminalRecord !== "Not Received"
+                        ? "underline"
+                        : "none",
                   }}
                 >
                   {e.criminalRecord}
@@ -85,8 +261,9 @@ export default function RequiredPapersTable() {
               <li className="w-[20%]">
                 <span
                   style={{
-                    color:
-                      e.idScan === "Not Received" ? "#E9313E" : "#0066FF",
+                    color: e.idScan === "Not Received" ? "#E9313E" : "#0066FF",
+                    textDecoration:
+                      e.idScan !== "Not Received" ? "underline" : "none",
                   }}
                 >
                   {e.idScan}
@@ -98,6 +275,8 @@ export default function RequiredPapersTable() {
                     style={{
                       color:
                         e.military === "Not Received" ? "#E9313E" : "#0066FF",
+                      textDecoration:
+                        e.military !== "Not Received" ? "underline" : "none",
                     }}
                   >
                     {e.military}
@@ -109,6 +288,8 @@ export default function RequiredPapersTable() {
                   style={{
                     color:
                       e.gradCert === "Not Received" ? "#E9313E" : "#0066FF",
+                    textDecoration:
+                      e.gradCert !== "Not Received" ? "underline" : "none",
                   }}
                 >
                   {e.gradCert}
