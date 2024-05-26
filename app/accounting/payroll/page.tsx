@@ -205,9 +205,9 @@ const page = () => {
           </div>
         </div>
       </div>
-      <div className={`${styles.tableContainer} h-[65vh] width-[87%]`}>
+      <div className={`${styles.tableContainer} h-[65vh]`}>
         {/* Start Table */}
-        <div className={`${styles.table} overflow-auto width-[87%] max-w-fit `}>
+        <div className={`${styles.table} overflow-auto w-full`}>
           {/* Table Header */}
           <ul className={`${styles.table_header} w-fit`}>
             <li className="w-[14.2857%] min-w-[230px] ">

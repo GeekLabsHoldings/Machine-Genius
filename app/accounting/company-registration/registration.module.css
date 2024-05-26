@@ -1,0 +1,47 @@
+.tabs {
+    margin-bottom: 2vw;
+  }
+  
+  .tabs input[type="radio"] {
+    outline: none;
+    font-size: clamp(16px, calc(1vw + 0.1rem), 1000px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding: clamp(3px, calc(0.1vw + 0.1rem), 1000px)
+      clamp(10px, calc(0.9vw + 0.1rem), 1000px);
+    height: auto;
+    width: max-content;
+  }
+  
+  .tabs input[type="radio"]:first-child {
+    padding-left: 0;
+  }
+  
+  .tabs input[type="radio"]::after {
+    color: #acacac;
+    transition: all 0.2s;
+  }
+  
+  .tabs input[type="radio"]:not(:last-of-type)::before {
+    content: "";
+    height: 100%;
+    width: 1px;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: var(--dark);
+  }
+  
+  .tabs input[type="radio"]:checked::after {
+    color: var(--dark);
+  }
+  
+  .tabs input[type="radio"] + div {
+    display: none;
+  }
+  
+  .tabs input[type="radio"]:checked + div {
+    display: block;
+  }
+  

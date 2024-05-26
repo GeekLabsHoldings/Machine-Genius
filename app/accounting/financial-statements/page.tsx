@@ -276,7 +276,7 @@ function FinancialTable() {
                     <span className="flex flex-col gap-1 w-full">
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link
-                          href={"/acounting/financial-statements/balance-sheet"}
+                          href={"/accounting/financial-statements/balance-sheet"}
                         >
                           Preview
                         </Link>
@@ -291,7 +291,7 @@ function FinancialTable() {
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link
                           href={
-                            "/acounting/financial-statements/cash-flow-statement"
+                            "/accounting/financial-statements/cash-flow-statement"
                           }
                         >
                           Preview
@@ -307,7 +307,7 @@ function FinancialTable() {
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link
                           href={
-                            "/acounting/financial-statements/income-statement"
+                            "/accounting/financial-statements/income-statement"
                           }
                         >
                           Preview
@@ -331,7 +331,7 @@ function FinancialTable() {
                   <span className="flex flex-col gap-1 w-full">
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link
-                        href={"/acounting/financial-statements/balance-sheet"}
+                        href={"/accounting/financial-statements/balance-sheet"}
                       >
                         Preview
                       </Link>
@@ -346,7 +346,7 @@ function FinancialTable() {
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link
                         href={
-                          "/acounting/financial-statements/cash-flow-statement"
+                          "/accounting/financial-statements/cash-flow-statement"
                         }
                       >
                         Preview
@@ -362,7 +362,7 @@ function FinancialTable() {
                     <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                       <Link
                         href={
-                          "/acounting/financial-statements/income-statement"
+                          "/accounting/financial-statements/income-statement"
                         }
                       >
                         Preview

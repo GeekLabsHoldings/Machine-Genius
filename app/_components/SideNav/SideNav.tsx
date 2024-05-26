@@ -30,7 +30,7 @@ const rols = [
     'Customer Service',
     'Creative',
     'HR',
-    'Acounting',
+    'Accounting',
     'Newsletter'
 ]
 
