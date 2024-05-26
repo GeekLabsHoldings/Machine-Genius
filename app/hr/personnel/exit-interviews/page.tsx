@@ -26,7 +26,7 @@ export default function Page() {
       <div className="flex justify-between items-center my-[1.5vw]">
         <h2 className="text-[32px] font-bold">Templates</h2>
         <div>
-          <CustomBtn icon={addIcon} word="New Template" btnColor="black" />
+          <CustomBtn icon={addIcon} word="New Template" btnColor="black" href="/hr/personnel/exit-interviews/new-template" />
         </div>
       </div>
       <div className="grid lg:grid-cols-3 gap-[2vw] items-start">

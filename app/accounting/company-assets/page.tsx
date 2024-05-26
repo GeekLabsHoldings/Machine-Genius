@@ -1,14 +1,13 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import styles from "./companyAssets.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
 const page = () => {
-
-  const [sorting1,setSorting1] = useState("Ascend") 
-  const [sorting2,setSorting2] = useState("Ascend") 
-  const [sorting3,setSorting3] = useState("Ascend") 
-  const [sorting4,setSorting4] = useState("Ascend") 
+  const [sorting1, setSorting1] = useState("Ascend");
+  const [sorting2, setSorting2] = useState("Ascend");
+  const [sorting3, setSorting3] = useState("Ascend");
+  const [sorting4, setSorting4] = useState("Ascend");
 
   function getRandomBackgroundColor() {
     const colors = [
@@ -346,10 +345,12 @@ const page = () => {
               <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
                 <span>{sorting1}</span>
                 <svg
-                onClick={()=>{
-                  sorting1 == "Ascend" ? setSorting1("Descend") : setSorting1("Ascend")
-                }}
-                className="cursor-pointer"
+                  onClick={() => {
+                    sorting1 == "Ascend"
+                      ? setSorting1("Descend")
+                      : setSorting1("Ascend");
+                  }}
+                  className="cursor-pointer"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -370,10 +371,12 @@ const page = () => {
               <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
                 <span>{sorting2}</span>
                 <svg
-                onClick={()=>{
-                  sorting2 == "Ascend" ? setSorting2("Descend") : setSorting2("Ascend")
-                }}
-                className="cursor-pointer"
+                  onClick={() => {
+                    sorting2 == "Ascend"
+                      ? setSorting2("Descend")
+                      : setSorting2("Ascend");
+                  }}
+                  className="cursor-pointer"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -394,10 +397,12 @@ const page = () => {
               <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
                 <span>{sorting3}</span>
                 <svg
-                onClick={()=>{
-                  sorting3 == "Ascend" ? setSorting3("Descend") : setSorting3("Ascend")
-                }}
-                className="cursor-pointer"
+                  onClick={() => {
+                    sorting3 == "Ascend"
+                      ? setSorting3("Descend")
+                      : setSorting3("Ascend");
+                  }}
+                  className="cursor-pointer"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -418,10 +423,12 @@ const page = () => {
               <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
                 <span>{sorting4}</span>
                 <svg
-                onClick={()=>{
-                  sorting4 == "Ascend" ? setSorting4("Descend") : setSorting4("Ascend")
-                }}
-                className="cursor-pointer"
+                  onClick={() => {
+                    sorting4 == "Ascend"
+                      ? setSorting4("Descend")
+                      : setSorting4("Ascend");
+                  }}
+                  className="cursor-pointer"
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
