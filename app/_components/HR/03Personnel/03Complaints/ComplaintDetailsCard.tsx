@@ -2,6 +2,11 @@
 import React from "react";
 import styles from "./ComplaintDetailsCard.module.css";
 
+/**
+ * Renders a card component displaying the details of a complaint.
+ *
+ * @return {JSX.Element} The rendered card component.
+ */
 export default function ComplaintDetailsCard() {
   return (
     <div

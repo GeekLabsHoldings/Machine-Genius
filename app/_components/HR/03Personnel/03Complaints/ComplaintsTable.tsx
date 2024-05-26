@@ -5,13 +5,27 @@ import { truncateText } from "@/app/_utils/text";
 import RequestedByCard from "./RequestedByCard";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
+/**
+ * Renders a table component displaying a list of complaints. Each complaint is represented by an object in the `bodyRow` array.
+ * Each object contains properties such as `complaintId`, `newStatus`, `complaintIssue`, `complaintDescription`, `requestedBy`, `requestedByColor`, and `urgencyLevel`.
+ * The table has a header with columns for `Complaint Issue`, `Complaint Description`, `Requested By`, `Urgency Level`, and `Preview`.
+ * The table body is populated with data from the `bodyRow` array, where each row represents a complaint.
+ * The `newStatus` property determines whether a new ribbon is displayed for that complaint.
+ * The `requestedBy` property is used to display the name of the person who requested the complaint.
+ * The `urgencyLevel` property determines the color of the urgency level column.
+ * The `Preview` column contains a button that links to the complaint details page.
+ *
+ * @return {JSX.Element} The rendered table component.
+ */
 export default function ComplaintsTable() {
+  // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
       complaintId: "1",
       newStatus: true,
       complaintIssue: "Finance",
-      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      complaintDescription:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Sherry",
       requestedByColor: "#FAC5A5",
       urgencyLevel: "High",
@@ -20,7 +34,8 @@ export default function ComplaintsTable() {
       complaintId: "2",
       newStatus: false,
       complaintIssue: "Bullying",
-      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      complaintDescription:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Shahenda",
       requestedByColor: "#DFCCE8",
       urgencyLevel: "Mid",
@@ -29,7 +44,8 @@ export default function ComplaintsTable() {
       complaintId: "3",
       newStatus: false,
       complaintIssue: "Finance",
-      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      complaintDescription:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Farah",
       requestedByColor: "#A6DEF3",
       urgencyLevel: "Low",
@@ -38,7 +54,8 @@ export default function ComplaintsTable() {
       complaintId: "4",
       newStatus: false,
       complaintIssue: "Finance",
-      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      complaintDescription:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Sherry",
       requestedByColor: "#FAC5A5",
       urgencyLevel: "Low",
@@ -47,7 +64,8 @@ export default function ComplaintsTable() {
       complaintId: "5",
       newStatus: false,
       complaintIssue: "Finance",
-      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      complaintDescription:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Manar",
       requestedByColor: "#C5E1C2",
       urgencyLevel: "Mid",
@@ -56,7 +74,8 @@ export default function ComplaintsTable() {
       complaintId: "6",
       newStatus: false,
       complaintIssue: "Harassment",
-      complaintDescription: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      complaintDescription:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       requestedBy: "Kamel",
       requestedByColor: "#F2E3A1",
       urgencyLevel: "Low",
@@ -107,14 +126,33 @@ export default function ComplaintsTable() {
             <ul className="w-[100%] relative" key={e.complaintId}>
               <div className="absolute">{e.newStatus && newRibbon}</div>
               <li className="w-[20%]">{e.complaintIssue}</li>
-              <li className="w-[30%]">{truncateText(e.complaintDescription, 35)}</li>
-              <li className="w-[20%]">
-                <RequestedByCard name={e.requestedBy} color={e.requestedByColor} />
+              <li className="w-[30%]">
+                {truncateText(e.complaintDescription, 35)}
               </li>
-              <li className={`w-[15%] ${e.urgencyLevel === "High" ? styles.highUrgencyLevel : e.urgencyLevel === "Mid" ? styles.midUrgencyLevel : ""}`}>{e.urgencyLevel}</li>
+              <li className="w-[20%]">
+                <RequestedByCard
+                  name={e.requestedBy}
+                  color={e.requestedByColor}
+                />
+              </li>
+              <li
+                className={`w-[15%] ${
+                  e.urgencyLevel === "High"
+                    ? styles.highUrgencyLevel
+                    : e.urgencyLevel === "Mid"
+                    ? styles.midUrgencyLevel
+                    : ""
+                }`}
+              >
+                {e.urgencyLevel}
+              </li>
               <li className="w-[15%]">
-                  <CustomBtn btnColor="black" word="Preview" href={`/hr/personnel/complaints/complaintDetails/`} />
-              </li>    
+                <CustomBtn
+                  btnColor="black"
+                  word="Preview"
+                  href={`/hr/personnel/complaints/complaintDetails/`}
+                />
+              </li>
             </ul>
           ))}
         </div>
