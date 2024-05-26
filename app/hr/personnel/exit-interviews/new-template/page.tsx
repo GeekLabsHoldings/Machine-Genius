@@ -9,7 +9,7 @@ export default function page() {
   return (
     <section>
       {/* Back To Complaint Table Button */}
-      <div className="flex items-center gap-4 my-[20px]">
+      <div className="flex items-center gap-4 my-[15px]">
         <Link href="/hr/personnel/exit-interviews/">
           <svg
             width="11"
@@ -28,9 +28,9 @@ export default function page() {
       </div>
 
       {/* Template Container */}
-      <div className="flex justify-between gap-[3vw] outline outline-2">
+      <div className="flex justify-between gap-[3vw]">
         {/* Employment Details */}
-        <div className="bg-red-500 flex-grow space-y-8">
+        <div className=" flex-grow space-y-6">
           <h3 className="font-bold text-[20px]">Employment Details</h3>
           <div>
             <label className="font-bold block mb-[1.5vh]">
@@ -70,54 +70,70 @@ export default function page() {
           </div>
         </div>
         {/* Question Container */}
-        <div className="bg-yellow-500 flex-grow">
-          <h3 className="font-bold text-[20px]">Video Editor Template</h3>
-          <div className={styles.questionContainer + " space-y-8"}>
-            <h3 className="font-bold text-[20px]">Questions:</h3>
-            <div className="flex flex-col">
-              <label htmlFor="tell-me-about-yourself">
-                1. Tell me more about yourself:
-              </label>
-              <textarea
-                name="tell-me-about-yourself"
-                id="tell-me-about-yourself"
-                cols={30}
-                rows={5}
-              ></textarea>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="where-do-you-see-yourself">
-                2. Where do you see yourself in 5 years?
-              </label>
-              <textarea
-                name="where-do-you-see-yourself"
-                id="where-do-you-see-yourself"
-                cols={30}
-                rows={5}
-              ></textarea>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="exp-in-pr">
-                3. Do you have experience in Pr?
-              </label>
-              <input name="exp-in-pr" id="exp-in-pr" type="text"></input>
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="exp-in-after-effects">
-                4. Do you have experience inAdobe After Effects?
-              </label>
-              <input
-                name="exp-in-after-effects"
-                id="exp-in-after-effects"
-                type="text"
-              ></input>
+        <div className=" flex-grow">
+          <h3 className="font-bold text-[20px] mb-[1.5vh]">
+            Video Editor Template
+          </h3>
+          <div className={styles.questionContainer}>
+            <h3 className="font-bold text-[20px] mb-[1.5vh]">Questions:</h3>
+            <div className="space-y-6">
+              <div className="flex flex-col">
+                <label
+                  className="font-bold mb-[1.5vh] block"
+                  htmlFor="tell-me-about-yourself"
+                >
+                  1. Tell me more about yourself:
+                </label>
+                <textarea
+                  name="tell-me-about-yourself"
+                  id="tell-me-about-yourself"
+                  cols={30}
+                  rows={5}
+                ></textarea>
+              </div>
+              <div className="flex flex-col">
+                <label
+                  className="font-bold mb-[1.5vh] block"
+                  htmlFor="where-do-you-see-yourself"
+                >
+                  2. Where do you see yourself in 5 years?
+                </label>
+                <textarea
+                  name="where-do-you-see-yourself"
+                  id="where-do-you-see-yourself"
+                  cols={30}
+                  rows={5}
+                ></textarea>
+              </div>
+              <div className="flex flex-col">
+                <label
+                  className="font-bold mb-[1.5vh] block"
+                  htmlFor="exp-in-pr"
+                >
+                  3. Do you have experience in Pr?
+                </label>
+                <input name="exp-in-pr" id="exp-in-pr" type="text"></input>
+              </div>
+              <div className="flex flex-col">
+                <label
+                  className="font-bold mb-[1.5vh] block"
+                  htmlFor="exp-in-after-effects"
+                >
+                  4. Do you have experience inAdobe After Effects?
+                </label>
+                <input
+                  name="exp-in-after-effects"
+                  id="exp-in-after-effects"
+                  type="text"
+                ></input>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* save button */}
-      <div className="flex justify-end mt-[1vh]">
+      <div className="flex justify-end mt-[20px]">
         <CustomBtn word={"Save"} btnColor="black" />
       </div>
     </section>
