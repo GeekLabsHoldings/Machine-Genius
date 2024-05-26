@@ -1,7 +1,7 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import ComplaintDetailsCard from "@/app/_components/HR/03Personnel/03Complaints/ComplaintDetailsCard";
+import styles from "./new-template.module.css";
 import { Link } from "@mui/material";
 import React from "react";
 
@@ -29,41 +29,52 @@ export default function page() {
 
       {/* Template Container */}
       <div className="flex justify-between gap-[3vw] outline outline-2">
+        {/* Employment Details */}
         <div className="bg-red-500 flex-grow space-y-8">
           <h3 className="font-bold text-[20px]">Employment Details</h3>
           <div>
-            <label className="font-bold">Select Employee</label>
+            <label className="font-bold block mb-[1.5vh]">
+              Select Employee
+            </label>
             <CustomSelectInput options={[""]} label={"John Doe Johnney Doe"} />
           </div>
           <div className="flex gap-[2vw]">
             <div className="flex-grow">
-              <label className="font-bold">Contract Start Date</label>
+              <label className="font-bold block mb-[1.5vh]">
+                Contract Start Date
+              </label>
               <CustomSelectInput options={[""]} label={"20 March 2020"} />
             </div>
             <div className="flex-grow">
-              <label className="font-bold">Contract End Date</label>
+              <label className="font-bold block mb-[1.5vh]">
+                Contract End Date
+              </label>
               <CustomSelectInput options={[""]} label={"20 March 2023"} />
             </div>
           </div>
           <div>
-            <label className="font-bold">Reason For Quitting</label>
+            <label className="font-bold block mb-[1.5vh]">
+              Reason For Quitting
+            </label>
             <CustomSelectInput options={[""]} label={"Select Reason"} />
           </div>
           <div className="w-1/2">
-            <label className="font-bold">Two Week Notice</label>
+            <label className="font-bold block mb-[1.5vh]">
+              Two Week Notice
+            </label>
             <CustomSelectInput options={[""]} label={"Given"} />
           </div>
           <div className="w-1/2">
-            <label className="font-bold">Handover Date</label>
+            <label className="font-bold block mb-[1.5vh]">Handover Date</label>
             <CustomSelectInput options={[""]} label={"Select Date"} />
           </div>
         </div>
-
+        {/* Question Container */}
         <div className="bg-yellow-500 flex-grow">
           <h3 className="font-bold text-[20px]">Video Editor Template</h3>
-          <div>
-            <h3>Questions:</h3>
-            <div>
+          <div className={styles.questionContainer + " space-y-8"}>
+            <h3 className="font-bold text-[20px]">Questions:</h3>
+            <div className="flex flex-col">
               <label htmlFor="tell-me-about-yourself">
                 1. Tell me more about yourself:
               </label>
@@ -71,10 +82,10 @@ export default function page() {
                 name="tell-me-about-yourself"
                 id="tell-me-about-yourself"
                 cols={30}
-                rows={10}
+                rows={5}
               ></textarea>
             </div>
-            <div>
+            <div className="flex flex-col">
               <label htmlFor="where-do-you-see-yourself">
                 2. Where do you see yourself in 5 years?
               </label>
@@ -82,16 +93,16 @@ export default function page() {
                 name="where-do-you-see-yourself"
                 id="where-do-you-see-yourself"
                 cols={30}
-                rows={10}
+                rows={5}
               ></textarea>
             </div>
-            <div>
+            <div className="flex flex-col">
               <label htmlFor="exp-in-pr">
                 3. Do you have experience in Pr?
               </label>
               <input name="exp-in-pr" id="exp-in-pr" type="text"></input>
             </div>
-            <div>
+            <div className="flex flex-col">
               <label htmlFor="exp-in-after-effects">
                 4. Do you have experience inAdobe After Effects?
               </label>
@@ -106,7 +117,7 @@ export default function page() {
       </div>
 
       {/* save button */}
-      <div className="flex justify-end mt-[4vh]">
+      <div className="flex justify-end mt-[1vh]">
         <CustomBtn word={"Save"} btnColor="black" />
       </div>
     </section>

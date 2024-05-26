@@ -1,0 +1,6 @@
+.questionContainer{
+    border: 2px solid #DBDBD7;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    border-radius: 20px;
+    /* padding: 1vw; */
+}
