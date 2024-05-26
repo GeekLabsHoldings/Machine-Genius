@@ -71,7 +71,7 @@ export default function Page() {
       {activeTab === 1 && (
         <div className={`${styles.tab1}`}>
           {/* Tab Header */}
-          <div className={`my-[25px] flex justify-between`}>
+          <div className={`my-[20px] flex justify-between`}>
             <h2 className="text-[24px] font-bold">Survey Templates</h2>
 
             {/* BUTTON HERE */}
@@ -87,7 +87,7 @@ export default function Page() {
             <TemplateBox title="Back End Interview" />
             <TemplateBox title="UX/UI Interview" />
             <TemplateBox title="Video Editor">
-              <div>
+              {/* <div>
                 <p>1. What is your thinking process?</p>
                 <p>2. What are your strengths?</p>
                 <p>
@@ -97,7 +97,7 @@ export default function Page() {
                 <p>5. What kind of work experiences do you have?</p>
                 <p>6. Which editing software do you prefer?</p>
                 <p>7. Are you a team player or a one-man show?</p>
-              </div>
+              </div> */}
             </TemplateBox>
             <TemplateBox title="Content Writer Interview" />
             <TemplateBox title="Social Media Interview" />
