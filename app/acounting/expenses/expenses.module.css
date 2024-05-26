@@ -52,7 +52,7 @@
     font-weight: 600;
 }
 .expenses .dataSort span {
-    font-size: clamp(10px, calc(0.562vw + 0.1rem), 70px);
+    font-size: clamp(10px, calc(0.662vw + 0.1rem), 70px);
 }
 
 .expenses .dataSort svg {

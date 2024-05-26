@@ -1,8 +1,14 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import styles from "./payroll.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
 const page = () => {
+
+  const [sorting1,setSorting1] = useState("Ascend") 
+  const [sorting2,setSorting2] = useState("Ascend") 
+  const [sorting3,setSorting3] = useState("Ascend") 
+
   const bodyRow = [
     {
       employeeName: "John Doe",
@@ -124,13 +130,17 @@ const page = () => {
   ];
 
   return (
-    <div className={`${styles.payroll} pt-[1.9vw]`}>
-      <div className={`${styles.dataSort} flex gap-[0.938vw] mb-[1.372vw]`}>
+    <div className={`${styles.payroll} pt-[1.9vw] `}>
+      <div className={`${styles.dataSort} flex gap-[0.938vw] mb-[1.372vw] w-full overflow-hidden`}>
         <div className="mb-[3vh]">
           <h5 className=" mb-[1vh] font-semibold">Net Salary</h5>
           <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
-            <span>Ascend</span>
+            <span>{sorting1}</span>
             <svg
+            onClick={()=>{
+              sorting1 == "Ascend" ? setSorting1("Descend") : setSorting1("Ascend")
+            }}
+            className="cursor-pointer"
               width="16"
               height="16"
               viewBox="0 0 16 16"
@@ -149,8 +159,12 @@ const page = () => {
         <div className="mb-[3vh]">
           <h5 className=" mb-[1vh] font-semibold">Gross Salary</h5>
           <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
-            <span>Ascend</span>
+            <span>{sorting2}</span>
             <svg
+            onClick={()=>{
+              sorting2 == "Ascend" ? setSorting2("Descend") : setSorting2("Ascend")
+            }}
+            className="cursor-pointer"
               width="16"
               height="16"
               viewBox="0 0 16 16"
@@ -169,8 +183,12 @@ const page = () => {
         <div className="mb-[3vh]">
           <h5 className=" mb-[1vh] font-semibold">Date Joined</h5>
           <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
-            <span>Ascend</span>
+            <span>{sorting3}</span>
             <svg
+            onClick={()=>{
+              sorting3 == "Ascend" ? setSorting3("Descend") : setSorting3("Ascend")
+            }}
+            className="cursor-pointer"
               width="16"
               height="16"
               viewBox="0 0 16 16"
@@ -189,7 +207,7 @@ const page = () => {
       </div>
       <div className={`${styles.tableContainer} h-[65vh] width-[87%]`}>
         {/* Start Table */}
-        <div className={`${styles.table} overflow-auto width-[87%] max-w-fit`}>
+        <div className={`${styles.table} overflow-auto width-[87%] max-w-fit `}>
           {/* Table Header */}
           <ul className={`${styles.table_header} w-fit`}>
             <li className="w-[14.2857%] min-w-[230px] ">
