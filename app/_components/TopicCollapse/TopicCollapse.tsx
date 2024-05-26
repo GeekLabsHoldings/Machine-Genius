@@ -9,7 +9,7 @@ interface IProps {
     children: React.ReactNode
     title: string,
     date?: string,
-    svgBtn:ReactNode,
+    svgBtn?:ReactNode,
     replyTxt?:string,
     replyDate?:string,
     ownerName?:string,
