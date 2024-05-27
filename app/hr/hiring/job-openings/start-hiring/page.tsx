@@ -53,7 +53,7 @@ export default function page() {
                             <svg width="24" height="19" viewBox="0 0 24 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M0.462982 6.88282L11.4629 12.1684C11.6269 12.247 11.8139 12.2862 11.9999 12.2862C12.1869 12.2862 12.3729 12.247 12.5369 12.1684L23.5369 6.88282C23.8249 6.74389 23.9999 6.50378 23.9999 6.24554C23.9999 5.9873 23.8249 5.74718 23.5369 5.609L12.5369 0.322619C12.2089 0.165572 11.7909 0.165572 11.4629 0.322619L0.462982 5.609C0.174983 5.74718 9.42964e-09 5.9873 9.42964e-09 6.24554C-4.68653e-05 6.50378 0.174983 6.74389 0.462982 6.88282Z" fill="#2A2B2A"/>
               <path d="M23.5368 11.6477L20.4399 10.1595L13.6109 13.4411C13.1259 13.6729 12.5699 13.7952 11.9999 13.7952C11.4299 13.7952 10.874 13.6729 10.3919 13.4418L3.55995 10.1595L0.462982 11.6477C0.174983 11.7867 0 12.0268 0 12.285C0 12.5433 0.174983 12.7834 0.462982 12.9216L11.4629 18.2079C11.6269 18.2865 11.8129 18.3257 11.9999 18.3257C12.1859 18.3257 12.3729 18.2865 12.5369 18.2079L23.5368 12.9216C23.8248 12.7834 23.9998 12.5433 23.9998 12.285C23.9999 12.0268 23.8248 11.7867 23.5368 11.6477Z" fill="#2A2B2A"/>
-              </svg>
+                            </svg>
               <span className={styles.cardTitle + " font-bold relative"}>Level</span>
               </div>
               <hr className={styles.divider + " rotate-90 relative top-[50%] -translate-y-[50%]"}/>
@@ -80,8 +80,41 @@ export default function page() {
 
 
 
+          {/* Template Performance */}
+          <div className="space-y-4">
+            <h3 className="font-bold text-[24px]">Template Performance</h3>
+            <div className="px-[2vw] py-[1.5vw] rounded-[10px] text-white bg-[var(--dark)] space-y-10">
+                <div className="space-y-3">
+                  <span className="font-bold">Number of Applicants:</span>
+                  <div className="flex justify-between items-center">
+                    <span>Wuuzuf</span>
+                    <span>16</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Linked In</span>
+                    <span>38</span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <span className="font-bold">Template Success Hiring Rate:</span>
+                  <div className="flex justify-between items-center">
+                    <span>Wuuzuf</span>
+                    <span>30%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Linked In</span>
+                    <span>60%</span>
+                  </div>
+                </div>
+            </div>
+            <span className="flex justify-end">March’s Statistics</span>
+          </div>
+
+
 
         </div>
+
+
 
         {/* Template Preview Container */}
         <div className=" flex-grow">
