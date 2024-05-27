@@ -13,6 +13,7 @@ import Slider from "react-slick"; // Importing Slider component from react-slick
     "Niche",
   ];
 
+
   const dataRealEstate = [
     {
       emailAddress: "johndoe@gmail.com",
@@ -344,6 +345,8 @@ const page = () => {
                             btnColor="black"
                             word="View List"
                             width="100%"
+                            href="/newsletter/email-list/listDetails"
+                            
                           />
                         </div>
                         <div className={`${styles.info} p-[1vw] rounded-lg`}>
