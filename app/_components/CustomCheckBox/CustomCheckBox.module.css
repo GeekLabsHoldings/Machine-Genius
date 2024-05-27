@@ -35,5 +35,5 @@
 }
 
 .custom_checkbox:checked::after{
-    background-color: var(--orange);
+    background-color: var(--module-color)
 }

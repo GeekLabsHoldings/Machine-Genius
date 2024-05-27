@@ -52,6 +52,7 @@ function page() {
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
                 accsentColor="#E1C655"
+
               />
             </TopicColapse>
 
@@ -64,10 +65,12 @@ function page() {
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
             </TopicColapse>
 
@@ -80,10 +83,12 @@ function page() {
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
             </TopicColapse>
 
@@ -96,10 +101,12 @@ function page() {
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
             </TopicColapse>
 
@@ -112,10 +119,12 @@ function page() {
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
               <ArticleWithCheck
                 article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
                 name="select-articles"
+                accsentColor="#E1C655"
               />
             </TopicColapse>
           </div>
@@ -177,7 +186,7 @@ function page() {
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/content-creator/create/create-article"}
+          href={"/newsletter/create/newsletter-generated-titles"}
         />
       </div>
     </div>
