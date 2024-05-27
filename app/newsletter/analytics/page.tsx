@@ -7,6 +7,10 @@ const TasksChart = dynamic(() => import("@/app/_components/graph/ComparisonChart
 })
 
 
+
+
+const page = () => {
+  
   const options = ["Script", "Article", "Documentary", "Trends Article"];
 
   const data = [
@@ -77,9 +81,6 @@ const TasksChart = dynamic(() => import("@/app/_components/graph/ComparisonChart
       ],
     },
   ];
-
-const page = () => {
-
 
   return (
     <div className={`${styles.analytics} pt-[1vw] overflow-hidden`}>
