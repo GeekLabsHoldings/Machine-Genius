@@ -26,7 +26,7 @@ export default function page() {
   return (
     <section>
       {/* Back To Complaint Table Button */}
-      <div className="flex items-center justify-between gap-4 my-[15px]">
+      <div className="flex items-center justify-between gap-4 mt-[1.5vh]">
         <div className="flex items-center gap-4">
           <Link href="/hr/personnel/exit-interviews/">
             <svg
@@ -47,7 +47,12 @@ export default function page() {
           </span>
         </div>
         <div>
-          <CustomBtn word={"Modify Template"} btnColor="white" icon={modifyIcon} paddingVal="py-[0.5vw] px-[1vw]" />
+          <CustomBtn
+            word={"Modify Template"}
+            btnColor="white"
+            icon={modifyIcon}
+            paddingVal="py-[0.5vw] px-[1vw]"
+          />
         </div>
       </div>
 
@@ -55,7 +60,7 @@ export default function page() {
       <div className="flex justify-between gap-[3vw]">
         {/* Question Container */}
         <div className=" flex-grow">
-          <h3 className="font-bold text-[20px] mb-[1.5vh]">Template Preview</h3>
+          <h3 className="font-bold text-[20px] my-[2.5vh]">Template Preview</h3>
           <div className={styles.questionContainer}>
             <h3 className="font-bold text-[20px] mb-[1.5vh]">Questions:</h3>
             <div className="space-y-6">
@@ -128,7 +133,7 @@ export default function page() {
       </div>
 
       {/* save button */}
-      <div className="flex justify-end mt-[20px]">
+      <div className="flex justify-end">
         <CustomBtn word={"Schedule"} btnColor="black" />
       </div>
     </section>
