@@ -47,7 +47,8 @@ function page() {
                 <label
                   htmlFor="tiketDescription"
                   className="font-[600] text-xl"
-                > Title
+                >
+                  Subject Line
                 </label>
                 <input
                   type="text"
