@@ -118,11 +118,11 @@ export default function page() {
 
         {/* Template Preview Container */}
         <div className=" flex-grow">
-          {/* Question Container */}
+          {/* Template Preview Container */}
           <div className={styles.templatePreviewContainer}>
-            {/* Questions Title */}
-            <h3 className="font-bold text-[20px] mb-[1.5vh]">Questions:</h3>
-            {/* Questions List */}
+            {/* Template Preview Title */}
+            <h3 className="font-bold text-[20px] mb-[1.5vh]">Template Preview</h3>
+            {/* Template Preview Body */}
             <div className="space-y-6">
 
             </div>

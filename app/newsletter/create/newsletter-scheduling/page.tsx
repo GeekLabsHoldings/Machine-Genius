@@ -1,4 +1,5 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "@/app/newsletter/create/newsletter-subjectline/newsletter-subjectline.module.css";
 
 const ReGenerateIcon = (
@@ -16,18 +17,18 @@ function page() {
       {/* titles wrapper */}
       {/* generated titles container */}
       <div className="flex flex-col gap-1 w-full overflow-clip h-[75vh] py-[1.5vw]">
-        <h2 className="text-2xl font-bold">Scheduling</h2>
+        <h2 className="text-[2rem] font-bold">Scheduling</h2>
         <span>
           create compelling subject lines and captivating opening lines for your
           content
         </span>
 
-        <div className="flex justify-center grow mt-14 gap-[2rem]">
+        <div className="flex justify-center grow mt-14 gap-[6vw]">
           {/* scripts wrapper */}
           <div className={styles.scripts_wrapper + " w-1/2 py-5"}>
             {/* scripts header that  */}
             {/* topics container */}
-            <span className="font-bold text-2xl">Suggestions</span>
+            <span className="font-bold text-2xl">Scheduling</span>
             <div className="flex flex-col gap-6 mt-[2vw]">
               <div className={`flex flex-col gap-[0.2vw]`}>
                 <label
@@ -62,7 +63,7 @@ function page() {
                   htmlFor="tiketDescription"
                   className="font-[600] text-xl"
                 >
-                  Title
+                  Opening Line
                 </label>
                 <input
                   type="text"
@@ -72,17 +73,11 @@ function page() {
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-6 mt-[2vw]">
-              <div className="flex justify-end mt-1">
-                {/* regenerate titles button */}
-
-                <CustomBtn
-                  word="Re-Generate"
-                  btnColor="black"
-                  href="/content-creator/generated-titles"
-                  icon={ReGenerateIcon}
-                />
-              </div>
+            <div className="w-[50%] min-w-56 mt-16">
+              <span className="block text-xl mb-5 font-bold">Upload Time</span>
+              <CustomSelectInput
+                options={["8:30 PM GMT", "9:00 PM GMT", "9:30 PM GMT"]}
+              />
             </div>
           </div>
 
@@ -90,30 +85,11 @@ function page() {
           <div className={styles.scripts_wrapper + " w-1/2 py-5"}>
             {/* scripts header that  */}
             {/* topics container */}
-            <div className={`flex flex-col gap-[0.2vw]`}>
-              <label htmlFor="tiketDescription" className="font-bold text-xl">
-                Opening Line*
-              </label>
-              <input
-                type="text"
-                id="subjectLine"
-                required
-                className={`${styles.input}`}
+            <div className="min-w-56 mt-16">
+              <span className="block text-xl mb-5 font-bold">Email List</span>
+              <CustomSelectInput
+                options={["PST | Asia", "EST | Europe", "CST | Africa"]}
               />
-            </div>
-            <div className="flex flex-col gap-6 mt-[2vw]">
-              <span className="font-bold text-xl">Suggestions</span>
-
-              <div className="flex justify-end mt-1">
-                {/* regenerate titles button */}
-
-                <CustomBtn
-                  word="Re-Generate"
-                  btnColor="black"
-                  href="/content-creator/generated-titles"
-                  icon={ReGenerateIcon}
-                />
-              </div>
             </div>
           </div>
         </div>

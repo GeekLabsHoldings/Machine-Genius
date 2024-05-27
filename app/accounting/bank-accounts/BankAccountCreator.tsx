@@ -27,7 +27,7 @@ const ticketTypeOptions: string[] = ["IT", "System Issue", "Request"];
  * @param btnColor - The color of the button.
  * @param btnIcon - The icon displayed on the button.
  */
-function SubscriptionsCreator({
+function BankAccountCreator({
   modalTitle,
   btnWord,
   btnColor,
@@ -150,9 +150,7 @@ function SubscriptionsCreator({
                     type="text"
                     id="subjectLine"
                     required
-                   
-
- className={`${styles.input}`}
+                    className={`${styles.input}`}
                   />
                 </div>
                 <div className={`flex flex-col gap-[0.2vw]`}>
@@ -246,3 +244,4 @@ function SubscriptionsCreator({
   );
 }
 
+export default BankAccountCreator;
