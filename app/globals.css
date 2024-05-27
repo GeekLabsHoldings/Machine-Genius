@@ -236,6 +236,9 @@ img {
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
 
+
+
+
 .custom_arrows.slick-arrow{
   width: unset !important;
   height: unset !important;

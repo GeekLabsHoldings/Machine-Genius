@@ -1,16 +1,15 @@
-"use client"
+"use client";
 import dynamic from "next/dynamic";
 import styles from "./analytics.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-const TasksChart = dynamic(() => import("@/app/_components/graph/ComparisonChart"), {
-  ssr:false
-})
-
-
-
+const TasksChart = dynamic(
+  () => import("@/app/_components/graph/ComparisonChart"),
+  {
+    ssr: false,
+  }
+);
 
 const page = () => {
-  
   const options = ["Script", "Article", "Documentary", "Trends Article"];
 
   const data = [
@@ -148,9 +147,44 @@ const page = () => {
             <h3 className=" mb-[0.8vw]">Brand</h3>
             <CustomSelectInput label="Street Politics" options={options} />
           </div>
-          <div className=" w-[50%">
-            <h3 className=" mb-[1.1vw]]">Audience Growth Graph</h3>
-            <TasksChart />
+          <div className=" w-[50%}">
+            <h3 className=" mb-[1.3vw]">Audience Growth Graph</h3>
+            <div className=" flex gap-[2.2vw] items-center w-full mb-2">
+              <div className={`${styles.chartBox} analyticsChart w-[50%] relative rounded-xl pt-[1vw]`}>
+                <TasksChart />
+              </div>
+              <div
+                className={`${styles.analyticsTable} w-[45%] rounded-xl bg-black py-[2vw] px-[1.7vw] text-white`}
+              >
+                <h3 className=" mb-[1.7vw]">News Letter Analytics</h3>
+                <div className={`${styles.analyticsTable}`}>
+                  <div>
+                    <ul className={`${styles.head} mb-[0.5vw] flex items-center justify-between`}>
+                      <li className="w-[40%]"></li>
+                      <li className="w-[30%]">This Month</li>
+                      <li className="w-[30%]">Last Month</li>
+                    </ul>
+                  </div>
+                  <div>
+                  <ul className={`${styles.body} flex items-center justify-between mb-[1vw] `}>
+                      <li className="w-[40%]">Published NewsLetters</li>
+                      <li className="w-[30%]">35</li>
+                      <li className="w-[30%]">35</li>
+                    </ul>
+                  <ul className={`${styles.body} flex items-center justify-between mb-[1vw] `}>
+                      <li className="w-[40%]">Published NewsLetters</li>
+                      <li className="w-[30%]">35</li>
+                      <li className="w-[30%]">35</li>
+                    </ul>
+                  <ul className={`${styles.body} flex items-center justify-between mb-[1vw] `}>
+                      <li className="w-[40%]">Published NewsLetters</li>
+                      <li className="w-[30%]">35</li>
+                      <li className="w-[30%]">35</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
