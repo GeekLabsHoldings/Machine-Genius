@@ -101,7 +101,6 @@ const page = () => {
   const [isShowed,setIsShowed] = useState(true)
 
   const [sorting, setSorting] = useState("Ascend");
-  const [position,setPosition] = useState<number>(0);
 
   function getRandomBackgroundColor() {
     const colors = [
@@ -121,23 +120,6 @@ const page = () => {
 
   // State for handling modal visibility
   const [isOpen, setIsOpen] = useState(false);
-
-
-  let sliderRef:any = useRef(null);
-  const next = () => {
-   if (position < sliderRef.props.children.length - 3) {
-    console.log(sliderRef);
-    sliderRef.slickNext();
-
-    
-   }
-  };
-  const previous = () => {
-    if (position != 0) {
-    sliderRef.slickPrev();
-
-    }
-  };
 
   // Define the maximum number of stars to display
 
@@ -206,57 +188,58 @@ const page = () => {
   // Variable to track the current position of the slider
 
   function SampleNextArrow(props: any) {
-    const {onClick,color } = props;
+    const {onClick , className } = props;
     return (
+      <div
+        onClick={onClick}
+        className={`custom_arrows ${className}`}
+      >
         <svg
-          width="34"
-          height="34"
           viewBox="0 0 34 34"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={onClick}
         >
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
             d="M17.4941 23.9434C17.0787 23.529 17.0787 22.8565 17.4941 22.441L21.8726 18.0625L10.625 18.0625C10.0406 18.0625 9.5625 17.5865 9.5625 17C9.5625 16.4124 10.0406 15.9375 10.625 15.9375L21.8726 15.9375L17.4941 11.559C17.0787 11.1435 17.0787 10.4699 17.4941 10.0566C17.9074 9.64115 18.581 9.64115 18.9965 10.0566L25.0059 16.066C25.2609 16.321 25.3406 16.6696 25.2822 17C25.3406 17.3304 25.2609 17.679 25.0059 17.934L18.9965 23.9434C18.581 24.3588 17.9074 24.3588 17.4941 23.9434ZM34 29.75L34 4.25C34 1.90294 32.0971 -8.318e-08 29.75 -1.85773e-07L4.25 -1.30041e-06C1.90187 -1.40305e-06 -8.318e-08 1.90294 -1.85773e-07 4.25L-1.30041e-06 29.75C-1.40301e-06 32.0971 1.90187 34 4.25 34L29.75 34C32.0971 34 34 32.0971 34 29.75Z"
-            fill={color}
           />
         </svg>
+      </div>
     );
   }
   function SamplePrevArrow(props: any) {
-    const {onClick,color } = props;
+    const {onClick , className} = props;
     return (
+      <div
+        onClick={onClick}
+        className={`custom_arrows ${className}`}
+      >
         <svg
-          width="34"
-          height="34"
           viewBox="0 0 34 34"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={onClick}
         >
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
             d="M16.5059 23.9434C16.9213 23.529 16.9213 22.8565 16.5059 22.441L12.1274 18.0625L23.375 18.0625C23.9594 18.0625 24.4375 17.5865 24.4375 17C24.4375 16.4124 23.9594 15.9375 23.375 15.9375L12.1274 15.9375L16.5059 11.559C16.9213 11.1435 16.9213 10.4699 16.5059 10.0566C16.0926 9.64115 15.419 9.64115 15.0035 10.0566L8.99409 16.066C8.73909 16.321 8.65939 16.6696 8.71783 17C8.65939 17.3304 8.73909 17.679 8.99409 17.934L15.0035 23.9434C15.419 24.3588 16.0926 24.3588 16.5059 23.9434ZM1.30041e-06 29.75L1.85773e-07 4.25C8.318e-08 1.90294 1.90294 -8.318e-08 4.25 -1.85773e-07L29.75 -1.30041e-06C32.0981 -1.40305e-06 34 1.90294 34 4.25L34 29.75C34 32.0971 32.0981 34 29.75 34L4.25 34C1.90294 34 1.40301e-06 32.0971 1.30041e-06 29.75Z"
-            fill={color}
           />
         </svg>
+      </div>
     );
   }
 
-  const settings = {
+  const settings:any = {
     infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
-    afterChange: (current:number) => {
-      setPosition(current)
-      console.log(current)
-    }
-
+    centerPadding:30,
+    nextArrow: <SampleNextArrow  />,
+    prevArrow: <SamplePrevArrow  />,
   };
+
 
   return (
     <>
@@ -278,7 +261,7 @@ const page = () => {
             <div className="mb-[1.3vw]">
               <div className=" flex justify-between w-[87vw] mb-[1.1vw]">
                 <div className=" min-w-[20vw]">
-                  <h4 className="mb-[0.5vw]">Brand {position}</h4>
+                  <h4 className="mb-[0.5vw]">Brand</h4>
                   <CustomSelectInput
                     options={[
                       "All",
@@ -289,14 +272,10 @@ const page = () => {
                     ]}
                   />
                 </div>
-                <div className=" flex items-end gap-3">
-                  <SamplePrevArrow onClick={previous} color={position == 0 ? "#D9D9D9" : "#000000"} />
-                  <SampleNextArrow  onClick={next} color={position + 1 == sliderRef?.props?.children.length - 3 ? "#D9D9D9" : "black"}/>
-                </div>
               </div>
               <div className="sliderAudience w-[87vw]">
                 <div className="slider-container ">
-                  <Slider ref={slider => {sliderRef = slider;}} {...settings}>
+                  <Slider {...settings}>
                     <div
                       className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
                     >
@@ -711,11 +690,11 @@ const page = () => {
             </div>
             {/* Outer container for the table with specific styles applied */}
             <div
-              className={`${styles.table} w-fit rounded-xl overflow-y-hidden overflow-x-auto px-2 max-w-full mb-1`}
+              className={`${styles.table} w-full rounded-xl overflow-y-hidden overflow-x-auto px-2 max-w-full mb-1`}
             >
               {/* Header section of the table */}
-              <div className={`${styles.tableHead} w-fit`}>
-                <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-fit">
+              <div className={`${styles.tableHead} w-full`}>
+                <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                   {/* Mapping over the dataHeadRealEstate array to create table header columns */}
                   {dataHeadRealEstate.map((e, i) => (
                     // Each header item has a minimum width and is evenly distributed
@@ -727,13 +706,13 @@ const page = () => {
               </div>
               {/* Body section of the table with scrollable content */}
               <div
-                className={`${styles.tableBody} w-fit overflow-y-scroll rounded-xl h-[53vh] `}
+                className={`${styles.tableBody} w-full overflow-y-scroll rounded-xl h-[53vh] `}
               >
                 {/* Mapping over the dataRealEstate array to create table rows */}
                 {dataRealEstate.map((e, i) => (
                   // Each row with styling applied and a border at the bottom
                   <ul
-                    className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit"
+                    className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full"
                     key={i}
                   >
                     {/* Property address column */}
