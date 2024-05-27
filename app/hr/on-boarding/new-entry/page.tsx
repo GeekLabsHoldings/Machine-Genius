@@ -67,7 +67,9 @@ export default function page() {
             <h3 className="font-bold text-[20px]">Required Paper Work</h3>
             <div className="flex justify-between">
               <span className="font-bold">ID Scan</span>
-              <span className="underline cursor-pointer text-[#0066FF]">JohnDoeID.pdf</span>
+              <span className="underline cursor-pointer text-[#0066FF]">
+                JohnDoeID.pdf
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="font-bold">Military Paper</span>
@@ -83,9 +85,9 @@ export default function page() {
             </div>
           </div>
         </div>
-        {/* Question Container */}
+        {/* Select & Preview Contract Container */}
         <div className="flex-grow space-y-10">
-        {/* Select Contract */}
+          {/* Select Contract */}
           <div>
             <label className="font-bold text-[20px] block mb-[1.5vh]">
               Select Contract
@@ -94,8 +96,10 @@ export default function page() {
           </div>
           {/* Contract Preview */}
           <div>
-          <h3 className="font-bold text-[20px] mb-[1.5vh]">Contract Preview</h3>
-          <div className={styles.questionContainer + " min-h-[50vh]"}></div>
+            <h3 className="font-bold text-[20px] mb-[1.5vh]">
+              Contract Preview
+            </h3>
+            <div className={styles.contractPreview + " min-h-[50vh]"}></div>
           </div>
         </div>
       </div>
