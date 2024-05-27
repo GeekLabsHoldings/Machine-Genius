@@ -15,7 +15,7 @@ function page() {
     <div className="flex flex-col">
       {/* titles wrapper */}
       {/* generated titles container */}
-      <div className="flex flex-col gap-1 w-full h-[75vh] py-[1.5vw]">
+      <div className="flex flex-col gap-1 w-full overflow-clip h-[75vh] py-[1.5vw]">
         <h2 className="text-2xl font-bold">Subject Line & Opening Lines</h2>
         <span>
           create compelling subject lines and captivating opening lines for your
@@ -40,7 +40,7 @@ function page() {
             </div>
             <div className="flex flex-col gap-6 mt-[2vw]">
               <span className="font-bold text-xl">Suggestions</span>
-              <div className="h-[50%]">
+              <div className="max-h-[50%]">
                 <ul className="flex flex-col h-full overflow-y-auto gap-5">
                   <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
                     Groundbreaking Results for Q4, 400M Profit Gain , 6B in
@@ -108,7 +108,7 @@ function page() {
             </div>
             <div className="flex flex-col gap-6 mt-[2vw]">
               <span className="font-bold text-xl">Suggestions</span>
-              <div className="h-[50%]">
+              <div className="max-h-[50%]">
                 <ul className="flex flex-col h-full overflow-y-auto gap-5">
                   <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
                     Groundbreaking Results for Q4, 400M Profit Gain , 6B in
@@ -169,7 +169,7 @@ function page() {
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/newsletter/create/newsletter-generated-titles"}
+          href={"/newsletter/create/newsletter-scheduling"}
         />
       </div>
     </div>
