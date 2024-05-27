@@ -116,22 +116,25 @@ export default function page() {
 
   return (
     <>
+      {/* Page Header */}
       <div className="pageHeader">
         <h3 className="mt-[25px]">Filter By:</h3>
 
-        {/* filters options to filter and edit data in table */}
+        {/* Filters Options Container */}
         <div
           className={`flex flex-col gap-[0.7vw] w-full pageHeader mt-[10px] mb-[25px]`}
         >
           <div className="flex justify-between items-end">
+            {/* Select Input for Roles */}
             <div className={`w-8/12 flex items-end gap-[1vw]`}>
               <div className="flex flex-col w-1/4 gap-[0.3vw]">
                 <CustomSelectInput label="All Roles" options={rolesOptions} />
               </div>
             </div>
 
-            {/* BUTTON HERE */}
+            {/* Navigation Buttons */}
             <div className="flex gap-2">
+              {/* Left Navigation Button */}
               <div
                 className="cursor-pointer"
                 onClick={() => {
@@ -140,6 +143,7 @@ export default function page() {
               >
                 {leftArrow}
               </div>
+              {/* Right Navigation Button */}
               <div
                 className="cursor-pointer"
                 onClick={() => {
@@ -153,6 +157,7 @@ export default function page() {
         </div>
       </div>
 
+      {/* Employee Database Table */}
       <EmployeeDatabaseTable />
     </>
   );

@@ -69,7 +69,7 @@ export default function page() {
     </svg>
   );
 
-    /**
+  /**
    * Scrolls the table to the right by 150 pixels.
    *
    * @return {void} No return value.
@@ -83,11 +83,11 @@ export default function page() {
     }
   }
 
-    /**
- * Scrolls the table to the left by 150 pixels.
- *
- * @return {void} No return value.
- */
+  /**
+   * Scrolls the table to the left by 150 pixels.
+   *
+   * @return {void} No return value.
+   */
   function slideLeft() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -97,11 +97,11 @@ export default function page() {
     }
   }
 
-    /**
- * Updates the fill color of the left and right arrows based on the scroll position of the table.
- *
- * @return {void} This function does not return a value.
- */
+  /**
+   * Updates the fill color of the left and right arrows based on the scroll position of the table.
+   *
+   * @return {void} This function does not return a value.
+   */
   function updateFillColor() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -123,9 +123,9 @@ export default function page() {
 
   useEffect(() => {
     // Retrieve the table element by its ID from the document and cast it to HTMLTableElement or null if not found.
-    const table = document.getElementById("table") as HTMLTableElement | null;  
+    const table = document.getElementById("table") as HTMLTableElement | null;
     // Add an event listener to the table element for the "scroll" event, calling the updateFillColor function.
-    table?.addEventListener("scroll", updateFillColor);  
+    table?.addEventListener("scroll", updateFillColor);
     // Cleanup function executed on component unmount or when the effect dependencies change.
     return () => {
       // Remove the event listener from the table element to prevent memory leaks.
@@ -135,13 +135,15 @@ export default function page() {
 
   return (
     <section>
+      {/* Employee Database Page Header */}
       <div className="pageHeader">
         <h3 className="mt-[25px]">Employee Database</h3>
 
         {/* Search & Filter Options & Buttons Container */}
         <div className="flex justify-between items-end w-full mt-[10px] mb-[25px]">
+          {/* Search and Filter Options Section */}
           <div className={`w-8/12 flex items-center gap-[1.2vw]`}>
-            {/* Search */}
+            {/* Search Input */}
             <input
               type="search"
               name=""
@@ -155,7 +157,7 @@ export default function page() {
             </div>
           </div>
 
-          {/* BUTTONS Container */}
+          {/* Buttons Container */}
           <div className="flex items-center gap-[2vw]">
             {/* New Entry Button */}
             <div className="">
@@ -190,6 +192,7 @@ export default function page() {
         </div>
       </div>
 
+      {/* Employee On-Boarding Table */}
       <OnBoardingTable />
     </section>
   );
