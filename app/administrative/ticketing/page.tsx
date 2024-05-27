@@ -1,35 +1,45 @@
-"use client";
-import TicketingDatabaseTable from "@/app/_components/Administrative/03TicketingDatabase/TicketingDatabaseTable";
-import React, { useState } from "react";
-import styles from "./ticketing.module.css";
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import CreateTicketModal from "@/app/_components/Administrative/03TicketingDatabase/CreateTicketModal";
+"use client"; // Directive to indicate that this file is a client component in a Next.js application.
+
+import TicketingDatabaseTable from "@/app/_components/Administrative/03TicketingDatabase/TicketingDatabaseTable"; // Importing the TicketingDatabaseTable component.
+import React, { useState } from "react"; // Importing React and useState hook.
+import styles from "./ticketing.module.css"; // Importing CSS module for styling.
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing CustomSelectInput component.
+import CreateTicketModal from "@/app/_components/Administrative/03TicketingDatabase/CreateTicketModal"; // Importing CreateTicketModal component.
 
 export default function page() {
+  // Defining ticket type options for the select input.
   const ticketTypeOptions: string[] = ["All", "IT", "System Issue", "Request"];
+  // State variable to manage the order of dates, initialized to true (ascending).
   const [dateOrder, setDateOrder] = useState<boolean>(true);
 
   return (
     <div className="pageHeader">
-        <h3 className="mt-[25px]">Ticket Database</h3>
+      <h3 className="mt-[25px]">Ticket Database</h3>
 
-      {/* filters options to filter and edit data in table */}
+      {/* Filters section to filter and edit data in the table */}
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader my-[25px]`}>
         <div className="flex justify-between items-end">
-          <div className={`${styles.ticketingPage} w-8/12 flex items-end gap-[1vw]`}>
+          {/* Left section containing filters */}
+          <div
+            className={`${styles.ticketingPage} w-8/12 flex items-end gap-[1vw]`}
+          >
+            {/* Ticket Type filter */}
             <div className="flex flex-col w-1/4 gap-[0.3vw]">
               <h5>Ticket Type</h5>
               <CustomSelectInput label="All" options={ticketTypeOptions} />
             </div>
+            {/* Date filter with order toggle */}
             <div className="flex flex-col w-[25%] gap-[0.3vw]">
               <h5>Date</h5>
               <div
                 className={`${styles.changeOrder} `}
                 onClick={() => {
+                  // Toggles the date order between ascending and descending.
                   setDateOrder(!dateOrder);
                 }}
               >
-                <p>{dateOrder ? "Ascend" : "Decend"}</p>
+                <p>{dateOrder ? "Ascend" : "Descend"}</p>
+                {/* SVG icon for the date order toggle button */}
                 <svg
                   width="16"
                   height="16"
@@ -48,26 +58,36 @@ export default function page() {
             </div>
           </div>
 
-          {/* BUTTON MODALS HERE */}
+          {/* Right section containing the button to open the Create Ticket modal */}
           <div className="flex gap-2">
-            {/* open modal to enable you to Create Ticket  */}
-
-<CreateTicketModal btnWord={'Create Ticket'} btnIcon={<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z" fill="#FFFFFB" />
-            </svg>} btnColor={'black'} modalTitle={'Create Ticket'} />
-
-
-
-
-
-
-
-
-
+            {/* Button to open modal for creating a new ticket */}
+            <CreateTicketModal
+              btnWord={"Create Ticket"} // Text for the button.
+              btnIcon={
+                // SVG icon for the button.
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="11"
+                  height="11"
+                  viewBox="0 0 11 11"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
+                    fill="#FFFFFB"
+                  />
+                </svg>
+              }
+              btnColor={"black"} // Button color.
+              modalTitle={"Create Ticket"} // Title of the modal.
+            />
           </div>
         </div>
       </div>
 
+      {/* Component to display the ticketing database table */}
       <TicketingDatabaseTable />
     </div>
   );

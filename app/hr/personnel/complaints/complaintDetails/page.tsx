@@ -3,13 +3,19 @@ import ComplaintDetailsCard from "@/app/_components/HR/03Personnel/03Complaints/
 import { Link } from "@mui/material";
 import React from "react";
 
+/**
+ * Renders the HR personnel complaint details page.
+ *
+ * @return {JSX.Element} The JSX element representing the HR personnel complaint details page.
+ */
 export default function page() {
   return (
     <>
       {/* Back To Complaint Table Button */}
-
       <div className="flex items-center gap-4 my-[30px]">
+        {/* Link to navigate back to the complaints table */}
         <Link href="/hr/personnel/complaints">
+          {/* Arrow icon for back navigation */}
           <svg
             width="11"
             height="22"
@@ -23,10 +29,13 @@ export default function page() {
             />
           </svg>
         </Link>
+        {/* Title for Complaint Table */}
         <span className="text-[36px] font-bold ">Complaint Table</span>
       </div>
 
+      {/* Title for Complaint Details */}
       <h2 className="text-[32px] font-bold mb-[30px]">Complaint Details</h2>
+      {/* Component to display Complaint Details */}
       <ComplaintDetailsCard />
     </>
   );

@@ -3,6 +3,11 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import TemplateBox from "@/app/_components/HR/03Personnel/00General/TemplateBox";
 import React from "react";
 
+/**
+ * Renders the Page component which displays a list of interview templates and allows the user to navigate through the list.
+ *
+ * @return {JSX.Element} The Page component.
+ */
 export default function Page() {
   const leftArrow = (
     <svg
@@ -56,15 +61,29 @@ export default function Page() {
 
   return (
     <section className="flex flex-col justify-between h-[60vh]">
+      {/* Section Content */}
       <div>
+        {/* Section Header */}
         <div className="flex justify-between items-center my-[1vw]">
+          {/* Section Title */}
           <h2 className="text-[24px] font-bold">Interview Templates</h2>
+
+          {/* Navigation Arrows */}
+          {/* Buttons for navigating left and right */}
           <div className="flex gap-2">
+            {/* Left Arrow Button */}
             <div className="cursor-pointer">{leftArrow}</div>
+
+            {/* Right Arrow Button */}
             <div className="cursor-pointer">{rightArrow}</div>
           </div>
         </div>
+
+        {/* Template Grid */}
+        {/* Grid displaying interview templates */}
         <div className="grid lg:grid-cols-3 gap-[1vw] items-start">
+          {/* Template Boxes */}
+          {/* Each TemplateBox represents a different interview template */}
           <TemplateBox title="Front End Interview" />
           <TemplateBox title="Back End Interview" />
           <TemplateBox title="UX/UI Interview" />
@@ -75,6 +94,9 @@ export default function Page() {
           <TemplateBox title="Social Media Interview" />
         </div>
       </div>
+
+      {/* Section Footer */}
+      {/* Button to add a new interview template */}
       <div className="flex justify-end mt-1">
         <CustomBtn
           btnColor="black"

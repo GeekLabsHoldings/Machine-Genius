@@ -23,24 +23,38 @@ export default function Page() {
 
   return (
     <section>
+      {/* Section Header */}
       <div className="flex justify-between items-center my-[1.5vw]">
+        {/* Section Title */}
         <h2 className="text-[32px] font-bold">Templates</h2>
+
+        {/* New Template Button */}
         <div>
-          <CustomBtn icon={addIcon} word="New Template" btnColor="black" href="/hr/personnel/exit-interviews/new-template" />
+          <CustomBtn
+            icon={addIcon}
+            word="New Template"
+            btnColor="black"
+            href="/hr/personnel/exit-interviews/new-template"
+          />
         </div>
       </div>
+
+      {/* Template Grid */}
       <div className="grid lg:grid-cols-3 gap-[2vw] items-start">
+        {/* Fired Employee Template */}
         <TemplateBox title="Fired Employee Template">
+          {/* Commented-out content that may be template questions */}
           {/* <div>
-            <p>1. What is your thinking process?</p>
-            <p>2. What are your strengths?</p>
-            <p>3. Describe your response to a certain situation.</p>
-            <p>4. Are you a team player or a one-man show?</p>
-            <p>5. What kind of work experiences do you have?</p>
-            <p>6. Which editing software do you prefer?</p>
-          </div> */}
+        <p>1. What is your thinking process?</p>
+        <p>2. What are your strengths?</p>
+        <p>3. Describe your response to a certain situation.</p>
+        <p>4. Are you a team player or a one-man show?</p>
+        <p>5. What kind of work experiences do you have?</p>
+        <p>6. Which editing software do you prefer?</p>
+      </div> */}
         </TemplateBox>
 
+        {/* Resigned Employee Template */}
         <TemplateBox title="Resigned Employee Template" />
       </div>
     </section>

@@ -31,52 +31,80 @@ export default function page() {
       <div className="flex justify-between gap-[3vw]">
         {/* Employment Details */}
         <div className=" flex-grow space-y-6">
+          {/* Section Title */}
           <h3 className="font-bold text-[20px]">Employment Details</h3>
+
+          {/* Select Employee */}
           <div>
             <label className="font-bold block mb-[1.5vh]">
               Select Employee
             </label>
+            {/* Custom select input for employee selection */}
             <CustomSelectInput options={[""]} label={"John Doe Johnney Doe"} />
           </div>
+
+          {/* Contract Dates */}
           <div className="flex gap-[2vw]">
+            {/* Contract Start Date */}
             <div className="flex-grow">
               <label className="font-bold block mb-[1.5vh]">
                 Contract Start Date
               </label>
+              {/* Custom select input for contract start date */}
               <CustomSelectInput options={[""]} label={"20 March 2020"} />
             </div>
+
+            {/* Contract End Date */}
             <div className="flex-grow">
               <label className="font-bold block mb-[1.5vh]">
                 Contract End Date
               </label>
+              {/* Custom select input for contract end date */}
               <CustomSelectInput options={[""]} label={"20 March 2023"} />
             </div>
           </div>
+
+          {/* Reason For Quitting */}
           <div>
             <label className="font-bold block mb-[1.5vh]">
               Reason For Quitting
             </label>
+            {/* Custom select input for reason for quitting */}
             <CustomSelectInput options={[""]} label={"Select Reason"} />
           </div>
+
+          {/* Two Week Notice */}
           <div className="w-1/2">
             <label className="font-bold block mb-[1.5vh]">
               Two Week Notice
             </label>
+            {/* Custom select input for two week notice */}
             <CustomSelectInput options={[""]} label={"Given"} />
           </div>
+
+          {/* Handover Date */}
           <div className="w-1/2">
             <label className="font-bold block mb-[1.5vh]">Handover Date</label>
+            {/* Custom select input for handover date */}
             <CustomSelectInput options={[""]} label={"Select Date"} />
           </div>
         </div>
+
         {/* Question Container */}
         <div className=" flex-grow">
+          {/* Section Title */}
           <h3 className="font-bold text-[20px] mb-[1.5vh]">
             Video Editor Template
           </h3>
+
+          {/* Question Container */}
           <div className={styles.questionContainer}>
+            {/* Questions Title */}
             <h3 className="font-bold text-[20px] mb-[1.5vh]">Questions:</h3>
+
+            {/* Questions List */}
             <div className="space-y-6">
+              {/* Question 1 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
@@ -84,6 +112,7 @@ export default function page() {
                 >
                   1. Tell me more about yourself:
                 </label>
+                {/* Textarea for answering question 1 */}
                 <textarea
                   name="tell-me-about-yourself"
                   id="tell-me-about-yourself"
@@ -91,6 +120,8 @@ export default function page() {
                   rows={5}
                 ></textarea>
               </div>
+
+              {/* Question 2 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
@@ -98,6 +129,7 @@ export default function page() {
                 >
                   2. Where do you see yourself in 5 years?
                 </label>
+                {/* Textarea for answering question 2 */}
                 <textarea
                   name="where-do-you-see-yourself"
                   id="where-do-you-see-yourself"
@@ -105,22 +137,28 @@ export default function page() {
                   rows={5}
                 ></textarea>
               </div>
+
+              {/* Question 3 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
                   htmlFor="exp-in-pr"
                 >
-                  3. Do you have experience in Pr?
+                  3. Do you have experience in PR?
                 </label>
+                {/* Input field for answering question 3 */}
                 <input name="exp-in-pr" id="exp-in-pr" type="text"></input>
               </div>
+
+              {/* Question 4 */}
               <div className="flex flex-col">
                 <label
                   className="font-bold mb-[1.5vh] block"
                   htmlFor="exp-in-after-effects"
                 >
-                  4. Do you have experience inAdobe After Effects?
+                  4. Do you have experience in Adobe After Effects?
                 </label>
+                {/* Input field for answering question 4 */}
                 <input
                   name="exp-in-after-effects"
                   id="exp-in-after-effects"
