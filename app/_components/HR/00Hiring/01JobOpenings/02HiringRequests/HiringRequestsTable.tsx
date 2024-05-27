@@ -18,21 +18,21 @@ export default function HiringRequestsTable() {
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Kamel",
-      hiringStatus: "Continue",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Sherry",
-      hiringStatus: "Pending",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Manar",
-      hiringStatus: "Completed",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Front-End",
@@ -46,21 +46,21 @@ export default function HiringRequestsTable() {
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Kamel",
-      hiringStatus: "Continue",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Sherry",
-      hiringStatus: "Pending",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Manar",
-      hiringStatus: "Completed",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Front-End",
@@ -74,21 +74,21 @@ export default function HiringRequestsTable() {
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Kamel",
-      hiringStatus: "Continue",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Sherry",
-      hiringStatus: "Pending",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Manar",
-      hiringStatus: "Completed",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Front-End",
@@ -102,21 +102,21 @@ export default function HiringRequestsTable() {
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Kamel",
-      hiringStatus: "Continue",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Sherry",
-      hiringStatus: "Pending",
+      hiringStatus: "Start Hiring",
     },
     {
       job_title: "Video Editor",
       level: "Beginner",
       department: "Video Editing",
       requested_by: "Manar",
-      hiringStatus: "Completed",
+      hiringStatus: "Start Hiring",
     },
   ];
   return (
@@ -233,12 +233,12 @@ export default function HiringRequestsTable() {
                 {ele.requested_by}
               </span>
             </li>
-            <li
-              className={`w-[20%] ${
-                ele.hiringStatus === "Completed" && "opacity-50"
-              }`}
-            >
-              <CustomBtn btnColor="black" word={ele.hiringStatus} />
+            <li className={`w-[20%]`}>
+              <CustomBtn
+                btnColor="black"
+                word={ele.hiringStatus}
+                href={`/hr/hiring/job-openings/start-hiring`}
+              />
             </li>
           </ul>
         ))}
