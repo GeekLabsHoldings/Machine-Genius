@@ -6,199 +6,26 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Slider from "react-slick"; // Importing Slider component from react-slick
 
 const page = () => {
-  const [sorting, setSorting] = useState("Ascend");
 
-  function getRandomBackgroundColor() {
-    const colors = [
-      "#F36F24B2",
-      "#9B5FBFB2",
-      "#E1C655B2",
-      "#31B2E9B2",
-      "#E9313EB2",
-    ];
-
-    // Select a random index from the array of colors
-    const randomIndex = Math.floor(Math.random() * colors.length);
-
-    // Return the color at the random index
-    return colors[randomIndex];
-  }
-
-  // State for handling modal visibility
-  const [isOpen, setIsOpen] = useState(false);
-
-  // References to HTML elements and components
-  const btnRef = useRef<any>(null); // Reference for the button element
-  const sliderRef = useRef<Slider>(null); // Reference for the slider component
-
-  const [position, setPosition] = useState(0);
-
-  // Define the maximum number of stars to display
-
-  const STAR_COUNT = 5;
-
-  // Function to generate star rating SVG elements based on a given value
-
-  const rating = (value: number) => {
-    // Create an array of length STAR_COUNT, each element is a default (empty) star SVG
-
-    const stars = Array.from({ length: STAR_COUNT }, () => (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M0.0225353 7.23255C0.0764637 7.07602 0.213829 6.96299 0.377325 6.94122L6.67488 6.10642L9.61063 0.221093C9.75672 -0.0736975 10.2428 -0.0736975 10.3889 0.221093L13.3246 6.10646L19.6222 6.94126C19.7857 6.96299 19.9239 7.07606 19.9769 7.23259C20.03 7.38911 19.99 7.56215 19.8726 7.67954L15.2542 12.2979L16.5125 18.5911C16.5447 18.7546 16.4821 18.9207 16.3499 19.0224C16.2177 19.1233 16.0386 19.1398 15.8916 19.0659L9.99929 16.1197L4.10696 19.0659C4.0452 19.0963 3.97913 19.112 3.91305 19.112C3.81999 19.112 3.72608 19.0815 3.64871 19.0224C3.51742 18.9216 3.45391 18.7546 3.48611 18.5911L4.74439 12.2979L0.12603 7.67958C0.0103874 7.563 -0.0296402 7.38997 0.0225353 7.23255ZM3.84873 8.94129L6.63314 11.7266L5.91226 15.331C5.88096 15.391 5.86355 15.4589 5.86355 15.5311C5.86355 15.7711 6.05835 15.9659 6.29836 15.9659H6.31576C6.38184 15.9659 6.44795 15.9502 6.51056 15.9198L10.0011 14.1754L13.4916 15.9198C13.6403 15.9937 13.8186 15.978 13.9499 15.8763C14.0812 15.7754 14.1447 15.6084 14.1125 15.445L13.369 11.7257L16.1534 8.94043C16.2708 8.82304 16.3108 8.65 16.2578 8.49347C16.2038 8.33695 16.0665 8.22392 15.903 8.20215L12.1829 7.70909L10.3906 4.11769C10.2446 3.8229 9.75847 3.8229 9.61238 4.11769L7.82016 7.70909L4.10007 8.20215C3.93657 8.22388 3.79831 8.33695 3.74528 8.49347C3.69135 8.65086 3.73134 8.82389 3.84873 8.94129Z"
-          fill="#E1C655"
-        />
-      </svg>
-    ));
-    let i;
-    for (i = 0; i < value; i++) {
-      // this will loop Math.floor(value) times
-      stars[i] = (
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M7.85846 0.00390625L10.738 5.3874L15.8711 6.13858L12.4908 9.89451V15.278L7.85846 13.2748L2.85056 14.652L4.22773 9.89451L0.722199 6.13858L5.10411 5.01181L7.85846 0.00390625Z"
-            fill="#E1C655"
-          />
-        </svg>
-      );
-    }
-
-    if (value % 1 != 0)
-      // if value is a decimal, add a half star
-      stars[i - 1] = (
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0.0225353 7.23255C0.0764637 7.07602 0.213829 6.96299 0.377325 6.94122L6.67488 6.10642L9.61063 0.221093C9.75672 -0.0736975 10.2428 -0.0736975 10.3889 0.221093L13.3246 6.10646L19.6222 6.94126C19.7857 6.96299 19.9239 7.07606 19.9769 7.23259C20.03 7.38911 19.99 7.56215 19.8726 7.67954L15.2542 12.2979L16.5125 18.5911C16.5447 18.7546 16.4821 18.9207 16.3499 19.0224C16.2177 19.1233 16.0386 19.1398 15.8916 19.0659L9.99929 16.1197L4.10696 19.0659C4.0452 19.0963 3.97913 19.112 3.91305 19.112C3.81999 19.112 3.72608 19.0815 3.64871 19.0224C3.51742 18.9216 3.45391 18.7546 3.48611 18.5911L4.74439 12.2979L0.12603 7.67958C0.0103874 7.563 -0.0296402 7.38997 0.0225353 7.23255ZM9.56538 13.6892C9.56538 13.8536 9.65844 14.0049 9.80539 14.0779L13.4898 15.9197C13.5516 15.9502 13.6176 15.9658 13.6846 15.9658C13.7777 15.9658 13.8716 15.9354 13.949 15.8763C14.0803 15.7754 14.1438 15.6084 14.1116 15.445L13.3681 11.7257L16.1525 8.94043C16.2699 8.82304 16.3099 8.65 16.2569 8.49347C16.2029 8.33695 16.0656 8.22392 15.9021 8.20215L12.182 7.70909L10.3898 4.11769C10.3002 3.93683 10.0976 3.84291 9.90106 3.88811C9.70365 3.93422 9.56538 4.10986 9.56538 4.31159V13.6892Z"
-            fill="#E1C655"
-          />
-        </svg>
-      );
-
-    return <div className="rating">{stars}</div>;
+  let sliderRef:any = useRef(null);
+  const next = () => {
+    sliderRef.slickNext();
+  };
+  const previous = () => {
+    sliderRef.slickPrev();
   };
 
-  const dataHeadRealEstate = [
-    "Email Address",
-    "Email Marketing",
-    "Source",
-    "Contact Rating",
-    "Date Added",
-    "Niche",
-  ];
-
-  const dataRealEstate = [
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-    {
-      emailAddress: "johndoe@gmail.com",
-      emailMarketing: "Cleaned",
-      Source: "Twitter",
-      contactRating: 3.5,
-      dateAdded: "20 March 2024",
-      Niche: "",
-    },
-  ];
-
-  // Variable to track the current position of the slider
 
   function SampleNextArrow(props: any) {
-    const { className, style, onClick } = props;
+    const {onClick } = props;
     return (
-      <div onClick={onClick} className={className} style={{ ...style }}>
         <svg
           width="34"
           height="34"
           viewBox="0 0 34 34"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          onClick={onClick}
         >
           <path
             fill-rule="evenodd"
@@ -207,449 +34,385 @@ const page = () => {
             fill="black"
           />
         </svg>
-      </div>
     );
   }
   function SamplePrevArrow(props: any) {
-    const { className, style, onClick } = props;
+    const {onClick } = props;
     return (
-      <div onClick={onClick} className={className} style={{ ...style }}>
         <svg
           width="34"
           height="34"
           viewBox="0 0 34 34"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          onClick={onClick}
         >
           <path
             fill-rule="evenodd"
             clip-rule="evenodd"
             d="M16.5059 23.9434C16.9213 23.529 16.9213 22.8565 16.5059 22.441L12.1274 18.0625L23.375 18.0625C23.9594 18.0625 24.4375 17.5865 24.4375 17C24.4375 16.4124 23.9594 15.9375 23.375 15.9375L12.1274 15.9375L16.5059 11.559C16.9213 11.1435 16.9213 10.4699 16.5059 10.0566C16.0926 9.64115 15.419 9.64115 15.0035 10.0566L8.99409 16.066C8.73909 16.321 8.65939 16.6696 8.71783 17C8.65939 17.3304 8.73909 17.679 8.99409 17.934L15.0035 23.9434C15.419 24.3588 16.0926 24.3588 16.5059 23.9434ZM1.30041e-06 29.75L1.85773e-07 4.25C8.318e-08 1.90294 1.90294 -8.318e-08 4.25 -1.85773e-07L29.75 -1.30041e-06C32.0981 -1.40305e-06 34 1.90294 34 4.25L34 29.75C34 32.0971 32.0981 34 29.75 34L4.25 34C1.90294 34 1.40301e-06 32.0971 1.30041e-06 29.75Z"
-            fill={position == 0 ? "#D9D9D9" : "black"}
+            fill="#D9D9D9"
           />
         </svg>
-      </div>
     );
   }
 
   const settings = {
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 3,
-    centerPadding: "30px",
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
   };
-  // // Function to navigate to the next slide in the slider
-  // const next = () => {
-  //   if (sliderRef.current) {
-  //     setPosition((prev) => prev + 1);
-  //     sliderRef.current.slickNext(); // Move to the next slide
-  //     console.log(sliderRef.current); // Log the current state of the slider
-  //   }
-  // };
-
-  // Function to navigate to the previous slide in the slider
-  // const previous = () => {
-  //   if (sliderRef.current) {
-  //     if (position !== 0) {
-  //       sliderRef.current.slickPrev(); // Move to the previous slide
-  //       setPosition((prev) => prev - 1);
-  //     }
-  //   }
-  // };
 
   return (
-    <>
-      <div className={`${styles.emailList} pt-[1vw] overflow-hidden relative`}>
-        <div className={"tabs " + styles.tabs}>
-          <input
-            type="radio"
-            name="tabs"
-            className="tab"
-            aria-label="Audience"
-            defaultChecked
-          />
-          <div className={`tab-content pt-[1vw]`}>
-            <div className="mb-[1.3vw]">
-              <div className=" flex justify-between w-[87vw] mb-[1.1vw]">
-                <div className=" min-w-[20vw]">
-                  <h4 className="mb-[0.5vw]">Brand</h4>
-                  <CustomSelectInput
-                    options={[
-                      "All",
-                      "ST Suite",
-                      "Street Politics",
-                      "ST Suite",
-                      "Street Politics",
-                    ]}
-                  />
-                </div>
-                <div className=" flex items-end gap-3">
-                  <SamplePrevArrow />
-                  <SampleNextArrow />
-                </div>
+    <div className={`${styles.emailList} pt-[1vw] overflow-hidden`}>
+      <div className={"tabs " + styles.tabs}>
+        <input
+          type="radio"
+          name="tabs"
+          className="tab"
+          aria-label="Audience"
+          defaultChecked
+        />
+        <div className={`tab-content pt-[1vw] relative`}>
+          <div className="mb-[1.3vw]">
+            <div className=" flex justify-between w-[87vw] mb-[1.1vw]">
+              <div className=" min-w-[20vw]">
+                <h4 className="mb-[0.5vw]">Brand</h4>
+                <CustomSelectInput
+                  options={[
+                    "All",
+                    "ST Suite",
+                    "Street Politics",
+                    "ST Suite",
+                    "Street Politics",
+                  ]}
+                />
               </div>
-              <div className="sliderAudience w-[87vw]">
-                <div className="slider-container ">
-                  <Slider ref={sliderRef} {...settings}>
-                    <div
-                      className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
-                    >
-                      <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
-                        <h3>Street Politics</h3>
-                        <svg
-                          width="30"
-                          height="30"
-                          viewBox="0 0 30 30"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clip-path="url(#clip0_902_2705)">
-                            <rect
-                              width="30"
-                              height="30"
-                              rx="6"
-                              fill="#2A2B2A"
-                            />
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
-                              fill="#FFFFFB"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_902_2705">
-                              <rect
-                                width="30"
-                                height="30"
-                                rx="6"
-                                fill="white"
-                              />
-                            </clipPath>
-                          </defs>
-                        </svg>
+              <div className=" flex items-end gap-3">
+                <SamplePrevArrow  onClick={previous} />
+                <SampleNextArrow  onClick={next} />
+              </div>
+            </div>
+            <div className="sliderAudience w-[87vw]">
+              <div className="slider-container ">
+                <Slider ref={slider => {sliderRef = slider}} {...settings}>
+                  <div
+                    className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
+                  >
+                    <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
+                      <h3>Street Politics</h3>
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clip-path="url(#clip0_902_2705)">
+                          <rect width="30" height="30" rx="6" fill="#2A2B2A" />
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
+                            fill="#FFFFFB"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_902_2705">
+                            <rect width="30" height="30" rx="6" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </div>
+                    <div className=" overflow-y-scroll h-[55vh] pr-2">
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
                     </div>
-                    <div
-                      className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
-                    >
-                      <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
-                        <h3>Street Politics</h3>
-                        <svg
-                          width="30"
-                          height="30"
-                          viewBox="0 0 30 30"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clip-path="url(#clip0_902_2705)">
-                            <rect
-                              width="30"
-                              height="30"
-                              rx="6"
-                              fill="#2A2B2A"
-                            />
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
-                              fill="#FFFFFB"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_902_2705">
-                              <rect
-                                width="30"
-                                height="30"
-                                rx="6"
-                                fill="white"
-                              />
-                            </clipPath>
-                          </defs>
-                        </svg>
+                  </div>
+                  <div
+                    className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
+                  >
+                    <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
+                      <h3>Street Politics</h3>
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clip-path="url(#clip0_902_2705)">
+                          <rect width="30" height="30" rx="6" fill="#2A2B2A" />
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
+                            fill="#FFFFFB"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_902_2705">
+                            <rect width="30" height="30" rx="6" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </div>
+                    <div className=" overflow-y-scroll h-[55vh] pr-2">
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
                     </div>
-                    <div
-                      className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
-                    >
-                      <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
-                        <h3>Street Politics</h3>
-                        <svg
-                          width="30"
-                          height="30"
-                          viewBox="0 0 30 30"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clip-path="url(#clip0_902_2705)">
-                            <rect
-                              width="30"
-                              height="30"
-                              rx="6"
-                              fill="#2A2B2A"
-                            />
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
-                              fill="#FFFFFB"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_902_2705">
-                              <rect
-                                width="30"
-                                height="30"
-                                rx="6"
-                                fill="white"
-                              />
-                            </clipPath>
-                          </defs>
-                        </svg>
+                  </div>
+                  <div
+                    className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
+                  >
+                    <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
+                      <h3>Street Politics</h3>
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clip-path="url(#clip0_902_2705)">
+                          <rect width="30" height="30" rx="6" fill="#2A2B2A" />
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
+                            fill="#FFFFFB"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_902_2705">
+                            <rect width="30" height="30" rx="6" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </div>
+                    <div className=" overflow-y-scroll h-[55vh] pr-2">
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
                     </div>
-                    <div
-                      className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
-                    >
-                      <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
-                        <h3>Street Politics</h3>
-                        <svg
-                          width="30"
-                          height="30"
-                          viewBox="0 0 30 30"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clip-path="url(#clip0_902_2705)">
-                            <rect
-                              width="30"
-                              height="30"
-                              rx="6"
-                              fill="#2A2B2A"
-                            />
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
-                              fill="#FFFFFB"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_902_2705">
-                              <rect
-                                width="30"
-                                height="30"
-                                rx="6"
-                                fill="white"
-                              />
-                            </clipPath>
-                          </defs>
-                        </svg>
+                  </div>
+                  <div
+                    className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
+                  >
+                    <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
+                      <h3>Street Politics</h3>
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clip-path="url(#clip0_902_2705)">
+                          <rect width="30" height="30" rx="6" fill="#2A2B2A" />
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
+                            fill="#FFFFFB"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_902_2705">
+                            <rect width="30" height="30" rx="6" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </div>
+                    <div className=" overflow-y-scroll h-[55vh] pr-2">
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
+                      </div>
+                      <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                        <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                        <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                          List of people who unsubscribed to our newsletter
+                        </p>
+                        <CustomBtn
+                          btnColor="black"
+                          word="View List"
+                          width="100%"
+                        />
                       </div>
                     </div>
-                  </Slider>
-                </div>
+                  </div>
+                </Slider>
               </div>
             </div>
           </div>
+        </div>
 
           <input
             type="radio"

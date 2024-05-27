@@ -1,10 +1,12 @@
-"use client";
-import React, { useState } from "react";
+"use client"
+import dynamic from "next/dynamic";
 import styles from "./analytics.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import TasksChart from "@/app/_components/graph/ComparisonChart";
+const TasksChart = dynamic(() => import("@/app/_components/graph/ComparisonChart"), {
+  ssr:false
+})
 
-const page = () => {
+
   const options = ["Script", "Article", "Documentary", "Trends Article"];
 
   const data = [
@@ -75,21 +77,9 @@ const page = () => {
       ],
     },
   ];
-  const analyticsTableBody = [
-{name:"Published NewsLetters",
-  thisMonth:"35",
-  lastMonth:"35",
-},{name:"Growth Percentage",
-thisMonth:"15%",
-lastMonth:"15%",
-},{name:"New Subscribers",
-thisMonth:"35",
-lastMonth:"35",
-},{name:"Unsubscribes",
-thisMonth:"3",
-lastMonth:"3",
-},
-  ]
+
+const page = () => {
+
 
   return (
     <div className={`${styles.analytics} pt-[1vw] overflow-hidden`}>
@@ -157,31 +147,9 @@ lastMonth:"3",
             <h3 className=" mb-[0.8vw]">Brand</h3>
             <CustomSelectInput label="Street Politics" options={options} />
           </div>
-          <h3 className=" mb-[1.1vw]">Audience Growth Graph</h3>
-          <div className=" flex gap-[1.9vw] items-center">
-            <div
-              className={`${styles.analyticsChart} analyticsChart px-[1.2vw] py-[0.8vw] rounded-xl w-fit after:-right-[1.4vw]`}
-            >
-              <TasksChart />
-            </div>
-            <div className={`${styles.analyticsTable} rounded-xl bg-[var(--dark)] px-[1.2vw] py-[0.8vw] w-[45%] h-full text-white`}>
-              <h3 className=" mb-[0.6vw]">News Letter Analytics</h3>
-              <div className=" py-1">
-                <ul className={`${styles.head} flex items-center justify-between w-full`}>
-                  <li className=" w-[40%]"></li>
-                  <li className="w-[30%]">This Month</li>
-                  <li className="w-[30%]">Last Month</li>
-                </ul>
-                
-                {analyticsTableBody.map((e,i)=>(
-                  <ul className={`flex items-center justify-between text-white w-full ${styles.body}`}>
-                  <li className=" w-[40%]">{e.name}</li>
-                  <li className="w-[30%]">{e.thisMonth}</li>
-                  <li className="w-[30%]">{e.lastMonth}</li>
-                </ul>
-                ))}
-              </div>
-            </div>
+          <div>
+            <h3 className=" mb-[1.1vw]">Audience Growth Graph</h3>
+            <TasksChart />
           </div>
         </div>
       </div>
