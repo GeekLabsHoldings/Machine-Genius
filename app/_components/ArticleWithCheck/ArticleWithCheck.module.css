@@ -23,7 +23,7 @@
 }
 
 .article_with_check label.article:hover{
-    /* background: var(--orange); */
+    background: var(--orange);
     color: var(--white);
 }
 

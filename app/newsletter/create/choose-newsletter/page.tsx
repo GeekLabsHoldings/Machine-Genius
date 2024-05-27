@@ -58,7 +58,7 @@ function page() {
             {/* topic collapse */}
             <TopicColapse
               forComments={false}
-              title="Canada Loves People"
+              title="#SAVE is on the low"
               date="April 16th 2024"
             >
               <ArticleWithCheck
@@ -74,7 +74,7 @@ function page() {
             {/* topic collapse */}
             <TopicColapse
               forComments={false}
-              title="Canada Loves People"
+              title="U.S military hit IRAN"
               date="April 16th 2024"
             >
               <ArticleWithCheck
@@ -90,7 +90,23 @@ function page() {
             {/* topic collapse */}
             <TopicColapse
               forComments={false}
-              title="Canada Loves People"
+              title="Food Prices are high"
+              date="April 16th 2024"
+            >
+              <ArticleWithCheck
+                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
+                name="select-articles"
+              />
+              <ArticleWithCheck
+                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
+                name="select-articles"
+              />
+            </TopicColapse>
+
+            {/* topic collapse */}
+            <TopicColapse
+              forComments={false}
+              title="Lowest 2024 Property Prices"
               date="April 16th 2024"
             >
               <ArticleWithCheck
@@ -111,7 +127,7 @@ function page() {
             <h6>Preview</h6>
           </div>
           <div className={styles.selected_article_container}>
-            <h6>Canada Loves People</h6>
+            <h6>TESLA IS ON TOP!</h6>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae
               labore recusandae tempora eveniet eius, veritatis corporis hic
@@ -156,7 +172,7 @@ function page() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/create/choose-content"}
+          href={"/newsletter/create/"}
         />
         <CustomBtn
           word={"Next"}
