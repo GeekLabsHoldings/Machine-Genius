@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import styles from "./analytics.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
@@ -75,6 +75,21 @@ const page = () => {
       ],
     },
   ];
+  const analyticsTableBody = [
+{name:"Published NewsLetters",
+  thisMonth:"35",
+  lastMonth:"35",
+},{name:"Growth Percentage",
+thisMonth:"15%",
+lastMonth:"15%",
+},{name:"New Subscribers",
+thisMonth:"35",
+lastMonth:"35",
+},{name:"Unsubscribes",
+thisMonth:"3",
+lastMonth:"3",
+},
+  ]
 
   return (
     <div className={`${styles.analytics} pt-[1vw] overflow-hidden`}>
@@ -103,28 +118,29 @@ const page = () => {
                 <li className="w-[15%]">Letter Name</li>
                 <li className="w-[15%]">Letter Name</li>
               </ul>
-              <div className={`${styles.tableBody} max-h-[50vh] overflow-y-auto`}>
-              {data.map((e, i) => (
-                <div >
-                  <div className=" bg-[#E1C655] text-white text-end px-[1.5vw] py-[0.3vw] ">
-                    {e.date}
+              <div
+                className={`${styles.tableBody} max-h-[50vh] overflow-y-auto`}
+              >
+                {data.map((e, i) => (
+                  <div>
+                    <div className=" bg-[#E1C655] text-white text-end px-[1.5vw] py-[0.3vw] ">
+                      {e.date}
+                    </div>
+                    {e.info.map((info, i) => (
+                      <ul
+                        className={` px-[5.4vw] border-b-[1px] border-b-[#D9D9D9] `}
+                      >
+                        <li className="w-[40%] underline border-b-[#D9D9D9]">
+                          {info.letterName}
+                        </li>
+                        <li className="w-[15%]">{info.OpenRate}</li>
+                        <li className="w-[15%]">{info.LinkClicks}</li>
+                        <li className="w-[15%]">{info.Audience}</li>
+                        <li className="w-[15%]">{info.Unsubscribes}</li>
+                      </ul>
+                    ))}
                   </div>
-                  {e.info.map((info, i) => (
-                    <ul
-                      className={` px-[5.4vw] border-b-[1px] border-b-[#D9D9D9] `}
-                    >
-                      <li className="w-[40%] underline border-b-[#D9D9D9]">
-                        {info.letterName}
-                      </li>
-                      <li className="w-[15%]">{info.OpenRate}</li>
-                      <li className="w-[15%]">{info.LinkClicks}</li>
-                      <li className="w-[15%]">{info.Audience}</li>
-                      <li className="w-[15%]">{info.Unsubscribes}</li>
-
-                    </ul>
-                  ))}
-                </div>
-              ))}
+                ))}
               </div>
             </div>
           </div>
@@ -136,15 +152,36 @@ const page = () => {
           className="tab"
           aria-label="Audience Growth"
         />
-         <div className={`tab-content py-[1.419vw]`}>
+        <div className={`tab-content py-[1.419vw]`}>
           <div className="w-[14.191vw] mb-[1.6vw]">
             <h3 className=" mb-[0.8vw]">Brand</h3>
             <CustomSelectInput label="Street Politics" options={options} />
           </div>
-          <div>
-            <h3 className=" mb-[1.1vw]">Audience Growth Graph</h3>
-            <TasksChart/>
-            
+          <h3 className=" mb-[1.1vw]">Audience Growth Graph</h3>
+          <div className=" flex gap-[1.9vw] items-center">
+            <div
+              className={`${styles.analyticsChart} analyticsChart px-[1.2vw] py-[0.8vw] rounded-xl w-fit after:-right-[1.4vw]`}
+            >
+              <TasksChart />
+            </div>
+            <div className={`${styles.analyticsTable} rounded-xl bg-[var(--dark)] px-[1.2vw] py-[0.8vw] w-[45%] h-full text-white`}>
+              <h3 className=" mb-[0.6vw]">News Letter Analytics</h3>
+              <div className=" py-1">
+                <ul className={`${styles.head} flex items-center justify-between w-full`}>
+                  <li className=" w-[40%]"></li>
+                  <li className="w-[30%]">This Month</li>
+                  <li className="w-[30%]">Last Month</li>
+                </ul>
+                
+                {analyticsTableBody.map((e,i)=>(
+                  <ul className={`flex items-center justify-between text-white w-full ${styles.body}`}>
+                  <li className=" w-[40%]">{e.name}</li>
+                  <li className="w-[30%]">{e.thisMonth}</li>
+                  <li className="w-[30%]">{e.lastMonth}</li>
+                </ul>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
