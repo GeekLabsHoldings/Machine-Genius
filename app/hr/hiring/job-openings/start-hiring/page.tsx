@@ -1,6 +1,4 @@
 "use client";
-import CustomBtn from "@/app/_components/Button/CustomBtn";
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./new-template.module.css";
 import { Link } from "@mui/material";
 import React from "react";
@@ -67,14 +65,14 @@ export default function page() {
 
 
           {/* Job Template */}
-          <div>
-            <h3>Job Template</h3>
-            <div className="border border-[#2A2B2A] px-[1.5vw] py-[1.5vh] rounded-[6px] w-1/2 flex justify-between items-center">
-              <div className="flex flex-col">
-                  <span>Video Editor</span>
-                  <span>Beginner</span>
+          <div className="space-y-4">
+            <h3 className="font-bold text-[24px]">Job Template</h3>
+            <div className="border border-[#2A2B2A] px-[1.5vw] py-[1.5vh] rounded-[11px] w-1/2 flex justify-between items-center">
+              <div className="flex flex-col gap-2">
+                  <span className="font-bold">Video Editor</span>
+                  <span className="text-sm font-medium">Beginner</span>
               </div>
-              <div>
+              <div className="flex items-center">
                 <CustomCheckBox accentColor="#5FA85B" />
               </div>
             </div>
