@@ -65,16 +65,19 @@ const newsletter = {
 
 function page() {
   return (
-    <div className="flex flex-col h-full justify-between py-[1.5vw]">
+   
+    <div className="flex flex-col">
+
       {/* titles wrapper */}
-      <div className="flex justify-end items-center grow flex-col h-[75vh] gap-[2vw]">
+      <div className="flex justify-end items-center flex-col h-[75vh] gap-[2vw] pb-[1.5vw]">
+        {/* scripts wrapper */}
         {/* generated titles container */}
-      <div className="flex flex-col gap-1 w-full">
-        <h2 className="text-2xl font-bold">News Letter</h2>
-        <span>
-          Make sure to check the News Letter carefully before publishing.
-        </span>
-      </div>
+        <div className="flex flex-col gap-1 w-full">
+          <h2 className="text-2xl font-bold">News Letter</h2>
+          <span>
+            Make sure to check the News Letter carefully before publishing.
+          </span>
+        </div>
         <div
           className={`${styles.titles_container} flex flex-col h-full text-center overflow-hidden`}
         >
@@ -97,19 +100,19 @@ function page() {
             ))}
           </ul>
         </div>
-        {/* Next & Back Buttons to navigate to next and back pages */}
-        <div className="flex w-full justify-between">
-          <CustomBtn
-            word={"Back"}
-            btnColor="white"
-            href={"/newsletter/create/newsletter-generated-titles"}
-          />
-          <CustomBtn
-            word={"Next"}
-            btnColor="black"
-            href={"/newsletter/create/newsletter-preview"}
-          />
-        </div>
+      </div>
+      {/* Next & Back Buttons to navigate to next and back pages */}
+      <div className="flex w-full justify-between">
+        <CustomBtn
+          word={"Back"}
+          btnColor="white"
+          href={"/newsletter/create/newsletter-generated-titles"}
+        />
+        <CustomBtn
+          word={"Next"}
+          btnColor="black"
+          href={"/newsletter/create/newsletter-subjectline"}
+        />
       </div>
     </div>
   );

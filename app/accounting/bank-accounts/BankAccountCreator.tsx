@@ -246,4 +246,3 @@ function SubscriptionsCreator({
   );
 }
 
-export default SubscriptionsCreator;
