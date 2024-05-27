@@ -11,6 +11,7 @@ export default function page() {
       {/* Back To Complaint Table Button */}
       <div className="flex items-center gap-4 my-[15px]">
         <Link href="/hr/on-boarding">
+          {/* Back arrow icon with link */}
           <svg
             width="11"
             height="22"
@@ -24,6 +25,7 @@ export default function page() {
             />
           </svg>
         </Link>
+        {/* Title for new employee entry */}
         <span className="text-[36px] font-bold ">New Employee Entry</span>
       </div>
 
@@ -34,6 +36,7 @@ export default function page() {
           {/* Employment Details */}
           <div className="space-y-5">
             <h3 className="font-bold text-[20px]">Employment Details</h3>
+            {/* Select Candidate */}
             <div>
               <label className="font-bold block mb-[1.5vh]">
                 Select Candidate
@@ -44,17 +47,20 @@ export default function page() {
               />
             </div>
             <div className="w-1/2">
+              {/* Select Role */}
               <label className="font-bold block mb-[1.5vh]">Select Role</label>
               <CustomSelectInput options={[""]} label={"Video Editor"} />
             </div>
             <div className="flex gap-[2vw]">
               <div className="flex-grow">
+                {/* Contract Start Date */}
                 <label className="font-bold block mb-[1.5vh]">
                   Contract Start Date
                 </label>
                 <CustomSelectInput options={[""]} label={"20 March 2020"} />
               </div>
               <div className="flex-grow">
+                {/* Contract End Date */}
                 <label className="font-bold block mb-[1.5vh]">
                   Contract End Date
                 </label>
@@ -66,20 +72,24 @@ export default function page() {
           <div className="w-1/2 space-y-6">
             <h3 className="font-bold text-[20px]">Required Paper Work</h3>
             <div className="flex justify-between">
+              {/* ID Scan */}
               <span className="font-bold">ID Scan</span>
               <span className="underline cursor-pointer text-[#0066FF]">
                 JohnDoeID.pdf
               </span>
             </div>
             <div className="flex justify-between">
+              {/* Military Paper */}
               <span className="font-bold">Military Paper</span>
               <span className="underline cursor-pointer">Upload</span>
             </div>
             <div className="flex justify-between">
+              {/* Criminal Record */}
               <span className="font-bold">Criminal Record</span>
               <span className="underline cursor-pointer">Upload</span>
             </div>
             <div className="flex justify-between">
+              {/* Graduation Certificate */}
               <span className="font-bold">Graduation Certificate</span>
               <span className="underline cursor-pointer">Upload</span>
             </div>
@@ -99,12 +109,13 @@ export default function page() {
             <h3 className="font-bold text-[20px] mb-[1.5vh]">
               Contract Preview
             </h3>
+            {/* Contract Preview Area */}
             <div className={styles.contractPreview + " min-h-[50vh]"}></div>
           </div>
         </div>
       </div>
 
-      {/* save button */}
+      {/* Save Button */}
       <div className="flex justify-end mt-[25px]">
         <CustomBtn
           word={"Print Contract"}

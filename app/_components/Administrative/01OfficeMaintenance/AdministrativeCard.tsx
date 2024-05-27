@@ -1,17 +1,22 @@
-"use client";
+"use client"; // Indicate that this file is a client-side component
+
+// Import the React library
 import React from "react";
+// Import CSS module styles for the AdministrativeCard component
 import styles from "./AdministrativeCard.module.css";
 
+// Define the Item interface specifying the structure of an item object
 interface Item {
-  title: string;
-  info?: any;
+  title: string; // The title of the item
+  info?: any; // Optional additional information about the item
 }
 
+// Define the props interface for the AdministrativeCard component
 interface AdministrativeCardProps {
-  icon: JSX.Element;
-  addIcon: boolean;
-  title: string;
-  items: Item[];
+  icon: JSX.Element; // The icon to be displayed in the card
+  addIcon: boolean; // Flag indicating whether to add an icon to the card header
+  title: string; // The title of the card
+  items: Item[]; // The list of items to be displayed in the card body
 }
 
 /**
@@ -34,13 +39,18 @@ export default function AdministrativeCard({
 }: AdministrativeCardProps) {
   return (
     <div className={styles.card}>
+      {/* Card header containing the title and optional icon */}
       <div className="card-head flex justify-between">
         <div className={`${styles.cardTitle} flex gap-3`}>
+          {/* Display the provided icon */}
           {icon}
+          {/* Display the card title */}
           <div>{title}</div>
         </div>
+        {/* Conditionally render an additional icon in the header if addIcon is true */}
         {addIcon && (
           <div className="card-head-icon cursor-pointer">
+            {/* SVG icon for adding a new item */}
             <svg
               width="30"
               height="30"
@@ -78,14 +88,18 @@ export default function AdministrativeCard({
           </div>
         )}
       </div>
+      {/* Horizontal rule separating the header and body */}
       <hr className={styles.cardHr} />
+      {/* Card body containing the list of items */}
       <div className={styles.cardBody}>
         {items.map((item, index) => (
           <div
-            key={index}
+            key={index} // Unique key for each item
             className={`${styles.cardItem} flex justify-between`}
           >
+            {/* Display the item's title */}
             {item.title}
+            {/* Display additional information about the item if available */}
             <span>{item?.info}</span>
           </div>
         ))}

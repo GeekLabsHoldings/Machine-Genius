@@ -4,6 +4,11 @@ import RequiredPapersTable from "@/app/_components/HR/03Personnel/02RequiredPape
 import styles from "./RequiredPapers.module.css";
 import React, { useState } from "react";
 
+/**
+ * Renders a page with tabs for displaying required and missing papers for all employees.
+ *
+ * @return {JSX.Element} The rendered page with tabs and corresponding tab content.
+ */
 export default function page() {
   const [activeTab, setActiveTab] = useState<number>(1);
 

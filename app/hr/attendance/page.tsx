@@ -8,7 +8,6 @@ import NotificationsBreakGrid from "@/app/_components/HR/02Attendance/Notificati
 
 export default function page() {
   const [activeTab, setActiveTab] = useState<number>(1);
-
   const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
   const [fillColorRight, setFillColorRight] = useState("#2A2B2A");
 
@@ -46,6 +45,11 @@ export default function page() {
     </svg>
   );
 
+  /**
+   * Scrolls the table to the right by 150 pixels.
+   *
+   * @return {void} No return value.
+   */
   function slideRight() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -55,6 +59,11 @@ export default function page() {
     }
   }
 
+  /**
+   * Scrolls the table to the left by 150 pixels.
+   *
+   * @return {void} No return value.
+   */
   function slideLeft() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -64,6 +73,11 @@ export default function page() {
     }
   }
 
+  /**
+   * Updates the fill color of the left and right arrows based on the scroll position of the table.
+   *
+   * @return {void} This function does not return a value.
+   */
   function updateFillColor() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -84,9 +98,13 @@ export default function page() {
   }
 
   useEffect(() => {
+    // Retrieve the table element by its ID from the document and cast it to HTMLTableElement or null if not found.
     const table = document.getElementById("table") as HTMLTableElement | null;
+    // Add an event listener to the table element for the "scroll" event, calling the updateFillColor function.
     table?.addEventListener("scroll", updateFillColor);
+    // Cleanup function executed on component unmount or when the effect dependencies change.
     return () => {
+      // Remove the event listener from the table element to prevent memory leaks.
       table?.removeEventListener("scroll", updateFillColor);
     };
   }, []);
@@ -97,7 +115,9 @@ export default function page() {
       <div>
         {/* Tabs */}
         <div className="flex justify-between items-end mt-[30px]">
+          {/* Tabs Section */}
           <div role="tablist" className={`${styles.tabs} flex`}>
+            {/* Today's Attendance Tab */}
             <a
               role="tab"
               className={`${styles.tab} ${
@@ -107,6 +127,8 @@ export default function page() {
             >
               Today’s Attendance
             </a>
+
+            {/* Attendance Database Tab */}
             <a
               role="tab"
               className={`${styles.tab} ${
@@ -116,6 +138,8 @@ export default function page() {
             >
               Attendance Database
             </a>
+
+            {/* Notifications Tab */}
             <a
               role="tab"
               className={`${styles.tab} ${
@@ -127,14 +151,17 @@ export default function page() {
             </a>
           </div>
 
+          {/* Conditional Select Input Section */}
           {activeTab === 2 && (
             <div className="w-[20%] flex">
+              {/* Custom Select Input for Late Arrivals */}
               <CustomSelectInput label="Late Arrivals" options={[]} />
             </div>
           )}
 
           {activeTab === 3 && (
             <div className="w-[20%] flex">
+              {/* Custom Select Input for Exceeding Breaks */}
               <CustomSelectInput label="Exceeding Breaks" options={[]} />
             </div>
           )}
@@ -143,9 +170,11 @@ export default function page() {
         {/* 1. Tab 1 Content */}
         {activeTab === 1 && (
           <div className={`${styles.tab1}`}>
+            {/* Tab 1 Header */}
             <div
               className={`${styles.tabHeader} my-[25px] flex justify-between`}
             >
+              {/* Tab 1 Text Content */}
               <p>
                 These are all the hiring requests and unfinished hiring
                 processes, requested by team managers and approved by OP (
@@ -157,6 +186,7 @@ export default function page() {
 
               {/* BUTTON HERE */}
               <div className="flex gap-2">
+                {/* Left Arrow Button */}
                 <div
                   className="cursor-pointer"
                   onClick={() => {
@@ -165,6 +195,8 @@ export default function page() {
                 >
                   {leftArrow}
                 </div>
+
+                {/* Right Arrow Button */}
                 <div
                   className="cursor-pointer"
                   onClick={() => {
@@ -184,14 +216,17 @@ export default function page() {
         {/* Tab 2 Content */}
         {activeTab === 2 && (
           <div className={`${styles.tab2}`}>
+            {/* Tab 2 Header */}
             <div className={`${styles.tabHeader} my-[25px]`}>
               <p>
+                {/* Policy Explanation */}
                 This policy ensures that employees can only access the system
                 from one designated computer and IP address. Tardiness triggers
                 a series of escalating warnings: verbal, written, and then
                 deductions from pay. Termination occurs after the fifth
                 instance. The cycle resets every{" "}
                 <span className="font-semibold">90 days</span>.<br />
+                {/* Notification Details */}
                 <span className="font-semibold">
                   Notifications are sent to HR and the team leader throughout
                   the process.
@@ -207,14 +242,17 @@ export default function page() {
         {/* Tab 3 Content */}
         {activeTab === 3 && (
           <div className={`${styles.tab3}`}>
+            {/* Tab 3 Header */}
             <div className={`${styles.tabHeader} my-[25px]`}>
               <p>
+                {/* Policy Explanation */}
                 This policy ensures that employees can only access the system
                 from one designated computer and IP address. Tardiness triggers
                 a series of escalating warnings: verbal, written, and then
                 deductions from pay. Termination occurs after the fifth
                 instance. The cycle resets every{" "}
                 <span className="font-semibold">90 days</span>.<br />
+                {/* Notification Details */}
                 <span className="font-semibold">
                   Notifications are sent to HR and the team leader throughout
                   the process.

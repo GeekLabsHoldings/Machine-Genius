@@ -17,22 +17,33 @@ const addIcon = (
 const page = () => {
   return (
     <div className="flex flex-col h-full">
-      {/* chose brand select */}
+      {/* Chose Brand Select */}
+      {/* Container for adding a new interview template */}
       <div
         className={
           "flex flex-col h-[75vh] py-[1.5vw] " + styles.add_new_template
         }
       >
+        {/* Header Section */}
+        {/* Header containing the template name input */}
         <div className={styles.header}>
           <div className={styles.template_name}>
             <input type="text" placeholder="Template Title*" />
           </div>
         </div>
 
+        {/* Template Cards */}
+        {/* Grid of editable question and answer cards */}
         <div className={styles.template_cards + " grid grid-cols-4 gap-[1vw]"}>
+          {/* Editable Card */}
+          {/* Individual card for a question and answer */}
           <div className={styles.card + " " + styles.editable}>
+            {/* Card Header */}
+            {/* Header of the card containing the question input */}
             <div className={styles.card_header}>
               <input type="text" placeholder="Question*" />
+              {/* Edit Button */}
+              {/* Button to edit the question */}
               <button>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -50,6 +61,9 @@ const page = () => {
                 </svg>
               </button>
             </div>
+
+            {/* Card Body */}
+            {/* Body of the card containing the answer textarea and save button */}
             <div className={styles.card_body}>
               <textarea placeholder="Answer" rows={3} />
               <CustomBtn word="Save" btnColor="black" />
@@ -58,8 +72,11 @@ const page = () => {
         </div>
       </div>
 
-      {/* buttons to move to last or next page */}
+      {/* Navigation Buttons */}
+      {/* Buttons to navigate or save the interview template */}
       <div className="flex justify-end items-center gap-[1vw]">
+        {/* Add Question Button */}
+        {/* Button to add a new question to the template */}
         <CustomBtn
           word="Add Question"
           btnColor="white"
@@ -67,6 +84,9 @@ const page = () => {
           href=""
           paddingVal="px-[1.5vw] py-[0.5vw]"
         />
+
+        {/* Save Template Button */}
+        {/* Button to save the interview template */}
         <CustomBtn
           word="Save Template"
           btnColor="black"

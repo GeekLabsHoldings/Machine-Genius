@@ -11,7 +11,6 @@ import Link from "next/link";
  */
 export default function OnBoardingTable() {
   // An array of objects representing the rows of the table body.
-
   const bodyRow = [
     {
       firstName: "John",

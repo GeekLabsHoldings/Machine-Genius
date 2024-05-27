@@ -135,7 +135,7 @@ export default function Calendar() {
   const month = today.getMonth() + 1; // Note: Month is zero-based (0 for January, 1 for February, etc.)
   const day = today.getDate();
 
-  // add Icon for button   
+  // add Icon for button
   const addIcon = (
     <svg
       width="11"
@@ -159,8 +159,8 @@ export default function Calendar() {
       {/* Filters section */}
       <div className="flex justify-between filters">
         <div className="w-[30%] flex items-center gap-[2vw]">
-        <h3 className="font-bold text-[32px]">Calendar</h3>
-        <CustomSelectInput label="All Events" options={eventsOptions} />
+          <h3 className="font-bold text-[32px]">Calendar</h3>
+          <CustomSelectInput label="All Events" options={eventsOptions} />
         </div>
         <div className="flex items-center justify-end">
           <CustomBtn
