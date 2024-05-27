@@ -4,6 +4,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import styles from "./new-template.module.css";
 import { Link } from "@mui/material";
 import React from "react";
+import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
 export default function page() {
   return (
@@ -66,10 +67,16 @@ export default function page() {
 
 
           {/* Job Template */}
-          <div className="bg-yellow-500">
-            <h3>1</h3>
-            <div>
-              
+          <div>
+            <h3>Job Template</h3>
+            <div className="border border-[#2A2B2A] px-[1.5vw] py-[1.5vh] rounded-[6px] w-1/2 flex justify-between items-center">
+              <div className="flex flex-col">
+                  <span>Video Editor</span>
+                  <span>Beginner</span>
+              </div>
+              <div>
+                <CustomCheckBox accentColor="#5FA85B" />
+              </div>
             </div>
           </div>
 
