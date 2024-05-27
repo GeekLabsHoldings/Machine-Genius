@@ -1,6 +1,7 @@
-"use client";
-import React from "react";
-import styles from "./VideoDatabaseTable.module.css";
+"use client"; // Directive to indicate that this file is a client component in a Next.js application.
+
+import React from "react"; // Import the React library for building the component.
+import styles from "./VideoDatabaseTable.module.css"; // Import CSS module for component-specific styles.
 
 /**
  * Renders a table component displaying Video Database information.
@@ -8,6 +9,7 @@ import styles from "./VideoDatabaseTable.module.css";
  * @return {JSX.Element} The rendered table component.
  */
 export default function VideoDatabaseTable() {
+  // Array containing data to be displayed in the table
   const bodyRow = [
     {
       product: "Chips",
@@ -205,6 +207,7 @@ export default function VideoDatabaseTable() {
         </ul>
 
         {/* Table Body */}
+        {/* Rendering table rows dynamically based on bodyRow array */}
         <div className={styles.table_body}>
           {bodyRow.map((e, idx) => (
             <ul className="w-[100%]" key={idx}>
