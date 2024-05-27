@@ -51,7 +51,7 @@ export default function page() {
     </svg>
   );
 
-    /**
+  /**
    * Scrolls the table to the right by 150 pixels.
    *
    * @return {void} No return value.
@@ -66,10 +66,10 @@ export default function page() {
   }
 
   /**
- * Scrolls the table to the left by 150 pixels.
- *
- * @return {void} No return value.
- */
+   * Scrolls the table to the left by 150 pixels.
+   *
+   * @return {void} No return value.
+   */
   function slideLeft() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -79,11 +79,11 @@ export default function page() {
     }
   }
 
-    /**
- * Updates the fill color of the left and right arrows based on the scroll position of the table.
- *
- * @return {void} This function does not return a value.
- */
+  /**
+   * Updates the fill color of the left and right arrows based on the scroll position of the table.
+   *
+   * @return {void} This function does not return a value.
+   */
   function updateFillColor() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -105,9 +105,9 @@ export default function page() {
 
   useEffect(() => {
     // Retrieve the table element by its ID from the document and cast it to HTMLTableElement or null if not found.
-    const table = document.getElementById("table") as HTMLTableElement | null;  
+    const table = document.getElementById("table") as HTMLTableElement | null;
     // Add an event listener to the table element for the "scroll" event, calling the updateFillColor function.
-    table?.addEventListener("scroll", updateFillColor);  
+    table?.addEventListener("scroll", updateFillColor);
     // Cleanup function executed on component unmount or when the effect dependencies change.
     return () => {
       // Remove the event listener from the table element to prevent memory leaks.
@@ -117,24 +117,28 @@ export default function page() {
 
   return (
     <>
+      {/* Page Header */}
       <div className="pageHeader">
+        {/* Header Title */}
         <h3 className="mt-[25px]">Filter By:</h3>
 
-        {/* filters options to filter and edit data in table */}
+        {/* Filter Options */}
+        {/* Filters options to filter and edit data in table */}
         <div
           className={`flex flex-col gap-[0.7vw] w-full pageHeader mt-[10px] mb-[25px]`}
         >
           <div className="flex justify-between items-end">
-            <div
-              className={`w-8/12 flex items-end gap-[1vw]`}
-            >
+            <div className={`w-8/12 flex items-end gap-[1vw]`}>
               <div className="flex flex-col w-1/4 gap-[0.3vw]">
+                {/* Custom Select Input */}
                 <CustomSelectInput label="All Roles" options={rolesOptions} />
               </div>
             </div>
 
+            {/* Navigation Arrows */}
             {/* BUTTON HERE */}
             <div className="flex gap-2">
+              {/* Left Arrow Button */}
               <div
                 className="cursor-pointer"
                 onClick={() => {
@@ -143,6 +147,7 @@ export default function page() {
               >
                 {leftArrow}
               </div>
+              {/* Right Arrow Button */}
               <div
                 className="cursor-pointer"
                 onClick={() => {
@@ -156,6 +161,7 @@ export default function page() {
         </div>
       </div>
 
+      {/* Candidate Database Table */}
       <CandidateDatabaseTable />
     </>
   );
