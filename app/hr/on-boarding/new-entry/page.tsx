@@ -29,60 +29,84 @@ export default function page() {
 
       {/* Template Container */}
       <div className="flex justify-between gap-[3vw]">
-        {/* Employment Details */}
-        <div className=" flex-grow space-y-6">
-          <h3 className="font-bold text-[20px]">Employment Details</h3>
-          <div>
-            <label className="font-bold block mb-[1.5vh]">
-              Select Candidate
-            </label>
-            <CustomSelectInput options={[""]} label={"John Doe Johnney Doe"} />
-          </div>
-          <div className="w-1/2">
-            <label className="font-bold block mb-[1.5vh]">Select Role</label>
-            <CustomSelectInput options={[""]} label={"Video Editor"} />
-          </div>
-          <div className="flex gap-[2vw]">
-            <div className="flex-grow">
+        {/* Employment Details & Required Paper Work Container */}
+        <div className="flex-grow space-y-20">
+          {/* Employment Details */}
+          <div className="space-y-5">
+            <h3 className="font-bold text-[20px]">Employment Details</h3>
+            <div>
               <label className="font-bold block mb-[1.5vh]">
-                Contract Start Date
+                Select Candidate
               </label>
-              <CustomSelectInput options={[""]} label={"20 March 2020"} />
+              <CustomSelectInput
+                options={[""]}
+                label={"John Doe Johnney Doe"}
+              />
             </div>
-            <div className="flex-grow">
-              <label className="font-bold block mb-[1.5vh]">
-                Contract End Date
-              </label>
-              <CustomSelectInput options={[""]} label={"20 March 2023"} />
+            <div className="w-1/2">
+              <label className="font-bold block mb-[1.5vh]">Select Role</label>
+              <CustomSelectInput options={[""]} label={"Video Editor"} />
+            </div>
+            <div className="flex gap-[2vw]">
+              <div className="flex-grow">
+                <label className="font-bold block mb-[1.5vh]">
+                  Contract Start Date
+                </label>
+                <CustomSelectInput options={[""]} label={"20 March 2020"} />
+              </div>
+              <div className="flex-grow">
+                <label className="font-bold block mb-[1.5vh]">
+                  Contract End Date
+                </label>
+                <CustomSelectInput options={[""]} label={"20 March 2023"} />
+              </div>
             </div>
           </div>
-          <div className="w-1/2">
-            <label className="font-bold block mb-[1.5vh]">
-              Two Week Notice
-            </label>
-            <CustomSelectInput options={[""]} label={"Given"} />
-          </div>
-          <div className="w-1/2">
-            <label className="font-bold block mb-[1.5vh]">Handover Date</label>
-            <CustomSelectInput options={[""]} label={"Select Date"} />
+          {/* Required Paper Work */}
+          <div className="w-1/2 space-y-6">
+            <h3 className="font-bold text-[20px]">Required Paper Work</h3>
+            <div className="flex justify-between">
+              <span className="font-bold">ID Scan</span>
+              <span className="underline text-[#0066FF]">JohnDoeID.pdf</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-bold">Military Paper</span>
+              <span className="underline">Upload</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-bold">Criminal Record</span>
+              <span className="underline">Upload</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-bold">Graduation Certificate</span>
+              <span className="underline">Upload</span>
+            </div>
           </div>
         </div>
         {/* Question Container */}
-        <div className="flex-grow">
+        <div className="flex-grow space-y-10">
+        {/* Select Contract */}
           <div>
             <label className="font-bold text-[20px] block mb-[1.5vh]">
               Select Contract
             </label>
             <CustomSelectInput options={[""]} label={"Video Editor Inter"} />
           </div>
+          {/* Contract Preview */}
+          <div>
           <h3 className="font-bold text-[20px] mb-[1.5vh]">Contract Preview</h3>
-          <div className={styles.questionContainer}></div>
+          <div className={styles.questionContainer + " min-h-[50vh]"}></div>
+          </div>
         </div>
       </div>
 
       {/* save button */}
       <div className="flex justify-end mt-[20px]">
-        <CustomBtn word={"Print Contract"} btnColor="black" paddingVal="py-[0.5vw] px-[1vw]" />
+        <CustomBtn
+          word={"Print Contract"}
+          btnColor="black"
+          paddingVal="py-[0.5vw] px-[1vw]"
+        />
       </div>
     </section>
   );
