@@ -8,7 +8,6 @@ import NotificationsBreakGrid from "@/app/_components/HR/02Attendance/Notificati
 
 export default function page() {
   const [activeTab, setActiveTab] = useState<number>(1);
-
   const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
   const [fillColorRight, setFillColorRight] = useState("#2A2B2A");
 
@@ -46,6 +45,11 @@ export default function page() {
     </svg>
   );
 
+  /**
+   * Scrolls the table to the right by 150 pixels.
+   *
+   * @return {void} No return value.
+   */
   function slideRight() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -55,6 +59,11 @@ export default function page() {
     }
   }
 
+  /**
+   * Scrolls the table to the left by 150 pixels.
+   *
+   * @return {void} No return value.
+   */
   function slideLeft() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -64,6 +73,11 @@ export default function page() {
     }
   }
 
+  /**
+   * Updates the fill color of the left and right arrows based on the scroll position of the table.
+   *
+   * @return {void} This function does not return a value.
+   */
   function updateFillColor() {
     const table = document.getElementById("table") as HTMLTableElement | null;
     if (table) {
@@ -84,9 +98,13 @@ export default function page() {
   }
 
   useEffect(() => {
+    // Retrieve the table element by its ID from the document and cast it to HTMLTableElement or null if not found.
     const table = document.getElementById("table") as HTMLTableElement | null;
+    // Add an event listener to the table element for the "scroll" event, calling the updateFillColor function.
     table?.addEventListener("scroll", updateFillColor);
+    // Cleanup function executed on component unmount or when the effect dependencies change.
     return () => {
+      // Remove the event listener from the table element to prevent memory leaks.
       table?.removeEventListener("scroll", updateFillColor);
     };
   }, []);
