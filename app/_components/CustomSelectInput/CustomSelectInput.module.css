@@ -68,7 +68,7 @@
 
 .dropdown_content {
     position: absolute;
-    top: 125%;
+    /* top: 125%; */
     left: 0;
     width: 100%;
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.07);

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './CustomSelectInput.module.css'
 
 interface Iprops {
@@ -18,11 +18,28 @@ const CustomSelectInput = (props: Iprops) => {
     const [isActive, setIsActive] = useState(false);
     const [selected, setIsSelected] = useState(props.label ? props.label : props.options[0]);
 
+    const ref = useRef<HTMLDivElement | null>(null);
+    const clickableContainer = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
         if (props.whenSideNavClosed) {
             setIsActive(false)
         }
     }, [props.whenSideNavClosed])
+
+    //detect if there is a space for the dropdown to open downwards if not open it upwards
+    useEffect(() => {
+        if (ref.current) {
+            const clickContainer = clickableContainer.current?.getBoundingClientRect();
+
+            if (clickContainer && (window.innerHeight - clickContainer.bottom) < window.innerHeight / 3) {
+                ref.current.style.top = "auto"
+                ref.current.style.bottom = "125%"
+            } else {
+                ref.current.style.top = "125%"
+                ref.current.style.bottom = "auto"
+            }
+        }
+    }, [isActive])
 
     const handleSelectedItem = (e: any) => {
         console.log(e.innerText);
@@ -41,6 +58,7 @@ const CustomSelectInput = (props: Iprops) => {
                     setIsActive(!isActive);
                 }}
                 className={`${styles.dropdown_btn} ${props.paddingVal ? props.paddingVal : `py-[0.2vw] px-[1.2vw]`} ${isActive ? styles.open : ''} `}
+                ref={clickableContainer}
             >
                 {props.icon}
                 <span>{selected}</span>
@@ -51,6 +69,7 @@ const CustomSelectInput = (props: Iprops) => {
             <div
                 className={styles.dropdown_content}
                 style={{ display: isActive ? "block" : "none" }}
+                ref={ref}
             // onMouseLeave={()=> setIsActive(false)}
             >
                 <div>

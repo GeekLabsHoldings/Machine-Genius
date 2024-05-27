@@ -16,7 +16,7 @@ function page() {
       {/* titles wrapper */}
       {/* generated titles container */}
       <div className="flex flex-col gap-1 w-full overflow-clip h-[75vh] py-[1.5vw]">
-        <h2 className="text-2xl font-bold">Subject Line & Opening Lines</h2>
+        <h2 className="text-[2rem] font-bold">Subject Line & Opening Lines</h2>
         <span>
           create compelling subject lines and captivating opening lines for your
           content
