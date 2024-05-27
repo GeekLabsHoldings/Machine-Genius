@@ -9,7 +9,8 @@ type IProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement
 const CustomCheckBox = (props:IProps) => {
 
   return (
-    <input className={`${styles.custom_checkbox} bg-red-300`}
+    <input 
+    className={`${styles.custom_checkbox} bg-red-300`}
       type="checkbox" 
       {...props}/>
   )
