@@ -1,9 +1,14 @@
-"use client";
+"use client"; // Indicate that this file is a client-side component
+
+// Import the CustomBtn component from the specified path
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+// Import the ResearchTable component from the specified path
 import ResearchTable from "@/app/_components/HR/07Research/ResearchTable";
+// Import the React library
 import React from "react";
 
 export default function page() {
+  // Define an SVG icon for the "New Entry" button
   const addIcon = (
     <svg
       width="11"
@@ -21,9 +26,11 @@ export default function page() {
     </svg>
   );
 
+  // Return the component's rendered JSX
   return (
     <section>
       <div className="flex justify-between items-center">
+        {/* Informational paragraph describing the current section */}
         <p className="font-light my-6">
           These are all the hiring requests and unfinished hiring processes,
           requested by team managers and approved by OP ( Operation Manager).
@@ -31,15 +38,17 @@ export default function page() {
           Make sure to go through every request in detail to find and hire the
           best candidate for the requested role!
         </p>
+        {/* Container for the "New Entry" button */}
         <div>
           <CustomBtn
-            btnColor="black"
-            word="New Entry"
-            icon={addIcon}
-            paddingVal="py-[0.5vw] px-[1vw]"
+            btnColor="black" // Button color
+            word="New Entry" // Button text
+            icon={addIcon} // Button icon
+            paddingVal="py-[0.5vw] px-[1vw]" // Button padding
           />
         </div>
       </div>
+      {/* Render the ResearchTable component */}
       <ResearchTable />
     </section>
   );
