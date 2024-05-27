@@ -1,0 +1,16 @@
+.questionContainer {
+  border: 2px solid #dbdbd7;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  border-radius: 20px;
+  padding: clamp(25px, calc(0.1vw + 0.7rem), 100px);
+}
+.questionContainer textarea,
+.questionContainer input {
+    background: #FFFFFB;
+    box-shadow: 0px 1px 7.1px 0px #00000040 inset;
+    border-radius: 5px;
+}
+
+.questionContainer input {
+    padding: 0.5vw 1vw;
+}

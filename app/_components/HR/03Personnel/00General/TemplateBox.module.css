@@ -1,6 +1,6 @@
 /* box */
 .box {
-  padding: clamp(16px, calc(1vw + 0.1rem), 1000px);
+  padding: clamp(16px, calc(0.90vw + 0.1rem), 1000px);
   border: 2px solid #d9d9d9;
   border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
   -webkit-border-radius: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
@@ -15,7 +15,7 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--dark);
   padding: 0 0.5vw 1vw;
-  margin-bottom: 1vw;
+  margin-bottom: 0.75vw;
 }
 
 .box .header p:first-child {
