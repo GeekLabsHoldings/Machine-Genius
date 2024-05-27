@@ -4,6 +4,7 @@ import styles from "./Surveys.module.css";
 import TemplateBox from "@/app/_components/HR/03Personnel/00General/TemplateBox";
 import SurveysResultsTable from "@/app/_components/HR/03Personnel/05Surveys/SurveysResultsTable";
 import SurveysScheduledTable from "@/app/_components/HR/03Personnel/05Surveys/SurveysScheduledTable";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -39,11 +40,28 @@ export default function Page() {
       />
     </svg>
   );
+  // add Icon for button
+  const addIcon = (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
+        fill="#FFFFFB"
+      />
+    </svg>
+  );
 
   return (
     <section>
       {/* Tabs */}
-      <div role="tablist" className={`${styles.tabs} flex mt-[30px]`}>
+      <div role="tablist" className={`${styles.tabs} flex mt-[20px]`}>
         <a
           role="tab"
           className={`${styles.tab} ${activeTab === 1 ? styles.activeTab : ""}`}
@@ -69,9 +87,9 @@ export default function Page() {
 
       {/* 1. Tab 1 Content */}
       {activeTab === 1 && (
-        <div className={`${styles.tab1}`}>
+        <div className={`${styles.tab1} + "h-[50vh] bg-green-500"`}>
           {/* Tab Header */}
-          <div className={`my-[20px] flex justify-between`}>
+          <div className={`my-[10px] flex justify-between`}>
             <h2 className="text-[24px] font-bold">Survey Templates</h2>
 
             {/* BUTTON HERE */}
@@ -82,7 +100,7 @@ export default function Page() {
           </div>
 
           {/* Tab Content */}
-          <div className="h-[50vh] grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <TemplateBox title="Front End Interview" />
             <TemplateBox title="Back End Interview" />
             <TemplateBox title="UX/UI Interview" />
@@ -103,6 +121,16 @@ export default function Page() {
             <TemplateBox title="Social Media Interview" />
             <TemplateBox title="Content Writer Interview" />
             <TemplateBox title="Social Media Interview" />
+          </div>
+
+          {/* Create New Template Button */}
+          <div className="flex justify-end mt-[0.75vh]">
+            <CustomBtn
+              icon={addIcon}
+              word="New Template"
+              btnColor="black"
+              href="/hr/personnel/surveys/new-template"
+            />
           </div>
         </div>
       )}
