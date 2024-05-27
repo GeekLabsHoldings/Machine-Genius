@@ -67,19 +67,19 @@ export default function page() {
             <h3 className="font-bold text-[20px]">Required Paper Work</h3>
             <div className="flex justify-between">
               <span className="font-bold">ID Scan</span>
-              <span className="underline text-[#0066FF]">JohnDoeID.pdf</span>
+              <span className="underline cursor-pointer text-[#0066FF]">JohnDoeID.pdf</span>
             </div>
             <div className="flex justify-between">
               <span className="font-bold">Military Paper</span>
-              <span className="underline">Upload</span>
+              <span className="underline cursor-pointer">Upload</span>
             </div>
             <div className="flex justify-between">
               <span className="font-bold">Criminal Record</span>
-              <span className="underline">Upload</span>
+              <span className="underline cursor-pointer">Upload</span>
             </div>
             <div className="flex justify-between">
               <span className="font-bold">Graduation Certificate</span>
-              <span className="underline">Upload</span>
+              <span className="underline cursor-pointer">Upload</span>
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function page() {
       </div>
 
       {/* save button */}
-      <div className="flex justify-end mt-[20px]">
+      <div className="flex justify-end mt-[25px]">
         <CustomBtn
           word={"Print Contract"}
           btnColor="black"
