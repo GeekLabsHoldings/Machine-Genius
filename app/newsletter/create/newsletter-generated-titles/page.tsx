@@ -52,8 +52,8 @@ const GeneratedTitles = () => {
 
             {/* Next & Back Buttons to navigate to next and back pages */}
             <div className="flex justify-between">
-                <CustomBtn word={"Back"} btnColor="white" href={"/newsletter/create/choose-newsletter"} />t
-                <CustomBtn word={"Next"} btnColor="black" href={"/content-creator/create/seo-generating"} />
+                <CustomBtn word={"Back"} btnColor="white" href={"/newsletter/create/choose-newsletter"} />
+                <CustomBtn word={"Next"} btnColor="black" href={"/newsletter/create/newsletter-preview"} />
             </div>
         </div>
     )

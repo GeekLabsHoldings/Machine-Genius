@@ -1,0 +1,15 @@
+.titles_container{
+    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+    border: 1px solid transparent;
+    border-radius: clamp(10px,  calc( 1.4vw + 0.1rem ) , 1000px);
+    width: clamp(25rem, 90% , 1000px);
+    height: 100%;
+}
+
+.titles_container div:not(:first-child) > li:has(h4){
+    margin-block: .7rem;
+}
+
+.titles_container div:is(:first-child) > li:has(h4){
+    margin-bottom: .7rem;
+}
