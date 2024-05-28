@@ -3,6 +3,7 @@ import styles from "./new-template.module.css";
 import { Link } from "@mui/material";
 import React from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 export default function page() {
   return (
@@ -29,7 +30,7 @@ export default function page() {
       
       <div className="flex justify-between gap-[3vw]">
         {/* Job Hiring Request Info Container */}
-        <div className=" flex-grow space-y-6">
+        <div className=" w-[40%] space-y-6 ">
 
 
 
@@ -117,16 +118,62 @@ export default function page() {
 
 
         {/* Template Preview Container */}
-        <div className=" flex-grow">
-          {/* Template Preview Container */}
-          <div className={styles.templatePreviewContainer}>
+        <div className={styles.templatePreviewContainer + " w-[60%] "}>
+     
             {/* Template Preview Title */}
-            <h3 className="font-bold text-[20px] mb-[1.5vh]">Template Preview</h3>
+            <div className="flex justify-between items-center">
+                          <h3 className="font-bold text-[20px] mb-[1.5vh]">Template Preview</h3>
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M1.58576 16.7395L0.0553957 20.8204C-0.00336969 20.9775 -0.0156878 21.1481 0.0199129 21.312C0.0555136 21.4758 0.137528 21.626 0.256162 21.7445C0.374795 21.863 0.525034 21.9449 0.688934 21.9803C0.852835 22.0157 1.02347 22.0032 1.18046 21.9443L5.26028 20.4139C5.72724 20.2391 6.15136 19.9662 6.50414 19.6138L18.322 7.79615C18.322 7.79615 17.9097 6.56046 16.6751 5.32477C15.4406 4.09025 14.2037 3.67796 14.2037 3.67796L2.38589 15.4956C2.03348 15.8484 1.76066 16.2725 1.58576 16.7395ZM15.8517 2.02999L17.4625 0.419279C17.7513 0.130446 18.1368 -0.053568 18.5398 0.0139815C19.107 0.107153 19.9746 0.388998 20.7922 1.20774C21.611 2.02649 21.8928 2.89299 21.986 3.46017C22.0536 3.86314 21.8696 4.24864 21.5807 4.53747L19.9688 6.14818C19.9688 6.14818 19.5577 4.91365 18.322 3.67913C17.0874 2.44227 15.8517 2.02999 15.8517 2.02999Z" fill="#2A2B2A"/>
+            </svg>
+            </div>
             {/* Template Preview Body */}
             <div className="space-y-6">
-
+            {/* Job Position & Description */}
+              <div className="border border-[#2A2B2A] rounded-[11px] px-[2vw] py-[1.5vw] bg-[#DBDBD73D]">
+              {/* Job Position */}
+                <div className="flex items-center gap-8 mb-[20px]">
+                  <span className="font-bold">Job Position:</span>
+                  <span>Video Editor - Beginner</span>
+                </div>
+                {/* Job Description */}
+                <div>
+                <span className="font-bold mb-[10px] block">Job Description:</span>
+                <p>
+                As a Video Editor at [Company Name], you will be responsible for transforming raw footage into polished and captivating video content.
+                <br /><br />
+Working closely with our creative team, you will edit and enhance video footage to create compelling narratives that align with our brand identity and meet the highest standards of quality. 
+<br /><br />
+You will collaborate with producers, directors, and other team members to understand project requirements and deliver on creative vision.
+<br /><br />
+Additionally, you will stay updated on industry trends and techniques to continuously improve your editing skills and contribute creative ideas to enhance the overall quality of our video content.
+                </p>
+                </div>
+              </div>
+              {/* Platform */}
+              <div className="w-[75%] space-y-4">
+                <h3 className="font-bold text-[20px]">Platform</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <CustomCheckBox name="wuuzuf" accentColor="#2A2B2A" />
+                    <label htmlFor="wuuzuf">Wuuzuf</label>
+                  </div>
+                  <div className="flex items-center">
+                    <CustomCheckBox name="linked-in" accentColor="#2A2B2A" />
+                    <label htmlFor="linked-in">Linked In</label>
+                  </div>
+                  <div className="flex items-center">
+                    <CustomCheckBox name="jobs-co" accentColor="#2A2B2A" />
+                    <label htmlFor="jobs-co">Jobs.co</label>
+                  </div>
+                </div>
+              </div>
+              {/* Publish Template Button */}
+              <div className="mt-[15px]">
+                <CustomBtn btnColor="black" word="Publish Template" width="w-full" />
+              </div>
             </div>
-          </div>
         </div>
       </div>
 
