@@ -1,4 +1,7 @@
+"use client";
+
 import styles from "./balance-sheet.module.css";
+import { useRouter } from "next/navigation";
 
 function FinancialTable() {
   const AssetsData = [
@@ -75,36 +78,45 @@ function FinancialTable() {
 
   return (
     <>
-      <div className={`${styles.tableContainer} h-[68vh] w-full`}>
-        <div className="flex flex-col w-full gap-1 py-8 text-center text-xs justify-center items-center">
-          <h3 className="text-xs">Juice Box Inc.</h3>
-          <h4>
+      <div
+        className={`${styles.tableContainer} ${styles.tableContainer1} h-[68vh] w-full`}
+      >
+        {/* Header for the table */}
+        <div className="flex flex-col w-full gap-1 pt-8 pb-4 text-center text-xs justify-center items-center">
+          <h3 className="">Juice Box Inc.</h3>
+          <h4 className="text-[0.7rem] font-bold">
             CONSOLIDATED BALANCE SHEETS
             <br />
             (In millions)
           </h4>
         </div>
+
+        {/* Table column headers */}
         <header className="flex flex-col">
           <ul className="flex w-full text-center items-center justify-center">
             <li className="w-[50%]"></li>
             <li className="w[25%]">
-              <h4>
+              <h4 className="font-bold">
                 March 20 <br /> 2023
               </h4>
             </li>
             <li className="w-[25%]">
-              <h4>
+              <h4 className="font-bold">
                 March 20 <br /> 2024
               </h4>
             </li>
           </ul>
         </header>
+
+        {/* Content section with scrolling */}
         <div className="h-[80%] overflow-y-auto">
+          {/* Header row for assets section */}
           <ul className="flex w-full text-left bg-[#006699] text-[#fffffb] items-center justify-start">
             <li className={`${styles.headerRow}`}>ASSETS:</li>
           </ul>
           {AssetsData.map((item, i) => (
             <>
+              {/* Asset category row */}
               <ul className="flex w-full text-left bg-[#0066994F] text-[#2A2B2A] items-center justify-start">
                 <li className={`${styles.headerRow}`}>{item.category}</li>
               </ul>
@@ -126,6 +138,7 @@ function FinancialTable() {
                   </li>
                 </ul>
               ))}
+              {/* Total for each asset category */}
               <ul className="flex w-full text-left text-[#2A2B2A] items-center justify-start">
                 <li className="w-[50%]">Total {item.category}</li>
                 <li
@@ -135,7 +148,7 @@ function FinancialTable() {
                   <span className="absolute left-0">$</span>
                 </li>
                 <li
-                  className={`w-[25%]  relative  border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+                  className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
                 >
                   {item.total.March_2024}
                   <span className="absolute left-0">$</span>
@@ -143,12 +156,14 @@ function FinancialTable() {
               </ul>
             </>
           ))}
-          {/* LIABILITIES */}
+
+          {/* Header row for liabilities section */}
           <ul className="flex w-full text-left bg-[#006699] text-[#fffffb] items-center justify-start">
             <li className={`${styles.headerRow}`}>LIABILITIES:</li>
           </ul>
           {LiabilitiesData.map((item, i) => (
             <>
+              {/* Liability category row */}
               <ul className="flex w-full text-left bg-[#0066994F] text-[#2A2B2A] items-center justify-start">
                 <li className={`${styles.headerRow}`}>{item.category}</li>
               </ul>
@@ -172,23 +187,26 @@ function FinancialTable() {
                   </li>
                 </ul>
               ))}
-              <ul
-                className={`flex  w-full text-left text-[#2A2B2A] items-center justify-start ${styles.totalAmount}`}
-              >
-                <li className="w-[50%]">Total {item.category}</li>
-                <li
-                  className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+              {/* Total for each liability category */}
+              {item.total.March_2023 || item.total.March_2024 ? (
+                <ul
+                  className={`flex w-full text-left text-[#2A2B2A] items-center justify-start ${styles.totalAmount}`}
                 >
-                  {item.total.March_2023}
-                  <span className="absolute left-0">$</span>
-                </li>
-                <li
-                  className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
-                >
-                  {item.total.March_2024}
-                  <span className="absolute left-0">$</span>
-                </li>
-              </ul>
+                  <li className="w-[50%]">Total {item.category}</li>
+                  <li
+                    className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+                  >
+                    {item.total.March_2023}
+                    <span className="absolute left-0">$</span>
+                  </li>
+                  <li
+                    className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+                  >
+                    {item.total.March_2024}
+                    <span className="absolute left-0">$</span>
+                  </li>
+                </ul>
+              ) : null}
             </>
           ))}
         </div>
@@ -198,30 +216,44 @@ function FinancialTable() {
 }
 
 function page() {
+  const router = useRouter();
+
   return (
     <div>
       <div className="pageHeader">
-        <div className="flex items-center space-x-4 cursor-pointer mt-[25px]">
-          <svg
-            width="11"
-            height="22"
-            viewBox="0 0 11 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+        <div className="flex justify-between mt-[25px]">
+          <div
+            className="flex items-center h-fit space-x-4 cursor-pointer"
+            onClick={() => {
+              router.back();
+            }}
           >
-            <path
-              d="M11 20.8993L11 1.09878C10.9996 0.898304 10.9627 0.701801 10.8932 0.530416C10.8237 0.359031 10.7244 0.219253 10.6058 0.126133C10.4873 0.03301 10.354 -0.00993011 10.2203 0.0019317C10.0867 0.0137935 9.95773 0.080009 9.84734 0.19345L0.296979 10.0937C-0.0989937 10.504 -0.0989937 11.4919 0.296979 11.9033L9.84734 21.8036C9.9575 21.9182 10.0865 21.9854 10.2204 21.9979C10.3543 22.0104 10.4879 21.9677 10.6067 21.8745C10.7255 21.7813 10.825 21.6411 10.8943 21.4692C10.9637 21.2973 11.0002 21.1002 11 20.8993Z"
-              fill="#2A2B2A"
-            />
-          </svg>
-          <h2 className="text-[2rem] w-max font-bold">
-            {" "}
-            Balance Sheet, Q4, 2024{" "}
-          </h2>
+            <svg
+              width="11"
+              height="22"
+              viewBox="0 0 11 22"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11 20.8993L11 1.09878C10.9996 0.898304 10.9627 0.701801 10.8932 0.530416C10.8237 0.359031 10.7244 0.219253 10.6058 0.126133C10.4873 0.03301 10.354 -0.00993011 10.2203 0.0019317C10.0867 0.0137935 9.95773 0.080009 9.84734 0.19345L0.296979 10.0937C-0.0989937 10.504 -0.0989937 11.4919 0.296979 11.9033L9.84734 21.8036C9.9575 21.9182 10.0865 21.9854 10.2204 21.9979C10.3543 22.0104 10.4879 21.9677 10.6067 21.8745C10.7255 21.7813 10.825 21.6411 10.8943 21.4692C10.9637 21.2973 11.0002 21.1002 11 20.8993Z"
+                fill="#2A2B2A"
+              />
+            </svg>
+            <h2 className="text-[2rem] w-max font-bold">
+              {" "}
+              Balance Sheet, Q4, 2024{" "}
+            </h2>
 
-          <span className="bg-[#5FA85B] rounded p-1 px-4 text-white text-[.7rem] font-semibold">
-            Balanced
-          </span>
+            <span className="bg-[#5FA85B] rounded p-1 px-4 text-white text-[.7rem] font-semibold">
+              Balanced
+            </span>
+          </div>
+          <div className={`flex flex-col gap-1 ${styles.ratios}`}>
+            <span className="font-bold">Cash Ratio: 3</span>
+            <span className="font-bold">Current Ratio: 3</span>
+            <span className="font-bold">Debt to Equity Ratio: 3</span>
+          </div>
         </div>
         {/* filters options to filter and edit data in table */}
         <div

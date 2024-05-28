@@ -83,11 +83,13 @@ function FinancialTable1() {
 
   return (
     <>
-      <div className={`${styles.tableContainer} h-[68vh]`}>
+      <div
+        className={`${styles.tableContainer} ${styles.tableContainer1} h-[68vh]`}
+      >
         {/* Header for the table */}
-        <div className="flex flex-col w-full gap-1 py-8 text-center text-xs justify-center items-center">
-          <h3 className="text-xs">Juice Box Inc.</h3>
-          <h4>
+        <div className="flex flex-col w-full gap-1 pt-8 pb-4 text-center text-xs justify-center items-center">
+          <h3 className="">Juice Box Inc.</h3>
+          <h4 className="text-[0.7rem] font-bold">
             CONSOLIDATED BALANCE SHEETS
             <br />
             (In millions)
@@ -99,12 +101,12 @@ function FinancialTable1() {
           <ul className="flex w-full text-center items-center justify-center">
             <li className="w-[50%]"></li>
             <li className="w[25%]">
-              <h4>
+              <h4 className="font-bold">
                 March 20 <br /> 2023
               </h4>
             </li>
             <li className="w-[25%]">
-              <h4>
+              <h4 className="font-bold">
                 March 20 <br /> 2024
               </h4>
             </li>
@@ -191,23 +193,25 @@ function FinancialTable1() {
                 </ul>
               ))}
               {/* Total for each liability category */}
-              <ul
-                className={`flex w-full text-left text-[#2A2B2A] items-center justify-start ${styles.totalAmount}`}
-              >
-                <li className="w-[50%]">Total {item.category}</li>
-                <li
-                  className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+              {item.total.March_2023 || item.total.March_2024 ? (
+                <ul
+                  className={`flex w-full text-left text-[#2A2B2A] items-center justify-start ${styles.totalAmount}`}
                 >
-                  {item.total.March_2023}
-                  <span className="absolute left-0">$</span>
-                </li>
-                <li
-                  className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
-                >
-                  {item.total.March_2024}
-                  <span className="absolute left-0">$</span>
-                </li>
-              </ul>
+                  <li className="w-[50%]">Total {item.category}</li>
+                  <li
+                    className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+                  >
+                    {item.total.March_2023}
+                    <span className="absolute left-0">$</span>
+                  </li>
+                  <li
+                    className={`w-[25%] relative border-t border-solid border-[var(--dark)] ${styles.totalAmount}`}
+                  >
+                    {item.total.March_2024}
+                    <span className="absolute left-0">$</span>
+                  </li>
+                </ul>
+              ) : null}
             </>
           ))}
         </div>
@@ -215,7 +219,6 @@ function FinancialTable1() {
     </>
   );
 }
-
 
 function FinancialTable() {
   // Data structure for storing financial data for the years 2024 and 2023
@@ -280,7 +283,9 @@ function FinancialTable() {
                       {/* Preview button for Balance Sheet */}
                       <button className="h-full bg-[var(--dark)] text-[#fffffb] rounded w-full py-2 px-1 group-hover:text[var(--dark)] group-hover:bg-[#fffffb]">
                         <Link
-                          href={"/accounting/financial-statements/balance-sheet"}
+                          href={
+                            "/accounting/financial-statements/balance-sheet"
+                          }
                         >
                           Preview
                         </Link>
@@ -405,7 +410,6 @@ function FinancialTable() {
   );
 }
 
-
 const page = () => {
   const monthOptions: string[] = [
     "All",
@@ -456,7 +460,6 @@ const page = () => {
                 <CustomSelectInput label="All" options={monthOptions} />
               </div>
             </div>
-          
           </div>
         </div>
         <div className="flex gap-5">
