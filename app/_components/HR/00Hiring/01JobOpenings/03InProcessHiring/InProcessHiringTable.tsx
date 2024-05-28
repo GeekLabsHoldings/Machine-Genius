@@ -221,7 +221,7 @@ export default function InProcessHiringTable() {
               <CustomBtn
                 btnColor="black"
                 word={ele.hiringStatus}
-                href={`/hr/hiring/job-openings/start-hiring`}
+                href={`/hr/hiring/job-openings/in-process-hiring`}
               />
             </li>
           </ul>
