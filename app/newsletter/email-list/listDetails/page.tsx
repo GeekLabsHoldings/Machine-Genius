@@ -473,10 +473,10 @@ const page = () => {
           className={`${styles.table} w-full rounded-xl overflow-y-hidden mb-1 `}
         >
           {/* Header section of the table */}
-          <div className={`${styles.tableHead} px-2  w-full`}>
+          <div className={`${styles.tableHead} w-full`}>
             <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
               <li
-                className={`w-fit ${
+                className={`${
                   checkboxHidden == true ? "hidden" : "flex"
                 }`}
                 id="main"
@@ -500,7 +500,7 @@ const page = () => {
               {/* Mapping over the dataHeadEmailCleaning array to create table header columns */}
               {headEmailList.map((e, i) => (
                 // Each header item has a minimum width and is evenly distributed
-                <li className={`w-[14.2%] flex`} key={i}>
+                <li className={`w-[14.28%] flex`} key={i}>
                   {e.icon}
                   {e.name}
                 </li>
@@ -514,9 +514,9 @@ const page = () => {
             {/* Mapping over the dataEmailCleaning array to create table rows */}
             {emailLists.map((e, i) => (
               // Each row with styling applied and a border at the bottom
-              <div className="px-2">
+              <div className="">
                 <ul
-                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit min-w-full "
+                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] "
                   key={i}
                 >
                   <li
@@ -528,35 +528,35 @@ const page = () => {
                   </li>
 
                   {/* emailAddress column */}
-                  <li className={`w-[14.2%] flex`}>{e.emailAddress}</li>
+                  <li className={`w-[14.28%] flex`}>{e.emailAddress}</li>
                   {/*Subscription column with specific background color */}
-                  <li className={`w-[14.2%] flex`}>
+                  <li className={`w-[14.28%] flex`}>
                     <span className="py-1 px-2 rounded-sm bg-[#E1C655B2] ">
                       {e.Subscription}
                     </span>
                   </li>
                   {/* Space column */}
-                  <li className={`w-[14.2%] flex`}>
+                  <li className={`w-[14.28%] flex`}>
                     <span className="py-1 px-2 rounded-sm bg-[#E9313EB2] text-white">
                       {e.Source}
                     </span>
                   </li>
                   {/* Brand column with specific background color */}
 
-                  <li className={`w-[14.2%] flex`}>
+                  <li className={`w-[14.28%] flex`}>
                     <span className="py-1 px-2 rounded-sm bg-[#E1C655B2] ">
                       {e.Brand}
                     </span>
                   </li>
                   {/* Ratings column */}
-                  <li className={`w-[14.2%] flex`}>
+                  <li className={`w-[14.28%] flex`}>
                     {rating(e.contactRating)}
                   </li>
                   {/* Date column */}
-                  <li className={`w-[14.2%] flex`}>{e.dateAdded}</li>
+                  <li className={`w-[14.28%] flex`}>{e.dateAdded}</li>
                   {/* Niche column */}
 
-                  <li className={`w-[14.2%] flex`}>{e.Niche}</li>
+                  <li className={`w-[14.28%] flex`}>{e.Niche}</li>
                 </ul>
               </div>
             ))}

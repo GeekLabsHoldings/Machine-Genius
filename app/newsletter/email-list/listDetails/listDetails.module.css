@@ -73,6 +73,8 @@
       clamp(16px, calc(1.3vw + 0.1rem), 1000px);
       gap: 0.6vw;
       align-items: center;
+      justify-content: center;
+
   }
   
   .table .tableBody ul li {
