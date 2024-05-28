@@ -72,7 +72,7 @@ function page() {
       <div className="flex justify-end items-center flex-col h-[75vh] gap-[2vw] pb-[1.5vw]">
         {/* scripts wrapper */}
         {/* generated titles container */}
-        <div className="flex flex-col gap-1 w-full">
+        <div className="flex flex-col gap-1 w-full mt-5">
           <h2 className="text-2xl font-bold">News Letter</h2>
           <span>
             Make sure to check the News Letter carefully before publishing.
