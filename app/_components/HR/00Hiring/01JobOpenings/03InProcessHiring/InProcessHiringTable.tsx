@@ -212,7 +212,7 @@ export default function InProcessHiringTable() {
       {/* Table Body */}
       <div className={styles.table_body}>
         {taleData.map((ele, idx) => (
-          <ul className="w-[100%]">
+          <ul className="w-[100%]" key={idx}>
             <li className="w-[20%]">{ele.job_title}</li>
             <li className="w-[20%]">{ele.level}</li>
             <li className="w-[20%]">{ele.department}</li>
@@ -221,7 +221,7 @@ export default function InProcessHiringTable() {
               <CustomBtn
                 btnColor="black"
                 word={ele.hiringStatus}
-                href={`/hr/hiring/job-openings/in-process-hiring`}
+                href={`/hr/hiring/job-openings/prospects`}
               />
             </li>
           </ul>

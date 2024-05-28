@@ -211,7 +211,7 @@ export default function HiringRequestsTable() {
       {/* Table Body */}
       <div className={styles.table_body}>
         {taleData.map((ele, idx) => (
-          <ul className="w-[100%]">
+          <ul className="w-[100%]" key={idx}>
             <li className="w-[20%]">{ele.job_title}</li>
             <li className="w-[20%]">{ele.level}</li>
             <li className="w-[20%]">{ele.department}</li>
