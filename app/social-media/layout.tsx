@@ -3,8 +3,10 @@
 // Importing necessary libraries and components
 import React, { useState } from 'react';
 import styles from './socialMedia.module.css';
-import SideNav from '../_components/SideNav/SideNav';
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
+import dynamic from 'next/dynamic';
+const SideNav = dynamic(() => import('../_components/SideNav/SideNav'), { ssr: false })
+
 // import { usePathname } from 'next/navigation';
 
 // Functional component for layout

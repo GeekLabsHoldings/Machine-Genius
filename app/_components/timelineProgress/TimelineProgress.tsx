@@ -16,7 +16,7 @@ const TimelineProgress = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" stroke-width="1.5" />
+            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" strokeWidth="1.5" />
           </svg>
           <svg
             className={`${styles.current}`}
@@ -52,7 +52,7 @@ const TimelineProgress = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" stroke-width="1.5" />
+            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" strokeWidth="1.5" />
           </svg>
           <svg
             className={`${styles.current}`}
@@ -78,7 +78,7 @@ const TimelineProgress = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" stroke-width="1.5" />
+            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" strokeWidth="1.5" />
           </svg>
           <svg
             className={`${styles.current}`}
@@ -104,7 +104,7 @@ const TimelineProgress = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" stroke-width="1.5" />
+            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" strokeWidth="1.5" />
           </svg>
           <svg
             className={`${styles.current}`}
@@ -130,7 +130,7 @@ const TimelineProgress = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" stroke-width="1.5" />
+            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" strokeWidth="1.5" />
           </svg>
           <svg
             className={`${styles.current}`}
@@ -155,7 +155,7 @@ const TimelineProgress = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" stroke-width="1.5" />
+            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" strokeWidth="1.5" />
           </svg>
           <svg
             className={`${styles.current}`}
@@ -181,7 +181,7 @@ const TimelineProgress = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" stroke-width="1.5" />
+            <path d="M1 4L4 7L10 1" stroke="#FFFFFB" strokeWidth="1.5" />
           </svg>
           <svg
             className={`${styles.current}`}
