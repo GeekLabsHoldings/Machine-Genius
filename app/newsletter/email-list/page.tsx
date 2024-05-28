@@ -690,15 +690,15 @@ const page = () => {
             </div>
             {/* Outer container for the table with specific styles applied */}
             <div
-              className={`${styles.table} w-full rounded-xl overflow-y-hidden overflow-x-auto px-2 max-w-full mb-1`}
+              className={`${styles.table} w-full rounded-xl overflow-y-hidden overflow-x-auto px-2 mb-1`}
             >
               {/* Header section of the table */}
-              <div className={`${styles.tableHead}  w-fit`}>
-                <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-fit">
+              <div className={`${styles.tableHead}`}>
+                <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)]">
                   {/* Mapping over the dataHeadEmailCleaning array to create table header columns */}
                   {dataHeadEmailCleaning.map((e, i) => (
-                    // Each header item has a minimum width and is evenly distributed
-                    <li className={`w-[12.5%] min-w-[260px]`} key={i}>
+                    // Each header item is evenly distributed
+                    <li className={`w-[16.6666%]`} key={i}>
                       {e}
                     </li>
                   ))}
@@ -706,26 +706,26 @@ const page = () => {
               </div>
               {/* Body section of the table with scrollable content */}
               <div
-                className={`${styles.tableBody} w-fit overflow-y-scroll h-[53vh] `}
+                className={`${styles.tableBody} overflow-y-scroll h-[53vh] `}
               >
                 {/* Mapping over the dataEmailCleaning array to create table rows */}
                 {dataEmailCleaning.map((e, i) => (
                   // Each row with styling applied and a border at the bottom
                   <ul
-                    className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit"
+                    className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A]"
                     key={i}
                   >
                     {/* Property address column */}
-                    <li className={`w-[16.6666%] min-w-[260px]`}>
+                    <li className={`w-[16.6666%]`}>
                       {e.emailAddress}
                     </li>
                     {/* Property type column with dynamic background color */}
-                    <li className={`w-[16.6666%] min-w-[260px]`}>
+                    <li className={`w-[16.6666%]`}>
                       <span className="p-2 rounded-sm bg-[#ACACAC] text-white">{e.emailMarketing}</span>
                     </li>
                     {/* Space column */}
                     <li
-                      className={`w-[16.6666%] min-w-[260px]`}
+                      className={`w-[16.6666%]`}
                      
                     >
                      <span className="p-2 rounded-sm bg-[#ACACAC] text-white"  style={{
@@ -734,14 +734,14 @@ const page = () => {
                     </li>
                     {/* Ratings column with custom star rating component */}
 
-                    <li className={`w-[16.6666%] min-w-[260px] `}>
+                    <li className={`w-[16.6666%]`}>
                       {rating(e.contactRating)}
                     </li>
                     {/* Market rate column */}
-                    <li className={`w-[16.6666%] min-w-[260px]`}>
+                    <li className={`w-[16.6666%]`}>
                       {e.dateAdded}
                     </li>
-                    <li className={`w-[16.6666%] min-w-[260px]`}>{e.Niche}</li>
+                    <li className={`w-[16.6666%]`}>{e.Niche}</li>
                   </ul>
                 ))}
               </div>
