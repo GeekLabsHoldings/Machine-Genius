@@ -117,7 +117,12 @@ export default function page() {
             </div>
           </div>
           <div className="mt-[3.5vh] flex justify-end">
-          <CustomBtn btnColor="black" word="Dashboard" paddingVal="px-[1.5vw] py-[0.5vw]"/>
+            <CustomBtn
+              btnColor="black"
+              word="Dashboard"
+              paddingVal="px-[1.5vw] py-[0.5vw]"
+              href="/hr/dashboard"
+            />
           </div>
         </div>
       </div>
