@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import styles from "./ProspectsPreview.module.css";
+import styles from "./ShortList.module.css";
 import Link from "next/link";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import ProspectsPreviewTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsPreviewTable";
+import ShortListTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ShortListTable";
 
 export default function page() {
   return (
@@ -29,7 +29,7 @@ export default function page() {
 
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
-          <ProspectsPreviewTable />
+          <ShortListTable />
         </div>
         <div className={styles.test + " w-[49%] h-full border p-7 flex flex-col justify-between"}>
           {/* Personal Info */}
@@ -119,8 +119,9 @@ export default function page() {
         </div>
       </div>
 
-      <div className="flex justify-end mt-4">
-        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/short-list" />
+      <div className="flex justify-between mt-4">
+        <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/prospects-preview" />
+        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/phone-interview-questionnaire" />
       </div>
     </section>
   );
