@@ -31,7 +31,7 @@ export default function page() {
         <div className="w-[49%] h-full">
           <ProspectsPreviewTable />
         </div>
-        <div className={styles.test + " w-[49%] h-full border p-7 flex flex-col justify-between"}>
+        <div className={styles.prospectsPreview + " w-[49%] h-full border p-7 flex flex-col justify-between"}>
           {/* Personal Info */}
           <div className="space-y-4">
             <div className="space-y-1">
@@ -63,15 +63,21 @@ export default function page() {
             <div className="space-y-1">
               <div>
                 <span className="font-bold">CV: </span>
-                <span>JohnDoeCV.pdf</span>
+                <Link href="#">
+                  <span className="text-[#0066FF] underline">JohnDoeCV.pdf</span>
+                </Link>
               </div>
               <div>
                 <span className="font-bold">Portfolio Link: </span>
-                <span>https://www.linkedin.comjogndoe</span>
+                <Link href="#">
+                  <span className="text-[#0066FF] underline">https://www.linkedin.comjogndoe</span>
+                </Link>
               </div>
               <div>
                 <span className="font-bold">LinkedIn: </span>
-                <span>https://www.linkedin.comjogndoe</span>
+                <Link href="#">
+                  <span className="text-[#0066FF] underline">https://www.linkedin.comjogndoe</span>
+                </Link>
               </div>
             </div>
           </div>

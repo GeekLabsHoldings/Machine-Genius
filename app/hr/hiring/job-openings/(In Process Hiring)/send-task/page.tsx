@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
-import styles from "./ShortList.module.css";
-import Link from "next/link";
+import styles from "./send-task.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ShortListTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ShortListTable";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
@@ -28,18 +27,20 @@ export default function page() {
           </div>
           <div>
             <span className="font-bold mb-[15px] block">Select Message Template:</span>
-            <CustomSelectInput options={[]} label="More Info - Call Whatsapp Message" />
+            <CustomSelectInput options={[]} label="More Info - Video Editor Task" />
           </div>
           <div>
             <span className="font-bold mb-[15px] block">Message Preview:</span>
             <div className="border border-[#2A2B2A] bg-[#DBDBD73D] p-4 rounded-[11px]">
             <div className="font-medium">
-  <p className="my-3">Hello [Candidate's Name],</p>
-  <p className="my-3">We are pleased to inform you that you have been shortlisted for the next stage of our hiring process. Congratulations! 🎉</p>
-  <p className="my-3">We would like to schedule an interview call to discuss your application further. Could you please let us know your availability for a call sometime this week?</p>
-  <p className="my-3">Looking forward to speaking with you soon.</p>
+  <p className="my-3">Hi [Candidate's Name],</p>
+  <p className="my-3">Congratulations on being shortlisted for the next stage of our hiring process! 🎉 As part of this stage, we have a task for you to complete within the next week.</p>
+  <p className="my-3">Please find the task details outlined in the following Google Doc link: [Dummy Google Doc Link]</p>
+  <p className="my-3">If you have any questions or need clarification on any aspect of the task, feel free to reach out to us.</p>
+  <p className="my-3">We look forward to reviewing your work and discussing it further in our upcoming interview.</p>
   <p className="my-3">Best regards,<br />[Your Name]<br />[Your Position]<br />[Company Name]</p>
 </div>
+
 
             </div>
           </div>
@@ -55,8 +56,8 @@ export default function page() {
       </div>
 
       <div className="flex justify-between mt-4">
-        <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/prospects-preview" />
-        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/phone-interview-questionnaire" />
+        <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/phone-interview-questionnaire" />
+        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/task-form" />
       </div>
     </section>
   );
