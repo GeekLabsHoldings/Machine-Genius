@@ -10,6 +10,7 @@ const page = () => {
   // useState used for the sorting
   const [sorting, setSorting] = useState("Ascend");
 
+  // Handler to swap button text
   const [btnSwapped, setBtnSwapped] = useState(false);
 
   // useRouter used for navigation
@@ -18,7 +19,7 @@ const page = () => {
   // State for handling modal visibility
   const [isOpen, setIsOpen] = useState(false);
 
-  //
+  // Function to handle checkbox changes
   const [checkboxHidden, setCheckboxHidden] = useState(true);
 
   const headEmailList = [
@@ -470,13 +471,13 @@ const page = () => {
           />
         </div>
         <div
-          className={`${styles.table} w-full min-w-full rounded-xl overflow-y-hidden overflow-x-auto mb-1 `}
+          className={`${styles.table} w-full rounded-xl overflow-y-hidden mb-1 `}
         >
           {/* Header section of the table */}
-          <div className={`${styles.tableHead} px-2  w-fit`}>
-            <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-fit">
+          <div className={`${styles.tableHead} w-full`}>
+            <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
               <li
-                className={`w-fit ${
+                className={`${
                   checkboxHidden == true ? "hidden" : "flex"
                 }`}
                 id="main"
@@ -500,7 +501,7 @@ const page = () => {
               {/* Mapping over the dataHeadEmailCleaning array to create table header columns */}
               {headEmailList.map((e, i) => (
                 // Each header item has a minimum width and is evenly distributed
-                <li className={`w-[14.28%] min-w-[215px] flex`} key={i}>
+                <li className={`w-[14.28%] flex`} key={i}>
                   {e.icon}
                   {e.name}
                 </li>
@@ -509,18 +510,18 @@ const page = () => {
           </div>
           {/* Body section of the table with scrollable content */}
           <div
-            className={`${styles.tableBody}  overflow-y-scroll h-[53vh]  w-fit min-w-full  `}
+            className={`${styles.tableBody}  overflow-y-scroll h-[53vh]`}
           >
             {/* Mapping over the dataEmailCleaning array to create table rows */}
             {emailLists.map((e, i) => (
               // Each row with styling applied and a border at the bottom
-              <div className="px-2 w-full">
+              <div className="">
                 <ul
-                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit min-w-full "
+                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] "
                   key={i}
                 >
                   <li
-                    className={`w-[12.5%] checking ${
+                    className={`checking ${
                       checkboxHidden == true ? "hidden" : "flex"
                     }`}
                   >
@@ -528,35 +529,35 @@ const page = () => {
                   </li>
 
                   {/* emailAddress column */}
-                  <li className={`w-[12.5%] flex`}>{e.emailAddress}</li>
+                  <li className={`w-[14.28%] flex`}>{e.emailAddress}</li>
                   {/*Subscription column with specific background color */}
-                  <li className={`w-[12.5%] flex`}>
+                  <li className={`w-[14.28%] flex`}>
                     <span className="py-1 px-2 rounded-sm bg-[#E1C655B2] ">
                       {e.Subscription}
                     </span>
                   </li>
-                  {/* Space column */}
-                  <li className={`w-[12.5%] flex`}>
+                  {/* Source column */}
+                  <li className={`w-[14.28%] flex`}>
                     <span className="py-1 px-2 rounded-sm bg-[#E9313EB2] text-white">
                       {e.Source}
                     </span>
                   </li>
                   {/* Brand column with specific background color */}
 
-                  <li className={`w-[12.5%] flex`}>
+                  <li className={`w-[14.28%] flex`}>
                     <span className="py-1 px-2 rounded-sm bg-[#E1C655B2] ">
                       {e.Brand}
                     </span>
                   </li>
                   {/* Ratings column */}
-                  <li className={`w-[12.5%] flex`}>
+                  <li className={`w-[14.28%] flex`}>
                     {rating(e.contactRating)}
                   </li>
                   {/* Date column */}
-                  <li className={`w-[12.5%] flex`}>{e.dateAdded}</li>
+                  <li className={`w-[14.28%] flex`}>{e.dateAdded}</li>
                   {/* Niche column */}
 
-                  <li className={`w-[12.5%] flex`}>{e.Niche}</li>
+                  <li className={`w-[14.28%] flex`}>{e.Niche}</li>
                 </ul>
               </div>
             ))}

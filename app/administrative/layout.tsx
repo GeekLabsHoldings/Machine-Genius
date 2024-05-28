@@ -72,7 +72,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     },
     {
       name: "Database",
-      path: "/administrative/video-database",
+      path: "/administrative/database",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"

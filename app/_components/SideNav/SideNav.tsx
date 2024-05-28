@@ -32,7 +32,8 @@ const rols = [
     'Creative',
     'HR',
     'Accounting',
-    'Newsletter'
+    'Newsletter',
+    'Out Reach'
 ]
 
 
@@ -55,7 +56,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
     }
 
 
-    const handleToggleSubMenu = (e:any)=>{
+    const handleToggleSubMenu = (e: any) => {
         console.log($(e.target).parents(`.${styles.has_sub_menu}`));
         $(`.${styles.has_sub_menu}`).not($(e.target).parents(`.${styles.has_sub_menu}`)).removeClass(`${styles.open}`)
         $(e.target).parents(`.${styles.has_sub_menu}`).toggleClass(`${styles.open}`)
@@ -64,26 +65,38 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
 
     useEffect(() => {
 
-
+        // localStorage.setItem('selected-role', `${SelectedRole}`)
 
         if (SelectedRole === 'Content Creator') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/content-creator/dashboard')
         } else if (SelectedRole === 'Video Editor') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/video-editor/dashboard')
         } else if (SelectedRole === 'Social Media') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/social-media/dashboard')
         } else if (SelectedRole === 'Administrative') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/administrative/dashboard')
         } else if (SelectedRole === 'Customer Service') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/customer-service/dashboard')
         } else if (SelectedRole === 'Creative') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/creative/dashboard')
         } else if (SelectedRole === 'HR') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/hr/dashboard')
-        }else if (SelectedRole === 'Accounting') {
+        } else if (SelectedRole === 'Accounting') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/accounting/dashboard')
-        }else if (SelectedRole === 'Newsletter') {
+        } else if (SelectedRole === 'Newsletter') {
+            localStorage.setItem('selected-role', SelectedRole)
             router.push('/newsletter/dashboard')
+        } else if (SelectedRole === 'Out Reach') {
+            localStorage.setItem('selected-role', SelectedRole)
+            router.push('/outreach/dashboard')
         }
     }, [SelectedRole])
 
@@ -123,7 +136,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
                     {sideNavLinks.slice(1).map(ele => (
-                        <li key={ele.name} className={ele.subLinks ? styles.has_sub_menu : ''} onClick={e=>handleToggleSubMenu(e)}>
+                        <li key={ele.name} className={ele.subLinks ? styles.has_sub_menu : ''} onClick={e => handleToggleSubMenu(e)}>
                             <Link href={ele.path ? ele.path : ''} onClick={() => handleCurrentPageTitle((prev: any) => ele.path ? ele.name : prev)}>
                                 {ele.icon}
                                 <p>{ele.name}</p>
@@ -132,12 +145,12 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                                 </svg>}
                             </Link>
                             <ul className={styles.sub_menu_links}>
-                                {ele.subLinks ? ele.subLinks.map(ele=>(
+                                {ele.subLinks ? ele.subLinks.map(ele => (
                                     <li>
                                         <Link href={ele.path} onClick={() => handleCurrentPageTitle(ele.name)}>{ele.name}</Link>
                                     </li>
-                                )):null}
-                                
+                                )) : null}
+
                             </ul>
 
                         </li>
