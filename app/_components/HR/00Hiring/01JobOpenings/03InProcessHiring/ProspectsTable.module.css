@@ -129,11 +129,11 @@
   /* width: 12.5%; Ensure the body items have a fixed width */
 }
 
-.table .table_body ul li a {
+.table .table_body ul li:not(:last-child) a {
   color: #0066ff;
 }
 
-.table .table_body ul:hover li a {
+.table .table_body ul:hover li:not(:last-child) a {
   color: #5fa85b;
 }
 

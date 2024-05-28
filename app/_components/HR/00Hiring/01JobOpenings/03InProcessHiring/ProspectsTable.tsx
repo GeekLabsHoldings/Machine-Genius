@@ -158,7 +158,6 @@ export default function ProspectsTable() {
                   word="Preview"
                   btnColor="black"
                   href="/hr/hiring/job-openings/prospects-preview"
-                  style={{ color: "white" }}
                 />
               </li>
             </ul>
