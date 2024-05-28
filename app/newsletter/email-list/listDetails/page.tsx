@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./listDetails.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
 const page = () => {
+
+
   // useState used for the sorting
   const [sorting, setSorting] = useState("Ascend");
 
@@ -21,6 +23,15 @@ const page = () => {
 
   // Function to handle checkbox changes
   const [checkboxHidden, setCheckboxHidden] = useState(true);
+
+
+  function handleCheck() {
+    document.getElementsByName("emailLists").forEach((e:any)=>{
+      if (e.checked == false) {
+       ( document.querySelector("#main input") as any).checked = false
+      }
+    })
+  }
 
   const headEmailList = [
     {
@@ -333,6 +344,7 @@ const page = () => {
       Niche: "",
     },
   ];
+  
 
   return (
     <>
@@ -477,13 +489,9 @@ const page = () => {
           <div className={`${styles.tableHead} w-full`}>
             <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
               <li
-                className={`${
-                  checkboxHidden == true ? "hidden" : "flex"
-                }`}
+                className={`${checkboxHidden == true ? "hidden" : "flex"}`}
                 id="main"
                 onClick={() => {
-                  console.log("yes");
-
                   document
                     .querySelectorAll(".checking input")
                     .forEach((e: any) => {
@@ -509,9 +517,7 @@ const page = () => {
             </ul>
           </div>
           {/* Body section of the table with scrollable content */}
-          <div
-            className={`${styles.tableBody}  overflow-y-scroll h-[53vh]`}
-          >
+          <div className={`${styles.tableBody}  overflow-y-scroll h-[53vh]`}>
             {/* Mapping over the dataEmailCleaning array to create table rows */}
             {emailLists.map((e, i) => (
               // Each row with styling applied and a border at the bottom
@@ -525,7 +531,7 @@ const page = () => {
                       checkboxHidden == true ? "hidden" : "flex"
                     }`}
                   >
-                    <CustomCheckBox accentColor="#E1C655" />
+                    <CustomCheckBox accentColor="#E1C655" name="emailLists" onChange={handleCheck}/>
                   </li>
 
                   {/* emailAddress column */}
@@ -594,7 +600,11 @@ const page = () => {
               word="Ignore"
               btnColor="white"
             />
-            <CustomBtn word="Replace Duplicate" btnColor="black" paddingVal="py-[0.5vw] px-[0.3vw]"/>
+            <CustomBtn
+              word="Replace Duplicate"
+              btnColor="black"
+              paddingVal="py-[0.5vw] px-[0.3vw]"
+            />
           </div>
         </div>
       </div>
