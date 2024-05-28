@@ -141,3 +141,14 @@
     width: 100%;
 
   }
+  .overlay {
+    border-radius:  clamp(0.5rem, calc(4.3vw + 0.1rem) , 1000px ) 0 0 0 ;
+
+  }
+  .cleaningTable .tableBody ul:hover {
+    background-color: black;
+    
+  }
+  .cleaningTable .tableBody ul:hover li {
+color: white;
+  }

@@ -45,3 +45,100 @@
     display: block;
   }
   
+.listDetails h3 {
+  font-size: clamp(14px, calc(1vw + 0.1rem), 100px);
+  font-weight: 600;
+
+}
+.listDetails h5 {
+  font-size: clamp(12px, calc(0.8vw + 0.1rem), 100px);
+  font-weight: 600;
+
+}
+.table .tableHead li,
+  .table .tableBody li {
+    justify-content: center;
+    align-items: center;
+  }
+  .table {
+    box-shadow: 0px 4px 4px 0px #00000040;
+    border: 2px solid #dbdbd7;
+  }
+  
+  .table .tableHead li {
+    font-size: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+    font-style: normal;
+    font-weight: 700;
+    padding: clamp(16px, calc(1.1vw + 0.1rem), 1000px)
+      clamp(16px, calc(1.3vw + 0.1rem), 1000px);
+      gap: 0.6vw;
+      align-items: center;
+  }
+  
+  .table .tableBody ul li {
+    font-size: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+    font-style: normal;
+    font-weight: 300;
+    padding: clamp(7px, calc(0.7vw + 0.1rem), 1000px)
+      clamp(10px, calc(1.1vw + 0.1rem), 1000px);
+      align-items: center;
+      justify-content: center;
+  }
+  .table .tableBody ul:hover li {
+    color: white;
+  }
+  .table .tableBody div:hover {
+    background-color: black !important;
+  }
+  
+  .table::-webkit-scrollbar {
+    height: 10px;
+  }
+  .tableBody::-webkit-scrollbar {
+    width: 8px;
+  }
+  .table::-webkit-scrollbar-thumb,
+  .tableBody::-webkit-scrollbar-thumb {
+    background-color: #acacac;
+  }
+  .listDetails svg {
+    width: clamp(10px, calc(1vw + 0.1rem), 50px);
+    height: clamp(10px, calc(1vw + 0.1rem), 50px);
+  }
+  .listDetails span {
+    font-size: clamp(12px, calc(0.7vw + 0.1rem), 100px);
+  }
+  .overlay {
+    border-radius:  clamp(0.5rem, calc(4.3vw + 0.1rem) , 1000px ) 0 0 0 ;
+
+  }
+  .overlayBox {
+    border: 2px solid #DBDBD7;
+    box-shadow: 1px 7px 7.4px 2px #00000033;
+
+  }
+  .overlayBox h5 {
+    font-size: clamp(12px, calc(0.8vw + 0.1rem), 100px);
+    font-weight: 700;
+
+  }
+  .overlayBox h6 {
+    font-size: clamp(12px, calc(0.7vw + 0.1rem), 100px);
+    font-weight: 700;
+
+  }
+  .overlayBox p {
+    font-size: clamp(12px, calc(0.7vw + 0.1rem), 100px);
+    font-weight: 300;
+
+  }
+  .overlayBox p:not(:last-child) {
+    margin-bottom: 0.2vw;
+
+  }
+  .overlayBox input {
+    display: block;
+    margin-bottom: 1vw;
+    width: 100%;
+
+  }
