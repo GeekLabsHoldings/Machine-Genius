@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import styles from "./ProspectsPreview.module.css";
+import styles from "./ShortList.module.css";
 import Link from "next/link";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ProspectsPreviewTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsPreviewTable";
@@ -120,7 +120,7 @@ export default function page() {
       </div>
 
       <div className="flex justify-end mt-4">
-        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/short-list" />
+        <CustomBtn word={"Next"} btnColor="black" />
       </div>
     </section>
   );
