@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import styles from './customerService.module.css';
 
 // Import components
-import SideNav from '../_components/SideNav/SideNav';
+import dynamic from 'next/dynamic';
+const SideNav = dynamic(() => import('../_components/SideNav/SideNav'), { ssr: false })
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
 // import { usePathname } from 'next/navigation';
 
