@@ -2,7 +2,7 @@
 import React from "react";
 // import styles from "./Prospects.module.css";
 import Link from "next/link";
-// import ProspectsTable from '@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsTable';
+import ProspectsTable from '@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsTable';
 
 export default function page() {
   return (
@@ -26,7 +26,11 @@ export default function page() {
         <span className="text-[32px] font-bold">Prospects</span>
       </div>
 
-      {/* <ProspectsTable /> */}
+
+      <div className="flex gap-[2vw] w-[25vw]">
+            <div className="flex-grow"><ProspectsTable /></div>
+            <div className="flex-grow"><ProspectsTable /></div>
+      </div>
     </section>
   );
 }
