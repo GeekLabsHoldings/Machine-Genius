@@ -1,9 +1,9 @@
 "use client";
 import styles from "./new-template.module.css";
-import { Link } from "@mui/material";
 import React from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import Link from "next/link";
 
 export default function page() {
   return (
@@ -171,7 +171,7 @@ Additionally, you will stay updated on industry trends and techniques to continu
               </div>
               {/* Publish Template Button */}
               <div className="mt-[15px]">
-                <CustomBtn btnColor="black" word="Publish Template" width="w-full" />
+                <CustomBtn btnColor="black" word="Publish Template" width="w-full" href="/hr/hiring/job-openings/start-hiring/job-listing-published" />
               </div>
             </div>
         </div>
