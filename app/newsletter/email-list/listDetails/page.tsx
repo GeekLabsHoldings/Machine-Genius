@@ -10,6 +10,7 @@ const page = () => {
   // useState used for the sorting
   const [sorting, setSorting] = useState("Ascend");
 
+  // Handler to swap button text
   const [btnSwapped, setBtnSwapped] = useState(false);
 
   // useRouter used for navigation
@@ -18,7 +19,7 @@ const page = () => {
   // State for handling modal visibility
   const [isOpen, setIsOpen] = useState(false);
 
-  //
+  // Function to handle checkbox changes
   const [checkboxHidden, setCheckboxHidden] = useState(true);
 
   const headEmailList = [
@@ -535,7 +536,7 @@ const page = () => {
                       {e.Subscription}
                     </span>
                   </li>
-                  {/* Space column */}
+                  {/* Source column */}
                   <li className={`w-[14.28%] flex`}>
                     <span className="py-1 px-2 rounded-sm bg-[#E9313EB2] text-white">
                       {e.Source}
