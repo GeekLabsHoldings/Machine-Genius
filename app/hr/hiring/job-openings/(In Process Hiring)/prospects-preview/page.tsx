@@ -2,8 +2,8 @@
 import React from "react";
 import styles from "./ProspectsPreview.module.css";
 import Link from "next/link";
-import ProspectsTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsTable";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import ProspectsPreviewTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsPreviewTable";
 
 export default function page() {
   return (
@@ -29,9 +29,9 @@ export default function page() {
 
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
-          <ProspectsTable />
+          <ProspectsPreviewTable />
         </div>
-        <div className="w-[49%] h-full border p-7 flex flex-col justify-between">
+        <div className={styles.test + " w-[49%] h-full border p-7 flex flex-col justify-between"}>
           {/* Personal Info */}
           <div className="space-y-4">
             <div className="space-y-1">
@@ -111,7 +111,7 @@ export default function page() {
             </div>
           </div>
           <hr className={styles.divider} />
-          {/* Buttons */}
+          {/* Action Buttons */}
           <div className="flex justify-between gap-3">
             <CustomBtn word={"Reject"} btnColor="white" width="w-full" />
             <CustomBtn word={"Short List"} btnColor="black" width="w-full" />
