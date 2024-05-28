@@ -4,7 +4,7 @@ import styles from "./emailList.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Slider from "react-slick"; // Importing Slider component from react-slick
-  const dataHeadRealEstate = [
+  const dataHeadEmailCleaning = [
     "Email Address",
     "Email Marketing",
     "Source",
@@ -14,7 +14,7 @@ import Slider from "react-slick"; // Importing Slider component from react-slick
   ];
 
 
-  const dataRealEstate = [
+  const dataEmailCleaning = [
     {
       emailAddress: "johndoe@gmail.com",
       emailMarketing: "Cleaned",
@@ -648,12 +648,12 @@ const page = () => {
             <div className=" flex justify-between">
             <div className=" flex gap-2">
               <div className="mb-[3vh]">
-                {/* Staff Member */}
+                {/* Sources */}
                 <h5 className=" mb-[1vh] font-semibold">Sources</h5>
                 <div className="w-[11.927vw]">
-                  {/* CustomSelectInput for staff members */}
+                  {/* CustomSelectInput for Sources */}
                   <CustomSelectInput
-                    options={["All", ...dataRealEstate.map((e, i) => e.Source)]}
+                    options={["All", ...dataEmailCleaning.map((e, i) => e.Source)]}
                   />
                 </div>
               </div>
@@ -695,8 +695,8 @@ const page = () => {
               {/* Header section of the table */}
               <div className={`${styles.tableHead} w-full`}>
                 <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
-                  {/* Mapping over the dataHeadRealEstate array to create table header columns */}
-                  {dataHeadRealEstate.map((e, i) => (
+                  {/* Mapping over the dataHeadEmailCleaning array to create table header columns */}
+                  {dataHeadEmailCleaning.map((e, i) => (
                     // Each header item has a minimum width and is evenly distributed
                     <li className={`w-[12.5%] min-w-[260px]`} key={i}>
                       {e}
@@ -708,8 +708,8 @@ const page = () => {
               <div
                 className={`${styles.tableBody} w-full overflow-y-scroll rounded-xl h-[53vh] `}
               >
-                {/* Mapping over the dataRealEstate array to create table rows */}
-                {dataRealEstate.map((e, i) => (
+                {/* Mapping over the dataEmailCleaning array to create table rows */}
+                {dataEmailCleaning.map((e, i) => (
                   // Each row with styling applied and a border at the bottom
                   <ul
                     className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full"
