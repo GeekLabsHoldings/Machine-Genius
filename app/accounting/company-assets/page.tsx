@@ -450,8 +450,8 @@ const page = () => {
             className={`${styles.table} w-[85vw] rounded-xl overflow-y-hidden overflow-x-scroll px-2 max-w-full`}
           >
             {/* Header section of the table */}
-            <div className={`${styles.tableHead} w-fit`}>
-              <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-fit">
+            <div className={`${styles.tableHead} w-full`}>
+              <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                 {/* Mapping over the dataHeadRealEstate array to create table header columns */}
                 {dataHeadRealEstate.map((e, i) => (
                   // Each header item has a minimum width and is evenly distributed
@@ -463,13 +463,13 @@ const page = () => {
             </div>
             {/* Body section of the table with scrollable content */}
             <div
-              className={`${styles.tableBody} w-fit overflow-y-scroll rounded-xl h-[53vh]`}
+              className={`${styles.tableBody} w-full overflow-y-scroll rounded-xl h-[53vh]`}
             >
               {/* Mapping over the dataRealEstate array to create table rows */}
               {dataRealEstate.map((e, i) => (
                 // Each row with styling applied and a border at the bottom
                 <ul
-                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit"
+                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full"
                   key={i}
                 >
                   {/* Property address column */}
@@ -616,8 +616,8 @@ const page = () => {
             className={`${styles.table} w-[85vw] rounded-xl overflow-y-hidden overflow-x-scroll px-2 max-w-full`}
           >
             {/* Header section of the table */}
-            <div className={`${styles.tableHead} w-fit`}>
-              <ul className=" flex justify-between items-center border-b-2 border-b-[var(--dark)] w-fit">
+            <div className={`${styles.tableHead} w-full`}>
+              <ul className=" flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                 {/* Each header item has a minimum width and is evenly
                 distributed */}
                 {headEquipment.map((e, i) => (
@@ -626,10 +626,10 @@ const page = () => {
               </ul>
             </div>
             <div
-              className={`${styles.tableBody} w-fit overflow-y-scroll h-[53vh]`}
+              className={`${styles.tableBody} w-full overflow-y-scroll h-[53vh]`}
             >
               {dataEquipment.map((e, i) => (
-                <ul className=" flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit">
+                <ul className=" flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full">
                   <li className="w-[20%] min-w-[320px]">{e.Equipments}</li>
                   <li className="w-[20%] min-w-[320px]">
                     <span
@@ -757,8 +757,8 @@ const page = () => {
             className={`${styles.table} w-[85vw] rounded-xl overflow-y-hidden overflow-x-scroll px-2 max-w-full`}
           >
             {/* Header section of the table */}
-            <div className={`${styles.tableHead} w-fit`}>
-              <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-fit">
+            <div className={`${styles.tableHead} w-full`}>
+              <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                 {/* Mapping over the dataHeadRealEstate array to create table header columns */}
                 {dataHeadRealEstate.map((e, i) => (
                   // Each header item has a minimum width and is evenly distributed
@@ -770,13 +770,13 @@ const page = () => {
             </div>
             {/* Body section of the table with scrollable content */}
             <div
-              className={`${styles.tableBody} w-fit overflow-y-scroll rounded-xl h-[53vh]`}
+              className={`${styles.tableBody} w-full overflow-y-scroll rounded-xl h-[53vh]`}
             >
               {/* Mapping over the dataRealEstate array to create table rows */}
               {dataRealEstate.map((e, i) => (
                 // Each row with styling applied and a border at the bottom
                 <ul
-                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit"
+                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full"
                   key={i}
                 >
                   {/* Property address column */}
