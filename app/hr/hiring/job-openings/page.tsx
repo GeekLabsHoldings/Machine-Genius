@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./job-openings.module.css";
 import AllHiringTable from "@/app/_components/HR/00Hiring/01JobOpenings/01AllHiring/AllHiringTable";
 import HiringRequestsTable from "@/app/_components/HR/00Hiring/01JobOpenings/02HiringRequests/HiringRequestsTable";
+import InProcessHiringTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/InProcessHiringTable";
 
 const page = () => {
   return (
@@ -39,7 +40,7 @@ const page = () => {
             requested by team managers and approved by OP (Operation Manager).
             <br />
             Make sure to go through every request in detail to find and hire the
-            best candidate for the requested role!{" "}
+            best candidate for the requested role!
           </p>
           <HiringRequestsTable />
         </div>
@@ -51,7 +52,16 @@ const page = () => {
           className="tab"
           aria-label="In Process Hiring"
         />
-        <div className="tab-content h-[70vh] py-[1.5vw] flex flex-col "></div>
+        <div className="tab-content h-[70vh] py-[1.5vw] flex flex-col ">
+          <p>
+            These are all the hiring requests and unfinished hiring processes,
+            requested by team managers and approved by OP (Operation Manager).
+            <br />
+            Make sure to go through every request in detail to find and hire the
+            best candidate for the requested role!
+          </p>
+          <InProcessHiringTable />
+        </div>
       </div>
     </div>
   );
