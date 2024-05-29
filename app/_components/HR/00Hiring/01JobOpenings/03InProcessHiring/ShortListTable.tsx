@@ -176,7 +176,7 @@ export default function ShortListTable() {
                 });
             }}
           >
-            <CustomCheckBox accentColor="#2A2B2A" style={{margin:"auto"}} />
+            <CustomCheckBox accentColor="#2A2B2A" />
           </li>
 
           <li className="w-[10%]">
@@ -208,7 +208,6 @@ export default function ShortListTable() {
                   accentColor="#2A2B2A"
                   name="candidateSelection"
                   onChange={handleCheck}
-                  style={{margin:"auto"}}
                 />
               </li>
               <li className="w-[10%]">
