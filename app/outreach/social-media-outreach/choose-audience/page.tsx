@@ -1,7 +1,12 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
-const options = ["Invvestocracy", "Invvestocracy 2", "Invvestocracy 3", "Invvestocracy 4"];
+const options = [
+  "Invvestocracy",
+  "Invvestocracy 2",
+  "Invvestocracy 3",
+  "Invvestocracy 4",
+];
 
 const page = () => {
   return (
@@ -16,7 +21,11 @@ const page = () => {
 
           {/* buttons to move to last or next page */}
           <div className="flex justify-end items-center w-full">
-            <CustomBtn word="Next" btnColor="black" />
+            <CustomBtn
+              word="Next"
+              btnColor="black"
+              href="/outreach/social-media-outreach/choose-template"
+            />
           </div>
         </div>
       </div>
