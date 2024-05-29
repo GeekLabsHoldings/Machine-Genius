@@ -10,7 +10,7 @@ export default function page() {
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}
       <div className="flex items-center gap-4 my-[15px]">
-        <span className="text-[32px] font-bold">Send Task</span>
+        <span className="text-[32px] font-bold">Final Offer Message</span>
       </div>
 
       <div className="h-[70vh] flex align-center justify-between w-full">
@@ -27,7 +27,7 @@ export default function page() {
           </div>
           <div>
             <span className="font-bold mb-[15px] block">Select Message Template:</span>
-            <CustomSelectInput options={[]} label="More Info - Video Editor Task" />
+            <CustomSelectInput options={[]} label="More Info - Offer Template - Video Editor | Intern" />
           </div>
           <div>
             <span className="font-bold mb-[15px] block">Message Preview:</span>
@@ -46,7 +46,7 @@ export default function page() {
           </div>
           {/* Action Button */}
           <div>
-            <CustomBtn word={"Send Whatsapp Message"} btnColor="black" width="w-full" />
+            <CustomBtn word={"Send Email"} btnColor="black" width="w-full" />
           </div>
         </div>
 
@@ -56,8 +56,8 @@ export default function page() {
       </div>
 
       <div className="flex justify-between mt-4">
-        <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/phone-interview-questionnaire" />
-        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/accepted-tasks" />
+        <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/interview-acceptance-sheet" />
+        <CustomBtn word={"Dashboard"} btnColor="black" href="/hr/dashboard" />
       </div>
     </section>
   );
