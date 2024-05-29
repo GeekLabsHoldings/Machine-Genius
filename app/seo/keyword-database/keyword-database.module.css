@@ -1,0 +1,21 @@
+.ticketingPage h5 {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+.changeOrder {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2vw 1.2vw;
+  background: var(--white);
+  border: 1px solid #000000;
+  border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
+  color: #000;
+  font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
+  font-weight: 400;
+}
+.changeOrder svg {
+  width: clamp(18px, calc(0.8vw + 0.1rem), 100px);
+}
