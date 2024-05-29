@@ -53,7 +53,7 @@
   font-style: normal;
   font-weight: 700;
   padding: clamp(16px, calc(1.1vw + 0.1rem), 1000px)
-    clamp(16px, calc(1.5vw + 0.1rem), 1000px);
+    0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,7 +121,7 @@
   font-style: normal;
   font-weight: 400;
   padding: clamp(7px, calc(0.7vw + 0.1rem), 1000px)
-    clamp(10px, calc(1.2vw + 0.1rem), 1000px);
+    0;
   display: flex;
   align-items: center;
   justify-content: center;

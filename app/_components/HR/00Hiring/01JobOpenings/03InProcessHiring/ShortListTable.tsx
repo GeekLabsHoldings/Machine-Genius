@@ -3,6 +3,7 @@ import React from "react";
 import { truncateText } from "../../../../../_utils/text";
 import Link from "next/link";
 import styles from "./ShortListTable.module.css";
+import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
 export default function ShortListTable() {
   // An array of objects representing the rows of the table body.
@@ -139,12 +140,45 @@ export default function ShortListTable() {
     },
   ];
 
+  /**
+   * Handles the check event for the candidate selection.
+   *
+   * @return {void} No return value.
+   */
+  function handleCheck() {
+    document.getElementsByName("candidateSelection").forEach((e: any) => {
+      if (e.checked == false) {
+        (document.querySelector("#checkBoxList input") as any).checked = false;
+      }
+    });
+  }
+
   return (
     <div className={`${styles.tableContainer} h-full`}>
       {/* Start Table */}
       <div className={styles.table + " max-w-full"} id="table">
         {/* Table Header */}
-        <ul className={styles.table_header + " space-x-2"}>
+        <ul className={styles.table_header + " "}>
+          <li
+            className="w-[4%]"
+            id="checkBoxList"
+            onClick={() => {
+              document
+                .querySelectorAll(".candidateSelection input")
+                .forEach((e: any) => {
+                  console.log(e);
+                  if (
+                    !(document.querySelector("#checkBoxList input") as any)
+                      ?.checked
+                  )
+                    e.checked = false;
+                  else e.checked = true;
+                });
+            }}
+          >
+            <CustomCheckBox accentColor="#2A2B2A" style={{margin:"auto"}} />
+          </li>
+
           <li className="w-[10%]">
             <span>First Name</span>
           </li>
@@ -168,7 +202,15 @@ export default function ShortListTable() {
         {/* Table Body */}
         <div className={styles.table_body}>
           {bodyRow.map((e, idx) => (
-            <ul key={idx} className={`space-x-2`}>
+            <ul key={idx} className={``}>
+              <li className="candidateSelection w-[4%]">
+                <CustomCheckBox
+                  accentColor="#2A2B2A"
+                  name="candidateSelection"
+                  onChange={handleCheck}
+                  style={{margin:"auto"}}
+                />
+              </li>
               <li className="w-[10%]">
                 <span>{e.firstName}</span>
               </li>
