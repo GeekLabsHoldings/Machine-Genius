@@ -10,7 +10,7 @@ export default function page() {
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}
       <div className="flex items-center gap-4 my-[15px]">
-        <span className="text-[32px] font-bold">Short List</span>
+        <span className="text-[32px] font-bold">Send Task</span>
       </div>
 
       <div className="h-[70vh] flex align-center justify-between w-full">
