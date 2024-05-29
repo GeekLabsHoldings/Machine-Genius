@@ -1,0 +1,38 @@
+/* .slick-dots {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+} */
+
+.email__preview .slick-dots {
+  bottom: -35px;
+}
+.email__preview .slick-dots li {
+  width: clamp(5px, 55px, 55px); /* Width of the rectangle */
+  height: 5px !important;
+}
+
+/* .slick-dots li button::before {
+    all: unset !important;
+}  */
+
+.email__preview .slick-dots li button:before {
+  color: #000; /* Color of the dots */
+  content: ""; /* Remove default content */
+  width: clamp(5px, 55px, 55px); /* Width of the rectangle */
+  height: 5px; /* Height of the rectangle */
+  border-radius: 3px; /* Remove border radius to make it rectangular */
+  background-color: #acacac; /* Background color of the dots */
+  border: 1px solid var(--dark); /* Border color of the dots */
+  display: inline-block;
+}
+
+.email__preview .slick-dots li.slick-active button:before {
+  background-color: #2a2b2a; /* Change the color of the active dot */
+}
+
+.op__analytics__container .slick-slide > div {
+  margin: 0 10px; /* Adjust the value as needed */
+  box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
+}
