@@ -18,30 +18,62 @@ export default function page() {
           <ShortListTable />
         </div>
 
-
-
-        <div className={styles.messageBox + " w-[49%] h-full border p-7 flex flex-col justify-between"}>
+        <div
+          className={
+            styles.messageBox +
+            " w-[49%] h-full border p-7 flex flex-col justify-between"
+          }
+        >
           <div className="flex justify-between">
             <span className="font-bold">Number of selected candidates:</span>
             <span className="font-bold">(8)</span>
           </div>
           <div>
-            <span className="font-bold mb-[15px] block">Select Message Template:</span>
-            <CustomSelectInput options={[]} label="More Info - Offer Template - Video Editor | Intern" />
+            <span className="font-bold mb-[15px] block">
+              Select Message Template:
+            </span>
+            <CustomSelectInput
+              options={[]}
+              label="More Info - Offer Template - Video Editor | Intern"
+            />
           </div>
           <div>
             <span className="font-bold mb-[15px] block">Message Preview:</span>
             <div className="border border-[#2A2B2A] bg-[#DBDBD73D] p-4 rounded-[11px]">
-            <div className="font-medium">
-  <p className="my-3">Hi [Candidate's Name],</p>
-  <p className="my-3">Congratulations on being shortlisted for the next stage of our hiring process! 🎉 As part of this stage, we have a task for you to complete within the next week.</p>
-  <p className="my-3">Please find the task details outlined in the following Google Doc link: [Dummy Google Doc Link]</p>
-  <p className="my-3">If you have any questions or need clarification on any aspect of the task, feel free to reach out to us.</p>
-  <p className="my-3">We look forward to reviewing your work and discussing it further in our upcoming interview.</p>
-  <p className="my-3">Best regards,<br />[Your Name]<br />[Your Position]<br />[Company Name]</p>
-</div>
-
-
+              <div className="font-medium max-h-[35vh] overflow-y-auto">
+                <p className="mb-3">Subject: Job Offer: Video Editor Position at [Company Name]</p>
+                <p className="my-3">Dear [Candidate's Name],</p>
+                <p className="my-3">
+                  I am delighted to extend this offer to you for the position of
+                  Video Editor at [Company Name]. After careful consideration of
+                  your qualifications and experience, we are confident that you
+                  will make a valuable addition to our team.
+                </p>
+                <p className="my-3">Position Details:</p>
+                <p className="my-3">
+                  <strong>Job Title:</strong> Video Editor
+                  <br />
+                  <strong>Company:</strong> [Company Name]
+                  <br />
+                  <strong>Location:</strong> [Location]
+                  <br />
+                  <strong>Start Date:</strong> [Start Date]
+                  <br />
+                  <strong>Salary:</strong> [Salary]
+                  <br />
+                  <strong>Benefits:</strong> [List of Benefits]
+                </p>
+                <p className="my-3">
+                  <strong>Responsibilities:</strong>
+                  <br />
+                  As a Video Editor, you will be responsible for editing and
+                  enhancing video content to create engaging narratives that
+                  align with our brand identity. You will collaborate closely
+                  with our creative team to produce high-quality video content
+                  that captivates our audience and supports our organizational
+                  objectives.
+                </p>
+              </div>
             </div>
           </div>
           {/* Action Button */}
@@ -49,14 +81,14 @@ export default function page() {
             <CustomBtn word={"Send Email"} btnColor="black" width="w-full" />
           </div>
         </div>
-
-
-
-
       </div>
 
       <div className="flex justify-between mt-4">
-        <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/interview-acceptance-sheet" />
+        <CustomBtn
+          word={"Back"}
+          btnColor="white"
+          href="/hr/hiring/job-openings/interview-acceptance-sheet"
+        />
         <CustomBtn word={"Dashboard"} btnColor="black" href="/hr/dashboard" />
       </div>
     </section>

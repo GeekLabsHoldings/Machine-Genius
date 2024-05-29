@@ -31,7 +31,7 @@ export default function page() {
           <h3 className="font-bold text-[20px] mb-[1.5vh]">Questions:</h3>
 
           {/* Questions List */}
-          <div className="space-y-6">
+          <div className="space-y-6 max-h-[55vh] overflow-y-auto">
             {/* Question 1 */}
             <div className="flex flex-col">
               <label
