@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 
 // Import CSS styles
-import styles from './seo.module.css';
+import styles from './op.module.css';
 
 // Import components
 import dynamic from 'next/dynamic';
@@ -67,7 +67,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
         <SideNav isSideNavOpen={isSideNavOpen} setIsSideNavOpen={setIsSideNavOpen} setCurrentPage={setCurrentPage} sideNavLinks={sideNavLinks} />
       </div>
       {/* Main page wrapper */}
-      <div className={styles.Page_Wrapper}>
+      <div className={`${styles.Page_Wrapper} ${isSideNavOpen ? styles.when_sideNav_open : ''          }`}>
         {/* Title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Children components */}
