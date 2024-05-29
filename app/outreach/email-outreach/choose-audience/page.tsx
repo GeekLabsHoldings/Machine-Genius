@@ -24,7 +24,7 @@ const page = () => {
             <CustomBtn
               word="Next"
               btnColor="black"
-              href="/outreach/social-media-outreach/choose-template"
+              href="/outreach/email-outreach/email-preview"
             />
           </div>
         </div>

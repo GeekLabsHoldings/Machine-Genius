@@ -281,6 +281,7 @@ const page = () => {
             paddingVal="py-[0.5vw] px-[0.6vw]" // Padding for the button
             btnColor="black" // Color of the button
             word="New Template" // Text for the button
+            href="/outreach/templates/template-title"
             icon={
               // Icon for the button
               <svg
@@ -309,7 +310,9 @@ const page = () => {
         <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
           {/* Header section for the template box */}
           <div className={`${styles.templateBoxHeaderSm}`}>
-            <h6 className=" mb-[0.5vw]">Syndication reach-out email (indirect)</h6>{" "}
+            <h6 className=" mb-[0.5vw]">
+              Syndication reach-out email (indirect)
+            </h6>{" "}
             {/* Heading for the template box */}
           </div>
 
@@ -321,7 +324,9 @@ const page = () => {
         <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
           {/* Header section for the template box */}
           <div className={`${styles.templateBoxHeaderSm}`}>
-            <h6 className=" mb-[0.5vw]">Syndication reach-out email (indirect)</h6>{" "}
+            <h6 className=" mb-[0.5vw]">
+              Syndication reach-out email (indirect)
+            </h6>{" "}
             {/* Heading for the template box */}
           </div>
 
@@ -333,7 +338,9 @@ const page = () => {
         <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
           {/* Header section for the template box */}
           <div className={`${styles.templateBoxHeaderSm}`}>
-            <h6 className=" mb-[0.5vw]">Syndication reach-out email (indirect)</h6>{" "}
+            <h6 className=" mb-[0.5vw]">
+              Syndication reach-out email (indirect)
+            </h6>{" "}
             {/* Heading for the template box */}
           </div>
 
