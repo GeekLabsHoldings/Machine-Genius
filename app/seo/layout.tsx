@@ -58,7 +58,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
     </svg>
     },
     {
-      name: "Data Collection", path: "/seo/data-collection", icon: <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
+      name: "Website Speed", path: "/seo/website-speed", icon: <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none">
       <path d="M9.12195 2.56098C9.56647 2.56098 9.92683 2.90495 9.92683 3.32927V11.5244H18.5122C18.9197 11.5244 19.2564 11.8134 19.3097 12.1884L19.3171 12.2927C19.3171 17.3845 14.9928 21 9.65854 21C4.32427 21 0 16.8723 0 11.7805C0 6.68869 3.78769 2.56098 9.12195 2.56098ZM12.3415 0C17.6757 0 22 4.12772 22 9.21951C22 9.64383 21.6396 9.9878 21.1951 9.9878H12.3415C11.8969 9.9878 11.5366 9.64383 11.5366 9.21951V0.768293C11.5366 0.343976 11.8969 0 12.3415 0Z" fill="#FFFFFB"/>
     </svg>
     }
