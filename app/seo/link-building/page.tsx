@@ -29,14 +29,14 @@ export default function page() {
             <h5 className="mb-1">Long Tail Keywords</h5>
             <CustomSelectInput label="All" options={ticketTypeOptions} />
           </div>
-          {/* Volume filter */}
+          {/* Platform filter */}
           <div className="flex flex-col w-1/4 gap-[0.3vw]">
-            <h5 className="mb-1">Volume</h5>
+            <h5 className="mb-1">Platform</h5>
             <CustomSelectInput label="All" options={ticketTypeOptions} />
           </div>
-          {/* Global Volume filter */}
+          {/* Trend filter */}
           <div className="flex flex-col w-1/4 gap-[0.3vw]">
-            <h5 className="mb-1">Global Volume</h5>
+            <h5 className="mb-1">Trend</h5>
             <CustomSelectInput label="All" options={ticketTypeOptions} />
           </div>
           {/* Data Mentions with order toggle */}
