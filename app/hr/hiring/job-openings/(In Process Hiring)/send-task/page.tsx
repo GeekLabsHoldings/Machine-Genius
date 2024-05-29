@@ -10,7 +10,7 @@ export default function page() {
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}
       <div className="flex items-center gap-4 my-[15px]">
-        <span className="text-[32px] font-bold">Short List</span>
+        <span className="text-[32px] font-bold">Send Task</span>
       </div>
 
       <div className="h-[70vh] flex align-center justify-between w-full">
@@ -57,7 +57,7 @@ export default function page() {
 
       <div className="flex justify-between mt-4">
         <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/phone-interview-questionnaire" />
-        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/task-form" />
+        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/accepted-tasks" />
       </div>
     </section>
   );
