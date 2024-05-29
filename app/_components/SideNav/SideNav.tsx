@@ -33,7 +33,8 @@ const rols = [
     'HR',
     'Accounting',
     'Newsletter',
-    'Out Reach'
+    'Out Reach',
+    'SEO'
 ]
 
 
@@ -97,6 +98,9 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
         } else if (SelectedRole === 'Out Reach') {
             localStorage.setItem('selected-role', SelectedRole)
             router.push('/outreach/dashboard')
+        } else if (SelectedRole === 'SEO') {
+            localStorage.setItem('selected-role', SelectedRole)
+            router.push('/seo/dashboard')
         }
     }, [SelectedRole])
 
