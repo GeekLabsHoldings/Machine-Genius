@@ -57,7 +57,7 @@ export default function page() {
 
       <div className="flex justify-between mt-4">
         <CustomBtn word={"Back"} btnColor="white" href="/hr/hiring/job-openings/phone-interview-questionnaire" />
-        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/task-form" />
+        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/accepted-tasks" />
       </div>
     </section>
   );

@@ -8,7 +8,7 @@ export default function page() {
     <section>
       {/* Back To In Process Hiring Table Button */}
       <div className="flex items-center gap-4 my-[15px]">
-        <span className="text-[32px] font-bold ">Task Form</span>
+        <span className="text-[32px] font-bold ">Accepted Tasks</span>
       </div>
 
       <TaskFormTable />
