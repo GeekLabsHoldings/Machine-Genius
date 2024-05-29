@@ -4,11 +4,7 @@
 import React, { useState } from "react";
 
 // Import CSS styles
-<<<<<<< HEAD
-import styles from "./seo.module.css";
-=======
-import styles from './op.module.css';
->>>>>>> 3c630b5b6c9f039e224c934968a8e140389d728d
+import styles from "./op.module.css";
 
 // Import components
 import dynamic from "next/dynamic";
@@ -19,10 +15,6 @@ import TitleOfPage from "../_components/TitleOfPage/TitleOfPage";
 // import { usePathname } from 'next/navigation';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-<<<<<<< HEAD
-=======
-
->>>>>>> 3c630b5b6c9f039e224c934968a8e140389d728d
 // Define the layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   // State variables to manage side nav and current page
@@ -178,7 +170,11 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page wrapper */}
-      <div className={`${styles.Page_Wrapper} ${isSideNavOpen ? styles.when_sideNav_open : ''          }`}>
+      <div
+        className={`${styles.Page_Wrapper} ${
+          isSideNavOpen ? styles.when_sideNav_open : ""
+        }`}
+      >
         {/* Title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Children components */}
