@@ -10,6 +10,106 @@ const Share = () => {
   // State for handling modal visibility and date selection
   const [isOpen, setIsOpen] = useState(false);
 
+  const [sorting1, setSorting1] = useState("Ascend");
+  const [sorting2, setSorting2] = useState("Ascend");
+
+  function getRandomBackgroundColor() {
+    const colors = [
+      "#F36F24B2",
+      "#9B5FBFB2",
+      "#E1C655B2",
+      "#31B2E9B2",
+      "#E9313EB2",
+    ];
+
+    // Select a random index from the array of colors
+    const randomIndex = Math.floor(Math.random() * colors.length);
+
+    // Return the color at the random index
+    return colors[randomIndex];
+  }
+
+  const headers = [
+    "Data Scraped",
+    "Platform",
+    "Data Mentions",
+    "Trending",
+    "Data",
+  ];
+
+  const bodyRow = [
+    {
+      DataScraped: "$TSLA",
+      Platform: "Email",
+      DataMentions: "200 Mentions",
+      Trending: "Not Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Instagram",
+      DataMentions: "200 Mentions",
+      Trending: "Not Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Instagram",
+      DataMentions: "200 Mentions",
+      Trending: "Not Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Instagram",
+      DataMentions: "200 Mentions",
+      Trending: "Not Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Instagram",
+      DataMentions: "2.1K Mentions",
+      Trending: "Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Instagram",
+      DataMentions: "200 Mentions",
+      Trending: "Not Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Twitter",
+      DataMentions: "2.1K Mentions",
+      Trending: "Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Subscribed",
+      DataMentions: "2.1K Mentions",
+      Trending: "Not Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Youtube",
+      DataMentions: "200 Mentions",
+      Trending: "Trending",
+      Date: "12 March  2024",
+    },
+    {
+      DataScraped: "$TSLA",
+      Platform: "Youtube",
+      DataMentions: "200 Mentions",
+      Trending: "Trending",
+      Date: "12 March  2024",
+    },
+  ];
+
   return (
     <>
       <div className="flex flex-col h-full">
@@ -67,14 +167,18 @@ const Share = () => {
                     <h5 className=" underline border-b-[var(--dark)]">
                       3 Scrapers Running
                     </h5>
+                    {/* Container div with flexbox column layout, vertical gap, vertical scrollbar, and padding */}
                     <div className="flex flex-col gap-[0.7vw] overflow-y-auto py-2 px-1">
                       {" "}
+                      {/* First platform box with flexbox column layout and gap */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
+                        {/* Header section for the platform box */}
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Heading for the platform box */}
                         </div>
+                        {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
                         <CustomBtn
                           btnColor="black"
                           word="Run Scraper"
@@ -82,36 +186,45 @@ const Share = () => {
                           onClick={() => setIsOpen(true)}
                         />
                       </div>
+                      {/* Second platform box with same layout as the first one */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
+                        {/* Header section for the platform box */}
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Heading for the platform box */}
                         </div>
+                        {/* Custom button with black color, "Run Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="black"
                           word="Run Scraper"
                           width="100%"
                         />
                       </div>
+                      {/* Third platform box with same layout as the previous ones */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
+                        {/* Header section for the platform box */}
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Heading for the platform box */}
                         </div>
+                        {/* Custom button with white color, "Stop Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="white"
                           word="Stop Scraper"
                           width="100%"
                         />
                       </div>
+                      {/* Fourth platform box with same layout as the previous ones */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
+                        {/* Header section for the platform box */}
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Heading for the platform box */}
                         </div>
+                        {/* Custom button with white color, "Stop Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="white"
                           word="Stop Scraper"
@@ -120,15 +233,19 @@ const Share = () => {
                       </div>
                     </div>
                   </div>
-
                   {/* Websites Scraper Data */}
+                  {/* Main container for the platform box with specific height,
+                  width, flexbox column layout, and gap */}
                   <div
                     className={`${styles.platformBox} h-[65vh] w-1/3 flex flex-col gap-[1.2vw]`}
                   >
+                    {/* Header section of the platform box with flex layout and space-between alignment */}
                     <div
                       className={`${styles.platformBoxHeader} flex justify-between`}
                     >
+                      {/* Container for the icon and title with flex layout, gap, and center alignment */}
                       <div className="flex gap-[0.5vw] items-center">
+                        {/* SVG icon representing a logo or symbol */}
                         <svg
                           width="30"
                           height="30"
@@ -154,56 +271,69 @@ const Share = () => {
                           />
                         </svg>
 
+                        {/* Title for the platform box */}
                         <h3>Websites Scraper Data</h3>
                       </div>
                     </div>
-                    <h5 className=" underline border-b-[var(--dark)]">
+
+                    {/* Subheader with underline and bottom border */}
+                    <h5 className="underline border-b-[var(--dark)]">
                       3 Scrapers Running
                     </h5>
+
+                    {/* Inner container for the scraper list with flexbox column layout, vertical gap, vertical scrollbar, and padding */}
                     <div className="flex flex-col gap-[0.7vw] overflow-y-auto py-2 px-1">
                       {" "}
+                      {/* Individual platform box for a scraper with flexbox column layout and gap */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Scraper label */}
                         </div>
+                        {/* Custom button with black color, "Run Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="black"
                           word="Run Scraper"
                           width="100%"
                         />
                       </div>
+                      {/* Repeat of platform box for another scraper */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Scraper label */}
                         </div>
+                        {/* Custom button with black color, "Run Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="black"
                           word="Run Scraper"
                           width="100%"
                         />
                       </div>
+                      {/* Platform box with a "Stop Scraper" button */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Scraper label */}
                         </div>
+                        {/* Custom button with white color, "Stop Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="white"
                           word="Stop Scraper"
                           width="100%"
                         />
                       </div>
+                      {/* Another platform box with a "Stop Scraper" button */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Scraper label */}
                         </div>
+                        {/* Custom button with white color, "Stop Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="white"
                           word="Stop Scraper"
@@ -212,15 +342,19 @@ const Share = () => {
                       </div>
                     </div>
                   </div>
-
                   {/* Reddit Scraper Data */}
+                  {/* Main container for the platform box with specific height,
+                  width, flexbox column layout, and gap */}
                   <div
                     className={`${styles.platformBox} h-[65vh] w-1/3 flex flex-col gap-[1.2vw]`}
                   >
+                    {/* Header section of the platform box with flex layout and space-between alignment */}
                     <div
                       className={`${styles.platformBoxHeader} flex justify-between`}
                     >
+                      {/* Container for the icon and title with flex layout, gap, and center alignment */}
                       <div className="flex gap-[0.5vw] items-center">
+                        {/* SVG icon representing a logo or symbol */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="31"
@@ -228,56 +362,58 @@ const Share = () => {
                           viewBox="0 0 31 30"
                           fill="none"
                         >
-                          <path
-                            d="M15.5 0C7.22656 0 0.5 6.72656 0.5 15C0.5 23.2735 7.22656 30 15.5 30C23.7735 30 30.5 23.2735 30.5 15C30.5 6.72656 23.7735 0 15.5 0Z"
-                            fill="#FC471E"
-                          />
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M19.8067 7.40333C19.7931 7.48939 19.786 7.5777 19.786 7.6677C19.786 8.57631 20.5056 9.31292 21.3931 9.31292C22.2807 9.31292 23.0003 8.57631 23.0003 7.6677C23.0003 6.75905 22.2807 6.02246 21.3931 6.02246C20.9977 6.02246 20.6355 6.16871 20.3555 6.41127L16.1819 5.35742L14.6735 11.5343C12.6668 11.6695 10.8621 12.2916 9.5006 13.2308C9.11403 12.8427 8.58447 12.6034 8.00028 12.6034C6.81681 12.6034 5.85742 13.5856 5.85742 14.797C5.85742 15.6402 6.32206 16.3722 7.0035 16.7394C6.95426 17.0011 6.92885 17.2681 6.92885 17.5391C6.92885 20.8709 10.7664 23.5717 15.5003 23.5717C20.2342 23.5717 24.0717 20.8709 24.0717 17.5391C24.0717 17.2681 24.0463 17.0011 23.997 16.7394C24.6785 16.3722 25.1431 15.6402 25.1431 14.797C25.1431 13.5856 24.1838 12.6034 23.0003 12.6034C22.4161 12.6034 21.8865 12.8427 21.5 13.2308C20.0167 12.2076 18.0073 11.5607 15.7839 11.5099L16.9615 6.68753L19.8067 7.40333ZM11.7503 18.0876C12.6379 18.0876 13.3574 17.351 13.3574 16.4423C13.3574 15.5336 12.6379 14.797 11.7503 14.797C10.8627 14.797 10.1431 15.5336 10.1431 16.4423C10.1431 17.351 10.8627 18.0876 11.7503 18.0876ZM19.2503 18.0876C20.1379 18.0876 20.8574 17.351 20.8574 16.4423C20.8574 15.5336 20.1379 14.797 19.2503 14.797C18.3627 14.797 17.6431 15.5336 17.6431 16.4423C17.6431 17.351 18.3627 18.0876 19.2503 18.0876ZM12.0474 19.8249C11.8013 19.6569 11.4687 19.725 11.3046 19.977C11.1404 20.2291 11.207 20.5696 11.4531 20.7376C12.6189 21.5331 14.0596 21.9309 15.5003 21.9309C16.9409 21.9309 18.3817 21.5331 19.5474 20.7376C19.7936 20.5696 19.8601 20.2291 19.696 19.977C19.5319 19.725 19.1993 19.6569 18.9531 19.8249C17.9672 20.4977 16.7338 20.8341 15.5003 20.8341C14.7688 20.8341 14.0372 20.7158 13.3574 20.4792C12.8909 20.3168 12.4486 20.0987 12.0474 19.8249Z"
-                            fill="white"
-                          />
+                          {/* SVG path for the icon */}
                         </svg>
 
+                        {/* Title for the platform box */}
                         <h3>Twitter Scraper Data</h3>
                       </div>
                     </div>
-                    <h5 className=" underline border-b-[var(--dark)]">
+
+                    {/* Subheader with underline and bottom border */}
+                    <h5 className="underline border-b-[var(--dark)]">
                       3 Scrapers Running
                     </h5>
+
+                    {/* Inner container for the scraper list with flexbox column layout, vertical gap, vertical scrollbar, and padding */}
                     <div className="flex flex-col gap-[0.7vw] overflow-y-auto py-2 px-1">
                       {" "}
+                      {/* Individual platform box for a scraper with flexbox column layout and gap */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Scraper label */}
                         </div>
+                        {/* Custom button with black color, "Run Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="black"
                           word="Run Scraper"
                           width="100%"
                         />
                       </div>
+                      {/* Repeat of platform box for another scraper */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Scraper label */}
                         </div>
+                        {/* Custom button with black color, "Run Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="black"
                           word="Run Scraper"
                           width="100%"
                         />
                       </div>
+                      {/* Platform box with a "Stop Scraper" button */}
                       <div
                         className={`${styles.platformBox} flex flex-col gap-[0.7vw]`}
                       >
                         <div className={`${styles.platformBoxHeaderSm}`}>
-                          <h6>$TSLA</h6>
+                          <h6>$TSLA</h6> {/* Scraper label */}
                         </div>
+                        {/* Custom button with white color, "Stop Scraper" text, and full width */}
                         <CustomBtn
                           btnColor="white"
                           word="Stop Scraper"
@@ -296,7 +432,165 @@ const Share = () => {
               className="tab"
               aria-label="Lists"
             />
-            <div className="tab-content h-[75vh] pt-[1vw]"></div>
+            <div className="tab-content h-[75vh] pb-[1vw]">
+              <div className={`${styles.lists} py-[4.4vh]`}>
+                <div className=" flex items-center justify-between">
+                  <div className={` flex gap-[0.938vw]`}>
+                    <div className="mb-[3vh]">
+                      {/* Staff Member */}
+                      <h5 className=" mb-[1vh] font-semibold">List</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for staff members */}
+                        <CustomSelectInput options={["All", "list"]} />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Data Scraped</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for projects */}
+                        <CustomSelectInput
+                          options={[
+                            "All",
+                            ...bodyRow.map((e, i) => e.DataScraped),
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Platform</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for projects */}
+                        <CustomSelectInput
+                          options={[
+                            "All",
+                            ...bodyRow.map((e, i) => e.Platform),
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Trend</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for projects */}
+                        <CustomSelectInput
+                          options={[
+                            "All",
+                            ...bodyRow.map((e, i) => e.Trending),
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Data Mentions</h5>
+                      <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
+                        <span className={`${styles.dataSort}`}>{sorting1}</span>
+                        <svg
+                          onClick={() => {
+                            sorting1 == "Ascend"
+                              ? setSorting1("Descend")
+                              : setSorting1("Ascend");
+                          }}
+                          className="cursor-pointer"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721066 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139325 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139325 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
+                            fill="#2A2B2A"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Date</h5>
+                      <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
+                        <span className={`${styles.dataSort}`}>{sorting2}</span>
+                        <svg
+                          onClick={() => {
+                            sorting2 == "Ascend"
+                              ? setSorting2("Descend")
+                              : setSorting2("Ascend");
+                          }}
+                          className="cursor-pointer"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721066 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139325 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139325 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
+                            fill="#2A2B2A"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={`${styles.tableContainer} h-[65vh]`}>
+                  {/* Start Table */}
+                  <div className={styles.table}>
+                    {/* Table Header */}
+                    <ul className={styles.table_header}>
+                      {headers.map((e, i) => (
+                        <li className="w-[20%]" key={i}>
+                          {e}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Table Body */}
+                    <div className={styles.table_body}>
+                      {bodyRow.map((e, idx) => (
+                        <ul className="w-[100%]" key={idx}>
+                          <li className="w-[20%]">{e.DataScraped}</li>
+                          <li className="w-[20%]">
+                            <span
+                              className={` text-white ${
+                                styles[e.Platform]
+                              }  px-[0.4vw] py-[0.2vw] rounded-sm`}
+                              style={{
+                                backgroundColor: `${getRandomBackgroundColor()}`,
+                              }}
+                            >
+                              {e.Platform}
+                            </span>
+                          </li>
+                          <li className="w-[20%]"> {e.DataMentions}</li>
+                          <li className="w-[20%]">
+                            <span
+                              className={`px-[0.4vw] py-[0.2vw] rounded-sm ${
+                                e.Trending == "Trending"
+                                  ? "text-black"
+                                  : "text-white"
+                              }`}
+                              style={{
+                                backgroundColor: `${
+                                  e.Trending == "Trending"
+                                    ? "#5FA85BB5"
+                                    : "#E9313EB2"
+                                }`,
+                              }}
+                            >
+                              {e.Trending}
+                            </span>
+                          </li>
+                          <li className="w-[20%]">{e.Date}</li>
+                        </ul>
+                      ))}
+                    </div>
+                  </div>
+                  {/* End Table */}
+                </div>
+              </div>
+            </div>
 
             <input
               type="radio"
@@ -304,21 +598,187 @@ const Share = () => {
               className="tab"
               aria-label="Database"
             />
-            <div className="tab-content h-[75vh] pt-[1vw]"></div>
+            <div className="tab-content h-[75vh] pb-[1vw]">
+              {" "}
+              <div className={`${styles.lists} py-[4.4vh]`}>
+                <div className=" flex items-center justify-between">
+                  <div className={` flex gap-[0.938vw]`}>
+                    <div className="mb-[3vh]">
+                      {/* Staff Member */}
+                      <h5 className=" mb-[1vh] font-semibold">List</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for staff members */}
+                        <CustomSelectInput options={["All", "list"]} />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Data Scraped</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for projects */}
+                        <CustomSelectInput
+                          options={[
+                            "All",
+                            ...bodyRow.map((e, i) => e.DataScraped),
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Platform</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for projects */}
+                        <CustomSelectInput
+                          options={[
+                            "All",
+                            ...bodyRow.map((e, i) => e.Platform),
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Trend</h5>
+                      <div className="w-[11.927vw]">
+                        {/* CustomSelectInput for projects */}
+                        <CustomSelectInput
+                          options={[
+                            "All",
+                            ...bodyRow.map((e, i) => e.Trending),
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Data Mentions</h5>
+                      <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
+                        <span className={`${styles.dataSort}`}>{sorting1}</span>
+                        <svg
+                          onClick={() => {
+                            sorting1 == "Ascend"
+                              ? setSorting1("Descend")
+                              : setSorting1("Ascend");
+                          }}
+                          className="cursor-pointer"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721066 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139325 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139325 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
+                            fill="#2A2B2A"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="mb-[3vh]">
+                      <h5 className=" mb-[1vh] font-semibold">Date</h5>
+                      <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.37vw]">
+                        <span className={`${styles.dataSort}`}>{sorting2}</span>
+                        <svg
+                          onClick={() => {
+                            sorting2 == "Ascend"
+                              ? setSorting2("Descend")
+                              : setSorting2("Ascend");
+                          }}
+                          className="cursor-pointer"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721066 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139325 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139325 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
+                            fill="#2A2B2A"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={`${styles.tableContainer} h-[65vh]`}>
+                  {/* Start Table */}
+                  <div className={styles.table}>
+                    {/* Table Header */}
+                    <ul className={styles.table_header}>
+                      {headers.map((e, i) => (
+                        <li className="w-[20%]" key={i}>
+                          {e}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Table Body */}
+                    <div className={styles.table_body}>
+                      {bodyRow.map((e, idx) => (
+                        <ul className="w-[100%]" key={idx}>
+                          <li className="w-[20%]">{e.DataScraped}</li>
+                          <li className="w-[20%]">
+                            <span
+                              className={` text-white ${
+                                styles[e.Platform]
+                              }  px-[0.4vw] py-[0.2vw] rounded-sm`}
+                              style={{
+                                backgroundColor: `${getRandomBackgroundColor()}`,
+                              }}
+                            >
+                              {e.Platform}
+                            </span>
+                          </li>
+                          <li className="w-[20%]"> {e.DataMentions}</li>
+                          <li className="w-[20%]">
+                            <span
+                              className={`px-[0.4vw] py-[0.2vw] rounded-sm ${
+                                e.Trending == "Trending"
+                                  ? "text-black"
+                                  : "text-white"
+                              }`}
+                              style={{
+                                backgroundColor: `${
+                                  e.Trending == "Trending"
+                                    ? "#5FA85BB5"
+                                    : "#E9313EB2"
+                                }`,
+                              }}
+                            >
+                              {e.Trending}
+                            </span>
+                          </li>
+                          <li className="w-[20%]">{e.Date}</li>
+                        </ul>
+                      ))}
+                    </div>
+                  </div>
+                  {/* End Table */}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      {/* Overlay container covering the entire screen with absolute positioning,
+      centered content, and conditional rendering based on isOpen state */}
       <div
         className={` ${
           styles.overlay
-        }  absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
-          isOpen ? "flex" : "hidden" // Conditional rendering based on isOpen state
+        } absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
+          isOpen ? "flex" : "hidden"
         }`}
       >
-        <div className={`${styles.overlayBox}`}>
-          <div className=" flex justify-between items-center pb-[0.8vw] mb-[1vw] border-b-[1px] border-b-[var(--dark)]">
-            <h6>Listing</h6>
+        {/* Container for overlay content with rounded corners */}
+        <div className={`${styles.overlayBox} rounded-xl`}>
+          {/* Header section with title and close button */}
+          <div className="flex justify-between items-center pb-[0.8vw] mb-[1vw] border-b-[1px] border-b-[var(--dark)]">
+            <h6>Listing</h6> {/* Title for the overlay */}
+            {/* Close button */}
             <svg
+              onClick={() => setIsOpen(false)}
+              className="cursor-pointer"
               width="22"
               height="22"
               viewBox="0 0 22 22"
@@ -333,21 +793,33 @@ const Share = () => {
               />
             </svg>
           </div>
+
+          {/* Section for assigning to an existing list */}
           <h6 className="mb-[1vw]">Assign to</h6>
+
+          {/* Custom select input for selecting from existing lists */}
           <div className="w-[20vw] mb-[2vw]">
             <CustomSelectInput options={["List", "List"]} />
           </div>
+
+          {/* Divider */}
           <div
             className={`${styles.or} h-[1px] w-full bg-[var(--dark)] relative mb-[2vw]`}
           ></div>
-          <h6 className=" mb-[1vw]">Assign to new list</h6>
-          <label className=" mb-[0.2vw] block">List Name</label>
+
+          {/* Section for assigning to a new list */}
+          <h6 className="mb-[1vw]">Assign to new list</h6>
+
+          {/* Input field for entering the name of the new list */}
+          <label className="mb-[0.2vw] block">List Name*</label>
           <input
             type="text"
             placeholder="New List"
-            className="placeholder:text-[var(--dark)] border-0 border-b-[1px] border-b-[var(--dark)] w-full py-[0.5vw] mb-[1vw]"
+            className="placeholder:text-[var(--dark)] border-0 border-b-[1px] border-b-[var(--dark)] w-full py-[0.5vw] mb-[1vw] outline-none placeholder:font-semibold"
           />
-          <div className=" w-fit ms-auto">
+
+          {/* Button to save the new list */}
+          <div className="w-fit ms-auto">
             <CustomBtn btnColor="black" word="Save" />
           </div>
         </div>

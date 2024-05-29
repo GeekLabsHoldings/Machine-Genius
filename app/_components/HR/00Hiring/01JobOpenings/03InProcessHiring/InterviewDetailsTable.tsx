@@ -1,11 +1,9 @@
 "use client";
 import React from "react";
-import { truncateText } from "../../../../../_utils/text";
-import Link from "next/link";
-import styles from "./TaskFormTable.module.css";
-import CustomBtn from "@/app/_components/Button/CustomBtn";
+import styles from "./InterviewDetailsTable.module.css";
+import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
-export default function TaskFormTable() {
+export default function InterviewDetailsTable() {
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -13,97 +11,108 @@ export default function TaskFormTable() {
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
-
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
-
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
-
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
-
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
-
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
-
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
-
     {
       firstName: "John",
       lastName: "Doe",
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
-    },
-
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      portfolio: "https://www.linkedin.com/jogndoe",
+      date: "March 20",
+      time: "1:30 PM",
     },
   ];
 
+  function handleCheck() {
+    document.getElementsByName("candidateSelection").forEach((e: any) => {
+      if (e.checked == false) {
+        (document.querySelector("#checkBoxList input") as any).checked = false;
+      }
+    });
+  }
+
   return (
-    <div className={`${styles.tableContainer} h-[68vh]`}>
+    <div className={`${styles.tableContainer} h-[70vh] w-full`}>
       {/* Start Table */}
       <div className={styles.table + " max-w-full"} id="table">
         {/* Table Header */}
         <ul className={styles.table_header + " space-x-2"}>
+          <li
+            className="w-[6%]"
+            id="checkBoxList"
+            onClick={() => {
+              document
+                .querySelectorAll(".candidateSelection input")
+                .forEach((e: any) => {
+                  console.log(e);
+                  if (
+                    !(document.querySelector("#checkBoxList input") as any)
+                      ?.checked
+                  )
+                    e.checked = false;
+                  else e.checked = true;
+                });
+            }}
+          >
+            <CustomCheckBox accentColor="#2A2B2A" />
+          </li>
           <li className="w-[10%]">
             <span>First Name</span>
           </li>
@@ -116,14 +125,11 @@ export default function TaskFormTable() {
           <li className="w-[20%]">
             <span>Email</span>
           </li>
-          <li className="w-[20%]">
-            <span>LinkedIn</span>
+          <li className="w-[15%]">
+            <span>Date</span>
           </li>
-          <li className="w-[20%]">
-            <span>Portfolio</span>
-          </li>
-          <li className="w-[10%]">
-            <span>Preview</span>
+          <li className="w-[15%]">
+            <span>Time</span>
           </li>
         </ul>
 
@@ -131,6 +137,13 @@ export default function TaskFormTable() {
         <div className={styles.table_body}>
           {bodyRow.map((e, idx) => (
             <ul key={idx} className={`space-x-2`}>
+              <li className="candidateSelection w-[6%]">
+                <CustomCheckBox
+                  accentColor="#2A2B2A"
+                  name="candidateSelection"
+                  onChange={handleCheck}
+                />
+              </li>
               <li className="w-[10%]">
                 <span>{e.firstName}</span>
               </li>
@@ -143,22 +156,11 @@ export default function TaskFormTable() {
               <li className="w-[20%]">
                 <span>{e.email}</span>
               </li>
-              <li className="w-[20%]">
-                <Link href={e.linkedin} target="_blank">
-                  <span>{truncateText(e.linkedin, 20)}</span>
-                </Link>
+              <li className="w-[15%]">
+                <span>{e.date}</span>
               </li>
-              <li className="w-[20%]">
-                <Link href={e.portfolio} target="_blank">
-                  <span>{truncateText(e.portfolio, 20)}</span>
-                </Link>
-              </li>
-              <li className="w-[10%]">
-                <CustomBtn
-                  word="Preview"
-                  btnColor="black"
-                  href="/hr/hiring/job-openings/prospects-preview"
-                />
+              <li className="w-[15%]">
+                <span>{e.time}</span>
               </li>
             </ul>
           ))}
