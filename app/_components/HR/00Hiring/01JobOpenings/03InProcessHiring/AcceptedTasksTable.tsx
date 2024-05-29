@@ -2,11 +2,11 @@
 import React from "react";
 import { truncateText } from "../../../../../_utils/text";
 import Link from "next/link";
-import styles from "./TaskFormTable.module.css";
+import styles from "./AcceptedTasks.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
-export default function TaskFormTable() {
+export default function AcceptedTasks() {
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
