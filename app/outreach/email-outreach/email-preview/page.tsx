@@ -93,6 +93,7 @@ function page() {
           word={"Start Campaign"}
           btnColor="black"
           paddingVal="py-2 px-4"
+          href="/outreach/email-outreach/preview-sequence"
         />
       </div>
     </div>

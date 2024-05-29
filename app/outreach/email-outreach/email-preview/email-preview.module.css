@@ -1,8 +1,6 @@
-
 .box__shadow {
   box-shadow: 1px 3px 6.6px 0px #00000026;
 }
-
 
 .email__preview > h2 {
   font-size: clamp(0.1rem, 1.55vw + 0.1rem, 5rem);
@@ -16,7 +14,23 @@
   font-size: clamp(0.1rem, 1vw + 0.1rem, 5rem);
 }
 
-
 .email__preview .email__preview__container h3 {
   font-size: clamp(0.1rem, 0.8vw + 0.1rem, 5rem);
+}
+
+.card {
+  border: 2px solid #dbdbd7;
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  display: flex;
+}
+
+.input {
+  padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
+  border-bottom: 1px solid var(--dark);
+  color: var(--dark);
+  margin-top: 0.5rem;
+}
+
+.input:focus {
+  outline: none;
 }

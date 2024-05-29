@@ -11,6 +11,8 @@ import dynamic from 'next/dynamic';
 const SideNav = dynamic(() => import('../_components/SideNav/SideNav'), { ssr: false })
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage';
 // import { usePathname } from 'next/navigation';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // Define the layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {

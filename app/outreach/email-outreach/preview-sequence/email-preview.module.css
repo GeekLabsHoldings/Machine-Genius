@@ -1,0 +1,22 @@
+.box__shadow {
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+}
+
+.card {
+  border: 2px solid #dbdbd7;
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  display: flex !important;
+  flex-direction: column;
+  gap: 3.125rem;
+}
+
+.input {
+  padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
+  border-bottom: 1px solid var(--dark);
+  color: var(--dark);
+  margin-top: 0.5rem;
+}
+
+.input:focus {
+  outline: none;
+}
