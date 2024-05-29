@@ -1,3 +1,22 @@
+
 .box__shadow {
   box-shadow: 1px 3px 6.6px 0px #00000026;
+}
+
+
+.email__preview > h2 {
+  font-size: clamp(0.1rem, 1.55vw + 0.1rem, 5rem);
+}
+
+.email__preview .email__preview__box p {
+  font-size: clamp(0.1rem, 0.8vw + 0.1rem, 5rem);
+}
+
+.email__preview .email__preview__box h3 {
+  font-size: clamp(0.1rem, 1vw + 0.1rem, 5rem);
+}
+
+
+.email__preview .email__preview__container h3 {
+  font-size: clamp(0.1rem, 0.8vw + 0.1rem, 5rem);
 }

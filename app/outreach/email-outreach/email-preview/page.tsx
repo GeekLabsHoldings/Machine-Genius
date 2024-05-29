@@ -4,12 +4,12 @@ import styles from "@/app/outreach/email-outreach/email-preview/email-preview.mo
 function page() {
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col gap-1 w-full overflow-clip h-[75vh] py-[1.5vw]">
+      <div className={`flex flex-col gap-1 w-full overflow-clip h-[75vh] py-[1.5vw] ${styles.email__preview}`}>
         <h2 className="text-[2rem] font-bold">Email Sequence Preview</h2>
         <div className="flex justify-center items-center grow mt-14 gap-2">
           {/* scripts wrapper */}
           <div
-            className={`flex flex-col py-8 px-9 ${styles.box__shadow} border w-[23%] border-gray-300 rounded-[20px] max-h-[60vh] text-[#FFFFFB] bg-[#2A2B2A]`}
+            className={`flex flex-col py-8 px-9 ${styles.box__shadow} border w-1/3 border-gray-300 rounded-[20px] max-h-[60vh] text-[#FFFFFB] bg-[#2A2B2A] ${styles.email__preview__box}`}
           >
             <h3 className="text-xl font-bold border-b border-[var(--white)] pb-5">
               Cold Mail
@@ -32,8 +32,7 @@ function page() {
             </div>
           </div>
           <svg
-            width="426"
-            height="514"
+            className="w-1/4"
             viewBox="0 0 426 514"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -71,13 +70,13 @@ function page() {
               fill="#2A2B2A"
             />
           </svg>
-          <div className="flex flex-col items-center justify-between w-[20%] h-[60vh] ml-10">
+          <div className={`flex flex-col items-center justify-between w-1/4 h-[60vh] ml-10 ${styles.email__preview__container}`}>
             {Array(4).fill(0).map((_, i) => (
             <div
               className={`flex flex-col gap-3 p-[22px] ${styles.box__shadow} border w-full border-gray-300 rounded-[20px] max-h-[60vh]`}
             >
              <h3 className="font-bold">
-                Cold Mail
+                Follow Up {i + 1}
               </h3>
               <div className="h-[1px] border-t border-[var(--dark)] w-full"></div> 
              <h3 className="font-bold">
