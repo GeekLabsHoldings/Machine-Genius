@@ -5,25 +5,33 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 
 const page = () => {
   return (
-    <div className={`${styles.templates} py-[1vw]`}>
-      <div className=" flex justify-between items-center">
+    <div className={`${styles.templates} py-[1.2vw]`}>
+      {/* // Container with flex layout, space-between alignment, and center items */}
+      <div className="flex justify-between items-center">
+        {/* Section for selecting templates with flex layout, column direction, vertical gap, and margin */}
         <div
           className={`w-1/3 ${styles.selection} flex flex-col gap-[0.4vw] mb-[1vw]`}
         >
+          {/* Title for the templates section */}
           <h5>Templates</h5>
-          <div className=" w-[16vw]">
+
+          {/* Custom select input for selecting template type with width */}
+          <div className="w-[16vw]">
             <CustomSelectInput
-              options={["Feedback", "Campaign", "Sequence"]}
-              label={"All"}
+              options={["Feedback", "Campaign", "Sequence"]} // Options for template selection
+              label={"All"} // Label for the select input
             />
           </div>
         </div>
+
+        {/* Button for creating a new sequence with padding, color, text, and icon */}
         <div className="w-fit items-end">
           <CustomBtn
-            paddingVal="py-[0.5vw] px-[0.6vw]"
-            btnColor="black"
-            word="New Sequence"
+            paddingVal="py-[0.5vw] px-[0.6vw]" // Padding values for the button
+            btnColor="black" // Color of the button
+            word="New Sequence" // Text content of the button
             icon={
+              // Icon for the button
               <svg
                 width="11"
                 height="11"
@@ -43,20 +51,27 @@ const page = () => {
         </div>
       </div>
 
-      <div className="flex gap-[2.5vw] mb-[1vw]">
+      <div className="flex gap-[2.5vw] mb-[1.4vw]">
         {/* Twitter Scraper Data  */}
+        {/* // Container for displaying templates with custom styling, height, width, flex layout, and vertical gap */}
         <div
-          className={`${styles.templateBox} h-[48vh] w-1/3 flex flex-col gap-[0.8vw]`}
+          className={`${styles.templateBox} h-[42vh] w-1/3 flex flex-col gap-[0.8vw]`}
         >
+          {/* Header section of the template box with flex layout, space-between alignment, and center items */}
           <div
             className={`${styles.templateBoxHeader} flex justify-between items-center`}
           >
+            {/* Section for title of the template box */}
             <div className="flex gap-[0.5vw] items-center">
-              <h3>Feedback Survey Sequence</h3>
+              <h3>Feedback Survey Sequence</h3>{" "}
+              {/* Title of the template box */}
             </div>
+
+            {/* Button for additional actions with black color and custom icon */}
             <CustomBtn
-              btnColor="black"
+              btnColor="black" // Color of the button
               icon={
+                // Icon for the button
                 <svg
                   width="18"
                   height="18"
@@ -64,6 +79,7 @@ const page = () => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
+                  {/* Path for the plus icon */}
                   <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"
@@ -74,10 +90,10 @@ const page = () => {
               }
             />
           </div>
-          {/* Container div with flexbox column layout, vertical gap, vertical scrollbar, and padding */}
-          <div className="flex flex-col gap-[1.1vw] overflow-y-auto py-2 px-1">
-            {" "}
-            {/* First template box with flexbox column layout and gap */}
+
+          {/* Container for templates with flex layout, column direction, vertical gap, vertical scrollbar, and padding */}
+          <div className="flex flex-col gap-[1.3vw] overflow-y-auto py-2 px-1">
+            {/* First template box with flex layout, column direction, and vertical gap */}
             <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
               {/* Header section for the template box */}
               <div className={`${styles.templateBoxHeaderSm}`}>
@@ -86,9 +102,10 @@ const page = () => {
                 </h6>{" "}
                 {/* Heading for the template box */}
               </div>
-              {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+              {/* Button to view the template with black color, "View Template" text, and full width */}
               <CustomBtn btnColor="black" word="View Template" width="100%" />
             </div>
+
             {/* Second template box with same layout as the first one */}
             <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
               {/* Header section for the template box */}
@@ -98,26 +115,32 @@ const page = () => {
                 </h6>{" "}
                 {/* Heading for the template box */}
               </div>
-              {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+              {/* Button to view the template with black color, "View Template" text, and full width */}
               <CustomBtn btnColor="black" word="View Template" width="100%" />
             </div>
           </div>
         </div>
+
         {/* Websites Scraper Data */}
         {/* Main container for the template box with specific height,
-                  width, flexbox column layout, and gap */}
+          width, flexbox column layout, and gap */}
         <div
-          className={`${styles.templateBox} h-[48vh] w-1/3 flex flex-col gap-[0.8vw]`}
+          className={`${styles.templateBox} h-[42vh] w-1/3 flex flex-col gap-[0.8vw]`}
         >
+          {/* Header section of the template box with flex layout, space-between alignment, and center items */}
           <div
             className={`${styles.templateBoxHeader} flex justify-between items-center`}
           >
+            {/* Section for title of the template box */}
             <div className="flex gap-[0.5vw] items-center">
-              <h3>Campaign Sequence</h3>
+              <h3>Campaign Sequence</h3> {/* Title of the template box */}
             </div>
+
+            {/* Button for additional actions with black color and custom icon */}
             <CustomBtn
-              btnColor="black"
+              btnColor="black" // Color of the button
               icon={
+                // Icon for the button
                 <svg
                   width="18"
                   height="18"
@@ -125,6 +148,7 @@ const page = () => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
+                  {/* Path for the plus icon */}
                   <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"
@@ -135,19 +159,20 @@ const page = () => {
               }
             />
           </div>
-          {/* Container div with flexbox column layout, vertical gap, vertical scrollbar, and padding */}
-          <div className="flex flex-col gap-[1.1vw] overflow-y-auto py-2 px-1">
-            {" "}
-            {/* First template box with flexbox column layout and gap */}
+
+          {/* Container for templates with flex layout, column direction, vertical gap, vertical scrollbar, and padding */}
+          <div className="flex flex-col gap-[1.3vw] overflow-y-auto py-2 px-1">
+            {/* First template box with flex layout, column direction, and vertical gap */}
             <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
               {/* Header section for the template box */}
               <div className={`${styles.templateBoxHeaderSm}`}>
                 <h6 className=" mb-[0.5vw]">Out Reach Campaign Sequence</h6>{" "}
                 {/* Heading for the template box */}
               </div>
-              {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+              {/* Button to view the template with black color, "View Template" text, and full width */}
               <CustomBtn btnColor="black" word="View Template" width="100%" />
             </div>
+
             {/* Second template box with same layout as the first one */}
             <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
               {/* Header section for the template box */}
@@ -155,26 +180,33 @@ const page = () => {
                 <h6 className=" mb-[0.5vw]">Out Reach Campaign Sequence</h6>{" "}
                 {/* Heading for the template box */}
               </div>
-              {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+              {/* Button to view the template with black color, "View Template" text, and full width */}
               <CustomBtn btnColor="black" word="View Template" width="100%" />
             </div>
           </div>
         </div>
+
         {/* Reddit Scraper Data */}
         {/* Main container for the template box with specific height,
-                  width, flexbox column layout, and gap */}
+          width, flexbox column layout, and gap */}
         <div
-          className={`${styles.templateBox} h-[48vh] w-1/3 flex flex-col gap-[0.8vw]`}
+          className={`${styles.templateBox} h-[42vh] w-1/3 flex flex-col gap-[0.8vw]`}
         >
+          {/* Header section of the template box with flex layout, space-between alignment, and center items */}
           <div
             className={`${styles.templateBoxHeader} flex justify-between items-center`}
           >
+            {/* Section for title of the template box */}
             <div className="flex gap-[0.5vw] items-center">
-              <h3>Loyal Customers Sequence</h3>
+              <h3>Loyal Customers Sequence</h3>{" "}
+              {/* Title of the template box */}
             </div>
+
+            {/* Button for additional actions with black color and custom icon */}
             <CustomBtn
-              btnColor="black"
+              btnColor="black" // Color of the button
               icon={
+                // Icon for the button
                 <svg
                   width="18"
                   height="18"
@@ -182,6 +214,7 @@ const page = () => {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
+                  {/* Path for the plus icon */}
                   <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"
@@ -192,10 +225,10 @@ const page = () => {
               }
             />
           </div>
-          {/* Container div with flexbox column layout, vertical gap, vertical scrollbar, and padding */}
-          <div className="flex flex-col gap-[1.1vw] overflow-y-auto py-2 px-1">
-            {" "}
-            {/* First template box with flexbox column layout and gap */}
+
+          {/* Container for templates with flex layout, column direction, vertical gap, vertical scrollbar, and padding */}
+          <div className="flex flex-col gap-[1.3vw] overflow-y-auto py-2 px-1">
+            {/* First template box with flex layout, column direction, and vertical gap */}
             <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
               {/* Header section for the template box */}
               <div className={`${styles.templateBoxHeaderSm}`}>
@@ -204,9 +237,10 @@ const page = () => {
                 </h6>{" "}
                 {/* Heading for the template box */}
               </div>
-              {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+              {/* Button to view the template with black color, "View Template" text, and full width */}
               <CustomBtn btnColor="black" word="View Template" width="100%" />
             </div>
+
             {/* Second template box with same layout as the first one */}
             <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
               {/* Header section for the template box */}
@@ -216,30 +250,39 @@ const page = () => {
                 </h6>{" "}
                 {/* Heading for the template box */}
               </div>
-              {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+              {/* Button to view the template with black color, "View Template" text, and full width */}
               <CustomBtn btnColor="black" word="View Template" width="100%" />
             </div>
           </div>
         </div>
       </div>
+      {/* Main container with flex layout, space-between alignment, and center items */}
       <div className=" flex justify-between items-center">
+        {/* Container for template selection with flex layout, column direction, vertical gap, and margin */}
         <div
-          className={`w-1/3 ${styles.selection} flex flex-col gap-[0.5vw] mb-[1vw]`}
+          className={`w-1/3 ${styles.selection} flex flex-col gap-[0.5vw] mb-[1.5vw]`}
         >
+          {/* Heading for the template selection */}
           <h5>Templates</h5>
+
+          {/* Custom select input for template options with specific width */}
           <div className=" w-[16vw]">
             <CustomSelectInput
-              options={["Feedback", "Campaign", "Sequence"]}
-              label={"All"}
+              options={["Feedback", "Campaign", "Sequence"]} // Options for the select input
+              label={"All"} // Label for the select input
             />
           </div>
         </div>
+
+        {/* Container for new template button with flex layout and end alignment */}
         <div className="w-fit items-end">
+          {/* Custom button for creating a new template with specific padding, black color, and custom icon */}
           <CustomBtn
-            paddingVal="py-[0.5vw] px-[0.6vw]"
-            btnColor="black"
-            word="New Template"
+            paddingVal="py-[0.5vw] px-[0.6vw]" // Padding for the button
+            btnColor="black" // Color of the button
+            word="New Template" // Text for the button
             icon={
+              // Icon for the button
               <svg
                 width="11"
                 height="11"
@@ -247,6 +290,7 @@ const page = () => {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                {/* Path for the plus icon */}
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -258,32 +302,42 @@ const page = () => {
           />
         </div>
       </div>
+
+      {/* Main container with flex layout and gap */}
       <div className=" flex gap-[2vw]">
+        {/* Template box container with flex layout, column direction, and vertical gap */}
         <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
           {/* Header section for the template box */}
           <div className={`${styles.templateBoxHeaderSm}`}>
-            <h6 className=" mb-[0.5vw]">Out Reach Campaign Sequence</h6>{" "}
+            <h6 className=" mb-[0.5vw]">Syndication reach-out email (indirect)</h6>{" "}
             {/* Heading for the template box */}
           </div>
-          {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+
+          {/* Custom button for viewing the template with black color, "View Template" text, and full width */}
           <CustomBtn btnColor="black" word="View Template" width="100%" />
         </div>
+
+        {/* Template box container with same layout as the previous one */}
         <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
           {/* Header section for the template box */}
           <div className={`${styles.templateBoxHeaderSm}`}>
-            <h6 className=" mb-[0.5vw]">Out Reach Campaign Sequence</h6>{" "}
+            <h6 className=" mb-[0.5vw]">Syndication reach-out email (indirect)</h6>{" "}
             {/* Heading for the template box */}
           </div>
-          {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+
+          {/* Custom button for viewing the template with black color, "View Template" text, and full width */}
           <CustomBtn btnColor="black" word="View Template" width="100%" />
         </div>
+
+        {/* Template box container with same layout as the previous ones */}
         <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
           {/* Header section for the template box */}
           <div className={`${styles.templateBoxHeaderSm}`}>
-            <h6 className=" mb-[0.5vw]">Out Reach Campaign Sequence</h6>{" "}
+            <h6 className=" mb-[0.5vw]">Syndication reach-out email (indirect)</h6>{" "}
             {/* Heading for the template box */}
           </div>
-          {/* Custom button with black color, "Run Scraper" text, full width, and onClick event to setIsOpen */}
+
+          {/* Custom button for viewing the template with black color, "View Template" text, and full width */}
           <CustomBtn btnColor="black" word="View Template" width="100%" />
         </div>
       </div>

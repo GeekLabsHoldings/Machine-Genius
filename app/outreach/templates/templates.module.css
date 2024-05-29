@@ -22,11 +22,11 @@
 }
 .templateBox h3{
     font-weight: 700;
-    font-size: clamp(16px, calc(1.4vw + 0.1rem), 80px);
+    font-size: clamp(16px, calc(1vw + 0.1rem), 80px);
 }
 .templateBox h6{
     font-weight: 900;
-    font-size: clamp(14px, calc( 1vw + 0.1rem), 60px);
+    font-size: clamp(14px, calc( 0.9vw + 0.1rem), 60px);
 }
 .templateBox h5{
     font-weight: 700;
