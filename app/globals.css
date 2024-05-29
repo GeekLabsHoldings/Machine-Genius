@@ -50,6 +50,10 @@ textarea {
   background-color: transparent;
 }
 
+textarea {
+  resize: none;
+}
+
 img {
   width: 100%;
 }
@@ -180,7 +184,6 @@ img {
   gap: 1vh;
 }
 
-
 .fillBtn::before {
   content: "";
   position: absolute; /* Positioning properties */
@@ -233,28 +236,25 @@ img {
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
 
-
-
-
-.custom_arrows.slick-arrow{
+.custom_arrows.slick-arrow {
   width: unset !important;
   height: unset !important;
   position: absolute !important;
   top: unset !important;
   bottom: calc(100% + 1.1vw) !important;
-  transform: translate(0,0) !important;
-  -webkit-transform: translate(0,0) !important;
-  -moz-transform: translate(0,0) !important;
-  -ms-transform: translate(0,0) !important;
-  -o-transform: translate(0,0) !important;
+  transform: translate(0, 0) !important;
+  -webkit-transform: translate(0, 0) !important;
+  -moz-transform: translate(0, 0) !important;
+  -ms-transform: translate(0, 0) !important;
+  -o-transform: translate(0, 0) !important;
 }
 
-.custom_arrows.slick-next{
+.custom_arrows.slick-next {
   right: 0vw;
 }
-.custom_arrows.slick-prev{
+.custom_arrows.slick-prev {
   left: unset !important;
-  right: 2.5vw ;
+  right: 2.5vw;
 }
 
 .custom_arrows.slick-arrow > svg {
@@ -262,10 +262,11 @@ img {
   height: clamp(10px, calc(1.5vw + 0.1rem), 50px);
 }
 
-.custom_arrows.slick-arrow.slick-next > svg > path , .custom_arrows.slick-arrow.slick-prev > svg > path{
+.custom_arrows.slick-arrow.slick-next > svg > path,
+.custom_arrows.slick-arrow.slick-prev > svg > path {
   fill: #000000;
-
 }
-.custom_arrows.slick-arrow.slick-next.slick-disabled > svg > path , .custom_arrows.slick-arrow.slick-prev.slick-disabled > svg > path{
-  fill: #D9D9D9;
+.custom_arrows.slick-arrow.slick-next.slick-disabled > svg > path,
+.custom_arrows.slick-arrow.slick-prev.slick-disabled > svg > path {
+  fill: #d9d9d9;
 }
