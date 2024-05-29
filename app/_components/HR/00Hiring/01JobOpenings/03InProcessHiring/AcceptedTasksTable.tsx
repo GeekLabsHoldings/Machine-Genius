@@ -1,12 +1,9 @@
 "use client";
 import React from "react";
-import { truncateText } from "../../../../../_utils/text";
-import Link from "next/link";
-import styles from "./AcceptedTasks.module.css";
-import CustomBtn from "@/app/_components/Button/CustomBtn";
+import styles from "./AcceptedTasksTable.module.css";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
-export default function AcceptedTasks() {
+export default function AcceptedTasksTable() {
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -47,7 +44,7 @@ export default function AcceptedTasks() {
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
       taskReceived: "Received",
-      taskApproved: "Rejected",
+      taskApproved: "-",
     },
     {
       firstName: "John",
@@ -55,7 +52,7 @@ export default function AcceptedTasks() {
       mobile: "+0202123456789",
       email: "johndoe@gmail.com",
       taskReceived: "Received",
-      taskApproved: "Rejected",
+      taskApproved: "-",
     },
     {
       firstName: "John",
@@ -84,13 +81,13 @@ export default function AcceptedTasks() {
   }
 
   return (
-    <div className={`${styles.tableContainer} h-[68vh]`}>
+    <div className={`${styles.tableContainer} h-[70vh] w-full`}>
       {/* Start Table */}
       <div className={styles.table + " max-w-full"} id="table">
         {/* Table Header */}
         <ul className={styles.table_header + " space-x-2"}>
           <li
-            className="w-[4%]"
+            className="w-[6%]"
             id="checkBoxList"
             onClick={() => {
               document
@@ -132,7 +129,7 @@ export default function AcceptedTasks() {
         <div className={styles.table_body}>
           {bodyRow.map((e, idx) => (
             <ul key={idx} className={`space-x-2`}>
-              <li className="candidateSelection w-[4%]">
+              <li className="candidateSelection w-[6%]">
                 <CustomCheckBox
                   accentColor="#2A2B2A"
                   name="candidateSelection"
@@ -158,7 +155,6 @@ export default function AcceptedTasks() {
                 <span
                   style={{
                     ...(e.taskApproved === "Approved" && { color: "#5FA85B" }),
-                    ...(e.taskApproved === "Rejected" && { color: "#E9313E" }),
                   }}
                 >
                   {e.taskApproved}
