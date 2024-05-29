@@ -1,0 +1,15 @@
+.newBrand h3 {
+    font-size: clamp(16px, calc(1.3vw + 0.1rem), 100px);
+    font-weight: 700px;
+}
+.newBrand h4 {
+    font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
+    font-weight: 700px;
+}
+.newBrand label {
+    font-size: clamp(16px, calc(1.1vw + 0.1rem), 100px);
+    font-weight: 700px;
+}
+.form a {
+    align-self: start;
+}

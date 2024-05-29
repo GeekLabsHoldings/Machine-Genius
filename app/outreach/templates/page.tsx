@@ -118,6 +118,19 @@ const page = () => {
               {/* Button to view the template with black color, "View Template" text, and full width */}
               <CustomBtn btnColor="black" word="View Template" width="100%" />
             </div>
+
+            {/* third template box with flex layout, column direction, and vertical gap */}
+            <div className={`${styles.templateBox} flex flex-col gap-[0.7vw]`}>
+              {/* Header section for the template box */}
+              <div className={`${styles.templateBoxHeaderSm}`}>
+                <h6 className=" mb-[0.5vw]">
+                  Syndication reach-out email (indirect)
+                </h6>{" "}
+                {/* Heading for the template box */}
+              </div>
+              {/* Button to view the template with black color, "View Template" text, and full width */}
+              <CustomBtn btnColor="black" word="View Template" width="100%" />
+            </div>
           </div>
         </div>
 

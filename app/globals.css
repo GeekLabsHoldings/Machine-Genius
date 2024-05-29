@@ -235,6 +235,10 @@ img {
   margin: 0 10px; /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
+.brands .slick-slide > div {
+  margin: 0 clamp(10px,calc(1.2vw + 0.1rem),60px); /* Adjust the value as needed */
+  box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
+}
 
 .custom_arrows.slick-arrow {
   width: unset !important;
