@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./LinkBuildingTable.module.css";
-import CustomBtn from "../../Button/CustomBtn";
 import WriteArticleModal from "./WriteArticleModal";
 
 /**

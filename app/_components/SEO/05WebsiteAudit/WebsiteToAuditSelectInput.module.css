@@ -1,0 +1,221 @@
+/* ===== Start Select Input ===== */
+.App {
+  font-family: sans-serif;
+}
+
+.dropdown {
+  width: 100%;
+  position: relative;
+}
+
+.dropdown .dropdown_btn {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  /* padding: clamp(4px, calc(0.2vw + 0.1rem), 200px) clamp(20px, calc(1.2vw + 0.1rem), 200px); */
+  background: var(--white);
+  border: 1px solid var(--dark);
+  border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
+  color: var(--dark);
+  font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
+  font-weight: 400;
+  gap: clamp(0.5rem, calc(1vw + 0.1rem), 1000px);
+  position: relative;
+}
+
+.dropdown.dark .dropdown_btn {
+  padding: 0 clamp(6px, calc(0.3vw + 0.1rem), 1000px);
+  background-color: var(--dark);
+  color: var(--white);
+  font-weight: 500;
+  font-size: clamp(12px, calc(0.7vw + 0.1rem), 1000px);
+}
+
+.dropdown .dropdown_btn svg {
+  width: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+}
+
+.dropdown .dropdown_btn .toggleIcon {
+  width: clamp(14px, calc(1vw + 0.1rem), 100px);
+  position: absolute;
+  right: clamp(20px, calc(1.2vw + 0.1rem), 200px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dropdown.dark .dropdown_btn .toggleIcon {
+  width: clamp(14px, calc(0.8vw + 0.1rem), 100px);
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dropdown.onClose .dropdown_btn {
+  justify-content: center;
+}
+.dropdown.onClose .dropdown_btn .toggleIcon,
+.dropdown.onClose .dropdown_btn span {
+  display: none;
+}
+.dropdown .dropdown_btn.open .toggleIcon {
+  transform: translateY(-50%) rotateX(180deg);
+}
+
+.dropdown.dark .dropdown_btn svg path {
+  fill: var(--white);
+}
+
+.dropdown_content {
+  position: absolute;
+  /* top: 125%; */
+  left: 0;
+  width: 100%;
+  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.07);
+  border: 1px solid #000000;
+  border-radius: clamp(5px, calc(0.2vw + 0.1rem), 1000px);
+  color: #000;
+  font-size: clamp(0.8rem, calc(0.9vw + 0.1rem), 1000px);
+  background: var(--white);
+  z-index: 9;
+}
+
+.dropdown_content > div {
+  overflow: auto;
+  max-height: clamp(200px, calc(10vw + 0.1rem), 1000px);
+}
+
+.dropdown.dark .dropdown_content {
+  position: unset;
+}
+
+.dropdown_content .item {
+  position: relative;
+  width: 100%;
+  padding: clamp(0.4rem, calc(0.4vw + 0.1rem), 500px)
+    clamp(1rem, calc(1vw + 0.1rem), 500px);
+  cursor: pointer;
+  font-size: clamp(0.8rem, calc(0.7vw + 0.1rem), 1000px);
+}
+
+.dropdown.onClose .dropdown_content .item {
+  padding: clamp(0.4rem, calc(0.4vw + 0.1rem), 500px);
+  text-align: center;
+  font-size: clamp(0.6rem, calc(0.8vw + 0.1rem), 1000px);
+}
+
+.dropdown_content .item:hover {
+  background-color: var(--orange);
+  color: var(--white);
+}
+
+.dropdown_content .item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - clamp(0.7rem, calc(0.9vw + 0.1rem), 500px));
+  height: 1px;
+  background-color: var(--dark);
+}
+
+.dropdown_content .item:nth-of-type(4):after {
+  width: 100%;
+}
+
+.dropdown_content .item:last-of-type:after {
+  content: unset;
+}
+
+.dropdown.dark .dropdown_content {
+  background-color: transparent;
+  border: none;
+  color: var(--white);
+  padding: clamp(0.7rem, calc(0.7vw + 0.1rem), 500px) 0 0;
+  box-shadow: none;
+}
+
+.dropdown.dark .dropdown_content .item {
+  padding-left: calc(
+    clamp(15px, calc(2vw + 0.1rem), 1000px) +
+      clamp(0.5rem, calc(1vw + 0.1rem), 1000px)
+  );
+}
+
+.dropdown.dark .dropdown_content .item::after {
+  content: unset;
+}
+
+.dropdown.dark .dropdown_content .item:hover {
+  background-color: var(--white);
+  color: var(--dark);
+  border-radius: clamp(0.3rem, calc(0.3vw + 0.1rem), 1000px);
+}
+
+.dropdown .dropdown_content > a {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+}
+
+.dropdown .dropdown_content > a > div {
+  font-size: clamp(10px, calc(0.8vw + 0.1rem), 600px);
+  padding: 0.5vw;
+}
+
+.dropdown .dropdown_content > a > div > span {
+  font-size: clamp(10px, calc(0.65vw + 0.1rem), 600px);
+}
+/* ===== End Select Input ===== */
+
+
+/* ===== Start Create New List Modal ===== */
+.modalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: clamp(56px, calc(22vw + 0.1rem), 800px);
+  height: fit-content;
+  background-color: var(--white);
+  border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  border: 1px solid #dbdbd7;
+  box-shadow: 1px 7px 7.4px 2px rgba(0, 0, 0, 0.2);
+  padding: clamp(10px, calc(1.5vw + 0.1rem), 100px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vw;
+}
+
+.modal {
+  background-color: rgba(255, 255, 251, 0.58);
+}
+.modalBox h3 {
+  font-size: clamp(14px, calc(0.95vw + 0.1rem), 70px);
+  font-weight: 700;
+}
+.modalBox h2 {
+  font-size: clamp(24px, calc(0.7vw + 0.1rem), 60px);
+  font-weight: 700;
+}
+.addNewList svg {
+  width: clamp(12px, calc(0.9vw + 0.1rem), 70px);
+  height: clamp(12px, calc(0.9vw + 0.1rem), 70px);
+}
+.addNewList {
+  padding-bottom: clamp(10px, calc(0.5vw + 0.1rem), 60px);
+  border-bottom: 1px solid var(--dark);
+}
+.input {
+  border-bottom: 1px solid var(--dark);
+  color: var(--dark);
+}
+
+.input:focus {
+  outline: none;
+}
+/* ===== End Create New List Modal =====  */
