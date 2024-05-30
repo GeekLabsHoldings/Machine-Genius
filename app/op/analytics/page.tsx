@@ -5,7 +5,8 @@ import "./slider.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ReactApexChart from "react-apexcharts";
 import dynamic from "next/dynamic";
-import LineCharts from "@/app/_components/graph/LineCharts";
+
+const LineCharts = dynamic(() => import("@/app/_components/graph/LineCharts"), { ssr: false })
 
 function SampleNextArrow(props: any) {
   const { onClick, className } = props;
