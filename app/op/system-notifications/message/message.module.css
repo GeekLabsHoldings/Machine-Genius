@@ -1,0 +1,4 @@
+.message input::placeholder {
+    font-size: clamp(14px, calc(0.8vw + 0.1rem), 80px);
+  
+  }

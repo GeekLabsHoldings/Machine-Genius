@@ -111,7 +111,7 @@ const page = () => {
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
-                <input type="radio" name="my-accordion-2" defaultChecked />
+                <input type="checkbox" name="my-accordion-2"  />
                 <div className="collapse-title text-xl font-semibold">
                   Website
                 </div>
@@ -145,7 +145,7 @@ const page = () => {
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
-                <input type="radio" name="my-accordion-2" defaultChecked />
+                <input type="radio" name="my-accordion-2"  />
                 <div className="collapse-title text-xl font-semibold">
                 Twitter
                 </div>
@@ -210,6 +210,75 @@ const page = () => {
                   />
                 </div>
               </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Telegram
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Facebook
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              
             </div>
             <div className=" w-full">
               <div
@@ -286,74 +355,6 @@ const page = () => {
                 <input type="radio" name="my-accordion-2"  />
                 <div className="collapse-title text-xl font-semibold">
                 Discord
-                </div>
-                <div className="collapse-content">
-                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  <label htmlFor="">Password*</label>
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  <label htmlFor="">Link*</label>
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  <label htmlFor="">Handle*</label>
-                  <input
-                    type="text"
-                    placeholder="@username"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                <input type="radio" name="my-accordion-2"  />
-                <div className="collapse-title text-xl font-semibold">
-                Telegram
-                </div>
-                <div className="collapse-content">
-                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  <label htmlFor="">Password*</label>
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  <label htmlFor="">Link*</label>
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  <label htmlFor="">Handle*</label>
-                  <input
-                    type="text"
-                    placeholder="@username"
-                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                <input type="radio" name="my-accordion-2"  />
-                <div className="collapse-title text-xl font-semibold">
-                Facebook
                 </div>
                 <div className="collapse-content">
                   <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
