@@ -1,15 +1,33 @@
 .newBrand h3 {
-    font-size: clamp(16px, calc(1.3vw + 0.1rem), 100px);
-    font-weight: 700px;
+  font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
+  font-weight: 800;
 }
 .newBrand h4 {
-    font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
-    font-weight: 700px;
+  font-size: clamp(16px, calc(1vw + 0.1rem), 100px);
+  font-weight: 800;
 }
 .newBrand label {
-    font-size: clamp(16px, calc(1.1vw + 0.1rem), 100px);
-    font-weight: 700px;
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
+  font-weight: 800;
 }
-.form a {
-    align-self: start;
+.newBrand a {
+  align-self: start;
 }
+.newBrand .accordion {
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  border: 1px solid #dbdbd7;
+  background-color: #fffffb;
+  color: black;
+}
+.newBrand .accordion:not(:last-child) {
+  margin-bottom: 0.7vw;
+}
+
+  .accordion h4 {
+    font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
+    font-weight: 800;
+  }
+  .accordion label {
+    font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
+    font-weight: 800;
+  }

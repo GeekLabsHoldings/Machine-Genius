@@ -3,3 +3,13 @@
   box-shadow: 1px 3px 6.6px 0px #00000026;
   border-radius: 20px;
 }
+
+.divider {
+  display: block;
+  height: 1px;
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #2a2b2a;
+  /* margin: 0; */
+  padding: 0;
+}
