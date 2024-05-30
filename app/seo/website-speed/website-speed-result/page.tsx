@@ -11,8 +11,8 @@ export default function page() {
         {/* Overview Card */}
         <div className="flex-grow">
           <h3 className="font-bold text-[24px] mb-2">Overview</h3>
-          <div className={styles.card + " p-4 grid grid-cols-2"}>
-            <div className="flex flex-col items-center justify-center gap-1">
+          <div className={styles.card + " p-4 grid grid-cols-2 gap-[2vw] bg-gray-400"}>
+            <div className={styles.colContent + " flex flex-col items-center justify-center gap-1 relative bg-red-500"}>
               {/* <img
                 src={"/assets/websiteSpeedIndicator.png"}
                 className="w-full"
@@ -25,7 +25,7 @@ export default function page() {
                 Last Check on 21 Apr
               </span>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 bg-yellow-500">
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Website</span>
                 <span>https://machinegenius.io/signin</span>
