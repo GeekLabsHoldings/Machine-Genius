@@ -3,6 +3,9 @@ import Slider from "react-slick";
 import styles from "./analytics.module.css";
 import "./slider.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import ReactApexChart from "react-apexcharts";
+import dynamic from "next/dynamic";
+import LineCharts from "@/app/_components/graph/LineCharts";
 
 function SampleNextArrow(props: any) {
   const { onClick, className } = props;
@@ -33,19 +36,64 @@ function SamplePrevArrow(props: any) {
   );
 }
 
+const TasksChart = dynamic(() => import("@/app/_components/graph/AreaChart"), {
+  ssr: false,
+});
+
+// const chart = () => {
+//   return (
+//     <
+//   )
+// }
+
 function page() {
   const settings: any = {
     infinite: false,
     speed: 500,
-    slidesToShow: 4.5,
-    slidesToScroll: 3,
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    responsive: [
+      {
+        breakpoint: 1425,
+        settings: {
+          slidesToShow: 3.5,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
     centerPadding: 30,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
   return (
     <div
-      className={`${styles.assets} py-[1vw] h-[75vh] overflow-hidden op__analytics__container`}
+      className={`${styles.assets} py-[1vw] h-[90vh] overflow-hidden op__analytics__container`}
     >
       <div className={"tabs " + styles.tabs}>
         <input type="radio" name="tabs" className="tab" aria-label="God View" />
@@ -59,28 +107,255 @@ function page() {
           defaultChecked
         />
         <div className={`tab-content relative`}>
-          <div className={` ${styles.audience} mt-10`}>
+          <div className={` ${styles.audience} mt-8`}>
             <h2 className="text-2xl mb-4 font-bold">Social Media Accounts</h2>
             <div className="">
-              <div className="sliderAudience w-[87vw]">
+              <div className="sliderAudience w-[86vw]">
                 <div className={`slider-container card ${styles.card} py-6`}>
                   <Slider {...settings}>
                     {Array(12)
                       .fill(0)
                       .map((_, i) => (
                         <div
-                          className={`${styles.card} px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl`}
+                          className={`${styles.card} px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl group hover:bg-[var(--dark)] hover:text-[var(--white)]`}
                         >
-                          <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
+                          <div className="flex justify-between items-center pb-[0.5vw] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[0.5vw]">
                             <h3 className="grow font-bold text-center">
                               Twitter
                             </h3>
                           </div>
-                          <div className={`flex flex-col gap-[0.2vw]`}></div>
-                          <div className={`flex flex-col gap-[0.2vw]`}></div>
+                          <div className="grid mx-auto w-fit grid-cols-2 ">
+                            <span className="font-bold">Name:</span>
+                            <span>Mega Dose</span>
+                            <span className="font-bold">Username:</span>
+                            <span>@MEGADOSE</span>
+                            <span className="font-bold">Followers:</span>
+                            <span>20.1 K</span>
+                          </div>
                         </div>
                       ))}
                   </Slider>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4 grid-rows-4 gap-4 mt-9">
+            <div className="col-span-2 row-span-2">
+              <h3 className="text-2xl font-bold">Analytics</h3>
+              <div className={"tabs " + styles.tab}>
+                <input
+                  type="radio"
+                  name="tab"
+                  className="tab"
+                  aria-label="Daily"
+                  defaultChecked
+                />
+                <div className={`tab-content `}>
+                  <div className="flex gap-3 mt-5">
+                    <div
+                      className={`${styles.card} w-1/2 card h-fit grow px-[1vw] py-[0.6vw] rounded-xl group hover:bg-[var(--dark)] `}
+                    >
+                      <div className="flex justify-center items-center gap-[1.5vw]">
+                        <div className="group-hover:text-[var(--white)]">
+                          <div className="flex justify-between items-center w-fit h-[5vh] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[1vw]">
+                            <h3 className="font-bold text-center pr-2">
+                              Followers
+                            </h3>
+                          </div>
+                          <div className="w-fit flex justify-center items-center gap-3 ">
+                            <div className="text-4xl font-bold">22k</div>
+                            <div>
+                              <svg
+                                width="18"
+                                height="10"
+                                viewBox="0 0 18 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0.900543 9.19922L17.101 9.19922C17.265 9.19887 17.4258 9.16866 17.566 9.11183C17.7062 9.05501 17.8206 8.97372 17.8968 8.87671C17.973 8.7797 18.0081 8.67066 17.9984 8.56131C17.9887 8.45196 17.9345 8.34645 17.8417 8.25613L9.74149 0.4422C9.40578 0.118223 8.59756 0.118223 8.26095 0.442201L0.160722 8.25614C0.066962 8.34626 0.0119789 8.45183 0.00174654 8.56136C-0.00848579 8.67089 0.0264241 8.7802 0.102683 8.87741C0.178943 8.97462 0.293634 9.05602 0.434298 9.11275C0.574961 9.16949 0.736217 9.19939 0.900543 9.19922Z"
+                                  fill="#5FA85B"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="h-full place-self-end">
+                          <TasksChart />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`${styles.card} w-1/2 card h-fit grow px-[1vw] py-[0.6vw] rounded-xl group hover:bg-[var(--dark)] `}
+                    >
+                      <div className="flex justify-center items-center gap-[1.5vw]">
+                        <div className="group-hover:text-[var(--white)]">
+                          <div className="flex justify-between items-center w-fit h-[5vh] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[1vw]">
+                            <h3 className="font-bold text-center pr-2">
+                              Activities
+                            </h3>
+                          </div>
+                          <div className="w-fit flex justify-center items-center gap-3 ">
+                            <div className="text-4xl font-bold">22k</div>
+                            <div>
+                              <svg
+                                width="18"
+                                height="10"
+                                viewBox="0 0 18 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0.900543 9.19922L17.101 9.19922C17.265 9.19887 17.4258 9.16866 17.566 9.11183C17.7062 9.05501 17.8206 8.97372 17.8968 8.87671C17.973 8.7797 18.0081 8.67066 17.9984 8.56131C17.9887 8.45196 17.9345 8.34645 17.8417 8.25613L9.74149 0.4422C9.40578 0.118223 8.59756 0.118223 8.26095 0.442201L0.160722 8.25614C0.066962 8.34626 0.0119789 8.45183 0.00174654 8.56136C-0.00848579 8.67089 0.0264241 8.7802 0.102683 8.87741C0.178943 8.97462 0.293634 9.05602 0.434298 9.11275C0.574961 9.16949 0.736217 9.19939 0.900543 9.19922Z"
+                                  fill="#5FA85B"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="h-full place-self-end">
+                          <TasksChart />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <input
+                  type="radio"
+                  name="tab"
+                  className="tab"
+                  aria-label="Weekly"
+                />
+                <div className={`tab-content relative`}></div>
+                <input
+                  type="radio"
+                  name="tab"
+                  className="tab"
+                  aria-label="Monthly"
+                />
+                <div className={`tab-content relative`}></div>
+                <input
+                  type="radio"
+                  name="tab"
+                  className="tab"
+                  aria-label="Quarterly"
+                />
+                <div className={`tab-content relative`}></div>
+                <input
+                  type="radio"
+                  name="tab"
+                  className="tab"
+                  aria-label="Yearly"
+                />
+                <div className={`tab-content relative`}></div>
+                <input
+                  type="radio"
+                  name="tab"
+                  className="tab"
+                  aria-label="Life-time"
+                />
+                <div className={`tab-content relative`}></div>
+              </div>
+            </div>
+            <div className="col-span-2 row-span-2 col-start-3">
+              <div
+                className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-[24vh] bg-[var(--dark)] `}
+              >
+                <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
+                  <div className="w-full place-self-end">
+                    <LineCharts />
+                  </div>
+                  <div className="flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
+                    <span>Average Reach</span>
+                    <span>|</span>
+                    <span className="font-bold">200k</span>
+                    <span>
+                      <svg
+                        width="18"
+                        height="9"
+                        viewBox="0 0 18 9"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0.900543 9L17.101 9C17.265 8.99965 17.4258 8.96944 17.566 8.91261C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242982C9.40578 -0.0809961 8.59756 -0.080996 8.26095 0.242982L0.160722 8.05692C0.066962 8.14705 0.0119789 8.25261 0.00174654 8.36214C-0.00848579 8.47167 0.0264241 8.58098 0.102683 8.67819C0.178943 8.7754 0.293634 8.8568 0.434298 8.91353C0.574961 8.97027 0.736217 9.00017 0.900543 9Z"
+                          fill="#5FA85B"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className={`col-span-4 row-span-2 row-start-3 ${styles.engagement}`}
+            >
+              <div
+                className={`${styles.card} flex gap-[3vw]  grow px-[1vw] py-[0.6vw] rounded-xl h-[20vh] bg-[var(--dark)] `}
+              >
+                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                  <div className="w-1/2 h-full flex flex-col">
+                    <h3 className="text-xl font-bold">Tweets</h3>
+                    <ul className="text-sm list-none">
+                      <li className="flex justify-between items-center">
+                        <span>Tweets Created</span>
+                        <span>1</span>
+                      </li>
+                      <li className="flex justify-between items-center">
+                        <span>Impressions</span>
+                        <span>24</span>
+                      </li>
+                      <li className="flex justify-between items-center">
+                        <span>Likes</span>
+                        <span>34</span>
+                      </li>
+                      <li className="flex justify-between items-center">
+                        <span>Retweets</span>
+                        <span>12</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                      <h3 className="text-sm pt-3 pl-5  font-bold">
+                        Tweets Created
+                      </h3>
+                      <LineCharts />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                  <div className="w-1/2 h-full flex flex-col">
+                    <h3 className="text-xl font-bold">Tweets</h3>
+                    <ul className="text-sm list-none">
+                      <li className="flex justify-between items-center">
+                        <span>Tweets Created</span>
+                        <span>1</span>
+                      </li>
+                      <li className="flex justify-between items-center">
+                        <span>Impressions</span>
+                        <span>24</span>
+                      </li>
+                      <li className="flex justify-between items-center">
+                        <span>Likes</span>
+                        <span>34</span>
+                      </li>
+                      <li className="flex justify-between items-center">
+                        <span>Retweets</span>
+                        <span>12</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                      <h3 className="text-sm pt-3 pl-5  font-bold">
+                        Tweets Created
+                      </h3>
+                      <LineCharts />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

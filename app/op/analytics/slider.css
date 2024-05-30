@@ -33,6 +33,14 @@
 }
 
 .op__analytics__container .slick-slide > div {
-  margin: 0 10px; /* Adjust the value as needed */
+  margin: 0 1rem; /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
+}
+
+.op__analytics__container .card * {
+  transition: all 150ms;
+}
+
+.op__analytics__container .custom_arrows {
+  top: -67% !important;
 }
