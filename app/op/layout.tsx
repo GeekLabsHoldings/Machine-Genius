@@ -151,6 +151,43 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         </svg>
       ),
     },
+    {
+      name: "System Tasks",
+      path: "/op/system-tasks",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="22"
+          height="21"
+          viewBox="0 0 22 21"
+          fill="none"
+        >
+          <rect width="9.44373" height="9.01447" rx="1" fill="#FFFFFB" />
+          <rect
+            y="11.9863"
+            width="9.44373"
+            height="9.01447"
+            rx="1"
+            fill="#FFFFFB"
+          />
+          <rect
+            x="12.5547"
+            width="9.44373"
+            height="9.01447"
+            rx="1"
+            fill="#FFFFFB"
+          />
+          <rect
+            x="12.5547"
+            y="11.9863"
+            width="9.44373"
+            height="9.01447"
+            rx="1"
+            fill="#FFFFFB"
+          />
+        </svg>
+      ),
+    },
   ];
 
   // Return the layout component

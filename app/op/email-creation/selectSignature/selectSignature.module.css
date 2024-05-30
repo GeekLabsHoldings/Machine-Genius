@@ -1,0 +1,26 @@
+.card {
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  border: 2px solid #dfdfdf;
+  padding: 2vw 1vw;
+}
+.try {
+  width: 100% !important;
+}
+.boxWithBefore::before {
+  content: "";
+  background-color: black;
+  width: 2px;
+  height: 100%;
+  position: absolute;
+  left: -1.25vw;
+}
+.card h3 {
+  font-size: clamp(16px, calc(0.8vw + 0.1rem), 80px);
+  font-weight: 700;
+}
+.card h5 {
+  font-size: clamp(14px, calc(0.7vw + 0.1rem), 80px);
+}
+.card:hover {
+  border: 2px solid #2a2b2a;
+}

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import styles from "./newBrand.module.css";
+import "./newBrand.css";
 import { useRouter } from "next/navigation";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
@@ -8,10 +9,10 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 const page = () => {
   const router = useRouter();
   return (
-    <div className={`${styles.newBrand} pt-[1.5vw]`}>
+    <div className={`${styles.newBrand} newBrand pt-[1.5vw]`}>
       <div
         onClick={() => router.back()}
-        className=" flex items-center cursor-pointer mb-[1.2vw]"
+        className=" flex items-center cursor-pointer mb-[1vw]"
       >
         <svg
           className=" mr-[0.6vw]"
@@ -29,8 +30,8 @@ const page = () => {
         <h3>Add New Brand</h3>
       </div>
 
-      <div className=" grid grid-cols-3 w-full gap-[2vw]">
-        <div className={`${styles.form} col-span-1`}>
+      <div className=" grid grid-cols-5 w-full gap-[5vw] px-[1vw] mb-[0.8vw]">
+        <div className={`${styles.form} col-span-2`}>
           <h4 className=" mb-[1vw]">Brand Details</h4>
           <label htmlFor="">Brand Name*</label>
           <input
@@ -48,13 +49,13 @@ const page = () => {
           <input
             type="text"
             placeholder="51640615651463254"
-            className=" py-[0.6vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+            className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
           />
           <label htmlFor="">Acquisition Date*</label>
           <input
             type="text"
             placeholder="20 April 2024"
-            className=" py-[0.6vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+            className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
           />
           <div className=" flex justify-between">
             {" "}
@@ -81,6 +82,347 @@ const page = () => {
             />
           </div>
         </div>
+        <div className={`${styles.socialAccordions} col-span-3`}>
+          <div className=" flex justify-between items-center mb-[1vw]">
+            <h4>Social Media</h4>
+            <CustomBtn
+              btnColor="black"
+              paddingVal="py-[0.2vw] px-[0.2vw]"
+              icon={
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M7.58333 16.5C7.58333 17.3284 8.21757 18 9 18C9.78242 18 10.4167 17.3284 10.4167 16.5V10.5H16.0833C16.8658 10.5 17.5 9.82845 17.5 9C17.5 8.17155 16.8658 7.5 16.0833 7.5H10.4167V1.5C10.4167 0.671565 9.78242 0 9 0C8.21757 0 7.58333 0.671565 7.58333 1.5V7.5H1.91667C1.13427 7.5 0.5 8.17155 0.5 9C0.5 9.82845 1.13427 10.5 1.91667 10.5H7.58333V16.5Z"
+                    fill="#FFFFFB"
+                  />
+                </svg>
+              }
+            />
+          </div>
+          <div className=" flex justify-between h-[62vh] overflow-y-scroll px-[0.5vw] gap-[1.5vw]">
+            <div className=" w-full">
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="checkbox" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                  Website
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Twitter
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Instagram
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Telegram
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Facebook
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              
+            </div>
+            <div className=" w-full">
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Youtube
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Reddit
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Discord
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2"  />
+                <div className="collapse-title text-xl font-semibold">
+                Tiktok
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="" className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block">Username*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Password*</label>
+                  <input
+                    type="text"
+                    placeholder="username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Link*</label>
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                  <label htmlFor="">Handle*</label>
+                  <input
+                    type="text"
+                    placeholder="@username"
+                    className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className=" w-fit ms-auto">
+        <CustomBtn btnColor="black" word="Save" />
       </div>
     </div>
   );
