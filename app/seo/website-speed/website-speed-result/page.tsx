@@ -10,11 +10,12 @@ export default function page() {
         {/* OverView Card */}
         <div>
           <h3 className="font-bold text-[24px]">OverView</h3>
-          <div className={styles.card}>
-            <div>
-              <Image src={"/assets/websiteSpeedIndicator.png"} alt="WebsiteSpeedIndicator">
-
+          <div className={styles.card + " p-4"}>
+            <div className="flex flex-col items-center justify-center gap-1">
+              <Image src={"/assets/websiteSpeedIndicator.png"} width={"300"} height={"300"} alt="WebsiteSpeedIndicator">
               </Image>
+              <span className="font-semibold">Website Speed</span>
+              <span className="text-[#ACACAC] text-[14px] font-medium">Last Check on 21 Apr</span>
             </div>
             <div>
 
@@ -24,7 +25,13 @@ export default function page() {
         {/* Field Data Card */}
         <div>
           <h3 className="font-bold text-[24px]">Field Data</h3>
-          <div className={styles.card}>1111111</div>
+          <div className={styles.card + " p-4"}>
+            <span>First Contentful Paint (FCP)</span>
+            <hr />
+
+            <span>First Inut Delay (FID)</span>
+            <hr />
+          </div>
         </div>
         {/* Opportunities Card */}
 
