@@ -11,19 +11,44 @@ export default function page() {
         {/* Overview Card */}
         <div className="flex-grow">
           <h3 className="font-bold text-[24px] mb-2">Overview</h3>
-          <div className={styles.card + " p-4 grid grid-cols-2 gap-[2vw] bg-gray-400"}>
-            <div className={styles.colContent + " flex flex-col items-center justify-center gap-1 relative bg-red-500"}>
-              {/* <img
-                src={"/assets/websiteSpeedIndicator.png"}
-                className="w-full"
-                // width={"150"}
-                // height={"150"}
-                alt="WebsiteSpeedIndicator"
-              ></img> */}
-              <span className="font-semibold">Website Speed</span>
+          <div className={styles.card + " p-4 grid grid-cols-2 gap-[2vw]"}>
+            <div
+              className={
+                styles.colContent +
+                " flex flex-col items-center justify-center gap-1 relative"
+              }
+            >
+
+
+
+
+
+
+
+
+
+
+              <div className={styles.testParent + " relative w-fit"}>
+                <img
+                  src={"/assets/websiteSpeedIndicator.png"}
+                  className="w-full"
+                  // width={"150"}
+                  // height={"150"}
+                  alt="WebsiteSpeedIndicator"
+                ></img>
+                <div className={styles.test + " absolute bottom-0 w-full h-[20px] "}></div>
+              </div>
+
+
+
+
+
+
+
+              {/* <span className="font-semibold">Website Speed</span>
               <span className="text-[#ACACAC] text-[14px] font-medium">
                 Last Check on 21 Apr
-              </span>
+              </span> */}
             </div>
             <div className="flex flex-col gap-2 bg-yellow-500">
               <div className="flex flex-col gap-2">

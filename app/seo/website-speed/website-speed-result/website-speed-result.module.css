@@ -23,3 +23,26 @@
     left: calc(100% + 1vw);
     top: -2%;
 }
+.testParent {
+    overflow: hidden;
+}
+.testParent img{
+    width: 300px;
+    height: 150px;
+}
+.test{
+    transform-origin: center bottom; /* Sets the rotation point at the bottom center of the div */
+    transform: rotate(45deg);
+}
+.test::after{
+    content: "";
+    position: absolute;
+    z-index: 99;
+    width: 25px;
+    height: 25px;
+    border-radius: 999999999999px;
+    background-color: green;
+    top: 50%;
+    left: 3%;
+    transform: translate(-50%, -50%); 
+}
