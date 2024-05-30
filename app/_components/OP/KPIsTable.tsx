@@ -1,7 +1,7 @@
-import React from 'react'
-import './table.css'
+import React from 'react';
+import './KPIsTable.css';
 
-const page = () => {
+const KPIsTable = () => {
   return (
     <div className='overflow-hidden rounded-[20px]'>
       <div className='table-container'>
@@ -446,4 +446,4 @@ const page = () => {
   )
 }
 
-export default page
+export default KPIsTable
