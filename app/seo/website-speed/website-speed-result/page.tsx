@@ -18,16 +18,6 @@ export default function page() {
                 " flex flex-col items-center justify-center gap-1 relative"
               }
             >
-
-
-
-
-
-
-
-
-
-
               <div className={styles.testParent + " relative w-fit"}>
                 <img
                   src={"/assets/websiteSpeedIndicator.png"}
@@ -36,21 +26,22 @@ export default function page() {
                   // height={"150"}
                   alt="WebsiteSpeedIndicator"
                 ></img>
-                <div className={styles.test + " absolute bottom-0 w-full h-[20px] "}></div>
+                <div
+                  className={
+                    styles.test + " absolute bottom-0 w-full h-[20px] "
+                  }
+                ></div>
               </div>
 
-
-
-
-
-
-
-              {/* <span className="font-semibold">Website Speed</span>
-              <span className="text-[#ACACAC] text-[14px] font-medium">
-                Last Check on 21 Apr
-              </span> */}
+              <div className="flex flex-col items-center -mt-[70px]">
+                <span className="font-bold text-[48px]">80</span>
+                <span className="font-semibold">Website Speed</span>
+                <span className="text-[#ACACAC] text-[14px] font-medium">
+                  Last Check on 21 Apr
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 bg-yellow-500">
+            <div className="flex flex-col gap-2 ">
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Website</span>
                 <span>https://machinegenius.io/signin</span>

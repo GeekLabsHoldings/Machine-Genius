@@ -32,7 +32,7 @@
 }
 .test{
     transform-origin: center bottom; /* Sets the rotation point at the bottom center of the div */
-    transform: rotate(45deg);
+    transform: rotate(120deg);
 }
 .test::after{
     content: "";
@@ -41,8 +41,21 @@
     width: 25px;
     height: 25px;
     border-radius: 999999999999px;
-    background-color: green;
+    background-color: #E1C655;
     top: 50%;
     left: 3%;
     transform: translate(-50%, -50%); 
+}
+
+.test::before{
+    content: "";
+    position: absolute;
+    z-index: 100; /* Higher z-index to be on top of the ::after pseudo-element */
+    width: 15px; /* Smaller size than the parent circle */
+    height: 15px; /* Smaller size than the parent circle */
+    border-radius: 50%; /* Ensures it's also a circle */
+    background-color: #FFFFFF; /* White color */
+    top: 50%;
+    left: 3%;
+    transform: translate(-50%, -50%); /* Center it inside the parent circle */
 }
