@@ -1,10 +1,10 @@
 import React from 'react';
-import './KPIsTable.css';
+import styles from './KPIsTable.module.css';
 
 const KPIsTable = () => {
   return (
-    <div className='overflow-hidden rounded-[20px]'>
-      <div className='table-container'>
+    <div className={styles.kpis_table + ' overflow-hidden rounded-[20px]'}>
+      <div className={styles.table_container}>
         <table>
           <thead>
             <tr>

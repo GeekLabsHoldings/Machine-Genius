@@ -1,4 +1,4 @@
-.table-container {
+.kpis_table .table_container {
     display: flex;
     overflow-x: auto;
     border-radius: 20px;
@@ -7,14 +7,14 @@
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-table {
+.kpis_table .table_container table {
     width: 100%;
     border-collapse: collapse;
     table-layout: auto;
 }
 
-th,
-td {
+.kpis_table .table_container th,
+.kpis_table .table_container td {
     border: 1px solid #ddd;
     padding: clamp(0.4rem, calc(0.3vw + 0.1rem), 10rem) clamp(1.5rem, calc(1vw + 0.1rem), 10rem);
     text-align: center;
@@ -23,45 +23,45 @@ td {
     /* Prevent text from wrapping */
 
 }
-th:hover,
-td:hover {
+.kpis_table .table_container th:hover,
+.kpis_table .table_container td:hover {
     background-color: #ececec;
 }
 
-thead th {
+.kpis_table .table_container thead th {
     padding: clamp(1rem, calc(1vw + 0.1rem), 10rem);
     background-color: var(--white);
 }
 
-thead th:hover {    
+.kpis_table .table_container thead th:hover {    
     background-color: var(--white);
 }
 
-thead th,
-thead td {
+.kpis_table .table_container thead th,
+.kpis_table .table_container thead td {
     border: 0px solid #ddd;
 }
 
-th {
+.kpis_table .table_container th {
     background-color: #f2f2f2;
 }
 
-.platform-header {
+.kpis_table .table_container .platform-header {
     background-color: var(--white);
     color: var(--dark);
     font-weight: bold;
     text-align: center;
 }
 
-.arrow-up {
+.kpis_table .table_container .arrow-up {
     color: green;
 }
 
-.arrow-down {
+.kpis_table .table_container .arrow-down {
     color: red;
 }
 
-.platform-header:hover{
+.kpis_table .table_container .platform-header:hover{
     background-color: var(--dark);
     color: var(--white);
 }

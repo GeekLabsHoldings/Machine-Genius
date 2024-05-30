@@ -67,8 +67,6 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
 
     useEffect(() => {
 
-        // localStorage.setItem('selected-role', `${SelectedRole}`)
-
         if (SelectedRole === 'Content Creator') {
             localStorage.setItem('selected-role', SelectedRole)
             router.push('/content-creator/dashboard')
@@ -139,7 +137,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
 
                 <div className={styles.line}></div>
 
-                <CustomSelectInput options={rols} icon={rolsIcon} theme="dark" whenSideNavClosed={!isSideNavOpen} getValue={getRole} />
+                <CustomSelectInput options={rols} icon={rolsIcon} theme="dark" whenSideNavClosed={!isSideNavOpen} getValue={getRole}/>
 
                 <div className={styles.line}></div>
                 <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
