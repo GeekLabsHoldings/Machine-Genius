@@ -23,10 +23,10 @@
   left: calc(100% + 1vw);
   top: 0;
 }
-.speedIndicatorWrapper img {
-  /* width: 300px;
-  height: 150px; */
-}
+/* .speedIndicatorWrapper img {
+  width: 300px;
+  height: 150px;
+} */
 .overlayIndicator {
   transform-origin: center bottom; /* Sets the rotation point at the bottom center of the div */
   transform: rotate(140deg);
@@ -55,4 +55,12 @@
   top: 50%;
   left: 2.5%;
   transform: translate(-50%, -50%); /* Center it inside the parent circle */
+}
+
+.websiteSpeedScore {
+  font-size: clamp(16px, calc(2.685vw + 0.1rem), 120px);
+}
+
+.websiteSpeedLabel {
+  font-size: clamp(14px, calc(0.833vw + 0.1rem), 80px);
 }
