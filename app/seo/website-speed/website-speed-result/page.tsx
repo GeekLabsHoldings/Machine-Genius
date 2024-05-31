@@ -41,7 +41,7 @@ export default function page() {
             <div className="flex flex-col gap-2 ">
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Website</span>
-                <span>https://machinegenius.io/signin</span>
+                <span className="truncate">https://machinegenius.io/signin</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Speed Scale</span>
