@@ -30,9 +30,13 @@ export default function page() {
                 ></div>
               </div>
 
-              <div className="flex flex-col items-center -mt-[70px]">
-                <span className="font-bold text-[48px]">80</span>
-                <span className="font-semibold">Website Speed</span>
+              <div className="flex flex-col items-center -mt-[4vw]">
+                <span className={styles.websiteSpeedScore + " font-bold"}>
+                  80
+                </span>
+                <span className={styles.websiteSpeedLabel + " font-semibold"}>
+                  Website Speed
+                </span>
                 <span className="text-[#ACACAC] text-[14px] font-medium">
                   Last Check on 21 Apr
                 </span>
@@ -41,7 +45,9 @@ export default function page() {
             <div className="flex flex-col gap-2 ">
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Website</span>
-                <span className="truncate">https://machinegenius.io/signin</span>
+                <span className="truncate">
+                  https://machinegenius.io/signin
+                </span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Speed Scale</span>
