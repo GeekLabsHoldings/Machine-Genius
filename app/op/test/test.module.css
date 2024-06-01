@@ -1,0 +1,42 @@
+/* Define the grid container */
+.dashboard {
+  display: grid;
+  grid-template-areas: "main-content sidebar"; /* one row */
+  grid-template-columns: 4fr 0.8fr;
+  grid-auto-rows: 85vh;
+  gap: 1vw;
+}
+
+/* Define styles for each grid area */
+.mainContent {
+  grid-area: main-content;
+  background-color: red;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: #2a2b2a;
+  box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
+  border: 0.88px solid #dfdfdf;
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  height: 100%;
+  padding-bottom: 50px;
+  overflow: hidden;
+}
+
+.sidebar section {
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.sidebar section::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}

@@ -1,0 +1,16 @@
+.collapse{
+  border-radius: 9px;
+}
+.collapse-title{
+  font-size: 14px;
+}
+input[type="radio"]:checked ~ .collapse-title svg{
+  transform: rotate(180deg);
+}
+.collapse-title, :where(.collapse > input[type="radio"]){
+  padding-inline-end: 1rem;
+}
+.collapse-content svg{
+  width: 16px;
+  height: 8px;
+}
