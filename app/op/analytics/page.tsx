@@ -6,7 +6,9 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ReactApexChart from "react-apexcharts";
 import dynamic from "next/dynamic";
 
-const LineCharts = dynamic(() => import("@/app/_components/graph/LineCharts"), { ssr: false })
+const LineCharts = dynamic(() => import("@/app/_components/graph/LineCharts"), {
+  ssr: false,
+});
 
 function SampleNextArrow(props: any) {
   const { onClick, className } = props;
@@ -97,7 +99,7 @@ function page() {
       className={`${styles.assets} py-[1vw] h-[90vh] overflow-hidden op__analytics__container`}
     >
       <div className={"tabs " + styles.tabs}>
-        <input type="radio" name="tabs" className="tab" aria-label="God View" defaultChecked />
+        <input type="radio" name="tabs" className="tab" aria-label="God View" />
         <div className={`tab-content `}></div>
 
         <input
@@ -105,6 +107,7 @@ function page() {
           name="tabs"
           className="tab"
           aria-label="Brands"
+          defaultChecked
         />
         <div className={`tab-content relative`}>
           <div className={` ${styles.audience} mt-8`}>
@@ -322,7 +325,9 @@ function page() {
                       <h3 className="text-sm pt-3 pl-5  font-bold">
                         Tweets Created
                       </h3>
-                      <LineCharts />
+                      <div className="text-[var(--dark)]">
+                        <LineCharts />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -353,7 +358,9 @@ function page() {
                       <h3 className="text-sm pt-3 pl-5  font-bold">
                         Tweets Created
                       </h3>
-                      <LineCharts />
+                      <div className="text-[var(--dark)]">
+                        <LineCharts />
+                      </div>
                     </div>
                   </div>
                 </div>
