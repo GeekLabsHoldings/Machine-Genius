@@ -99,7 +99,7 @@ function page() {
       className={`${styles.assets} py-[1vw] h-[90vh] overflow-hidden op__analytics__container`}
     >
       <div className={"tabs " + styles.tabs}>
-        <input type="radio" name="tabs" className="tab" aria-label="God View" />
+        <input type="radio" name="tabs" className="tab" aria-label="God View" defaultChecked />
         <div className={`tab-content `}></div>
 
         <input
@@ -107,7 +107,6 @@ function page() {
           name="tabs"
           className="tab"
           aria-label="Brands"
-          defaultChecked
         />
         <div className={`tab-content relative`}>
           <div className={` ${styles.audience} mt-8`}>

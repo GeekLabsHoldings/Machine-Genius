@@ -216,19 +216,58 @@ function page() {
     <div className={`py-[1vw] h-[80vh]`}>
       <div className={styles.dashboard}>
         <div className={styles.mainContent}>
-          <div className="flex justify-between">
-            {/* First Row */}
+          {/* First Row */}
+          <div className="flex justify-between h-1/2 overflow-y-auto">            
             {/* Revenue Over View */}
-            <div>Revenue Over View</div>
+            <div>
+<p>Revenue Over View</p>
+
+
+
+
+<div className="RevenueOverView_Container">
+
+
+</div>
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             {/* Brand KPIs */}
             <div className="BrandKPIs">
               <p>Brand KPIs</p>
-              <AccordionItem2 title={"Street Politics"} />
+                    <div className="bg-rose-500 -space-y-6">
+                    <AccordionItem2 title={"Street Politics"} />
               {accordionItems.map((item, index) => (
                 <AccordionItem2 key={index} title={item.title} />
               ))}
+                    </div>
             </div>
           </div>
+
+
+
 
           {/* Second Row */}
           <div>second row</div>
@@ -257,7 +296,7 @@ function page() {
 
 
 
-        
+
         <div className={styles.sidebar}>
           <p className="text-[14px] font-bold mt-[6px] mb-[20px] text-center">
             Brand/Accounts
