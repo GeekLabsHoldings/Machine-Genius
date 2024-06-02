@@ -43,12 +43,6 @@ const TasksChart = dynamic(() => import("@/app/_components/graph/AreaChart"), {
   ssr: false,
 });
 
-// const chart = () => {
-//   return (
-//     <
-//   )
-// }
-
 function page() {
   const settings: any = {
     infinite: false,
