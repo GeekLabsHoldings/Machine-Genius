@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./website-speed-result.module.css";
-// import Image from "next/image";
 import OpportunitiesTable from "@/app/_components/SEO/06WebsiteSpeed/OpportunitiesTable";
 
 export default function page() {
@@ -14,28 +13,30 @@ export default function page() {
           <div className={styles.card + " p-4 grid grid-cols-2 gap-[2vw]"}>
             <div
               className={
-                styles.colContent +
+                styles.columnContent +
                 " flex flex-col items-center justify-center gap-1 relative"
               }
             >
-              <div className={styles.testParent + " relative w-fit"}>
+              <div className={styles.speedIndicatorWrapper + " relative w-fit"}>
                 <img
                   src={"/assets/websiteSpeedIndicator.png"}
                   className="w-full"
-                  // width={"150"}
-                  // height={"150"}
                   alt="WebsiteSpeedIndicator"
                 ></img>
                 <div
                   className={
-                    styles.test + " absolute bottom-0 w-full h-[20px] "
+                    styles.overlayIndicator + " absolute bottom-0 w-full "
                   }
                 ></div>
               </div>
 
-              <div className="flex flex-col items-center -mt-[70px]">
-                <span className="font-bold text-[48px]">80</span>
-                <span className="font-semibold">Website Speed</span>
+              <div className="flex flex-col items-center -mt-[4vw]">
+                <span className={styles.websiteSpeedScore + " font-bold"}>
+                  80
+                </span>
+                <span className={styles.websiteSpeedLabel + " font-semibold"}>
+                  Website Speed
+                </span>
                 <span className="text-[#ACACAC] text-[14px] font-medium">
                   Last Check on 21 Apr
                 </span>
@@ -44,7 +45,9 @@ export default function page() {
             <div className="flex flex-col gap-2 ">
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Website</span>
-                <span>https://machinegenius.io/signin</span>
+                <span className="truncate">
+                  https://machinegenius.io/signin
+                </span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-bold">Speed Scale</span>
@@ -114,9 +117,9 @@ export default function page() {
                 </div>
               </div>
             </div>
-            {/* First Inut Delay (FID) */}
+            {/* First Input Delay (FID) */}
             <div className="space-y-2">
-              <span className="font-bold block">First Inut Delay (FID)</span>
+              <span className="font-bold block">First Input Delay (FID)</span>
               <hr className={styles.divider} />
               <div className="w-full flex justify-between gap-1">
                 <div className="flex justify-center items-center rounded-[5px] py-3 w-[30%] bg-[#EC6060]">

@@ -1,0 +1,62 @@
+.collapse {
+  border-radius: 9px;
+}
+.collapse-title {
+  font-size: 14px;
+}
+input[type="radio"]:checked ~ .collapse-title svg {
+  transform: rotate(180deg);
+}
+.collapse-title,
+:where(.collapse > input[type="radio"]) {
+  padding-inline-end: 1rem;
+}
+.collapse-content svg {
+  width: 16px;
+  height: 8px;
+}
+/* Table */
+#testTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+#testTable th,
+#testTable td {
+  padding: 10px;
+  text-align: left;
+}
+#testTable .kpi-met {
+  color: green;
+  text-align: center;
+}
+#testTable .kpi-not-met {
+  color: red;
+  text-align: center;
+}
+
+/*  */
+.accordion2 .collapse-title{
+  font-size: 16px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.accordion2 .collapse-content{
+  border-radius: 9px !important;
+  padding-top: 1rem;
+}
+
+
+/*  */
+.BrandKPIs{
+  box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
+  border: 0.88px solid #DFDFDF;
+  border-radius: 9px;
+  padding: 1rem;
+}
+
+.RevenueOverView_Container{
+  box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
+  border: 0.88px solid #DFDFDF;
+  border-radius: 9px;
+  padding: 1rem;
+}

@@ -175,20 +175,21 @@ function page() {
                 placeholder="Type your reply here..."
                 maxRows={isExpanded ? 17 : 5}
               /> */}
-                <textarea
-                    className="w-full text-base p-2 resize-none focus:outline-none h-full"
-                    placeholder="Type your reply here..."
-                    rows={isExpanded ? 17 : 1}
-                    />
+              <textarea
+                className="w-full text-base p-2 resize-none outline-none h-full"
+                placeholder="Type your reply here..."
+                rows={isExpanded ? 17 : 1}
+                onClick={() => setIsExpanded(true)}
+              />
 
               {/* <div className="absolute bottom-0 inset-x-0"> */}
-                <div className="flex border-t pt-4 [border-color:var(--dark)]">
-                  <CustomBtn
-                    word="Reply"
-                    btnColor="black"
-                    href="/customer-service/email-inbox/email/reply"
-                  />
-                </div>
+              <div className="flex border-t pt-4 [border-color:var(--dark)]">
+                <CustomBtn
+                  word="Reply"
+                  btnColor="black"
+                  href="/customer-service/email-inbox/email/reply"
+                />
+              </div>
               {/* </div> */}
             </div>
           </div>

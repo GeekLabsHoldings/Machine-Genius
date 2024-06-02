@@ -24,6 +24,7 @@ function SampleNextArrow(props: any) {
     </div>
   );
 }
+
 function SamplePrevArrow(props: any) {
   const { onClick, className } = props;
   return (
@@ -92,16 +93,16 @@ function page() {
       className={`${styles.assets} py-[1vw] h-[90vh] overflow-hidden op__analytics__container`}
     >
       <div className={"tabs " + styles.tabs}>
-        <input type="radio" name="tabs" className="tab" aria-label="God View" />
-        <div className={`tab-content `}></div>
-
         <input
           type="radio"
           name="tabs"
           className="tab"
-          aria-label="Brands"
+          aria-label="God View"
           defaultChecked
         />
+        <div className={`tab-content `}></div>
+
+        <input type="radio" name="tabs" className="tab" aria-label="Brands" />
         <div className={`tab-content relative`}>
           <div className={` ${styles.audience} mt-8`}>
             <h2 className="text-2xl mb-4 font-bold">Social Media Accounts</h2>
@@ -318,7 +319,9 @@ function page() {
                       <h3 className="text-sm pt-3 pl-5  font-bold">
                         Tweets Created
                       </h3>
-                      <LineCharts />
+                      <div className="text-[var(--dark)]">
+                        <LineCharts />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -349,7 +352,9 @@ function page() {
                       <h3 className="text-sm pt-3 pl-5  font-bold">
                         Tweets Created
                       </h3>
-                      <LineCharts />
+                      <div className="text-[var(--dark)]">
+                        <LineCharts />
+                      </div>
                     </div>
                   </div>
                 </div>
