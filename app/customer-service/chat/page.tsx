@@ -1,8 +1,10 @@
+"use client";
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/customer-service/chat/chat.module.css";
 import { TextareaAutosize } from "@mui/material";
+import { use, useEffect, useRef, useState } from "react";
 
 const messages = [
   {
@@ -85,6 +87,33 @@ function ProfileImageFrame({ reversed }: ProfileImageFrameProps) {
 }
 
 function page() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight || 0;
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ref.current) {
+        if (ref.current.scrollTop > 0) {
+          setScrolled(true);
+        } else {
+          setScrolled(false);
+        }
+      }
+    };
+
+    ref.current?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      ref.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrolled]);
+
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
       {/* 
@@ -151,7 +180,7 @@ function page() {
             openIndecator
           />
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto" ref={ref}>
           <div className="flex flex-col gap-8 p-5">
             {messages.map((message, index: number) => (
               <div key={index}>
