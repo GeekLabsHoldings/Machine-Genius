@@ -3,53 +3,10 @@ import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/customer-service/chat/chat.module.css";
+import { textarea } from "@material-tailwind/react";
 import { TextareaAutosize } from "@mui/material";
 import { use, useEffect, useRef, useState } from "react";
-
-const messages = [
-  {
-    name: "John Doe",
-    message: "Hello, how can I help you today?",
-    time: "12:00 PM",
-  },
-  {
-    name: "John Doe",
-    message:
-      "Hello, how can I help you today? lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    time: "12:00 PM",
-  },
-  {
-    name: "John Doe",
-    message: "Hello, how can I help you today?",
-    time: "12:00 PM",
-  },
-  {
-    name: "John Doe",
-    message: "Hello, how can I help you today?",
-    time: "12:00 PM",
-  },
-  {
-    name: "John Doe",
-    message:
-      "Hello, how can I help you today? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    time: "12:00 PM",
-  },
-  {
-    name: "John Doe",
-    message: "Hello, how can I help you today?",
-    time: "12:00 PM",
-  },
-  {
-    name: "John Doe",
-    message: "Hello, how can I help you today?",
-    time: "12:00 PM",
-  },
-  {
-    name: "John Doe",
-    message: "Hello, how can I help you today?",
-    time: "12:00 PM",
-  },
-];
+import { text } from "stream/consumers";
 
 const files = (
   <svg
@@ -87,8 +44,75 @@ function ProfileImageFrame({ reversed }: ProfileImageFrameProps) {
 }
 
 function page() {
+  const messagesApi = [
+    {
+      name: "John Doe",
+      message: "Hello, how can I help you today?",
+      time: "12:00 PM",
+    },
+    {
+      name: "John Doe",
+      message:
+        "Hello, how can I help you today? lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      time: "12:00 PM",
+    },
+    {
+      name: "John Doe",
+      message: "Hello, how can I help you today?",
+      time: "12:00 PM",
+    },
+    {
+      name: "John Doe",
+      message: "Hello, how can I help you today?",
+      time: "12:00 PM",
+    },
+    {
+      name: "John Doe",
+      message:
+        "Hello, how can I help you today? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      time: "12:00 PM",
+    },
+    {
+      name: "John Doe",
+      message: "Hello, how can I help you today?",
+      time: "12:00 PM",
+    },
+    {
+      name: "John Doe",
+      message: "Hello, how can I help you today?",
+      time: "12:00 PM",
+    },
+    {
+      name: "John Doe",
+      message: "Hello, how can I help you today?",
+      time: "12:00 PM",
+    },
+  ];
   const ref = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [messages, setMessages] = useState(messagesApi);
+  const [message, setMessage] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const AddMessage = (message: string) => {
+    setMessages([
+      ...messages,
+      {
+        name: "John Doe",
+        message: message,
+        time: new Date().toLocaleTimeString(),
+      },
+    ]);
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.value = "";
+    }
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight || 0;
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (ref.current) {
@@ -224,8 +248,18 @@ function page() {
             className="flex-1 resize-none border md:max-w-[90%] lg:max-w-[85%] text-3xl:max-w-[80%] [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
             placeholder="Type your reply here..."
             maxRows={5}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                AddMessage(message);
+                setMessage("");
+              }
+            }}
+            ref={textareaRef}
           />
-          <button>
+          <button onClick={() => AddMessage(message)}>
             <svg
               width="40"
               height="39"
