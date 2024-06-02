@@ -2,6 +2,7 @@ import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/customer-service/chat/chat.module.css";
+import { TextareaAutosize } from "@mui/material";
 
 const messages = [
   {
@@ -27,7 +28,8 @@ const messages = [
   },
   {
     name: "John Doe",
-    message: "Hello, how can I help you today? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    message:
+      "Hello, how can I help you today? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     time: "12:00 PM",
   },
   {
@@ -165,9 +167,7 @@ function page() {
                   )}
                   <div
                     className={`p-3 rounded-[20px] max-w-[60%] ${
-                      index % 2 === 0
-                        ? "bg-[#CEEAE9] self-end"
-                        : "self-start"
+                      index % 2 === 0 ? "bg-[#CEEAE9] self-end" : "self-start"
                     } ${styles.chat__box__message__container}`}
                   >
                     <p>{message.message}</p>
@@ -178,10 +178,15 @@ function page() {
           </div>
         </div>
         <div className="flex items-center justify-between px-[18px] py-[21px] border-t border-[var(--dark)]">
-          <textarea
+          {/* <textarea
             placeholder="Type a message"
             className="flex-1 resize-none border md:max-w-[90%] lg:max-w-[85%] text-3xl:max-w-[80%] [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
             rows={1}
+          /> */}
+          <TextareaAutosize
+            className="flex-1 resize-none border md:max-w-[90%] lg:max-w-[85%] text-3xl:max-w-[80%] [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
+            placeholder="Type your reply here..."
+            maxRows={5}
           />
           <button>
             <svg
