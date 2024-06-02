@@ -53,3 +53,10 @@ input[type="radio"]:checked ~ .collapse-title svg {
   border-radius: 9px;
   padding: 1rem;
 }
+
+.RevenueOverView_Container{
+  box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
+  border: 0.88px solid #DFDFDF;
+  border-radius: 9px;
+  padding: 1rem;
+}

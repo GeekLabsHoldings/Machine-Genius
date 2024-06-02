@@ -2,6 +2,13 @@
   font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
   font-weight: 800;
 }
+div.collapse-title {
+  font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+.newBrand input::placeholder {
+  font-size: clamp(16px, calc(0.7vw + 0.1rem), 100px);
+}
 .newBrand h4 {
   font-size: clamp(16px, calc(1vw + 0.1rem), 100px);
   font-weight: 800;
