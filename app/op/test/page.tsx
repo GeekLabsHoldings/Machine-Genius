@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import styles from "./test.module.css";
 import "./test.css";
+import dynamic from 'next/dynamic';
+
 
 function page() {
   const [selectedValue, setSelectedValue] = useState<string>("option1");
@@ -212,6 +214,10 @@ function page() {
     );
   }
 
+    const Chart1 = dynamic(() => import('../../_components/OP/Chart1'), {
+    ssr: false,
+  });
+
   return (
     <div className={`py-[1vw] h-[80vh]`}>
       <div className={styles.dashboard}>
@@ -219,7 +225,7 @@ function page() {
           {/* First Row */}
           <div className="flex justify-between h-1/2 overflow-y-auto">            
             {/* Revenue Over View */}
-            <div>
+            <div className="flex-grow">
 <p>Revenue Over View</p>
 
 
@@ -227,7 +233,7 @@ function page() {
 
 <div className="RevenueOverView_Container">
 
-
+<Chart1 />
 </div>
 
 
