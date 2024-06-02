@@ -2,11 +2,13 @@
 import Slider from "react-slick";
 import styles from "./analytics.module.css";
 import "./slider.css";
-import CustomBtn from "@/app/_components/Button/CustomBtn";
-import ReactApexChart from "react-apexcharts";
 import dynamic from "next/dynamic";
+const TasksChart = dynamic(() => import("@/app/_components/graph/AreaChart"), {
+  ssr: false,
+});
 
 const LineCharts = dynamic(() => import("@/app/_components/graph/LineCharts"), { ssr: false })
+
 
 function SampleNextArrow(props: any) {
   const { onClick, className } = props;
@@ -37,15 +39,8 @@ function SamplePrevArrow(props: any) {
   );
 }
 
-const TasksChart = dynamic(() => import("@/app/_components/graph/AreaChart"), {
-  ssr: false,
-});
 
-// const chart = () => {
-//   return (
-//     <
-//   )
-// }
+
 
 function page() {
   const settings: any = {
