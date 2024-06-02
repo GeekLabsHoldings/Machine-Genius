@@ -94,12 +94,14 @@ function page() {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight || 0;
     }
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => {
       if (ref.current) {
-        if (ref.current.scrollTop > 0) {
+        var limit = Math.max(
+          ref.current.scrollHeight - ref.current.clientHeight || 0,
+          0
+        );
+
+        if (ref.current.scrollTop < limit - 11) {
           setScrolled(true);
         } else {
           setScrolled(false);
@@ -112,7 +114,7 @@ function page() {
     return () => {
       ref.current?.removeEventListener("scroll", handleScroll);
     };
-  }, [scrolled]);
+  }, []);
 
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
@@ -180,7 +182,13 @@ function page() {
             openIndecator
           />
         </div>
-        <div className="flex-1 overflow-y-auto" ref={ref}>
+        <div
+          className="flex-1 overflow-y-auto"
+          ref={ref}
+          onScroll={() => {
+            console.log(scrolled);
+          }}
+        >
           <div className="flex flex-col gap-8 p-5">
             {messages.map((message, index: number) => (
               <div key={index}>
