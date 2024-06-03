@@ -1,0 +1,36 @@
+/* YoutubeWatchTimeContainer */
+.YoutubeWatchTimeContainer {
+  box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
+  border: 0.88px solid #dfdfdf;
+  border-radius: 9px;
+  padding: 1rem;
+}
+
+.YoutubeWatchTimeContainer table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.YoutubeWatchTimeContainer th,
+.YoutubeWatchTimeContainer td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.YoutubeWatchTimeContainer .chart {
+  display: inline-block;
+  width: 50px;
+  height: 20px;
+  margin-right: 10px;
+  background-size: cover;
+  vertical-align: middle;
+}
+
+.YoutubeWatchTimeContainer .upArrow {
+  color: green;
+}
+
+.YoutubeWatchTimeContainer .downArrow {
+  color: red;
+}

@@ -1,0 +1,33 @@
+.BrandKPIs {
+  box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
+  border: 0.88px solid #dfdfdf;
+  border-radius: 9px;
+  padding: 1rem;
+}
+
+.BrandKPIs > div {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.BrandKPIs > div::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+.BrandKPIsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.BrandKPIsTable th,
+.BrandKPIsTable td {
+  padding: 10px;
+  text-align: left;
+}
+.BrandKPIsTable .kpiMet {
+  color: green;
+  text-align: center;
+}
+.BrandKPIsTable .kpiNotMet {
+  color: red;
+  text-align: center;
+}
