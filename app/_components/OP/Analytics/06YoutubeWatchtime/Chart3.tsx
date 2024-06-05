@@ -1,9 +1,9 @@
 // CustomChart.js
 import React from "react";
-import Chart from "react-apexcharts";
+import ReactApexChart from "react-apexcharts";
 
 const CustomChart = () => {
-  const options = {
+  const options: any = {
     chart: {
       type: "line",
       toolbar: {
@@ -65,7 +65,12 @@ const CustomChart = () => {
 
   return (
     <div>
-      <Chart options={options} series={series} type="line" height="350" />
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="line"
+        height="350"
+      />
     </div>
   );
 };

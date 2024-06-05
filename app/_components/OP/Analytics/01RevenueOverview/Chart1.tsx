@@ -1,12 +1,14 @@
 // ChartComponent.jsx
+"use client";
 import React from "react";
-import Chart from "react-apexcharts";
+import ReactApexChart from "react-apexcharts";
 
 const ChartComponent = () => {
-  const options = {
+  const options: any = {
     chart: {
       type: "area",
       stacked: true,
+      height: 300,
       toolbar: {
         show: false,
       },
@@ -55,7 +57,7 @@ const ChartComponent = () => {
 
     yaxis: {
       labels: {
-        formatter: function (val) {
+        formatter: function (val: any) {
           return val / 1000 + "K";
         },
       },
@@ -87,7 +89,7 @@ const ChartComponent = () => {
 
   return (
     <div>
-      <Chart options={options} series={options.series} type="area" />
+      <ReactApexChart options={options} series={options.series} type="area" height={300} />
     </div>
   );
 };

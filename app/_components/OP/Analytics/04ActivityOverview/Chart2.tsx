@@ -1,5 +1,6 @@
+"use client";
 import React from "react";
-import Chart from "react-apexcharts";
+import ReactApexChart from "react-apexcharts";
 
 const MyChart = () => {
   const series = [
@@ -9,7 +10,7 @@ const MyChart = () => {
     },
   ];
 
-  const options = {
+  const options: any = {
     chart: {
       type: "line",
       height: 350,
@@ -75,7 +76,12 @@ const MyChart = () => {
 
   return (
     <div>
-      <Chart options={options} series={series} type="line" height={350} />
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="line"
+        height={350}
+      />
     </div>
   );
 };
