@@ -55,7 +55,7 @@ function page() {
                 for your content
               </span>
 
-              <div className="flex justify-center grow mt-14 gap-[6vw]">
+              <div className="flex justify-center grow mt-[1vw] gap-[6vw]">
                 {/* scripts wrapper */}
                 <div className={styles.scripts_wrapper + " w-1/2 py-5"}>
                   {/* scripts header that  */}

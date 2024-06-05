@@ -41,7 +41,7 @@ function page() {
             <div className="flex flex-col gap-6 mt-[2vw]">
               <span className="font-bold text-xl">Suggestions</span>
               <div className="max-h-[50%]">
-                <ul className="flex flex-col h-full overflow-y-auto gap-5">
+                <ul className="flex flex-col h-full max-h-[28vh] overflow-y-auto gap-5">
                   <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
                     Groundbreaking Results for Q4, 400M Profit Gain , 6B in
                     Crypto
@@ -82,7 +82,7 @@ function page() {
                 <CustomBtn
                   word="Re-Generate"
                   btnColor="black"
-                  href="/content-creator/generated-titles"
+                  // href="/content-creator/generated-titles"
                   icon={ReGenerateIcon}
                 />
               </div>
@@ -109,7 +109,7 @@ function page() {
             <div className="flex flex-col gap-6 mt-[2vw]">
               <span className="font-bold text-xl">Suggestions</span>
               <div className="max-h-[50%]">
-                <ul className="flex flex-col h-full overflow-y-auto gap-5">
+                <ul className="flex flex-col h-full max-h-[28vh] overflow-y-auto gap-5">
                   <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
                     Groundbreaking Results for Q4, 400M Profit Gain , 6B in
                     Crypto
@@ -150,7 +150,7 @@ function page() {
                 <CustomBtn
                   word="Re-Generate"
                   btnColor="black"
-                  href="/content-creator/generated-titles"
+                  // href="/content-creator/generated-titles"
                   icon={ReGenerateIcon}
                 />
               </div>

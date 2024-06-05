@@ -3,6 +3,10 @@
     display: flex;
     flex-direction: column;
 }
+
+.scripts_wrapper ul::-webkit-scrollbar , .preview_wrapper ul::-webkit-scrollbar {
+    width: 0px;
+  }
 /* 
 .scripts_wrapper .header , .preview_wrapper .header{
     display: flex;

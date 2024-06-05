@@ -6,6 +6,11 @@
     height: 100%;
 }
 
+.titles_container>div::-webkit-scrollbar {
+  width: 0px;
+}
+
+
 .input {
   padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
   border-bottom: 1px solid var(--dark);

@@ -385,7 +385,7 @@ const page = () => {
           </svg>
           <h3>Subscribed</h3>
         </div>
-        <div className=" mb-[1.5vw] flex items-center justify-between">
+        <div className=" mb-[1.5vw] flex items-end justify-between">
           <div className=" flex items-center gap-2">
             <div>
               {/* Sources */}

@@ -173,10 +173,10 @@ const data = [
           <div className=" w-[50%}">
             <h3 className=" mb-[1.3vw]">Audience Growth Graph</h3>
             {/* Flex container for chart and analytics table */}
-            <div className=" flex gap-[2.2vw] items-center w-full mb-2">
+            <div className=" flex gap-[2.2vw] w-full mb-2">
               {/* Chart container with styles */}
               <div
-                className={`${styles.chartBox} analyticsChart w-[50%] relative rounded-xl pt-[1vw]`}
+                className={`${styles.chartBox} analyticsChart w-[50%] relative rounded-xl pt-[1vw] h-auto`}
               >
                 <TasksChart />
               </div>

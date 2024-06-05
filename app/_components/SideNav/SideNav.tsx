@@ -117,7 +117,7 @@ const SideNav = ({ sideNavLinks, isSideNavOpen, setIsSideNavOpen, setCurrentPage
                         </div>
                         <div className="flex flex-col">
                             <h6>John Doe</h6>
-                            <p>Content Writer</p>
+                            <p>{typeof window !== "undefined" && localStorage.getItem("selected-role") === null ? 'Content Creator' : localStorage.getItem("selected-role")}</p>
                         </div>
                     </div>
                     <div className={styles.logo}>

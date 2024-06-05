@@ -37,7 +37,7 @@ const page = () => {
           <div className="flex flex-col justify-center items-center w-full">
             <div className="flex flex-col justify-center gap-12 items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw]">
               {/* writing type select */}
-              <h2 className="text-[2.5rem] font-bold">I am writing a</h2>
+              <h2 className="text-[2.5rem] font-bold">I am creating a newsletter for</h2>
               <CustomSelectInput
                 label="Select Brand"
                 options={options}

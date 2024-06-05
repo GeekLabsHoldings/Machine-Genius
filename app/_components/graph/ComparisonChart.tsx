@@ -4,7 +4,7 @@ import ReactApexChart from "react-apexcharts";
 const TasksChart = () => {
   const options: any = {
     chart: {
-      height: 350,
+      height: '100%',
       zoom: {
         enabled: true,
       },
@@ -65,7 +65,7 @@ const TasksChart = () => {
       type="area"
       options={options}
       series={series}
-      height={350}
+      height={'100%'}
       width={"100%"}
     />
   );

@@ -33,7 +33,7 @@ function page() {
     <div className="flex flex-col">
       {/* titles wrapper */}
       {/* generated titles container */}
-      <div className="flex flex-col gap-1 w-full overflow-clip h-[75vh] py-[1.5vw]">
+      <div className="flex flex-col gap-1 w-full overflow-clip py-[1.5vw]">
         <div className="flex justify-center grow gap-[5vw]">
           {/* scripts wrapper */}
           <div className={styles.scripts_wrapper + " w-1/2 py-5"}>

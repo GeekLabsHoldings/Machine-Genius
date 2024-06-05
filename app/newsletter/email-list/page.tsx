@@ -232,10 +232,11 @@ const page = () => {
 
   const settings:any = {
     infinite: false,
-    speed: 500,
+    speed: 300,
     slidesToShow: 3,
     slidesToScroll: 3,
     centerPadding:30,
+
     nextArrow: <SampleNextArrow  />,
     prevArrow: <SamplePrevArrow  />,
   };
@@ -314,7 +315,7 @@ const page = () => {
                           </defs>
                         </svg>
                       </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
+                      <div className=" overflow-y-scroll h-[52vh] ">
                         <div className={`${styles.info} p-[1vw] rounded-lg`}>
                           <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
                           <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
@@ -323,8 +324,8 @@ const page = () => {
                           <CustomBtn
                             btnColor="black"
                             word="View List"
+                            href="/newsletter/email-list/list-details"
                             width="100%"
-                            href="/newsletter/email-list/listDetails"
                             
                           />
                         </div>
@@ -336,6 +337,7 @@ const page = () => {
                           <CustomBtn
                             btnColor="black"
                             word="View List"
+                            href="/newsletter/email-list/list-details"
                             width="100%"
                           />
                         </div>
@@ -379,7 +381,7 @@ const page = () => {
                           </defs>
                         </svg>
                       </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
+                      <div className=" overflow-y-scroll h-[52vh] ">
                         <div className={`${styles.info} p-[1vw] rounded-lg`}>
                           <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
                           <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
@@ -388,6 +390,7 @@ const page = () => {
                           <CustomBtn
                             btnColor="black"
                             word="View List"
+                            href="/newsletter/email-list/list-details"
                             width="100%"
                           />
                         </div>
@@ -399,6 +402,108 @@ const page = () => {
                           <CustomBtn
                             btnColor="black"
                             word="View List"
+                            href="/newsletter/email-list/list-details"
+                            width="100%"
+                          />
+                        </div>
+                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                            List of people who unsubscribed to our newsletter
+                          </p>
+                          <CustomBtn
+                            btnColor="black"
+                            word="View List"
+                            href="/newsletter/email-list/list-details"
+                            width="100%"
+                          />
+                        </div>
+                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                            List of people who unsubscribed to our newsletter
+                          </p>
+                          <CustomBtn
+                            btnColor="black"
+                            word="View List"
+                            href="/newsletter/email-list/list-details"
+                            width="100%"
+                          />
+                        </div>
+                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                            List of people who unsubscribed to our newsletter
+                          </p>
+                          <CustomBtn
+                            btnColor="black"
+                            word="View List"
+                            href="/newsletter/email-list/list-details"
+                            width="100%"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
+                    >
+                      <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
+                        <h3>Street Politics</h3>
+                        <svg
+                          width="30"
+                          height="30"
+                          viewBox="0 0 30 30"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clip-path="url(#clip0_902_2705)">
+                            <rect
+                              width="30"
+                              height="30"
+                              rx="6"
+                              fill="#2A2B2A"
+                            />
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
+                              fill="#FFFFFB"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_902_2705">
+                              <rect
+                                width="30"
+                                height="30"
+                                rx="6"
+                                fill="white"
+                              />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </div>
+                      <div className=" overflow-y-scroll h-[52vh] ">
+                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                            List of people who unsubscribed to our newsletter
+                          </p>
+                          <CustomBtn
+                            btnColor="black"
+                            word="View List"
+                            href="/newsletter/email-list/list-details"
+                            width="100%"
+                          />
+                        </div>
+                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
+                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
+                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
+                            List of people who unsubscribed to our newsletter
+                          </p>
+                          <CustomBtn
+                            btnColor="black"
+                            word="View List"
+                            href="/newsletter/email-list/list-details"
                             width="100%"
                           />
                         </div>
@@ -475,103 +580,7 @@ const page = () => {
                           </defs>
                         </svg>
                       </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                        <div className={`${styles.info} p-[1vw] rounded-lg`}>
-                          <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
-                          <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
-                            List of people who unsubscribed to our newsletter
-                          </p>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View List"
-                            width="100%"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`${styles.card} px-[1vw] pt-[1.1vw] rounded-xl`}
-                    >
-                      <div className=" flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[1vw]">
-                        <h3>Street Politics</h3>
-                        <svg
-                          width="30"
-                          height="30"
-                          viewBox="0 0 30 30"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clip-path="url(#clip0_902_2705)">
-                            <rect
-                              width="30"
-                              height="30"
-                              rx="6"
-                              fill="#2A2B2A"
-                            />
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M13.5833 22.5C13.5833 23.3284 14.2176 24 15 24C15.7824 24 16.4167 23.3284 16.4167 22.5V16.5H22.0833C22.8658 16.5 23.5 15.8285 23.5 15C23.5 14.1715 22.8658 13.5 22.0833 13.5H16.4167V7.5C16.4167 6.67156 15.7824 6 15 6C14.2176 6 13.5833 6.67156 13.5833 7.5V13.5H7.91667C7.13427 13.5 6.5 14.1715 6.5 15C6.5 15.8285 7.13427 16.5 7.91667 16.5H13.5833V22.5Z"
-                              fill="#FFFFFB"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_902_2705">
-                              <rect
-                                width="30"
-                                height="30"
-                                rx="6"
-                                fill="white"
-                              />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      </div>
-                      <div className=" overflow-y-scroll h-[57vh] pr-2">
+                      <div className=" overflow-y-scroll h-[52vh] ">
                         <div className={`${styles.info} p-[1vw] rounded-lg`}>
                           <h4 className="mb-[0.8vw]">Last Opened 3M</h4>
                           <p className="mb-[0.8vw] pb-[0.8vw] border-b-[1px] border-b-[#2A2B2A]">
@@ -647,7 +656,7 @@ const page = () => {
           >
             <div className=" flex justify-between">
             <div className=" flex gap-2">
-              <div className="mb-[3vh]">
+              <div className="mb-[3vh] flex flex-col">
                 {/* Sources */}
                 <h5 className=" mb-[1vh] font-semibold">Sources</h5>
                 <div className="w-[11.927vw]">
@@ -659,7 +668,7 @@ const page = () => {
               </div>
               <div className="mb-[3vh]">
                 <h5 className=" mb-[1vh] font-semibold">Ratings</h5>
-                <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
+                <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw] min-h-1.8vw">
                   <span>{sorting}</span>
                   <svg
                     onClick={() => {

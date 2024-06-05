@@ -26,6 +26,11 @@
     overflow-y: auto;
 }
 
+.scripts_wrapper .select_article_container::-webkit-scrollbar-thumb , .preview_wrapper .selected_article_container::-webkit-scrollbar-thumb{
+    display: none;
+    visibility: hidden;
+}
+
 
 .preview_wrapper .header h6{
     font-weight: 700;

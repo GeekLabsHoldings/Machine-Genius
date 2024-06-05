@@ -2,7 +2,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "@/app/newsletter/create/newsletter-preview/newsletter-preview.module.css";
 
 const newsletter = {
-  title: "News Letter Title",
+  title: "News Letter Title*",
   sections: [
     {
       name: "SMALL CAPS",
@@ -82,7 +82,7 @@ function page() {
           className={`${styles.titles_container} flex flex-col h-full text-center overflow-hidden`}
         >
           {/* generated titles container */}
-          <h3 className="text-2xl p-4 font-bold">{newsletter.title}</h3>
+          <h3 className="text-2xl p-4 font-bold u">{newsletter.title}</h3>
           <ul className="grow overflow-y-auto pb-[0.7rem]">
             {newsletter.sections.map((section, index) => (
               <div key={index} className="">

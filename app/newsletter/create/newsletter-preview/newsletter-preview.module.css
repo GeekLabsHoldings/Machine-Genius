@@ -6,6 +6,11 @@
     height: 100%;
 }
 
+.titles_container ul::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+
 .titles_container div:not(:first-child) > li:has(h4){
     margin-block: .7rem;
 }

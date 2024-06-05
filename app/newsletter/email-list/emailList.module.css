@@ -89,15 +89,9 @@
     clamp(10px, calc(1.1vw + 0.1rem), 1000px);
 }
 
-.table::-webkit-scrollbar {
-  height: 10px;
-}
-.tableBody::-webkit-scrollbar {
-  width: 8px;
-}
-.table::-webkit-scrollbar-thumb,
-.tableBody::-webkit-scrollbar-thumb {
-  background-color: #acacac;
+.card>*::-webkit-scrollbar{
+  width: 0px;
+  display: none;
 }
 .cleaningTable h5 {
   font-size: clamp(10px, calc(0.9vw + 0.1rem), 100px);
