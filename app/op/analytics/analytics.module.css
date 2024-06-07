@@ -48,7 +48,7 @@
 }
 
 .tab {
-  margin-block: 0.85vw 1vw;
+  margin-block: 1vh;
 }
 
 .tab input[type="radio"] {
@@ -132,19 +132,36 @@
   grid-auto-rows: 75vh;
   overflow: hidden;
   gap: clamp(15px, calc(0.83vw + 0.1rem), 100px);
-  /* Outline */
-  border: 1px solid red;
 }
 
 /* Define styles for each grid area */
 .mainContent {
   height: 100%; /* 100% of grid-auto-rows: 75vh; */
   grid-area: main-content;
-  display: flex;
-  flex-direction: column;
-  justify-items: space-between;
   /* Outline */
   border: 1px solid rgb(56, 148, 91);
+}
+
+.firstRow {
+  height: 50vh; /* 50vh of 75vh */
+  margin-bottom: 2.5vh; /* 2.5vh of 75vh */
+}
+
+.firstRow > div {
+  height: 100%; /* 100% of 50vh */
+}
+
+.firstRow > div::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
+
+.secondRow {
+  height: 22.5vh; /* 22.5vh of 75vh */
+}
+
+.secondRow > div {
+  height: 100%; /* 100% of 22.5vh */
 }
 
 .sidebar {

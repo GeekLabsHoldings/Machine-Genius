@@ -8,10 +8,10 @@ const ChartComponent = () => {
     chart: {
       type: "area",
       stacked: true,
-      height: 300,
       toolbar: {
         show: false,
       },
+      height: "100%",
     },
 
     dataLabels: {
@@ -88,8 +88,8 @@ const ChartComponent = () => {
   };
 
   return (
-    <div>
-      <ReactApexChart options={options} series={options.series} type="area" height={300} />
+    <div style={{ height: "100%" }}>
+      <ReactApexChart options={options} series={options.series} type="area" />
     </div>
   );
 };

@@ -118,10 +118,9 @@ function page() {
 
       {activeTab === 1 && (
         <div className={styles.dashboard}>
-          {/* Todo after sidebar */}
           <div className={styles.mainContent}>
-            {/* First Row */}
-            <div className="flex justify-between gap-[1vw] h-[45vh]">
+            {/* ===== Start First Row ===== */}
+            <div className={styles.firstRow + " flex justify-between gap-[1vw]"}>
               {/* Revenue Over View */}
               <div className="flex-grow">
                 <RevenueOverview />
@@ -130,9 +129,11 @@ function page() {
               {/* Brand KPIs */}
               <BrandKPIs />
             </div>
+            {/* ===== End First Row ===== */}
 
-            {/* Second Row */}
-            <div className="flex gap-[1vw]">
+
+            {/* ==== Start Second Row ==== */}
+            <div className={styles.secondRow + " flex gap-[1vw]"}>
               {/* Activity Over View */}
               <div className="ActivityOverView flex-grow">
                 <ActivityOverview />
@@ -148,6 +149,7 @@ function page() {
                 <YoutubeWatchtime />
               </div>
             </div>
+            {/* ==== End Second Row ==== */}
           </div>
 
           <div className={styles.sidebar}>
