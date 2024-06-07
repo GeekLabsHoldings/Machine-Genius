@@ -1,22 +1,44 @@
-/* ActivityOverView_Container */
+.ActivityOverview {
+  height: 100% !important;
+}
+.ActivityOverviewTitle{
+  font-size: 15px;
+  font-weight: 700;
+}
 .ActivityOverviewContainer {
   box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
   border: 0.88px solid #dfdfdf;
   border-radius: 9px;
-  padding: 1rem;
+  overflow: hidden;
+  /* padding: 1rem; */
 }
 
-.ActivityOverviewContainer table {
+.ActivityBody{
+  height: 20vh;
+  overflow-y: auto;
+}
+
+.ActivityBody::-webkit-scrollbar {
+  width: 2px;
+}
+
+.ActivityBody table {
   width: 100%;
   border-collapse: collapse;
 }
-.ActivityOverviewContainer th,
-.ActivityOverviewContainer td {
+
+.ActivityBody th,
+.ActivityBody td {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
-.ActivityOverviewContainer .view {
+
+.ActivityBody thead th:last-child {
+  text-align: center;
+}
+
+.ActivityBody .view {
   width: 100px;
   height: 50px;
 }

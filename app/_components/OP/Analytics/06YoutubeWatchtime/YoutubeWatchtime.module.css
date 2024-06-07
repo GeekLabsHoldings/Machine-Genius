@@ -1,9 +1,24 @@
 /* YoutubeWatchTimeContainer */
+.YoutubeWatchTime {
+  height: 100% !important;
+}
+.title {
+  font-size: 15px;
+  font-weight: 700;
+}
 .YoutubeWatchTimeContainer {
+  overflow: hidden;
   box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
   border: 0.88px solid #dfdfdf;
   border-radius: 9px;
-  padding: 1rem;
+  /* padding: 1rem; */
+}
+.YoutubeWatchTimeBody {
+  height: 20vh;
+  overflow-y: auto;
+}
+.YoutubeWatchTimeBody::-webkit-scrollbar {
+  width: 2px;
 }
 
 .YoutubeWatchTimeContainer table {
@@ -14,7 +29,7 @@
 .YoutubeWatchTimeContainer th,
 .YoutubeWatchTimeContainer td {
   padding: 10px;
-  text-align: left;
+  text-align: center;
   border-bottom: 1px solid #ddd;
 }
 

@@ -4,9 +4,10 @@ import styles from "./FollowersOverview.module.css";
 
 export default function FollowersOverview() {
   return (
-    <>
-      <p>Followers Over View</p>
+    <section className={styles.FollowersOverview}>
+      <p className={styles.FollowersOverviewTitle}>Followers Over View</p>
       <div className={styles.FollowersOverviewContainer}>
+        <div className={styles.FollowersOverviewBody}>
         <table>
           <thead>
             <tr>
@@ -53,7 +54,8 @@ export default function FollowersOverview() {
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
-    </>
+    </section>
   );
 }

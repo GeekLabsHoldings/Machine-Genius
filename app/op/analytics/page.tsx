@@ -133,19 +133,19 @@ function page() {
 
 
             {/* ==== Start Second Row ==== */}
-            <div className={styles.secondRow + " flex gap-[1vw]"}>
+            <div className={styles.secondRow + " flex gap-[0.75vw]"}>
               {/* Activity Over View */}
-              <div className="ActivityOverView flex-grow">
+              <div className="ActivityOverView w-[40%]">
                 <ActivityOverview />
               </div>
 
               {/* Followers Over View */}
-              <div className="FollowersOverView">
+              <div className="FollowersOverView w-[32.5%]">
                 <FollowersOverview />
               </div>
 
               {/* Youtube Watch time */}
-              <div className="YoutubeWatchTime">
+              <div className="YoutubeWatchTime w-[27.5%]">
                 <YoutubeWatchtime />
               </div>
             </div>

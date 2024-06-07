@@ -4,10 +4,11 @@ import styles from "./YoutubeWatchtime.module.css";
 
 export default function YoutubeWatchtime() {
   return (
-    <>
-      <p>Youtube Watch time</p>
+    <section className={styles.YoutubeWatchTime}>
+      <p className={styles.title}>Youtube Watch time</p>
       <div className={styles.YoutubeWatchTimeContainer}>
-        <table>
+      <div className={styles.YoutubeWatchTimeBody}>
+      <table>
           <thead>
             <tr>
               <th>Channel</th>
@@ -216,6 +217,7 @@ export default function YoutubeWatchtime() {
           </tbody>
         </table>
       </div>
-    </>
+      </div>
+    </section>
   );
 }

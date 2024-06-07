@@ -1,15 +1,28 @@
 /* FollowersOverviewContainer */
+.FollowersOverview {
+  height: 100% !important;
+}
+.FollowersOverviewTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
 .FollowersOverviewContainer {
+  overflow: hidden;
   box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
   border: 0.88px solid #dfdfdf;
   border-radius: 9px;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
-
+.FollowersOverviewBody {
+  height: 20vh;
+  overflow-y: auto;
+}
+.FollowersOverviewBody::-webkit-scrollbar {
+  width: 2px;
+}
 .FollowersOverviewContainer table {
   width: 100%;
   border-collapse: collapse;
-  font-family: Arial, sans-serif;
 }
 .FollowersOverviewContainer th,
 .FollowersOverviewContainer td {

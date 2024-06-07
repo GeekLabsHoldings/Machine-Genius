@@ -138,8 +138,6 @@
 .mainContent {
   height: 100%; /* 100% of grid-auto-rows: 75vh; */
   grid-area: main-content;
-  /* Outline */
-  border: 1px solid rgb(56, 148, 91);
 }
 
 .firstRow {
