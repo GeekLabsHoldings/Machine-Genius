@@ -97,9 +97,7 @@ function page() {
   const [activeTab, setActiveTab] = useState<number>(1);
 
   return (
-    <div
-      className={`${styles.assets} h-[90vh] overflow-hidden op__analytics__container`}
-    >
+    <div className={`overflow-hidden op__analytics__container`}>
       {/* Tabs */}
       <div role="tablist" className={`${styles.tabs} flex`}>
         <a
@@ -119,49 +117,48 @@ function page() {
       </div>
 
       {activeTab === 1 && (
-        <div className={`h-[80vh]`}>
-          <div className={styles.dashboard}>
-            <div className={styles.mainContent}>
-              {/* First Row */}
-              <div className="flex justify-between gap-[1vw] h-[45vh]">
-                {/* Revenue Over View */}
-                <div className="flex-grow">
-                  <RevenueOverview />
-                </div>
-
-                {/* Brand KPIs */}
-                <BrandKPIs />
+        <div className={styles.dashboard}>
+          {/* Todo after sidebar */}
+          <div className={styles.mainContent}>
+            {/* First Row */}
+            <div className="flex justify-between gap-[1vw] h-[45vh]">
+              {/* Revenue Over View */}
+              <div className="flex-grow">
+                <RevenueOverview />
               </div>
 
-              {/* Second Row */}
-              <div className="flex gap-[1vw]">
-                {/* Activity Over View */}
-                <div className="ActivityOverView flex-grow">
-                  <ActivityOverview />
-                </div>
+              {/* Brand KPIs */}
+              <BrandKPIs />
+            </div>
 
-                {/* Followers Over View */}
-                <div className="FollowersOverView">
-                  <FollowersOverview />
-                </div>
+            {/* Second Row */}
+            <div className="flex gap-[1vw]">
+              {/* Activity Over View */}
+              <div className="ActivityOverView flex-grow">
+                <ActivityOverview />
+              </div>
 
-                {/* Youtube Watch time */}
-                <div className="YoutubeWatchTime">
-                  <YoutubeWatchtime />
-                </div>
+              {/* Followers Over View */}
+              <div className="FollowersOverView">
+                <FollowersOverview />
+              </div>
+
+              {/* Youtube Watch time */}
+              <div className="YoutubeWatchTime">
+                <YoutubeWatchtime />
               </div>
             </div>
+          </div>
 
-            <div className={styles.sidebar}>
-              <BrandAccounts />
-            </div>
+          <div className={styles.sidebar}>
+            <BrandAccounts />
           </div>
         </div>
       )}
 
       {activeTab === 2 && (
         <div className={`relative`}>
-          <div className={` ${styles.audience} mt-8`}>
+          <div>
             <h2 className="text-2xl mb-4 font-bold">Social Media Accounts</h2>
             <div className="">
               <div className="sliderAudience w-[86vw]">

@@ -129,28 +129,34 @@
   display: grid;
   grid-template-areas: "main-content sidebar"; /* one row */
   grid-template-columns: 4fr 0.8fr;
-  grid-auto-rows: 80vh;
-  gap: 1vw;
+  grid-auto-rows: 75vh;
+  overflow: hidden;
+  gap: clamp(15px, calc(0.83vw + 0.1rem), 100px);
+  /* Outline */
+  border: 1px solid red;
 }
 
 /* Define styles for each grid area */
 .mainContent {
+  height: 100%; /* 100% of grid-auto-rows: 75vh; */
   grid-area: main-content;
   display: flex;
   flex-direction: column;
   justify-items: space-between;
+  /* Outline */
+  border: 1px solid rgb(56, 148, 91);
 }
 
 .sidebar {
+  height: 100%; /* 100% of grid-auto-rows: 75vh; */
   grid-area: sidebar;
   background-color: #2a2b2a;
   box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
   border: 0.88px solid #dfdfdf;
+  border-radius: clamp(12px, calc(0.6vw + 0.1rem), 50px);
   color: white;
-  padding: 14px;
-  border-radius: 12px;
-  height: 100%;
-  padding-bottom: 50px;
+  padding: clamp(14px, calc(0.71vw + 0.1rem), 100px);
+  padding-bottom: clamp(50px, calc(4.8vh + 0.1rem), 1000px);
   overflow: hidden;
 }
 

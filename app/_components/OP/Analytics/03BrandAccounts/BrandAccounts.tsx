@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import styles from "./BrandAccounts.module.css";
 
 export default function BrandAccounts() {
   const [selectedValue, setSelectedValue] = useState<string>("option1");
@@ -26,7 +27,7 @@ export default function BrandAccounts() {
   function AccordionItem({ title, option }: { title: string; option: number }) {
     return (
       <div
-        className={`collapse ${
+        className={`collapse accordion1 ${
           selectedValue === `option${option}` ? "bg-[#404140]" : ""
         }`}
       >
@@ -37,56 +38,56 @@ export default function BrandAccounts() {
           onChange={handleRadioChange}
           checked={selectedValue === `option${option}`}
         />
-        <div className="collapse-title font-bold flex justify-between items-center">
+        <div className="collapse-title flex justify-between items-center">
           <p>{title}</p>
           {accordionWhiteArrow}
         </div>
         <div className="collapse-content space-y-1">
           <div className="flex justify-between">
             <p>Instagram</p>
-            <p className="flex items-center gap-[12px]">
+            <p className="flex items-center">
               <span>100K</span>
               {upArrow}
             </p>
           </div>
           <div className="flex justify-between">
             <p>Twitter</p>
-            <p className="flex items-center gap-[12px]">
+            <p className="flex items-center">
               <span>20K</span>
               {upArrow}
             </p>
           </div>
           <div className="flex justify-between">
             <p>YouTube</p>
-            <p className="flex items-center gap-[12px]">
+            <p className="flex items-center">
               <span>3.2M</span>
               {downArrow}
             </p>
           </div>
           <div className="flex justify-between">
             <p>Website</p>
-            <p className="flex items-center gap-[12px]">
+            <p className="flex items-center">
               <span>400k</span>
               {upArrow}
             </p>
           </div>
           <div className="flex justify-between">
             <p>Reddit</p>
-            <p className="flex items-center gap-[12px]">
+            <p className="flex items-center">
               <span>1M</span>
               {upArrow}
             </p>
           </div>
           <div className="flex justify-between">
             <p>Discord</p>
-            <p className="flex items-center gap-[12px]">
+            <p className="flex items-center">
               <span>20K</span>
               {downArrow}
             </p>
           </div>
           <div className="flex justify-between">
             <p>Telegram</p>
-            <p className="flex items-center gap-[12px]">
+            <p className="flex items-center">
               <span>150K</span>
               {upArrow}
             </p>
@@ -143,14 +144,14 @@ export default function BrandAccounts() {
 
   return (
     <>
-      <p className="text-[14px] font-bold mt-[6px] mb-[20px] text-center">
+      <p className={styles.title}>
         Brand/Accounts
       </p>
-      <section className="">
+      <section>
         <div>
           {/* Accordion Item */}
           <div
-            className={`collapse ${
+            className={`collapse accordion1 ${
               selectedValue === "option1" ? "bg-[#404140]" : ""
             }`}
           >
@@ -162,56 +163,56 @@ export default function BrandAccounts() {
               onChange={handleRadioChange}
               checked={selectedValue === "option1"}
             />
-            <div className="collapse-title font-bold flex justify-between items-center">
+            <div className="collapse-title flex justify-between items-center">
               <p>Street Politics</p>
               {accordionWhiteArrow}
             </div>
             <div className="collapse-content space-y-1">
               <div className="flex justify-between">
                 <p>Instagram</p>
-                <p className="flex items-center gap-[12px]">
+                <p className="flex items-center">
                   <span>100K</span>
                   {upArrow}
                 </p>
               </div>
               <div className="flex justify-between">
                 <p>Twitter</p>
-                <p className="flex items-center gap-[12px]">
+                <p className="flex items-center">
                   <span>20K</span>
                   {upArrow}
                 </p>
               </div>
               <div className="flex justify-between">
                 <p>YouTube</p>
-                <p className="flex items-center gap-[12px]">
+                <p className="flex items-center">
                   <span>3.2M</span>
                   {downArrow}
                 </p>
               </div>
               <div className="flex justify-between">
                 <p>Website</p>
-                <p className="flex items-center gap-[12px]">
+                <p className="flex items-center">
                   <span>400k</span>
                   {upArrow}
                 </p>
               </div>
               <div className="flex justify-between">
                 <p>Reddit</p>
-                <p className="flex items-center gap-[12px]">
+                <p className="flex items-center">
                   <span>1M</span>
                   {upArrow}
                 </p>
               </div>
               <div className="flex justify-between">
                 <p>Discord</p>
-                <p className="flex items-center gap-[12px]">
+                <p className="flex items-center">
                   <span>20K</span>
                   {downArrow}
                 </p>
               </div>
               <div className="flex justify-between">
                 <p>Telegram</p>
-                <p className="flex items-center gap-[12px]">
+                <p className="flex items-center">
                   <span>150K</span>
                   {upArrow}
                 </p>
