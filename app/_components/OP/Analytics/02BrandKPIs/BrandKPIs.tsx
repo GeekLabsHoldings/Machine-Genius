@@ -37,7 +37,7 @@ export default function BrandKPIs() {
     return (
       <div className={`collapse accordion2`}>
         <input type="radio" name="my-accordion-2" />
-        <div className="collapse-title font-bold flex justify-between items-center">
+        <div className="collapse-title flex justify-between items-center">
           <p>{title}</p>
           {accordionBlackArrow}
         </div>
@@ -110,9 +110,9 @@ export default function BrandKPIs() {
   }
 
   return (
-    <div className={styles.BrandKPIs + " h-full"}>
-      <p>Brand KPIs</p>
-      <div className="-space-y-4 overflow-y-auto h-full">
+    <div className={styles.BrandKPIsContainer}>
+      <p className={styles.BrandKPIsTitle}>Brand KPIs</p>
+      <div className={styles.BrandKPIsBody + " -space-y-4"}>
         <AccordionItem2 title={"Street Politics"} />
         {accordionItems.map((item, index) => (
           <AccordionItem2 key={index} title={item.title} />

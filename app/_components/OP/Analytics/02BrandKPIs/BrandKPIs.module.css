@@ -1,16 +1,28 @@
-.BrandKPIs {
+.BrandKPIsContainer {
+  height: 100%; /* 100% of 50vh */
+  overflow: hidden;
   box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
   border: 0.88px solid #dfdfdf;
   border-radius: 9px;
   padding: 1rem;
+  padding-bottom: clamp(50px, calc(4.8vh + 0.1rem), 1000px);
 }
 
-.BrandKPIs > div {
+.BrandKPIsTitle{
+  font-size: clamp(14px, calc(0.72vw + 0.1rem), 100px);
+  font-weight: 700;
+  margin-top: 6px;
+  margin-bottom: 8px;
+}
+
+.BrandKPIsBody {
+  height: 100%;
+  overflow-y: auto;
   scrollbar-width: none; /* For Firefox */
   -ms-overflow-style: none; /* For Internet Explorer and Edge */
 }
 
-.BrandKPIs > div::-webkit-scrollbar {
+.BrandKPIsBody::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
 
@@ -22,6 +34,9 @@
 .BrandKPIsTable td {
   padding: 10px;
   text-align: left;
+}
+.BrandKPIsTable thead th:last-child{
+  text-align: center;
 }
 .BrandKPIsTable .kpiMet {
   color: green;

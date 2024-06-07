@@ -71,17 +71,17 @@ input[type="radio"]:checked ~ .collapse-title svg {
   border-radius: 9px;
 }
 
-.accordion1 .collapse-title > p{
+.accordion1 .collapse-title > p {
   font-size: clamp(12.3px, calc(0.62vw + 0.1rem), 100px);
   font-weight: 700;
 }
 
-.accordion1 .collapse-content{
+.accordion1 .collapse-content {
   font-size: clamp(12.3px, calc(0.62vw + 0.1rem), 100px);
   font-weight: 400;
 }
 
-.accordion1 .collapse-content > div > p:nth-child(2){
+.accordion1 .collapse-content > div > p:nth-child(2) {
   gap: clamp(12px, calc(0.6vw + 0.1rem), 100px);
 }
 
@@ -93,13 +93,19 @@ input[type="radio"]:checked ~ .collapse-title svg {
 }
 
 .accordion2 .collapse-title {
-  font-size: 16px;
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
+.accordion2 .collapse-title > p {
+  font-size: clamp(12.3px, calc(0.62vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+
 .accordion2 .collapse-content {
+  font-size: clamp(12.3px, calc(0.62vw + 0.1rem), 100px);
+  font-weight: 400;
   border-radius: 9px !important;
-  padding-top: 1rem;
+  /* padding-top: 1rem; */
 }
 /* ===== End Brand KPIs Accordion ===== */
