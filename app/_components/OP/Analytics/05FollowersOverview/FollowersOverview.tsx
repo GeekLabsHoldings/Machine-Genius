@@ -5,7 +5,7 @@ import styles from "./FollowersOverview.module.css";
 export default function FollowersOverview() {
   return (
     <section className={styles.FollowersOverview}>
-      <p className={styles.FollowersOverviewTitle}>Followers Over View</p>
+      <p className={styles.FollowersOverviewTitle}>Followers Overview</p>
       <div className={styles.FollowersOverviewContainer}>
         <div className={styles.FollowersOverviewBody}>
         <table>
