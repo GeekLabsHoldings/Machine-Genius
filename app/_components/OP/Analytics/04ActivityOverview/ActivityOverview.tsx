@@ -174,8 +174,6 @@ export default function ActivityOverview() {
                 </li>
               </ul>
               {/* Table Body */}
-
-              {/* Table Body */}
               <div className={styles.table_body}>
                 {bodyRow.map((e, idx) => (
                   <ul key={idx}>
@@ -195,8 +193,8 @@ export default function ActivityOverview() {
                 ))}
               </div>
             </div>
-            {/* ===== End Table ===== */}
           </div>
+          {/* ===== End Table ===== */}
         </div>
       </div>
     </section>
