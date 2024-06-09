@@ -52,7 +52,7 @@
 .table .table_body {
   display: flex;
   flex-direction: column;
-  height: 16.5vh;
+  height: 21vh;
   overflow-y: auto;
   padding: 15px;
 }

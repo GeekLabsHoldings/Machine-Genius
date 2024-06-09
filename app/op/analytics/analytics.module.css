@@ -129,20 +129,20 @@
   display: grid;
   grid-template-areas: "main-content sidebar"; /* one row */
   grid-template-columns: 4fr 0.8fr;
-  grid-auto-rows: 75vh;
+  grid-auto-rows: 80vh;
   overflow: hidden;
   gap: clamp(15px, calc(0.83vw + 0.1rem), 100px);
 }
 
 /* Define styles for each grid area */
 .mainContent {
-  height: 100%; /* 100% of grid-auto-rows: 75vh; */
+  height: 100%; /* 100% of grid-auto-rows: 80vh; */
   grid-area: main-content;
 }
 
 .firstRow {
-  height: 50vh; /* 50vh of 75vh */
-  margin-bottom: 2.5vh; /* 2.5vh of 75vh */
+  height: 50vh; /* 50vh of 80vh */
+  margin-bottom: 2.5vh; /* 2.5vh of 80vh */
 }
 
 .firstRow > div {
@@ -155,15 +155,15 @@
 }
 
 .secondRow {
-  height: 22.5vh; /* 22.5vh of 75vh */
+  height: 27.5vh; /* 27.5vh of 80vh */
 }
 
 .secondRow > div {
-  height: 100%; /* 100% of 22.5vh */
+  height: 100%; /* 100% of 27.5vh */
 }
 
 .sidebar {
-  height: 100%; /* 100% of grid-auto-rows: 75vh; */
+  height: 100%; /* 100% of grid-auto-rows: 80vh; */
   grid-area: sidebar;
   background-color: #2a2b2a;
   box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
