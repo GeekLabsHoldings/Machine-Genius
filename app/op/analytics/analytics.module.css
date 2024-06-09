@@ -155,15 +155,15 @@
 }
 
 .secondRow {
-  height: 27.5vh; /* 27.5vh of 80vh */
+  height: 27vh; /* 27vh of 80vh */
 }
 
 .secondRow > div {
-  height: 100%; /* 100% of 27.5vh */
+  height: 100%; /* 100% of 27vh */
 }
 
 .sidebar {
-  height: 100%; /* 100% of grid-auto-rows: 80vh; */
+  height: 80vh; /* 100% of grid-auto-rows: 80vh; */
   grid-area: sidebar;
   background-color: #2a2b2a;
   box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
