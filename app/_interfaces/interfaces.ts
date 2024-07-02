@@ -23,8 +23,9 @@ export interface IArticleProps {
     height:string,
     beginSelect?:boolean,
     withEdit:boolean,
-    yourNewArticle:boolean
-    isEditable: boolean
+    yourNewArticle:boolean,
+    isEditable: boolean,
+    finalArticle?: any
 }
 
 // Interface for comments data

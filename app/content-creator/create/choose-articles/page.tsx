@@ -106,7 +106,7 @@ const chooseArticles = () => {
             {/* topic collapse */}
             {/* <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
-                            <ArticleWithCheck article='dddd' name='select-articles' />
+                            <ArticleWithCheck accsentColor="#2A2B2A" article='dddd' name='select-articles' />
                         </TopicColapse> */}
 
             {/* topic collapse */}

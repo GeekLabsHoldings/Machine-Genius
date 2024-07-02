@@ -11,14 +11,14 @@ interface IProps {
 }
 
 const ArticleWithCheck = ({ article, name, accsentColor }: IProps) => {
-  const { setPreviewText } = useContext(globalContext);
+  const { setPreviewText, setChoosedArticles } = useContext(globalContext);
 
   return article ? (
     <div
       className={`${styles.article_with_check} group`}
       style={{ "--module-color": accsentColor }}
     >
-      <CustomCheckBox name={name} value={article} accentColor={accsentColor} />
+      <CustomCheckBox name={name} value={article} accentColor={accsentColor} onChange={() => setChoosedArticles((prevArticles: any) => [...prevArticles, article])} />
       <label
         className={`${styles.article}`}
         onMouseEnter={() =>

@@ -5,12 +5,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
-import styles from './final-artical.module.css'
+import styles from './final-artical.module.css';
+import { globalContext } from "@/app/_context/store";
+import { useContext } from "react";
 // page enables you to have a look to your article
 const FinalArticle = () => {
 // state to handle content while page is loading its content
     const [IsLoading, setIsLoading] = useState(false);
     const router = useRouter();
+
+    const { finalArticle } =
+    useContext(globalContext);
 
 // show loading page before navigate to next page
     const handleNavigate = () => {
@@ -41,7 +46,7 @@ const FinalArticle = () => {
             </div> : <><div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] w-11/12 " >
                 {/* section to display article */}
                 <div className="w-4/5 mx-auto h-full">
-                    <ArticlePreview yourNewArticle={true} height="h-full" withEdit={false} />
+                    <ArticlePreview isEditable={false} yourNewArticle={true} height="h-full" withEdit={false} finalArticle={finalArticle} />
                 </div>
 
             </div>
