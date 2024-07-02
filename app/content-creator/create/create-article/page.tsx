@@ -7,7 +7,8 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { SelectArticleData } from "@/app/_data/data";
-import { useGlobalContext } from "@/app/_context/store";
+import { globalContext } from "@/app/_context/store";
+import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
@@ -16,12 +17,14 @@ const CreateArticle = () => {
   // const [selectedText, setSelectedText] = useState<string[]>([]);
 
   // state keeps selected text to display them in selection section
-  const { selectedText, setSelectedText } = useGlobalContext();
+  const { selectedText, setSelectedText } = useContext(globalContext);
+
 
   // state to enable text selection when click on highlight button
   const [beginSelect, setBeginSelect] = useState(false);
 
   // return selected text in selections
+  // @ts-ignore
   const renderSelectedTxt = selectedText.map((oneTxt) => (
     <div>
       <div className={`${styles.singleArticle}`}>

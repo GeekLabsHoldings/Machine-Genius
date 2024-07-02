@@ -1,8 +1,9 @@
 import type { Metadata } from "next"; // Importing Metadata type from Next.js
 // import { Inter } from "next/font/google"; // Importing Inter font from Google Fonts
 import "./globals.css"; // Importing global styles
-import { GlobalContextProvider } from './_context/store'; // Importing GlobalContextProvider from context store
+
 import styles from './mainLayout.module.css'; // Importing styles for the main layout
+import GlobalContextProvider from "./_context/store";
 
 // Initializing Inter font with Latin subset
 // const inter = Inter({ subsets: ["latin"] });

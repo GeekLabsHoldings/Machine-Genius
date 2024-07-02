@@ -1,8 +1,10 @@
+"use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./chooseArticles.module.css";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
-import data from "./data";
+import { globalContext } from "@/app/_context/store";
+import { useContext } from "react";
 
 const chooseArticles = () => {
   // favorite icon
@@ -51,6 +53,9 @@ const chooseArticles = () => {
     </svg>
   );
 
+  const { generateContent } = useContext(globalContext);
+
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-start gap-[2rem] h-[75vh] py-[1.5vw]">
@@ -79,15 +84,15 @@ const chooseArticles = () => {
           <div className={styles.select_article_container}>
             {/* topic collapse */}
 
-            {data.allContent.map((item: any, i: any) => (
+            {generateContent?.articles.map((item: any, i: any) => (
               <TopicColapse
                 forComments={false}
                 svgBtn={favIcon}
-                title={"Lorem ipsum dolor sit amet"}
+                title={item.title}
                 date={"April 16th 2024"}
                 key={i}
               >
-                {item.content.map((article: any, i: any) => (
+                {item.content.split(".").map((article: any, i: any) => (
                   <ArticleWithCheck
                     article={article}
                     accsentColor="#2A2B2A"
@@ -124,42 +129,7 @@ const chooseArticles = () => {
             <h6>Preview</h6>
           </div>
           <div className={styles.selected_article_container}>
-            <h6>Canada Loves People</h6>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae
-              labore recusandae tempora eveniet eius, veritatis corporis hic
-              itaque doloribus nemo expedita excepturi nesciunt laborum
-              accusamus perspiciatis, asperiores ipsam officia?
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est
-              laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est
-              laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae
-              labore recusandae tempora eveniet eius, veritatis corporis hic
-              itaque doloribus nemo expedita excepturi nesciunt laborum
-              accusamus perspiciatis, asperiores ipsam officia?
-            </p>
+              
           </div>
         </div>
       </div>

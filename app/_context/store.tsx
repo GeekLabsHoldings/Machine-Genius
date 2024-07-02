@@ -1,22 +1,37 @@
-'use client';
-import {createContext,useContext,Dispatch,SetStateAction,useState} from 'react';
+"use client";
+import { createContext, useState } from "react";
 
-interface contextProps {
-    selectedText : string[],
-    // setSelectedText :Dispatch<SetStateAction<string[]>>
-    setSelectedText : Dispatch<SetStateAction<string[]>>
+const initialContextState = {
+  selectedText: [] as string[],
+  setSelectedText: (text: string[]) => {},
+  generateContent: null as any,
+  setGenerateContent: (content: any) => {},
+};
+
+// 1- create context, export it
+export const globalContext = createContext(initialContextState);
+
+// 2- provide context, export it
+export default function GlobalContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [selectedText, setSelectedText] = useState<string[]>([]);
+  const [generateContent, setGenerateContent] = useState<any>(null);
+
+  // Create a context value object
+  const contextValue = {
+    selectedText,
+    setSelectedText,
+    generateContent,
+    setGenerateContent,
+  };
+
+  return (
+    // to provide what i created
+    <globalContext.Provider value={contextValue}>
+      {children}
+    </globalContext.Provider>
+  );
 }
-
-const GlobalContext = createContext<contextProps>({
-    selectedText:[],
-    setSelectedText:(): string[] => []
-})
-
-export const GlobalContextProvider = ({children}:any) =>{
-    const [selectedText,setSelectedText]= useState<string[]>([])
-    return(
-        <GlobalContext.Provider value={{selectedText,setSelectedText}}>{children}</GlobalContext.Provider>
-    )
-}
-
-export const useGlobalContext = ()=> useContext(GlobalContext);

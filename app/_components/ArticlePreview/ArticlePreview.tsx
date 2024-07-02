@@ -3,11 +3,13 @@ import styles from './ArticlePreview.module.css';
 import { ArticlePreviewData } from '../../_data/data';
 import { IArticleProps } from '@/app/_interfaces/interfaces';
 import { useState } from 'react';
-import { useGlobalContext } from '@/app/_context/store';
+import { globalContext } from "@/app/_context/store";
+import { useContext } from "react";
 
 // Article preview component contains article title and content
 const ArticlePreview = ({ withEdit, isEditable=false, beginSelect, height, yourNewArticle }: IArticleProps) => {
-  const { selectedText, setSelectedText } = useGlobalContext();
+
+  const { selectedText, setSelectedText } = useContext(globalContext);
 
   const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
 
@@ -15,6 +17,7 @@ const ArticlePreview = ({ withEdit, isEditable=false, beginSelect, height, yourN
     const selection = window.getSelection();
     if (selection) {
       const selectedText = selection.toString();
+      // @ts-ignore
       setSelectedText(prev => [...prev, selectedText]);
     }
 
