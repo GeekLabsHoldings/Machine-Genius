@@ -26,8 +26,8 @@ const ChooseContent = () => {
 
   // select options
   const options = [
-    "Script",
-    "Article",
+    // "Script",
+    // "Article",
     "Documentary",
     "Trends Article"
   ]

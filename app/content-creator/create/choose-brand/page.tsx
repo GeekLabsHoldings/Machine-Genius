@@ -19,12 +19,11 @@ const ChooseBrand = () => {
 
   // select options 
   const options = [
-    "PST",
-    "Street Politics",
+    "PST USA",
+    "PST Canada",
     "Movie Myth",
     "Investorcracy",
     "Mega Projects",
-    "PST Canada"
   ]
 
   useEffect(() => {
