@@ -53,7 +53,7 @@ const chooseArticles = () => {
     </svg>
   );
 
-  const { generateContent } = useContext(globalContext);
+  const { generateContent, previewText } = useContext(globalContext);
 
 
   return (
@@ -106,7 +106,7 @@ const chooseArticles = () => {
             {/* topic collapse */}
             {/* <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
                             <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
-                            <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
+                            <ArticleWithCheck article='dddd' name='select-articles' />
                         </TopicColapse> */}
 
             {/* topic collapse */}
@@ -129,7 +129,7 @@ const chooseArticles = () => {
             <h6>Preview</h6>
           </div>
           <div className={styles.selected_article_container}>
-              
+              {previewText}
           </div>
         </div>
       </div>

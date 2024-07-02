@@ -6,6 +6,8 @@ const initialContextState = {
   setSelectedText: (text: string[]) => {},
   generateContent: null as any,
   setGenerateContent: (content: any) => {},
+  previewText: "" as string,
+  setPreviewText: (text: any) => {},
 };
 
 // 1- create context, export it
@@ -19,6 +21,7 @@ export default function GlobalContextProvider({
 }) {
   const [selectedText, setSelectedText] = useState<string[]>([]);
   const [generateContent, setGenerateContent] = useState<any>(null);
+  const [previewText, setPreviewText] = useState<any>("");
 
   // Create a context value object
   const contextValue = {
@@ -26,6 +29,8 @@ export default function GlobalContextProvider({
     setSelectedText,
     generateContent,
     setGenerateContent,
+    previewText,
+    setPreviewText,
   };
 
   return (
