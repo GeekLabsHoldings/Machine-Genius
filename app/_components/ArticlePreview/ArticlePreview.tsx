@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useGlobalContext } from '@/app/_context/store';
 
 // Article preview component contains article title and content
-const ArticlePreview = ({ withEdit, beginSelect, height, yourNewArticle }: IArticleProps) => {
+const ArticlePreview = ({ withEdit, isEditable=false, beginSelect, height, yourNewArticle }: IArticleProps) => {
   const { selectedText, setSelectedText } = useGlobalContext();
 
   const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
@@ -38,7 +38,7 @@ const ArticlePreview = ({ withEdit, beginSelect, height, yourNewArticle }: IArti
         // setHighlightedBefore([...highlightedBefore,selectedText.filter(element => article.sectionData.includes(element))]);
         // highlightedBefore.length ? highlightedBefore.map((ele)=>(<p className={styles.highlightedBefore}>{ele}</p>)) : <p className={beginSelect ? styles.beginSelection : ''}>{singleData}</p> 
         // highlight text with orange color
-        <p className={beginSelect ? styles.beginSelection : ''} onMouseUp={handleSelectedText}>{singleData}</p>
+        <p contentEditable={`${isEditable}`} className={beginSelect ? styles.beginSelection : ''} onMouseUp={handleSelectedText}>{singleData}</p>
       ))}
     </div>
 

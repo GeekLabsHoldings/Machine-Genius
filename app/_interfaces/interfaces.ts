@@ -24,6 +24,7 @@ export interface IArticleProps {
     beginSelect?:boolean,
     withEdit:boolean,
     yourNewArticle:boolean
+    isEditable: boolean
 }
 
 // Interface for comments data
