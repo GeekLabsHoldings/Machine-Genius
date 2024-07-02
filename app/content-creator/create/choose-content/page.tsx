@@ -2,15 +2,15 @@
 import styles from './choose-content.module.css'
 import CustomBtn from '@/app/_components/Button/CustomBtn'
 import CustomSelectInput from '../../../_components/CustomSelectInput/CustomSelectInput'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle'
+import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle';
 
 const ChooseContent = () => {
 
   // loading state that show and hide loading
   const [IsLoading, setIsLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const handleNavigate = () => {
 
