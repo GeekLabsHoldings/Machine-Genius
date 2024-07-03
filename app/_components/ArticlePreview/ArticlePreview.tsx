@@ -79,8 +79,7 @@ const ArticlePreview = ({
             onInput={handleInput}
             dangerouslySetInnerHTML={{ __html: finalArticle[0]?.content }}
           >
-            {" "}
-            {finalArticle && finalArticle[0]?.content}{" "}
+            {finalArticle && finalArticle[0]?.content}
           </div>
         ) : (
           <div>{renderArticleData}</div>
