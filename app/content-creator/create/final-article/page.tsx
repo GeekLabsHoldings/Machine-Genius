@@ -37,9 +37,9 @@ const FinalArticle = () => {
                 <div className={`${styles.genuisWorking}`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
                     <div className={`${styles.allCheckers} w-full`}>
-                        <SpecificChecker pass={true} word='Grammar Checker' />
+                        <SpecificChecker pass={false} word='Grammar Checker' />
                         <SpecificChecker pass={false} word='Plagiarism Checker' />
-                        <SpecificChecker pass={true} word='AI Checker' />
+                        <SpecificChecker pass={false} word='AI Checker' />
                     </div>
                     <CustomBtn word={"Results"} btnColor="black" href="/content-creator/create/show-errors" />
                 </div>

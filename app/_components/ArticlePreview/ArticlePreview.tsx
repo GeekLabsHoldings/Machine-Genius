@@ -15,7 +15,8 @@ const ArticlePreview = ({
   yourNewArticle,
   finalArticle,
 }: IArticleProps) => {
-  const { selectedText, setSelectedText } = useContext(globalContext);
+  const { selectedText, setSelectedText, setFinalArticle } =
+    useContext(globalContext);
 
   // const [highlightedBefore, setHighlightedBefore] = useState<string[]>([]);
 
@@ -62,12 +63,22 @@ const ArticlePreview = ({
   // return article title
   const renderArticleTitle = finalArticle && finalArticle[0]?.title;
 
+  const handleInput = (event: any) => {
+    const newContent = event.target.innerHTML;
+    setFinalArticle([newContent]);
+  };
+
   return (
     <div className={` ${styles.articlePreview} ${height} `}>
       <div className={`${styles.articlePreviewData} `}>
         <h1 className="mx-auto font-bold text-2xl">{renderArticleTitle}</h1>
         {yourNewArticle ? (
-          <div contentEditable={true} className={`${styles.articleContent} `}>
+          <div
+            contentEditable={true}
+            className={`${styles.articleContent}`}
+            onInput={handleInput}
+            dangerouslySetInnerHTML={{ __html: finalArticle[0]?.content }}
+          >
             {" "}
             {finalArticle && finalArticle[0]?.content}{" "}
           </div>
