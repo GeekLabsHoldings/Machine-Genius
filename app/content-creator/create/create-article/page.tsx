@@ -110,8 +110,8 @@ const CreateArticle = () => {
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-[75vh] py-[1.5vw]">
-          <div className="flex justify-between gap-[2vw] h-full">
-            <div className="w-7/12 flex flex-col justify-between h-full">
+          <div className="flex justify-between gap-[2vw] h-full w-full">
+            <div className="w-7/12 flex flex-col gap-[3vh] h-full">
               <div className={`${styles.articlesToSelect} h-[15%]`}>
                 <h3>Articles</h3>
                 <div className="flex items-center gap-3">
@@ -151,11 +151,11 @@ const CreateArticle = () => {
                 isEditable={true}
               /> */}
 
-              {choosedArticles.map((article: any, i: any) => (
-                <div className={` ${styles.articlePreview} !max-h-[57vh]`}>
-                  <div className={`${styles.articlePreviewData} `}>
-                    <div>
-                      <div className={`${styles.articleContent} `}>
+              <div className={` ${styles.articlePreview} !h-[57vh]`}>
+                <div className={`${styles.articlePreviewData} `}>
+                  <div>
+                    <div className={`${styles.articleContent} `}>
+                      {choosedArticles.map((article: any, i: any) => (
                         <p
                           key={i}
                           contentEditable={true}
@@ -164,11 +164,11 @@ const CreateArticle = () => {
                         >
                           {article}
                         </p>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
 
               {/* <div className={` ${styles.articlePreview}  `}>
                 <div className={`${styles.articlePreviewData} `}>

@@ -67,7 +67,7 @@ const ArticlePreview = ({
       <div className={`${styles.articlePreviewData} `}>
         <h1 className="mx-auto font-bold text-2xl">{renderArticleTitle}</h1>
         {yourNewArticle ? (
-          <div className={`${styles.articleContent} `}>
+          <div contentEditable={true} className={`${styles.articleContent} `}>
             {" "}
             {finalArticle && finalArticle[0]?.content}{" "}
           </div>
