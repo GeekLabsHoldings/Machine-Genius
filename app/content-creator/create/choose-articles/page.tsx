@@ -60,6 +60,7 @@ const chooseArticles = () => {
     setChoosedArticles,
     choosedArticles,
     setPreviewText,
+    collectedData,
   } = useContext(globalContext);
 
   return (
@@ -90,7 +91,7 @@ const chooseArticles = () => {
           <div className={styles.select_article_container}>
             {/* topic collapse */}
 
-            {generateContent?.articles.map((item: any, i: any) => (
+            {collectedData?.articles.map((item: any, i: any) => (
               <TopicColapse
                 forComments={false}
                 svgBtn={favIcon}

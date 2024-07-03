@@ -13,7 +13,8 @@
     justify-content: space-between;
     background: var(--white);
     border: 1px solid var(--dark);
-    padding: clamp(8px, calc(0.5vw + 0.1rem), 1000px) clamp(10px, calc(1.4vw + 0.1rem), 600px);
+    /* padding: clamp(8px, calc(0.5vw + 0.1rem), 1000px) clamp(10px, calc(1.4vw + 0.1rem), 600px); */
+    padding: clamp(8px, calc(0.5vw + 0.1rem), 1000px) clamp(10px, calc(3.4vw + 0.1rem), 600px) clamp(8px, calc(0.5vw + 0.1rem), 1000px) clamp(10px, calc(1vw + 0.1rem), 600px);
     border-radius: clamp(0.625rem, calc(0.5vw + 0.1rem), 1000px);
     cursor: pointer;
     transition: none;

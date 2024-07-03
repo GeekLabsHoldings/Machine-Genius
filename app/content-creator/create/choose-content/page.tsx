@@ -12,17 +12,34 @@ const ChooseContent = () => {
   // loading state that show and hide loading
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { setGenerateContent } = useContext(globalContext);
+  const { setGenerateContent, setCollectedData } = useContext(globalContext);
 
-  async function generateContent() {
+  // async function generateContent() {
+  //   setIsLoading(true);
+  //   try {
+  //     const res = await fetch(`http://localhost:3000/generate-content`);
+  //     if (!res.ok) {
+  //       throw new Error("Failed to fetch data");
+  //     }
+  //     const json = await res.json();
+  //     setGenerateContent(json);
+  //     router.push("/content-creator/create/choose-articles");
+  //   } catch (error) {
+  //     console.error("Error generating content:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
+
+   async function getCollectedData() {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:3000/generate-content`);
+      const res = await fetch(`http://localhost:3000/collect`);
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
       const json = await res.json();
-      setGenerateContent(json);
+      setCollectedData(json);
       router.push("/content-creator/create/choose-articles");
     } catch (error) {
       console.error("Error generating content:", error);
@@ -63,7 +80,7 @@ const ChooseContent = () => {
           btnColor="white"
           href="/content-creator/create/choose-brand"
         />
-        <CustomBtn word="Next" btnColor="black" onClick={generateContent} />
+        <CustomBtn word="Next" btnColor="black" onClick={getCollectedData} />
       </div>
     </div>
   );
