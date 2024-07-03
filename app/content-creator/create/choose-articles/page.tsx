@@ -2,9 +2,10 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./chooseArticles.module.css";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
-import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
+// import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
+import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
 const chooseArticles = () => {
   // favorite icon
@@ -53,8 +54,13 @@ const chooseArticles = () => {
     </svg>
   );
 
-  const { generateContent, previewText } = useContext(globalContext);
-
+  const {
+    generateContent,
+    previewText,
+    setChoosedArticles,
+    choosedArticles,
+    setPreviewText,
+  } = useContext(globalContext);
 
   return (
     <div className="flex flex-col">
@@ -93,12 +99,38 @@ const chooseArticles = () => {
                 key={i}
               >
                 {item.content.split(".").map((article: any, i: any) => (
-                  <ArticleWithCheck
-                    article={article}
-                    accsentColor="#2A2B2A"
-                    name="select-articles"
-                    key={i}
-                  />
+                  // <ArticleWithCheck
+                  //   article={article}
+                  //   accsentColor="#2A2B2A"
+                  //   name="select-articles"
+                  //   key={i}
+                  //   onChange={() => {
+                  //     setChoosedArticles([...choosedArticles, article]);
+                  //   }}
+                  // />
+                  <div
+                    className={`${styles.article_with_check} group`}
+                    style={{ "--module-color": "#2A2B2A" }}
+                  >
+                    <CustomCheckBox
+                      name="select-articles"
+                      value={article}
+                      accentColor="#2A2B2A"
+                      onChange={() =>
+                        setChoosedArticles((prevArticles: any) => [
+                          ...prevArticles,
+                          article,
+                        ])
+                      }
+                    />
+                    <label
+                      className={`${styles.article}`}
+                      onMouseEnter={() => setPreviewText(article)}
+                    >
+                      {/* {article} */}
+                      loram4fffffff
+                    </label>
+                  </div>
                 ))}
               </TopicColapse>
             ))}
@@ -128,9 +160,7 @@ const chooseArticles = () => {
           <div className={styles.header}>
             <h6>Preview</h6>
           </div>
-          <div className={styles.selected_article_container}>
-              {previewText}
-          </div>
+          <div className={styles.selected_article_container}>{previewText}</div>
         </div>
       </div>
 

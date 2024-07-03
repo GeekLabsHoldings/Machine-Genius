@@ -17,7 +17,7 @@ const CreateArticle = () => {
   // const [selectedText, setSelectedText] = useState<string[]>([]);
 
   // state keeps selected text to display them in selection section
-  const { selectedText, setSelectedText, setFinalArticle } =
+  const { selectedText, setSelectedText, setFinalArticle, choosedArticles } =
     useContext(globalContext);
 
   // state to enable text selection when click on highlight button
@@ -63,7 +63,7 @@ const CreateArticle = () => {
 
   const router = useRouter();
 
-  async function generateContent() {
+  async function finalizeContent() {
     setIsLoading(true);
     try {
       const res = await fetch(`http://localhost:3000/finalize-content`, {
@@ -72,7 +72,7 @@ const CreateArticle = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          selectedText,
+          selectedText: selectedText.join(" "),
         }),
       });
       if (!res.ok) {
@@ -87,6 +87,15 @@ const CreateArticle = () => {
       setIsLoading(false);
     }
   }
+
+  const handleSelectedText = () => {
+    const selection = window.getSelection();
+    if (selection) {
+      const selectedText = selection.toString();
+      // @ts-ignore
+      setSelectedText((prev) => [...prev, selectedText]);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -134,14 +143,66 @@ const CreateArticle = () => {
                 </div>
               </div>
               {/* display chosen article  */}
-              <ArticlePreview
+              {/* <ArticlePreview
                 yourNewArticle={false}
                 height="h-[80%]"
                 beginSelect={beginSelect}
                 withEdit={false}
                 isEditable={true}
-              />
+              /> */}
+
+              {choosedArticles.map((article: any, i: any) => (
+                <div className={` ${styles.articlePreview} !max-h-[57vh]`}>
+                  <div className={`${styles.articlePreviewData} `}>
+                    <p
+                      key={i}
+                      contentEditable={true}
+                      className={beginSelect ? styles.beginSelection : ""}
+                      onMouseUp={handleSelectedText}
+                    >
+                      {article}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {/* <div className={` ${styles.articlePreview}  `}>
+                <div className={`${styles.articlePreviewData} `}>
+                  <p>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Itaque nesciunt in mollitia amet. Optio impedit sed
+                    voluptates, facilis cum provident nihil magnam. Omnis
+                    voluptates ipsam rem. Architecto placeat harum dolorem
+                    laboriosam consequuntur blanditiis libero quisquam ad neque
+                    modi eos sint, odio inventore impedit exercitationem quae
+                    iure ex, maxime laudantium similique.
+                  </p>
+                  <p>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Itaque nesciunt in mollitia amet. Optio impedit sed
+                    voluptates, facilis cum provident nihil magnam. Omnis
+                    voluptates ipsam rem. Architecto placeat harum dolorem
+                    laboriosam consequuntur blanditiis libero quisquam ad neque
+                    modi eos sint, odio inventore impedit exercitationem quae
+                    iure ex, maxime laudantium similique.
+                  </p>{" "}
+                  <p>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Itaque nesciunt in mollitia amet. Optio impedit sed
+                    voluptates, facilis cum provident nihil magnam. Omnis
+                    voluptates ipsam rem. Architecto placeat harum dolorem
+                    laboriosam consequuntur blanditiis libero quisquam ad neque
+                    modi eos sint, odio inventore impedit exercitationem quae
+                    iure ex, maxime laudantium similique.
+                  </p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
+                </div>
+              </div> */}
             </div>
+
             {/* selections part */}
             <div className={`w-5/12 ${styles.selectionsHeader}`}>
               <div className="flex justify-between items-center">
@@ -188,7 +249,7 @@ const CreateArticle = () => {
           btnColor="white"
           href={"/content-creator/create/choose-articles"}
         />
-        <CustomBtn word={"Next"} btnColor="black" onClick={generateContent} />
+        <CustomBtn word={"Next"} btnColor="black" onClick={finalizeContent} />
       </div>
     </div>
   );

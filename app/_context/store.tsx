@@ -2,14 +2,14 @@
 import { createContext, useState } from "react";
 
 const initialContextState = {
-  selectedText: [] as string[],
-  setSelectedText: (text: string[]) => {},
   generateContent: null as any,
   setGenerateContent: (content: any) => {},
-  previewText: "" as string,
-  setPreviewText: (text: any) => {},
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
+  previewText: "" as string,
+  setPreviewText: (text: any) => {},
+  selectedText: [] as string[],
+  setSelectedText: (text: string[]) => {},
   finalArticle: [] as any,
   setFinalArticle: (article: any) => {},
 };
@@ -23,10 +23,10 @@ export default function GlobalContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [selectedText, setSelectedText] = useState<string[]>([]);
   const [generateContent, setGenerateContent] = useState<any>(null);
-  const [previewText, setPreviewText] = useState<any>("");
   const [choosedArticles, setChoosedArticles] = useState<any>([]);
+  const [previewText, setPreviewText] = useState<any>("");
+  const [selectedText, setSelectedText] = useState<string[]>([]); 
   const [finalArticle, setFinalArticle] = useState<any>([]);
 
   // Create a context value object
