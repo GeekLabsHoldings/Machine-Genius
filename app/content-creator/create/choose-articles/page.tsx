@@ -127,8 +127,7 @@ const chooseArticles = () => {
                       className={`${styles.article}`}
                       onMouseEnter={() => setPreviewText(article)}
                     >
-                      {/* {article} */}
-                      loram4fffffff
+                      {article}
                     </label>
                   </div>
                 ))}

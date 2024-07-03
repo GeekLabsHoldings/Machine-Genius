@@ -154,14 +154,18 @@ const CreateArticle = () => {
               {choosedArticles.map((article: any, i: any) => (
                 <div className={` ${styles.articlePreview} !max-h-[57vh]`}>
                   <div className={`${styles.articlePreviewData} `}>
-                    <p
-                      key={i}
-                      contentEditable={true}
-                      className={beginSelect ? styles.beginSelection : ""}
-                      onMouseUp={handleSelectedText}
-                    >
-                      {article}
-                    </p>
+                    <div>
+                      <div className={`${styles.articleContent} `}>
+                        <p
+                          key={i}
+                          contentEditable={true}
+                          className={beginSelect ? styles.beginSelection : ""}
+                          onMouseUp={handleSelectedText}
+                        >
+                          {article}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
