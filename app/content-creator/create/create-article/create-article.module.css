@@ -176,10 +176,10 @@
   font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
 }
 
-.article_with_check label.article:hover {
+/* .article_with_check label.article:hover {
   background: var(--module-color);
   color: var(--white);
-}
+} */
 
 .article_with_check input {
   display: none;
@@ -191,4 +191,15 @@
 
 .article_with_check input:checked + label.article {
   width: calc(100% - (clamp(10px, calc(1.4vw + 0.1rem), 600px)));
+}
+/* highlight-btn */
+.highlightBtn {
+  position: absolute;
+  display: none;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  z-index: 1000;
 }

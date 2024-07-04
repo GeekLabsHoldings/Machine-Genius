@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./create-article.module.css";
 // import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
@@ -148,6 +148,32 @@ const CreateArticle = () => {
     return article?.content.join(" ");
   }
 
+  useEffect(() => {
+    const button = document.getElementById("highlight-btn");
+    const articleContent = document.querySelector("#article-content");
+
+    if (button && articleContent) {
+      articleContent.addEventListener("mouseup", () => {
+        const selection = window.getSelection();
+        if (selection) {
+          if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            if (rect) {
+              button.style.left = `${rect.left + window.scrollX}px`;
+              button.style.top = `${
+                rect.top + window.scrollY - button.offsetHeight
+              }px`;
+              button.style.display = "block";
+            }
+          } else {
+            button.style.display = "none";
+          }
+        }
+      });
+    }
+  }, []);
+
   return (
     <div className="flex flex-col">
       {/* check on loading state to render the correct content based on it */}
@@ -161,6 +187,15 @@ const CreateArticle = () => {
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-[75vh] py-[1.5vw]">
+          <button
+            id="highlight-btn"
+            className={`${styles.highlightBtn}`}
+            onClick={() => {
+              handleSelectedText();
+            }}
+          >
+            Select
+          </button>
           <div className="flex justify-between gap-[2vw] h-full w-full">
             <div className="w-7/12 flex flex-col gap-[3vh] h-full">
               <div className={`${styles.articlesToSelect} h-[15%]`}>
@@ -212,11 +247,14 @@ const CreateArticle = () => {
               <div className={` ${styles.articlePreview} !h-[57vh]`}>
                 <div className={`${styles.articlePreviewData} `}>
                   <div>
-                    <div className={`${styles.articleContent} `}>
+                    <div
+                      id="article-content"
+                      className={`${styles.articleContent} `}
+                    >
                       <p
                         contentEditable={true}
                         className={beginSelect ? styles.beginSelection : ""}
-                        onMouseUp={handleSelectedText}
+                        // onMouseUp={handleSelectedText}
                       >
                         {previewSelectedArticle()}
                       </p>
