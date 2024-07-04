@@ -97,7 +97,7 @@ const chooseArticles = () => {
               title={"title of topic"}
               date={"April 16th 2024"}
             >
-              {collectedData?.allContent.map((item: any, i: any) => (
+              {collectedData?.allContent.filter((item: any) => item.text !== "").map((item: any, i: any) => (
                 // <ArticleWithCheck
                 //   article={article}
                 //   accsentColor="#2A2B2A"
@@ -114,7 +114,7 @@ const chooseArticles = () => {
                 >
                   <CustomCheckBox
                     name="select-articles"
-                    value={item?.text}
+                    value={item?.text.split("\n")[0]}
                     accentColor="#2A2B2A"
                     onChange={() =>
                       setChoosedArticles((prevArticles: any) => [
@@ -125,9 +125,10 @@ const chooseArticles = () => {
                   />
                   <label
                     className={`${styles.article}`}
-                    onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
+                    // onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
+                    onMouseEnter={() => setPreviewText(Array.isArray(item?.content) ? item.content.join(" ") : "")}
                   >
-                    {item?.text}
+                    {item?.text.split("\n")[0]}
                   </label>
                 </div>
               ))}

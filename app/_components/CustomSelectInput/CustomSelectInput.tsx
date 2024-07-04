@@ -76,7 +76,9 @@ const CustomSelectInput = (props: Iprops) => {
         <span>
           {props.theme
             ? typeof window !== "undefined" &&
-              localStorage.getItem("selected-role") === null ? 'Content Creator' : localStorage.getItem("selected-role")
+              localStorage.getItem("selected-role") === null
+              ? "Content Creator"
+              : localStorage.getItem("selected-role")
             : selected}
         </span>
         <svg
