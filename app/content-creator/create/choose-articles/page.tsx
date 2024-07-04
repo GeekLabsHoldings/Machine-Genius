@@ -126,7 +126,7 @@ const chooseArticles = () => {
                   <label
                     className={`${styles.article}`}
                     // onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
-                    onMouseEnter={() => setPreviewText(Array.isArray(item?.content) ? item.content.join(" ") : "")}
+                    onClick={() => setPreviewText(Array.isArray(item?.content) ? item.content.join(" ") : "")}
                   >
                     {item?.text.split("\n")[0]}
                   </label>

@@ -21,7 +21,7 @@ const ArticleWithCheck = ({ article, name, accsentColor }: IProps) => {
       <CustomCheckBox name={name} value={article} accentColor={accsentColor} />
       <label
         className={`${styles.article}`}
-        onMouseEnter={() =>
+        onClick={() =>
           setPreviewText(article)
         }
       >
