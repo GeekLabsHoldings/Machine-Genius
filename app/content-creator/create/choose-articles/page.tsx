@@ -91,49 +91,47 @@ const chooseArticles = () => {
           <div className={styles.select_article_container}>
             {/* topic collapse */}
 
-            {collectedData?.articles.map((item: any, i: any) => (
-              <TopicColapse
-                forComments={false}
-                svgBtn={favIcon}
-                title={item.title}
-                date={"April 16th 2024"}
-                key={i}
-              >
-                {item.content.split(".").map((article: any, i: any) => (
-                  // <ArticleWithCheck
-                  //   article={article}
-                  //   accsentColor="#2A2B2A"
-                  //   name="select-articles"
-                  //   key={i}
-                  //   onChange={() => {
-                  //     setChoosedArticles([...choosedArticles, article]);
-                  //   }}
-                  // />
-                  <div
-                    className={`${styles.article_with_check} group`}
-                    style={{ "--module-color": "#2A2B2A" }}
+            <TopicColapse
+              forComments={false}
+              svgBtn={favIcon}
+              title={"title of topic"}
+              date={"April 16th 2024"}
+            >
+              {collectedData?.allContent.map((item: any, i: any) => (
+                // <ArticleWithCheck
+                //   article={article}
+                //   accsentColor="#2A2B2A"
+                //   name="select-articles"
+                //   key={i}
+                //   onChange={() => {
+                //     setChoosedArticles([...choosedArticles, article]);
+                //   }}
+                // />
+                <div
+                  className={`${styles.article_with_check} group`}
+                  style={{ "--module-color": "#2A2B2A" }}
+                  key={i}
+                >
+                  <CustomCheckBox
+                    name="select-articles"
+                    value={item?.text}
+                    accentColor="#2A2B2A"
+                    onChange={() =>
+                      setChoosedArticles((prevArticles: any) => [
+                        ...prevArticles,
+                        item,
+                      ])
+                    }
+                  />
+                  <label
+                    className={`${styles.article}`}
+                    onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
                   >
-                    <CustomCheckBox
-                      name="select-articles"
-                      value={article}
-                      accentColor="#2A2B2A"
-                      onChange={() =>
-                        setChoosedArticles((prevArticles: any) => [
-                          ...prevArticles,
-                          article,
-                        ])
-                      }
-                    />
-                    <label
-                      className={`${styles.article}`}
-                      onMouseEnter={() => setPreviewText(article)}
-                    >
-                      {article}
-                    </label>
-                  </div>
-                ))}
-              </TopicColapse>
-            ))}
+                    {item?.text}
+                  </label>
+                </div>
+              ))}
+            </TopicColapse>
 
             {/* topic collapse */}
             {/* <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >

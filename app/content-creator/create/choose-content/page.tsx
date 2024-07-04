@@ -12,7 +12,7 @@ const ChooseContent = () => {
   // loading state that show and hide loading
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { setGenerateContent, setCollectedData } = useContext(globalContext);
+  const { setGenerateContent, setCollectedData, collectedData } = useContext(globalContext);
 
   // async function generateContent() {
   //   setIsLoading(true);
@@ -45,6 +45,7 @@ const ChooseContent = () => {
       console.error("Error generating content:", error);
     } finally {
       setIsLoading(false);
+      console.log(collectedData);
     }
   }
 
