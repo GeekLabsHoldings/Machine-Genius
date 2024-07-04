@@ -23,11 +23,12 @@ const CreateArticle = () => {
     setFinalArticle,
     choosedArticles,
     collectedData,
+    selectedArticle,
   } = useContext(globalContext);
 
   // state to enable text selection when click on highlight button
   const [beginSelect, setBeginSelect] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<string | number>();
+  // const [selectedArticle, setSelectedArticle] = useState<string | number>();
 
   // return selected text in selections
   // @ts-ignore
@@ -78,7 +79,7 @@ const CreateArticle = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          selectedText: selectedText.join(" "),
+          selectContent: selectedText.join(" "),
         }),
       });
       if (!res.ok) {
@@ -103,13 +104,18 @@ const CreateArticle = () => {
     }
   };
 
+  // function that get role value from select option by send it as a prop
+  //   const getSelectedArticle = (value: string | number) => {
+  //     setSelectedArticle(value)
+  //     console.log(selectedArticle);
+  // }
 
-      // function that get role value from select option by send it as a prop
-      const getSelectedArticle = (value: string | number) => {
-        setSelectedArticle(value)
-        console.log(selectedArticle);
-        
-    }
+  function previewSelectedArticle() {
+    const article = collectedData?.allContent.find(
+      (e: any) => e.text.split("\n")[0] === selectedArticle
+    );
+    return article?.content.join(" ");
+  }
 
   return (
     <div className="flex flex-col">
@@ -134,10 +140,13 @@ const CreateArticle = () => {
                     <CustomSelectInput
                       label="Select Article"
                       // options={SelectArticleData}
-                      options={collectedData?.allContent.map(
-                        (e: any) => e.text.split("\n")[0]
-                      )}
-                      getValue={getSelectedArticle}
+                      // options={collectedData.allContent
+                      //   ?.filter((item: any) => item.text !== "")
+                      //   .map((e: any) => e.text.split("\n")[0])}
+                      options={choosedArticles
+                        ?.filter((item: any) => item.text !== "")
+                        .map((item: any) => item.text.split("\n")[0])}
+                      // getValue={getSelectedArticle}
                     />
                   </div>
                   {/* highlighting button */}
@@ -173,19 +182,13 @@ const CreateArticle = () => {
                 <div className={`${styles.articlePreviewData} `}>
                   <div>
                     <div className={`${styles.articleContent} `}>
-                      {choosedArticles.map((article: any, i: any) => (
-
-                        <p
-                          key={i}
-                          contentEditable={true}
-                          className={beginSelect ? styles.beginSelection : ""}
-                          onMouseUp={handleSelectedText}
-                        >
-                          {article}
-                        </p>
-
-
-                      ))}
+                      <p
+                        contentEditable={true}
+                        className={beginSelect ? styles.beginSelection : ""}
+                        onMouseUp={handleSelectedText}
+                      >
+                        {previewSelectedArticle()}
+                      </p>
                     </div>
                   </div>
                 </div>

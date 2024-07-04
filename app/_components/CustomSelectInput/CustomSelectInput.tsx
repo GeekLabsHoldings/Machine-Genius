@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./CustomSelectInput.module.css";
+import { globalContext } from "@/app/_context/store";
+import { useContext } from "react";
 
 interface Iprops {
   label?: string | number;
@@ -51,11 +53,14 @@ const CustomSelectInput = (props: Iprops) => {
   const handleSelectedItem = (e: any) => {
     console.log(e.innerText);
     setIsSelected(e.innerText);
+    setSelectedArticle(e.innerText);
     setIsActive(false);
     if (props.getValue) {
       props.getValue(e.innerText);
     }
   };
+
+  const { setSelectedArticle } = useContext(globalContext);
 
   return (
     <div

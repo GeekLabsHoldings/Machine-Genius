@@ -77,7 +77,6 @@ const ArticlePreview = ({
             contentEditable={true}
             className={`${styles.articleContent}`}
             onInput={handleInput}
-            dangerouslySetInnerHTML={{ __html: finalArticle[0]?.content }}
           >
             {finalArticle && finalArticle[0]?.content}
           </div>

@@ -1,73 +1,107 @@
-'use client'
-import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview"
-import CustomBtn from "@/app/_components/Button/CustomBtn"
+"use client";
+import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
-import styles from './final-artical.module.css';
+import styles from "./final-artical.module.css";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 // page enables you to have a look to your article
 const FinalArticle = () => {
-// state to handle content while page is loading its content
-    const [IsLoading, setIsLoading] = useState(false);
-    const router = useRouter();
+  // state to handle content while page is loading its content
+  const [IsLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-    const { finalArticle } =
-    useContext(globalContext);
+  const { finalArticle, setFinalArticle } = useContext(globalContext);
 
-// show loading page before navigate to next page
-    const handleNavigate = () => {
-      setIsLoading(true)
-  
+  // show loading page before navigate to next page
+  const handleNavigate = () => {
+    setIsLoading(true);
+
     //   setTimeout(() => {
     //     // Your action here
     //     router.push('/content-creator/create/final-article')
-  
+
     //   }, 1500); // 3000 milliseconds = 3 seconds
-  
-    }
+  };
 
-    return (
+  const handleInput = (event: any) => {
+    // const newContent = event.target.innerHTML;
+    // setFinalArticle([newContent]);
+    const updatedContent = event.target.innerHTML;
+    setFinalArticle([{ ...finalArticle[0], content: updatedContent }]);
+  };
 
-         <div className="flex flex-col">
-            {/* loading screen */}
-            { IsLoading ? <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]" >
-                <div className={`${styles.genuisWorking}`}>
-                    <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
-                    <div className={`${styles.allCheckers} w-full`}>
-                        <SpecificChecker pass={false} word='Grammar Checker' />
-                        <SpecificChecker pass={false} word='Plagiarism Checker' />
-                        <SpecificChecker pass={false} word='AI Checker' />
-                    </div>
-                    <CustomBtn word={"Results"} btnColor="black" href="/content-creator/create/show-errors" />
-                </div>
-            </div> : <><div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] w-11/12 " >
-                {/* section to display article */}
-                <div className="w-4/5 mx-auto h-full">
-                    <ArticlePreview isEditable={false} yourNewArticle={true} height="h-full" withEdit={false} finalArticle={finalArticle} />
-                </div>
-
+  return (
+    <div className="flex flex-col">
+      {/* loading screen */}
+      {IsLoading ? (
+        <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+          <div className={`${styles.genuisWorking}`}>
+            <LogoAndTitle
+              needTxt={false}
+              title="Genius is working on your article.."
+            />
+            <div className={`${styles.allCheckers} w-full`}>
+              <SpecificChecker pass={false} word="Grammar Checker" />
+              <SpecificChecker pass={false} word="Plagiarism Checker" />
+              <SpecificChecker pass={false} word="AI Checker" />
             </div>
-            {/* buttons to move to last or next page */}
-            <div className="flex justify-between items-center">
-                <CustomBtn
-                    word={"Back"}
-                    btnColor="white"
-                    href={"/content-creator/create/create-article"}
-                />
-                <CustomBtn
-                    word={"Next"}
-                    btnColor="black"
-                    onClick={handleNavigate}
-                />
-            </div></>}
-            
+            <CustomBtn
+              word={"Results"}
+              btnColor="black"
+              href="/content-creator/create/show-errors"
+            />
+          </div>
         </div>
-        
+      ) : (
+        <>
+          <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] w-11/12 ">
+            {/* section to display article */}
+            <div className="w-4/5 mx-auto h-full">
+              {/* <ArticlePreview
+                isEditable={false}
+                yourNewArticle={true}
+                finalArticle={finalArticle}
+              /> */}
 
-    )
-}
+              <div className={` ${styles.articlePreview} h-full `}>
+                <div className={`${styles.articlePreviewData} `}>
+                  <h1 className="mx-auto font-bold text-2xl">
+                    {finalArticle && finalArticle[0]?.title}
+                  </h1>
+                  (
+                  <div
+                    contentEditable={true}
+                    className={`${styles.articleContent}`}
+                    onInput={handleInput}
+                  >
+                    {finalArticle && finalArticle[0]?.content}
+                  </div>
+                  )
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* buttons to move to last or next page */}
+          <div className="flex justify-between items-center">
+            <CustomBtn
+              word={"Back"}
+              btnColor="white"
+              href={"/content-creator/create/create-article"}
+            />
+            <CustomBtn
+              word={"Next"}
+              btnColor="black"
+              onClick={handleNavigate}
+            />
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
-export default FinalArticle
+export default FinalArticle;

@@ -10,6 +10,8 @@ const initialContextState = {
   setChoosedArticles: (articles: any) => {},
   previewText: "" as string,
   setPreviewText: (text: any) => {},
+  selectedArticle: null as any,
+  setSelectedArticle: (article: any) => {},
   selectedText: [] as string[],
   setSelectedText: (text: string[]) => {},
   finalArticle: [] as any,
@@ -28,6 +30,7 @@ export default function GlobalContextProvider({
   const [generateContent, setGenerateContent] = useState<any>(null);
   const [collectedData, setCollectedData] = useState<any>(null);
   const [choosedArticles, setChoosedArticles] = useState<any>([]);
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [previewText, setPreviewText] = useState<any>("");
   const [selectedText, setSelectedText] = useState<string[]>([]); 
   const [finalArticle, setFinalArticle] = useState<any>([]);
@@ -44,6 +47,8 @@ export default function GlobalContextProvider({
     setPreviewText,
     choosedArticles,
     setChoosedArticles,
+    selectedArticle,
+    setSelectedArticle,
     finalArticle,
     setFinalArticle,
   };
