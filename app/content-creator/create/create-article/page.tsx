@@ -79,7 +79,7 @@ const CreateArticle = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          selectContent: selectedText.join(" "),
+          selectedContent: selectedText.join(" "),
         }),
       });
       if (!res.ok) {
