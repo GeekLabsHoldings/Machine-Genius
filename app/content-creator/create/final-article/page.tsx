@@ -19,6 +19,8 @@ const FinalArticle = () => {
   // show loading page before navigate to next page
   const handleNavigate = () => {
     setIsLoading(true);
+    const finalArticleContent = document.getElementById("finalArticle")?.innerHTML;
+    setFinalArticle([{ ...finalArticle[0], content: finalArticleContent }]);
 
     //   setTimeout(() => {
     //     // Your action here
@@ -27,12 +29,12 @@ const FinalArticle = () => {
     //   }, 1500); // 3000 milliseconds = 3 seconds
   };
 
-  const handleInput = (event: any) => {
-    // const newContent = event.target.innerHTML;
-    // setFinalArticle([newContent]);
-    const updatedContent = event.target.innerHTML;
-    setFinalArticle([{ ...finalArticle[0], content: updatedContent }]);
-  };
+//   const handleInput = (event: any) => {
+//     // const newContent = event.target.innerHTML;
+//     // setFinalArticle([newContent]);
+//     const updatedContent = event.target.innerHTML;
+//     setFinalArticle([{ ...finalArticle[0], content: updatedContent }]);
+//   };
 
   return (
     <div className="flex flex-col">
@@ -72,15 +74,15 @@ const FinalArticle = () => {
                   <h1 className="mx-auto font-bold text-2xl">
                     {finalArticle && finalArticle[0]?.title}
                   </h1>
-                  (
+
                   <div
+                    id="finalArticle"
                     contentEditable={true}
                     className={`${styles.articleContent}`}
-                    onInput={handleInput}
+                    // onInput={handleInput}
                   >
                     {finalArticle && finalArticle[0]?.content}
                   </div>
-                  )
                 </div>
               </div>
             </div>
