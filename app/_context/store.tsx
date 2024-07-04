@@ -12,8 +12,8 @@ const initialContextState = {
   setPreviewText: (text: any) => {},
   selectedArticle: null as any,
   setSelectedArticle: (article: any) => {},
-  selectedText: [] as string[],
-  setSelectedText: (text: string[]) => {},
+  selectedText: [] as any,
+  setSelectedText: (text: any) => {},
   finalArticle: [] as any,
   setFinalArticle: (article: any) => {},
 };
@@ -32,7 +32,8 @@ export default function GlobalContextProvider({
   const [choosedArticles, setChoosedArticles] = useState<any>([]);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [previewText, setPreviewText] = useState<any>("");
-  const [selectedText, setSelectedText] = useState<string[]>([]); 
+  // const [selectedText, setSelectedText] = useState<string[]>([]); 
+  const [selectedText, setSelectedText] = useState<any>([]);
   const [finalArticle, setFinalArticle] = useState<any>([]);
 
   // Create a context value object

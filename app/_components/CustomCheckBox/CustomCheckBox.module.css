@@ -1,6 +1,8 @@
 .custom_checkbox{
     width: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
     height: clamp(10px,  calc( 1.4vw + 0.1rem ), 600px);
+    min-width: 29px;
+    min-height: 29px;
     position: relative;
     margin:  0 clamp(10px, calc(1.4vw + 0.1rem), 600px) 0 0;
 }

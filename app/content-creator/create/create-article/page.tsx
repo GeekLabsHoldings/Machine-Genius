@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
 import styles from "./create-article.module.css";
-import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
-import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
+// import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
+// import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import { SelectArticleData } from "@/app/_data/data";
+// import { SelectArticleData } from "@/app/_data/data";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
@@ -24,46 +24,85 @@ const CreateArticle = () => {
     choosedArticles,
     collectedData,
     selectedArticle,
+    setPreviewText,
   } = useContext(globalContext);
 
   // state to enable text selection when click on highlight button
   const [beginSelect, setBeginSelect] = useState(false);
+
+  const [CheckAllSelectedText, setCheckAllSelectedText] = useState(false);
+
   // const [selectedArticle, setSelectedArticle] = useState<string | number>();
 
+  const handleSelectedText = () => {
+    const selection = window.getSelection();
+    if (selection) {
+      const selectedText = selection.toString();
+      // @ts-ignore
+      // setSelectedText((prev) => [...prev, selectedText]);
+      setSelectedText((prev: any) => [
+        ...prev,
+        { text: selectedText, checked: false },
+      ]);
+    }
+  };
+
   // return selected text in selections
-  // @ts-ignore
-  const renderSelectedTxt = selectedText.map((oneTxt) => (
-    <div>
-      <div className={`${styles.singleArticle}`}>
-        <ArticleWithCheck
-          accsentColor="#2A2B2A"
-          article={oneTxt}
-          name="selected-articles"
+  const renderSelectedTxt = selectedText.map((item: any, index: any) => (
+    <div key={index}>
+      <div className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}>
+        <CustomCheckBox
+          // @ts-ignore
+          value={item.text}
+          onChange={(e: any) => handleCheckChange(e, index)}
+          checked={item.checked}
+          accentColor="#2A2B2A"
         />
+        {/* <ArticleWithCheck
+          accsentColor="#2A2B2A"
+          // @ts-ignore
+          article={oneTxt.text}
+          name="selected-articles"
+        /> */}
+
+        <div className={`${styles.article_with_check} group`}>
+          <label
+            className={`${styles.article}`}
+            onClick={() => setPreviewText(item.text)}
+          >
+            {item.text}
+          </label>
+        </div>
       </div>
     </div>
   ));
 
+  const handleCheckChange = (e: any, index: any) => {
+    const newSelectedText = [...selectedText];
+    // @ts-ignore
+    newSelectedText[index].checked = e.target.checked;
+    setSelectedText(newSelectedText);
+  };
+
   const handleCheckAllSelectedText = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    // Get all checkbox elements
-    var checkboxes = document.querySelectorAll(
-      'input[name="selected-articles"]'
-    );
-
-    if (e.target.checked) {
-      // Loop through each checkbox and set checked property to true
-      checkboxes.forEach(function (checkbox: any) {
-        checkbox.checked = true;
-      });
-    } else {
-      // Loop through each checkbox and set checked property to false
-      checkboxes.forEach(function (checkbox: any) {
-        checkbox.checked = false;
-      });
-    }
+    const newCheckedState = !CheckAllSelectedText;
+    const newSelectedText = selectedText.map((item: any) => ({
+      ...item,
+      checked: newCheckedState,
+    }));
+    setSelectedText(newSelectedText);
+    setCheckAllSelectedText(newCheckedState);
   };
+
+  function handleDeleteSelectedText() {
+    // delete checked from selected text
+    let newSelectedText = selectedText.filter((item: any) => !item.checked);
+    setSelectedText(newSelectedText);
+    // reset check all selected text
+    setCheckAllSelectedText(false);
+  }
 
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
@@ -79,7 +118,8 @@ const CreateArticle = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          selectedContent: selectedText.join(" "),
+          // selectedContent: selectedText.join(" "),
+          selectedContent: selectedText.map((item: any) => item.text).join(" "),
         }),
       });
       if (!res.ok) {
@@ -94,15 +134,6 @@ const CreateArticle = () => {
       setIsLoading(false);
     }
   }
-
-  const handleSelectedText = () => {
-    const selection = window.getSelection();
-    if (selection) {
-      const selectedText = selection.toString();
-      // @ts-ignore
-      setSelectedText((prev) => [...prev, selectedText]);
-    }
-  };
 
   // function that get role value from select option by send it as a prop
   //   const getSelectedArticle = (value: string | number) => {
@@ -240,11 +271,17 @@ const CreateArticle = () => {
                     value={""}
                     onChange={(e) => handleCheckAllSelectedText(e)}
                     accentColor="#2A2B2A"
+                    checked={CheckAllSelectedText}
                   />
                   <h2>Selections</h2>
                 </div>
                 {/* delete button to delete selected highlighted text */}
-                <div className={styles.deleteSvg}>
+                <div
+                  className={styles.deleteSvg}
+                  onClick={() => {
+                    handleDeleteSelectedText();
+                  }}
+                >
                   <svg
                     viewBox="0 0 22 25"
                     fill="none"
