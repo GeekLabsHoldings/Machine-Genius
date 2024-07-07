@@ -68,7 +68,7 @@ const CreateArticle = () => {
         <div className={`${styles.article_with_check} group`}>
           <label
             className={`${styles.article}`}
-            onClick={() => setPreviewText(item.text)}
+            // onClick={() => setPreviewText(item.text)}
           >
             {item.text}
           </label>
@@ -142,10 +142,10 @@ const CreateArticle = () => {
   // }
 
   function previewSelectedArticle() {
-    const article = collectedData?.allContent.find(
-      (e: any) => e.text.split("\n")[0] === selectedArticle
+    const article = collectedData?.allArticles.find(
+      (e: any) => e.title === selectedArticle
     );
-    return article?.content.join(" ");
+    return article?.content;
   }
 
   useEffect(() => {
@@ -206,12 +206,11 @@ const CreateArticle = () => {
                     <CustomSelectInput
                       label="Select Article"
                       // options={SelectArticleData}
-                      // options={collectedData.allContent
+                      // options={collectedData.allArticles
                       //   ?.filter((item: any) => item.text !== "")
                       //   .map((e: any) => e.text.split("\n")[0])}
                       options={choosedArticles
-                        ?.filter((item: any) => item.text !== "")
-                        .map((item: any) => item.text.split("\n")[0])}
+                        .map((item: any) => item.title.split("\n")[0])}
                       // getValue={getSelectedArticle}
                     />
                   </div>

@@ -19,7 +19,8 @@ const FinalArticle = () => {
   // show loading page before navigate to next page
   const handleNavigate = () => {
     setIsLoading(true);
-    const finalArticleContent = document.getElementById("finalArticle")?.innerHTML;
+    const finalArticleContent =
+      document.getElementById("finalArticle")?.innerHTML;
     setFinalArticle([{ ...finalArticle[0], content: finalArticleContent }]);
 
     //   setTimeout(() => {
@@ -29,12 +30,12 @@ const FinalArticle = () => {
     //   }, 1500); // 3000 milliseconds = 3 seconds
   };
 
-//   const handleInput = (event: any) => {
-//     // const newContent = event.target.innerHTML;
-//     // setFinalArticle([newContent]);
-//     const updatedContent = event.target.innerHTML;
-//     setFinalArticle([{ ...finalArticle[0], content: updatedContent }]);
-//   };
+  //   const handleInput = (event: any) => {
+  //     // const newContent = event.target.innerHTML;
+  //     // setFinalArticle([newContent]);
+  //     const updatedContent = event.target.innerHTML;
+  //     setFinalArticle([{ ...finalArticle[0], content: updatedContent }]);
+  //   };
 
   return (
     <div className="flex flex-col">
