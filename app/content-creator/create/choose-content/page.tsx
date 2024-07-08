@@ -34,12 +34,12 @@ const ChooseContent = () => {
    async function getCollectedData() {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:3000/collect`);
+      const res = await fetch(`http://localhost:3000/generate-content`);
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
       const json = await res.json();
-      setCollectedData(json);
+      setCollectedData(json?.organizedArticles);
       router.push("/content-creator/create/choose-articles");
     } catch (error) {
       console.error("Error generating content:", error);

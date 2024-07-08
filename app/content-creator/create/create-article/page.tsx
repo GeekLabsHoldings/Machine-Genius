@@ -141,12 +141,28 @@ const CreateArticle = () => {
   //     console.log(selectedArticle);
   // }
 
+  // function previewSelectedArticle() {
+  //   const article = collectedData?.allArticles.find(
+  //     (e: any) => e.title === selectedArticle
+  //   );
+  //   return article?.content;
+  // }
+
   function previewSelectedArticle() {
-    const article = collectedData?.allArticles.find(
-      (e: any) => e.title === selectedArticle
-    );
-    return article?.content;
+    let selectedContent = null;
+  
+    collectedData?.forEach((item: any) => {
+      const article = item.articleOpj.find(
+        (e: any) => e.title === selectedArticle
+      );
+      if (article) {
+        selectedContent = article.content;
+      }
+    });
+  
+    return selectedContent;
   }
+  
 
   useEffect(() => {
     const button = document.getElementById("highlight-btn");
@@ -209,8 +225,7 @@ const CreateArticle = () => {
                       // options={collectedData.allArticles
                       //   ?.filter((item: any) => item.text !== "")
                       //   .map((e: any) => e.text.split("\n")[0])}
-                      options={choosedArticles
-                        .map((item: any) => item.title.split("\n")[0])}
+                      options={choosedArticles.map((item: any) => item.title)}
                       // getValue={getSelectedArticle}
                     />
                   </div>

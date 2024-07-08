@@ -91,66 +91,42 @@ const chooseArticles = () => {
           <div className={styles.select_article_container}>
             {/* topic collapse */}
 
-            <TopicColapse
-              forComments={false}
-              svgBtn={favIcon}
-              title={"title of topic"}
-              date={"April 16th 2024"}
-            >
-              {collectedData?.allArticles.map((item: any, i: any) => (
-                // <ArticleWithCheck
-                //   article={article}
-                //   accsentColor="#2A2B2A"
-                //   name="select-articles"
-                //   key={i}
-                //   onChange={() => {
-                //     setChoosedArticles([...choosedArticles, article]);
-                //   }}
-                // />
-                <div
-                  className={`${styles.article_with_check} group`}
-                  style={{ "--module-color": "#2A2B2A" }}
-                  key={i}
-                >
-                  <CustomCheckBox
-                    name="select-articles"
-                    value={item?.title}
-                    accentColor="#2A2B2A"
-                    onChange={() =>
-                      setChoosedArticles((prevArticles: any) => [
-                        ...prevArticles,
-                        item,
-                      ])
-                    }
-                  />
-                  <label
-                    className={`${styles.article}`}
-                    // onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
-                    onClick={() => setPreviewText(item.content)}
+            {collectedData?.map((item: any, i: number) => (
+              <TopicColapse
+                forComments={false}
+                svgBtn={favIcon}
+                title={item.generalTitle}
+                key={i} // Consider using a more unique key if possible
+                date={"April 16th 2024"}
+              >
+                {item?.articleOpj.map((ele: any, j: number) => (
+                  <div
+                    className={`${styles.article_with_check} group`}
+                    style={{ "--module-color": "#2A2B2A" }}
+                    key={j} // Consider using a more unique key if possible
                   >
-                    {item?.title}
-                  </label>
-                </div>
-              ))}
-            </TopicColapse>
-
-            {/* topic collapse */}
-            {/* <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
-                            <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
-                            <ArticleWithCheck accsentColor="#2A2B2A" article='dddd' name='select-articles' />
-                        </TopicColapse> */}
-
-            {/* topic collapse */}
-            {/* <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
-                            <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
-                            <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
-                        </TopicColapse> */}
-
-            {/* topic collapse */}
-            {/* <TopicColapse forComments={false} svgBtn={favIcon} title='Canada Loves People' date='April 16th 2024' >
-                            <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
-                            <ArticleWithCheck article='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore' name='select-articles' />
-                        </TopicColapse> */}
+                    <CustomCheckBox
+                      name="select-articles"
+                      value={ele?.title}
+                      accentColor="#2A2B2A"
+                      onChange={() =>
+                        setChoosedArticles((prevArticles: any) => [
+                          ...prevArticles,
+                          ele,
+                        ])
+                      }
+                    />
+                    <label
+                      className={`${styles.article}`}
+                      // onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
+                      onClick={() => setPreviewText(ele.content)}
+                    >
+                      {ele?.title}
+                    </label>
+                  </div>
+                ))}
+              </TopicColapse>
+            ))}
           </div>
         </div>
 
