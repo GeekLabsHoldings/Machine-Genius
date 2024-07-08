@@ -152,7 +152,7 @@ const CreateArticle = () => {
     let selectedContent = null;
   
     collectedData?.forEach((item: any) => {
-      const article = item.articleOpj.find(
+      const article = item.articleJson.find(
         (e: any) => e.title === selectedArticle
       );
       if (article) {

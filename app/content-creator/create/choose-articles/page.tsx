@@ -99,7 +99,7 @@ const chooseArticles = () => {
                 key={i} // Consider using a more unique key if possible
                 date={"April 16th 2024"}
               >
-                {item?.articleOpj.map((ele: any, j: number) => (
+                {item?.articleJson.map((ele: any, j: number) => (
                   <div
                     className={`${styles.article_with_check} group`}
                     style={{ "--module-color": "#2A2B2A" }}
