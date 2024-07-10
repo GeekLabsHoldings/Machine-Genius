@@ -5,15 +5,11 @@ import CustomSelectInput from "../../../_components/CustomSelectInput/CustomSele
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
-import { globalContext } from "@/app/_context/store";
-import { useContext } from "react";
+
 
 const ChooseContent = () => {
-  // loading state that show and hide loading
-  const [IsLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const { setGenerateContent, setCollectedData, collectedData } = useContext(globalContext);
-
+   // loading state that show and hide loading
+   const [IsLoading, setIsLoading] = useState(false);
   // async function generateContent() {
   //   setIsLoading(true);
   //   try {
@@ -31,25 +27,10 @@ const ChooseContent = () => {
   //   }
   // }
 
-   async function getCollectedData() {
-    setIsLoading(true);
-    try {
-      const res = await fetch(`http://localhost:3000/generate-content`);
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const json = await res.json();
-      setCollectedData(json?.organizedArticles);
-      router.push("/content-creator/create/choose-articles");
-    } catch (error) {
-      console.error("Error generating content:", error);
-    } finally {
-      setIsLoading(false);
-      console.log(collectedData);
-    }
-  }
+
 
   // select options
+  
   const options = [
     // "Script",
     // "Article",
@@ -81,7 +62,7 @@ const ChooseContent = () => {
           btnColor="white"
           href="/content-creator/create/choose-brand"
         />
-        <CustomBtn word="Next" btnColor="black" onClick={getCollectedData} />
+        <CustomBtn word="Next" btnColor="black" />
       </div>
     </div>
   );

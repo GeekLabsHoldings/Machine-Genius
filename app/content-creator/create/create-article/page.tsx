@@ -112,7 +112,7 @@ const CreateArticle = () => {
   async function finalizeContent() {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:3000/finalize-content`, {
+      const res = await fetch(`http://localhost:3000/STP/finalize-content`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

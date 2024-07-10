@@ -79,12 +79,13 @@ const CustomSelectInput = (props: Iprops) => {
       >
         {props.icon}
         <span>
-          {props.theme
+          {/* {props.theme
             ? typeof window !== "undefined" &&
               localStorage.getItem("selected-role") === null
               ? "Content Creator"
               : localStorage.getItem("selected-role")
-            : selected}
+            : selected} */}
+          {selected ? selected : props.label}
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"

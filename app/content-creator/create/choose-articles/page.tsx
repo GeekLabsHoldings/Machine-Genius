@@ -55,7 +55,6 @@ const chooseArticles = () => {
   );
 
   const {
-    generateContent,
     previewText,
     setChoosedArticles,
     choosedArticles,
