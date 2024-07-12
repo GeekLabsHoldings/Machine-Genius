@@ -174,7 +174,7 @@ const CreateArticle = () => {
   }
 
   useEffect(() => {
-    if (!collectedData){
+    if (!collectedData || choosedArticles.length === 0){
       window.alert("No data is available. You will be redirected to refetch new data!");
       router.push("/content-creator/create/choose-brand");
       return;
