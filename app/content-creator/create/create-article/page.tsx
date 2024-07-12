@@ -116,35 +116,57 @@ const CreateArticle = () => {
   const router = useRouter();
 
   async function finalizeContent() {
-    if (selectedText.length === 0){
+    if (selectedText.length === 0) {
       window.alert("Please select at least one article!");
       return;
     }
     setIsLoading(true);
-    try {
-      const res = await fetch(`http://localhost:3000/INV/finalize-content`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // selectedContent: selectedText.join(" "),
-          selectedContent: selectedText.map((item: any) => item.text).join(" "),
-        }),
-      });
-      if (!res.ok) {
-        window.alert("Failed to fetch data");
-        throw new Error("Failed to fetch data");
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+  
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(`http://localhost:3000/INV/finalize-content`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            selectedContent: selectedText.map((item: any) => item.text).join(" "),
+          }),
+        });
+  
+        if (!res.ok) {
+          window.alert("Failed to fetch data");
+          throw new Error("Failed to fetch data");
+        }
+  
+        json = await res.json();
+  
+        if (json.articles[0]?.content) {
+          // If content is found, break the loop
+          break;
+        }
+  
+      } catch (error) {
+        console.error("Error generating content:", error);
+      } finally {
+        attempts++;
       }
-      const json = await res.json();
+    }
+  
+    if (json?.articles[0]?.content) {
       setFinalArticle(json);
       router.push("/content-creator/create/final-article");
-    } catch (error) {
-      console.error("Error generating content:", error);
-    } finally {
-      setIsLoading(false);
+    } else {
+      window.alert("Failed to generate content after multiple attempts");
+      router.push("/content-creator/create/choose-brand");
     }
+  
+    setIsLoading(false);
   }
+  
 
   // function that get role value from select option by send it as a prop
   //   const getSelectedArticle = (value: string | number) => {
