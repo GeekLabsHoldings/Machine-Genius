@@ -133,6 +133,7 @@ const CreateArticle = () => {
         }),
       });
       if (!res.ok) {
+        window.alert("Failed to fetch data");
         throw new Error("Failed to fetch data");
       }
       const json = await res.json();
