@@ -90,7 +90,7 @@ const chooseArticles = () => {
           <div className={styles.select_article_container}>
             {/* topic collapse */}
 
-            {collectedData?.map((item: any, i: number) => (
+            {collectedData?.filter((item: any) => item.articleJson.length > 0).map((item: any, i: number) => (
               <TopicColapse
                 forComments={false}
                 svgBtn={favIcon}

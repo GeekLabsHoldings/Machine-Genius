@@ -35,15 +35,21 @@ const CreateArticle = () => {
   // const [selectedArticle, setSelectedArticle] = useState<string | number>();
 
   const handleSelectedText = () => {
+    const button = document.getElementById("highlight-btn");
     const selection = window.getSelection();
     if (selection) {
       const selectedText = selection.toString();
       // @ts-ignore
       // setSelectedText((prev) => [...prev, selectedText]);
-      setSelectedText((prev: any) => [
-        ...prev,
-        { text: selectedText, checked: false },
-      ]);
+      if (selectedText.length > 0) {
+        setSelectedText((prev: any) => [
+          ...prev,
+          { text: selectedText, checked: false },
+        ]);
+      }
+      if (button) {
+        button.style.display = "none";
+      }
     }
   };
 
@@ -112,7 +118,7 @@ const CreateArticle = () => {
   async function finalizeContent() {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:3000/STP/finalize-content`, {
+      const res = await fetch(`http://localhost:3000/INV/finalize-content`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +156,7 @@ const CreateArticle = () => {
 
   function previewSelectedArticle() {
     let selectedContent = null;
-  
+
     collectedData?.forEach((item: any) => {
       const article = item.articleJson.find(
         (e: any) => e.title === selectedArticle
@@ -159,35 +165,64 @@ const CreateArticle = () => {
         selectedContent = article.content;
       }
     });
-  
+
     return selectedContent;
   }
-  
 
   useEffect(() => {
     const button = document.getElementById("highlight-btn");
     const articleContent = document.querySelector("#article-content");
+    let clientX: any, clientY: any;
 
-    if (button && articleContent) {
+    if (articleContent && button) {
+      articleContent.addEventListener("mousedown", function (event: any) {
+        clientX = event.pageX;
+        clientY = event.pageY;
+      });
+
       articleContent.addEventListener("mouseup", () => {
-        const selection = window.getSelection();
-        if (selection) {
-          if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            const rect = range.getBoundingClientRect();
-            if (rect) {
-              button.style.left = `${rect.left + window.scrollX}px`;
-              button.style.top = `${
-                rect.top + window.scrollY - button.offsetHeight
-              }px`;
-              button.style.display = "block";
-            }
-          } else {
-            button.style.display = "none";
-          }
+        let selectionFromDocument: any = document.getSelection();
+        let textValue = selectionFromDocument.toString();
+
+        if (textValue == "") {
+          button.style.display = "none";
+        } else {
+          // Get coOrdinates of the content div
+          let coOrdinates = articleContent.getBoundingClientRect();
+
+          // Calculate button dimensions
+          let buttonWidth = button.offsetWidth;
+          let buttonHeight = button.offsetHeight;
+
+          // Calculate maximum allowable positions
+          let maxPosX = coOrdinates.right - buttonWidth;
+          let maxPosY = coOrdinates.bottom - buttonHeight;
+
+          // Constrain posX and posY
+          let posX = Math.min(
+            Math.max(clientX - Math.round(coOrdinates.left), 0),
+            maxPosX
+          );
+          let posY = Math.min(
+            Math.max(clientY - Math.round(coOrdinates.top) - 40, 0),
+            maxPosY
+          );
+
+          // Set the display style of the button to block
+          button.style.display = "block";
+          // Set the position of the button
+          button.style.left = posX + "px";
+          button.style.top = posY + "px";
         }
       });
     }
+
+    return () => {
+      if (articleContent && button) {
+        articleContent.removeEventListener("mousedown", () => {});
+        articleContent.removeEventListener("mouseup", () => {});
+      }
+    };
   }, []);
 
   return (
@@ -203,15 +238,6 @@ const CreateArticle = () => {
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-[75vh] py-[1.5vw]">
-          <button
-            id="highlight-btn"
-            className={`${styles.highlightBtn}`}
-            onClick={() => {
-              handleSelectedText();
-            }}
-          >
-            Select
-          </button>
           <div className="flex justify-between gap-[2vw] h-full w-full">
             <div className="w-7/12 flex flex-col gap-[3vh] h-full">
               <div className={`${styles.articlesToSelect} h-[15%]`}>
@@ -258,13 +284,19 @@ const CreateArticle = () => {
                 isEditable={true}
               /> */}
 
-              <div className={` ${styles.articlePreview} !h-[57vh]`}>
+              <div className={` ${styles.articlePreview} !h-[57vh]`} id="article-content">
                 <div className={`${styles.articlePreviewData} `}>
                   <div>
-                    <div
-                      id="article-content"
-                      className={`${styles.articleContent} `}
-                    >
+                    <div className={`${styles.articleContent}`}>
+                      <button
+                        id="highlight-btn"
+                        className={`${styles.highlightBtn}`}
+                        onClick={() => {
+                          handleSelectedText();
+                        }}
+                      >
+                        Select
+                      </button>
                       <p
                         contentEditable={true}
                         className={beginSelect ? styles.beginSelection : ""}
@@ -276,42 +308,6 @@ const CreateArticle = () => {
                   </div>
                 </div>
               </div>
-
-              {/* <div className={` ${styles.articlePreview}  `}>
-                <div className={`${styles.articlePreviewData} `}>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Itaque nesciunt in mollitia amet. Optio impedit sed
-                    voluptates, facilis cum provident nihil magnam. Omnis
-                    voluptates ipsam rem. Architecto placeat harum dolorem
-                    laboriosam consequuntur blanditiis libero quisquam ad neque
-                    modi eos sint, odio inventore impedit exercitationem quae
-                    iure ex, maxime laudantium similique.
-                  </p>
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Itaque nesciunt in mollitia amet. Optio impedit sed
-                    voluptates, facilis cum provident nihil magnam. Omnis
-                    voluptates ipsam rem. Architecto placeat harum dolorem
-                    laboriosam consequuntur blanditiis libero quisquam ad neque
-                    modi eos sint, odio inventore impedit exercitationem quae
-                    iure ex, maxime laudantium similique.
-                  </p>{" "}
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Itaque nesciunt in mollitia amet. Optio impedit sed
-                    voluptates, facilis cum provident nihil magnam. Omnis
-                    voluptates ipsam rem. Architecto placeat harum dolorem
-                    laboriosam consequuntur blanditiis libero quisquam ad neque
-                    modi eos sint, odio inventore impedit exercitationem quae
-                    iure ex, maxime laudantium similique.
-                  </p>
-                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
-                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
-                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
-                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque nesciunt in mollitia amet. Optio impedit sed voluptates, facilis cum provident nihil magnam. Omnis voluptates ipsam rem. Architecto placeat harum dolorem laboriosam consequuntur blanditiis libero quisquam ad neque modi eos sint, odio inventore impedit exercitationem quae iure ex, maxime laudantium similique.</p>
-                </div>
-              </div> */}
             </div>
 
             {/* selections part */}
