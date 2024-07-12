@@ -66,6 +66,7 @@ const chooseArticles = () => {
   } = useContext(globalContext);
 
   useEffect(() => {
+    console.log("collectedData", collectedData);
     if (!collectedData) {
       window.alert(
         "No data is available. You will be redirected to refetch new data!"

@@ -63,6 +63,7 @@ const ChooseBrand = () => {
       window.alert("Please select PST Canada or Investorcracy!");
       return;
     }
+  
     let brandNameValue;
     let postBody: any = {};
     if (selectedValue === "PST Canada") {
@@ -70,36 +71,60 @@ const ChooseBrand = () => {
       postBody.brandName = brandNameValue;
     } else if (selectedValue === "Investorcracy") {
       brandNameValue = "INV";
-      // Ensure stockNameValue is defined before using it
       postBody.brandName = brandNameValue;
       postBody.stockName = stockNameValue;
     }
+  
     setIsLoading(true);
-    try {
-      const res = await fetch(`http://localhost:3000/generate-content`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postBody),
-      });
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
+  
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+  
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(`http://localhost:3000/generate-content`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postBody),
+        });
+  
+        if (!res.ok) {
+          throw new Error("Failed to fetch data");
+        }
+  
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Received non-JSON response");
+        }
+  
+        json = await res.json();
+  
+        if (json?.organizedArticles) {
+          // If valid data is found, break the loop
+          break;
+        }
+  
+      } catch (error) {
+        console.error("Error generating content:", error);
+      } finally {
+        attempts++;
       }
-      const contentType = res.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Received non-JSON response");
-      }
-      const json = await res.json();
-      setCollectedData(json?.organizedArticles);
-      router.push("/content-creator/create/choose-articles");
-    } catch (error) {
-      console.error("Error generating content:", error);
-    } finally {
-      setIsLoading(false);
-      console.log("collectedData", collectedData);
     }
+  
+    if (json?.organizedArticles) {
+      setCollectedData(json.organizedArticles);
+      router.push("/content-creator/create/choose-articles");
+    } else {
+      window.alert("Failed to generate content after multiple attempts");
+      router.push("/content-creator/create/choose-brand");
+    }
+  
+    setIsLoading(false);
   }
+  
 
   useEffect(() => {
     console.log(SelectedValue);
