@@ -1,8 +1,7 @@
 "use client";
-import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from "./final-artical.module.css";
@@ -16,12 +15,40 @@ const FinalArticle = () => {
 
   const { finalArticle, setFinalArticle } = useContext(globalContext);
 
+  useEffect(() => {
+    if (
+      !finalArticle ||
+      !finalArticle.articles[0] ||
+      !finalArticle.articles[0]?.content ||
+      finalArticle.success !== true
+    ) {
+      window.alert(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      router.push("/content-creator/create/choose-brand");
+      return;
+    }
+  }, []);
+
   // show loading page before navigate to next page
   const handleNavigate = () => {
     setIsLoading(true);
     const finalArticleContent =
       document.getElementById("finalArticle")?.innerHTML;
-    setFinalArticle([{ ...finalArticle[0], content: finalArticleContent }]);
+
+    // setFinalArticle([
+    //   { ...finalArticle.articles[0], content: finalArticleContent },
+    // ]);
+
+    setFinalArticle((prev: any) => ({
+      ...prev,
+      articles: [
+        {
+          ...prev.articles[0],
+          content: finalArticleContent,
+        },
+      ],
+    }));
 
     //   setTimeout(() => {
     //     // Your action here
@@ -73,7 +100,7 @@ const FinalArticle = () => {
               <div className={` ${styles.articlePreview} h-full `}>
                 <div className={`${styles.articlePreviewData} `}>
                   <h1 className="mx-auto font-bold text-2xl">
-                    {finalArticle && finalArticle[0]?.title}
+                    {finalArticle?.articles[0]?.title}
                   </h1>
 
                   <div
@@ -82,7 +109,7 @@ const FinalArticle = () => {
                     className={`${styles.articleContent}`}
                     // onInput={handleInput}
                   >
-                    {finalArticle && finalArticle[0]?.content}
+                    {finalArticle?.articles[0]?.content}
                   </div>
                 </div>
               </div>

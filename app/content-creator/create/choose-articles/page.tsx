@@ -4,10 +4,13 @@ import styles from "./chooseArticles.module.css";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 // import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
 import { globalContext } from "@/app/_context/store";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import { useRouter } from "next/navigation";
 
 const chooseArticles = () => {
+  const router = useRouter();
+
   // favorite icon
   const favIcon = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
@@ -62,6 +65,16 @@ const chooseArticles = () => {
     collectedData,
   } = useContext(globalContext);
 
+  useEffect(() => {
+    if (!collectedData) {
+      window.alert(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      router.push("/content-creator/create/choose-brand");
+      return;
+    }
+  }, []);
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-start gap-[2rem] h-[75vh] py-[1.5vw]">
@@ -90,42 +103,44 @@ const chooseArticles = () => {
           <div className={styles.select_article_container}>
             {/* topic collapse */}
 
-            {collectedData?.filter((item: any) => item.articleJson.length > 0).map((item: any, i: number) => (
-              <TopicColapse
-                forComments={false}
-                svgBtn={favIcon}
-                title={item.generalTitle}
-                key={i} // Consider using a more unique key if possible
-                date={"April 16th 2024"}
-              >
-                {item?.articleJson.map((ele: any, j: number) => (
-                  <div
-                    className={`${styles.article_with_check} group`}
-                    style={{ "--module-color": "#2A2B2A" }}
-                    key={j} // Consider using a more unique key if possible
-                  >
-                    <CustomCheckBox
-                      name="select-articles"
-                      value={ele?.title}
-                      accentColor="#2A2B2A"
-                      onChange={() =>
-                        setChoosedArticles((prevArticles: any) => [
-                          ...prevArticles,
-                          ele,
-                        ])
-                      }
-                    />
-                    <label
-                      className={`${styles.article}`}
-                      // onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
-                      onClick={() => setPreviewText(ele.content)}
+            {collectedData
+              ?.filter((item: any) => item.articleJson.length > 0)
+              .map((item: any, i: number) => (
+                <TopicColapse
+                  forComments={false}
+                  svgBtn={favIcon}
+                  title={item.generalTitle}
+                  key={i} // Consider using a more unique key if possible
+                  date={"April 16th 2024"}
+                >
+                  {item?.articleJson.map((ele: any, j: number) => (
+                    <div
+                      className={`${styles.article_with_check} group`}
+                      style={{ "--module-color": "#2A2B2A" }}
+                      key={j} // Consider using a more unique key if possible
                     >
-                      {ele?.title}
-                    </label>
-                  </div>
-                ))}
-              </TopicColapse>
-            ))}
+                      <CustomCheckBox
+                        name="select-articles"
+                        value={ele?.title}
+                        accentColor="#2A2B2A"
+                        onChange={() =>
+                          setChoosedArticles((prevArticles: any) => [
+                            ...prevArticles,
+                            ele,
+                          ])
+                        }
+                      />
+                      <label
+                        className={`${styles.article}`}
+                        // onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
+                        onClick={() => setPreviewText(ele.content)}
+                      >
+                        {ele?.title}
+                      </label>
+                    </div>
+                  ))}
+                </TopicColapse>
+              ))}
           </div>
         </div>
 
@@ -145,10 +160,11 @@ const chooseArticles = () => {
           btnColor="white"
           href={"/content-creator/create/choose-content"}
         />
+
         <CustomBtn
-          word={"Next"}
+          word="Next"
           btnColor="black"
-          href={"/content-creator/create/create-article"}
+          href="/content-creator/create/create-article"
         />
       </div>
     </div>

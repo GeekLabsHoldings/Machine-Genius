@@ -2,10 +2,9 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./ChooseBrand.module.css";
 import CustomSelectInput from "../../../_components/CustomSelectInput/CustomSelectInput";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { globalContext } from "@/app/_context/store";
-import { useContext } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 // import Radio from '@mui/material/Radio';
 // import RadioGroup from '@mui/material/RadioGroup';
@@ -13,10 +12,29 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 // import FormControl from '@mui/material/FormControl';
 // import FormLabel from '@mui/material/FormLabel';
 
-
 const ChooseBrand = () => {
   const router = useRouter();
-  const { setCollectedData, collectedData } = useContext(globalContext);
+
+  const {
+    setCollectedData,
+    setChoosedArticles,
+    setPreviewText,
+    setSelectedArticle,
+    setSelectedText,
+    setFinalArticle,
+    collectedData,
+  } = useContext(globalContext);
+
+  // reset all the data
+  useEffect(() => {
+    setCollectedData(null);
+    setChoosedArticles([]);
+    setPreviewText("");
+    setSelectedArticle(null);
+    setSelectedText([]);
+    setFinalArticle(null);
+  }, []);
+
   // loading state that show and hide loading
   const [IsLoading, setIsLoading] = useState(false);
   // selected option from custom select
@@ -26,7 +44,7 @@ const ChooseBrand = () => {
     setSelectedValue(value);
   };
 
-  const [stockNameValue, setStockNameValue] = useState('NVDA');
+  const [stockNameValue, setStockNameValue] = useState("NVDA");
   // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setStockNameValue((event.target as HTMLInputElement).value);
   // };
@@ -41,6 +59,10 @@ const ChooseBrand = () => {
   ];
 
   async function getCollectedData(selectedValue: any) {
+    if (selectedValue !== "PST Canada" && selectedValue !== "Investorcracy") {
+      window.alert("Please select PST Canada or Investorcracy!");
+      return;
+    }
     let brandNameValue;
     let postBody: any = {};
     if (selectedValue === "PST Canada") {
@@ -48,9 +70,9 @@ const ChooseBrand = () => {
       postBody.brandName = brandNameValue;
     } else if (selectedValue === "Investorcracy") {
       brandNameValue = "INV";
-    // Ensure stockNameValue is defined before using it
-    postBody.brandName = brandNameValue;
-    postBody.stockName = stockNameValue;
+      // Ensure stockNameValue is defined before using it
+      postBody.brandName = brandNameValue;
+      postBody.stockName = stockNameValue;
     }
     setIsLoading(true);
     try {
@@ -75,7 +97,7 @@ const ChooseBrand = () => {
       console.error("Error generating content:", error);
     } finally {
       setIsLoading(false);
-      console.log(collectedData);
+      console.log("collectedData", collectedData);
     }
   }
 
@@ -106,16 +128,13 @@ const ChooseBrand = () => {
       <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw] ">
         <label className={styles.select_label}>For This Brand</label>
 
-
         <CustomSelectInput
           label="Select Brand"
           options={options}
           getValue={getValue}
         />
 
-        
-
-{/* {SelectedValue === "Investorcracy" && (
+        {/* {SelectedValue === "Investorcracy" && (
   <FormControl sx={{marginTop: "2vh"}}>
       <RadioGroup
         aria-labelledby="demo-controlled-radio-buttons-group"
@@ -132,8 +151,6 @@ const ChooseBrand = () => {
       </RadioGroup>
     </FormControl>
 )} */}
-
-
       </div>
 
       {/* buttons to move to last or next page */}

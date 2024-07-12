@@ -116,6 +116,10 @@ const CreateArticle = () => {
   const router = useRouter();
 
   async function finalizeContent() {
+    if (selectedText.length === 0){
+      window.alert("Please select at least one article!");
+      return;
+    }
     setIsLoading(true);
     try {
       const res = await fetch(`http://localhost:3000/INV/finalize-content`, {
@@ -132,7 +136,7 @@ const CreateArticle = () => {
         throw new Error("Failed to fetch data");
       }
       const json = await res.json();
-      setFinalArticle(json.articles);
+      setFinalArticle(json);
       router.push("/content-creator/create/final-article");
     } catch (error) {
       console.error("Error generating content:", error);
@@ -170,6 +174,12 @@ const CreateArticle = () => {
   }
 
   useEffect(() => {
+    if (!collectedData){
+      window.alert("No data is available. You will be redirected to refetch new data!");
+      router.push("/content-creator/create/choose-brand");
+      return;
+    }
+
     const button = document.getElementById("highlight-btn");
     const articleContent = document.querySelector("#article-content");
     let clientX: any, clientY: any;

@@ -56,7 +56,7 @@ const ArticlePreview = ({
   ));
 
   // return highlighted parts that are wanted to be in my article
-  const renderWantedParts = selectedText?.map((singlePart) => (
+  const renderWantedParts = selectedText?.map((singlePart:any) => (
     <p>{singlePart}</p>
   ));
 

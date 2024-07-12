@@ -3,11 +3,12 @@ import ArticlePreview from '@/app/_components/ArticlePreview/ArticlePreview'
 import CustomBtn from '@/app/_components/Button/CustomBtn'
 import styles from './show-errors.module.css'
 import ErrorCollapse from '@/app/_components/ErrorCollapse/ErrorCollapse'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 // import { useRouter } from 'next/navigation'
 import LogoAndTitle from '@/app/_components/LogoAndTitle/LogoAndTitle'
 import SpecificChecker from '@/app/_components/SpecificChecker/SpecificChecker'
-
+import { globalContext } from "@/app/_context/store";
+import { useContext } from "react";
 
 // page that displays the errors in the article 
 const ShowErrors = () => {
@@ -30,6 +31,10 @@ const ShowErrors = () => {
         //   }, 1500); // 3000 milliseconds = 3 seconds
 
     }
+    const { finalArticle } = useContext(globalContext);
+    useEffect(() => {
+       console.log(finalArticle)
+    }, [])
 
     return (
         <>

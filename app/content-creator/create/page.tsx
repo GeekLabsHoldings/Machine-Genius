@@ -1,7 +1,9 @@
-
+"use client";
 import CustomSelectInput from "../../_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "../../_components/Button/CustomBtn";
 import styles from "./Create.module.css";
+import { globalContext } from "@/app/_context/store";
+import { useContext, useEffect } from "react";
 
 const options = [
   "Script",
@@ -9,6 +11,30 @@ const options = [
 ]
 
 const Create = () => {
+
+
+  const {
+    setCollectedData,
+    setChoosedArticles,
+    setPreviewText,
+    setSelectedArticle,
+    setSelectedText,
+    setFinalArticle
+  } = useContext(globalContext);
+  
+  
+  // reset all the data
+  useEffect(() => {
+    setCollectedData(null);
+    setChoosedArticles([]);
+    setPreviewText("");
+    setSelectedArticle(null);
+    setSelectedText([]);
+    setFinalArticle(null);
+  }, []);
+
+
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-col justify-center items-center w-full">
