@@ -135,6 +135,7 @@ const CreateArticle = () => {
           body: JSON.stringify({
             selectedContent: selectedText.map((item: any) => item.text).join(" "),
           }),
+          cache: 'no-store',
         });
   
         if (!res.ok) {
