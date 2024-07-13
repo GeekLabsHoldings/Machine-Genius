@@ -4,7 +4,7 @@ import styles from "./chooseArticles.module.css";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 // import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
 import { globalContext } from "@/app/_context/store";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import { useRouter } from "next/navigation";
 
@@ -57,10 +57,12 @@ const chooseArticles = () => {
     </svg>
   );
 
+  const [isChoosedArticles, setIsChoosedArticles] = useState(false);
+
   const {
     previewText,
-    setChoosedArticles,
     choosedArticles,
+    setChoosedArticles,
     setPreviewText,
     collectedData,
   } = useContext(globalContext);
@@ -75,6 +77,13 @@ const chooseArticles = () => {
       return;
     }
   }, []);
+
+  useEffect(() => {
+    console.log("choosedArticles", choosedArticles);
+    if (choosedArticles.length > 0) {
+      setIsChoosedArticles(true);
+    }
+  }, [choosedArticles]);
 
   return (
     <div className="flex flex-col">
@@ -162,11 +171,23 @@ const chooseArticles = () => {
           href={"/content-creator/create/choose-content"}
         />
 
-        <CustomBtn
-          word="Next"
-          btnColor="black"
-          href="/content-creator/create/create-article"
-        />
+        {isChoosedArticles ? (
+          <CustomBtn
+            word="Next"
+            btnColor="black"
+            href="/content-creator/create/create-article"
+          />
+        ) : (
+          <CustomBtn
+            word="Next"
+            btnColor="black"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.alert("Please select at least one article");
+            }}
+          />
+        )}
       </div>
     </div>
   );
