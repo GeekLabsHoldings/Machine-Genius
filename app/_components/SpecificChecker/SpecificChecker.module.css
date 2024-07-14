@@ -9,13 +9,23 @@
     font-weight: 300;
 }
 
+
 .loader {
     width: 24px;
     height: 24px;
-    aspect-ratio: 1;
+    border: 5px solid #1c1c1c;
+    border-bottom-color: transparent;
     border-radius: 50%;
-    border: 8px solid;
-    border-color: #000 #0000;
-    animation: l1 1s infinite;
-  }
-  @keyframes l1 {to{transform: rotate(.5turn)}}
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 

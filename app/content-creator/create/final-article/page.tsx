@@ -12,11 +12,12 @@ const FinalArticle = () => {
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { finalArticle, setFinalArticle, setCheckResults } = useContext(globalContext);
+  const { finalArticle, setFinalArticle, setCheckResults } =
+    useContext(globalContext);
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
     // todo
-    plagiarism: "fetchError",
+    plagiarism: "waiting",
     ai: "waiting",
   });
 
@@ -64,12 +65,11 @@ const FinalArticle = () => {
     //   }, 1500); // 3000 milliseconds = 3 seconds
   };
 
-
-  async function startChecks(){
+  async function startChecks() {
     await checkGrammer();
     await checkAi();
-  }  
- 
+  }
+
   async function checkGrammer() {
     const maxRetries = 2; // Define the maximum number of retries
     let attempts = 0;
@@ -83,7 +83,7 @@ const FinalArticle = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, "")
+            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
           }),
           // cache: "no-store",
         });
@@ -107,24 +107,24 @@ const FinalArticle = () => {
     }
 
     if (json) {
-        if (json.grammarIssues.length > 0){
-          setCheckStatus((prev) => ({...prev, grammar: "fail"}))
-        } else {
-          setCheckStatus((prev) => ({...prev, grammar: "pass"}))
-        }
-        let results = [];
-        for (const issue of json.grammarIssues){
-          results.push({
-            description: issue.description,
-            replacement: issue.replacement,
-            sentence: issue.sentence,
-          })
-        }
-        console.log("checkGrammerResults1", json);
-        console.log("checkGrammerResults2", results);
-        setCheckResults((prev: any) => [...prev, ...results]);
+      if (json.grammarIssues.length > 0) {
+        setCheckStatus((prev) => ({ ...prev, grammar: "fail" }));
+      } else {
+        setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
+      }
+      let results = [];
+      for (const issue of json.grammarIssues) {
+        results.push({
+          description: issue.description,
+          replacement: issue.replacement,
+          sentence: issue.sentence,
+        });
+      }
+      console.log("checkGrammerResults1", json);
+      console.log("checkGrammerResults2", results);
+      setCheckResults((prev: any) => [...prev, ...results]);
     } else {
-      setCheckStatus((prev) => ({...prev, grammar: "fetchError"}))
+      setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       window.alert("Failed to generate content after multiple attempts");
       router.push("/content-creator/create/choose-brand");
     }
@@ -143,7 +143,7 @@ const FinalArticle = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, "")
+            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
           }),
           // cache: "no-store",
         });
@@ -167,20 +167,18 @@ const FinalArticle = () => {
     }
 
     if (json) {
-        if (json.documents[0].class_probabilities.human < 0.8){
-          setCheckStatus((prev) => ({...prev, ai: "fail"}))
-        } else {
-          setCheckStatus((prev) => ({...prev, ai: "pass"}))
-        }
-        console.log("checkAiResult", json)
+      if (json.documents[0].class_probabilities.human < 0.8) {
+        setCheckStatus((prev) => ({ ...prev, ai: "fail" }));
+      } else {
+        setCheckStatus((prev) => ({ ...prev, ai: "pass" }));
+      }
+      console.log("checkAiResult", json);
     } else {
-      setCheckStatus((prev) => ({...prev, ai: "fetchError"}))
+      setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
       window.alert("Failed to generate content after multiple attempts");
       router.push("/content-creator/create/choose-brand");
     }
   }
-
-
 
   //   const handleInput = (event: any) => {
   //     // const newContent = event.target.innerHTML;
@@ -245,7 +243,14 @@ const FinalArticle = () => {
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >
-                {finalArticle?.articles[0]?.content}
+                {finalArticle?.articles[0]?.content
+                  .match(/[^\.!\?]+[\.!\?]+/g)
+                  ?.map((e: any, index: number) => (
+                    <>
+                      <p key={index}>{e}</p>
+                      <br />
+                    </>
+                  ))}
               </div>
             </div>
           </div>
