@@ -15,7 +15,8 @@ const FinalArticle = () => {
   const { finalArticle, setFinalArticle, setCheckResults } = useContext(globalContext);
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
-    plagiarism: "",
+    // todo
+    plagiarism: "fetchError",
     ai: "waiting",
   });
 
@@ -119,9 +120,11 @@ const FinalArticle = () => {
             sentence: issue.sentence,
           })
         }
-        console.log("checkResults", results);
+        console.log("checkGrammerResults1", json);
+        console.log("checkGrammerResults2", results);
         setCheckResults((prev: any) => [...prev, ...results]);
     } else {
+      setCheckStatus((prev) => ({...prev, grammar: "fetchError"}))
       window.alert("Failed to generate content after multiple attempts");
       router.push("/content-creator/create/choose-brand");
     }
@@ -169,8 +172,9 @@ const FinalArticle = () => {
         } else {
           setCheckStatus((prev) => ({...prev, ai: "pass"}))
         }
-        console.log("ai", json)
+        console.log("checkAiResult", json)
     } else {
+      setCheckStatus((prev) => ({...prev, ai: "fetchError"}))
       window.alert("Failed to generate content after multiple attempts");
       router.push("/content-creator/create/choose-brand");
     }
