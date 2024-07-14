@@ -24,7 +24,7 @@ export interface IArticleProps {
     beginSelect?:boolean,
     withEdit:boolean,
     yourNewArticle:boolean,
-    isEditable: boolean,
+    isEditable?: boolean,
     finalArticle?: any
 }
 

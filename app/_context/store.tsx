@@ -2,8 +2,6 @@
 import { createContext, useState } from "react";
 
 const initialContextState = {
-  // generateContent: null as any,
-  // setGenerateContent: (content: any) => {},
   collectedData: null as any,
   setCollectedData: (data: any) => {},
   choosedArticles: [] as any,
@@ -14,7 +12,7 @@ const initialContextState = {
   setSelectedArticle: (article: any) => {},
   selectedText: [] as any,
   setSelectedText: (text: any) => {},
-  finalArticle: [] as any,
+  finalArticle: null as any,
   setFinalArticle: (article: any) => {},
 };
 
@@ -27,20 +25,17 @@ export default function GlobalContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  // const [generateContent, setGenerateContent] = useState<any>(null);
   const [collectedData, setCollectedData] = useState<any>(null);
   const [choosedArticles, setChoosedArticles] = useState<any>([]);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [previewText, setPreviewText] = useState<any>("");
   const [selectedText, setSelectedText] = useState<any>([]);
-  const [finalArticle, setFinalArticle] = useState<any>([]);
+  const [finalArticle, setFinalArticle] = useState<any>(null);
 
   // Create a context value object
   const contextValue = {
     selectedText,
     setSelectedText,
-    // generateContent,
-    // setGenerateContent,
     collectedData,
     setCollectedData,
     previewText,
