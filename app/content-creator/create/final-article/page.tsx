@@ -111,8 +111,6 @@ const FinalArticle = () => {
       window.alert("Failed to generate content after multiple attempts");
       router.push("/content-creator/create/choose-brand");
     }
-
-    setIsLoading(false);
   }
 
 

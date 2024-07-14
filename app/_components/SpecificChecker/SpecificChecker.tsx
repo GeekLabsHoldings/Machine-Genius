@@ -15,7 +15,7 @@ const SpecificChecker = ({ word, checkStatus }: ICheckerProps) => {
       {/* right icon with green or red background based on the recieved result */}
       <div>
         {checkStatus === "waiting" ? (
-          <span className="loader"></span>
+          <div className={styles.loader}></div>
         ) : checkStatus === "pass" ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
