@@ -137,7 +137,7 @@ const CreateArticle = () => {
               .map((item: any) => item.text)
               .join(" "),
           }),
-          cache: "no-store",
+          // cache: "no-store",
         });
 
         if (!res.ok) {

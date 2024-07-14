@@ -89,7 +89,7 @@ const ChooseBrand = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(postBody),
-          cache: 'no-store',
+          // cache: 'no-store',
         });
   
         if (!res.ok) {
