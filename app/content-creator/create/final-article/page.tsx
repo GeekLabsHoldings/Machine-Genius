@@ -78,7 +78,7 @@ const FinalArticle = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content
+            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, "")
           }),
           // cache: "no-store",
         });

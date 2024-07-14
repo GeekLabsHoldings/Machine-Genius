@@ -127,7 +127,7 @@ const CreateArticle = () => {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`http://localhost:3000/INV/finalize-content`, {
+        const res = await fetch(`http://localhost:3000/script/finalize-content`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
