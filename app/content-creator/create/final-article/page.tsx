@@ -12,12 +12,16 @@ const FinalArticle = () => {
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
   const { finalArticle, setFinalArticle } = useContext(globalContext);
+  const [checkStatus, setCheckStatus] = useState({
+    grammar: "waiting",
+    plagiarism: "waiting",
+    ai: "waiting",
+  });
 
   useEffect(() => {
     if (
-      !finalArticle 
+      !finalArticle
       // ||
       // !finalArticle.articles[0] ||
       // !finalArticle.articles[0]?.content ||
@@ -27,7 +31,6 @@ const FinalArticle = () => {
         "No data is available. You will be redirected to refetch new data!"
       );
       router.push("/content-creator/create/choose-brand");
-      return;
     }
   }, []);
 
@@ -65,72 +68,67 @@ const FinalArticle = () => {
   //     setFinalArticle([{ ...finalArticle[0], content: updatedContent }]);
   //   };
 
+  if (IsLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle
+            needTxt={false}
+            title="Genius is working on your article.."
+          />
+          <div className={`${styles.allCheckers} w-full`}>
+            <SpecificChecker checkStatus={checkStatus.grammar} word="Grammar Checker" />
+            <SpecificChecker checkStatus={checkStatus.plagiarism} word="Plagiarism Checker" />
+            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
+          </div>
+          <CustomBtn
+            word={"Results"}
+            btnColor="black"
+            href="/content-creator/create/show-errors"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col">
-      {/* loading screen */}
-      {IsLoading ? (
-        <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
-          <div className={`${styles.genuisWorking}`}>
-            <LogoAndTitle
-              needTxt={false}
-              title="Genius is working on your article.."
-            />
-            <div className={`${styles.allCheckers} w-full`}>
-              <SpecificChecker pass={false} word="Grammar Checker" />
-              <SpecificChecker pass={false} word="Plagiarism Checker" />
-              <SpecificChecker pass={false} word="AI Checker" />
-            </div>
-            <CustomBtn
-              word={"Results"}
-              btnColor="black"
-              href="/content-creator/create/show-errors"
-            />
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] w-11/12 ">
-            {/* section to display article */}
-            <div className="w-4/5 mx-auto h-full">
-              {/* <ArticlePreview
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] w-11/12 ">
+        {/* section to display article */}
+        <div className="w-4/5 mx-auto h-full">
+          {/* <ArticlePreview
                 isEditable={false}
                 yourNewArticle={true}
                 finalArticle={finalArticle}
               /> */}
 
-              <div className={` ${styles.articlePreview} h-full `}>
-                <div className={`${styles.articlePreviewData} `}>
-                  <h1 className="mx-auto font-bold text-2xl">
-                    {finalArticle?.articles[0]?.title}
-                  </h1>
+          <div className={` ${styles.articlePreview} h-full `}>
+            <div className={`${styles.articlePreviewData} `}>
+              <h1 className="mx-auto font-bold text-2xl">
+                {finalArticle?.articles[0]?.title}
+              </h1>
 
-                  <div
-                    id="finalArticle"
-                    contentEditable={true}
-                    className={`${styles.articleContent}`}
-                    // onInput={handleInput}
-                  >
-                    {finalArticle?.articles[0]?.content}
-                  </div>
-                </div>
+              <div
+                id="finalArticle"
+                contentEditable={true}
+                className={`${styles.articleContent}`}
+                // onInput={handleInput}
+              >
+                {finalArticle?.articles[0]?.content}
               </div>
             </div>
           </div>
-          {/* buttons to move to last or next page */}
-          <div className="flex justify-between items-center">
-            <CustomBtn
-              word={"Back"}
-              btnColor="white"
-              href={"/content-creator/create/create-article"}
-            />
-            <CustomBtn
-              word={"Next"}
-              btnColor="black"
-              onClick={handleNavigate}
-            />
-          </div>
-        </>
-      )}
+        </div>
+      </div>
+      {/* buttons to move to last or next page */}
+      <div className="flex justify-between items-center">
+        <CustomBtn
+          word={"Back"}
+          btnColor="white"
+          href={"/content-creator/create/create-article"}
+        />
+        <CustomBtn word={"Next"} btnColor="black" onClick={handleNavigate} />
+      </div>
     </div>
   );
 };

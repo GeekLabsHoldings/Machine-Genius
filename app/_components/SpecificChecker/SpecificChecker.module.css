@@ -8,14 +8,22 @@
     font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
     font-weight: 300;
 }
-.greenColor svg{
-    fill: #5FA85B;
-}
-.redColor svg{
-    fill: rgba(233, 49, 62, 1);
-}
-.greenColor svg, .redColor svg{
-    width: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
-    height: clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
 
-}
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
