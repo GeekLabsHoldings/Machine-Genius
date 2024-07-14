@@ -17,10 +17,11 @@ const FinalArticle = () => {
 
   useEffect(() => {
     if (
-      !finalArticle ||
-      !finalArticle.articles[0] ||
-      !finalArticle.articles[0]?.content ||
-      finalArticle.success !== true
+      !finalArticle 
+      // ||
+      // !finalArticle.articles[0] ||
+      // !finalArticle.articles[0]?.content ||
+      // finalArticle.success !== true
     ) {
       window.alert(
         "No data is available. You will be redirected to refetch new data!"
