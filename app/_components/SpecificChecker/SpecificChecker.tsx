@@ -22,7 +22,7 @@ const SpecificChecker = ({ word, checkStatus }: ICheckerProps) => {
             x="0px"
             y="0px"
             viewBox="0 0 48 48"
-            className="w-[24px] h-[24px]"
+            className="w-[29px] h-[29px]"
           >
             <path
               fill="#4caf50"
@@ -38,7 +38,7 @@ const SpecificChecker = ({ word, checkStatus }: ICheckerProps) => {
             xmlns="http://www.w3.org/2000/svg"
             x="0px"
             y="0px"
-            className="w-[24px] h-[24px]"
+            className="w-[29px] h-[29px]"
             viewBox="0 0 48 48"
           >
             <path
@@ -56,7 +56,7 @@ const SpecificChecker = ({ word, checkStatus }: ICheckerProps) => {
           </svg>
         ) : checkStatus === "fetchError" ? (
           <svg
-            className="w-[24px] h-[24px] iconify iconify--emojione"
+            className="w-[29px] h-[29px] iconify iconify--emojione"
             viewBox="0 0 64 64"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
