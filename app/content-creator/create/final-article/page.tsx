@@ -15,8 +15,8 @@ const FinalArticle = () => {
   const { finalArticle, setFinalArticle } = useContext(globalContext);
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
-    plagiarism: "waiting",
-    ai: "waiting",
+    plagiarism: "",
+    ai: "",
   });
 
   useEffect(() => {
@@ -54,12 +54,68 @@ const FinalArticle = () => {
       ],
     }));
 
+    checkGrammer();
+
     //   setTimeout(() => {
     //     // Your action here
     //     router.push('/content-creator/create/final-article')
 
     //   }, 1500); // 3000 milliseconds = 3 seconds
   };
+
+  
+ 
+  async function checkGrammer() {
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(`http://localhost:3000/grammar-check`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            document: finalArticle?.articles[0]?.content
+          }),
+          // cache: "no-store",
+        });
+
+        if (!res.ok) {
+          window.alert("Failed to fetch data");
+          throw new Error("Failed to fetch data");
+        }
+
+        json = await res.json();
+
+        if (json) {
+          // If content is found, break the loop
+          break;
+        }
+      } catch (error) {
+        console.error("Error generating content:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+        if (json.grammarIssues.length > 0){
+          setCheckStatus((prev) => ({...prev, grammar: "fail"}))
+        } else {
+          setCheckStatus((prev) => ({...prev, grammar: "pass"}))
+        }
+    } else {
+      window.alert("Failed to generate content after multiple attempts");
+      router.push("/content-creator/create/choose-brand");
+    }
+
+    setIsLoading(false);
+  }
+
+
 
   //   const handleInput = (event: any) => {
   //     // const newContent = event.target.innerHTML;
@@ -77,15 +133,25 @@ const FinalArticle = () => {
             title="Genius is working on your article.."
           />
           <div className={`${styles.allCheckers} w-full`}>
-            <SpecificChecker checkStatus={checkStatus.grammar} word="Grammar Checker" />
-            <SpecificChecker checkStatus={checkStatus.plagiarism} word="Plagiarism Checker" />
+            <SpecificChecker
+              checkStatus={checkStatus.grammar}
+              word="Grammar Checker"
+            />
+            <SpecificChecker
+              checkStatus={checkStatus.plagiarism}
+              word="Plagiarism Checker"
+            />
             <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
           </div>
-          <CustomBtn
-            word={"Results"}
-            btnColor="black"
-            href="/content-creator/create/show-errors"
-          />
+          {checkStatus.grammar !== "waiting" &&
+          checkStatus.plagiarism !== "waiting" &&
+          checkStatus.ai !== "waiting" ? (
+            <CustomBtn
+              word={"Results"}
+              btnColor="black"
+              href="/content-creator/create/show-errors"
+            />
+          ) : null}
         </div>
       </div>
     );
