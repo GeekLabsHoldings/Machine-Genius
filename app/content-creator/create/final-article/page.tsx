@@ -12,11 +12,11 @@ const FinalArticle = () => {
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { finalArticle, setFinalArticle } = useContext(globalContext);
+  const { finalArticle, setFinalArticle, setCheckResults } = useContext(globalContext);
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
     plagiarism: "",
-    ai: "",
+    ai: "waiting",
   });
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const FinalArticle = () => {
       ],
     }));
 
-    checkGrammer();
+    startChecks();
 
     //   setTimeout(() => {
     //     // Your action here
@@ -63,7 +63,11 @@ const FinalArticle = () => {
     //   }, 1500); // 3000 milliseconds = 3 seconds
   };
 
-  
+
+  async function startChecks(){
+    await checkGrammer();
+    await checkAi();
+  }  
  
   async function checkGrammer() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -107,6 +111,65 @@ const FinalArticle = () => {
         } else {
           setCheckStatus((prev) => ({...prev, grammar: "pass"}))
         }
+        let results = [];
+        for (const issue of json.grammarIssues){
+          results.push({
+            description: issue.description,
+            replacement: issue.replacement,
+            sentence: issue.sentence,
+          })
+        }
+        console.log("checkResults", results);
+        setCheckResults((prev: any) => [...prev, ...results]);
+    } else {
+      window.alert("Failed to generate content after multiple attempts");
+      router.push("/content-creator/create/choose-brand");
+    }
+  }
+
+  async function checkAi() {
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(`http://localhost:3000/AI-check`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, "")
+          }),
+          // cache: "no-store",
+        });
+
+        if (!res.ok) {
+          window.alert("Failed to fetch data");
+          throw new Error("Failed to fetch data");
+        }
+
+        json = await res.json();
+
+        if (json) {
+          // If content is found, break the loop
+          break;
+        }
+      } catch (error) {
+        console.error("Error generating content:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+        if (json.documents[0].class_probabilities.human < 0.8){
+          setCheckStatus((prev) => ({...prev, ai: "fail"}))
+        } else {
+          setCheckStatus((prev) => ({...prev, ai: "pass"}))
+        }
+        console.log("ai", json)
     } else {
       window.alert("Failed to generate content after multiple attempts");
       router.push("/content-creator/create/choose-brand");

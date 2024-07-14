@@ -14,6 +14,8 @@ const initialContextState = {
   setSelectedText: (text: any) => {},
   finalArticle: null as any,
   setFinalArticle: (article: any) => {},
+  checkResults: [] as any,
+  setCheckResults: (result: any) => {},
 };
 
 // 1- create context, export it
@@ -31,6 +33,7 @@ export default function GlobalContextProvider({
   const [previewText, setPreviewText] = useState<any>("");
   const [selectedText, setSelectedText] = useState<any>([]);
   const [finalArticle, setFinalArticle] = useState<any>(null);
+  const [checkResults, setCheckResults] = useState<any>([]);
 
   // Create a context value object
   const contextValue = {
@@ -46,6 +49,8 @@ export default function GlobalContextProvider({
     setSelectedArticle,
     finalArticle,
     setFinalArticle,
+    checkResults,
+    setCheckResults,
   };
 
   return (
