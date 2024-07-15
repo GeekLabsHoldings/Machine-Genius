@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styles from './ErrorCollapse.module.css'
 
 interface IProps {
-    children: string
+    children: React.ReactNode,
     title: string,
     date?: string
 }

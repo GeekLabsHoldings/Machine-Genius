@@ -12,11 +12,10 @@ const FinalArticle = () => {
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { finalArticle, setFinalArticle, setCheckResults } =
+  const { finalArticle, setFinalArticle, setCheckGrammerResults } =
     useContext(globalContext);
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
-    // todo
     plagiarism: "waiting",
     ai: "waiting",
   });
@@ -119,17 +118,17 @@ const FinalArticle = () => {
       } else {
         setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
       }
-      let results = [];
-      for (const issue of json.grammarIssues) {
-        results.push({
-          description: issue.description,
-          replacement: issue.replacement,
-          sentence: issue.sentence,
-        });
-      }
+      // let results = [];
+      // for (const issue of json.grammarIssues) {
+      //   results.push({
+      //     description: issue.description,
+      //     replacement: issue.replacement,
+      //     sentence: issue.sentence,
+      //   });
+      // }
       console.log("checkGrammerResults1", json);
-      console.log("checkGrammerResults2", results);
-      setCheckResults((prev: any) => [...prev, ...results]);
+      // console.log("checkGrammerResults2", results);
+      setCheckGrammerResults(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other"));
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       window.alert("Failed to generate content after multiple attempts");

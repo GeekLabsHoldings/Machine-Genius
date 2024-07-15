@@ -28,80 +28,110 @@ const ShowErrors = () => {
 
     //   }, 1500); // 3000 milliseconds = 3 seconds
   };
-  const { finalArticle, checkResults } = useContext(globalContext);
+  const { finalArticle, checkGrammerResults } = useContext(globalContext);
   useEffect(() => {
-    console.log(finalArticle);
+    console.log("finalArticle", finalArticle);
+    console.log("checkGrammerResults", checkGrammerResults);
   }, []);
+
+  if (IsLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking} m-auto`}>
+          <LogoAndTitle
+            needTxt={false}
+            title="Genius is working on your article.."
+          />
+          <div className={`${styles.allCheckers} w-full`}>
+            <SpecificChecker checkStatus={"todo"} word="Grammar Checker" />
+            <SpecificChecker checkStatus={"todo"} word="Plagiarism Checker" />
+            <SpecificChecker checkStatus={"todo"} word="AI Checker" />
+          </div>
+          <CustomBtn
+            word={"Request Approval"}
+            btnColor="black"
+            href="/content-creator/create/script-approved"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function highlightText(text: string, start: number, end: number) {
+    // return text.slice(0, start) + "<span className='bg-red-500'>" + text.slice(start, end) + "</span>" + text.slice(end);
+    return [text.slice(0, start), text.slice(start, end), text.slice(end)];
+  }
 
   return (
     <>
       <div className="flex flex-col h-full">
-        {/* loading screen */}
-        {IsLoading ? (
-          <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.5vw]">
-            <div className={`${styles.genuisWorking} m-auto`}>
-              <LogoAndTitle
-                needTxt={false}
-                title="Genius is working on your article.."
-              />
-              <div className={`${styles.allCheckers} w-full`}>
-                <SpecificChecker checkStatus={"todo"} word="Grammar Checker" />
-                <SpecificChecker checkStatus={"todo"} word="Plagiarism Checker" />
-                <SpecificChecker checkStatus={"todo"} word="AI Checker" />
-              </div>
-              <CustomBtn
-                word={"Request Approval"}
-                btnColor="black"
-                href="/content-creator/create/script-approved"
-              />
+        <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
+          <div className={"w-3/5 h-full"}>
+            <ArticlePreview
+              yourNewArticle={true}
+              height="h-full"
+              withEdit={true}
+            />
+          </div>
+          <div className={styles.scripts_wrapper + " w-2/5"}>
+            <div className={styles.header}>
+              <h6>Errors</h6>
+              <h6>({checkGrammerResults.length})</h6>
+            </div>
+
+            <div className={styles.errors_container}>
+
+
+
+  {
+    checkGrammerResults.map((item: any) => {
+      return (
+        <ErrorCollapse title="Grammer">
+          <>
+          <p><span className="font-bold">Grammar Issue:</span> {item.description}</p>
+          <p><span className="font-bold">In the following sentence:</span> 
+          "
+          <span>{highlightText(item.sentence, item.start, item.end)[0]}</span>
+          <span className='bg-red-200'>{highlightText(item.sentence, item.start, item.end)[1]}</span>
+          <span>{highlightText(item.sentence, item.start, item.end)[2]}</span>
+          "</p>
+          <p><span className="font-bold">Replace:</span> "{item.sentence.slice(item.start, item.end)}" <span className="font-bold">With:</span> {item.replacement}</p>
+          </>
+        </ErrorCollapse>
+      );
+    })
+  }
+
+              {/* error Collapse */}
+              {/* <ErrorCollapse title="Plagiarism">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque
+                doloribus ratione non similique velit modi eum repudiandae, nam
+                saepe amet quaerat quasi placeat, dolore molestiae magnam iure
+                earum ipsam. Soluta.
+              </ErrorCollapse> */}
+
+
+
+
+
+
+
             </div>
           </div>
-        ) : (
-          <>
-            <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
-              <div className={"w-3/5 h-full"}>
-                <ArticlePreview
-                  yourNewArticle={true}
-                  height="h-full"
-                  withEdit={true}
-                />
-              </div>
-              <div className={styles.scripts_wrapper + " w-2/5"}>
-                <div className={styles.header}>
-                  <h6>Errors</h6>
-                  <h6>({checkResults.length})</h6>
-                </div>
-
-                <div className={styles.errors_container}>
-                  {/* error Collapse */}
-                  <ErrorCollapse title="Plagiarism">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Itaque doloribus ratione non similique velit modi eum
-                    repudiandae, nam saepe amet quaerat quasi placeat, dolore
-                    molestiae magnam iure earum ipsam. Soluta.
-                  </ErrorCollapse>
-
-
-
-
-                </div>
-              </div>
-            </div>
-            {/* buttons lead you to last or next page */}
-            <div className="flex justify-between w-full">
-              <CustomBtn
-                word={"Back"}
-                btnColor="white"
-                href="/content-creator/create/final-article"
-              />
-              <CustomBtn
-                word={"Fix & Check"}
-                btnColor="black"
-                onClick={handleNavigate}
-              />
-            </div>
-          </>
-        )}
+        </div>
+        {/* buttons lead you to last or next page */}
+        <div className="flex justify-between w-full">
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href="/content-creator/create/final-article"
+          />
+          <CustomBtn
+            word={"Fix & Check"}
+            btnColor="black"
+            onClick={handleNavigate}
+          />
+        </div>
       </div>
     </>
   );

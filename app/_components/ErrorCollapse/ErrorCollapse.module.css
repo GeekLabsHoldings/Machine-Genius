@@ -17,7 +17,7 @@
     cursor: pointer;
     position: relative;
     z-index: 2;
-    transition: none;
+    transition: box-shadow 0.3s ease;
 }
 
 .topic_collapse .collapse_header h6 {
@@ -70,7 +70,7 @@
 }
 
 .topic_collapse .collapse_header:hover {
-    border: 2px solid var(--dark);
+    box-shadow: 0 0 0 2px var(--dark);
 }
 
 .topic_collapse.open .collapse_header:hover {
