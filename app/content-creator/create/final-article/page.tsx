@@ -73,6 +73,7 @@ const FinalArticle = () => {
 
   async function startChecks() {
     await checkGrammer();
+    await checkPlagiarism();
     await checkAi();
   }
 
@@ -132,7 +133,58 @@ const FinalArticle = () => {
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       window.alert("Failed to generate content after multiple attempts");
-      router.push("/content-creator/create/choose-brand");
+      // router.push("/content-creator/create/choose-brand");
+    }
+  }
+
+  async function checkPlagiarism() {
+    const maxRetries = 1; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(`http://localhost:3000/plagiarism-check`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
+          }),
+          // cache: "no-store",
+        });
+
+        if (!res.ok) {
+          // window.alert("Failed to fetch data");
+          throw new Error("Failed to fetch data");
+        }
+
+        json = await res.json();
+
+        if (json) {
+          // If content is found, break the loop
+          break;
+        }
+      } catch (error) {
+        console.error("Error generating content:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+      // todo
+      if (json) {
+        setCheckStatus((prev) => ({ ...prev, plagiarism: "fail" }));
+      } else {
+        setCheckStatus((prev) => ({ ...prev, plagiarism: "pass" }));
+      }
+      console.log("checkPlagiarismResult", json);
+    } else {
+      setCheckStatus((prev) => ({ ...prev, plagiarism: "fetchError" }));
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.push("/content-creator/create/choose-brand");
     }
   }
 
@@ -182,7 +234,7 @@ const FinalArticle = () => {
     } else {
       setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
       window.alert("Failed to generate content after multiple attempts");
-      router.push("/content-creator/create/choose-brand");
+      // router.push("/content-creator/create/choose-brand");
     }
   }
 
