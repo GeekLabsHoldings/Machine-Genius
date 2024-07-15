@@ -77,8 +77,9 @@ const chooseArticles = () => {
       router.push("/content-creator/create/choose-brand");
     } else{
       if (typeof window !== "undefined"){
-        if (sessionStorage.getItem("collectedData")) {
-          setCollectedData(JSON.parse(sessionStorage.getItem("collectedData") || "[]"));
+        const storedData = sessionStorage.getItem("collectedData");
+        if (storedData) {
+          setCollectedData(JSON.parse(storedData));
         }
       }
     }

@@ -130,18 +130,21 @@ const CreateArticle = () => {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`http://localhost:3000/script/finalize-content`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            selectedContent: selectedText
-              .map((item: any) => item.text)
-              .join(" "),
-          }),
-          // cache: "no-store",
-        });
+        const res = await fetch(
+          `http://localhost:3000/script/finalize-content`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              selectedContent: selectedText
+                .map((item: any) => item.text)
+                .join(" "),
+            }),
+            // cache: "no-store",
+          }
+        );
 
         if (!res.ok) {
           window.alert("Failed to fetch data");
@@ -212,19 +215,25 @@ const CreateArticle = () => {
 
   useEffect(() => {
     console.log("choosedArticles", choosedArticles);
-    if ((!collectedData || choosedArticles.length === 0) && !sessionStorage.getItem("choosedArticles")) {
+    if (
+      (!collectedData || choosedArticles.length === 0) &&
+      !sessionStorage.getItem("choosedArticles")
+    ) {
       window.alert(
         "No data is available. You will be redirected to refetch new data!"
       );
       router.push("/content-creator/create/choose-brand");
       return;
-    } else{
-      if (typeof window !== "undefined"){
-        if (sessionStorage.getItem("collectedData")) {
-          setCollectedData(JSON.parse(sessionStorage.getItem("collectedData") || "[]"));
+    } else {
+      if (typeof window !== "undefined") {
+        const storedData = sessionStorage.getItem("collectedData");
+        if (storedData) {
+          setCollectedData(JSON.parse(storedData));
         }
-        if (sessionStorage.getItem("choosedArticles")) {
-          setChoosedArticles(JSON.parse(sessionStorage.getItem("choosedArticles") || "[]"));
+
+        const storedChoosedArticles = sessionStorage.getItem("choosedArticles");
+        if (storedChoosedArticles) {
+          setChoosedArticles(JSON.parse(storedChoosedArticles));
         }
       }
     }
@@ -292,14 +301,16 @@ const CreateArticle = () => {
           textNeeded="Hold on tight."
           title="Genius is working on your article.."
         />
-                {
-          IsRetry && (
-            <CustomBtn btnColor="black" word="Retry" onClick={() => {
+        {IsRetry && (
+          <CustomBtn
+            btnColor="black"
+            word="Retry"
+            onClick={() => {
               finalizeContent();
               setIsRetry(false);
-            }} />
-          )
-        }
+            }}
+          />
+        )}
       </div>
     );
   }
