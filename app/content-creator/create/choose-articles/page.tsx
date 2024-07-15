@@ -65,16 +65,22 @@ const chooseArticles = () => {
     setChoosedArticles,
     setPreviewText,
     collectedData,
+    setCollectedData
   } = useContext(globalContext);
 
   useEffect(() => {
     console.log("collectedData", collectedData);
-    if (!collectedData) {
+    if (!collectedData && !sessionStorage.getItem("collectedData")) {
       window.alert(
         "No data is available. You will be redirected to refetch new data!"
       );
       router.push("/content-creator/create/choose-brand");
-      return;
+    } else{
+      if (typeof window !== "undefined"){
+        if (sessionStorage.getItem("collectedData")) {
+          setCollectedData(JSON.parse(sessionStorage.getItem("collectedData") || "[]"));
+        }
+      }
     }
   }, []);
 
@@ -82,6 +88,9 @@ const chooseArticles = () => {
     console.log("choosedArticles", choosedArticles);
     if (choosedArticles.length > 0) {
       setIsChoosedArticles(true);
+    }
+    if (typeof window !== "undefined"){                         
+      sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));                        
     }
   }, [choosedArticles]);
 
@@ -133,11 +142,12 @@ const chooseArticles = () => {
                         name="select-articles"
                         value={ele?.title}
                         accentColor="#2A2B2A"
-                        onChange={() =>
+                        onChange={() => {
                           setChoosedArticles((prevArticles: any) => [
                             ...prevArticles,
                             ele,
                           ])
+                        }                          
                         }
                       />
                       <label

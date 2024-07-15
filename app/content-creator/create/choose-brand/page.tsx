@@ -109,7 +109,7 @@ const ChooseBrand = () => {
         }
   
       } catch (error) {
-        console.error("Error generating content:", error);
+        console.error("Error getCollectedData:", error);
       } finally {
         attempts++;
       }
@@ -117,6 +117,9 @@ const ChooseBrand = () => {
   
     if (json?.organizedArticles) {
       setCollectedData(json.organizedArticles);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("collectedData", JSON.stringify(json.organizedArticles));
+      }
       router.push("/content-creator/create/choose-articles");
     } else {
       window.alert("Failed to generate content after multiple attempts");

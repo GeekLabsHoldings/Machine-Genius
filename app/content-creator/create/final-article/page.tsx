@@ -23,7 +23,7 @@ const FinalArticle = () => {
 
   useEffect(() => {
     if (
-      !finalArticle
+      !finalArticle && !sessionStorage.getItem("finalArticle")
       // ||
       // !finalArticle.articles[0] ||
       // !finalArticle.articles[0]?.content ||
@@ -33,6 +33,12 @@ const FinalArticle = () => {
         "No data is available. You will be redirected to refetch new data!"
       );
       router.push("/content-creator/create/choose-brand");
+    } else {
+      if (typeof window !== "undefined"){
+        if (sessionStorage.getItem("finalArticle")) {
+          setFinalArticle(JSON.parse(sessionStorage.getItem("finalArticle") || ""));
+        }
+      }
     }
   }, []);
 

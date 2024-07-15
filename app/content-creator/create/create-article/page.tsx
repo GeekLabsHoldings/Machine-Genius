@@ -22,7 +22,9 @@ const CreateArticle = () => {
     setSelectedText,
     setFinalArticle,
     choosedArticles,
+    setChoosedArticles,
     collectedData,
+    setCollectedData,
     selectedArticle,
     setPreviewText,
   } = useContext(globalContext);
@@ -152,7 +154,7 @@ const CreateArticle = () => {
           break;
         }
       } catch (error) {
-        console.error("Error generating content:", error);
+        console.error("Error finalizeContent:", error);
       } finally {
         attempts++;
       }
@@ -160,6 +162,9 @@ const CreateArticle = () => {
 
     if (json?.articles[0]?.content) {
       setFinalArticle(json);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("finalArticle", JSON.stringify(json));
+      }
       router.push("/content-creator/create/final-article");
     } else {
       window.alert("Failed to generate content after multiple attempts");
@@ -199,12 +204,21 @@ const CreateArticle = () => {
 
   useEffect(() => {
     console.log("choosedArticles", choosedArticles);
-    if (!collectedData || choosedArticles.length === 0) {
+    if ((!collectedData || choosedArticles.length === 0) && !sessionStorage.getItem("choosedArticles")) {
       window.alert(
         "No data is available. You will be redirected to refetch new data!"
       );
       router.push("/content-creator/create/choose-brand");
       return;
+    } else{
+      if (typeof window !== "undefined"){
+        if (sessionStorage.getItem("collectedData")) {
+          setCollectedData(JSON.parse(sessionStorage.getItem("collectedData") || "[]"));
+        }
+        if (sessionStorage.getItem("choosedArticles")) {
+          setChoosedArticles(JSON.parse(sessionStorage.getItem("choosedArticles") || "[]"));
+        }
+      }
     }
 
     const button = document.getElementById("highlight-btn");
