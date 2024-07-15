@@ -13,7 +13,7 @@ const SpecificChecker = ({ word, checkStatus }: ICheckerProps) => {
       {/* type of check */}
       <p>{word}</p>
       {/* right icon with green or red background based on the recieved result */}
-      <div>
+      <div className="flex justify-center items-center">
         {checkStatus === "waiting" ? (
           <span className={styles.loader}></span>
         ) : checkStatus === "pass" ? (
