@@ -107,7 +107,7 @@ const FinalArticle = () => {
           break;
         }
       } catch (error) {
-        console.error("Error generating content:", error);
+        console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
       }
@@ -167,7 +167,7 @@ const FinalArticle = () => {
           break;
         }
       } catch (error) {
-        console.error("Error generating content:", error);
+        console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
       }
@@ -218,7 +218,7 @@ const FinalArticle = () => {
           break;
         }
       } catch (error) {
-        console.error("Error generating content:", error);
+        console.error("Error checkAi:", error);
       } finally {
         attempts++;
       }
