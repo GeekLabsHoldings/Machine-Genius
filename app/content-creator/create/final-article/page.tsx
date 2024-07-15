@@ -129,6 +129,9 @@ const FinalArticle = () => {
       console.log("checkGrammerResults1", json);
       // console.log("checkGrammerResults2", results);
       setCheckGrammerResults(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other"));
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("checkGrammerResults", JSON.stringify(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other")));
+      }
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       window.alert("Failed to generate content after multiple attempts");
@@ -311,6 +314,9 @@ const FinalArticle = () => {
               </div>
             </div>
           </div>
+
+
+
         </div>
       </div>
       {/* buttons to move to last or next page */}

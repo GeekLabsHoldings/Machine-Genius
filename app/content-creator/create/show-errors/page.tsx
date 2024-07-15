@@ -9,12 +9,14 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
 // page that displays the errors in the article
 const ShowErrors = () => {
   // loading state that make loading show or hide
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // const router = useRouter()
   // const router = useRouter()
@@ -28,10 +30,34 @@ const ShowErrors = () => {
 
     //   }, 1500); // 3000 milliseconds = 3 seconds
   };
-  const { finalArticle, checkGrammerResults } = useContext(globalContext);
+  const { finalArticle, setFinalArticle, checkGrammerResults, setCheckGrammerResults } = useContext(globalContext);
+
+
   useEffect(() => {
     console.log("finalArticle", finalArticle);
     console.log("checkGrammerResults", checkGrammerResults);
+
+    if (
+      !finalArticle && !sessionStorage.getItem("finalArticle")
+    ) {
+      window.alert(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      router.push("/content-creator/create/choose-brand");
+    } else {
+      if (typeof window !== "undefined"){
+        if (sessionStorage.getItem("finalArticle")) {
+          setFinalArticle(JSON.parse(sessionStorage.getItem("finalArticle") || ""));
+        }
+        if (sessionStorage.getItem("checkGrammerResults")) {
+          setCheckGrammerResults(JSON.parse(sessionStorage.getItem("checkGrammerResults") || ""));
+        }
+      }
+    }
+
+
+
+
   }, []);
 
   if (IsLoading) {
@@ -67,11 +93,35 @@ const ShowErrors = () => {
       <div className="flex flex-col h-full">
         <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
           <div className={"w-3/5 h-full"}>
-            <ArticlePreview
+
+
+
+            {/* <ArticlePreview
               yourNewArticle={true}
               height="h-full"
               withEdit={true}
-            />
+            /> */}
+
+
+<div className={` ${styles.articlePreview} h-full`}>
+            <div className={`${styles.articlePreviewData} `}>
+              <h1 className="mx-auto font-bold text-2xl">
+                {finalArticle?.articles[0]?.title}
+              </h1>
+
+              <div
+                id="finalArticle"
+                contentEditable={true}
+                className={`${styles.articleContent}`}
+                // onInput={handleInput}
+              >
+                {finalArticle?.articles[0]?.content}
+              </div>
+            </div>
+          </div>
+
+
+
           </div>
           <div className={styles.scripts_wrapper + " w-2/5"}>
             <div className={styles.header}>
