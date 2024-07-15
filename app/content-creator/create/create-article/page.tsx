@@ -203,6 +203,10 @@ const CreateArticle = () => {
   }
 
   useEffect(() => {
+    console.log("selectedText", selectedText);
+  }, [selectedText]);
+
+  useEffect(() => {
     console.log("choosedArticles", choosedArticles);
     if ((!collectedData || choosedArticles.length === 0) && !sessionStorage.getItem("choosedArticles")) {
       window.alert(
