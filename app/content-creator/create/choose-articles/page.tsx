@@ -178,7 +178,8 @@ const chooseArticles = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/content-creator/create/choose-content"}
+          // href={"/content-creator/create/choose-content"}
+          href={"/content-creator/create/choose-brand"}
         />
 
         {isChoosedArticles ? (

@@ -37,6 +37,7 @@ const ChooseBrand = () => {
 
   // loading state that show and hide loading
   const [IsLoading, setIsLoading] = useState(false);
+  const [IsRetry, setIsRetry] = useState(false);
   // selected option from custom select
   const [SelectedValue, setSelectedValue] = useState<string | number>("");
   // function that get select value by sending to custom select as a prop
@@ -61,7 +62,6 @@ const ChooseBrand = () => {
   async function getCollectedData(selectedValue: any) {
     if (selectedValue !== "PST Canada" && selectedValue !== "Investorcracy") {
       window.alert("Please select PST Canada or Investorcracy!");
-      return;
     }
   
     let brandNameValue;
@@ -120,13 +120,16 @@ const ChooseBrand = () => {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("collectedData", JSON.stringify(json.organizedArticles));
       }
+      setIsRetry(false);
+      setIsLoading(false);
       router.push("/content-creator/create/choose-articles");
     } else {
-      window.alert("Failed to generate content after multiple attempts");
-      router.push("/content-creator/create/choose-brand");
+      setIsRetry(true);
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.push("/content-creator/create/choose-brand");
     }
   
-    setIsLoading(false);
+    // setIsLoading(false);
   }
   
 
@@ -141,12 +144,20 @@ const ChooseBrand = () => {
 
   if (IsLoading) {
     return (
-      <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
+      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
         <LogoAndTitle
           needTxt={true}
           textNeeded="Hold on tight."
           title="Genius is working on your article.."
         />
+        {
+          IsRetry && (
+            <CustomBtn btnColor="black" word="Retry" onClick={() => {
+              getCollectedData(SelectedValue);
+              setIsRetry(false);
+            }} />
+          )
+        }
       </div>
     );
   }
