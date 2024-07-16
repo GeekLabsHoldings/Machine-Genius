@@ -121,7 +121,6 @@ const CreateArticle = () => {
   async function finalizeContent() {
     if (selectedText.length === 0) {
       window.alert("Please select at least one article!");
-      return;
     }
     setIsLoading(true);
     const maxRetries = 2; // Define the maximum number of retries
@@ -223,7 +222,6 @@ const CreateArticle = () => {
         "No data is available. You will be redirected to refetch new data!"
       );
       router.push("/content-creator/create/choose-brand");
-      return;
     } else {
       if (typeof window !== "undefined") {
         const storedData = sessionStorage.getItem("collectedData");
