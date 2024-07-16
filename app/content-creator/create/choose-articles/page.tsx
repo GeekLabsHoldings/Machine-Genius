@@ -65,18 +65,20 @@ const chooseArticles = () => {
     setChoosedArticles,
     setPreviewText,
     collectedData,
-    setCollectedData
+    setCollectedData,
   } = useContext(globalContext);
 
   useEffect(() => {
     console.log("collectedData", collectedData);
+    // reset choosedArticles
+    setChoosedArticles([]);
     if (!collectedData && !sessionStorage.getItem("collectedData")) {
       window.alert(
         "No data is available. You will be redirected to refetch new data!"
       );
       router.push("/content-creator/create/choose-brand");
-    } else{
-      if (typeof window !== "undefined"){
+    } else {
+      if (typeof window !== "undefined") {
         const storedData = sessionStorage.getItem("collectedData");
         if (storedData) {
           setCollectedData(JSON.parse(storedData));
@@ -89,9 +91,14 @@ const chooseArticles = () => {
     console.log("choosedArticles", choosedArticles);
     if (choosedArticles.length > 0) {
       setIsChoosedArticles(true);
+    } else {
+      setIsChoosedArticles(false);
     }
-    if (typeof window !== "undefined"){                         
-      sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));                        
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(
+        "choosedArticles",
+        JSON.stringify(choosedArticles)
+      );
     }
   }, [choosedArticles]);
 
@@ -144,12 +151,25 @@ const chooseArticles = () => {
                         value={ele?.title}
                         accentColor="#2A2B2A"
                         onChange={() => {
-                          setChoosedArticles((prevArticles: any) => [
-                            ...prevArticles,
-                            ele,
-                          ])
-                        }                          
-                        }
+                          // setChoosedArticles((prevArticles: any) => [
+                          //   ...prevArticles,
+                          //   ele,
+                          // ])
+
+                          setChoosedArticles((prevArticles: any) => {
+                            if (
+                              prevArticles.some(
+                                (article: any) => article.title === ele.title
+                              )
+                            ) {
+                              return prevArticles.filter(
+                                (article: any) => article.title !== ele.title
+                              );
+                            } else {
+                              return [...prevArticles, ele];
+                            }
+                          });
+                        }}
                       />
                       <label
                         className={`${styles.article}`}

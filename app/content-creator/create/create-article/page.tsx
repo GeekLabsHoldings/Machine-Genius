@@ -121,63 +121,63 @@ const CreateArticle = () => {
   async function finalizeContent() {
     if (selectedText.length === 0) {
       window.alert("Please select at least one article!");
-    }
-    setIsLoading(true);
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `http://localhost:3000/script/finalize-content`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              selectedContent: selectedText
-                .map((item: any) => item.text)
-                .join(" "),
-            }),
-            // cache: "no-store",
-          }
-        );
-
-        if (!res.ok) {
-          window.alert("Failed to fetch data");
-          throw new Error("Failed to fetch data");
-        }
-
-        json = await res.json();
-
-        if (json.articles[0]?.content) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        console.error("Error finalizeContent:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json?.articles[0]?.content) {
-      setFinalArticle(json);
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("finalArticle", JSON.stringify(json));
-      }
-      setIsRetry(false);
-      setIsLoading(false);
-      router.push("/content-creator/create/final-article");
     } else {
-      setIsRetry(true);
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
-    }
+      setIsLoading(true);
+      const maxRetries = 2; // Define the maximum number of retries
+      let attempts = 0;
+      let json = null;
 
-    // setIsLoading(false);
+      while (attempts < maxRetries) {
+        try {
+          const res = await fetch(
+            `http://localhost:3000/script/finalize-content`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                selectedContent: selectedText
+                  .map((item: any) => item.text)
+                  .join(" "),
+              }),
+              // cache: "no-store",
+            }
+          );
+
+          if (!res.ok) {
+            throw new Error("Failed to fetch data");
+          }
+
+          json = await res.json();
+
+          if (json.articles[0]?.content) {
+            // If content is found, break the loop
+            break;
+          }
+        } catch (error) {
+          console.error("Error finalizeContent:", error);
+        } finally {
+          attempts++;
+        }
+      }
+
+      if (json?.articles[0]?.content) {
+        setFinalArticle(json);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("finalArticle", JSON.stringify(json));
+        }
+        setIsRetry(false);
+        setIsLoading(false);
+        router.push("/content-creator/create/final-article");
+      } else {
+        setIsRetry(true);
+        // window.alert("Failed to generate content after multiple attempts");
+        // router.push("/content-creator/create/choose-brand");
+      }
+
+      // setIsLoading(false);
+    }
   }
 
   // function that get role value from select option by send it as a prop
@@ -444,7 +444,13 @@ const CreateArticle = () => {
           btnColor="white"
           href={"/content-creator/create/choose-articles"}
         />
-        <CustomBtn word={"Next"} btnColor="black" onClick={finalizeContent} />
+        <CustomBtn
+          word={"Next"}
+          btnColor="black"
+          onClick={() => {
+            finalizeContent();
+          }}
+        />
       </div>
     </div>
   );

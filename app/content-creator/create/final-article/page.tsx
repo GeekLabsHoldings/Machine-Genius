@@ -95,7 +95,6 @@ const FinalArticle = () => {
         });
 
         if (!res.ok) {
-          window.alert("Failed to fetch data");
           throw new Error("Failed to fetch data");
         }
 
@@ -134,7 +133,7 @@ const FinalArticle = () => {
       }
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
-      window.alert("Failed to generate content after multiple attempts");
+      // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
   }
@@ -158,7 +157,6 @@ const FinalArticle = () => {
         });
 
         if (!res.ok) {
-          // window.alert("Failed to fetch data");
           throw new Error("Failed to fetch data");
         }
 
@@ -209,7 +207,6 @@ const FinalArticle = () => {
         });
 
         if (!res.ok) {
-          window.alert("Failed to fetch data");
           throw new Error("Failed to fetch data");
         }
 
@@ -235,7 +232,7 @@ const FinalArticle = () => {
       console.log("checkAiResult", json);
     } else {
       setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
-      window.alert("Failed to generate content after multiple attempts");
+      // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
   }
