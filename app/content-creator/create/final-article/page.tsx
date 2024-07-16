@@ -7,6 +7,7 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from "./final-artical.module.css";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
+import Link from "next/link";
 // page enables you to have a look to your article
 const FinalArticle = () => {
   // state to handle content while page is loading its content
@@ -265,13 +266,13 @@ const FinalArticle = () => {
           </div>
           {checkStatus.grammar !== "waiting" &&
           checkStatus.plagiarism !== "waiting" &&
-          checkStatus.ai !== "waiting" ? (
+          checkStatus.ai !== "waiting" && (
             <CustomBtn
               word={"Results"}
               btnColor="black"
               href="/content-creator/create/show-errors/"
             />
-          ) : null}
+          )}
         </div>
       </div>
     );
