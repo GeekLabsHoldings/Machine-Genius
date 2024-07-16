@@ -27,6 +27,7 @@ const CreateArticle = () => {
     setCollectedData,
     selectedArticle,
     setPreviewText,
+    selectedBrand
   } = useContext(globalContext);
 
   // state to enable text selection when click on highlight button
@@ -122,6 +123,12 @@ const CreateArticle = () => {
     if (selectedText.length === 0) {
       window.alert("Please select at least one article!");
     } else {
+      let brandNameValue;
+      if (selectedBrand === "PST Canada") {
+        brandNameValue = "StreetPolitics";
+      } else if (selectedBrand === "Investorcracy") {
+        brandNameValue = "Investocracy";
+      }
       setIsLoading(true);
       const maxRetries = 2; // Define the maximum number of retries
       let attempts = 0;
@@ -140,6 +147,7 @@ const CreateArticle = () => {
                 selectedContent: selectedText
                   .map((item: any) => item.text)
                   .join(" "),
+                  brandName: brandNameValue
               }),
               // cache: "no-store",
             }

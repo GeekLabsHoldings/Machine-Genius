@@ -2,6 +2,8 @@
 import { createContext, useState } from "react";
 
 const initialContextState = {
+  selectedBrand: "" as any,
+  setSelectedBrand: (brand: any) => {},
   collectedData: null as any,
   setCollectedData: (data: any) => {},
   choosedArticles: [] as any,
@@ -27,6 +29,7 @@ export default function GlobalContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [selectedBrand, setSelectedBrand] = useState<any>("");
   const [collectedData, setCollectedData] = useState<any>(null);
   const [choosedArticles, setChoosedArticles] = useState<any>([]);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
@@ -37,6 +40,8 @@ export default function GlobalContextProvider({
 
   // Create a context value object
   const contextValue = {
+    selectedBrand,
+    setSelectedBrand,
     selectedText,
     setSelectedText,
     collectedData,

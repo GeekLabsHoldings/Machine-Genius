@@ -23,6 +23,8 @@ const ChooseBrand = () => {
     setSelectedText,
     setFinalArticle,
     collectedData,
+    selectedBrand,
+    setSelectedBrand
   } = useContext(globalContext);
 
   // reset all the data
@@ -43,6 +45,7 @@ const ChooseBrand = () => {
   // function that get select value by sending to custom select as a prop
   const getValue = (value: string | number) => {
     setSelectedValue(value);
+    setSelectedBrand(value);
   };
 
   const [stockNameValue, setStockNameValue] = useState("NVDA");
@@ -131,7 +134,7 @@ const ChooseBrand = () => {
 
   useEffect(() => {
     console.log(SelectedValue);
-
+    console.log(`selectedBrand`, selectedBrand);    
     // navigate to movie myth if user select movie myth option
     if (SelectedValue === "Movie Myth") {
       router.push("/content-creator/create/movie-myth");
