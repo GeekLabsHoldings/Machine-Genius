@@ -39,7 +39,7 @@ const ChooseBrand = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [IsRetry, setIsRetry] = useState(false);
   // selected option from custom select
-  const [SelectedValue, setSelectedValue] = useState<string | number>("");
+  const [SelectedValue, setSelectedValue] = useState<any>("");
   // function that get select value by sending to custom select as a prop
   const getValue = (value: string | number) => {
     setSelectedValue(value);
