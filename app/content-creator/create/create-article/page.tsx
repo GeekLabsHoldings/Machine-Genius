@@ -27,7 +27,8 @@ const CreateArticle = () => {
     setCollectedData,
     selectedArticle,
     setPreviewText,
-    selectedBrand
+    selectedBrand,
+    setSelectedBrand
   } = useContext(globalContext);
 
   // state to enable text selection when click on highlight button
@@ -123,12 +124,21 @@ const CreateArticle = () => {
     if (selectedText.length === 0) {
       window.alert("Please select at least one article!");
     } else {
-      let brandNameValue;
+      var postBody: any = {};
+      console.log(`selectedBrand`, selectedBrand);
+      
       if (selectedBrand === "PST Canada") {
-        brandNameValue = "StreetPolitics";
+        postBody.selectedContent = selectedText
+        .map((item: any) => item.text)
+        .join(" ");
+        postBody.brandName = "StreetPolitics";
       } else if (selectedBrand === "Investorcracy") {
-        brandNameValue = "Investocracy";
+        postBody.selectedContent = selectedText
+        .map((item: any) => item.text)
+        .join(" ");
+        postBody.brandName = "Investocracy";
       }
+      console.log(postBody);
       setIsLoading(true);
       const maxRetries = 2; // Define the maximum number of retries
       let attempts = 0;
@@ -143,12 +153,7 @@ const CreateArticle = () => {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({
-                selectedContent: selectedText
-                  .map((item: any) => item.text)
-                  .join(" "),
-                  brandName: brandNameValue
-              }),
+              body: JSON.stringify(postBody),
               // cache: "no-store",
             }
           );
@@ -222,6 +227,11 @@ const CreateArticle = () => {
 
   useEffect(() => {
     console.log("choosedArticles", choosedArticles);
+    console.log("selectedBrand", selectedBrand);
+    if (typeof window !== "undefined") {
+      setSelectedBrand(sessionStorage.getItem("selectedBrand"));
+    }
+
     if (
       (!collectedData || choosedArticles.length === 0) &&
       !sessionStorage.getItem("choosedArticles")

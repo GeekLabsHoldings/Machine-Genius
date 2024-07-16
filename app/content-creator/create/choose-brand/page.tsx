@@ -46,6 +46,9 @@ const ChooseBrand = () => {
   const getValue = (value: string | number) => {
     setSelectedValue(value);
     setSelectedBrand(value);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("selectedBrand", value.toString());
+    }
   };
 
   const [stockNameValue, setStockNameValue] = useState("NVDA");
