@@ -269,7 +269,7 @@ const FinalArticle = () => {
             <CustomBtn
               word={"Results"}
               btnColor="black"
-              href="/content-creator/create/show-errors"
+              href="/content-creator/create/show-errors/"
             />
           ) : null}
         </div>
