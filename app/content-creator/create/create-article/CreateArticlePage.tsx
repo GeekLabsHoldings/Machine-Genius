@@ -130,6 +130,10 @@ export default function CreateArticlePage() {
   // }, [finalArticle, IsRetry, IsLoading]);
 
 
+  async function setFinalArticleAsync(json: any) {
+    setFinalArticle(json);
+  }
+
   async function finalizeContent() {
     if (selectedText.length === 0) {
       // window.alert("Please select at least one article!");
@@ -164,7 +168,6 @@ export default function CreateArticlePage() {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify(postBody),
-              // cache: "no-store",
             }
           );
 
@@ -173,7 +176,7 @@ export default function CreateArticlePage() {
           }
 
           json = await res.json();
-
+      
           if (json.articles[0]?.content) {
             // If content is found, break the loop
             break;
@@ -186,20 +189,16 @@ export default function CreateArticlePage() {
       }
 
       if (json?.articles[0]?.content) {
-        setFinalArticle(json);
+        await setFinalArticleAsync(json);
         if (typeof window !== "undefined") {
           sessionStorage.setItem("finalArticle", JSON.stringify(json));
         }
-        // setIsRetry(false);
-        // setIsLoading(false);
         router.push("/content-creator/create/final-article");
       } else {
         setIsRetry(true);
         // window.alert("Failed to generate content after multiple attempts");
         // router.push("/content-creator/create/choose-brand");
       }
-
-      // setIsLoading(false);
     }
   }
 

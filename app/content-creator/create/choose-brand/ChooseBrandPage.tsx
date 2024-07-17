@@ -12,8 +12,6 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 // import FormControl from '@mui/material/FormControl';
 // import FormLabel from '@mui/material/FormLabel';
 
-
-
 export default function ChooseBrandPage() {
   const router = useRouter();
 
@@ -26,7 +24,7 @@ export default function ChooseBrandPage() {
     setFinalArticle,
     collectedData,
     selectedBrand,
-    setSelectedBrand
+    setSelectedBrand,
   } = useContext(globalContext);
 
   // reset all the data
@@ -68,15 +66,10 @@ export default function ChooseBrandPage() {
   ];
 
 
-
-
-  // useEffect(() => {
-  //   if (collectedData && !IsRetry && !IsLoading) {
-  //     router.push("/content-creator/create/choose-articles");
-  //   }
-  // }, [collectedData, IsRetry, IsLoading]);
-
-
+  async function setCollectedDataAsync(json:any) {
+    setCollectedData(json.organizedArticles);
+    return Promise.resolve(); // Ensure this function is awaited properly
+  }
 
   async function getCollectedData(selectedValue: any) {
     let brandNameValue;
@@ -129,46 +122,28 @@ export default function ChooseBrandPage() {
     }
 
     if (json?.organizedArticles) {
-      setCollectedData(json.organizedArticles);
+      await setCollectedDataAsync(json);
       if (typeof window !== "undefined") {
         sessionStorage.setItem(
           "collectedData",
           JSON.stringify(json.organizedArticles)
         );
       }
-      // setIsRetry(false);
-      // setIsLoading(false);
       router.push("/content-creator/create/choose-articles");
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
-
-    // setIsLoading(false);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
     console.log(SelectedValue);
-    console.log(`selectedBrand`, selectedBrand);    
+    console.log(`selectedBrand`, selectedBrand);
     // navigate to movie myth if user select movie myth option
-    if (SelectedValue === "Movie Myth") {
-      router.push("/content-creator/create/movie-myth");
-    }
+    // if (SelectedValue === "Movie Myth") {
+    //   router.push("/content-creator/create/movie-myth");
+    // }
   }, [SelectedValue]);
 
   if (IsLoading) {
