@@ -65,6 +65,17 @@ const ChooseBrand = () => {
     "Mega Projects",
   ];
 
+
+
+
+  useEffect(() => {
+    if (collectedData && !IsRetry && !IsLoading) {
+      router.push("/content-creator/create/choose-articles");
+    }
+  }, [collectedData, IsRetry, IsLoading]);
+
+
+
   async function getCollectedData(selectedValue: any) {
     let brandNameValue;
     let postBody: any = {};
@@ -125,7 +136,7 @@ const ChooseBrand = () => {
       }
       setIsRetry(false);
       setIsLoading(false);
-      router.push("/content-creator/create/choose-articles");
+      // router.push("/content-creator/create/choose-articles");
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
@@ -134,6 +145,20 @@ const ChooseBrand = () => {
 
     // setIsLoading(false);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     console.log(SelectedValue);

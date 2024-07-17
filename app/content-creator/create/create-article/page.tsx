@@ -20,6 +20,7 @@ const CreateArticle = () => {
   const {
     selectedText,
     setSelectedText,
+    finalArticle,
     setFinalArticle,
     choosedArticles,
     setChoosedArticles,
@@ -120,6 +121,14 @@ const CreateArticle = () => {
 
   const router = useRouter();
 
+
+  useEffect(() => {
+    if (finalArticle && !IsRetry && !IsLoading) {
+      router.push("/content-creator/create/final-article");
+    }
+  }, [finalArticle, IsRetry, IsLoading]);
+
+
   async function finalizeContent() {
     if (selectedText.length === 0) {
       window.alert("Please select at least one article!");
@@ -182,7 +191,7 @@ const CreateArticle = () => {
         }
         setIsRetry(false);
         setIsLoading(false);
-        router.push("/content-creator/create/final-article");
+        // router.push("/content-creator/create/final-article");
       } else {
         setIsRetry(true);
         // window.alert("Failed to generate content after multiple attempts");
