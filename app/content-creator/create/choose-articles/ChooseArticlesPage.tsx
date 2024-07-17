@@ -59,7 +59,7 @@ export default function ChooseArticlesPage() {
     </svg>
   );
 
-  const [isChoosedArticles, setIsChoosedArticles] = useState(false);
+  // const [isChoosedArticles, setIsChoosedArticles] = useState(false);
 
   const {
     previewText,
@@ -91,11 +91,11 @@ export default function ChooseArticlesPage() {
 
   useEffect(() => {
     console.log("choosedArticles", choosedArticles);
-    if (choosedArticles.length > 0) {
-      setIsChoosedArticles(true);
-    } else {
-      setIsChoosedArticles(false);
-    }
+    // if (choosedArticles.length > 0) {
+    //   setIsChoosedArticles(true);
+    // } else {
+    //   setIsChoosedArticles(false);
+    // }
     if (typeof window !== "undefined") {
       sessionStorage.setItem(
         "choosedArticles",
@@ -205,7 +205,7 @@ export default function ChooseArticlesPage() {
           href={"/content-creator/create/choose-brand"}
         />
 
-        {isChoosedArticles ? (
+        {/* {isChoosedArticles ? (
           <CustomBtn
             word="Next"
             btnColor="black"
@@ -221,7 +221,13 @@ export default function ChooseArticlesPage() {
               // window.alert("Please select at least one article");
             }}
           />
-        )}
+        )} */}
+
+        <CustomBtn
+          word="Next"
+          btnColor="black"
+          href="/content-creator/create/create-article"
+        />
       </div>
     </div>
   );
