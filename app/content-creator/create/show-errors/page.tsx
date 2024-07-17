@@ -137,7 +137,7 @@ const ShowErrors = () => {
           {/* 01-2. Preview Errors */}
           <div className={styles.scripts_wrapper + " w-2/5"}>
             <div className={styles.header}>
-              <h6>Errors</h6>
+              <h6>Issues</h6>
               <h6>({checkGrammerResults.length})</h6>
             </div>
 
@@ -147,7 +147,7 @@ const ShowErrors = () => {
                   return (
                     <ErrorCollapse key={index} title="Grammer" onClick={() => {
                       setSelectedIndex(item);
-                      console.log("clicked", index);
+                      console.log("clicked:", index);
                     }}>
                       <>
                       <p><span className="font-bold">Grammar Issue:</span> {item.description}</p>
