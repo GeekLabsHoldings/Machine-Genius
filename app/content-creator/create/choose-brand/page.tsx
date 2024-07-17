@@ -68,11 +68,11 @@ const ChooseBrand = () => {
 
 
 
-  useEffect(() => {
-    if (collectedData && !IsRetry && !IsLoading) {
-      router.push("/content-creator/create/choose-articles");
-    }
-  }, [collectedData, IsRetry, IsLoading]);
+  // useEffect(() => {
+  //   if (collectedData && !IsRetry && !IsLoading) {
+  //     router.push("/content-creator/create/choose-articles");
+  //   }
+  // }, [collectedData, IsRetry, IsLoading]);
 
 
 
@@ -136,7 +136,7 @@ const ChooseBrand = () => {
       }
       setIsRetry(false);
       setIsLoading(false);
-      // router.push("/content-creator/create/choose-articles");
+      router.push("/content-creator/create/choose-articles");
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");

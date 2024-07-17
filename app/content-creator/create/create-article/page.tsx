@@ -122,11 +122,11 @@ const CreateArticle = () => {
   const router = useRouter();
 
 
-  useEffect(() => {
-    if (finalArticle && !IsRetry && !IsLoading) {
-      router.push("/content-creator/create/final-article");
-    }
-  }, [finalArticle, IsRetry, IsLoading]);
+  // useEffect(() => {
+  //   if (finalArticle && !IsRetry && !IsLoading) {
+  //     router.push("/content-creator/create/final-article");
+  //   }
+  // }, [finalArticle, IsRetry, IsLoading]);
 
 
   async function finalizeContent() {
@@ -191,7 +191,7 @@ const CreateArticle = () => {
         }
         setIsRetry(false);
         setIsLoading(false);
-        // router.push("/content-creator/create/final-article");
+        router.push("/content-creator/create/final-article");
       } else {
         setIsRetry(true);
         // window.alert("Failed to generate content after multiple attempts");
