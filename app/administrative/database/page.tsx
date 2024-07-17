@@ -7,7 +7,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import AddNewProductModal from "@/app/_components/Administrative/02VideoDatabase/AddNewProductModal";
 import UploadReceiptModal from "@/app/_components/Administrative/02VideoDatabase/UploadReceiptModal";
 
-export default function page() {
+export default function Page() {
   const [activeTab, setActiveTab] = React.useState<number>(1);
   const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
   const [demandOrder, setDemandOrder] = useState<boolean>(true);

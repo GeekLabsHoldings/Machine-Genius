@@ -9,7 +9,7 @@ import React, { useState } from "react";
  *
  * @return {JSX.Element} The rendered page with tabs and corresponding tab content.
  */
-export default function page() {
+export default function Page() {
   const [activeTab, setActiveTab] = useState<number>(1);
 
   return (

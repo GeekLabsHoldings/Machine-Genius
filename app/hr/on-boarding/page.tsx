@@ -4,7 +4,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import OnBoardingTable from "@/app/_components/HR/06OnBoarding/OnBoardingTable";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
-export default function page() {
+export default function Page() {
   // options for roles
   const rolesOptions: string[] = [
     "Video Editor",

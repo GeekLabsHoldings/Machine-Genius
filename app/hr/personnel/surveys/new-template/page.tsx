@@ -5,7 +5,7 @@ import styles from "./new-template.module.css";
 import { Link } from "@mui/material";
 import React from "react";
 
-export default function page() {
+export default function Page() {
   const modifyIcon = (
     <svg
       width="16"

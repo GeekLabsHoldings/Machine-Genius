@@ -215,7 +215,7 @@ function FinancialTable() {
   );
 }
 
-function page() {
+function Page() {
   const router = useRouter();
 
   return (
@@ -280,4 +280,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

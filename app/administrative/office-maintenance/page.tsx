@@ -5,7 +5,7 @@ import AdministrativeCard from "../../_components/Administrative/01OfficeMainten
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
-export default function page() {
+export default function Page() {
   const [activeTab, setActiveTab] = React.useState<number>(1);
   const annualOptions: string[] = [
     "Daily",

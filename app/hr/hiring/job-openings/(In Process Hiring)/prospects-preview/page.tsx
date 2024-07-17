@@ -5,7 +5,7 @@ import Link from "next/link";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ProspectsPreviewTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsPreviewTable";
 
-export default function page() {
+export default function Page() {
   return (
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}

@@ -4,7 +4,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import KPIsTable from "@/app/_components/OP/KPIsTable";
 
-export default function page() {
+export default function Page() {
   // options
   const brandOptions: string[] = [
     "Street Politics",

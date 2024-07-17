@@ -3,7 +3,7 @@ import CandidateDatabaseTable from "@/app/_components/HR/01CandidateDatabase/Can
 import React, { useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
-export default function page() {
+export default function Page() {
   // options for roles
   const rolesOptions: string[] = [
     "Video Editor",

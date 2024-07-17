@@ -5,7 +5,7 @@ import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Link from "next/link";
 
-export default function page() {
+export default function Page() {
   return (
     <section>
       {/* Back To Complaint Table Button */}

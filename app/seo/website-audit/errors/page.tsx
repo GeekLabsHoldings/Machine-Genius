@@ -4,7 +4,7 @@ import React from "react"; // Importing React and useState hook.
 
 import ErrorsTable from "@/app/_components/SEO/05WebsiteAudit/ErrorsTable";
 
-export default function page() {
+export default function Page() {
   return (
     <div className="pageHeader">
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader my-[25px]`}>

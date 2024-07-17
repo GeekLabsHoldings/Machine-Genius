@@ -4,7 +4,7 @@ import AcceptedTasksTable from "@/app/_components/HR/00Hiring/01JobOpenings/03In
 import React from "react";
 // import styles from "./Prospects.module.css";
 
-export default function page() {
+export default function Page() {
   return (
     <section className="">
       {/* Back To In Process Hiring Table Button */}

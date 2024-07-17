@@ -43,7 +43,7 @@ function ProfileImageFrame({ reversed }: ProfileImageFrameProps) {
   );
 }
 
-function page() {
+function Page() {
   const messagesApi = [
     {
       name: "John Doe",
@@ -279,4 +279,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

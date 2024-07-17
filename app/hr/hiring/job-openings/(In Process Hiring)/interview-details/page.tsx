@@ -3,7 +3,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import InterviewDetailsTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/InterviewDetailsTable";
 import React from "react";
 
-export default function page() {
+export default function Page() {
   return (
     <section className="">
       {/* Back To In Process Hiring Table Button */}

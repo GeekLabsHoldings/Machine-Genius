@@ -51,7 +51,7 @@ const icon = (
   </svg>
 );
 
-function page() {
+function Page() {
   const settings: any = {
     infinite: false,
     speed: 500,
@@ -167,4 +167,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

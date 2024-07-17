@@ -6,7 +6,7 @@ import styles from "./affiliates-database.module.css";
 import WritingArticleSelectInput from "@/app/_components/SEO/04AffiliatesDatabase/WritingArticleSelectInput";
 import AffiliatesDatabaseTable from "@/app/_components/SEO/04AffiliatesDatabase/AffiliatesDatabaseTable";
 
-export default function page() {
+export default function Page() {
   const [activeTab, setActiveTab] = useState<number>(1);
   // Defining ticket type options for the select input.
   const ticketTypeOptions: string[] = ["All"];

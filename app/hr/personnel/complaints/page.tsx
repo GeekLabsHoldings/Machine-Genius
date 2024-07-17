@@ -7,7 +7,7 @@ import React from "react";
  *
  * @return {JSX.Element} The JSX element representing the HR personnel complaints page.
  */
-export default function page() {
+export default function Page() {
   return (
     <>
       {/* Introduction Paragraph */}

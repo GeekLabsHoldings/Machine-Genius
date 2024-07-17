@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import EmployeeDatabaseTable from "@/app/_components/HR/03Personnel/01EmployeeDatabase/EmployeeDatabaseTable";
 
-export default function page() {
+export default function Page() {
   // options for roles
   const rolesOptions: string[] = [
     "Video Editor",

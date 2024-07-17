@@ -6,7 +6,7 @@ import styles from "./attendance.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import NotificationsBreakGrid from "@/app/_components/HR/02Attendance/NotificationsBreakGrid";
 
-export default function page() {
+export default function Page() {
   const [activeTab, setActiveTab] = useState<number>(1);
   const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
   const [fillColorRight, setFillColorRight] = useState("#2A2B2A");

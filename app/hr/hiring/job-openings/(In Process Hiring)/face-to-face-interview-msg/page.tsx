@@ -5,7 +5,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ShortListTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ShortListTable";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
-export default function page() {
+export default function Page() {
   return (
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}

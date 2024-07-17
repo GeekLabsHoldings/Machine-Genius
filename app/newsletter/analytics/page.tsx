@@ -232,4 +232,4 @@ const data = [
   );
 };
 
-export default page;
+export default Page;

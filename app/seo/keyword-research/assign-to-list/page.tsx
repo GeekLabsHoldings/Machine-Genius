@@ -3,7 +3,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import AssignToListSelectInput from "@/app/_components/SEO/01KeywordResearch/AssignToListSelectInput";
 import React from "react";
 
-export default function page() {
+export default function Page() {
 
   const options = [
     "Send To Sales Team",

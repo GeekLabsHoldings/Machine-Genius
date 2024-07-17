@@ -14,7 +14,7 @@ import { useState } from "react";
 //   </svg>
 // );
 
-function page() {
+function Page() {
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   // to handle loading content before navigation to next page
@@ -150,4 +150,4 @@ function page() {
     </>
   );
 }
-export default page;
+export default Page;

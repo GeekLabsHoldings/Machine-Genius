@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import ProspectsTable from '@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsTable';
 
-export default function page() {
+export default function Page() {
   return (
     <section>
       {/* Back To In Process Hiring Table Button */}

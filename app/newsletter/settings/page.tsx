@@ -28,7 +28,7 @@ const serverData = [
   { ipAddress: "26.115.228.8", server: "Server 6" },
 ];
 
-function page() {
+function Page() {
   return (
     <div className="flex flex-col">
       {/* titles wrapper */}
@@ -170,4 +170,4 @@ function page() {
     </div>
   );
 }
-export default page;
+export default Page;

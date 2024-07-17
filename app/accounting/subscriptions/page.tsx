@@ -188,7 +188,7 @@ function SortContainer({ title }: { title: string }) {
   );
 }
 
-function page() {
+function Page() {
   const subscriptionOptions = [ ...new Set(subscriptions.map((e) => e.Subscription))];
 
   return (
@@ -243,4 +243,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

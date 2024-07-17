@@ -140,7 +140,7 @@ const bin = (
   </svg>
 );
 
-function page() {
+function Page() {
   return (
     <div className="flex flex-col h-full py-[1.5vw]">
       <div>
@@ -211,4 +211,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

@@ -7,7 +7,7 @@ import ResearchTable from "@/app/_components/HR/07Research/ResearchTable";
 // Import the React library
 import React from "react";
 
-export default function page() {
+export default function Page() {
   // Define an SVG icon for the "New Entry" button
   const addIcon = (
     <svg

@@ -3,7 +3,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import WebsiteToCheckSelectInput from "@/app/_components/SEO/06WebsiteSpeed/WebsiteToCheckSelectInput";
 import React from "react";
 
-export default function page() {
+export default function Page() {
   return (
     <section>
       <div className=" flex justify-center items-center h-[75vh]">

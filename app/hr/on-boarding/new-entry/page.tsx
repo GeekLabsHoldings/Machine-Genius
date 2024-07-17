@@ -5,7 +5,7 @@ import styles from "./new-entry.module.css";
 import { Link } from "@mui/material";
 import React from "react";
 
-export default function page() {
+export default function Page() {
   return (
     <section>
       {/* Back To Complaint Table Button */}

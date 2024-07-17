@@ -1,7 +1,7 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "@/app/outreach/email-outreach/email-preview/email-preview.module.css";
 
-function page() {
+function Page() {
   return (
     <div className="flex flex-col">
       <div className={`flex flex-col gap-1 w-full overflow-clip h-[75vh] py-[1.5vw] ${styles.email__preview}`}>
@@ -100,4 +100,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

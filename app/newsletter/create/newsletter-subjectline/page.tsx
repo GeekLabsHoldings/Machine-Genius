@@ -10,7 +10,7 @@ const ReGenerateIcon = (
   </svg>
 );
 
-function page() {
+function Page() {
   return (
     <div className="flex flex-col">
       {/* titles wrapper */}
@@ -175,4 +175,4 @@ function page() {
     </div>
   );
 }
-export default page;
+export default Page;

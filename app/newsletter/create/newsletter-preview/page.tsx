@@ -63,7 +63,7 @@ const newsletter = {
   ],
 };
 
-function page() {
+function Page() {
   return (
    
     <div className="flex flex-col">
@@ -118,4 +118,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

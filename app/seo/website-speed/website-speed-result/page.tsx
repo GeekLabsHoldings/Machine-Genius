@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./website-speed-result.module.css";
 import OpportunitiesTable from "@/app/_components/SEO/06WebsiteSpeed/OpportunitiesTable";
 
-export default function page() {
+export default function Page() {
   return (
     <section className="h-[70vh] mt-[4vh]">
       <div className="grid grid-cols-2 gap-[2vw]">

@@ -4,7 +4,7 @@ import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
 
 
-function page() {
+function Page() {
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-start gap-[2rem] h-[75vh] py-[1.5vw]">
@@ -192,4 +192,4 @@ function page() {
     </div>
   );
 }
-export default page;
+export default Page;

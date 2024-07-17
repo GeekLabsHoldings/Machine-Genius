@@ -5,7 +5,7 @@ import styles from "./keyword-database.module.css"; // Importing CSS module for 
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing CustomSelectInput component.
 import KeywordDatabaseTable from "@/app/_components/SEO/02KeywordDatabase/KeywordDatabaseTable";
 
-export default function page() {
+export default function Page() {
   // Defining ticket type options for the select input.
   const ticketTypeOptions: string[] = ["All"];
   // State variable to manage the order of dates, initialized to true (ascending).

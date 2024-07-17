@@ -42,7 +42,7 @@ const files = (
   </svg>
 );
 
-function page() {
+function Page() {
   const router = useRouter();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -199,4 +199,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

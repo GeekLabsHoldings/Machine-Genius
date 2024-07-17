@@ -6,7 +6,7 @@ import styles from "./ticketing.module.css"; // Importing CSS module for styling
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing CustomSelectInput component.
 import CreateTicketModal from "@/app/_components/Administrative/03TicketingDatabase/CreateTicketModal"; // Importing CreateTicketModal component.
 
-export default function page() {
+export default function Page() {
   // Defining ticket type options for the select input.
   const ticketTypeOptions: string[] = ["All", "IT", "System Issue", "Request"];
   // State variable to manage the order of dates, initialized to true (ascending).

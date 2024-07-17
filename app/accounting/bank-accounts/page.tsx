@@ -258,7 +258,7 @@ const BankAccountsTable = () => {
   );
 };
 
-function page() {
+function Page() {
   return (
     <div className="pageHeader">
       {/* filters options to filter and edit data in table */}
@@ -321,4 +321,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
