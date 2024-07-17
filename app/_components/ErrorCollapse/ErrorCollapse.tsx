@@ -5,7 +5,8 @@ import styles from './ErrorCollapse.module.css'
 interface IProps {
     children: React.ReactNode,
     title: string,
-    date?: string
+    date?: string,
+    onClick?: () => void
 }
 
 const ErrorCollapse = (props: IProps) => {
@@ -13,8 +14,13 @@ const ErrorCollapse = (props: IProps) => {
     const [isCollapseOpen, setIsCollapseOpen] = useState(false);
 
     return (
-        <div className={`${styles.topic_collapse} topic_collapse ${isCollapseOpen ? styles.open : ''}`}>
-            <div className={`${styles.collapse_header}  collapse_header`} onClick={() => setIsCollapseOpen(!isCollapseOpen)}>
+        <div className={`${styles.topic_collapse} topic_collapse ${isCollapseOpen ? styles.open : ''}`}
+        onClick={()=>{
+            props.onClick && props.onClick();
+        }}
+        >
+            <div className={`${styles.collapse_header}  collapse_header`} onClick={() => setIsCollapseOpen(!isCollapseOpen)
+            }>
                 <div>
                     <h6>{props.title}</h6>
                     {props.date && <p>{props.date}</p>}

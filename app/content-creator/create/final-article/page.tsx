@@ -301,14 +301,16 @@ const FinalArticle = () => {
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >
-                {finalArticle?.articles[0]?.content
+                {/* {finalArticle?.articles[0]?.content
                   .match(/[^\.!\?]+[\.!\?]+/g)
                   ?.map((e: any, index: number) => (
                     <>
                       <p key={index}>{e}</p>
                       <br />
                     </>
-                  ))}
+                  ))} */}
+
+                  {finalArticle?.articles[0]?.content}
               </div>
             </div>
           </div>
