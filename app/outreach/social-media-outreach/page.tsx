@@ -3,7 +3,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 
 const options = ["Twitter", "Facebook", "Instagram", "LinkedIn"];
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <div className="flex flex-col h-full">

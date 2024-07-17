@@ -9,7 +9,7 @@ const TasksChart = dynamic(
   }
 );
 
-const page = () => {
+const Page = () => {
   // Define an array of options for the custom select input
 const options = ["Script", "Article", "Documentary", "Trends Article"];
 

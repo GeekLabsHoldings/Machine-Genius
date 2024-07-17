@@ -14,7 +14,7 @@ const addIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill
 </svg>
 
 
-const page = () => {
+const Page = () => {
 
     const [Iseditable, setIseditable] = useState(false)
 
@@ -181,4 +181,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

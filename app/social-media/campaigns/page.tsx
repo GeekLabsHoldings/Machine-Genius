@@ -4,7 +4,7 @@ import Sharing from './_sharing/sharing'
 
 
 
-const page = () => {
+const Page = () => {
   // campaigns page
   return (
     <div className="flex flex-col h-full">
@@ -21,4 +21,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

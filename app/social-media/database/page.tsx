@@ -16,7 +16,7 @@ const taleData = [
   {content_name: 'Pacific Allies ABANDON USA For China!' , date:'5 March  2024' , post:'12' , status:'Paused'},
 ]
 
-const page = () => {
+const Page = () => {
   return (
     <div className="flex flex-col h-full py-[1.5vw]">
 
@@ -192,4 +192,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

@@ -9,7 +9,7 @@ import { useState } from "react";
 
 const options = ["Script", "Article"];
 
-const page = () => {
+const Page = () => {
   const [IsLoading, setIsLoading] = useState(false);
 
   const router = useRouter();

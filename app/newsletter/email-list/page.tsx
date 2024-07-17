@@ -96,7 +96,7 @@ import Slider from "react-slick"; // Importing Slider component from react-slick
       Niche: "",
     },
   ];
-const page = () => {
+const Page = () => {
 
   const [isShowed,setIsShowed] = useState(true)
 

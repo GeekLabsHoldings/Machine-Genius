@@ -14,7 +14,7 @@ interface ArrowProps {
   onClick?: () => void;
 }
 
-const page = () => {
+const Page = () => {
   // References to HTML elements and components
   const btnRef = useRef<any>(null); // Reference for the button element
   const sliderRef = useRef<Slider>(null); // Reference for the slider component

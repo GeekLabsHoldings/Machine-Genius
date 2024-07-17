@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./companyAssets.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
-const page = () => {
+const Page = () => {
   const [sorting1, setSorting1] = useState("Ascend");
   const [sorting2, setSorting2] = useState("Ascend");
   const [sorting3, setSorting3] = useState("Ascend");

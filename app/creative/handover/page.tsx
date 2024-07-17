@@ -7,7 +7,7 @@ import QuarterCircles from '@/app/_components/QuarterCircles/QuarterCircles';
 
 
 
-const page = () => {
+const Page = () => {
  const btnRef = useRef<any>(null)
 
  const [top,setTop] = useState(0)

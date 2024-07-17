@@ -8,7 +8,7 @@ const options = [
     'Product',
 ];
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <div className="flex flex-col h-full">

@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./templates.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
-const page = () => {
+const Page = () => {
   return (
     <div className={`${styles.templates} py-[1.2vw]`}>
       {/* // Container with flex layout, space-between alignment, and center items */}

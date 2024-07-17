@@ -6,7 +6,7 @@ import Link from "next/link";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   return (
     <div

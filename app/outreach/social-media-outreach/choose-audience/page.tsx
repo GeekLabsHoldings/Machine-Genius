@@ -8,7 +8,7 @@ const options = [
   "Invvestocracy 4",
 ];
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <div className="flex flex-col h-full">

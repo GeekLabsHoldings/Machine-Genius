@@ -4,7 +4,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   const options = ["Script", "Article"];
 
   return (

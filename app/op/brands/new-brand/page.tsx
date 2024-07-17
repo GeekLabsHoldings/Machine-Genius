@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   return (
     <div className={`${styles.newBrand} newBrand pt-[1.5vw]`}>

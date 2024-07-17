@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import "./brands.css";
 
-const page = () => {
+const Page = () => {
   function SampleNextArrow(props: any) {
     const { onClick, className } = props;
     return (

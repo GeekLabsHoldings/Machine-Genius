@@ -14,7 +14,7 @@ const addIcon = (
   </svg>
 );
 
-const page = () => {
+const Page = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Chose Brand Select */}

@@ -4,7 +4,7 @@ import AllHiringTable from "@/app/_components/HR/00Hiring/01JobOpenings/01AllHir
 import HiringRequestsTable from "@/app/_components/HR/00Hiring/01JobOpenings/02HiringRequests/HiringRequestsTable";
 import InProcessHiringTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/InProcessHiringTable";
 
-const page = () => {
+const Page = () => {
   return (
     <div className="flex flex-col h-full py-[1.5vw]">
       <div className={"tabs " + styles.tabs}>

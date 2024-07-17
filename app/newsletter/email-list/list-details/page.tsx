@@ -6,7 +6,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
-const page = () => {
+const Page = () => {
 
 
   // useState used for the sorting

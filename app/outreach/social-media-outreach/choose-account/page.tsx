@@ -3,7 +3,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 
 const options = ["Invvestocracy", "Invvestocracy 2", "Invvestocracy 3", "Invvestocracy 4"];
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <div className="flex flex-col h-full">

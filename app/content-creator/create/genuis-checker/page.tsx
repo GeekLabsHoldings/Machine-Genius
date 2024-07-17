@@ -13,9 +13,9 @@ const GenuisChecker = () => {
                 <div className={`${styles.genuisWorking} m-auto`}>
                     <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
                     <div className={`${styles.allCheckers} w-full flex flex-col gap-[2vw]`}>
-                        <SpecificChecker pass={true} word='Grammar Checker' />
-                        <SpecificChecker pass={false} word='Plagiarism Checker' />
-                        <SpecificChecker pass={true} word='AI Checker' />
+                        <SpecificChecker checkStatus={"true"} word='Grammar Checker' />
+                        <SpecificChecker checkStatus={"false"} word='Plagiarism Checker' />
+                        <SpecificChecker checkStatus={"true"} word='AI Checker' />
                     </div>
                     {/* lead you to next page */}
                     <CustomBtn word={"Results"} btnColor="black" href="/content-creator/create/show-errors" />

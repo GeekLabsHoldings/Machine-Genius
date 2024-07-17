@@ -2,7 +2,7 @@
 import styles from "./income-statement.module.css";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const revenue = [
     { category: "total sales", 2022: 48200, 2023: 48200, 2024: 48200 },

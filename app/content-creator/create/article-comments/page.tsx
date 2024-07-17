@@ -124,9 +124,9 @@ const CommentsOnArticle = () => {
         <div className={`${styles.genuisWorking} m-auto`}>
           <LogoAndTitle needTxt={false} title='Genius is working on your article..' />
           <div className={`${styles.allCheckers} w-full`}>
-            <SpecificChecker pass={true} word='Grammar Checker' />
-            <SpecificChecker pass={true} word='Plagiarism Checker' />
-            <SpecificChecker pass={true} word='AI Checker' />
+            <SpecificChecker checkStatus={"true"} word='Grammar Checker' />
+            <SpecificChecker checkStatus={"true"} word='Plagiarism Checker' />
+            <SpecificChecker checkStatus={"true"} word='AI Checker' />
           </div> </div>
       </div> : <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
         <div className="w-7/12 flex flex-col gap-[1vw]">

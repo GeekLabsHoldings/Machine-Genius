@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import styles from "./selectSignature.module.css";
 
-const page = () => {
+const Page = () => {
   const options = ["Script", "Article"];
 
   return (

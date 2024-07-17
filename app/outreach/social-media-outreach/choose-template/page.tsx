@@ -2,7 +2,7 @@ import styles from "./choose-template.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
-const page = () => {
+const Page = () => {
   return (
     <>
       <div className="flex flex-col h-full">

@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
 
 
   const router = useRouter()

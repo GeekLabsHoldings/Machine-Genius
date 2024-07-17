@@ -3,7 +3,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import React, { useState } from "react";
 import styles from "./tasks.module.css";
 
-const page = () => {
+const Page = () => {
   const [sorting, setSorting] = useState("Ascend");
 
   function getRandomBackgroundColor() {

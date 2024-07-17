@@ -410,7 +410,7 @@ function FinancialTable() {
   );
 }
 
-const page = () => {
+const Page = () => {
   const monthOptions: string[] = [
     "All",
     "Jan",

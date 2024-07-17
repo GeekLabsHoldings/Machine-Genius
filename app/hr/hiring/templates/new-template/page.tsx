@@ -14,7 +14,7 @@ const addIcon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill
 
 const options = ['jop listings', 'tasks', 'offers', 'HR Questions', 'jop listings', 'tasks', 'offers', 'HR Questions'];
 
-const page = () => {
+const Page = () => {
 
     const [Templates, setTemplates] = useState([{ title: 'title 1', description: 'description1 description1 description1 description1 description1 description1 description1' },
     { title: 'title 2', description: 'description2 description2 description1 description1 description1 description1 description1' },
@@ -176,4 +176,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
