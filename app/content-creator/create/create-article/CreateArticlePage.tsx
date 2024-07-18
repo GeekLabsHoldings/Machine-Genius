@@ -49,6 +49,7 @@ export default function CreateArticlePage() {
           ...prev,
           { text: getSelectedText, checked: false, selectedFromArticle: selectedArticle },
         ]);
+
       }
       if (button) {
         button.style.display = "none";
@@ -211,6 +212,7 @@ export default function CreateArticlePage() {
     if (typeof window !== "undefined") {
       sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
     }
+    console.log("selectedText after mount", selectedText);
   }, [selectedText]);
 
   useEffect(() => {
@@ -221,14 +223,13 @@ export default function CreateArticlePage() {
       if (selectedBrandData) {
         setSelectedBrand(selectedBrandData);
       }
-    }
 
-    if (typeof window !== "undefined") {
       const selectedTextData = sessionStorage.getItem("selectedText");
       if (selectedTextData) {
         setSelectedText(JSON.parse(selectedTextData));
       }
     }
+
 
     if (
       (!collectedData || choosedArticles.length === 0) &&

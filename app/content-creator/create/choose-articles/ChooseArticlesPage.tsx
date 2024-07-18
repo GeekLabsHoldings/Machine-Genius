@@ -74,9 +74,13 @@ export default function ChooseArticlesPage() {
       // router.push("/content-creator/create/choose-brand");
     } else {
       if (typeof window !== "undefined") {
-        const storedData = sessionStorage.getItem("collectedData");
-        if (storedData) {
-          setCollectedData(JSON.parse(storedData));
+        const storedCollectedData = sessionStorage.getItem("collectedData");
+        if (storedCollectedData) {
+          setCollectedData(JSON.parse(storedCollectedData));
+        }
+        const storedChoosedArticles = sessionStorage.getItem("choosedArticles");
+        if (storedChoosedArticles) {
+          setChoosedArticles(JSON.parse(storedChoosedArticles));
         }
       }
     }
