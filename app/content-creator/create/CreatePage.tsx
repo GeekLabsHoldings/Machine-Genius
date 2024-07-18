@@ -12,24 +12,25 @@ const options = [
 
 export default function CreatePage() {
   const {
+    setSelectedBrand,
     setCollectedData,
     setChoosedArticles,
     setSelectedArticle,
     setSelectedText,
-    setFinalArticle
+    setFinalArticle,
+    setCheckGrammerResults
   } = useContext(globalContext);
-  
   
   // reset all the data
   useEffect(() => {
+    setSelectedBrand("");
     setCollectedData(null);
     setChoosedArticles([]);
     setSelectedArticle(null);
     setSelectedText([]);
     setFinalArticle(null);
+    setCheckGrammerResults([]);
   }, []);
-
-
 
   return (
     <div className="flex flex-col h-full">

@@ -7,12 +7,10 @@ import {
   LinkHTMLAttributes,
   ReactElement,
 } from "react";
+import { useRouter } from "next/navigation";
 
 // custom button props
-type IBtn = React.DetailedHTMLProps<
-  AnchorHTMLAttributes<HTMLAnchorElement>,
-  HTMLAnchorElement
-> & {
+type IBtn = React.DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
   word?: string;
   btnColor: "white" | "black";
   icon?: ReactElement;
@@ -21,32 +19,26 @@ type IBtn = React.DetailedHTMLProps<
   width?: string;
   class?: string;
   paddingVal?: string;
+  onClick?: () => void;
 };
 
-/**
- * Renders a custom button component that can navigate to the last or next page with a black or white style,
- * and can have an icon or not.
- *
- * @param {IBtn} props - The props for the custom button component.
- * @param {string} props.word - The text to display on the button.
- * @param {string} props.btnColor - The color of the button, either 'white' or 'black'.
- * @param {ReactElement} props.icon - The icon to display on the button.
- * @param {string} props.href - The URL to navigate to when the button is clicked.
- * @param {string} props.widthSize - The width of the button.
- * @param {string} props.width - The width of the button.
- * @param {string} props.class - The CSS class to apply to the button.
- * @param {string} props.paddingVal - The padding value for the button.
- * @return {JSX.Element} The rendered custom button component.
- */
 const CustomBtn = (props: IBtn) => {
+  const router = useRouter();
+
   return (
     // custom button to navigate to the last or next page with black or white style and with icon or without it
-    <Link
+    <button
       className={`${
         props.btnColor === "white" ? styles.whiteBtn : styles.blackBtn
       } ${props.class} ${props.width ? props.width : "w-fit"} `}
       {...props}
-      href={props.href ? props.href : "#"}
+      onClick={() => {
+        if (props.href) {
+          router.replace(props.href);
+        } else if (props.onClick) {
+          props.onClick();
+        }
+      }}
     >
       <div
         className={`${styles.iconAndTxtBtn} ${
@@ -56,7 +48,7 @@ const CustomBtn = (props: IBtn) => {
         {props.icon ? props.icon : null}
         {props.word ? <span>{props.word}</span> : null}
       </div>
-    </Link>
+    </button>
   );
 };
 
