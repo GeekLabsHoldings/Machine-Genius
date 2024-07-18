@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 
 
 export default function ChooseArticlesPage() {
-  const router = useRouter();
+  // const router = useRouter();
 
   // favorite icon
   const favIcon = (
@@ -63,8 +63,6 @@ export default function ChooseArticlesPage() {
   const [previewText, setPreviewText] = useState<any>("");
 
   const {
-    // previewText,
-    // setPreviewText,
     choosedArticles,
     setChoosedArticles,    
     collectedData,
