@@ -14,8 +14,9 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 
 export default function CreateArticlePage() {
-  // const [selectedText, setSelectedText] = useState<string[]>([]);
-
+  const router = useRouter();
+  const [IsLoading, setIsLoading] = useState(false);
+  const [IsRetry, setIsRetry] = useState(false);
   // state keeps selected text to display them in selection section
   const {
     selectedText,
@@ -34,7 +35,6 @@ export default function CreateArticlePage() {
 
   // state to enable text selection when click on highlight button
   const [beginSelect, setBeginSelect] = useState(false);
-
   const [CheckAllSelectedText, setCheckAllSelectedText] = useState(false);
 
 
@@ -44,7 +44,6 @@ export default function CreateArticlePage() {
     if (selection) {
       const selectedText = selection.toString();
       // @ts-ignore
-      // setSelectedText((prev) => [...prev, selectedText]);
       if (selectedText.length > 0) {
         setSelectedText((prev: any) => [
           ...prev,
@@ -113,20 +112,6 @@ export default function CreateArticlePage() {
     setCheckAllSelectedText(false);
   }
 
-  // state to handle content while page is loading its content
-  const [IsLoading, setIsLoading] = useState(false);
-  const [IsRetry, setIsRetry] = useState(false);
-
-  const router = useRouter();
-
-
-  // useEffect(() => {
-  //   if (finalArticle && !IsRetry && !IsLoading) {
-  //     router.push("/content-creator/create/final-article");
-  //   }
-  // }, [finalArticle, IsRetry, IsLoading]);
-
-
   async function setFinalArticleAsync(json: any) {
     setFinalArticle(json);
   }
@@ -190,7 +175,7 @@ export default function CreateArticlePage() {
         if (typeof window !== "undefined") {
           sessionStorage.setItem("finalArticle", JSON.stringify(json));
         }
-        router.push("/content-creator/create/final-article");
+        router.replace("/content-creator/create/final-article");
       } else {
         setIsRetry(true);
         // window.alert("Failed to generate content after multiple attempts");
@@ -205,7 +190,6 @@ export default function CreateArticlePage() {
       console.log(`selectedArticle:`, selectedArticle);
   }
 
-
   function previewSelectedArticle() {
     let selectedContent = null;
 
@@ -219,14 +203,17 @@ export default function CreateArticlePage() {
   }
 
   useEffect(() => {
-    console.log("selectedText", selectedText);
+    console.log("selectedText:", selectedText);
   }, [selectedText]);
 
   useEffect(() => {
-    console.log("choosedArticles", choosedArticles);
-    console.log("selectedBrand", selectedBrand);
+    console.log("choosedArticles:", choosedArticles);
+    console.log("selectedBrand:", selectedBrand);
     if (typeof window !== "undefined") {
-      setSelectedBrand(sessionStorage.getItem("selectedBrand"));
+      const selectedBrandData = sessionStorage.getItem("selectedBrand");
+      if (selectedBrandData) {
+        setSelectedBrand(selectedBrandData);
+      }
     }
 
     if (
@@ -342,10 +329,6 @@ export default function CreateArticlePage() {
                   {/* select article to read */}
                   <CustomSelectInput
                     label="Select Article"
-                    // options={SelectArticleData}
-                    // options={collectedData.allArticles
-                    //   ?.filter((item: any) => item.text !== "")
-                    //   .map((e: any) => e.text.split("\n")[0])}
                     options={choosedArticles.map((item: any) => item.title)}
                     getValue={getSelectedArticle}
                   />
