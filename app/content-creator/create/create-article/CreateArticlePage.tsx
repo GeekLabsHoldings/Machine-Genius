@@ -28,6 +28,7 @@ export default function CreateArticlePage() {
     collectedData,
     setCollectedData,
     selectedArticle,
+    setSelectedArticle,
     setPreviewText,
     selectedBrand,
     setSelectedBrand
@@ -38,7 +39,6 @@ export default function CreateArticlePage() {
 
   const [CheckAllSelectedText, setCheckAllSelectedText] = useState(false);
 
-  // const [selectedArticle, setSelectedArticle] = useState<string | number>();
 
   const handleSelectedText = () => {
     const button = document.getElementById("highlight-btn");
@@ -203,30 +203,21 @@ export default function CreateArticlePage() {
   }
 
   // function that get role value from select option by send it as a prop
-  //   const getSelectedArticle = (value: string | number) => {
-  //     setSelectedArticle(value)
-  //     console.log(selectedArticle);
-  // }
+    const getSelectedArticle = (value: string | number) => {
+      setSelectedArticle(value);
+      console.log(`selectedArticle:`, selectedArticle);
+  }
 
-  // function previewSelectedArticle() {
-  //   const article = collectedData?.allArticles.find(
-  //     (e: any) => e.title === selectedArticle
-  //   );
-  //   return article?.content;
-  // }
 
   function previewSelectedArticle() {
     let selectedContent = null;
 
-    collectedData?.forEach((item: any) => {
-      const article = item.articleJson.find(
-        (e: any) => e.title === selectedArticle
-      );
-      if (article) {
-        selectedContent = article.content;
+    choosedArticles?.forEach((item: any) => {
+      if (item.title === selectedArticle) {
+        selectedContent = item.content;
       }
     });
-
+  
     return selectedContent;
   }
 
@@ -359,7 +350,7 @@ export default function CreateArticlePage() {
                     //   ?.filter((item: any) => item.text !== "")
                     //   .map((e: any) => e.text.split("\n")[0])}
                     options={choosedArticles.map((item: any) => item.title)}
-                    // getValue={getSelectedArticle}
+                    getValue={getSelectedArticle}
                   />
                 </div>
                 {/* highlighting button */}
