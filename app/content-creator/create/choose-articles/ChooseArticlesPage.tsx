@@ -66,8 +66,6 @@ export default function ChooseArticlesPage() {
 
   useEffect(() => {
     console.log("collectedData:", collectedData);
-    // reset choosedArticles
-    setChoosedArticles([]);
 
     if (!collectedData && !sessionStorage.getItem("collectedData")) {
       // window.alert(
@@ -167,6 +165,9 @@ export default function ChooseArticlesPage() {
                             }
                           });
                         }}
+                        checked={choosedArticles.some(
+                          (article: any) => article.title === ele.title
+                        )}
                       />
                       <label
                         className={`${styles.article}`}
