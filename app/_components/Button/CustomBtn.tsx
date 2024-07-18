@@ -1,16 +1,13 @@
 "use client";
-import Link from "next/link";
 import styles from "./CustumBtn.module.css";
-import {
-  AnchorHTMLAttributes,
-  ButtonHTMLAttributes,
-  LinkHTMLAttributes,
-  ReactElement,
-} from "react";
+import { ButtonHTMLAttributes, ReactElement } from "react";
 import { useRouter } from "next/navigation";
 
 // custom button props
-type IBtn = React.DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
+type IBtn = React.DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> & {
   word?: string;
   btnColor: "white" | "black";
   icon?: ReactElement;
@@ -19,7 +16,7 @@ type IBtn = React.DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTM
   width?: string;
   class?: string;
   paddingVal?: string;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 const CustomBtn = (props: IBtn) => {
@@ -32,11 +29,16 @@ const CustomBtn = (props: IBtn) => {
         props.btnColor === "white" ? styles.whiteBtn : styles.blackBtn
       } ${props.class} ${props.width ? props.width : "w-fit"} `}
       {...props}
-      onClick={() => {
+      onClick={(e) => {
         if (props.href) {
           router.replace(props.href);
         } else if (props.onClick) {
-          props.onClick();
+          // Check if props.onClick expects an argument
+          if (props.onClick.length > 0) {
+            props.onClick(e); // Pass the event if the function expects an argument
+          } else {
+            props.onClick(); // Call without argument if the function does not expect one
+          }
         }
       }}
     >

@@ -44,7 +44,7 @@ const SignIn = () => {
             <div className={`${styles.welcomePart} welcom-wrapper ${StartAnimation ? styles.startAnimation : ''} ${ShowSignInForm ? styles.hide : ''}`}>
                 <h1>Welcome To </h1>
                 <Image src={logoTextImg} height={100} alt='' />
-                <CustomBtn word='Enter' btnColor='white' href='#' onClick={() => setShowSignInForm(true)} />
+                <CustomBtn word='Enter' btnColor='white' onClick={() => setShowSignInForm(true)} />
             </div>
 
             {/* Sign-in form */}

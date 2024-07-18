@@ -42,12 +42,12 @@ export default function CreateArticlePage() {
     const button = document.getElementById("highlight-btn");
     const selection = window.getSelection();
     if (selection) {
-      const selectedText = selection.toString();
+      const getSelectedText = selection.toString();
       // @ts-ignore
-      if (selectedText.length > 0) {
+      if (getSelectedText.length > 0) {
         setSelectedText((prev: any) => [
           ...prev,
-          { text: selectedText, checked: false },
+          { text: getSelectedText, checked: false, selectedFromArticle: selectedArticle },
         ]);
       }
       if (button) {
@@ -57,7 +57,7 @@ export default function CreateArticlePage() {
   };
 
   // return selected text in selections
-  const renderSelectedTxt = selectedText.map((item: any, index: any) => (
+  const renderSelectedTxt = selectedText.filter((item: any) => choosedArticles.some((article: any) => article.title === item.selectedFromArticle)).map((item: any, index: any) => (
     <div key={index}>
       <div className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}>
         <CustomCheckBox
@@ -188,8 +188,11 @@ export default function CreateArticlePage() {
   // function that get role value from select option by send it as a prop
     const getSelectedArticle = (value: string | number) => {
       setSelectedArticle(value);
-      console.log(`selectedArticle:`, selectedArticle);
   }
+
+  useEffect(() => {
+    console.log("selectedArticle:", selectedArticle);
+  }, [selectedArticle]);
 
   function previewSelectedArticle() {
     let selectedContent = null;
@@ -205,6 +208,9 @@ export default function CreateArticlePage() {
 
   useEffect(() => {
     console.log("selectedText:", selectedText);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
+    }
   }, [selectedText]);
 
   useEffect(() => {
@@ -214,6 +220,13 @@ export default function CreateArticlePage() {
       const selectedBrandData = sessionStorage.getItem("selectedBrand");
       if (selectedBrandData) {
         setSelectedBrand(selectedBrandData);
+      }
+    }
+
+    if (typeof window !== "undefined") {
+      const selectedTextData = sessionStorage.getItem("selectedText");
+      if (selectedTextData) {
+        setSelectedText(JSON.parse(selectedTextData));
       }
     }
 

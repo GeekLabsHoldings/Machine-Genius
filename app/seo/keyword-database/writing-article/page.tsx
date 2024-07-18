@@ -16,7 +16,7 @@ export default function Page() {
       </div>
 
       <div className="flex justify-end mt-4">
-        <CustomBtn word={"Next"} btnColor="black" href="#" />
+        <CustomBtn word={"Next"} btnColor="black" />
       </div>
     </section>
   );
