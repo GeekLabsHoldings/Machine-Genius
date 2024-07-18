@@ -114,6 +114,7 @@ export default function CreateArticlePage() {
 
   async function setFinalArticleAsync(json: any) {
     setFinalArticle(json);
+    return Promise.resolve(); // Ensure this function is awaited properly
   }
 
   async function finalizeContent() {
@@ -134,7 +135,7 @@ export default function CreateArticlePage() {
         .join(" ");
         postBody.brandName = "Investocracy";
       }
-      console.log(postBody);
+      console.log(`finalizeContent postBody:`, postBody);
       setIsLoading(true);
       const maxRetries = 2; // Define the maximum number of retries
       let attempts = 0;

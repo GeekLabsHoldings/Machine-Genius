@@ -7,14 +7,9 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from "./final-artical.module.css";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
-import Link from "next/link";
-
-
 
 export default function FinalArticlePage() {
-  // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
-  const router = useRouter();
   const { finalArticle, setFinalArticle, setCheckGrammerResults } =
     useContext(globalContext);
   const [checkStatus, setCheckStatus] = useState({
@@ -44,40 +39,36 @@ export default function FinalArticlePage() {
     }
   }, []);
 
-  // show loading page before navigate to next page
-  const handleNavigate = () => {
-    setIsLoading(true);
+  
+async function setIsLoadingAsync(){
+  setIsLoading(true);
+}
+async function setFinalArticleAsync(finalArticleContent: any){
+  setFinalArticle((prev: any) => ({
+    ...prev,
+    articles: [
+      {
+        ...prev.articles[0],
+        content: finalArticleContent,
+      },
+    ],
+  }));
+}
+async function startChecks() {
+  await checkGrammer();
+  await checkPlagiarism();
+  await checkAi();
+  return Promise.resolve();
+}
+  async function handleNavigate() {
+    await setIsLoadingAsync();
     const finalArticleContent =
       document.getElementById("finalArticle")?.innerHTML;
-
-    // setFinalArticle([
-    //   { ...finalArticle.articles[0], content: finalArticleContent },
-    // ]);
-
-    setFinalArticle((prev: any) => ({
-      ...prev,
-      articles: [
-        {
-          ...prev.articles[0],
-          content: finalArticleContent,
-        },
-      ],
-    }));
-
-    startChecks();
-
-    //   setTimeout(() => {
-    //     // Your action here
-    //     router.push('/content-creator/create/final-article')
-
-    //   }, 1500); // 3000 milliseconds = 3 seconds
+    await setFinalArticleAsync(finalArticleContent);
+    await startChecks();
   };
 
-  async function startChecks() {
-    await checkGrammer();
-    await checkPlagiarism();
-    await checkAi();
-  }
+
 
   async function checkGrammer() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -94,7 +85,6 @@ export default function FinalArticlePage() {
           body: JSON.stringify({
             document: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
           }),
-          // cache: "no-store",
         });
 
         if (!res.ok) {
@@ -120,16 +110,8 @@ export default function FinalArticlePage() {
       } else {
         setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
       }
-      // let results = [];
-      // for (const issue of json.grammarIssues) {
-      //   results.push({
-      //     description: issue.description,
-      //     replacement: issue.replacement,
-      //     sentence: issue.sentence,
-      //   });
-      // }
+
       console.log("checkGrammerResults1", json);
-      // console.log("checkGrammerResults2", results);
       setCheckGrammerResults(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other"));
       if (typeof window !== "undefined") {
         sessionStorage.setItem("checkGrammerResults", JSON.stringify(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other")));
@@ -156,7 +138,6 @@ export default function FinalArticlePage() {
           body: JSON.stringify({
             text: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
           }),
-          // cache: "no-store",
         });
 
         if (!res.ok) {
@@ -206,7 +187,6 @@ export default function FinalArticlePage() {
           body: JSON.stringify({
             document: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
           }),
-          // cache: "no-store",
         });
 
         if (!res.ok) {
@@ -240,12 +220,6 @@ export default function FinalArticlePage() {
     }
   }
 
-  //   const handleInput = (event: any) => {
-  //     // const newContent = event.target.innerHTML;
-  //     // setFinalArticle([newContent]);
-  //     const updatedContent = event.target.innerHTML;
-  //     setFinalArticle([{ ...finalArticle[0], content: updatedContent }]);
-  //   };
 
   if (IsLoading) {
     return (
@@ -301,7 +275,6 @@ export default function FinalArticlePage() {
                 id="finalArticle"
                 contentEditable={true}
                 className={`${styles.articleContent}`}
-                // onInput={handleInput}
               >
                 {/* {finalArticle?.articles[0]?.content
                   .match(/[^\.!\?]+[\.!\?]+/g)
@@ -328,7 +301,7 @@ export default function FinalArticlePage() {
           btnColor="white"
           href={"/content-creator/create/create-article"}
         />
-        <CustomBtn word={"Next"} btnColor="black" onClick={handleNavigate} />
+        <CustomBtn word={"Next"} btnColor="black" onClick={()=>{handleNavigate()}} />
       </div>
     </div>
   );
