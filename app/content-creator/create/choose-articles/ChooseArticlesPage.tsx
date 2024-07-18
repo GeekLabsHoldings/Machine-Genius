@@ -6,13 +6,8 @@ import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import { globalContext } from "@/app/_context/store";
 import { useContext, useEffect, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
-import { useRouter } from "next/navigation";
-
-
 
 export default function ChooseArticlesPage() {
-  // const router = useRouter();
-
   // favorite icon
   const favIcon = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
@@ -73,6 +68,7 @@ export default function ChooseArticlesPage() {
     console.log("collectedData:", collectedData);
     // reset choosedArticles
     setChoosedArticles([]);
+
     if (!collectedData && !sessionStorage.getItem("collectedData")) {
       // window.alert(
       //   "No data is available. You will be redirected to refetch new data!"
@@ -89,7 +85,7 @@ export default function ChooseArticlesPage() {
   }, []);
 
   useEffect(() => {
-    console.log("choosedArticles", choosedArticles);
+    console.log("choosedArticles:", choosedArticles);
     // if (choosedArticles.length > 0) {
     //   setIsChoosedArticles(true);
     // } else {
