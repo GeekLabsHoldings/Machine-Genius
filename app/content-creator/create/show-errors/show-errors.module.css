@@ -77,7 +77,7 @@
   text-align: justify;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  gap: clamp(5px, calc(0.1vw + 0.1rem), 100px);
 }
 
 .beginSelection {
