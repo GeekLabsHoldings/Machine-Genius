@@ -60,18 +60,19 @@ export default function ChooseArticlesPage() {
   );
 
   // const [isChoosedArticles, setIsChoosedArticles] = useState(false);
+  const [previewText, setPreviewText] = useState<any>("");
 
   const {
-    previewText,
+    // previewText,
+    // setPreviewText,
     choosedArticles,
-    setChoosedArticles,
-    setPreviewText,
+    setChoosedArticles,    
     collectedData,
     setCollectedData,
   } = useContext(globalContext);
 
   useEffect(() => {
-    console.log("collectedData", collectedData);
+    console.log("collectedData:", collectedData);
     // reset choosedArticles
     setChoosedArticles([]);
     if (!collectedData && !sessionStorage.getItem("collectedData")) {
@@ -175,7 +176,6 @@ export default function ChooseArticlesPage() {
                       />
                       <label
                         className={`${styles.article}`}
-                        // onMouseEnter={() => setPreviewText(item?.content?.join(" "))}
                         onClick={() => setPreviewText(ele.content)}
                       >
                         {ele?.title}

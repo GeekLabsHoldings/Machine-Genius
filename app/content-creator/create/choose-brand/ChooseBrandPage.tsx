@@ -18,7 +18,6 @@ export default function ChooseBrandPage() {
   const {
     setCollectedData,
     setChoosedArticles,
-    setPreviewText,
     setSelectedArticle,
     setSelectedText,
     setFinalArticle,
@@ -31,7 +30,6 @@ export default function ChooseBrandPage() {
   useEffect(() => {
     setCollectedData(null);
     setChoosedArticles([]);
-    setPreviewText("");
     setSelectedArticle(null);
     setSelectedText([]);
     setFinalArticle(null);

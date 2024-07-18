@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 
-
 export default function CreateArticlePage() {
   // const [selectedText, setSelectedText] = useState<string[]>([]);
 
@@ -29,7 +28,6 @@ export default function CreateArticlePage() {
     setCollectedData,
     selectedArticle,
     setSelectedArticle,
-    setPreviewText,
     selectedBrand,
     setSelectedBrand
   } = useContext(globalContext);
@@ -80,7 +78,6 @@ export default function CreateArticlePage() {
         <div className={`${styles.article_with_check} group`}>
           <label
             className={`${styles.article}`}
-            // onClick={() => setPreviewText(item.text)}
           >
             {item.text}
           </label>

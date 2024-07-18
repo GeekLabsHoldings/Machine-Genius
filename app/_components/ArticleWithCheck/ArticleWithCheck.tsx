@@ -1,8 +1,6 @@
 "use client";
 import CustomCheckBox from "../CustomCheckBox/CustomCheckBox";
 import styles from "./ArticleWithCheck.module.css";
-import { globalContext } from "@/app/_context/store";
-import { useContext } from "react";
 
 interface IProps {
   article: string;
@@ -11,7 +9,6 @@ interface IProps {
 }
 
 const ArticleWithCheck = ({ article, name, accsentColor }: IProps) => {
-  const { setPreviewText } = useContext(globalContext);
 
   return article ? (
     <div
@@ -21,9 +18,6 @@ const ArticleWithCheck = ({ article, name, accsentColor }: IProps) => {
       <CustomCheckBox name={name} value={article} accentColor={accsentColor} />
       <label
         className={`${styles.article}`}
-        onClick={() =>
-          setPreviewText(article)
-        }
       >
         {article}
       </label>

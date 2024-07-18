@@ -14,7 +14,6 @@ export default function CreatePage() {
   const {
     setCollectedData,
     setChoosedArticles,
-    setPreviewText,
     setSelectedArticle,
     setSelectedText,
     setFinalArticle
@@ -25,7 +24,6 @@ export default function CreatePage() {
   useEffect(() => {
     setCollectedData(null);
     setChoosedArticles([]);
-    setPreviewText("");
     setSelectedArticle(null);
     setSelectedText([]);
     setFinalArticle(null);
