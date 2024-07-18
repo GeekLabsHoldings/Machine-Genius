@@ -8,24 +8,11 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
-import { useRouter } from "next/navigation";
-
 
 export default function ShowErrorsPage() {
-  const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<any>(null);
   const { finalArticle, setFinalArticle, checkGrammerResults, setCheckGrammerResults } = useContext(globalContext);
-
-
-  const handleNavigate = () => {
-    setIsLoading(true);
-
-    //   setTimeout(() => {
-    //     // Your action here
-    //     router.push('/content-creator/create/final-article')
-    //   }, 1500); // 3000 milliseconds = 3 seconds
-  };
 
 
   function highlightText(text: string, start: number, end: number) {
@@ -33,13 +20,14 @@ export default function ShowErrorsPage() {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
   }
 
-
-
+  const handleNavigate = () => {
+    setIsLoading(true);
+  };
 
   useEffect(() => {
     // ===== log data =====
-    console.log("finalArticle", finalArticle);
-    console.log("checkGrammerResults", checkGrammerResults);
+    console.log("finalArticle:", finalArticle);
+    console.log("checkGrammerResults:", checkGrammerResults);
     // ===== if there is no data, redirect to the choose brand page =====
     if (
       !finalArticle && !sessionStorage.getItem("finalArticle")
@@ -192,7 +180,7 @@ export default function ShowErrorsPage() {
           <CustomBtn
             word={"Fix & Check"}
             btnColor="black"
-            onClick={handleNavigate}
+            onClick={()=>{handleNavigate()}}
           />
         </div>
 
