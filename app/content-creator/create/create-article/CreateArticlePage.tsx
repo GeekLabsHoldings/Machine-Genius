@@ -20,13 +20,13 @@ export default function CreateArticlePage() {
   const [selectedText, setSelectedText] = useState<any>([]);
   // state keeps selected text to display them in selection section
   const {
-    setFinalArticle,
-    choosedArticles,
-    setChoosedArticles,
-    collectedData,
-    setCollectedData,
     selectedBrand,
     setSelectedBrand,
+    collectedData,
+    setCollectedData,
+    choosedArticles,
+    setChoosedArticles,
+    setFinalArticle
   } = useContext(globalContext);
 
   // state to enable text selection when click on highlight button

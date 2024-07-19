@@ -15,7 +15,6 @@ export default function CreatePage() {
     setSelectedBrand,
     setCollectedData,
     setChoosedArticles,
-    // setSelectedText,
     setFinalArticle,
     setCheckGrammerResults
   } = useContext(globalContext);
@@ -25,15 +24,13 @@ export default function CreatePage() {
     setSelectedBrand("");
     setCollectedData(null);
     setChoosedArticles([]);
-    // setSelectedText([]);
     setFinalArticle(null);
     setCheckGrammerResults([]);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
       sessionStorage.removeItem("choosedArticles"); 
-      // sessionStorage.removeItem("selectedText");   
-      sessionStorage.removeItem("finalArticle");      
+      sessionStorage.removeItem("finalArticle");
       sessionStorage.removeItem("checkGrammerResults");
     }
   }, []);
