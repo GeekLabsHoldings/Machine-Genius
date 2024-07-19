@@ -26,7 +26,7 @@ export default function CreateArticlePage() {
     setCollectedData,
     choosedArticles,
     setChoosedArticles,
-    setFinalArticle
+    setFinalArticle,
   } = useContext(globalContext);
 
   // state to enable text selection when click on highlight button
@@ -58,28 +58,28 @@ export default function CreateArticlePage() {
   // return selected text in selections
   function renderSelectedTxt() {
     return selectedText.map((item: any, index: any) => (
-        <div key={index}>
-          <div
-            className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}
-          >
-            <CustomCheckBox
-              value={item.text}
-              onChange={(e: any) => handleCheckChange(e, index)}
-              checked={item.checked}
-              accentColor="#2A2B2A"
-            />
-            {/* <ArticleWithCheck
+      <div key={index}>
+        <div
+          className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}
+        >
+          <CustomCheckBox
+            value={item.text}
+            onChange={(e: any) => handleCheckChange(e, index)}
+            checked={item.checked}
+            accentColor="#2A2B2A"
+          />
+          {/* <ArticleWithCheck
               accsentColor="#2A2B2A"
               article={oneTxt.text}
               name="selected-articles"
             /> */}
 
-            <div className={`${styles.article_with_check} group`}>
-              <label className={`${styles.article}`}>{item.text}</label>
-            </div>
+          <div className={`${styles.article_with_check} group`}>
+            <label className={`${styles.article}`}>{item.text}</label>
           </div>
         </div>
-      ));
+      </div>
+    ));
   }
 
   const handleCheckChange = (e: any, index: any) => {
@@ -204,12 +204,6 @@ export default function CreateArticlePage() {
 
   const isInitialMount = useRef(true);
   useEffect(() => {
-    // console.log("selectedText:", selectedText);
-    // if (typeof window !== "undefined") {
-    //   sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
-    // }
-
-
     if (isInitialMount.current) {
       console.log("selectedText-InitialMount:", selectedText);
       isInitialMount.current = false;
@@ -219,14 +213,24 @@ export default function CreateArticlePage() {
         sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
       }
     }
-
-    
   }, [selectedText]);
 
   useEffect(() => {
     console.log("choosedArticles:", choosedArticles);
     console.log("selectedBrand:", selectedBrand);
   }, [choosedArticles, selectedBrand]);
+
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      const filteredSelectedText = selectedText.filter((item: any) =>
+        choosedArticles.some(
+          (article: any) => article.title === item.selectedFromArticle
+        )
+      );
+      console.log("filteredSelectedText:", filteredSelectedText);
+      setSelectedText(filteredSelectedText);
+    }
+  }, [choosedArticles]);
 
   useEffect(() => {
     if (
@@ -253,11 +257,11 @@ export default function CreateArticlePage() {
         if (selectedBrandData) {
           setSelectedBrand(selectedBrandData);
         }
-  
-        const selectedTextData = sessionStorage.getItem("selectedText");
-        if (selectedTextData) {
-          setSelectedText(JSON.parse(selectedTextData));
-        }
+      }
+
+      const selectedTextData = sessionStorage.getItem("selectedText");
+      if (selectedTextData) {
+        setSelectedText(JSON.parse(selectedTextData));
       }
     }
 
