@@ -114,10 +114,6 @@ export default function ChooseArticlesPage() {
     }
     return false;
   }
-  
-
-
-
 
   return (
     <div className="flex flex-col">
