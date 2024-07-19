@@ -191,14 +191,7 @@ export default function CreateArticlePage() {
   }, [selectedArticle]);
 
   function previewSelectedArticle() {
-    let selectedContent = null;
-
-    choosedArticles?.forEach((item: any) => {
-      if (item.title === selectedArticle) {
-        selectedContent = item.content;
-      }
-    });
-
+    const selectedContent = choosedArticles.find((item:any) => item.title === selectedArticle)?.content;
     return selectedContent;
   }
 
