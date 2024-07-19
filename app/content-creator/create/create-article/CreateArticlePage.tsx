@@ -58,7 +58,7 @@ export default function CreateArticlePage() {
   // return selected text in selections
   function renderSelectedTxt() {
     return selectedText.map((item: any, index: any) => (
-      <div key={index}>
+      <div key={`${index}-${item.text}`}>
         <div
           className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}
         >

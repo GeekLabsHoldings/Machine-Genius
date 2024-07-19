@@ -150,7 +150,7 @@ export default function ChooseArticlesPage() {
                   forComments={false}
                   svgBtn={favIcon}
                   title={item.generalTitle}
-                  key={i} // Consider using a more unique key if possible
+                  key={`${i}-${item.generalTitle}`}
                   date={"April 16th 2024"}
                   hasCheckedArticles={() => hasCheckedArticles(i)}
                 >
@@ -158,7 +158,7 @@ export default function ChooseArticlesPage() {
                     <div
                       className={`${styles.article_with_check} group`}
                       style={{ "--module-color": "#2A2B2A" }}
-                      key={j} // Consider using a more unique key if possible
+                      key={`${j}-${ele.title}`}
                     >
                       <CustomCheckBox
                         name="select-articles"
