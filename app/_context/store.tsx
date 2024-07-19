@@ -8,8 +8,6 @@ const initialContextState = {
   setCollectedData: (data: any) => {},
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
-  selectedText: [] as any,
-  setSelectedText: (text: any) => {},
   finalArticle: null as any,
   setFinalArticle: (article: any) => {},
   checkGrammerResults: [] as any,
@@ -27,8 +25,7 @@ export default function GlobalContextProvider({
 }) {
   const [selectedBrand, setSelectedBrand] = useState<any>("");
   const [collectedData, setCollectedData] = useState<any>(null);
-  const [choosedArticles, setChoosedArticles] = useState<any>([]);
-  const [selectedText, setSelectedText] = useState<any>([]);
+  const [choosedArticles, setChoosedArticles] = useState<any>([]); 
   const [finalArticle, setFinalArticle] = useState<any>(null);
   const [checkGrammerResults, setCheckGrammerResults] = useState<any>([]);
 
@@ -36,8 +33,6 @@ export default function GlobalContextProvider({
   const contextValue = {
     selectedBrand,
     setSelectedBrand,
-    selectedText,
-    setSelectedText,
     collectedData,
     setCollectedData,
     choosedArticles,

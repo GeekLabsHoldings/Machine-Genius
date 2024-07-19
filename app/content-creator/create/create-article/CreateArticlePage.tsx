@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./create-article.module.css";
 // import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
@@ -12,30 +12,26 @@ import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
-
 export default function CreateArticlePage() {
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [IsRetry, setIsRetry] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [selectedText, setSelectedText] = useState<any>([]);
   // state keeps selected text to display them in selection section
   const {
-    selectedText,
-    setSelectedText,
-    finalArticle,
     setFinalArticle,
     choosedArticles,
     setChoosedArticles,
     collectedData,
     setCollectedData,
     selectedBrand,
-    setSelectedBrand
+    setSelectedBrand,
   } = useContext(globalContext);
 
   // state to enable text selection when click on highlight button
   const [beginSelect, setBeginSelect] = useState(false);
   const [CheckAllSelectedText, setCheckAllSelectedText] = useState(false);
-
 
   const handleSelectedText = () => {
     const button = document.getElementById("highlight-btn");
@@ -46,9 +42,12 @@ export default function CreateArticlePage() {
       if (getSelectedText.length > 0) {
         setSelectedText((prev: any) => [
           ...prev,
-          { text: getSelectedText, checked: false, selectedFromArticle: selectedArticle },
+          {
+            text: getSelectedText,
+            checked: false,
+            selectedFromArticle: selectedArticle,
+          },
         ]);
-
       }
       if (button) {
         button.style.display = "none";
@@ -57,37 +56,34 @@ export default function CreateArticlePage() {
   };
 
   // return selected text in selections
-  const renderSelectedTxt = selectedText.filter((item: any) => choosedArticles.some((article: any) => article.title === item.selectedFromArticle)).map((item: any, index: any) => (
-    <div key={index}>
-      <div className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}>
-        <CustomCheckBox
-          // @ts-ignore
-          value={item.text}
-          onChange={(e: any) => handleCheckChange(e, index)}
-          checked={item.checked}
-          accentColor="#2A2B2A"
-        />
-        {/* <ArticleWithCheck
-          accsentColor="#2A2B2A"
-          // @ts-ignore
-          article={oneTxt.text}
-          name="selected-articles"
-        /> */}
-
-        <div className={`${styles.article_with_check} group`}>
-          <label
-            className={`${styles.article}`}
+  function renderSelectedTxt() {
+    return selectedText.map((item: any, index: any) => (
+        <div key={index}>
+          <div
+            className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}
           >
-            {item.text}
-          </label>
+            <CustomCheckBox
+              value={item.text}
+              onChange={(e: any) => handleCheckChange(e, index)}
+              checked={item.checked}
+              accentColor="#2A2B2A"
+            />
+            {/* <ArticleWithCheck
+              accsentColor="#2A2B2A"
+              article={oneTxt.text}
+              name="selected-articles"
+            /> */}
+
+            <div className={`${styles.article_with_check} group`}>
+              <label className={`${styles.article}`}>{item.text}</label>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  ));
+      ));
+  }
 
   const handleCheckChange = (e: any, index: any) => {
     const newSelectedText = [...selectedText];
-    // @ts-ignore
     newSelectedText[index].checked = e.target.checked;
     setSelectedText(newSelectedText);
   };
@@ -123,16 +119,16 @@ export default function CreateArticlePage() {
     } else {
       var postBody: any = {};
       console.log(`selectedBrand`, selectedBrand);
-      
+
       if (selectedBrand === "PST Canada") {
         postBody.selectedContent = selectedText
-        .map((item: any) => item.text)
-        .join(" ");
+          .map((item: any) => item.text)
+          .join(" ");
         postBody.brandName = "StreetPolitics";
       } else if (selectedBrand === "Investorcracy") {
         postBody.selectedContent = selectedText
-        .map((item: any) => item.text)
-        .join(" ");
+          .map((item: any) => item.text)
+          .join(" ");
         postBody.brandName = "Investocracy";
       }
       console.log(`finalizeContent postBody:`, postBody);
@@ -159,7 +155,7 @@ export default function CreateArticlePage() {
           }
 
           json = await res.json();
-      
+
           if (json.articles[0]?.content) {
             // If content is found, break the loop
             break;
@@ -186,9 +182,9 @@ export default function CreateArticlePage() {
   }
 
   // function that get role value from select option by send it as a prop
-    const getSelectedArticle = (value: string | number) => {
-      setSelectedArticle(value);
-  }
+  const getSelectedArticle = (value: string | number) => {
+    setSelectedArticle(value);
+  };
 
   useEffect(() => {
     console.log("selectedArticle:", selectedArticle);
@@ -202,34 +198,37 @@ export default function CreateArticlePage() {
         selectedContent = item.content;
       }
     });
-  
+
     return selectedContent;
   }
 
+  const isInitialMount = useRef(true);
   useEffect(() => {
-    console.log("selectedText:", selectedText);
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
+    // console.log("selectedText:", selectedText);
+    // if (typeof window !== "undefined") {
+    //   sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
+    // }
+
+
+    if (isInitialMount.current) {
+      console.log("selectedText-InitialMount:", selectedText);
+      isInitialMount.current = false;
+    } else {
+      console.log("selectedText-notInitialMount:", selectedText);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
+      }
     }
-    console.log("selectedText after mount", selectedText);
+
+    
   }, [selectedText]);
 
   useEffect(() => {
     console.log("choosedArticles:", choosedArticles);
     console.log("selectedBrand:", selectedBrand);
-    if (typeof window !== "undefined") {
-      const selectedBrandData = sessionStorage.getItem("selectedBrand");
-      if (selectedBrandData) {
-        setSelectedBrand(selectedBrandData);
-      }
+  }, [choosedArticles, selectedBrand]);
 
-      const selectedTextData = sessionStorage.getItem("selectedText");
-      if (selectedTextData) {
-        setSelectedText(JSON.parse(selectedTextData));
-      }
-    }
-
-
+  useEffect(() => {
     if (
       (!collectedData || choosedArticles.length === 0) &&
       !sessionStorage.getItem("choosedArticles")
@@ -248,6 +247,16 @@ export default function CreateArticlePage() {
         const storedChoosedArticles = sessionStorage.getItem("choosedArticles");
         if (storedChoosedArticles) {
           setChoosedArticles(JSON.parse(storedChoosedArticles));
+        }
+
+        const selectedBrandData = sessionStorage.getItem("selectedBrand");
+        if (selectedBrandData) {
+          setSelectedBrand(selectedBrandData);
+        }
+  
+        const selectedTextData = sessionStorage.getItem("selectedText");
+        if (selectedTextData) {
+          setSelectedText(JSON.parse(selectedTextData));
         }
       }
     }
@@ -333,10 +342,6 @@ export default function CreateArticlePage() {
     <div className="flex flex-col">
       <div className="flex flex-col justify-center items-center h-[75vh] py-[1.5vw]">
         <div className="flex justify-between gap-[2vw] h-full w-full">
-
-
-
-
           {/* ===== 01. Articles to select ===== */}
           <div className="w-7/12 flex flex-col gap-[3vh] h-full">
             {/* 01-1. Title & CustomSelectInput */}
@@ -401,9 +406,6 @@ export default function CreateArticlePage() {
             </div>
           </div>
 
-
-
-
           {/* ===== 02. Selections ===== */}
           <div className={`w-5/12 ${styles.selectionsHeader}`}>
             <div className="flex justify-between items-center">
@@ -442,13 +444,9 @@ export default function CreateArticlePage() {
             </div>
             {/* return highlighted text */}
             <div className={`${styles.selectionsParent}`}>
-              {renderSelectedTxt}
+              {renderSelectedTxt()}
             </div>
           </div>
-
-
-
-
         </div>
       </div>
       {/* ===== Navigation Buttons ===== */}

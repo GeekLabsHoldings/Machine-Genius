@@ -14,7 +14,7 @@ export default function ChooseBrandPage() {
     setSelectedBrand,
     setCollectedData,
     setChoosedArticles,
-    setSelectedText,
+    // setSelectedText,
     setFinalArticle,
     setCheckGrammerResults,
     selectedBrand,
@@ -25,14 +25,14 @@ export default function ChooseBrandPage() {
     setSelectedBrand("");
     setCollectedData(null);
     setChoosedArticles([]);
-    setSelectedText([]);
+    // setSelectedText([]);
     setFinalArticle(null);
     setCheckGrammerResults([]);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
       sessionStorage.removeItem("choosedArticles"); 
-      sessionStorage.removeItem("selectedText");   
+      // sessionStorage.removeItem("selectedText");   
       sessionStorage.removeItem("finalArticle");      
       sessionStorage.removeItem("checkGrammerResults");
     }
