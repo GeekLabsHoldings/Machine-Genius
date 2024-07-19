@@ -30,6 +30,14 @@ export default function CreatePage() {
     setSelectedText([]);
     setFinalArticle(null);
     setCheckGrammerResults([]);
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("selectedBrand");
+      sessionStorage.removeItem("collectedData");
+      sessionStorage.removeItem("choosedArticles"); 
+      sessionStorage.removeItem("selectedText");   
+      sessionStorage.removeItem("finalArticle");      
+      sessionStorage.removeItem("checkGrammerResults");
+    }
   }, []);
 
   return (
