@@ -59,7 +59,7 @@ export default function ChooseArticlesPage() {
 
   const {
     choosedArticles,
-    setChoosedArticles,    
+    setChoosedArticles,
     collectedData,
     setCollectedData,
   } = useContext(globalContext);
@@ -101,6 +101,24 @@ export default function ChooseArticlesPage() {
     }
   }, [choosedArticles]);
 
+  function hasCheckedArticles(i: number) {
+    const topicCollapse = document.querySelectorAll(".topic_collapse")[i];
+    const checkboxes = topicCollapse.querySelectorAll(
+      'input[name="select-articles"]'
+    );
+    for (let j = 0; j < checkboxes.length; j++) {
+      const checkbox = checkboxes[j] as HTMLInputElement;
+      if (checkbox.checked) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+
+
+
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-start gap-[2rem] h-[75vh] py-[1.5vw]">
@@ -138,6 +156,7 @@ export default function ChooseArticlesPage() {
                   title={item.generalTitle}
                   key={i} // Consider using a more unique key if possible
                   date={"April 16th 2024"}
+                  hasCheckedArticles={() => hasCheckedArticles(i)}
                 >
                   {item?.articleJson.map((ele: any, j: number) => (
                     <div

@@ -15,7 +15,6 @@ export default function CreatePage() {
     setSelectedBrand,
     setCollectedData,
     setChoosedArticles,
-    setSelectedArticle,
     setSelectedText,
     setFinalArticle,
     setCheckGrammerResults
@@ -26,7 +25,6 @@ export default function CreatePage() {
     setSelectedBrand("");
     setCollectedData(null);
     setChoosedArticles([]);
-    setSelectedArticle(null);
     setSelectedText([]);
     setFinalArticle(null);
     setCheckGrammerResults([]);

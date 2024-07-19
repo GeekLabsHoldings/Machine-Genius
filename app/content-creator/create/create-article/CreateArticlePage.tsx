@@ -17,6 +17,7 @@ export default function CreateArticlePage() {
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [IsRetry, setIsRetry] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
   // state keeps selected text to display them in selection section
   const {
     selectedText,
@@ -27,8 +28,6 @@ export default function CreateArticlePage() {
     setChoosedArticles,
     collectedData,
     setCollectedData,
-    selectedArticle,
-    setSelectedArticle,
     selectedBrand,
     setSelectedBrand
   } = useContext(globalContext);
@@ -332,11 +331,15 @@ export default function CreateArticlePage() {
 
   return (
     <div className="flex flex-col">
-      {/* check on loading state to render the correct content based on it */}
-
       <div className="flex flex-col justify-center items-center h-[75vh] py-[1.5vw]">
         <div className="flex justify-between gap-[2vw] h-full w-full">
+
+
+
+
+          {/* ===== 01. Articles to select ===== */}
           <div className="w-7/12 flex flex-col gap-[3vh] h-full">
+            {/* 01-1. Title & CustomSelectInput */}
             <div className={`${styles.articlesToSelect} h-[15%]`}>
               <h3>Articles</h3>
               <div className="flex items-center gap-3">
@@ -368,15 +371,7 @@ export default function CreateArticlePage() {
                 </div>
               </div>
             </div>
-            {/* display chosen article  */}
-            {/* <ArticlePreview
-                yourNewArticle={false}
-                height="h-[80%]"
-                beginSelect={beginSelect}
-                withEdit={false}
-                isEditable={true}
-              /> */}
-
+            {/* 01-2. previewSelectedArticle */}
             <div
               className={` ${styles.articlePreview} !h-[57vh]`}
               id="article-content"
@@ -406,7 +401,10 @@ export default function CreateArticlePage() {
             </div>
           </div>
 
-          {/* selections part */}
+
+
+
+          {/* ===== 02. Selections ===== */}
           <div className={`w-5/12 ${styles.selectionsHeader}`}>
             <div className="flex justify-between items-center">
               <div className={`${styles.checkSelection} items-center flex`}>
@@ -447,10 +445,13 @@ export default function CreateArticlePage() {
               {renderSelectedTxt}
             </div>
           </div>
+
+
+
+
         </div>
       </div>
-
-      {/* buttons to move to last or next page */}
+      {/* ===== Navigation Buttons ===== */}
       <div className="flex justify-between items-center">
         <CustomBtn
           word={"Back"}

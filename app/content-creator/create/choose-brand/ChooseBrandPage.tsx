@@ -14,7 +14,6 @@ export default function ChooseBrandPage() {
     setSelectedBrand,
     setCollectedData,
     setChoosedArticles,
-    setSelectedArticle,
     setSelectedText,
     setFinalArticle,
     setCheckGrammerResults,
@@ -26,7 +25,6 @@ export default function ChooseBrandPage() {
     setSelectedBrand("");
     setCollectedData(null);
     setChoosedArticles([]);
-    setSelectedArticle(null);
     setSelectedText([]);
     setFinalArticle(null);
     setCheckGrammerResults([]);
