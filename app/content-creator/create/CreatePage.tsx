@@ -35,6 +35,7 @@ export default function CreatePage() {
       sessionStorage.removeItem("collectedData");
       sessionStorage.removeItem("twitterData");
       sessionStorage.removeItem("choosedArticles"); 
+      sessionStorage.removeItem("selectedText"); 
       sessionStorage.removeItem("finalArticle");
       sessionStorage.removeItem("checkGrammerResults");
       sessionStorage.removeItem("checkAiResults");

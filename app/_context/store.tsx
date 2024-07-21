@@ -37,7 +37,7 @@ export default function GlobalContextProvider({
   }
   const [selectedBrand, setSelectedBrand] = useState<any>(selectedBrandInit());
   useEffect(() => {
-    sessionStorage.setItem("selectedBrand", JSON.stringify(selectedBrand));
+    sessionStorage.setItem("selectedBrand", selectedBrand);
   }, [selectedBrand]);
 
 
