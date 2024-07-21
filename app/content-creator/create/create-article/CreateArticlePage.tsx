@@ -24,6 +24,8 @@ export default function CreateArticlePage() {
     setSelectedBrand,
     collectedData,
     setCollectedData,
+    twitterData,
+    setTwitterData,
     choosedArticles,
     setChoosedArticles,
     setFinalArticle,
@@ -191,8 +193,13 @@ export default function CreateArticlePage() {
   }, [selectedArticle]);
 
   function previewSelectedArticle() {
-    const selectedContent = choosedArticles.find((item:any) => item.title === selectedArticle)?.content;
-    return selectedContent;
+    if (selectedArticle?.includes("x.com")) {
+      const selectedContent = choosedArticles.find((item:any) => item.href === selectedArticle)?.content;
+      return selectedContent;
+    } else {
+      const selectedContent = choosedArticles.find((item:any) => item.title === selectedArticle)?.content;
+      return selectedContent;
+    }
   }
 
   const isInitialMount = useRef(true);
@@ -239,6 +246,11 @@ export default function CreateArticlePage() {
         const storedData = sessionStorage.getItem("collectedData");
         if (storedData) {
           setCollectedData(JSON.parse(storedData));
+        }
+
+        const storedTwitterData = sessionStorage.getItem("twitterData");
+        if (storedTwitterData) {
+          setTwitterData(JSON.parse(storedTwitterData));
         }
 
         const storedChoosedArticles = sessionStorage.getItem("choosedArticles");
@@ -349,7 +361,14 @@ export default function CreateArticlePage() {
                   {/* select article to read */}
                   <CustomSelectInput
                     label="Select Article"
-                    options={choosedArticles.map((item: any) => item.title)}
+                    options={choosedArticles.map((item: any) => {
+                      if (item.title) {
+                        return item.title;
+                      } else {
+                        return item.href;
+                      }
+                    })                    
+                    }
                     getValue={getSelectedArticle}
                   />
                 </div>

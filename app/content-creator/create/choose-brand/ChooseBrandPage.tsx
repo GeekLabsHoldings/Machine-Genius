@@ -13,6 +13,7 @@ export default function ChooseBrandPage() {
   const {
     setSelectedBrand,
     setCollectedData,
+    setTwitterData,
     setChoosedArticles,
     setFinalArticle,
     setCheckGrammerResults,
@@ -29,6 +30,7 @@ export default function ChooseBrandPage() {
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
+      sessionStorage.removeItem("twitterData");
       sessionStorage.removeItem("choosedArticles");
       sessionStorage.removeItem("finalArticle");      
       sessionStorage.removeItem("checkGrammerResults");
@@ -79,7 +81,6 @@ export default function ChooseBrandPage() {
       postBody.stockName = stockNameValue;
     }
 
-    setIsLoading(true);
     const maxRetries = 2; // Define the maximum number of retries
     let attempts = 0;
     let json = null;
@@ -119,12 +120,47 @@ export default function ChooseBrandPage() {
           JSON.stringify(json.organizedArticles)
         );
       }
-      router.replace("/content-creator/create/choose-articles");
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
+  }
+
+
+  async function setTwitterDataAsync(json:any) {
+    setTwitterData(json);
+    return Promise.resolve(); // Ensure this function is awaited properly
+  }
+
+  async function getTwitterData() {
+    try {
+      const res = await fetch(`http://localhost:3000/collect/twitter/NVDA`);
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const json = await res.json();
+      await setTwitterDataAsync(json.allArticles);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(
+          "twitterData",
+          JSON.stringify(json.allArticles)
+        );
+      }
+    } catch (error) {
+      console.error("Error getCollectedData:", error);
+    }
+  }
+
+  async function generateContent(){
+    setIsLoading(true);
+    await getCollectedData();
+    if (selectedBrand === "Investorcracy"){
+      await getTwitterData();
+    }
+    router.replace("/content-creator/create/choose-articles");
   }
 
   if (IsLoading) {
@@ -181,7 +217,7 @@ export default function ChooseBrandPage() {
             ) {
               // window.alert("Please select PST Canada or Investorcracy!");
             } else {
-              getCollectedData();
+              generateContent();
             }
           }}
         />

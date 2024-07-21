@@ -62,6 +62,8 @@ export default function ChooseArticlesPage() {
     setChoosedArticles,
     collectedData,
     setCollectedData,
+    twitterData,
+    setTwitterData,
   } = useContext(globalContext);
 
   useEffect(() => {
@@ -77,6 +79,10 @@ export default function ChooseArticlesPage() {
         const storedCollectedData = sessionStorage.getItem("collectedData");
         if (storedCollectedData) {
           setCollectedData(JSON.parse(storedCollectedData));
+        }
+        const storedTwitterData = sessionStorage.getItem("twitterData");
+        if (storedTwitterData) {
+          setTwitterData(JSON.parse(storedTwitterData));
         }
         const storedChoosedArticles = sessionStorage.getItem("choosedArticles");
         if (storedChoosedArticles) {
@@ -198,6 +204,66 @@ export default function ChooseArticlesPage() {
                   ))}
                 </TopicColapse>
               ))}
+
+
+{twitterData
+              ?.filter((item: any) => item.tweets.length > 0)
+              .map((item: any, i: number) => (
+                <TopicColapse
+                  forComments={false}
+                  svgBtn={favIcon}
+                  title={item.account}
+                  key={`${i}-${item.account}`}
+                  date={"April 16th 2024"}
+                  hasCheckedArticles={() => hasCheckedArticles(i)}
+                >
+                  {item?.tweets.map((ele: any, j: number) => (
+                    <div
+                      className={`${styles.article_with_check} group`}
+                      style={{ "--module-color": "#2A2B2A" }}
+                      key={`${j}-${ele.href}`}
+                    >
+                      <CustomCheckBox
+                        name="select-articles"
+                        value={ele?.href}
+                        accentColor="#2A2B2A"
+                        onChange={() => {
+                          // setChoosedArticles((prevArticles: any) => [
+                          //   ...prevArticles,
+                          //   ele,
+                          // ])
+
+                          setChoosedArticles((prevArticles: any) => {
+                            if (
+                              prevArticles.some(
+                                (article: any) => article.href === ele.href
+                              )
+                            ) {
+                              return prevArticles.filter(
+                                (article: any) => article.href !== ele.href
+                              );
+                            } else {
+                              return [...prevArticles, ele];
+                            }
+                          });
+                        }}
+                        checked={choosedArticles.some(
+                          (article: any) => article.href === ele.href
+                        )}
+                      />
+                      <label
+                        className={`${styles.article}`}
+                        onClick={() => setPreviewText(ele.content)}
+                      >
+                        {ele?.content}
+                      </label>
+                    </div>
+                  ))}
+                </TopicColapse>
+              ))}
+
+
+
           </div>
         </div>
 
