@@ -17,6 +17,7 @@ export default function ChooseBrandPage() {
     setChoosedArticles,
     setFinalArticle,
     setCheckGrammerResults,
+    setCheckAiResults,
     selectedBrand,
   } = useContext(globalContext);
 
@@ -24,16 +25,19 @@ export default function ChooseBrandPage() {
   useEffect(() => {
     setSelectedBrand("");
     setCollectedData(null);
+    setTwitterData(null);
     setChoosedArticles([]);
     setFinalArticle(null);
     setCheckGrammerResults([]);
+    setCheckAiResults([]);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
       sessionStorage.removeItem("twitterData");
-      sessionStorage.removeItem("choosedArticles");
-      sessionStorage.removeItem("finalArticle");      
+      sessionStorage.removeItem("choosedArticles"); 
+      sessionStorage.removeItem("finalArticle");
       sessionStorage.removeItem("checkGrammerResults");
+      sessionStorage.removeItem("checkAiResults");
     }
   }, []);
 
@@ -52,9 +56,6 @@ export default function ChooseBrandPage() {
   // function that get select value by sending to custom select as a prop
   const getValue = (value: string | number) => {
     setSelectedBrand(value);
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("selectedBrand", value.toString());
-    }
   };
 
   useEffect(() => {
@@ -64,7 +65,6 @@ export default function ChooseBrandPage() {
     //   router.push("/content-creator/create/movie-myth");
     // }
   }, [selectedBrand]);
-
 
 
   async function setCollectedDataAsync(json:any) {
@@ -114,12 +114,6 @@ export default function ChooseBrandPage() {
 
     if (json?.organizedArticles) {
       await setCollectedDataAsync(json);
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem(
-          "collectedData",
-          JSON.stringify(json.organizedArticles)
-        );
-      }
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
@@ -143,12 +137,6 @@ export default function ChooseBrandPage() {
 
       const json = await res.json();
       await setTwitterDataAsync(json.allArticles);
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem(
-          "twitterData",
-          JSON.stringify(json.allArticles)
-        );
-      }
     } catch (error) {
       console.error("Error getCollectedData:", error);
     }

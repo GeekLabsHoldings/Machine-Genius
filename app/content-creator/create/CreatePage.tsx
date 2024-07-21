@@ -14,24 +14,30 @@ export default function CreatePage() {
   const {
     setSelectedBrand,
     setCollectedData,
+    setTwitterData,
     setChoosedArticles,
     setFinalArticle,
-    setCheckGrammerResults
+    setCheckGrammerResults,
+    setCheckAiResults
   } = useContext(globalContext);
   
   // reset all the data
   useEffect(() => {
     setSelectedBrand("");
     setCollectedData(null);
+    setTwitterData(null);
     setChoosedArticles([]);
     setFinalArticle(null);
     setCheckGrammerResults([]);
+    setCheckAiResults([]);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
+      sessionStorage.removeItem("twitterData");
       sessionStorage.removeItem("choosedArticles"); 
       sessionStorage.removeItem("finalArticle");
       sessionStorage.removeItem("checkGrammerResults");
+      sessionStorage.removeItem("checkAiResults");
     }
   }, []);
 

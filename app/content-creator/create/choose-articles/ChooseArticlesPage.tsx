@@ -74,21 +74,6 @@ export default function ChooseArticlesPage() {
       //   "No data is available. You will be redirected to refetch new data!"
       // );
       // router.push("/content-creator/create/choose-brand");
-    } else {
-      if (typeof window !== "undefined") {
-        const storedCollectedData = sessionStorage.getItem("collectedData");
-        if (storedCollectedData) {
-          setCollectedData(JSON.parse(storedCollectedData));
-        }
-        const storedTwitterData = sessionStorage.getItem("twitterData");
-        if (storedTwitterData) {
-          setTwitterData(JSON.parse(storedTwitterData));
-        }
-        const storedChoosedArticles = sessionStorage.getItem("choosedArticles");
-        if (storedChoosedArticles) {
-          setChoosedArticles(JSON.parse(storedChoosedArticles));
-        }
-      }
     }
   }, []);
 
@@ -99,12 +84,6 @@ export default function ChooseArticlesPage() {
     // } else {
     //   setIsChoosedArticles(false);
     // }
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem(
-        "choosedArticles",
-        JSON.stringify(choosedArticles)
-      );
-    }
   }, [choosedArticles]);
 
   function hasCheckedArticles(i: number) {

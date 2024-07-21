@@ -17,7 +17,24 @@ export default function CreateArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [IsRetry, setIsRetry] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
-  const [selectedText, setSelectedText] = useState<any>([]);
+
+
+
+  function selectedTextInit(){
+    if (typeof window !== "undefined") {
+      const selectedTextInitValue = sessionStorage.getItem("selectedText");
+      return selectedTextInitValue ? JSON.parse(selectedTextInitValue) : [];
+    } else{
+      return [];
+    }
+  }
+  const [selectedText, setSelectedText] = useState<any>(selectedTextInit());
+  useEffect(() => {
+    sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
+  }, [selectedText]);
+  
+
+
   // state keeps selected text to display them in selection section
   const {
     selectedBrand,
@@ -171,9 +188,6 @@ export default function CreateArticlePage() {
 
       if (json?.articles[0]?.content) {
         await setFinalArticleAsync(json);
-        if (typeof window !== "undefined") {
-          sessionStorage.setItem("finalArticle", JSON.stringify(json));
-        }
         router.replace("/content-creator/create/final-article");
       } else {
         setIsRetry(true);
@@ -209,9 +223,6 @@ export default function CreateArticlePage() {
       isInitialMount.current = false;
     } else {
       console.log("selectedText-notInitialMount:", selectedText);
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
-      }
     }
   }, [selectedText]);
 
@@ -241,33 +252,6 @@ export default function CreateArticlePage() {
       //   "No data is available. You will be redirected to refetch new data!"
       // );
       // router.push("/content-creator/create/choose-brand");
-    } else {
-      if (typeof window !== "undefined") {
-        const storedData = sessionStorage.getItem("collectedData");
-        if (storedData) {
-          setCollectedData(JSON.parse(storedData));
-        }
-
-        const storedTwitterData = sessionStorage.getItem("twitterData");
-        if (storedTwitterData) {
-          setTwitterData(JSON.parse(storedTwitterData));
-        }
-
-        const storedChoosedArticles = sessionStorage.getItem("choosedArticles");
-        if (storedChoosedArticles) {
-          setChoosedArticles(JSON.parse(storedChoosedArticles));
-        }
-
-        const selectedBrandData = sessionStorage.getItem("selectedBrand");
-        if (selectedBrandData) {
-          setSelectedBrand(selectedBrandData);
-        }
-      }
-
-      const selectedTextData = sessionStorage.getItem("selectedText");
-      if (selectedTextData) {
-        setSelectedText(JSON.parse(selectedTextData));
-      }
     }
 
     const button = document.getElementById("highlight-btn");

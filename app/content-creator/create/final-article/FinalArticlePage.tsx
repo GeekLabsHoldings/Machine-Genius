@@ -31,12 +31,6 @@ export default function FinalArticlePage() {
       //   "No data is available. You will be redirected to refetch new data!"
       // );
       // router.push("/content-creator/create/choose-brand");
-    } else {
-      if (typeof window !== "undefined"){
-        if (sessionStorage.getItem("finalArticle")) {
-          setFinalArticle(JSON.parse(sessionStorage.getItem("finalArticle") || ""));
-        }
-      }
     }
   }, []);
 
@@ -71,9 +65,6 @@ async function startChecks() {
       finalArticleContent = (finalArticleRef.current as HTMLElement).innerHTML;
     }
     await setFinalArticleAsync(finalArticleContent);
-    // if (typeof window !== "undefined"){
-    //   sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
-    // }
     console.log("finalArticleContent:", finalArticleContent);
     await startChecks();
   };
@@ -123,9 +114,6 @@ async function startChecks() {
 
       console.log("checkGrammerResults1", json);
       setCheckGrammerResults(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other"));
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("checkGrammerResults", JSON.stringify(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other")));
-      }
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");

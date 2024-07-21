@@ -40,19 +40,6 @@ export default function ShowErrorsPage() {
       //   "No data is available. You will be redirected to refetch new data!"
       // );
       // router.push("/content-creator/create/choose-brand");
-    } else {
-      if (typeof window !== "undefined") {
-        const finalArticle = sessionStorage.getItem("finalArticle");
-        if (finalArticle) {
-          setFinalArticle(JSON.parse(finalArticle));
-        }
-        const checkGrammerResults = sessionStorage.getItem(
-          "checkGrammerResults"
-        );
-        if (checkGrammerResults) {
-          setCheckGrammerResults(JSON.parse(checkGrammerResults));
-        }
-      }
     }
   }, []);
 
