@@ -48,7 +48,7 @@ export default function ChooseBrandPage() {
     "Mega Projects",
   ];
 
-  const [stockNameValue, setStockNameValue] = useState("NVDA");
+  const [stockNameValue, setStockNameValue] = useState("PLTR");
   // function that get select value by sending to custom select as a prop
   const getValue = (value: string | number) => {
     setSelectedBrand(value);
@@ -135,7 +135,7 @@ export default function ChooseBrandPage() {
 
   async function getTwitterData() {
     try {
-      const res = await fetch(`http://localhost:3000/collect/twitter/NVDA`);
+      const res = await fetch(`http://localhost:3000/collect/twitter/PLTR`);
 
       if (!res.ok) {
         throw new Error("Failed to fetch data");

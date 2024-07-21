@@ -1,7 +1,7 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from "./final-artical.module.css";
@@ -10,8 +10,9 @@ import { useContext } from "react";
 
 export default function FinalArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
-  const { finalArticle, setFinalArticle, setCheckGrammerResults } =
+  const { finalArticle, setFinalArticle, setCheckGrammerResults, setCheckAiResults } =
     useContext(globalContext);
+    const finalArticleRef = useRef(null);
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
     plagiarism: "waiting",
@@ -42,7 +43,9 @@ export default function FinalArticlePage() {
   
 async function setIsLoadingAsync(){
   setIsLoading(true);
+  return Promise.resolve();
 }
+
 async function setFinalArticleAsync(finalArticleContent: any){
   setFinalArticle((prev: any) => ({
     ...prev,
@@ -53,6 +56,7 @@ async function setFinalArticleAsync(finalArticleContent: any){
       },
     ],
   }));
+  return Promise.resolve();
 }
 async function startChecks() {
   await checkGrammer();
@@ -62,9 +66,15 @@ async function startChecks() {
 }
   async function handleNavigate() {
     await setIsLoadingAsync();
-    const finalArticleContent =
-      document.getElementById("finalArticle")?.innerHTML;
+    let finalArticleContent = "";
+    if (finalArticleRef.current) {
+      finalArticleContent = (finalArticleRef.current as HTMLElement).innerHTML;
+    }
     await setFinalArticleAsync(finalArticleContent);
+    // if (typeof window !== "undefined"){
+    //   sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
+    // }
+    console.log("finalArticleContent:", finalArticleContent);
     await startChecks();
   };
 
@@ -105,7 +115,7 @@ async function startChecks() {
     }
 
     if (json) {
-      if (json.grammarIssues.length > 0) {
+      if (json.grammarIssues.filter((item: any) => item.general_error_type !== "Other").length > 0) {
         setCheckStatus((prev) => ({ ...prev, grammar: "fail" }));
       } else {
         setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
@@ -213,6 +223,7 @@ async function startChecks() {
         setCheckStatus((prev) => ({ ...prev, ai: "pass" }));
       }
       console.log("checkAiResult", json);
+      setCheckAiResults(json.documents[0].sentences);
     } else {
       setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
@@ -273,6 +284,7 @@ async function startChecks() {
 
               <div
                 id="finalArticle"
+                ref={finalArticleRef}
                 contentEditable={true}
                 className={`${styles.articleContent}`}
               >
