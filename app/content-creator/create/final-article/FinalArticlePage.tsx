@@ -10,9 +10,13 @@ import { useContext } from "react";
 
 export default function FinalArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
-  const { finalArticle, setFinalArticle, setCheckGrammerResults, setCheckAiResults } =
-    useContext(globalContext);
-    const finalArticleRef = useRef(null);
+  const {
+    finalArticle,
+    setFinalArticle,
+    setCheckGrammerResults,
+    setCheckAiResults,
+  } = useContext(globalContext);
+  const finalArticleRef = useRef(null);
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
     plagiarism: "waiting",
@@ -21,7 +25,8 @@ export default function FinalArticlePage() {
 
   useEffect(() => {
     if (
-      !finalArticle && !sessionStorage.getItem("finalArticle")
+      !finalArticle &&
+      !sessionStorage.getItem("finalArticle")
       // ||
       // !finalArticle.articles[0] ||
       // !finalArticle.articles[0]?.content ||
@@ -34,42 +39,39 @@ export default function FinalArticlePage() {
     }
   }, []);
 
-  
-async function setIsLoadingAsync(){
-  setIsLoading(true);
-  return Promise.resolve();
-}
+  async function setIsLoadingAsync() {
+    setIsLoading(true);
+    return Promise.resolve();
+  }
 
-async function setFinalArticleAsync(finalArticleContent: any){
-  setFinalArticle((prev: any) => ({
-    ...prev,
-    articles: [
-      {
-        ...prev.articles[0],
-        content: finalArticleContent,
-      },
-    ],
-  }));
-  return Promise.resolve();
-}
-async function startChecks() {
-  await checkGrammer();
-  await checkPlagiarism();
-  await checkAi();
-  return Promise.resolve();
-}
+  async function setFinalArticleAsync(finalArticleContent: any) {
+    setFinalArticle((prev: any) => ({
+      ...prev,
+      articles: [
+        {
+          ...prev.articles[0],
+          content: finalArticleContent,
+        },
+      ],
+    }));
+    return Promise.resolve();
+  }
+  async function startChecks() {
+    await checkGrammer();
+    await checkPlagiarism();
+    await checkAi();
+    return Promise.resolve();
+  }
   async function handleNavigate() {
     await setIsLoadingAsync();
-    let finalArticleContent = "";
-    if (finalArticleRef.current) {
-      finalArticleContent = (finalArticleRef.current as HTMLElement).innerHTML;
-    }
-    await setFinalArticleAsync(finalArticleContent);
-    console.log("finalArticleContent:", finalArticleContent);
+    // let finalArticleContent = "";
+    // if (finalArticleRef.current) {
+    //   finalArticleContent = (finalArticleRef.current as HTMLElement).innerHTML;
+    // }
+    // await setFinalArticleAsync(finalArticleContent);
+    // console.log("finalArticleContent:", finalArticleContent);
     await startChecks();
-  };
-
-
+  }
 
   async function checkGrammer() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -106,14 +108,22 @@ async function startChecks() {
     }
 
     if (json) {
-      if (json.grammarIssues.filter((item: any) => item.general_error_type !== "Other").length > 0) {
+      if (
+        json.grammarIssues.filter(
+          (item: any) => item.general_error_type !== "Other"
+        ).length > 0
+      ) {
         setCheckStatus((prev) => ({ ...prev, grammar: "fail" }));
       } else {
         setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
       }
 
       console.log("checkGrammerResults1", json);
-      setCheckGrammerResults(json.grammarIssues.filter((item: any) => item.general_error_type !== "Other"));
+      setCheckGrammerResults(
+        json.grammarIssues.filter(
+          (item: any) => item.general_error_type !== "Other"
+        )
+      );
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
@@ -219,7 +229,6 @@ async function startChecks() {
     }
   }
 
-
   if (IsLoading) {
     return (
       <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
@@ -240,14 +249,14 @@ async function startChecks() {
             <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
           </div>
           {checkStatus.grammar !== "waiting" &&
-          checkStatus.plagiarism !== "waiting" &&
-          checkStatus.ai !== "waiting" && (
-            <CustomBtn
-              word={"Results"}
-              btnColor="black"
-              href="/content-creator/create/show-errors/"
-            />
-          )}
+            checkStatus.plagiarism !== "waiting" &&
+            checkStatus.ai !== "waiting" && (
+              <CustomBtn
+                word={"Results"}
+                btnColor="black"
+                href="/content-creator/create/show-errors/"
+              />
+            )}
         </div>
       </div>
     );
@@ -285,13 +294,10 @@ async function startChecks() {
                     </>
                   ))} */}
 
-                  {finalArticle?.articles[0]?.content}
+                {finalArticle?.articles[0]?.content}
               </div>
             </div>
           </div>
-
-
-
         </div>
       </div>
       {/* buttons to move to last or next page */}
@@ -301,7 +307,13 @@ async function startChecks() {
           btnColor="white"
           href={"/content-creator/create/create-article"}
         />
-        <CustomBtn word={"Next"} btnColor="black" onClick={()=>{handleNavigate()}} />
+        <CustomBtn
+          word={"Next"}
+          btnColor="black"
+          onClick={() => {
+            handleNavigate();
+          }}
+        />
       </div>
     </div>
   );

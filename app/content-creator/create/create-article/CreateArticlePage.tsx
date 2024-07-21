@@ -18,13 +18,11 @@ export default function CreateArticlePage() {
   const [IsRetry, setIsRetry] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
 
-
-
-  function selectedTextInit(){
+  function selectedTextInit() {
     if (typeof window !== "undefined") {
       const selectedTextInitValue = sessionStorage.getItem("selectedText");
       return selectedTextInitValue ? JSON.parse(selectedTextInitValue) : [];
-    } else{
+    } else {
       return [];
     }
   }
@@ -32,8 +30,6 @@ export default function CreateArticlePage() {
   useEffect(() => {
     sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
   }, [selectedText]);
-  
-
 
   // state keeps selected text to display them in selection section
   const {
@@ -135,22 +131,18 @@ export default function CreateArticlePage() {
   async function finalizeContent() {
     if (selectedText.length === 0) {
       // window.alert("Please select at least one article!");
+      return;
     } else {
-      var postBody: any = {};
+      let brandNamePayload = "";
       console.log(`selectedBrand`, selectedBrand);
+      console.log(`selectedText`, selectedText);
 
       if (selectedBrand === "PST Canada") {
-        postBody.selectedContent = selectedText
-          .map((item: any) => item.text)
-          .join(" ");
-        postBody.brandName = "StreetPolitics";
+        brandNamePayload = "StreetPolitics";
       } else if (selectedBrand === "Investorcracy") {
-        postBody.selectedContent = selectedText
-          .map((item: any) => item.text)
-          .join(" ");
-        postBody.brandName = "Investocracy";
+        brandNamePayload = "Investocracy";
       }
-      console.log(`finalizeContent postBody:`, postBody);
+      console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
       setIsLoading(true);
       const maxRetries = 2; // Define the maximum number of retries
       let attempts = 0;
@@ -165,7 +157,13 @@ export default function CreateArticlePage() {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(postBody),
+              // body: JSON.stringify(postBody),
+              body: JSON.stringify({
+                selectedContent: selectedText
+                  .map((item: any) => item.text)
+                  .join(" "),
+                brandName: brandNamePayload,
+              }),
             }
           );
 
@@ -208,10 +206,14 @@ export default function CreateArticlePage() {
 
   function previewSelectedArticle() {
     if (selectedArticle?.includes("x.com")) {
-      const selectedContent = choosedArticles.find((item:any) => item.href === selectedArticle)?.content;
+      const selectedContent = choosedArticles.find(
+        (item: any) => item.href === selectedArticle
+      )?.content;
       return selectedContent;
     } else {
-      const selectedContent = choosedArticles.find((item:any) => item.title === selectedArticle)?.content;
+      const selectedContent = choosedArticles.find(
+        (item: any) => item.title === selectedArticle
+      )?.content;
       return selectedContent;
     }
   }
@@ -351,8 +353,7 @@ export default function CreateArticlePage() {
                       } else {
                         return item.href;
                       }
-                    })                    
-                    }
+                    })}
                     getValue={getSelectedArticle}
                   />
                 </div>
