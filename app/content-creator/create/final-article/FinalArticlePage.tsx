@@ -1,6 +1,5 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
@@ -16,28 +15,30 @@ export default function FinalArticlePage() {
     setCheckGrammerResults,
     setCheckAiResults,
   } = useContext(globalContext);
-  const finalArticleRef = useRef(null);
+
+  const finalArticleRef = useRef<HTMLDivElement>(null);
+
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
     plagiarism: "waiting",
     ai: "waiting",
   });
 
-  useEffect(() => {
-    if (
-      !finalArticle &&
-      !sessionStorage.getItem("finalArticle")
+  // useEffect(() => {
+  //   if (
+  //     !finalArticle &&
+  //     !sessionStorage.getItem("finalArticle")
       // ||
       // !finalArticle.articles[0] ||
       // !finalArticle.articles[0]?.content ||
       // finalArticle.success !== true
-    ) {
+    // ) {
       // window.alert(
       //   "No data is available. You will be redirected to refetch new data!"
       // );
       // router.push("/content-creator/create/choose-brand");
-    }
-  }, []);
+  //   }
+  // }, []);
 
   async function setIsLoadingAsync() {
     setIsLoading(true);
@@ -54,21 +55,28 @@ export default function FinalArticlePage() {
         },
       ],
     }));
+
     return Promise.resolve();
   }
+
   async function startChecks() {
     await checkGrammer();
     await checkPlagiarism();
     await checkAi();
     return Promise.resolve();
   }
+
+  async function handleContentChange(){
+    if (finalArticleRef.current) {
+      const finalArticleContent = finalArticleRef.current.innerHTML;
+      await setFinalArticleAsync(finalArticleContent);
+    }
+  }
+
   async function handleNavigate() {
+    // handleContentChange(): must be first line.
+    await handleContentChange();
     await setIsLoadingAsync();
-    // let finalArticleContent = "";
-    // if (finalArticleRef.current) {
-    //   finalArticleContent = (finalArticleRef.current as HTMLElement).innerHTML;
-    // }
-    // await setFinalArticleAsync(finalArticleContent);
     // console.log("finalArticleContent:", finalArticleContent);
     await startChecks();
   }

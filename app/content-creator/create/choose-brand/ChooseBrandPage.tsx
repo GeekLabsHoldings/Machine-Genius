@@ -165,7 +165,7 @@ export default function ChooseBrandPage() {
             btnColor="black"
             word="Retry"
             onClick={() => {
-              getCollectedData();
+              // getCollectedData();
               setIsRetry(false);
             }}
           />

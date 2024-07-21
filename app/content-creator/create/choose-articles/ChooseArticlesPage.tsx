@@ -66,16 +66,16 @@ export default function ChooseArticlesPage() {
     setTwitterData,
   } = useContext(globalContext);
 
-  useEffect(() => {
-    console.log("collectedData:", collectedData);
+  // useEffect(() => {
+    // console.log("collectedData:", collectedData);
 
-    if (!collectedData && !sessionStorage.getItem("collectedData")) {
+    // if (!collectedData && !sessionStorage.getItem("collectedData")) {
       // window.alert(
       //   "No data is available. You will be redirected to refetch new data!"
       // );
       // router.push("/content-creator/create/choose-brand");
-    }
-  }, []);
+  //   }
+  // }, []);
 
   useEffect(() => {
     console.log("choosedArticles:", choosedArticles);
@@ -185,7 +185,7 @@ export default function ChooseArticlesPage() {
               ))}
 
 
-{twitterData
+{twitterData && twitterData
               ?.filter((item: any) => item.tweets.length > 0)
               .map((item: any, i: number) => (
                 <TopicColapse

@@ -17,6 +17,21 @@ export default function CreateArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [IsRetry, setIsRetry] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  // state keeps selected text to display them in selection section
+  const {
+    selectedBrand,
+    setSelectedBrand,
+    collectedData,
+    setCollectedData,
+    twitterData,
+    setTwitterData,
+    choosedArticles,
+    setChoosedArticles,
+    setFinalArticle,
+  } = useContext(globalContext);
+  // state to enable text selection when click on highlight button
+  const [beginSelect, setBeginSelect] = useState(false);
+  const [CheckAllSelectedText, setCheckAllSelectedText] = useState(false);
 
   function selectedTextInit() {
     if (typeof window !== "undefined") {
@@ -30,23 +45,6 @@ export default function CreateArticlePage() {
   useEffect(() => {
     sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
   }, [selectedText]);
-
-  // state keeps selected text to display them in selection section
-  const {
-    selectedBrand,
-    setSelectedBrand,
-    collectedData,
-    setCollectedData,
-    twitterData,
-    setTwitterData,
-    choosedArticles,
-    setChoosedArticles,
-    setFinalArticle,
-  } = useContext(globalContext);
-
-  // state to enable text selection when click on highlight button
-  const [beginSelect, setBeginSelect] = useState(false);
-  const [CheckAllSelectedText, setCheckAllSelectedText] = useState(false);
 
   const handleSelectedText = () => {
     const button = document.getElementById("highlight-btn");
@@ -246,15 +244,15 @@ export default function CreateArticlePage() {
   }, [choosedArticles]);
 
   useEffect(() => {
-    if (
-      (!collectedData || choosedArticles.length === 0) &&
-      !sessionStorage.getItem("choosedArticles")
-    ) {
+    // if (
+      // (!collectedData || choosedArticles.length === 0) &&
+      // !sessionStorage.getItem("choosedArticles")
+    // ) {
       // window.alert(
       //   "No data is available. You will be redirected to refetch new data!"
       // );
       // router.push("/content-creator/create/choose-brand");
-    }
+    // }
 
     const button = document.getElementById("highlight-btn");
     const articleContent = document.querySelector("#article-content");
