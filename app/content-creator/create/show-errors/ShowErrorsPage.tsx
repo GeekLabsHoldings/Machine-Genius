@@ -8,10 +8,11 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
+import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
 
 export default function ShowErrorsPage() {
   const [IsLoading, setIsLoading] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<any>(null);
+  const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
   const {
     finalArticle,
@@ -20,11 +21,6 @@ export default function ShowErrorsPage() {
     setCheckGrammerResults,
     checkAiResults,
   } = useContext(globalContext);
-
-  function highlightText(text: string, start: number, end: number) {
-    // return text.slice(0, start) + "<span className='bg-red-500'>" + text.slice(start, end) + "</span>" + text.slice(end);
-    return [text.slice(0, start), text.slice(start, end), text.slice(end)];
-  }
 
   const handleNavigate = () => {
     setIsLoading(true);
@@ -35,13 +31,17 @@ export default function ShowErrorsPage() {
     console.log("finalArticle:", finalArticle);
     console.log("checkGrammerResults:", checkGrammerResults);
     // ===== if there is no data, redirect to the choose brand page =====
-    if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
-      // window.alert(
-      //   "No data is available. You will be redirected to refetch new data!"
-      // );
-      // router.push("/content-creator/create/choose-brand");
-    }
+    // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
+    // window.alert(
+    //   "No data is available. You will be redirected to refetch new data!"
+    // );
+    // router.push("/content-creator/create/choose-brand");
+    // }
   }, []);
+
+  function highlightText(text: any, start: any, end: any) {
+    return [text.slice(0, start), text.slice(start, end), text.slice(end)];
+  }
 
   if (IsLoading) {
     return (
@@ -89,111 +89,29 @@ export default function ShowErrorsPage() {
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >
-                {selectedIndex === null ? (
+                {selectedIssue === null ? (
                   finalArticle?.articles[0]?.content
                 ) : issueType === "grammer" ? (
-                  <>
-                    "
-                    <p>
-                      {
-                        highlightText(
-                          finalArticle?.articles[0]?.content.replace(
-                            /[*#]/g,
-                            ""
-                          ),
-                          selectedIndex.sentence_start,
-                          selectedIndex.sentence_start +
-                            selectedIndex.sentence.length
-                        )[0]
-                      }
-                    </p>
-                    <p className="bg-red-200">
-                      {
-                        highlightText(
-                          finalArticle?.articles[0]?.content.replace(
-                            /[*#]/g,
-                            ""
-                          ),
-                          selectedIndex.sentence_start,
-                          selectedIndex.sentence_start +
-                            selectedIndex.sentence.length
-                        )[1]
-                      }
-                    </p>
-                    <p>
-                      {
-                        highlightText(
-                          finalArticle?.articles[0]?.content.replace(
-                            /[*#]/g,
-                            ""
-                          ),
-                          selectedIndex.sentence_start,
-                          selectedIndex.sentence_start +
-                            selectedIndex.sentence.length
-                        )[2]
-                      }
-                    </p>
-                    "
-                  </>
+                  <HighlightedContent
+                    text={finalArticle?.articles[0]?.content}
+                    start={selectedIssue.sentence_start}
+                    end={
+                      selectedIssue.sentence_start +
+                      selectedIssue.sentence.length
+                    }
+                  />
                 ) : issueType === "ai" ? (
-                  <>
-                    "
-                    <p>
-                      {
-                        highlightText(
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'"),
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'")
-                            .indexOf(selectedIndex.sentence),
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'")
-                            .indexOf(selectedIndex.sentence) +
-                            selectedIndex.sentence.length
-                        )[0]
-                      }
-                    </p>
-                    <p className="bg-red-200">
-                      {
-                        highlightText(
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'"),
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'")
-                            .indexOf(selectedIndex.sentence),
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'")
-                            .indexOf(selectedIndex.sentence) +
-                            selectedIndex.sentence.length
-                        )[1]
-                      }
-                    </p>
-                    <p>
-                      {
-                        highlightText(
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'"),
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'")
-                            .indexOf(selectedIndex.sentence),
-                          finalArticle?.articles[0]?.content
-                            .replace(/[*#]/g, "")
-                            .replace(/[’]/g, "'")
-                            .indexOf(selectedIndex.sentence) +
-                            selectedIndex.sentence.length
-                        )[2]
-                      }
-                    </p>
-                    "
-                  </>
+                  <HighlightedContent
+                    text={finalArticle?.articles[0]?.content}
+                    start={finalArticle?.articles[0]?.content.indexOf(
+                      selectedIssue.sentence
+                    )}
+                    end={
+                      finalArticle?.articles[0]?.content.indexOf(
+                        selectedIssue.sentence
+                      ) + selectedIssue.sentence.length
+                    }
+                  />
                 ) : (
                   <p>{finalArticle?.articles[0]?.content}</p>
                 )}
@@ -216,7 +134,7 @@ export default function ShowErrorsPage() {
                   key={index}
                   title="Grammer"
                   onClick={() => {
-                    setSelectedIndex(item);
+                    setSelectedIssue(item);
                     setIssueType("grammer");
                     console.log("grammer item clicked:", item);
                   }}
@@ -259,7 +177,7 @@ export default function ShowErrorsPage() {
                   key={index}
                   title="AI"
                   onClick={() => {
-                    setSelectedIndex(item);
+                    setSelectedIssue(item);
                     setIssueType("ai");
                     console.log("ai item clicked:", item);
                   }}

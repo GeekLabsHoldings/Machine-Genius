@@ -28,15 +28,15 @@ export default function FinalArticlePage() {
   //   if (
   //     !finalArticle &&
   //     !sessionStorage.getItem("finalArticle")
-      // ||
-      // !finalArticle.articles[0] ||
-      // !finalArticle.articles[0]?.content ||
-      // finalArticle.success !== true
-    // ) {
-      // window.alert(
-      //   "No data is available. You will be redirected to refetch new data!"
-      // );
-      // router.push("/content-creator/create/choose-brand");
+  // ||
+  // !finalArticle.articles[0] ||
+  // !finalArticle.articles[0]?.content ||
+  // finalArticle.success !== true
+  // ) {
+  // window.alert(
+  //   "No data is available. You will be redirected to refetch new data!"
+  // );
+  // router.push("/content-creator/create/choose-brand");
   //   }
   // }, []);
 
@@ -66,9 +66,16 @@ export default function FinalArticlePage() {
     return Promise.resolve();
   }
 
-  async function handleContentChange(){
+  async function handleContentChange() {
     if (finalArticleRef.current) {
-      const finalArticleContent = finalArticleRef.current.innerHTML;
+      const finalArticleContent = finalArticleRef.current.innerHTML
+        .replace(/[*#]/g, "") // Remove asterisks and hash symbols
+        .replace(/[’]/g, "'") // Replace right single quotes with regular single quotes
+        .replace(/[‘]/g, "'") // Replace left single quotes with regular single quotes
+        .replace(/[“]/g, '"') // Replace left double quotes with regular double quotes
+        .replace(/[”]/g, '"') // Replace right double quotes with regular double quotes
+        .replace(/\s+/g, " ") // Normalize whitespace to a single space
+        .trim(); // Trim leading and trailing whitespace
       await setFinalArticleAsync(finalArticleContent);
     }
   }
