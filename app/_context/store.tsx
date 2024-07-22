@@ -16,6 +16,9 @@ const initialContextState = {
   setCheckGrammerResults: (result: any) => {},
   checkAiResults: [] as any,
   setCheckAiResults: (result: any) => {},
+  generateTitles: () => {},
+  generatedTitles: [] as any,
+  setGeneratedTitles: (titles: any) => {},
 };
 
 // 1- create context, export it
@@ -125,6 +128,58 @@ export default function GlobalContextProvider({
   }, [checkAiResults]);
 
 
+  async function generateTitles() {
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(`http://localhost:3000/generate-titles`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: finalArticle?.articles[0]?.content,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        json = await res.json();
+
+        if (json) {
+          // If content is found, break the loop
+          break;
+        }
+      } catch (error) {
+        console.error("Error generateTitles:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+      setGeneratedTitles(json.generatedTitles);
+    }
+  }
+  function generatedTitlesInit(){
+    if (typeof window !== "undefined") {
+      const generatedTitlesInitValue = sessionStorage.getItem("generatedTitles");
+      return generatedTitlesInitValue ? JSON.parse(generatedTitlesInitValue) : [];
+    } else{
+      return [];
+    }
+  }
+  const [generatedTitles, setGeneratedTitles] = useState<any>(generatedTitlesInit());
+  useEffect(() => {
+    sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
+    console.log("generatedTitles:", generatedTitles);
+  }, [generatedTitles]);
+
   // Create a context value object
   const contextValue = {
     selectedBrand,
@@ -141,6 +196,9 @@ export default function GlobalContextProvider({
     setCheckGrammerResults,
     checkAiResults,
     setCheckAiResults,
+    generateTitles,
+    generatedTitles,
+    setGeneratedTitles,
   };
 
   return (
