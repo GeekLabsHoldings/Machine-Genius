@@ -5,6 +5,7 @@ import TitleCheckWithLock from "@/app/_components/TitleCheckWithLock/TitleCheckW
 import { useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ReGenerateIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13" fill="none">
@@ -16,10 +17,53 @@ const ReGenerateIcon = (
 );
 
 const GeneratedTitlesPage = () => {
-  const { finalArticle, generateTitles, generatedTitles, setGeneratedTitles } =
+  const { finalArticle, generateTitles, generatedTitles, setGeneratedTitles, lockedGeneratedTitles, setLockedGeneratedTitles } =
     useContext(globalContext);
+  const [IsLoading, setIsLoading] = useState(false);
   // state that make create my title disabled or abled
   const [isCreateMyOwnDisabled, setIsCreateMyOwnDisabled] = useState(true);
+
+  async function reGenerateTitles(){
+    setIsLoading(true);
+    await generateTitles();
+    setIsLoading(false);
+  }
+
+
+  if (IsLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle needTxt={false} title="Generating Titles.." />
+      </div>
+    );
+  }
+
+
+  function previewGeneratedTitles(){
+    let generatedTitlesToDisplay:any[] = [];
+    generatedTitles.forEach((title:any, index:any) => {
+      if (
+        lockedGeneratedTitles.some((item:any) => item.order === index)                
+    ){
+        const lockedTitle = lockedGeneratedTitles.find((item:any) => item.order === index)
+        generatedTitlesToDisplay.push(lockedTitle.title)
+      } else{
+        generatedTitlesToDisplay.push(title.generalTitle)
+      }
+    })
+    return generatedTitlesToDisplay.map((title:any, index:any) => {
+      return (
+        <TitleCheckWithLock
+        title={title}
+        checkName="generated-titles"
+        id={title.id}
+        order={index}
+        key={title.id}
+        />
+      )
+    })
+  }
+
 
   return (
     <div className="flex flex-col justify-between">
@@ -34,6 +78,7 @@ const GeneratedTitlesPage = () => {
               word="Re-Generate"
               btnColor="black"
               icon={ReGenerateIcon}
+              onClick={reGenerateTitles}
             />
           </div>
 
@@ -48,15 +93,36 @@ const GeneratedTitlesPage = () => {
             <div className="h-full overflow-y-auto p-[1vw] space-y-[1vw]">
 
 
-                {generatedTitles.map((title:any, index:any) => {
-                    return (
-                        <TitleCheckWithLock
-                        title={title.generalTitle}
-                        checkName="generated-titles"
-                        key={title.id}
-                      />
-                    )
-                })}
+      {/* {generatedTitles.map((title:any, index:any) => {
+        if (
+          lockedGeneratedTitles.some((item:any) => item.order === index)                
+      ){
+        const lockedTitle = lockedGeneratedTitles.find((item:any) => item.order === index)
+        return (
+          <TitleCheckWithLock
+          title={lockedTitle.title}
+          checkName="generated-titles"
+          id={lockedTitle.id}
+          order={lockedTitle.order}
+          key={lockedTitle.id}
+          setAsLocked={true}
+          />
+        )
+      } else{
+        return (
+          <TitleCheckWithLock
+          title={title.generalTitle}
+          checkName="generated-titles"
+          id={title.id}
+          order={index}
+          key={title.id}
+        />
+      )
+      }
+
+      })} */}
+
+      {previewGeneratedTitles()}
 
 
 

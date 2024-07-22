@@ -19,6 +19,8 @@ const initialContextState = {
   generateTitles: () => {},
   generatedTitles: [] as any,
   setGeneratedTitles: (titles: any) => {},
+  lockedGeneratedTitles: [] as any,
+  setLockedGeneratedTitles: (titles: any) => {},
 };
 
 // 1- create context, export it
@@ -180,6 +182,23 @@ export default function GlobalContextProvider({
     console.log("generatedTitles:", generatedTitles);
   }, [generatedTitles]);
 
+
+  function lockedGeneratedTitlesInit(){
+    if (typeof window !== "undefined") {
+      const lockedGeneratedTitlesInitValue = sessionStorage.getItem("lockedGeneratedTitles");
+      return lockedGeneratedTitlesInitValue ? JSON.parse(lockedGeneratedTitlesInitValue) : [];
+    } else{
+      return [];
+    }
+  }
+  const [lockedGeneratedTitles, setLockedGeneratedTitles] = useState<any>(lockedGeneratedTitlesInit());
+  useEffect(() => {
+    sessionStorage.setItem("lockedGeneratedTitles", JSON.stringify(lockedGeneratedTitles));
+    console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
+  }, [lockedGeneratedTitles]);
+
+
+
   // Create a context value object
   const contextValue = {
     selectedBrand,
@@ -199,6 +218,8 @@ export default function GlobalContextProvider({
     generateTitles,
     generatedTitles,
     setGeneratedTitles,
+    lockedGeneratedTitles,
+    setLockedGeneratedTitles,
   };
 
   return (
