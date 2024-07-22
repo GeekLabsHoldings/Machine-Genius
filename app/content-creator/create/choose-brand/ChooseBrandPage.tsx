@@ -19,6 +19,8 @@ export default function ChooseBrandPage() {
     setCheckGrammerResults,
     setCheckAiResults,
     selectedBrand,
+    setGeneratedTitles,
+    setLockedGeneratedTitles
   } = useContext(globalContext);
 
   // reset all the data
@@ -30,6 +32,8 @@ export default function ChooseBrandPage() {
     setFinalArticle(null);
     setCheckGrammerResults([]);
     setCheckAiResults([]);
+    setGeneratedTitles([]);
+    setLockedGeneratedTitles([]);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
@@ -39,6 +43,8 @@ export default function ChooseBrandPage() {
       sessionStorage.removeItem("finalArticle");
       sessionStorage.removeItem("checkGrammerResults");
       sessionStorage.removeItem("checkAiResults");
+      sessionStorage.removeItem("generatedTitles");
+      sessionStorage.removeItem("lockedGeneratedTitles");
     }
   }, []);
 

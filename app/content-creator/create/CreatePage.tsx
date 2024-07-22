@@ -18,7 +18,9 @@ export default function CreatePage() {
     setChoosedArticles,
     setFinalArticle,
     setCheckGrammerResults,
-    setCheckAiResults
+    setCheckAiResults,
+    setGeneratedTitles,
+    setLockedGeneratedTitles
   } = useContext(globalContext);
   
   // reset all the data
@@ -30,6 +32,8 @@ export default function CreatePage() {
     setFinalArticle(null);
     setCheckGrammerResults([]);
     setCheckAiResults([]);
+    setGeneratedTitles([]);
+    setLockedGeneratedTitles([]);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
@@ -39,6 +43,8 @@ export default function CreatePage() {
       sessionStorage.removeItem("finalArticle");
       sessionStorage.removeItem("checkGrammerResults");
       sessionStorage.removeItem("checkAiResults");
+      sessionStorage.removeItem("generatedTitles");
+      sessionStorage.removeItem("lockedGeneratedTitles");
     }
   }, []);
 
