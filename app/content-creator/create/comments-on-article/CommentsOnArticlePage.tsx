@@ -4,14 +4,14 @@ import styles from "./commentsOnArticle.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import { CommentsData } from "@/app/_data/data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 
 const CommentsOnArticlePage = () => {
-  const { finalArticle, generateTitles, generatedTitles, setGeneratedTitles } =
+  const { finalArticle, generateTitles, generatedTitles, setGeneratedTitles, setLockedGeneratedTitles } =
     useContext(globalContext);
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -109,6 +109,15 @@ const CommentsOnArticlePage = () => {
     await generateTitles();
     router.replace("/content-creator/create/generated-titles");
   }
+
+  useEffect(() => {
+    setGeneratedTitles([]);
+    setLockedGeneratedTitles([]);
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("generatedTitles");
+      sessionStorage.removeItem("lockedGeneratedTitles");
+    }
+  }, [])
 
 
   if (IsLoading) {
