@@ -1,7 +1,16 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const initialContextState = {
+  // ===== 00. Start Authentication =====
+  token: null as any,
+  setToken: (token: any) => {},
+  decodedToken: null as any,
+  setDecodedToken: (token: any) => {},
+  // ===== 00. End Authentication =====
+
+  // ===== 01. Start Content Creator =====
   selectedBrand: "" as any,
   setSelectedBrand: (brand: any) => {},
   collectedData: null as any,
@@ -21,6 +30,8 @@ const initialContextState = {
   setGeneratedTitles: (titles: any) => {},
   lockedGeneratedTitles: [] as any,
   setLockedGeneratedTitles: (titles: any) => {},
+  // ===== 01. End Content Creator =====
+
 };
 
 // 1- create context, export it
@@ -32,6 +43,32 @@ export default function GlobalContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  // ===== 00. Start Authentication =====
+  function tokenInit(){
+    if (typeof window !== "undefined") {
+      const tokenInitValue = localStorage.getItem("token");
+      return tokenInitValue ? tokenInitValue : null;
+    } else {
+      return null;
+    }
+  }
+  const [token, setToken] = useState<any>(tokenInit());
+  const [decodedToken, setDecodedToken] = useState<any>(null);
+  useEffect(() => {
+    localStorage.setItem("token", token);
+    if (token) {
+      try {
+        setDecodedToken(jwtDecode(token));
+      } catch (error) {
+        console.error("Invalid token:", error);
+        setDecodedToken(null);
+      }
+    }
+  }, [token]);
+  // ===== 00. End Authentication =====
+
+
+  // ===== 01. Start Content Creator =====
   function selectedBrandInit(){
     if (typeof window !== "undefined") {
       const selectedBrandInitValue = sessionStorage.getItem("selectedBrand");
@@ -196,11 +233,20 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("lockedGeneratedTitles", JSON.stringify(lockedGeneratedTitles));
     console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
   }, [generatedTitles, lockedGeneratedTitles]);
+  // ===== 01. End Content Creator =====
 
 
 
   // Create a context value object
   const contextValue = {
+  // ===== 00. Start Authentication =====
+    token,
+    setToken,
+    decodedToken,
+    setDecodedToken,
+  // ===== 00. End Authentication =====
+
+  // ===== 01. Start Content Creator =====
     selectedBrand,
     setSelectedBrand,
     collectedData,
@@ -220,6 +266,8 @@ export default function GlobalContextProvider({
     setGeneratedTitles,
     lockedGeneratedTitles,
     setLockedGeneratedTitles,
+  // ===== 01. End Content Creator =====
+
   };
 
   return (
