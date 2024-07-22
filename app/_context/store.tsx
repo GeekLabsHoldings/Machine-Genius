@@ -195,7 +195,7 @@ export default function GlobalContextProvider({
   useEffect(() => {
     sessionStorage.setItem("lockedGeneratedTitles", JSON.stringify(lockedGeneratedTitles));
     console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
-  }, [lockedGeneratedTitles]);
+  }, [generatedTitles, lockedGeneratedTitles]);
 
 
 

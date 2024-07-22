@@ -22,7 +22,8 @@ const TitleCheckWithLock = ({ checkName, title, id, order, setAsLocked }: IProps
         setLockedGeneratedTitles((prev:any) => [...prev, {title: title, id: id, order: order}])
       }
     } else {
-      setLockedGeneratedTitles((prev:any) => prev.filter((item:any) => item.id !== id))
+      // todo: handle uncheck
+      // setLockedGeneratedTitles((prev:any) => prev.filter((item:any) => item.id !== id))
     }
   }, [isLocked])
 
