@@ -57,17 +57,5 @@ label.toggle_locked svg {
 }
 
 label.title_check label.toggle_locked svg path {
-    fill: #DFDFDF;
     transition: all 0s;
-}
-label.title_check label.toggle_locked input[type=checkbox]:checked+svg path {
-    fill: var(--orange);
-}
-
-label.title_check:has(>input[type=radio]:checked) label.toggle_locked svg path{
-    fill: var(--white);
-}
-
-label.title_check:has(>input[type=radio]:checked) label.toggle_locked input[type=checkbox]:checked+svg path {
-    fill: var(--orange);
 }
