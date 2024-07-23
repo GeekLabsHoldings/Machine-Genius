@@ -5,10 +5,10 @@ import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 
 interface IProps {
-  checkName: string,
-  title: string,
-  id: string,
-  order: number,
+  checkName?: string,
+  title?: string,
+  id?: string,
+  order?: number,
   setAsLocked?: boolean
 }
 const TitleCheckWithLock = ({ checkName, title, id, order, setAsLocked }: IProps) => {

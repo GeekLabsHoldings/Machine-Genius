@@ -153,7 +153,7 @@ export default function ChooseBrandPage() {
     setIsLoading(true);
     await getCollectedData();
     if (selectedBrand === "Investorcracy"){
-      await getTwitterData();
+      // await getTwitterData();
     }
     router.replace("/content-creator/create/choose-articles");
   }
