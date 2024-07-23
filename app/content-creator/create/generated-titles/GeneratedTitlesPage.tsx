@@ -96,6 +96,21 @@ const GeneratedTitlesPage = () => {
                   );
                 }
               })}
+              {/* todo: add locked titles that are not in the generated titles (it's order over the generated titles length) */}
+              {/* {
+                (Math.max(...lockedGeneratedTitles.map((item:any) => item.order)) > generatedTitles.length-1) && (
+                  lockedGeneratedTitles.filter((item:any) => item.order > generatedTitles.length-1).map((item:any) => (
+                    <TitleCheckWithLock
+                      title={item.title}
+                      checkName="generated-titles"
+                      id={item.id}
+                      order={item.order}
+                      key={item.id}
+                      setAsLocked={true}
+                    />
+                  ))
+                ) 
+              } */}
             </div>
           </div>
         </div>

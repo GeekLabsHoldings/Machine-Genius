@@ -31,7 +31,6 @@ const initialContextState = {
   lockedGeneratedTitles: [] as any,
   setLockedGeneratedTitles: (titles: any) => {},
   // ===== 01. End Content Creator =====
-
 };
 
 // 1- create context, export it
@@ -44,7 +43,7 @@ export default function GlobalContextProvider({
   children: React.ReactNode;
 }) {
   // ===== 00. Start Authentication =====
-  function tokenInit(){
+  function tokenInit() {
     if (typeof window !== "undefined") {
       const tokenInitValue = localStorage.getItem("token");
       return tokenInitValue ? tokenInitValue : null;
@@ -68,13 +67,12 @@ export default function GlobalContextProvider({
   }, [token]);
   // ===== 00. End Authentication =====
 
-
   // ===== 01. Start Content Creator =====
-  function selectedBrandInit(){
+  function selectedBrandInit() {
     if (typeof window !== "undefined") {
       const selectedBrandInitValue = sessionStorage.getItem("selectedBrand");
       return selectedBrandInitValue ? selectedBrandInitValue : "";
-    } else{
+    } else {
       return "";
     }
   }
@@ -83,12 +81,11 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("selectedBrand", selectedBrand);
   }, [selectedBrand]);
 
-
-  function collectedDataInit(){
+  function collectedDataInit() {
     if (typeof window !== "undefined") {
       const collectedDataInitValue = sessionStorage.getItem("collectedData");
       return collectedDataInitValue ? JSON.parse(collectedDataInitValue) : null;
-    } else{
+    } else {
       return null;
     }
   }
@@ -97,12 +94,11 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("collectedData", JSON.stringify(collectedData));
   }, [collectedData]);
 
-
-  function twitterDataInit(){
+  function twitterDataInit() {
     if (typeof window !== "undefined") {
       const twitterDataInitValue = sessionStorage.getItem("twitterData");
       return twitterDataInitValue ? JSON.parse(twitterDataInitValue) : null;
-    } else{
+    } else {
       return null;
     }
   }
@@ -111,62 +107,73 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("twitterData", JSON.stringify(twitterData));
   }, [twitterData]);
 
-  
-  function choosedArticlesInit(){
+  function choosedArticlesInit() {
     if (typeof window !== "undefined") {
-      const choosedArticlesInitValue = sessionStorage.getItem("choosedArticles");
-      return choosedArticlesInitValue ? JSON.parse(choosedArticlesInitValue) : [];
-    } else{
+      const choosedArticlesInitValue =
+        sessionStorage.getItem("choosedArticles");
+      return choosedArticlesInitValue
+        ? JSON.parse(choosedArticlesInitValue)
+        : [];
+    } else {
       return [];
     }
   }
-  const [choosedArticles, setChoosedArticles] = useState<any>(choosedArticlesInit()); 
+  const [choosedArticles, setChoosedArticles] = useState<any>(
+    choosedArticlesInit()
+  );
   useEffect(() => {
     sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));
   }, [choosedArticles]);
-  
-  
-  function finalArticleInit(){
+
+  function finalArticleInit() {
     if (typeof window !== "undefined") {
       const finalArticleInitValue = sessionStorage.getItem("finalArticle");
       return finalArticleInitValue ? JSON.parse(finalArticleInitValue) : null;
-    } else{
+    } else {
       return null;
     }
   }
-  const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit()); 
+  const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit());
   useEffect(() => {
     sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
   }, [finalArticle]);
 
-
-  function checkGrammerResultsInit(){
+  function checkGrammerResultsInit() {
     if (typeof window !== "undefined") {
-      const checkGrammerResultsInitValue = sessionStorage.getItem("checkGrammerResults");
-      return checkGrammerResultsInitValue ? JSON.parse(checkGrammerResultsInitValue) : [];
-    } else{
+      const checkGrammerResultsInitValue = sessionStorage.getItem(
+        "checkGrammerResults"
+      );
+      return checkGrammerResultsInitValue
+        ? JSON.parse(checkGrammerResultsInitValue)
+        : [];
+    } else {
       return [];
     }
   }
-  const [checkGrammerResults, setCheckGrammerResults] = useState<any>(checkGrammerResultsInit()); 
+  const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
+    checkGrammerResultsInit()
+  );
   useEffect(() => {
-    sessionStorage.setItem("checkGrammerResults", JSON.stringify(checkGrammerResults));
+    sessionStorage.setItem(
+      "checkGrammerResults",
+      JSON.stringify(checkGrammerResults)
+    );
   }, [checkGrammerResults]);
 
-
-  function checkAiResultsInit(){
+  function checkAiResultsInit() {
     if (typeof window !== "undefined") {
       const checkAiResultsInitValue = sessionStorage.getItem("checkAiResults");
       return checkAiResultsInitValue ? JSON.parse(checkAiResultsInitValue) : [];
-    } else{
+    } else {
       return [];
     }
   }
-  const [checkAiResults, setCheckAiResults] = useState<any>(checkAiResultsInit());
+  const [checkAiResults, setCheckAiResults] = useState<any>(
+    checkAiResultsInit()
+  );
   useEffect(() => {
     sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
   }, [checkAiResults]);
-
 
   async function generateTitles() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -206,48 +213,59 @@ export default function GlobalContextProvider({
       setGeneratedTitles(json.generatedTitles);
     }
   }
-  function generatedTitlesInit(){
+  function generatedTitlesInit() {
     if (typeof window !== "undefined") {
-      const generatedTitlesInitValue = sessionStorage.getItem("generatedTitles");
-      return generatedTitlesInitValue ? JSON.parse(generatedTitlesInitValue) : [];
-    } else{
+      const generatedTitlesInitValue =
+        sessionStorage.getItem("generatedTitles");
+      return generatedTitlesInitValue
+        ? JSON.parse(generatedTitlesInitValue)
+        : [];
+    } else {
       return [];
     }
   }
-  const [generatedTitles, setGeneratedTitles] = useState<any>(generatedTitlesInit());
+  const [generatedTitles, setGeneratedTitles] = useState<any>(
+    generatedTitlesInit()
+  );
   useEffect(() => {
     sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
     console.log("generatedTitles:", generatedTitles);
   }, [generatedTitles]);
 
-
-  function lockedGeneratedTitlesInit(){
+  function lockedGeneratedTitlesInit() {
     if (typeof window !== "undefined") {
-      const lockedGeneratedTitlesInitValue = sessionStorage.getItem("lockedGeneratedTitles");
-      return lockedGeneratedTitlesInitValue ? JSON.parse(lockedGeneratedTitlesInitValue) : [];
-    } else{
+      const lockedGeneratedTitlesInitValue = sessionStorage.getItem(
+        "lockedGeneratedTitles"
+      );
+      return lockedGeneratedTitlesInitValue
+        ? JSON.parse(lockedGeneratedTitlesInitValue)
+        : [];
+    } else {
       return [];
     }
   }
-  const [lockedGeneratedTitles, setLockedGeneratedTitles] = useState<any>(lockedGeneratedTitlesInit());
+  const [lockedGeneratedTitles, setLockedGeneratedTitles] = useState<any>(
+    lockedGeneratedTitlesInit()
+  );
   useEffect(() => {
-    sessionStorage.setItem("lockedGeneratedTitles", JSON.stringify(lockedGeneratedTitles));
+    sessionStorage.setItem(
+      "lockedGeneratedTitles",
+      JSON.stringify(lockedGeneratedTitles)
+    );
     console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
   }, [generatedTitles, lockedGeneratedTitles]);
   // ===== 01. End Content Creator =====
 
-
-
   // Create a context value object
   const contextValue = {
-  // ===== 00. Start Authentication =====
+    // ===== 00. Start Authentication =====
     token,
     setToken,
     decodedToken,
     setDecodedToken,
-  // ===== 00. End Authentication =====
+    // ===== 00. End Authentication =====
 
-  // ===== 01. Start Content Creator =====
+    // ===== 01. Start Content Creator =====
     selectedBrand,
     setSelectedBrand,
     collectedData,
@@ -267,8 +285,7 @@ export default function GlobalContextProvider({
     setGeneratedTitles,
     lockedGeneratedTitles,
     setLockedGeneratedTitles,
-  // ===== 01. End Content Creator =====
-
+    // ===== 01. End Content Creator =====
   };
 
   return (

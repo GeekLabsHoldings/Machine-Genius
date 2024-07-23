@@ -1,13 +1,13 @@
-
-
-'use client'
+'use client';
 // Import necessary dependencies
-import React, { useEffect, useState } from 'react'
-import styles from './contentCreator.module.css'
+import React, { useEffect, useState } from 'react';
+import styles from './contentCreator.module.css';
 import dynamic from 'next/dynamic';
 const SideNav = dynamic(() => import('../_components/SideNav/SideNav'), { ssr: false }) // Importing the SideNav component
 import TitleOfPage from '../_components/TitleOfPage/TitleOfPage'; // Importing the TitleOfPage component
 // import { usePathname } from 'next/navigation';
+
+
 
 // Define a layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {

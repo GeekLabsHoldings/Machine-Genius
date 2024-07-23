@@ -5,7 +5,7 @@ import styles from "./signin.module.css"; // Stylesheet for SignIn component
 import logoTextImg from "@/public/assets/welcome logo.svg"; // Image asset for welcome logo text
 import logo_image from "@/public/assets/logo.svg"; // Image asset for logo
 import Image from "next/image"; // Image component from Next.js
-// import { useRouter } from 'next/navigation'; // Importing useRouter hook from Next.js
+import { useRouter } from 'next/navigation'; // Importing useRouter hook from Next.js
 import { useFormik } from "formik";
 import { globalContext } from "@/app/_context/store";
 
@@ -18,7 +18,7 @@ const SignIn = () => {
   const [ShowSignInForm, setShowSignInForm] = useState(false);
   // State to manage showing welcome message
   const [ShowWelcomeMesage, setShowWelcomeMesage] = useState(false);
-  // const router = useRouter()
+  const router = useRouter();
 
   let user = {
     email: "",
@@ -30,7 +30,6 @@ const SignIn = () => {
     let logInLogo: any = document.querySelector(".signin-wrapper img");
     logInLogo.style.transform = "scale(150)";
     setShowWelcomeMesage(true);
-
     // Redirect to dashboard after a delay
     // setTimeout(() => {
     //     router.push('')
@@ -89,6 +88,40 @@ const SignIn = () => {
   useEffect(() => {
     setStartAnimation(true);
   }, []);
+
+  function handleSetRouteToDirect() {
+    if (decodedToken.department === "Content Writer") {
+      return "/content-creator/dashboard";
+    } else if (decodedToken.department === "Video Editing") {
+      return "/video-editor/dashboard";
+    } else if (decodedToken.department === "Social Media") {
+      return "/social-media/dashboard";
+    } else if (decodedToken.department === "Administrative") {
+      return "/administrative/dashboard";
+    } else if (decodedToken.department === "Customer Service") {
+      return "/customer-service/dashboard";
+    } else if (decodedToken.department === "Creative") {
+      return "/creative/dashboard";
+    } else if (decodedToken.department === "HR") {
+      return "/hr/dashboard";
+    } else if (decodedToken.department === "Accounting") {
+      return "/accounting/dashboard";
+    } else if (decodedToken.department === "Newsletter") {
+      return "/newsletter/dashboard";
+    } else if (decodedToken.department === "Out Reach") {
+      return "/outreach/dashboard";
+    } else if (decodedToken.department === "SEO") {
+      return "/seo/dashboard";
+    } else if (decodedToken.department === "OP") {
+      return "/op/dashboard";
+    }
+    return "/"; // Default return value
+  }
+
+  function handleNavToDashboard() {
+    const route = handleSetRouteToDirect();
+    router.replace(route);
+  }
 
   return (
     <div
@@ -171,7 +204,7 @@ const SignIn = () => {
         <CustomBtn
           btnColor="black"
           word="Dashboard"
-          href="/content-creator/dashboard"
+          onClick={handleNavToDashboard}
         />
       </div>
     </div>
