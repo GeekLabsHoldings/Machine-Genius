@@ -95,7 +95,7 @@ export default function FinalArticlePage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`http://localhost:3000/grammar-check`, {
+        const res = await fetch(`https://backendmachinegenius.onrender.com/grammar-check`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -153,7 +153,7 @@ export default function FinalArticlePage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`http://localhost:3000/plagiarism-check`, {
+        const res = await fetch(`https://backendmachinegenius.onrender.com/plagiarism-check`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -202,7 +202,7 @@ export default function FinalArticlePage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`http://localhost:3000/AI-check`, {
+        const res = await fetch(`https://backendmachinegenius.onrender.com/AI-check`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

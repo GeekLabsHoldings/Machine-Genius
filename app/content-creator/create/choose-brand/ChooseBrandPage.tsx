@@ -94,7 +94,7 @@ export default function ChooseBrandPage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`http://localhost:3000/generate-content`, {
+        const res = await fetch(`https://backendmachinegenius.onrender.com/generate-content`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -136,7 +136,7 @@ export default function ChooseBrandPage() {
 
   async function getTwitterData() {
     try {
-      const res = await fetch(`http://localhost:3000/collect/twitter/PLTR`);
+      const res = await fetch(`https://backendmachinegenius.onrender.com/collect/twitter/PLTR`);
 
       if (!res.ok) {
         throw new Error("Failed to fetch data");

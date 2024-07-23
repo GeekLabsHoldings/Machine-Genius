@@ -236,7 +236,7 @@ export default function GlobalContextProvider({
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`http://localhost:3000/generate-titles`, {
+        const res = await fetch(`https://backendmachinegenius.onrender.com/generate-titles`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

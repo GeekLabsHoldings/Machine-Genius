@@ -149,7 +149,7 @@ export default function CreateArticlePage() {
       while (attempts < maxRetries) {
         try {
           const res = await fetch(
-            `http://localhost:3000/script/finalize-content`,
+            `https://backendmachinegenius.onrender.com/script/finalize-content`,
             {
               method: "POST",
               headers: {
