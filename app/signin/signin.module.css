@@ -79,11 +79,11 @@
     transform: translateY(0%);
 }
 
-.welcomePart a{
+.welcomePart button{
     opacity: 0;
     transition: opacity 0.5s 2s , background-color 0.3s 0s ;
 }
-.welcomePart.startAnimation a{
+.welcomePart.startAnimation button{
     opacity: 1;
 }
 

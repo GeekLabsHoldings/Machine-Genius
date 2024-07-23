@@ -89,6 +89,11 @@ export default function GlobalContextProvider({
   }
   const [token, setToken] = useState<any>(tokenInit());
   const [decodedToken, setDecodedToken] = useState<any>(null);
+
+
+
+
+
   useEffect(() => {
     localStorage.setItem("token", token);
     if (token) {
@@ -96,14 +101,19 @@ export default function GlobalContextProvider({
         const decoded = jwtDecode(token);
         setDecodedToken(decoded);
 
-        const role = decodedToken?.department;
-        const correspondingRoutePath =
-          handleSetRouteToDirect(role).split("/")[1];
-        const currentRoutePath = path.split("/")[1];
-        if (correspondingRoutePath !== currentRoutePath) {
-          const correspondingRoute = handleSetRouteToDirect(role);
-          router.replace(correspondingRoute);
-        }
+        // const role = decodedToken?.department;
+        // const correspondingRoutePath =
+        //   handleSetRouteToDirect(role).split("/")[1];
+        // console.log(`correspondingRoutePath:`, correspondingRoutePath)
+        // console.log(`currentpath:`, path)
+
+        // if (!path.includes(correspondingRoutePath)) {
+        //   const correspondingRoute = handleSetRouteToDirect(role);
+        //   router.replace(correspondingRoute);
+        //   console.log("---***INvalid path***---", path)
+        // } else {
+        //   console.log("---valid path---");
+        // }
       } catch (error) {
         console.error("setDecodedToken Error:", error);
         // setDecodedToken(null);
@@ -114,11 +124,29 @@ export default function GlobalContextProvider({
     console.log("decodedToken:", decodedToken);
   }, [token, path]);
 
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      router.replace("/signin");
-    }
-  }, [token]);
+
+
+    // useEffect(()=>{
+    //     console.log("---currentPath:", path);
+    // }, [path])
+
+
+
+
+
+
+
+
+  // useEffect(() => {
+  //   if (!decodedToken) {
+  //     router.replace("/signin");
+  //     console.log("Redirecting to signin...");
+  //   }
+  // }, [token, decodedToken, path, router]);
+  
+
+
+
   // ===== 00. End Authentication =====
 
   // ===== 01. Start Content Creator =====
