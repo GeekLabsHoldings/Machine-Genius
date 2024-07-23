@@ -100,10 +100,10 @@ const SideNav = ({
   };
 
   useEffect(() => {
-    if (SelectedRole === "Content Creator") {
+    if (SelectedRole === "Content Writer") {
       localStorage.setItem("selected-role", SelectedRole);
       router.push("/content-creator/dashboard");
-    } else if (SelectedRole === "Video Editor") {
+    } else if (SelectedRole === "Video Editing") {
       localStorage.setItem("selected-role", SelectedRole);
       router.push("/video-editor/dashboard");
     } else if (SelectedRole === "Social Media") {
