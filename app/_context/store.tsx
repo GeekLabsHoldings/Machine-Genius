@@ -6,8 +6,8 @@ const initialContextState = {
   // ===== 00. Start Authentication =====
   token: null as any,
   setToken: (token: any) => {},
-  // decodedToken: null as any,
-  // setDecodedToken: (token: any) => {},
+  decodedToken: null as any,
+  setDecodedToken: (token: any) => {},
   // ===== 00. End Authentication =====
 
   // ===== 01. Start Content Creator =====
@@ -53,20 +53,18 @@ export default function GlobalContextProvider({
     }
   }
   const [token, setToken] = useState<any>(tokenInit());
-  // const [decodedToken, setDecodedToken] = useState<any>(null);
-  let decodedToken = null;
+  const [decodedToken, setDecodedToken] = useState<any>(null);
   useEffect(() => {
     localStorage.setItem("token", token);
     if (token) {
       try {
-        // setDecodedToken(jwtDecode(token));
-        decodedToken = jwtDecode(token);
+        setDecodedToken(jwtDecode(token));
       } catch (error) {
-        console.error("Invalid token:", error);
-        // setDecodedToken(null);
-        decodedToken = null;
+        console.error("setDecodedToken Error:", error);
+        setDecodedToken(null);
       }
     }
+    console.log("decodedToken:", decodedToken);
   }, [token]);
   // ===== 00. End Authentication =====
 
@@ -246,7 +244,7 @@ export default function GlobalContextProvider({
     token,
     setToken,
     decodedToken,
-    // setDecodedToken,
+    setDecodedToken,
   // ===== 00. End Authentication =====
 
   // ===== 01. Start Content Creator =====
