@@ -1,6 +1,8 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
@@ -42,6 +44,40 @@ export default function GlobalContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const path = usePathname();
+
+  function handleSetRouteToDirect(role: string) {
+    switch (role) {
+      case "Content Writer":
+        return "/content-creator/dashboard";
+      case "Video Editing":
+        return "/video-editor/dashboard";
+      case "Social Media":
+        return "/social-media/dashboard";
+      case "Administrative":
+        return "/administrative/dashboard";
+      case "Customer Service":
+        return "/customer-service/dashboard";
+      case "Creative":
+        return "/creative/dashboard";
+      case "HR":
+        return "/hr/dashboard";
+      case "Accounting":
+        return "/accounting/dashboard";
+      case "Newsletter":
+        return "/newsletter/dashboard";
+      case "Out Reach":
+        return "/outreach/dashboard";
+      case "SEO":
+        return "/seo/dashboard";
+      case "OP":
+        return "/op/dashboard";
+      default:
+        return "/";
+    }
+  }
+
   // ===== 00. Start Authentication =====
   function tokenInit() {
     if (typeof window !== "undefined") {
@@ -57,13 +93,31 @@ export default function GlobalContextProvider({
     localStorage.setItem("token", token);
     if (token) {
       try {
-        setDecodedToken(jwtDecode(token));
+        const decoded = jwtDecode(token);
+        setDecodedToken(decoded);
+
+        const role = decodedToken?.department;
+        const correspondingRoutePath =
+          handleSetRouteToDirect(role).split("/")[1];
+        const currentRoutePath = path.split("/")[1];
+        if (correspondingRoutePath !== currentRoutePath) {
+          const correspondingRoute = handleSetRouteToDirect(role);
+          router.replace(correspondingRoute);
+        }
       } catch (error) {
         console.error("setDecodedToken Error:", error);
-        setDecodedToken(null);
+        // setDecodedToken(null);
       }
+    } else {
+      // router.replace("/signin");
     }
     console.log("decodedToken:", decodedToken);
+  }, [token, path]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      router.replace("/signin");
+    }
   }, [token]);
   // ===== 00. End Authentication =====
 
