@@ -1,12 +1,11 @@
 "use client";
 import { createContext, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
-  token: null as any,
+  token: "" as any,
   setToken: (token: any) => {},
   decodedToken: null as any,
   setDecodedToken: (token: any) => {},
@@ -47,6 +46,7 @@ export default function GlobalContextProvider({
   const router = useRouter();
   const path = usePathname();
 
+  // ===== 00. Start Authentication =====
   function handleSetRouteToDirect(role: string) {
     switch (role) {
       case "Content Writer":
@@ -78,73 +78,57 @@ export default function GlobalContextProvider({
     }
   }
 
-  // ===== 00. Start Authentication =====
   function tokenInit() {
     if (typeof window !== "undefined") {
       const tokenInitValue = localStorage.getItem("token");
-      return tokenInitValue ? tokenInitValue : null;
+      return tokenInitValue ? tokenInitValue : "";
+    } else {
+      return "";
+    }
+  }
+  
+  function decodedTokenInit() {
+    if (typeof window !== "undefined") {
+      const decodedTokenInitValue = localStorage.getItem("decodedToken");
+      return decodedTokenInitValue ? JSON.parse(decodedTokenInitValue) : null;
     } else {
       return null;
     }
   }
+
   const [token, setToken] = useState<any>(tokenInit());
-  const [decodedToken, setDecodedToken] = useState<any>(null);
+  const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit());
 
-
-
-
+  async function checkIfUserOnCorrespondingRoute() {
+  // if (decodedToken) {
+    const role = decodedToken?.department;
+    const correspondingRoutePath = handleSetRouteToDirect(role).split("/")[1];
+    console.log(`correspondingRoutePath:`, correspondingRoutePath);
+    console.log(`currentpath:`, path);
+    if (!path.includes(correspondingRoutePath)) {
+      const correspondingRoute = handleSetRouteToDirect(role);
+      router.replace(correspondingRoute);
+      console.log("~~~---***INvalid path***---~~~", path);
+    } else {
+      console.log("~~~---valid path---~~~");
+    }
+  // }
+  }
 
   useEffect(() => {
-    localStorage.setItem("token", token);
     if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setDecodedToken(decoded);
-
-        // const role = decodedToken?.department;
-        // const correspondingRoutePath =
-        //   handleSetRouteToDirect(role).split("/")[1];
-        // console.log(`correspondingRoutePath:`, correspondingRoutePath)
-        // console.log(`currentpath:`, path)
-
-        // if (!path.includes(correspondingRoutePath)) {
-        //   const correspondingRoute = handleSetRouteToDirect(role);
-        //   router.replace(correspondingRoute);
-        //   console.log("---***INvalid path***---", path)
-        // } else {
-        //   console.log("---valid path---");
-        // }
-      } catch (error) {
-        console.error("setDecodedToken Error:", error);
-        // setDecodedToken(null);
-      }
+      console.log("=+==+==There is Token=+==+==");
     } else {
-      // router.replace("/signin");
+      console.log("=x==x==There is No Token==x==x=");
+      console.log("Redirecting to signin...");
+      router.replace("/");
     }
-    console.log("decodedToken:", decodedToken);
-  }, [token, path]);
+  }, [token]);
 
-
-
-    // useEffect(()=>{
-    //     console.log("---currentPath:", path);
-    // }, [path])
-
-
-
-
-
-
-
-
-  // useEffect(() => {
-  //   if (!decodedToken) {
-  //     router.replace("/signin");
-  //     console.log("Redirecting to signin...");
-  //   }
-  // }, [token, decodedToken, path, router]);
-  
-
+  useEffect(()=>{
+      console.log("---currentPath:", path);
+      checkIfUserOnCorrespondingRoute();
+  }, [path])
 
 
   // ===== 00. End Authentication =====
@@ -264,15 +248,18 @@ export default function GlobalContextProvider({
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`https://backendmachinegenius.onrender.com/generate-titles`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            content: finalArticle?.articles[0]?.content,
-          }),
-        });
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/generate-titles`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              content: finalArticle?.articles[0]?.content,
+            }),
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch data");

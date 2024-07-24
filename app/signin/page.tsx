@@ -1,5 +1,5 @@
 "use client"; // Indicate that this component is intended for client-side rendering
-import { useEffect, useState, useContext } from "react"; // Importing useEffect and useState hooks from React
+import { useEffect, useState, useContext, useRef } from "react"; // Importing useEffect and useState hooks from React
 import CustomBtn from "../_components/Button/CustomBtn"; // Custom button component
 import styles from "./signin.module.css"; // Stylesheet for SignIn component
 import logoTextImg from "@/public/assets/welcome logo.svg"; // Image asset for welcome logo text
@@ -8,10 +8,11 @@ import Image from "next/image"; // Image component from Next.js
 import { useRouter } from 'next/navigation'; // Importing useRouter hook from Next.js
 import { useFormik } from "formik";
 import { globalContext } from "@/app/_context/store";
+import { JwtPayload, jwtDecode } from "jwt-decode";
 
 // SignIn component
 const SignIn = () => {
-  const { setToken, decodedToken } = useContext(globalContext);
+  const { token, setToken, decodedToken, setDecodedToken } = useContext(globalContext);
   // State to manage animation
   const [StartAnimation, setStartAnimation] = useState(false);
   // State to manage showing sign-in form
@@ -25,8 +26,28 @@ const SignIn = () => {
     password: "",
   };
 
+  function setTokenAsync(json:any){
+    setToken(json.logged_in_token);
+    console.log("01. setTokenAsync");    
+  }
+
+  function setDecodedTokenAsync() {
+    const decoded = jwtDecode<JwtPayload>(token);
+    setDecodedToken(decoded);
+    console.log("02. setDecodedTokenAsync");
+}
+
+  function setTokenInLocalStorageAsync(){
+    if (typeof window !== "undefined") {
+      console.log("03. Set Tokens in localStorage")
+      localStorage.setItem("token", token);
+      localStorage.setItem("decodedToken", JSON.stringify(decodedToken));
+    }
+  }
+
   // Function to handle login action
-  const handleLogin = () => {
+  function handleLogin() {
+    console.log("04. handleLogin");
     let logInLogo: any = document.querySelector(".signin-wrapper img");
     logInLogo.style.transform = "scale(150)";
     setShowWelcomeMesage(true);
@@ -36,8 +57,21 @@ const SignIn = () => {
     // }, 500); // 3000 milliseconds = 3 seconds
   };
 
+  useEffect(()=>{
+    if (token){handleNavToDashboard();}
+  }, [])
+
+  useEffect(()=>{
+    if(token){setDecodedTokenAsync();}   
+  },[token])
+
+  useEffect(()=>{
+    if(decodedToken){
+      setTokenInLocalStorageAsync();
+    }
+  },[decodedToken])
+
   async function loginToAccount(values: any) {
-    // setLoader(true);
     try {
       const res = await fetch(`https://backendmachinegenius.onrender.com/user/login`, {
         method: "POST",
@@ -51,18 +85,14 @@ const SignIn = () => {
       }
       const json = await res.json();
       if (json.message === "Loged in succcefully") {
-        setToken(json.logged_in_token);
-        handleLogin();
-        // setSuccessMsg("Welcome Back");
-        // setTimeout(() => {
-        //   navigate.push("/");
-        // }, 1000);
+        setTokenAsync(json);  
+        setTimeout(() => {
+          handleLogin();
+        }, 1);
       }
     } catch (e) {
-      //   setErrorMsg(e.response.data.message);
       console.error("Error loginToAccount:", e);
     }
-    // setLoader(false);
   }
 
   const formikObj = useFormik({
