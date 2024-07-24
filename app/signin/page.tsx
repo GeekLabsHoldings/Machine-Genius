@@ -49,7 +49,9 @@ const SignIn = () => {
   function handleLogin() {
     console.log("04. handleLogin");
     let logInLogo: any = document.querySelector(".signin-wrapper img");
-    logInLogo.style.transform = "scale(150)";
+    if (logInLogo){
+      logInLogo.style.transform = "scale(150)";
+    }    
     setShowWelcomeMesage(true);
     // Redirect to dashboard after a delay
     // setTimeout(() => {
