@@ -6,6 +6,11 @@ import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { globalContext } from "@/app/_context/store";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 export default function ChooseBrandPage() {
   const router = useRouter();
@@ -60,6 +65,9 @@ export default function ChooseBrandPage() {
   ];
 
   const [stockNameValue, setStockNameValue] = useState("PLTR");
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStockNameValue((event.target as HTMLInputElement).value);
+  };
   // function that get select value by sending to custom select as a prop
   const getValue = (value: string | number) => {
     setSelectedBrand(value);
@@ -191,6 +199,25 @@ export default function ChooseBrandPage() {
           options={options}
           getValue={getValue}
         />
+
+
+        {selectedBrand === "Investorcracy" && (
+  <FormControl sx={{marginTop: "2vh"}}>
+      <RadioGroup
+        aria-labelledby="demo-controlled-radio-buttons-group"
+        name="controlled-radio-buttons-group"
+        value={stockNameValue}
+        onChange={handleChange}
+      >
+        <FormControlLabel value="NVDA" control={<Radio />} label="NVIDIA" />
+        <FormControlLabel value="AAPL" control={<Radio />} label="Apple" />
+        <FormControlLabel value="AMD" control={<Radio />} label="AMD" />
+        <FormControlLabel value="AMZN" control={<Radio />} label="Amazon" />
+        <FormControlLabel value="PLTR" control={<Radio />} label="Palantir" />
+        <FormControlLabel value="TSLA" control={<Radio />} label="Tesla" />
+      </RadioGroup>
+    </FormControl>
+)}
 
 
       </div>
