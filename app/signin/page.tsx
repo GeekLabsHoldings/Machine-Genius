@@ -230,7 +230,7 @@ const SignIn = () => {
         }`}
       >
         <h2>
-          Hi {decodedToken?.email}, <br />
+          Hi {decodedToken?.email.split("@")[0]}, <br />
           Let’s have a productive day!
         </h2>
         <CustomBtn
