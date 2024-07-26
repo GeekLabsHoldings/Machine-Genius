@@ -32,10 +32,10 @@ const ChooseContent = () => {
   // select options
   
   const options = [
-    // "Script",
+    "Normal Script",
     // "Article",
-    "Documentary",
-    "Trends Article",
+    // "Documentary",
+    // "Trends Article",
   ];
 
   return (

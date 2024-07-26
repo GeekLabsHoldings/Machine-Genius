@@ -57,11 +57,11 @@ export default function ChooseBrandPage() {
   const [IsRetry, setIsRetry] = useState(false);
   // select options
   const options = [
-    "PST USA",
+    // "PST USA",
     "PST Canada",
-    "Movie Myth",
     "Investorcracy",
-    "Mega Projects",
+    "Movie Myth",
+    // "Mega Projects",
   ];
 
   const [stockNameValue, setStockNameValue] = useState("PLTR");
