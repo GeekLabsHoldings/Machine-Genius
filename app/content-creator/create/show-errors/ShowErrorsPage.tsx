@@ -25,7 +25,7 @@ export default function ShowErrorsPage() {
     setCheckAiResults,
   } = useContext(globalContext);
 
-  const [startNav, setStartNav] = useState(false);
+  const [triggerStartChecks, setTriggerStartChecks] = useState(false);
   const finalArticle = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
@@ -75,13 +75,14 @@ export default function ShowErrorsPage() {
       );
     }
 
-    setStartNav(true);
+    setTriggerStartChecks(true);
   }
 
   useEffect(() => {
     // ===== log data =====
     // console.log("finalArticle:", finalArticle);
     console.log("checkGrammerResults:", checkGrammerResults);
+    console.log("checkAiResults:", checkAiResults);
     // ===== if there is no data, redirect to the choose brand page =====
     // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
     // window.alert(
@@ -89,19 +90,33 @@ export default function ShowErrorsPage() {
     // );
     // router.push("/content-creator/create/choose-brand");
     // }
-  }, []);
+  }, [checkGrammerResults, checkAiResults]);
 
   function highlightText(text: any, start: any, end: any) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
   }
 
   useEffect(() => {
-    if (startNav) {
+    if (triggerStartChecks) {
       setIsLoading(true);
       console.log("finalArticle right before startChecks()", finalArticle);
       startChecks();
+    } else {
+      // reset checkStatus
+      setCheckStatus({
+        grammar: "waiting",
+        plagiarism: "waiting",
+        ai: "waiting",
+      });
     }
-  }, [startNav]);
+  }, [triggerStartChecks]);
+
+  useEffect(() => {
+    if (!IsLoading) {
+      setSelectedIssue(null);
+      setIssueType("");
+    }
+  }, [IsLoading]);
 
   async function checkGrammer() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -278,7 +293,7 @@ export default function ShowErrorsPage() {
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
-    setStartNav(false);
+    setTriggerStartChecks(false);
   }
 
   if (IsLoading) {
@@ -300,34 +315,28 @@ export default function ShowErrorsPage() {
             />
             <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
           </div>
-          {checkStatus.grammar !== "waiting" &&
-            checkStatus.plagiarism !== "waiting" &&
-            checkStatus.ai !== "waiting" &&
-            checkGrammerResults.length + checkAiResults.length > 0 && (
+          {checkStatus.grammar === "fail" ||
+            checkStatus.plagiarism === "fail" ||
+            checkStatus.ai === "fail" || (
               <CustomBtn
                 word={"Results"}
                 btnColor="black"
                 // href="/content-creator/create/show-errors/"
-                onClick={()=>{
-                  
+                onClick={() => {
                   setIsLoading(false);
-                  // reset checkStatus
-                  setCheckStatus({
-                    grammar: "waiting",
-                    plagiarism: "waiting",
-                    ai: "waiting",
-                  });
                 }}
               />
             )}
 
-          {checkGrammerResults.length + checkAiResults.length === 0 && (
-            <CustomBtn
-              word={"Request Approval"}
-              btnColor="black"
-              href="/content-creator/create/script-approved"
-            />
-          )}
+          {checkStatus.grammar === "pass" &&
+            checkStatus.plagiarism === "pass" &&
+            checkStatus.ai === "pass" && (
+              <CustomBtn
+                word={"Request Approval"}
+                btnColor="black"
+                href="/content-creator/create/script-approved"
+              />
+            )}
         </div>
       </div>
     );
@@ -404,7 +413,7 @@ export default function ShowErrorsPage() {
                   onClick={() => {
                     setSelectedIssue(item);
                     setIssueType("grammer");
-                    console.log("grammer item clicked:", item);
+                    // console.log("grammer item clicked:", item);
                   }}
                 >
                   <>
