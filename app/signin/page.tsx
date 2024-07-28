@@ -122,29 +122,29 @@ const SignIn = () => {
   }, []);
 
   function handleSetRouteToDirect() {
-    if (decodedToken.department === "Content Writer") {
+    if (decodedToken?.department === "Content Writer") {
       return "/content-creator/dashboard";
-    } else if (decodedToken.department === "Video Editing") {
+    } else if (decodedToken?.department === "Video Editing") {
       return "/video-editor/dashboard";
-    } else if (decodedToken.department === "Social Media") {
+    } else if (decodedToken?.department === "Social Media") {
       return "/social-media/dashboard";
-    } else if (decodedToken.department === "Administrative") {
+    } else if (decodedToken?.department === "Administrative") {
       return "/administrative/dashboard";
-    } else if (decodedToken.department === "Customer Service") {
+    } else if (decodedToken?.department === "Customer Service") {
       return "/customer-service/dashboard";
-    } else if (decodedToken.department === "Creative") {
+    } else if (decodedToken?.department === "Creative") {
       return "/creative/dashboard";
-    } else if (decodedToken.department === "HR") {
+    } else if (decodedToken?.department === "HR") {
       return "/hr/dashboard";
-    } else if (decodedToken.department === "Accounting") {
+    } else if (decodedToken?.department === "Accounting") {
       return "/accounting/dashboard";
-    } else if (decodedToken.department === "Newsletter") {
+    } else if (decodedToken?.department === "Newsletter") {
       return "/newsletter/dashboard";
-    } else if (decodedToken.department === "Out Reach") {
+    } else if (decodedToken?.department === "Out Reach") {
       return "/outreach/dashboard";
-    } else if (decodedToken.department === "SEO") {
+    } else if (decodedToken?.department === "SEO") {
       return "/seo/dashboard";
-    } else if (decodedToken.department === "OP") {
+    } else if (decodedToken?.department === "OP") {
       return "/op/dashboard";
     }
     return "/"; // Default return value
