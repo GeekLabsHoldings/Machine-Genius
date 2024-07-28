@@ -18,7 +18,7 @@ const ReGenerateIcon = (
 
 const GeneratedTitlesPage = () => {
   const {
-    finalArticle,
+    // finalArticle,
     generateTitles,
     generatedTitles,
     setGeneratedTitles,

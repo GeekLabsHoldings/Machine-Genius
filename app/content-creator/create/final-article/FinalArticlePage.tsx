@@ -6,15 +6,20 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from "./final-artical.module.css";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 
 export default function FinalArticlePage() {
+  const dispatch = useDispatch();
   const [IsLoading, setIsLoading] = useState(false);
-  const {
-    finalArticle,
-    setFinalArticle,
-    setCheckGrammerResults,
-    setCheckAiResults,
-  } = useContext(globalContext);
+  const [startNav, setStartNav] = useState(false);
+  const { setCheckGrammerResults, setCheckAiResults } =
+    useContext(globalContext);
+
+  const finalArticle: any = useSelector(
+    (state: any) => state.contentCreator.finalArticle
+  );
 
   const finalArticleRef = useRef<HTMLDivElement>(null);
 
@@ -23,6 +28,10 @@ export default function FinalArticlePage() {
     plagiarism: "waiting",
     ai: "waiting",
   });
+
+  // useEffect(() => {
+  //   console.log("finalArticle", finalArticle);
+  // }, []);
 
   // useEffect(() => {
   //   if (
@@ -40,24 +49,10 @@ export default function FinalArticlePage() {
   //   }
   // }, []);
 
-  async function setIsLoadingAsync() {
-    setIsLoading(true);
-    return Promise.resolve();
-  }
-
-  async function setFinalArticleAsync(finalArticleContent: any) {
-    setFinalArticle((prev: any) => ({
-      ...prev,
-      articles: [
-        {
-          ...prev.articles[0],
-          content: finalArticleContent,
-        },
-      ],
-    }));
-
-    return Promise.resolve();
-  }
+  // async function setIsLoadingAsync() {
+  //   setIsLoading(true);
+  //   return Promise.resolve();
+  // }
 
   async function startChecks() {
     await checkGrammer();
@@ -66,7 +61,8 @@ export default function FinalArticlePage() {
     return Promise.resolve();
   }
 
-  async function handleContentChange() {
+  function handleNavigate() {
+    // must be first line.
     if (finalArticleRef.current) {
       const finalArticleContent = finalArticleRef.current.innerHTML
         .replace(/[*#]/g, "") // Remove asterisks and hash symbols
@@ -76,17 +72,35 @@ export default function FinalArticlePage() {
         .replace(/[”]/g, '"') // Replace right double quotes with regular double quotes
         .replace(/\s+/g, " ") // Normalize whitespace to a single space
         .trim(); // Trim leading and trailing whitespace
-      await setFinalArticleAsync(finalArticleContent);
+
+      const updatedArticle = {
+        ...finalArticle,
+        articles: [
+          {
+            ...finalArticle.articles[0],
+            content: finalArticleContent,
+          },
+        ],
+      };
+
+      dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+      console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
+    } else {
+      console.log(
+        "xxxxxxxxxxxxxxxxxx-finalArticleRef.current is null-xxxxxxxxxxxxxxxxxx"
+      );
     }
+
+    setStartNav(true);
   }
 
-  async function handleNavigate() {
-    // handleContentChange(): must be first line.
-    await handleContentChange();
-    await setIsLoadingAsync();
-    // console.log("finalArticleContent:", finalArticleContent);
-    await startChecks();
-  }
+  useEffect(() => {
+    if (startNav) {
+      setIsLoading(true);
+      console.log("finalArticle right before startChecks()", finalArticle);
+      startChecks();
+    }
+  }, [startNav]);
 
   async function checkGrammer() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -95,15 +109,19 @@ export default function FinalArticlePage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`https://backendmachinegenius.onrender.com/grammar-check`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
-          }),
-        });
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/grammar-check`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              document: finalArticle?.articles[0]?.content,
+            }),
+            cache: "no-cache",
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch data");
@@ -153,15 +171,19 @@ export default function FinalArticlePage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`https://backendmachinegenius.onrender.com/plagiarism-check`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
-          }),
-        });
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/plagiarism-check`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: finalArticle?.articles[0]?.content,
+            }),
+            cache: "no-cache",
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch data");
@@ -202,15 +224,19 @@ export default function FinalArticlePage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`https://backendmachinegenius.onrender.com/AI-check`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content.replace(/[*#]/g, ""),
-          }),
-        });
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/AI-check`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              document: finalArticle?.articles[0]?.content,
+            }),
+            cache: "no-cache",
+          }
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch data");
@@ -230,13 +256,22 @@ export default function FinalArticlePage() {
     }
 
     if (json) {
-      if (json.documents[0].class_probabilities.human < 0.8) {
+      if (
+        // json.documents[0].class_probabilities.human < 0.8
+        json.documents[0].sentences.some(
+          (sentence: any) => sentence.highlight_sentence_for_ai
+        )
+      ) {
         setCheckStatus((prev) => ({ ...prev, ai: "fail" }));
       } else {
         setCheckStatus((prev) => ({ ...prev, ai: "pass" }));
       }
       console.log("checkAiResult", json);
-      setCheckAiResults(json.documents[0].sentences);
+      setCheckAiResults(
+        json.documents[0].sentences.filter(
+          (sentence: any) => sentence.highlight_sentence_for_ai
+        )
+      );
     } else {
       setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");

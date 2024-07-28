@@ -2,6 +2,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
@@ -20,8 +21,8 @@ const initialContextState = {
   setTwitterData: (data: any) => {},
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
-  finalArticle: null as any,
-  setFinalArticle: (article: any) => {},
+  // finalArticle: null as any,
+  // setFinalArticle: (article: any) => {},
   checkGrammerResults: [] as any,
   setCheckGrammerResults: (result: any) => {},
   checkAiResults: [] as any,
@@ -86,7 +87,7 @@ export default function GlobalContextProvider({
       return "";
     }
   }
-  
+
   function decodedTokenInit() {
     if (typeof window !== "undefined") {
       const decodedTokenInitValue = localStorage.getItem("decodedToken");
@@ -100,7 +101,7 @@ export default function GlobalContextProvider({
   const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit());
 
   async function checkIfUserOnCorrespondingRoute() {
-  // if (decodedToken) {
+    // if (decodedToken) {
     const role = decodedToken?.department;
     const correspondingRoutePath = handleSetRouteToDirect(role).split("/")[1];
     console.log(`correspondingRoutePath:`, correspondingRoutePath);
@@ -112,7 +113,7 @@ export default function GlobalContextProvider({
     } else {
       console.log("~~~---valid path---~~~");
     }
-  // }
+    // }
   }
 
   useEffect(() => {
@@ -125,11 +126,10 @@ export default function GlobalContextProvider({
     }
   }, [token]);
 
-  useEffect(()=>{
-      console.log("---currentPath:", path);
-      checkIfUserOnCorrespondingRoute();
-  }, [path])
-
+  useEffect(() => {
+    console.log("---currentPath:", path);
+    checkIfUserOnCorrespondingRoute();
+  }, [path]);
 
   // ===== 00. End Authentication =====
 
@@ -191,15 +191,18 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));
   }, [choosedArticles]);
 
-  function finalArticleInit() {
-    if (typeof window !== "undefined") {
-      const finalArticleInitValue = sessionStorage.getItem("finalArticle");
-      return finalArticleInitValue ? JSON.parse(finalArticleInitValue) : null;
-    } else {
-      return null;
-    }
-  }
-  const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit());
+  // function finalArticleInit() {
+  //   if (typeof window !== "undefined") {
+  //     const finalArticleInitValue = sessionStorage.getItem("finalArticle");
+  //     return finalArticleInitValue ? JSON.parse(finalArticleInitValue) : null;
+  //   } else {
+  //     return null;
+  //   }
+  // }
+  // const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit());
+  const finalArticle = useSelector(
+    (state: any) => state.contentCreator.finalArticle
+  );
   useEffect(() => {
     sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
   }, [finalArticle]);
@@ -343,8 +346,8 @@ export default function GlobalContextProvider({
     setTwitterData,
     choosedArticles,
     setChoosedArticles,
-    finalArticle,
-    setFinalArticle,
+    // finalArticle,
+    // setFinalArticle,
     checkGrammerResults,
     setCheckGrammerResults,
     checkAiResults,

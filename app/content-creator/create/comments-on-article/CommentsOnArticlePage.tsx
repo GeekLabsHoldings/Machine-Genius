@@ -11,7 +11,7 @@ import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 
 const CommentsOnArticlePage = () => {
-  const { finalArticle, generateTitles, generatedTitles, setGeneratedTitles, setLockedGeneratedTitles } =
+  const { generateTitles, generatedTitles, setGeneratedTitles, setLockedGeneratedTitles } =
     useContext(globalContext);
   const [IsLoading, setIsLoading] = useState(false);
   const router = useRouter();

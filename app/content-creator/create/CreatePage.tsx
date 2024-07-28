@@ -4,6 +4,8 @@ import CustomBtn from "../../_components/Button/CustomBtn";
 import styles from "./Create.module.css";
 import { globalContext } from "@/app/_context/store";
 import { useContext, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 
 const options = [
   "Script",
@@ -11,12 +13,13 @@ const options = [
 ]
 
 export default function CreatePage() {
+  const dispatch = useDispatch();
   const {
     setSelectedBrand,
     setCollectedData,
     setTwitterData,
     setChoosedArticles,
-    setFinalArticle,
+    // setFinalArticle,
     setCheckGrammerResults,
     setCheckAiResults,
     setGeneratedTitles,
@@ -29,7 +32,8 @@ export default function CreatePage() {
     setCollectedData(null);
     setTwitterData(null);
     setChoosedArticles([]);
-    setFinalArticle(null);
+    // setFinalArticle(null);
+    dispatch(contentCreatorActions.setFinalArticle(null));
     setCheckGrammerResults([]);
     setCheckAiResults([]);
     setGeneratedTitles([]);

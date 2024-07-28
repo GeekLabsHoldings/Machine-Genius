@@ -11,8 +11,11 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { useDispatch } from "react-redux";
+import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 
 export default function ChooseBrandPage() {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const {
@@ -20,7 +23,7 @@ export default function ChooseBrandPage() {
     setCollectedData,
     setTwitterData,
     setChoosedArticles,
-    setFinalArticle,
+    // setFinalArticle,
     setCheckGrammerResults,
     setCheckAiResults,
     selectedBrand,
@@ -34,7 +37,8 @@ export default function ChooseBrandPage() {
     setCollectedData(null);
     setTwitterData(null);
     setChoosedArticles([]);
-    setFinalArticle(null);
+    // setFinalArticle(null);
+    dispatch(contentCreatorActions.setFinalArticle(null));
     setCheckGrammerResults([]);
     setCheckAiResults([]);
     setGeneratedTitles([]);

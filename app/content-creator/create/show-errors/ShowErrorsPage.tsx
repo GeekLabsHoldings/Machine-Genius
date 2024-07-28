@@ -9,18 +9,21 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
+import { useSelector } from "react-redux";
 
 export default function ShowErrorsPage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
   const {
-    finalArticle,
-    setFinalArticle,
+    // finalArticle,
+    // setFinalArticle,
     checkGrammerResults,
     setCheckGrammerResults,
     checkAiResults,
   } = useContext(globalContext);
+
+  const finalArticle = useSelector((state:any) => state.contentCreator.finalArticle);
 
   const handleNavigate = () => {
     setIsLoading(true);
@@ -28,7 +31,7 @@ export default function ShowErrorsPage() {
 
   useEffect(() => {
     // ===== log data =====
-    console.log("finalArticle:", finalArticle);
+    // console.log("finalArticle:", finalArticle);
     console.log("checkGrammerResults:", checkGrammerResults);
     // ===== if there is no data, redirect to the choose brand page =====
     // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {

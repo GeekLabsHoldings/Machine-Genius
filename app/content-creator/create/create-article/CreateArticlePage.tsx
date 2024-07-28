@@ -11,8 +11,11 @@ import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import { useDispatch } from "react-redux";
+import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 
 export default function CreateArticlePage() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [IsRetry, setIsRetry] = useState(false);
@@ -27,7 +30,7 @@ export default function CreateArticlePage() {
     setTwitterData,
     choosedArticles,
     setChoosedArticles,
-    setFinalArticle,
+    // setFinalArticle,
   } = useContext(globalContext);
   // state to enable text selection when click on highlight button
   const [beginSelect, setBeginSelect] = useState(false);
@@ -121,10 +124,10 @@ export default function CreateArticlePage() {
     setCheckAllSelectedText(false);
   }
 
-  async function setFinalArticleAsync(json: any) {
-    setFinalArticle(json);
-    return Promise.resolve(); // Ensure this function is awaited properly
-  }
+  // async function setFinalArticleAsync(json: any) {
+  //   setFinalArticle(json);
+  //   return Promise.resolve(); // Ensure this function is awaited properly
+  // }
 
   async function finalizeContent() {
     if (selectedText.length === 0) {
@@ -183,7 +186,8 @@ export default function CreateArticlePage() {
       }
 
       if (json?.articles[0]?.content) {
-        await setFinalArticleAsync(json);
+        // await setFinalArticleAsync(json);
+        dispatch(contentCreatorActions.setFinalArticle(json));
         router.replace("/content-creator/create/final-article");
       } else {
         setIsRetry(true);
