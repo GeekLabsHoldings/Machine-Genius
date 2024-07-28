@@ -80,9 +80,9 @@ export default function ChooseBrandPage() {
   useEffect(() => {
     console.log(`selectedBrand:`, selectedBrand);
     // navigate to movie myth if user select movie myth option
-    // if (selectedBrand === "Movie Myth") {
-    //   router.push("/content-creator/create/movie-myth");
-    // }
+    if (selectedBrand === "Movie Myth") {
+      router.replace("/content-creator/create/movie-myth");
+    }
   }, [selectedBrand]);
 
 
