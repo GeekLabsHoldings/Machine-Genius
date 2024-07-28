@@ -118,8 +118,7 @@ export default function FinalArticlePage() {
             },
             body: JSON.stringify({
               document: finalArticle?.articles[0]?.content,
-            }),
-            cache: "no-cache",
+            })
           }
         );
 
@@ -180,8 +179,7 @@ export default function FinalArticlePage() {
             },
             body: JSON.stringify({
               text: finalArticle?.articles[0]?.content,
-            }),
-            cache: "no-cache",
+            })
           }
         );
 
@@ -233,8 +231,7 @@ export default function FinalArticlePage() {
             },
             body: JSON.stringify({
               document: finalArticle?.articles[0]?.content,
-            }),
-            cache: "no-cache",
+            })
           }
         );
 
