@@ -32,6 +32,43 @@ export default function ShowErrorsPage() {
     ai: "waiting",
   });
   const finalArticleRef = useRef<HTMLDivElement>(null);
+  // const contentRef = useRef(finalArticle?.articles[0]?.content || "");
+
+  const saveCursorPosition = () => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+      return 0; // Return a default position if there's no selection or range
+    }
+
+    const range = selection.getRangeAt(0);
+    const preCaretRange = range.cloneRange();
+    if (finalArticleRef.current) {
+      preCaretRange.selectNodeContents(finalArticleRef.current);
+    }
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    const cursorPosition = preCaretRange.toString().length;
+    return cursorPosition;
+  };
+
+  const restoreCursorPosition = (position: number) => {
+    const selection = window.getSelection();
+    if (!selection) {
+      return;
+    }
+
+    const range = document.createRange();
+    const textNode = finalArticleRef.current?.firstChild;
+
+    if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+      const textLength = textNode.textContent?.length || 0;
+      const validPosition = Math.min(position, textLength);
+
+      range.setStart(textNode, validPosition);
+      range.setEnd(textNode, validPosition);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  };
 
   async function startChecks() {
     await checkGrammer();
@@ -125,14 +162,151 @@ export default function ShowErrorsPage() {
     }
   }, [IsLoading]);
 
+  // useEffect(() => {
+  //   if (selectedIssue !== null) {
+  //     setSelectedIssue(null);
+  //   }
+  //   if (issueType !== "") {
+  //     setIssueType("");
+  //   }
+  // }, [finalArticle]);
+
+  // useEffect(() => {
+  //   const handleInput = () => {
+  //     if (finalArticleRef.current) {
+  //       // Save the cursor position
+  //       const selection = window.getSelection();
+  //       const range = selection?.getRangeAt(0);
+  //       const preCaretRange = range?.cloneRange();
+  //       preCaretRange?.selectNodeContents(finalArticleRef.current);
+  //       // if (range) {
+  //       preCaretRange?.setEnd(range?.endContainer, range?.endOffset);
+  //       const cursorPosition = preCaretRange?.toString().length;
+  //       // }
+
+  //       const finalArticleContent = finalArticleRef.current.innerText;
+
+  //       const updatedArticle = {
+  //         ...finalArticle,
+  //         articles: [
+  //           {
+  //             ...finalArticle.articles[0],
+  //             content: finalArticleContent,
+  //           },
+  //         ],
+  //       };
+
+  //       dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+
+  //       // Restore the cursor position
+  //       setTimeout(() => {
+  //         const newRange = document.createRange();
+  //         newRange.setStart(finalArticleRef.current.firstChild, cursorPosition);
+  //         newRange.setEnd(finalArticleRef.current.firstChild, cursorPosition);
+  //         selection.removeAllRanges();
+  //         selection.addRange(newRange);
+  //       }, 0);
+  //     }
+  //   };
+
+  //   const currentRef = finalArticleRef.current;
+  //   if (currentRef) {
+  //     currentRef.addEventListener("input", handleInput);
+  //   }
+
+  //   return () => {
+  //     if (currentRef) {
+  //       currentRef.removeEventListener("input", handleInput);
+  //     }
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   const handleBlur = () => {
+  //     if (finalArticleRef.current) {
+  //       contentRef.current = finalArticleRef.current.innerText;
+  //       const updatedArticle = {
+  //         ...finalArticle,
+  //         articles: [
+  //           {
+  //             ...finalArticle.articles[0],
+  //             content: contentRef.current,
+  //           },
+  //         ],
+  //       };
+  //       dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+  //     }
+  //   };
+
+  //   const currentRef = finalArticleRef.current;
+  //   if (currentRef) {
+  //     currentRef.addEventListener("blur", handleBlur);
+  //   }
+
+  //   return () => {
+  //     if (currentRef) {
+  //       currentRef.removeEventListener("blur", handleBlur);
+  //     }
+  //   };
+  // }, [dispatch, finalArticle]);
+
+  // useEffect(() => {
+  //   if (finalArticleRef.current) {
+  //     const finalArticleContent = finalArticleRef.current.innerText;
+
+  //     const updatedArticle = {
+  //       ...finalArticle,
+  //       articles: [
+  //         {
+  //           ...finalArticle.articles[0],
+  //           content: finalArticleContent,
+  //         },
+  //       ],
+  //     };
+
+  //     dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+  //     console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
+  //   } else {
+  //     console.log(
+  //       "xxxxxxxxxxxxxxxxxx-finalArticleRef.current is null-xxxxxxxxxxxxxxxxxx"
+  //     );
+  //   }
+  // }, [selectedIssue]);
+
   useEffect(() => {
-    if (selectedIssue !== null) {
-      setSelectedIssue(null);
+    const handleInput = () => {
+      if (finalArticleRef.current) {
+        const cursorPosition = saveCursorPosition();
+        const finalArticleContent = finalArticleRef.current.innerText;
+
+        const updatedArticle = {
+          ...finalArticle,
+          articles: [
+            {
+              ...finalArticle.articles[0],
+              content: finalArticleContent,
+            },
+          ],
+        };
+
+        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+        setTimeout(() => {
+          restoreCursorPosition(cursorPosition);
+        }, 0);
+      }
+    };
+
+    const currentRef = finalArticleRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("input", handleInput);
     }
-    if (issueType !== "") {
-      setIssueType("");
-    }
-  }, [finalArticle]);
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener("input", handleInput);
+      }
+    };
+  }, []);
 
   function highlightText(text: any, start: any, end: any) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
@@ -330,9 +504,9 @@ export default function ShowErrorsPage() {
           {(checkStatus.grammar === "fail" ||
             checkStatus.plagiarism === "fail" ||
             checkStatus.ai === "fail") &&
-          (checkStatus.grammar !== "waiting" &&
-            checkStatus.plagiarism !== "waiting" &&
-            checkStatus.ai !== "waiting") ? (
+          checkStatus.grammar !== "waiting" &&
+          checkStatus.plagiarism !== "waiting" &&
+          checkStatus.ai !== "waiting" ? (
             <CustomBtn
               word={"Results"}
               btnColor="black"
@@ -428,8 +602,12 @@ export default function ShowErrorsPage() {
                   key={index}
                   title="Grammer"
                   onClick={() => {
+                    const cursorPosition = saveCursorPosition();
                     setSelectedIssue(item);
                     setIssueType("grammer");
+                    setTimeout(() => {
+                      restoreCursorPosition(cursorPosition);
+                    }, 0);
                     // console.log("grammer item clicked:", item);
                   }}
                 >
@@ -471,8 +649,12 @@ export default function ShowErrorsPage() {
                   key={index}
                   title="AI"
                   onClick={() => {
+                    const cursorPosition = saveCursorPosition();
                     setSelectedIssue(item);
                     setIssueType("ai");
+                    setTimeout(() => {
+                      restoreCursorPosition(cursorPosition);
+                    }, 0);
                     // console.log("ai item clicked:", item);
                   }}
                 >
