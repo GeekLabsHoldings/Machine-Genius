@@ -18,20 +18,6 @@ const CreateMovie = () => {
     }
   };
 
-  // return transcript data of movie
-  const renderTranscriptData = [...videoTranscription.transcriptionResults]
-    .reverse()
-    .map((transcript) => (
-      <div
-        key={transcript.part}
-        className={`flex flex-col cursor-pointer ${styles.script} `}
-        onClick={() => handleTranscriptClick(transcript["time duration"])}
-      >
-        <p>{transcript.transcription}</p>
-        <span className="self-end">{transcript["time duration"]}</span>
-      </div>
-    ));
-
   return (
     <div className="flex flex-col gap-[1vw]">
       <div className="flex justify-center items-center pageHeader h-[75vh] py-[1.5vw] w-full gap-[2vw]">
@@ -41,7 +27,23 @@ const CreateMovie = () => {
           <div
             className={`${styles.box} flex flex-col px-[1.5vw] pt-[4vw] pb-[1.5vw] gap-[1vw]`}
           >
-            {renderTranscriptData}
+            {videoTranscription &&
+              [...videoTranscription?.transcriptionResults]
+                .reverse()
+                .map((transcript) => (
+                  <div
+                    key={transcript.part}
+                    className={`flex flex-col cursor-pointer ${styles.script} `}
+                    onClick={() =>
+                      handleTranscriptClick(transcript["time duration"])
+                    }
+                  >
+                    <p>{transcript.transcription}</p>
+                    <span className="self-end">
+                      {transcript["time duration"]}
+                    </span>
+                  </div>
+                ))}
           </div>
         </div>
         {/* section to display your selected movie */}
