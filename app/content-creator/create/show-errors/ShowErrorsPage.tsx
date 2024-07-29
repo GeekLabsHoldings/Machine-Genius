@@ -13,7 +13,7 @@ import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreato
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
-  const [IsLoading, setIsLoading] = useState(false);
+  const [IsLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
   const checkGrammerResults = useSelector(
@@ -22,18 +22,15 @@ export default function ShowErrorsPage() {
   const checkAiResults = useSelector(
     (state: any) => state.contentCreator.checkAiResults
   );
-
-  const [triggerStartChecks, setTriggerStartChecks] = useState(false);
+  const [triggerStartChecks, setTriggerStartChecks] = useState<boolean>(false);
   const finalArticle = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
-
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
     plagiarism: "waiting",
     ai: "waiting",
   });
-
   const finalArticleRef = useRef<HTMLDivElement>(null);
 
   async function startChecks() {
@@ -76,45 +73,70 @@ export default function ShowErrorsPage() {
     setTriggerStartChecks(true);
   }
 
-  useEffect(() => {
-    // ===== log data =====
-    // console.log("finalArticle:", finalArticle);
-    console.log("checkGrammerResults:", checkGrammerResults);
-    console.log("checkAiResults:", checkAiResults);
-    // ===== if there is no data, redirect to the choose brand page =====
-    // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
-    // window.alert(
-    //   "No data is available. You will be redirected to refetch new data!"
-    // );
-    // router.push("/content-creator/create/choose-brand");
-    // }
-  }, [checkGrammerResults, checkAiResults]);
-
-  function highlightText(text: any, start: any, end: any) {
-    return [text.slice(0, start), text.slice(start, end), text.slice(end)];
-  }
+  // useEffect(() => {
+  // ===== log data =====
+  // console.log("finalArticle:", finalArticle);
+  // ===== if there is no data, redirect to the choose brand page =====
+  // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
+  // window.alert(
+  //   "No data is available. You will be redirected to refetch new data!"
+  // );
+  // router.push("/content-creator/create/choose-brand");
+  // }
+  // }, []);
 
   useEffect(() => {
-    if (triggerStartChecks) {
-      setIsLoading(true);
-      console.log("finalArticle right before startChecks()", finalArticle);
-      startChecks();
-    } else {
-      // reset checkStatus
+    if (triggerStartChecks === false) {
       setCheckStatus({
         grammar: "waiting",
         plagiarism: "waiting",
         ai: "waiting",
       });
+    } else {
+      setIsLoading(true);
+      console.log("finalArticle right before startChecks()", finalArticle);
+      startChecks();
+      if (selectedIssue !== null) {
+        setSelectedIssue(null);
+      }
+      if (issueType !== "") {
+        setIssueType("");
+      }
     }
   }, [triggerStartChecks]);
 
   useEffect(() => {
-    if (!IsLoading) {
-      setSelectedIssue(null);
-      setIssueType("");
+    if (IsLoading === false) {
+      if (triggerStartChecks === true) {
+        setTriggerStartChecks(false);
+      }
+      setCheckStatus({
+        grammar: "waiting",
+        plagiarism: "waiting",
+        ai: "waiting",
+      });
+    } else {
+      if (selectedIssue !== null) {
+        setSelectedIssue(null);
+      }
+      if (issueType !== "") {
+        setIssueType("");
+      }
     }
   }, [IsLoading]);
+
+  useEffect(() => {
+    if (selectedIssue !== null) {
+      setSelectedIssue(null);
+    }
+    if (issueType !== "") {
+      setIssueType("");
+    }
+  }, [finalArticle]);
+
+  function highlightText(text: any, start: any, end: any) {
+    return [text.slice(0, start), text.slice(start, end), text.slice(end)];
+  }
 
   async function checkGrammer() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -133,7 +155,6 @@ export default function ShowErrorsPage() {
             body: JSON.stringify({
               document: finalArticle?.articles[0]?.content,
             }),
-            cache: "no-cache",
           }
         );
 
@@ -192,7 +213,6 @@ export default function ShowErrorsPage() {
             body: JSON.stringify({
               text: finalArticle?.articles[0]?.content,
             }),
-            cache: "no-cache",
           }
         );
 
@@ -245,7 +265,6 @@ export default function ShowErrorsPage() {
             body: JSON.stringify({
               document: finalArticle?.articles[0]?.content,
             }),
-            cache: "no-cache",
           }
         );
 
@@ -287,7 +306,6 @@ export default function ShowErrorsPage() {
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
-    setTriggerStartChecks(false);
   }
 
   if (IsLoading) {
@@ -309,18 +327,23 @@ export default function ShowErrorsPage() {
             />
             <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
           </div>
-          {checkStatus.grammar === "fail" ||
+          {(checkStatus.grammar === "fail" ||
             checkStatus.plagiarism === "fail" ||
-            checkStatus.ai === "fail" || (
-              <CustomBtn
-                word={"Results"}
-                btnColor="black"
-                // href="/content-creator/create/show-errors/"
-                onClick={() => {
-                  setIsLoading(false);
-                }}
-              />
-            )}
+            checkStatus.ai === "fail") &&
+          (checkStatus.grammar !== "waiting" &&
+            checkStatus.plagiarism !== "waiting" &&
+            checkStatus.ai !== "waiting") ? (
+            <CustomBtn
+              word={"Results"}
+              btnColor="black"
+              // href="/content-creator/create/show-errors/"
+              onClick={() => {
+                setIsLoading(false);
+              }}
+            />
+          ) : (
+            ""
+          )}
 
           {checkStatus.grammar === "pass" &&
             checkStatus.plagiarism === "pass" &&
@@ -450,7 +473,7 @@ export default function ShowErrorsPage() {
                   onClick={() => {
                     setSelectedIssue(item);
                     setIssueType("ai");
-                    console.log("ai item clicked:", item);
+                    // console.log("ai item clicked:", item);
                   }}
                 >
                   <>
