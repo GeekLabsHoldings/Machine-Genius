@@ -32,41 +32,133 @@ export default function ShowErrorsPage() {
     ai: "waiting",
   });
   const finalArticleRef = useRef<HTMLDivElement>(null);
-  // const contentRef = useRef(finalArticle?.articles[0]?.content || "");
 
-  const saveCursorPosition = () => {
+  const saveCursorPosition = (): number | null => {
     const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) {
-      return 0; // Return a default position if there's no selection or range
+    if (!selection || selection.rangeCount === 0 || !finalArticleRef.current) {
+      return null;
     }
 
     const range = selection.getRangeAt(0);
     const preCaretRange = range.cloneRange();
-    if (finalArticleRef.current) {
-      preCaretRange.selectNodeContents(finalArticleRef.current);
-    }
+    preCaretRange.selectNodeContents(finalArticleRef.current);
     preCaretRange.setEnd(range.endContainer, range.endOffset);
-    const cursorPosition = preCaretRange.toString().length;
-    return cursorPosition;
+
+    return preCaretRange.toString().length;
   };
 
-  const restoreCursorPosition = (position: number) => {
-    const selection = window.getSelection();
-    if (!selection) {
+  // const restoreCursorPosition = (position: number | null) => {
+  //   const selection = window.getSelection();
+  //   const range = document.createRange();
+
+  //   if (selection && finalArticleRef.current && position !== null) {
+  //     const textNode = finalArticleRef.current.firstChild;
+
+  //     if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+  //       const textLength = textNode.textContent?.length || 0;
+  //       const validPosition = Math.min(position, textLength);
+
+  //       range.setStart(textNode, validPosition);
+  //       range.setEnd(textNode, validPosition);
+
+  //       selection.removeAllRanges();
+  //       selection.addRange(range);
+
+  //       // Scroll to the cursor position
+  //       setTimeout(() => {
+  //         const tempAnchorEl = document.createElement("br");
+  //         range.insertNode(tempAnchorEl);
+  //         tempAnchorEl.scrollIntoView({
+  //           block: "end", // Change to 'start' if needed
+  //         });
+  //         tempAnchorEl.remove();
+  //       }, 0);
+  //     }
+  //   }
+  // };
+
+  const restoreCursorPosition = (position: number | null) => {
+    if (position === null || !finalArticleRef.current) {
       return;
     }
+    // if id=finalArticle have children ?
 
-    const range = document.createRange();
-    const textNode = finalArticleRef.current?.firstChild;
+    if (finalArticleRef.current.children.length > 1) {
+      const selection = window.getSelection();
+      const range = document.createRange();
 
-    if (textNode && textNode.nodeType === Node.TEXT_NODE) {
-      const textLength = textNode.textContent?.length || 0;
-      const validPosition = Math.min(position, textLength);
+      if (selection) {
+        const paragraphs = Array.from(
+          finalArticleRef.current.children
+        ) as HTMLElement[];
+        let remainingPosition = position;
+        let found = false;
 
-      range.setStart(textNode, validPosition);
-      range.setEnd(textNode, validPosition);
-      selection.removeAllRanges();
-      selection.addRange(range);
+        for (let i = 0; i < paragraphs.length; i++) {
+          const paragraph = paragraphs[i];
+          if (
+            paragraph.nodeType === Node.ELEMENT_NODE &&
+            paragraph.firstChild
+          ) {
+            const textNode = paragraph.firstChild as Node;
+            const textLength = textNode.textContent?.length || 0;
+
+            if (remainingPosition <= textLength) {
+              // Found the correct paragraph
+              const validPosition = Math.min(remainingPosition, textLength);
+              range.setStart(textNode, validPosition);
+              range.setEnd(textNode, validPosition);
+              found = true;
+              break;
+            } else {
+              remainingPosition -= textLength;
+            }
+          }
+        }
+
+        if (found) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+
+          // Scroll to the cursor position
+          setTimeout(() => {
+            const tempAnchorEl = document.createElement("br");
+            range.insertNode(tempAnchorEl);
+            tempAnchorEl.scrollIntoView({
+              block: "end", // Change to 'start' if needed
+            });
+            tempAnchorEl.remove();
+          }, 0);
+        }
+      }
+    } else {
+      const selection = window.getSelection();
+      const range = document.createRange();
+
+      if (selection && finalArticleRef.current && position !== null) {
+        const textNode = finalArticleRef.current.firstChild;
+
+        if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+          const textLength = textNode.textContent?.length || 0;
+          const validPosition = Math.min(position, textLength);
+
+          range.setStart(textNode, validPosition);
+          range.setEnd(textNode, validPosition);
+
+          selection.removeAllRanges();
+          selection.addRange(range);
+
+          // Scroll to the cursor position
+          setTimeout(() => {
+            const tempAnchorEl = document.createElement("br");
+            range.insertNode(tempAnchorEl);
+            tempAnchorEl.scrollIntoView({
+              block: "end", // Change to 'start' if needed
+            });
+            tempAnchorEl.remove();
+          }, 0);
+        }
+      }
     }
   };
 
@@ -306,7 +398,7 @@ export default function ShowErrorsPage() {
         currentRef.removeEventListener("input", handleInput);
       }
     };
-  }, []);
+  }, [finalArticle]);
 
   function highlightText(text: any, start: any, end: any) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
