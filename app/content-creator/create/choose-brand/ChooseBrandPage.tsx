@@ -24,8 +24,8 @@ export default function ChooseBrandPage() {
     setTwitterData,
     setChoosedArticles,
     // setFinalArticle,
-    setCheckGrammerResults,
-    setCheckAiResults,
+    // setCheckGrammerResults,
+    // setCheckAiResults,
     selectedBrand,
     setGeneratedTitles,
     setLockedGeneratedTitles
@@ -39,8 +39,10 @@ export default function ChooseBrandPage() {
     setChoosedArticles([]);
     // setFinalArticle(null);
     dispatch(contentCreatorActions.setFinalArticle(null));
-    setCheckGrammerResults([]);
-    setCheckAiResults([]);
+    // setCheckGrammerResults([]);
+    // setCheckAiResults([]);
+    dispatch(contentCreatorActions.setCheckGrammerResults([]));
+    dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);
     setLockedGeneratedTitles([]);
     if (typeof window !== "undefined") {

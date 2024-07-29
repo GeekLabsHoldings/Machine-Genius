@@ -9,8 +9,32 @@ function finalArticleInit() {
   }
 }
 
+function checkGrammerResultsInit() {
+  if (typeof window !== "undefined") {
+    const checkGrammerResultsInitValue = sessionStorage.getItem(
+      "checkGrammerResults"
+    );
+    return checkGrammerResultsInitValue
+      ? JSON.parse(checkGrammerResultsInitValue)
+      : [];
+  } else {
+    return [];
+  }
+}
+
+function checkAiResultsInit() {
+  if (typeof window !== "undefined") {
+    const checkAiResultsInitValue = sessionStorage.getItem("checkAiResults");
+    return checkAiResultsInitValue ? JSON.parse(checkAiResultsInitValue) : [];
+  } else {
+    return [];
+  }
+}
+
 const initialState = {
   finalArticle: finalArticleInit(),
+  checkGrammerResults: checkGrammerResultsInit(),
+  checkAiResults: checkAiResultsInit(),
 };
 
 export const contentCreatorSlice = createSlice({
@@ -19,6 +43,12 @@ export const contentCreatorSlice = createSlice({
   reducers: {
     setFinalArticle: (state, action) => {
       state.finalArticle = action.payload;
+    },
+    setCheckGrammerResults: (state, action) => {
+      state.checkGrammerResults = action.payload;
+    },
+    setCheckAiResults: (state, action) => {
+      state.checkAiResults = action.payload;
     },
   },
 });

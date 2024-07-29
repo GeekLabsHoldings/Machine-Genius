@@ -6,8 +6,6 @@ import ErrorCollapse from "@/app/_components/ErrorCollapse/ErrorCollapse";
 import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
-import { globalContext } from "@/app/_context/store";
-import { useContext } from "react";
 import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -18,12 +16,12 @@ export default function ShowErrorsPage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
-  const {
-    checkGrammerResults,
-    setCheckGrammerResults,
-    checkAiResults,
-    setCheckAiResults,
-  } = useContext(globalContext);
+  const checkGrammerResults = useSelector(
+    (state: any) => state.contentCreator.checkGrammerResults
+  );
+  const checkAiResults = useSelector(
+    (state: any) => state.contentCreator.checkAiResults
+  );
 
   const [triggerStartChecks, setTriggerStartChecks] = useState(false);
   const finalArticle = useSelector(
@@ -166,13 +164,10 @@ export default function ShowErrorsPage() {
       } else {
         setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
       }
-
-      console.log("checkGrammerResults1", json);
-      setCheckGrammerResults(
-        json.grammarIssues.filter(
-          (item: any) => item.general_error_type !== "Other"
-        )
+      let filteredJson = json.grammarIssues.filter(
+        (item: any) => item.general_error_type !== "Other"
       );
+      dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
@@ -283,11 +278,10 @@ export default function ShowErrorsPage() {
         setCheckStatus((prev) => ({ ...prev, ai: "pass" }));
       }
       console.log("checkAiResult", json);
-      setCheckAiResults(
-        json.documents[0].sentences.filter(
-          (sentence: any) => sentence.highlight_sentence_for_ai
-        )
+      let filteredJson = json.documents[0].sentences.filter(
+        (sentence: any) => sentence.highlight_sentence_for_ai
       );
+      dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
     } else {
       setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");

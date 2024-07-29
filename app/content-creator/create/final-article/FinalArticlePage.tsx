@@ -14,8 +14,6 @@ export default function FinalArticlePage() {
   const dispatch = useDispatch();
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
-  const { setCheckGrammerResults, setCheckAiResults } =
-    useContext(globalContext);
 
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
@@ -118,7 +116,7 @@ export default function FinalArticlePage() {
             },
             body: JSON.stringify({
               document: finalArticle?.articles[0]?.content,
-            })
+            }),
           }
         );
 
@@ -150,12 +148,10 @@ export default function FinalArticlePage() {
         setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
       }
 
-      console.log("checkGrammerResults1", json);
-      setCheckGrammerResults(
-        json.grammarIssues.filter(
-          (item: any) => item.general_error_type !== "Other"
-        )
+      let filteredJson = json.grammarIssues.filter(
+        (item: any) => item.general_error_type !== "Other"
       );
+      dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
     } else {
       setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
@@ -179,7 +175,7 @@ export default function FinalArticlePage() {
             },
             body: JSON.stringify({
               text: finalArticle?.articles[0]?.content,
-            })
+            }),
           }
         );
 
@@ -231,7 +227,7 @@ export default function FinalArticlePage() {
             },
             body: JSON.stringify({
               document: finalArticle?.articles[0]?.content,
-            })
+            }),
           }
         );
 
@@ -264,11 +260,10 @@ export default function FinalArticlePage() {
         setCheckStatus((prev) => ({ ...prev, ai: "pass" }));
       }
       console.log("checkAiResult", json);
-      setCheckAiResults(
-        json.documents[0].sentences.filter(
-          (sentence: any) => sentence.highlight_sentence_for_ai
-        )
+      let filteredJson = json.documents[0].sentences.filter(
+        (sentence: any) => sentence.highlight_sentence_for_ai
       );
+      dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
     } else {
       setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");

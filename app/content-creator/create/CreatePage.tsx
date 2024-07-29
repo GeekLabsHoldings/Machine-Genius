@@ -20,8 +20,8 @@ export default function CreatePage() {
     setTwitterData,
     setChoosedArticles,
     // setFinalArticle,
-    setCheckGrammerResults,
-    setCheckAiResults,
+    // setCheckGrammerResults,
+    // setCheckAiResults,
     setGeneratedTitles,
     setLockedGeneratedTitles
   } = useContext(globalContext);
@@ -34,8 +34,10 @@ export default function CreatePage() {
     setChoosedArticles([]);
     // setFinalArticle(null);
     dispatch(contentCreatorActions.setFinalArticle(null));
-    setCheckGrammerResults([]);
-    setCheckAiResults([]);
+    // setCheckGrammerResults([]);
+    // setCheckAiResults([]);
+    dispatch(contentCreatorActions.setCheckGrammerResults([]));
+    dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);
     setLockedGeneratedTitles([]);
     if (typeof window !== "undefined") {

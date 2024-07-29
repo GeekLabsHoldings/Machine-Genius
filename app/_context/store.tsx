@@ -21,12 +21,14 @@ const initialContextState = {
   setTwitterData: (data: any) => {},
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
+
   // finalArticle: null as any,
   // setFinalArticle: (article: any) => {},
-  checkGrammerResults: [] as any,
-  setCheckGrammerResults: (result: any) => {},
-  checkAiResults: [] as any,
-  setCheckAiResults: (result: any) => {},
+  // checkGrammerResults: [] as any,
+  // setCheckGrammerResults: (result: any) => {},
+  // checkAiResults: [] as any,
+  // setCheckAiResults: (result: any) => {},
+
   generateTitles: () => {},
   generatedTitles: [] as any,
   setGeneratedTitles: (titles: any) => {},
@@ -207,20 +209,12 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
   }, [finalArticle]);
 
-  function checkGrammerResultsInit() {
-    if (typeof window !== "undefined") {
-      const checkGrammerResultsInitValue = sessionStorage.getItem(
-        "checkGrammerResults"
-      );
-      return checkGrammerResultsInitValue
-        ? JSON.parse(checkGrammerResultsInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-  const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
-    checkGrammerResultsInit()
+
+  // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
+  //   checkGrammerResultsInit()
+  // );
+  const checkGrammerResults = useSelector(
+    (state: any) => state.contentCreator.checkGrammerResults
   );
   useEffect(() => {
     sessionStorage.setItem(
@@ -229,16 +223,11 @@ export default function GlobalContextProvider({
     );
   }, [checkGrammerResults]);
 
-  function checkAiResultsInit() {
-    if (typeof window !== "undefined") {
-      const checkAiResultsInitValue = sessionStorage.getItem("checkAiResults");
-      return checkAiResultsInitValue ? JSON.parse(checkAiResultsInitValue) : [];
-    } else {
-      return [];
-    }
-  }
-  const [checkAiResults, setCheckAiResults] = useState<any>(
-    checkAiResultsInit()
+  // const [checkAiResults, setCheckAiResults] = useState<any>(
+  //   checkAiResultsInit()
+  // );
+  const checkAiResults = useSelector(
+    (state: any) => state.contentCreator.checkAiResults
   );
   useEffect(() => {
     sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
@@ -346,12 +335,14 @@ export default function GlobalContextProvider({
     setTwitterData,
     choosedArticles,
     setChoosedArticles,
+
     // finalArticle,
     // setFinalArticle,
-    checkGrammerResults,
-    setCheckGrammerResults,
-    checkAiResults,
-    setCheckAiResults,
+    // checkGrammerResults,
+    // setCheckGrammerResults,
+    // checkAiResults,
+    // setCheckAiResults,
+
     generateTitles,
     generatedTitles,
     setGeneratedTitles,
