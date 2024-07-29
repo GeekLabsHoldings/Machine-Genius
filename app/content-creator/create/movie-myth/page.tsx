@@ -4,44 +4,45 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./uploadMovie.module.css";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import { useDispatch } from "react-redux";
+import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 
 const MovieMyth = () => {
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const [videoRes, setVideoRes] = useState(null);
 
   async function uploadVideo(file: File) {
     setIsLoading(true);
     setError(null);
-
     try {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("duration", "20");
 
-      const res = await fetch(`https://convert-m16z.onrender.com/upload`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        body: formData,
-      });
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/transcript-audio`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Failed to upload video");
       }
 
       const json = await res.json();
-      setVideoRes(json);
-      console.log(videoRes);
-      // Handle response if needed
-      // router.push("/content-creator/create/movie-myth/create-movie");
+      dispatch(contentCreatorActions.setVideoTranscription(json));
+      if (json){
+        router.replace("/content-creator/create/movie-myth/create-movie");
+      }
     } catch (error: any) {
       setError(error.message);
       console.error("Error in uploadVideo:", error);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   }
 
@@ -68,16 +69,16 @@ const MovieMyth = () => {
             <label className={styles.select_label}>Upload Movie</label>
             <div className={"w-full flex " + styles.uploud_movie}>
               <input type="file" onChange={handleFileChange} />
-              <CustomBtn
-                btnColor="black"
-                word="Upload"
-                onClick={() => {
+              {/* <CustomBtn
+                // btnColor="black"
+                // word="Upload"
+                // onClick={() => {
                   // const inputElement = document.querySelector(
                   //   'input[type="file"]'
                   // ) as HTMLInputElement;
                   // inputElement?.click();
-                }}
-              />
+                // }}
+              /> */}
             </div>
             {error && <div className="text-red-500 mt-2">{error}</div>}
           </div>

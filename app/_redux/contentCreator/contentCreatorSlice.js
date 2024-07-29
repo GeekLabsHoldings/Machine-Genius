@@ -31,10 +31,20 @@ function checkAiResultsInit() {
   }
 }
 
+function videoTranscriptionInit() {
+  if (typeof window !== "undefined") {
+    const videoTranscriptionInitValue = sessionStorage.getItem("videoTranscription");
+    return videoTranscriptionInitValue ? JSON.parse(videoTranscriptionInitValue) : null;
+  } else {
+    return null;
+  }
+}
+
 const initialState = {
   finalArticle: finalArticleInit(),
   checkGrammerResults: checkGrammerResultsInit(),
   checkAiResults: checkAiResultsInit(),
+  videoTranscription: videoTranscriptionInit(),
 };
 
 export const contentCreatorSlice = createSlice({
@@ -49,6 +59,9 @@ export const contentCreatorSlice = createSlice({
     },
     setCheckAiResults: (state, action) => {
       state.checkAiResults = action.payload;
+    },
+    setVideoTranscription: (state, action) => {
+      state.videoTranscription = action.payload;
     },
   },
 });
