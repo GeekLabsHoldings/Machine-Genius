@@ -315,6 +315,13 @@ export default function GlobalContextProvider({
     );
     console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
   }, [generatedTitles, lockedGeneratedTitles]);
+
+  const videoTranscription = useSelector(
+    (state: any) => state.contentCreator.videoTranscription
+  );
+  useEffect(() => {
+    sessionStorage.setItem("videoTranscription", JSON.stringify(videoTranscription));
+  }, [videoTranscription]);
   // ===== 01. End Content Creator =====
 
   // Create a context value object

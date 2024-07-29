@@ -19,7 +19,7 @@ const MovieMyth = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("duration", "20");
+      formData.append("duration", "300");
 
       const res = await fetch(
         `https://backendmachinegenius.onrender.com/transcript-audio`,
