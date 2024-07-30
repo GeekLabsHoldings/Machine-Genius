@@ -29,8 +29,6 @@ const Indicator = ({
   setCurrentTime,
   handleSliderChange,
 }: IndicatorProps) => {
-  // const [clicked, setClicked] = useState(highlighted);
-
   const handleClick = () => {
     setHighlighted(id);
     setCurrentTime(start);
@@ -44,7 +42,7 @@ const Indicator = ({
     <div
       className={`indicator ${highlighted ? "clicked" : ""}`}
       style={{
-        left: `${indicatorPercentage + 1}%`,
+        left: `${indicatorPercentage + 0.5}%`,
         width: `${width}%`,
       }}
       onClick={handleClick}
@@ -61,20 +59,47 @@ const VideoPlayer = ({ src, highlightTime }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [percentage, setPercentage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [highlighted, setHighlighted] = useState(0);
 
-  const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
-    setCurrentTime(videoRef.current.currentTime);
-  };
+  useEffect(() => {
+    console.log("Setting up video event listeners");
+    const videoElement = videoRef.current;
+    if (!videoElement) {
+      console.log("Video element not found");
+      return;
+    }
 
-  const handleLoadedMetadata = () => {
-    if (!videoRef.current) return;
-    setDuration(videoRef.current.duration);
-  };
+    const handleTimeUpdate = () => {
+      setCurrentTime(videoElement.currentTime);
+    };
+
+    const handleLoadedMetadata = () => {
+      console.log("Metadata loaded, duration:", videoElement.duration);
+      setDuration(videoElement.duration);
+    };
+
+    if (videoElement.readyState >= 1) {
+      // Metadata is already loaded
+      handleLoadedMetadata();
+    } else {
+      // Metadata not loaded, add event listener
+      videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+    }
+
+    videoElement.addEventListener("timeupdate", handleTimeUpdate);
+    return () => {
+      videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, []);
+
+  useEffect(() => {
+    setPercentage((currentTime / duration) * 100);
+  }, [currentTime, duration]);
 
   const handleSliderChange = (event: any) => {
-    console.log(event.target.value);
     if (!videoRef.current) return;
     const newTime = (event.target.value / 100) * duration;
     videoRef.current.currentTime = newTime;
@@ -92,32 +117,10 @@ const VideoPlayer = ({ src, highlightTime }: VideoPlayerProps) => {
     }
   };
 
-  useEffect(() => {
-    const videoElement = videoRef.current;
-    videoElement?.addEventListener("timeupdate", handleTimeUpdate);
-    videoElement?.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-    return () => {
-      videoElement?.removeEventListener("timeupdate", handleTimeUpdate);
-      videoElement?.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log("duration", duration);
-  }, [duration]);
-
-  const percentage = (currentTime / duration) * 100;
-
-  const [highlighted, setHighlighted] = useState(0);
-
   return (
     <div className="video-player">
       <video ref={videoRef} src={src} controls={false} />
       <div className="controls">
-        {/* <button onClick={handlePlayPause}>
-          {isPlaying ? "Pause" : "Play"}
-        </button> */}
         <div className="slider-container">
           <input
             type="range"
@@ -129,7 +132,7 @@ const VideoPlayer = ({ src, highlightTime }: VideoPlayerProps) => {
               background: `linear-gradient(to right, #FFFFFF ${percentage}%, #959595 ${percentage}%)`,
             }}
           />
-          {highlightTime.map((time, index) => (
+          {highlightTime?.map((time) => (
             <Indicator
               id={time.id}
               start={time.start}
@@ -168,22 +171,39 @@ const VideoPlayer = ({ src, highlightTime }: VideoPlayerProps) => {
               fill="#FFFFFB"
             />
           </svg>
-          <svg
-            width="25"
-            height="34"
-            viewBox="0 0 25 34"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            onClick={handlePlayPause}
-            className="cursor-pointer"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M4.21487 0.687256C1.933 0.687256 0.0810547 2.5392 0.0810547 4.82107V29.6239C0.0810547 31.9058 1.933 33.7578 4.21487 33.7578C6.49673 33.7578 8.34868 31.9058 8.34868 29.6239V4.82107C8.34868 2.5392 6.49673 0.687256 4.21487 0.687256ZM24.8839 4.82107V29.6239C24.8839 31.9058 23.032 33.7578 20.7501 33.7578C18.4683 33.7578 16.6163 31.9058 16.6163 29.6239V4.82107C16.6163 2.5392 18.4683 0.687256 20.7501 0.687256C23.032 0.687256 24.8839 2.5392 24.8839 4.82107Z"
-              fill="#FFFFFB"
-            />
-          </svg>
+          {isPlaying ? (
+            <svg
+              width="25"
+              height="34"
+              viewBox="0 0 25 34"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              onClick={handlePlayPause}
+              className="cursor-pointer"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M4.21487 0.687256C1.933 0.687256 0.0810547 2.5392 0.0810547 4.82107V29.6239C0.0810547 31.9058 1.933 33.7578 4.21487 33.7578C6.49673 33.7578 8.34868 31.9058 8.34868 29.6239V4.82107C8.34868 2.5392 6.49673 0.687256 4.21487 0.687256ZM24.8839 4.82107V29.6239C24.8839 31.9058 23.032 33.7578 20.7501 33.7578C18.4683 33.7578 16.6163 31.9058 16.6163 29.6239V4.82107C16.6163 2.5392 18.4683 0.687256 20.7501 0.687256C23.032 0.687256 24.8839 2.5392 24.8839 4.82107Z"
+                fill="#FFFFFB"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="25"
+              height="34"
+              viewBox="0 0 419 474"
+              onClick={handlePlayPause}
+              className="cursor-pointer"
+              fill="none"
+            >
+              <path
+                d="M402.263 207.896C424.486 220.726 424.486 252.8 402.263 265.63L50 469.01C27.7777 481.84 0 465.803 0 440.143V33.3829C0 7.72291 27.7777 -8.31443 50 4.51557L402.263 207.896Z"
+                fill="#FFFFFB"
+              />
+            </svg>
+          )}
           <svg
             width="39"
             height="34"
