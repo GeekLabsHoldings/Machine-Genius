@@ -48,7 +48,7 @@ const MovieMyth = () => {
 
       const json = await res.json();
       dispatch(contentCreatorActions.setVideoTranscription(json));
-      if (json){
+      if (json) {
         router.replace("/content-creator/create/movie-myth/create-movie");
       }
     } catch (error: any) {
