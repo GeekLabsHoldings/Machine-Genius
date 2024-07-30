@@ -3,6 +3,36 @@ import styles from "./create-movie.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useSelector } from "react-redux";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
+// import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
+const VideoPlayer = dynamic(
+  () => import("@/app/_components/VideoPlayer/VideoPlayer"),
+  {
+    ssr: false,
+  }
+);
+const highlightTime = [
+  {
+    id: 1,
+    start: 1,
+    end: 5,
+  },
+  {
+    id: 2,
+    start: 10,
+    end: 15,
+  },
+  {
+    id: 3,
+    start: 20,
+    end: 25,
+  },
+  {
+    id: 4,
+    start: 30,
+    end: 35,
+  },
+];
 
 const CreateMovie = () => {
   const videoTranscription = useSelector(
@@ -52,7 +82,7 @@ const CreateMovie = () => {
           <div
             className={`${styles.box} flex justify-center items-center ${styles.movieWrapper}`}
           >
-            <div className={styles.videoWrapper}>
+            {/* <div className={styles.videoWrapper}>
               <video
                 ref={videoRef}
                 className="w-full h-full"
@@ -69,7 +99,8 @@ const CreateMovie = () => {
                 />
                 Your browser does not support the video tag.
               </video>
-            </div>
+            </div> */}
+            <VideoPlayer src="/1.mp4" highlightTime={highlightTime} />
           </div>
         </div>
       </div>
