@@ -41,8 +41,7 @@ const MovieMyth = () => {
     } catch (error: any) {
       setError(error.message);
       console.error("Error in uploadVideo:", error);
-    } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   }
 
