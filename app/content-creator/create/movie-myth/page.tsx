@@ -19,10 +19,23 @@ const MovieMyth = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("duration", "150");
+      // formData.append("duration", "59:34:33");
+
+            // Get video duration
+            const videoElement = document.createElement('video');
+            videoElement.src = URL.createObjectURL(file);
+            await new Promise((resolve) => {
+              videoElement.onloadedmetadata = () => {
+                resolve(videoElement.duration);
+              };
+            });
+            const duration = videoElement.duration;
+            formData.append("duration", duration.toString());
+
+            console.log("duration", duration.toString());
 
       const res = await fetch(
-        `https://backendmachinegenius.onrender.com/transcript-audio`,
+        `https://convert-m16z.onrender.com/upload`,
         {
           method: "POST",
           body: formData,

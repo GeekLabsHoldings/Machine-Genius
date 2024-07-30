@@ -11,20 +11,23 @@ const VideoPlayer = dynamic(
     ssr: false,
   }
 );
-const highlightTime = [...videoTranscription?.transcriptionResults]
-  .sort((a, b) => a.part - b.part)
-  .map((e) => {
-    return {
-      id: e.part,
-      start: e["time duration"].split(":")[0],
-      end: e["time duration"].split(":")[1],
-    };
-  });
 
 const CreateMovie = () => {
   const videoTranscription = useSelector(
     (state) => state.contentCreator.videoTranscription
   );
+
+  const highlightTime = videoTranscription?.transcriptionResults
+    .slice() // Create a shallow copy of the array
+    .sort((a, b) => a.part - b.part)
+    .map((e) => {
+      const [start, end] = e["time duration"].split(":");
+      return {
+        id: e.part,
+        start: start.trim(), // Ensure no leading/trailing spaces
+        end: end.trim(), // Ensure no leading/trailing spaces
+      };
+    });
 
   const videoRef = useRef(null);
 
@@ -46,6 +49,7 @@ const CreateMovie = () => {
           >
             {videoTranscription &&
               [...videoTranscription?.transcriptionResults]
+                .slice() // Create a shallow copy of the array
                 .sort((a, b) => a.part - b.part)
                 .map((transcript) => (
                   <div
