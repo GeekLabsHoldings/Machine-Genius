@@ -11,28 +11,15 @@ const VideoPlayer = dynamic(
     ssr: false,
   }
 );
-const highlightTime = [
-  {
-    id: 1,
-    start: 1,
-    end: 5,
-  },
-  {
-    id: 2,
-    start: 10,
-    end: 15,
-  },
-  {
-    id: 3,
-    start: 20,
-    end: 25,
-  },
-  {
-    id: 4,
-    start: 30,
-    end: 35,
-  },
-];
+const highlightTime = [...videoTranscription?.transcriptionResults]
+  .sort((a, b) => a.part - b.part)
+  .map((e) => {
+    return {
+      id: e.part,
+      start: e["time duration"].split(":")[0],
+      end: e["time duration"].split(":")[1],
+    };
+  });
 
 const CreateMovie = () => {
   const videoTranscription = useSelector(
