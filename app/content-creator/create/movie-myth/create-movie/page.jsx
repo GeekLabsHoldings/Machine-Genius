@@ -59,7 +59,7 @@ const CreateMovie = () => {
           >
             {videoTranscription &&
               [...videoTranscription?.transcriptionResults]
-                .reverse()
+                .sort((a, b) => a.part - b.part)
                 .map((transcript) => (
                   <div
                     key={transcript.part}

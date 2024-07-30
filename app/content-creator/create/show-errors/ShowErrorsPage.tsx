@@ -47,36 +47,6 @@ export default function ShowErrorsPage() {
     return preCaretRange.toString().length;
   };
 
-  // const restoreCursorPosition = (position: number | null) => {
-  //   const selection = window.getSelection();
-  //   const range = document.createRange();
-
-  //   if (selection && finalArticleRef.current && position !== null) {
-  //     const textNode = finalArticleRef.current.firstChild;
-
-  //     if (textNode && textNode.nodeType === Node.TEXT_NODE) {
-  //       const textLength = textNode.textContent?.length || 0;
-  //       const validPosition = Math.min(position, textLength);
-
-  //       range.setStart(textNode, validPosition);
-  //       range.setEnd(textNode, validPosition);
-
-  //       selection.removeAllRanges();
-  //       selection.addRange(range);
-
-  //       // Scroll to the cursor position
-  //       setTimeout(() => {
-  //         const tempAnchorEl = document.createElement("br");
-  //         range.insertNode(tempAnchorEl);
-  //         tempAnchorEl.scrollIntoView({
-  //           block: "end", // Change to 'start' if needed
-  //         });
-  //         tempAnchorEl.remove();
-  //       }, 0);
-  //     }
-  //   }
-  // };
-
   const restoreCursorPosition = (position: number | null) => {
     if (position === null || !finalArticleRef.current) {
       return;
@@ -255,65 +225,6 @@ export default function ShowErrorsPage() {
   }, [IsLoading]);
 
   // useEffect(() => {
-  //   if (selectedIssue !== null) {
-  //     setSelectedIssue(null);
-  //   }
-  //   if (issueType !== "") {
-  //     setIssueType("");
-  //   }
-  // }, [finalArticle]);
-
-  // useEffect(() => {
-  //   const handleInput = () => {
-  //     if (finalArticleRef.current) {
-  //       // Save the cursor position
-  //       const selection = window.getSelection();
-  //       const range = selection?.getRangeAt(0);
-  //       const preCaretRange = range?.cloneRange();
-  //       preCaretRange?.selectNodeContents(finalArticleRef.current);
-  //       // if (range) {
-  //       preCaretRange?.setEnd(range?.endContainer, range?.endOffset);
-  //       const cursorPosition = preCaretRange?.toString().length;
-  //       // }
-
-  //       const finalArticleContent = finalArticleRef.current.innerText;
-
-  //       const updatedArticle = {
-  //         ...finalArticle,
-  //         articles: [
-  //           {
-  //             ...finalArticle.articles[0],
-  //             content: finalArticleContent,
-  //           },
-  //         ],
-  //       };
-
-  //       dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-
-  //       // Restore the cursor position
-  //       setTimeout(() => {
-  //         const newRange = document.createRange();
-  //         newRange.setStart(finalArticleRef.current.firstChild, cursorPosition);
-  //         newRange.setEnd(finalArticleRef.current.firstChild, cursorPosition);
-  //         selection.removeAllRanges();
-  //         selection.addRange(newRange);
-  //       }, 0);
-  //     }
-  //   };
-
-  //   const currentRef = finalArticleRef.current;
-  //   if (currentRef) {
-  //     currentRef.addEventListener("input", handleInput);
-  //   }
-
-  //   return () => {
-  //     if (currentRef) {
-  //       currentRef.removeEventListener("input", handleInput);
-  //     }
-  //   };
-  // }, []);
-
-  // useEffect(() => {
   //   const handleBlur = () => {
   //     if (finalArticleRef.current) {
   //       contentRef.current = finalArticleRef.current.innerText;
@@ -329,12 +240,10 @@ export default function ShowErrorsPage() {
   //       dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
   //     }
   //   };
-
   //   const currentRef = finalArticleRef.current;
   //   if (currentRef) {
   //     currentRef.addEventListener("blur", handleBlur);
   //   }
-
   //   return () => {
   //     if (currentRef) {
   //       currentRef.removeEventListener("blur", handleBlur);
@@ -342,28 +251,6 @@ export default function ShowErrorsPage() {
   //   };
   // }, [dispatch, finalArticle]);
 
-  // useEffect(() => {
-  //   if (finalArticleRef.current) {
-  //     const finalArticleContent = finalArticleRef.current.innerText;
-
-  //     const updatedArticle = {
-  //       ...finalArticle,
-  //       articles: [
-  //         {
-  //           ...finalArticle.articles[0],
-  //           content: finalArticleContent,
-  //         },
-  //       ],
-  //     };
-
-  //     dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-  //     console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
-  //   } else {
-  //     console.log(
-  //       "xxxxxxxxxxxxxxxxxx-finalArticleRef.current is null-xxxxxxxxxxxxxxxxxx"
-  //     );
-  //   }
-  // }, [selectedIssue]);
 
   useEffect(() => {
     const handleInput = () => {
