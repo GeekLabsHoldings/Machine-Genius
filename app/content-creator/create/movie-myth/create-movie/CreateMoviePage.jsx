@@ -59,7 +59,7 @@ const CreateMovie = () => {
                       handleTranscriptClick(transcript["time duration"])
                     }
                   >
-                    <p>{transcript.transcription}</p>
+                    <p>{transcript.transcription.content}</p>
                     <span className="self-end">
                       {transcript["time duration"]}
                     </span>
