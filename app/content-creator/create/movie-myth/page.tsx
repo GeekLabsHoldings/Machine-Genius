@@ -22,7 +22,7 @@ const MovieMyth = () => {
       formData.append("duration", "300");
 
       const res = await fetch(
-        `https://backendmachinegenius.onrender.com/transcript-audio`,
+        `http://localhost:3000/transcript-audio`,
         {
           method: "POST",
           body: formData,

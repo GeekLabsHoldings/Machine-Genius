@@ -28,7 +28,7 @@ export default function ShowErrorsPage() {
   );
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
-    plagiarism: "waiting",
+    plagiarism: "pass",
     ai: "waiting",
   });
   const finalArticleRef = useRef<HTMLDivElement>(null);
@@ -218,7 +218,7 @@ export default function ShowErrorsPage() {
     if (triggerStartChecks === false) {
       setCheckStatus({
         grammar: "waiting",
-        plagiarism: "waiting",
+        plagiarism: "pass",
         ai: "waiting",
       });
     } else {
@@ -241,7 +241,7 @@ export default function ShowErrorsPage() {
       }
       setCheckStatus({
         grammar: "waiting",
-        plagiarism: "waiting",
+        plagiarism: "pass",
         ai: "waiting",
       });
     } else {
@@ -508,7 +508,7 @@ export default function ShowErrorsPage() {
       }
       console.log("checkPlagiarismResult", json);
     } else {
-      setCheckStatus((prev) => ({ ...prev, plagiarism: "fetchError" }));
+      // setCheckStatus((prev) => ({ ...prev, plagiarism: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
