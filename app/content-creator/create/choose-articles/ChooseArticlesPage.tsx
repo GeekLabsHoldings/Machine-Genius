@@ -142,7 +142,7 @@ export default function ChooseArticlesPage() {
                   {item?.articleJson.map((ele: any, j: number) => (
                     <div
                       className={`${styles.article_with_check} group`}
-                      style={{ "--module-color": "#2A2B2A" }}
+                      style={{ "--module-color": "#2A2B2A" } as React.CSSProperties}
                       key={`${j}-${ele.title}`}
                     >
                       <CustomCheckBox
@@ -199,7 +199,7 @@ export default function ChooseArticlesPage() {
                   {item?.tweets.map((ele: any, j: number) => (
                     <div
                       className={`${styles.article_with_check} group`}
-                      style={{ "--module-color": "#2A2B2A" }}
+                      style={{ "--module-color": "#2A2B2A" } as React.CSSProperties}
                       key={`${j}-${ele.href}`}
                     >
                       <CustomCheckBox

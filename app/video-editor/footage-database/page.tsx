@@ -74,26 +74,26 @@ const FootageDatabase = () => {
 
             <div className="flex gap-[1.5vw]">
             <div className={`${styles.videoHolder} w-1/2`}>
-            <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+            {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
             </div>
             <div className={`${styles.videoHolder} w-1/2`}>
-            <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+            {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
             </div>
             </div>
             <div className="flex gap-[1.5vw]">
             <div className={`${styles.videoHolder} w-1/2`}>
-            <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+            {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
             </div>
             <div className={`${styles.videoHolder} w-1/2`}>
-            <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+            {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
             </div>
             </div>
             <div className="flex gap-[1.5vw]">
             <div className={`${styles.videoHolder} w-1/2`}>
-            <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+            {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
             </div>
             <div className={`${styles.videoHolder} w-1/2`}>
-            <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+            {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
             </div>
             </div>
 

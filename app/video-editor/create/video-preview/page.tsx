@@ -14,7 +14,7 @@ const VideoPreview = ()=>{
                         <h4>Video Preview:</h4> 
                         {/* display video here */}
                         <div className={`${styles.videoHolder} flex justify-center items-center `}>
-                        <VideoPlayer videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+                        {/* <VideoPlayer videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
                         </div>
                         </div>
                         </div>

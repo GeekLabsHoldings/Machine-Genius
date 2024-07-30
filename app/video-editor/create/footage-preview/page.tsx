@@ -15,7 +15,7 @@ const FootagePreview = () => {
   const renderVideo = () => {
     return (
       <div>
-        <VideoPlayer video={video} autoplay={true} videoUrl={video} />
+        {/* <VideoPlayer video={video} autoplay={true} videoUrl={video} /> */}
       </div>
     );
   };
@@ -48,34 +48,34 @@ const FootagePreview = () => {
               <div className={`${styles.movedCheckbox}`}>
                 <CustomCheckBox value="" type="checkbox" name="choose-footage"/>
               </div>
-              <VideoPlayer
+              {/* <VideoPlayer
                 video={video}
                 setVideo={setVideo}
                 autoplay={false}
                 videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-              />
+              /> */}
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
                 <CustomCheckBox value="" type="checkbox" name="choose-footage" />
               </div>
-              <VideoPlayer
+              {/* <VideoPlayer
                 video={video}
                 setVideo={setVideo}
                 autoplay={false}
                 videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
-              />
+              /> */}
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
                 <CustomCheckBox value="" type="checkbox" name="choose-footage" />
               </div>
-              <VideoPlayer
+              {/* <VideoPlayer
                 video={video}
                 setVideo={setVideo}
                 autoplay={false}
                 videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-              />
+              /> */}
             </div>
           </div>
           {/* preview footage in large area */}

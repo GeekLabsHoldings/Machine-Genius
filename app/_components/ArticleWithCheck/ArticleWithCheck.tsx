@@ -13,7 +13,8 @@ const ArticleWithCheck = ({ article, name, accsentColor }: IProps) => {
   return article ? (
     <div
       className={`${styles.article_with_check} group`}
-      style={{ "--module-color": accsentColor }}
+      // style={{ "--module-color": accsentColor }}
+      style={{ "--module-color": accsentColor } as React.CSSProperties}
     >
       <CustomCheckBox name={name} value={article} accentColor={accsentColor} />
       <label

@@ -14,7 +14,7 @@ const CustomCheckBox = (props: IProps) => {
     <input
       className={`${styles.custom_checkbox} `}
       type="checkbox"
-      style={{ "--module-color": props.accentColor }}
+      style={{ "--module-color": props.accentColor } as React.CSSProperties}
       {...props}
     />
   );

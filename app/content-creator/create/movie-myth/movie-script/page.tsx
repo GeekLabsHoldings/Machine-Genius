@@ -30,7 +30,7 @@ const MovieScript = () => {
                 <div className={`${styles.createMovie} w-7/12 h-full`}>
                     <h3>Preview</h3>
                     <div className={`${styles.box} flex justify-center items-center ${styles.movieWrapper} `}>
-                        <VideoPlayer videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+                        {/* <VideoPlayer videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
                     </div>
                 </div>
             </div>

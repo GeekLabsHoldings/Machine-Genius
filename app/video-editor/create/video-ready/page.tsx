@@ -13,7 +13,7 @@ const VideoReady = ()=>{
                   <h4>Video Preview:</h4> 
                   {/* display final video here */}
                   <div className={`${styles.videoHolder} flex justify-center items-center `}>
-                  <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
+                  {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
                   </div>
                   </div>
                   </div>
