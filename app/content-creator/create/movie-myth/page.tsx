@@ -21,26 +21,23 @@ const MovieMyth = () => {
       formData.append("file", file);
       // formData.append("duration", "59:34:33");
 
-            // Get video duration
-            const videoElement = document.createElement('video');
-            videoElement.src = URL.createObjectURL(file);
-            await new Promise((resolve) => {
-              videoElement.onloadedmetadata = () => {
-                resolve(videoElement.duration);
-              };
-            });
-            const duration = videoElement.duration;
-            formData.append("duration", duration.toString());
+      // Get video duration
+      const videoElement = document.createElement("video");
+      videoElement.src = URL.createObjectURL(file);
+      await new Promise((resolve) => {
+        videoElement.onloadedmetadata = () => {
+          resolve(videoElement.duration);
+        };
+      });
+      const duration = videoElement.duration;
+      formData.append("duration", duration.toString());
 
-            console.log("duration", duration.toString());
+      console.log("duration", duration.toString());
 
-      const res = await fetch(
-        `https://convert-m16z.onrender.com/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const res = await fetch(`https://convert-m16z.onrender.com/upload`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (!res.ok) {
         throw new Error("Failed to upload video");
