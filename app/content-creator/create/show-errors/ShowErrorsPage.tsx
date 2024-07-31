@@ -251,7 +251,6 @@ export default function ShowErrorsPage() {
   //   };
   // }, [dispatch, finalArticle]);
 
-
   useEffect(() => {
     const handleInput = () => {
       if (finalArticleRef.current) {
