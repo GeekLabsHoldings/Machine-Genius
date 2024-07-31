@@ -10,18 +10,17 @@ import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreato
 const MovieMyth = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function uploadVideo(file: File) {
     setIsLoading(true);
     setError(null);
+    setUploadPercentage(0);
     try {
       const formData = new FormData();
       formData.append("file", file);
-      // formData.append("duration", "59:34:33");
-
-      // Get video duration
       const videoElement = document.createElement("video");
       videoElement.src = URL.createObjectURL(file);
       await new Promise((resolve) => {
@@ -34,20 +33,37 @@ const MovieMyth = () => {
 
       console.log("duration", duration.toString());
 
-      const res = await fetch(`https://backendmachinegenius.onrender.com/transcript-audio`, {
-        method: "POST",
-        body: formData,
-      });
+      const xhr = new XMLHttpRequest();
+      xhr.open(
+        "POST",
+        "https://backendmachinegenius.onrender.com/transcript-audio",
+        true
+      );
 
-      if (!res.ok) {
-        throw new Error("Failed to upload video");
-      }
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = (event.loaded / event.total) * 100;
+          setUploadPercentage(percentComplete);
+        }
+      };
 
-      const json = await res.json();
-      dispatch(contentCreatorActions.setVideoTranscription(json));
-      if (json) {
-        router.replace("/content-creator/create/movie-myth/create-movie");
-      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const response = JSON.parse(xhr.responseText);
+          dispatch(contentCreatorActions.setVideoTranscription(response));
+          router.replace("/content-creator/create/movie-myth/create-movie");
+        } else {
+          throw new Error("Failed to upload video");
+          setIsLoading(false);
+        }
+      };
+
+      xhr.onerror = () => {
+        setError("Upload failed due to an error.");
+        setIsLoading(false);
+      };
+
+      xhr.send(formData);
     } catch (error: any) {
       setError(error.message);
       console.error("Error in uploadVideo:", error);
@@ -71,6 +87,9 @@ const MovieMyth = () => {
             textNeeded="Hold on tight."
             title="Genius is working on your article.."
           />
+          <div className="mt-4">
+            Upload Progress: {uploadPercentage.toFixed(2)}%
+          </div>
         </div>
       ) : (
         <>
@@ -78,16 +97,6 @@ const MovieMyth = () => {
             <label className={styles.select_label}>Upload Movie</label>
             <div className={"w-full flex " + styles.uploud_movie}>
               <input type="file" onChange={handleFileChange} />
-              {/* <CustomBtn
-                // btnColor="black"
-                // word="Upload"
-                // onClick={() => {
-                  // const inputElement = document.querySelector(
-                  //   'input[type="file"]'
-                  // ) as HTMLInputElement;
-                  // inputElement?.click();
-                // }}
-              /> */}
             </div>
             {error && <div className="text-red-500 mt-2">{error}</div>}
           </div>
