@@ -91,7 +91,7 @@ const CreateMovie = () => {
                 Your browser does not support the video tag.
               </video>
             </div> */}
-            <VideoPlayer src="/1.mp4" highlightTime={highlightTime} />
+            <VideoPlayer src="/1.mp4" highlightTime={highlightTime} videoRef={videoRef} />
           </div>
         </div>
       </div>

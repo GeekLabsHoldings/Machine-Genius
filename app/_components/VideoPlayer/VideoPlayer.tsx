@@ -53,10 +53,10 @@ const Indicator = ({
 interface VideoPlayerProps {
   src: string;
   highlightTime: { id: number; start: number; end: number }[];
+  videoRef: React.RefObject<HTMLVideoElement>;
 }
 
-const VideoPlayer = ({ src, highlightTime }: VideoPlayerProps) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+const VideoPlayer = ({ src, highlightTime, videoRef }: VideoPlayerProps) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [percentage, setPercentage] = useState(0);
