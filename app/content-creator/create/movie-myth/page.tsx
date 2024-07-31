@@ -34,7 +34,7 @@ const MovieMyth = () => {
 
       console.log("duration", duration.toString());
 
-      const res = await fetch(`https://convert-m16z.onrender.com/upload`, {
+      const res = await fetch(`https://backendmachinegenius.onrender.com/transcript-audio`, {
         method: "POST",
         body: formData,
       });
