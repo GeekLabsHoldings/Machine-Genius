@@ -37,10 +37,10 @@ export default function ShowErrorsPage() {
     if (typeof window !== "undefined") {
       const finalArticleInitValue = sessionStorage.getItem("finalArticle");
       return finalArticleInitValue
-        ? JSON.parse(finalArticleInitValue).articles[0].content
-        : null;
+        ? JSON.parse(finalArticleInitValue)?.articles[0]?.content
+        : finalArticleRef.current?.innerText;
     } else {
-      return null;
+      return finalArticleRef.current?.innerText;
     }
   }
   const finalArticleContentRef = useRef(finalArticleContentInit());
@@ -56,7 +56,7 @@ export default function ShowErrorsPage() {
     };
 
     sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
-  }, [finalArticleContentRef.current]);
+  }, [finalArticle, finalArticleContentRef.current]);
 
   async function startChecks() {
     await checkGrammer();
@@ -65,17 +65,11 @@ export default function ShowErrorsPage() {
     return Promise.resolve();
   }
 
+  // todo
   function handleNavigate() {
     // must be first line.
     if (finalArticleRef.current) {
-      const finalArticleContent = finalArticleRef.current.innerText
-        .replace(/[*#]/g, "") // Remove asterisks and hash symbols
-        .replace(/[’]/g, "'") // Replace right single quotes with regular single quotes
-        .replace(/[‘]/g, "'") // Replace left single quotes with regular single quotes
-        .replace(/[“]/g, '"') // Replace left double quotes with regular double quotes
-        .replace(/[”]/g, '"') // Replace right double quotes with regular double quotes
-        .replace(/\s+/g, " ") // Normalize whitespace to a single space
-        .trim(); // Trim leading and trailing whitespace
+      const finalArticleContent = finalArticleRef.current.innerText;
 
       const updatedArticle = {
         ...finalArticle,
@@ -152,6 +146,7 @@ export default function ShowErrorsPage() {
 
   useEffect(() => {
     const handleInput = () => {
+      console.log("handleInput");
       if (finalArticleRef.current) {
         finalArticleContentRef.current = finalArticleRef.current.innerText;
         const updatedArticle = {
@@ -180,6 +175,7 @@ export default function ShowErrorsPage() {
 
   useEffect(() => {
     const handleBlur = () => {
+      console.log("handleBlur");
       if (typeof window !== undefined) {
         const updatedFinalArticle = sessionStorage.getItem("finalArticle");
         if (updatedFinalArticle) {
