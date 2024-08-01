@@ -7,8 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 
 export default function ShowErrorsPage() {
@@ -31,106 +30,33 @@ export default function ShowErrorsPage() {
     plagiarism: "pass",
     ai: "waiting",
   });
+
   const finalArticleRef = useRef<HTMLDivElement>(null);
 
-  const saveCursorPosition = (): number | null => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0 || !finalArticleRef.current) {
+  function finalArticleContentInit() {
+    if (typeof window !== "undefined") {
+      const finalArticleInitValue = sessionStorage.getItem("finalArticle");
+      return finalArticleInitValue
+        ? JSON.parse(finalArticleInitValue).articles[0].content
+        : null;
+    } else {
       return null;
     }
+  }
+  const finalArticleContentRef = useRef(finalArticleContentInit());
+  useEffect(() => {
+    const updatedArticle = {
+      ...finalArticle,
+      articles: [
+        {
+          ...finalArticle.articles[0],
+          content: finalArticleContentRef.current,
+        },
+      ],
+    };
 
-    const range = selection.getRangeAt(0);
-    const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(finalArticleRef.current);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-
-    return preCaretRange.toString().length;
-  };
-
-  const restoreCursorPosition = (position: number | null) => {
-    if (position === null || !finalArticleRef.current) {
-      return;
-    }
-    // if id=finalArticle have children ?
-
-    if (finalArticleRef.current.children.length > 1) {
-      const selection = window.getSelection();
-      const range = document.createRange();
-
-      if (selection) {
-        const paragraphs = Array.from(
-          finalArticleRef.current.children
-        ) as HTMLElement[];
-        let remainingPosition = position;
-        let found = false;
-
-        for (let i = 0; i < paragraphs.length; i++) {
-          const paragraph = paragraphs[i];
-          if (
-            paragraph.nodeType === Node.ELEMENT_NODE &&
-            paragraph.firstChild
-          ) {
-            const textNode = paragraph.firstChild as Node;
-            const textLength = textNode.textContent?.length || 0;
-
-            if (remainingPosition <= textLength) {
-              // Found the correct paragraph
-              const validPosition = Math.min(remainingPosition, textLength);
-              range.setStart(textNode, validPosition);
-              range.setEnd(textNode, validPosition);
-              found = true;
-              break;
-            } else {
-              remainingPosition -= textLength;
-            }
-          }
-        }
-
-        if (found) {
-          selection.removeAllRanges();
-          selection.addRange(range);
-
-          // Scroll to the cursor position
-          setTimeout(() => {
-            const tempAnchorEl = document.createElement("br");
-            range.insertNode(tempAnchorEl);
-            tempAnchorEl.scrollIntoView({
-              block: "end", // Change to 'start' if needed
-            });
-            tempAnchorEl.remove();
-          }, 0);
-        }
-      }
-    } else {
-      const selection = window.getSelection();
-      const range = document.createRange();
-
-      if (selection && finalArticleRef.current && position !== null) {
-        const textNode = finalArticleRef.current.firstChild;
-
-        if (textNode && textNode.nodeType === Node.TEXT_NODE) {
-          const textLength = textNode.textContent?.length || 0;
-          const validPosition = Math.min(position, textLength);
-
-          range.setStart(textNode, validPosition);
-          range.setEnd(textNode, validPosition);
-
-          selection.removeAllRanges();
-          selection.addRange(range);
-
-          // Scroll to the cursor position
-          setTimeout(() => {
-            const tempAnchorEl = document.createElement("br");
-            range.insertNode(tempAnchorEl);
-            tempAnchorEl.scrollIntoView({
-              block: "end", // Change to 'start' if needed
-            });
-            tempAnchorEl.remove();
-          }, 0);
-        }
-      }
-    }
-  };
+    sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
+  }, [finalArticleContentRef.current]);
 
   async function startChecks() {
     await checkGrammer();
@@ -224,67 +150,70 @@ export default function ShowErrorsPage() {
     }
   }, [IsLoading]);
 
-  // useEffect(() => {
-  //   const handleBlur = () => {
-  //     if (finalArticleRef.current) {
-  //       contentRef.current = finalArticleRef.current.innerText;
-  //       const updatedArticle = {
-  //         ...finalArticle,
-  //         articles: [
-  //           {
-  //             ...finalArticle.articles[0],
-  //             content: contentRef.current,
-  //           },
-  //         ],
-  //       };
-  //       dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-  //     }
-  //   };
-  //   const currentRef = finalArticleRef.current;
-  //   if (currentRef) {
-  //     currentRef.addEventListener("blur", handleBlur);
-  //   }
-  //   return () => {
-  //     if (currentRef) {
-  //       currentRef.removeEventListener("blur", handleBlur);
-  //     }
-  //   };
-  // }, [dispatch, finalArticle]);
-
   useEffect(() => {
     const handleInput = () => {
       if (finalArticleRef.current) {
-        const cursorPosition = saveCursorPosition();
-        const finalArticleContent = finalArticleRef.current.innerText;
-
+        finalArticleContentRef.current = finalArticleRef.current.innerText;
         const updatedArticle = {
           ...finalArticle,
           articles: [
             {
               ...finalArticle.articles[0],
-              content: finalArticleContent,
+              content: finalArticleContentRef.current,
             },
           ],
         };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-        setTimeout(() => {
-          restoreCursorPosition(cursorPosition);
-        }, 0);
+        sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
       }
     };
 
-    const currentRef = finalArticleRef.current;
-    if (currentRef) {
-      currentRef.addEventListener("input", handleInput);
+    if (finalArticleRef.current) {
+      finalArticleRef.current.addEventListener("input", handleInput);
     }
 
     return () => {
-      if (currentRef) {
-        currentRef.removeEventListener("input", handleInput);
+      if (finalArticleRef.current) {
+        finalArticleRef.current.removeEventListener("input", handleInput);
       }
     };
-  }, [finalArticle]);
+  }, [finalArticle, finalArticleContentRef.current]);
+
+  useEffect(() => {
+    const handleBlur = () => {
+      if (typeof window !== undefined) {
+        const updatedFinalArticle = sessionStorage.getItem("finalArticle");
+        if (updatedFinalArticle) {
+          dispatch(
+            contentCreatorActions.setFinalArticle(
+              JSON.parse(updatedFinalArticle)
+            )
+          );
+        }
+      } else {
+        const updatedFinalArticle = {
+          ...finalArticle,
+          articles: [
+            {
+              ...finalArticle.articles[0],
+              content: finalArticleContentRef.current,
+            },
+          ],
+        };
+        dispatch(
+          contentCreatorActions.setFinalArticle(updatedFinalArticle)
+        );
+      }
+    };
+
+    if (finalArticleRef.current) {
+      finalArticleRef.current.addEventListener("blur", handleBlur);
+    }
+    return () => {
+      if (finalArticleRef.current) {
+        finalArticleRef.current.removeEventListener("blur", handleBlur);
+      }
+    };
+  }, [finalArticle, dispatch, finalArticleContentRef.current]);
 
   function highlightText(text: any, start: any, end: any) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
@@ -580,12 +509,8 @@ export default function ShowErrorsPage() {
                   key={index}
                   title="Grammer"
                   onClick={() => {
-                    const cursorPosition = saveCursorPosition();
                     setSelectedIssue(item);
                     setIssueType("grammer");
-                    setTimeout(() => {
-                      restoreCursorPosition(cursorPosition);
-                    }, 0);
                     // console.log("grammer item clicked:", item);
                   }}
                 >
@@ -627,12 +552,8 @@ export default function ShowErrorsPage() {
                   key={index}
                   title="AI"
                   onClick={() => {
-                    const cursorPosition = saveCursorPosition();
                     setSelectedIssue(item);
                     setIssueType("ai");
-                    setTimeout(() => {
-                      restoreCursorPosition(cursorPosition);
-                    }, 0);
                     // console.log("ai item clicked:", item);
                   }}
                 >
