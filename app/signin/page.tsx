@@ -75,7 +75,7 @@ const SignIn = () => {
 
   async function loginToAccount(values: any) {
     try {
-      const res = await fetch(`https://backendmachinegenius.onrender.com/user/login`, {
+      const res = await fetch(`https://backendmachinegenius.onrender.com/authentication`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
