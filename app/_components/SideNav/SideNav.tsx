@@ -43,7 +43,7 @@ const rolsIcon = (
 );
 
 const rols = [
-  "Content Writer",
+  "ContentCreator",
   "Video Editing",
   "Social Media",
   "Administrative",
@@ -185,7 +185,7 @@ const SideNav = ({
         <div className={styles.line}></div>
 
         <CustomSelectInput
-          options={rols.filter((role: any) => role === decodedToken?.department)}
+          options={rols.filter((role: any) => role === decodedToken?.department[0])}
           icon={rolsIcon}
           theme="dark"
           whenSideNavClosed={!isSideNavOpen}

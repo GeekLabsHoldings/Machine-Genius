@@ -75,7 +75,7 @@ const SignIn = () => {
 
   async function loginToAccount(values: any) {
     try {
-      const res = await fetch(`https://backendmachinegenius.onrender.com/authentication`, {
+      const res = await fetch(`https://machine-genius.onrender.com/authentication`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ const SignIn = () => {
         throw new Error("Failed to fetch data");
       }
       const json = await res.json();
-      if (json.message === "Loged in succcefully") {
+      if (json.message === "Logged in successfully") {
         setTokenAsync(json);  
         setTimeout(() => {
           handleLogin();
@@ -122,33 +122,34 @@ const SignIn = () => {
   }, []);
 
   function handleSetRouteToDirect() {
-    if (decodedToken?.department === "Content Writer") {
+    if (decodedToken?.department.includes("ContentCreator")) {
       return "/content-creator/dashboard";
-    } else if (decodedToken?.department === "Video Editing") {
+    } else if (decodedToken?.department.includes("Video Editing")) {
       return "/video-editor/dashboard";
-    } else if (decodedToken?.department === "Social Media") {
+    } else if (decodedToken?.department.includes("Social Media")) {
       return "/social-media/dashboard";
-    } else if (decodedToken?.department === "Administrative") {
+    } else if (decodedToken?.department.includes("Administrative")) {
       return "/administrative/dashboard";
-    } else if (decodedToken?.department === "Customer Service") {
+    } else if (decodedToken?.department.includes("Customer Service")) {
       return "/customer-service/dashboard";
-    } else if (decodedToken?.department === "Creative") {
+    } else if (decodedToken?.department.includes("Creative")) {
       return "/creative/dashboard";
-    } else if (decodedToken?.department === "HR") {
+    } else if (decodedToken?.department.includes("HR")) {
       return "/hr/dashboard";
-    } else if (decodedToken?.department === "Accounting") {
+    } else if (decodedToken?.department.includes("Accounting")) {
       return "/accounting/dashboard";
-    } else if (decodedToken?.department === "Newsletter") {
+    } else if (decodedToken?.department.includes("Newsletter")) {
       return "/newsletter/dashboard";
-    } else if (decodedToken?.department === "Out Reach") {
+    } else if (decodedToken?.department.includes("Out Reach")) {
       return "/outreach/dashboard";
-    } else if (decodedToken?.department === "SEO") {
+    } else if (decodedToken?.department.includes("SEO")) {
       return "/seo/dashboard";
-    } else if (decodedToken?.department === "OP") {
+    } else if (decodedToken?.department.includes("OP")) {
       return "/op/dashboard";
     }
     return "/"; // Default return value
   }
+
 
   function handleNavToDashboard() {
     const route = handleSetRouteToDirect();

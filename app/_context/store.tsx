@@ -52,7 +52,7 @@ export default function GlobalContextProvider({
   // ===== 00. Start Authentication =====
   function handleSetRouteToDirect(role: string) {
     switch (role) {
-      case "Content Writer":
+      case "ContentCreator":
         return "/content-creator/dashboard";
       case "Video Editing":
         return "/video-editor/dashboard";
@@ -104,7 +104,7 @@ export default function GlobalContextProvider({
 
   async function checkIfUserOnCorrespondingRoute() {
     // if (decodedToken) {
-    const role = decodedToken?.department;
+    const role = decodedToken?.department[0];
     const correspondingRoutePath = handleSetRouteToDirect(role).split("/")[1];
     console.log(`correspondingRoutePath:`, correspondingRoutePath);
     console.log(`currentpath:`, path);
