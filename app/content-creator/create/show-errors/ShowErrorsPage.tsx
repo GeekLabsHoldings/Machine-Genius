@@ -195,9 +195,7 @@ export default function ShowErrorsPage() {
             },
           ],
         };
-        dispatch(
-          contentCreatorActions.setFinalArticle(updatedFinalArticle)
-        );
+        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
     };
 
@@ -452,7 +450,7 @@ export default function ShowErrorsPage() {
               <h1 className="mx-auto font-bold text-2xl">
                 {finalArticle?.articles[0]?.title}
               </h1>
-
+              {/* 
               <div
                 id="finalArticle"
                 ref={finalArticleRef}
@@ -486,6 +484,16 @@ export default function ShowErrorsPage() {
                 ) : (
                   <p>{finalArticle?.articles[0]?.content}</p>
                 )}
+              </div> */}
+
+              <div
+                id="finalArticle"
+                ref={finalArticleRef}
+                contentEditable={true}
+                className={`${styles.articleContent}`}
+                // onInput={handleInput}
+              >
+                <p>{finalArticle?.articles[0]?.content}</p>
               </div>
             </div>
           </div>
