@@ -108,7 +108,7 @@ export default function GlobalContextProvider({
     const correspondingRoutePath = handleSetRouteToDirect(role).split("/")[1];
     console.log(`correspondingRoutePath:`, correspondingRoutePath);
     console.log(`currentpath:`, path);
-    if (!path.includes(correspondingRoutePath)) {
+    if (!path.includes(correspondingRoutePath) && !decodedToken?.department.includes("*")) {
       const correspondingRoute = handleSetRouteToDirect(role);
       router.replace(correspondingRoute);
       console.log("~~~---***INvalid path***---~~~", path);

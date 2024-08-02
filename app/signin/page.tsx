@@ -5,14 +5,15 @@ import styles from "./signin.module.css"; // Stylesheet for SignIn component
 import logoTextImg from "@/public/assets/welcome logo.svg"; // Image asset for welcome logo text
 import logo_image from "@/public/assets/logo.svg"; // Image asset for logo
 import Image from "next/image"; // Image component from Next.js
-import { useRouter } from 'next/navigation'; // Importing useRouter hook from Next.js
+import { useRouter } from "next/navigation"; // Importing useRouter hook from Next.js
 import { useFormik } from "formik";
 import { globalContext } from "@/app/_context/store";
 import { JwtPayload, jwtDecode } from "jwt-decode";
 
 // SignIn component
 const SignIn = () => {
-  const { token, setToken, decodedToken, setDecodedToken } = useContext(globalContext);
+  const { token, setToken, decodedToken, setDecodedToken } =
+    useContext(globalContext);
   // State to manage animation
   const [StartAnimation, setStartAnimation] = useState(false);
   // State to manage showing sign-in form
@@ -26,20 +27,20 @@ const SignIn = () => {
     password: "",
   };
 
-  function setTokenAsync(json:any){
+  function setTokenAsync(json: any) {
     setToken(json.logged_in_token);
-    console.log("01. setTokenAsync");    
+    console.log("01. setTokenAsync");
   }
 
   function setDecodedTokenAsync() {
     const decoded = jwtDecode<JwtPayload>(token);
     setDecodedToken(decoded);
     console.log("02. setDecodedTokenAsync");
-}
+  }
 
-  function setTokenInLocalStorageAsync(){
+  function setTokenInLocalStorageAsync() {
     if (typeof window !== "undefined") {
-      console.log("03. Set Tokens in localStorage")
+      console.log("03. Set Tokens in localStorage");
       localStorage.setItem("token", token);
       localStorage.setItem("decodedToken", JSON.stringify(decodedToken));
     }
@@ -49,45 +50,52 @@ const SignIn = () => {
   function handleLogin() {
     console.log("04. handleLogin");
     let logInLogo: any = document.querySelector(".signin-wrapper img");
-    if (logInLogo){
+    if (logInLogo) {
       logInLogo.style.transform = "scale(150)";
-    }    
+    }
     setShowWelcomeMesage(true);
     // Redirect to dashboard after a delay
     // setTimeout(() => {
     //     router.push('')
     // }, 500); // 3000 milliseconds = 3 seconds
-  };
+  }
 
-  useEffect(()=>{
-    if (token){handleNavToDashboard();}
-  }, [])
+  useEffect(() => {
+    if (token) {
+      handleNavToDashboard();
+    }
+  }, []);
 
-  useEffect(()=>{
-    if(token){setDecodedTokenAsync();}   
-  },[token])
+  useEffect(() => {
+    if (token) {
+      setDecodedTokenAsync();
+    }
+  }, [token]);
 
-  useEffect(()=>{
-    if(decodedToken){
+  useEffect(() => {
+    if (decodedToken) {
       setTokenInLocalStorageAsync();
     }
-  },[decodedToken])
+  }, [decodedToken]);
 
   async function loginToAccount(values: any) {
     try {
-      const res = await fetch(`https://machine-genius.onrender.com/authentication`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      const res = await fetch(
+        `https://machine-genius.onrender.com/authentication`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
       const json = await res.json();
       if (json.message === "Logged in successfully") {
-        setTokenAsync(json);  
+        setTokenAsync(json);
         setTimeout(() => {
           handleLogin();
         }, 1);
@@ -122,7 +130,10 @@ const SignIn = () => {
   }, []);
 
   function handleSetRouteToDirect() {
-    if (decodedToken?.department.includes("ContentCreator")) {
+    if (
+      decodedToken?.department.includes("ContentCreator") ||
+      decodedToken?.department.includes("*")
+    ) {
       return "/content-creator/dashboard";
     } else if (decodedToken?.department.includes("Video Editing")) {
       return "/video-editor/dashboard";
@@ -149,7 +160,6 @@ const SignIn = () => {
     }
     return "/"; // Default return value
   }
-
 
   function handleNavToDashboard() {
     const route = handleSetRouteToDirect();

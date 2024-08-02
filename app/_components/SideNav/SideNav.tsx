@@ -100,7 +100,7 @@ const SideNav = ({
   };
 
   useEffect(() => {
-    if (SelectedRole === "Content Writer") {
+    if (SelectedRole === "ContentCreator") {
       localStorage.setItem("selected-role", SelectedRole);
       router.push("/content-creator/dashboard");
     } else if (SelectedRole === "Video Editing") {
@@ -185,7 +185,11 @@ const SideNav = ({
         <div className={styles.line}></div>
 
         <CustomSelectInput
-          options={rols.filter((role: any) => role === decodedToken?.department[0])}
+          options={
+            decodedToken?.department.includes("*")
+              ? rols
+              : rols.filter((role: any) => role === decodedToken?.department[0])
+          }
           icon={rolsIcon}
           theme="dark"
           whenSideNavClosed={!isSideNavOpen}
