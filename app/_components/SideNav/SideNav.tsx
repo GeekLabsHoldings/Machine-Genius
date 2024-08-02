@@ -155,12 +155,12 @@ const SideNav = ({
           >
             <div className={styles.avatar + " " + styles.active}></div>
             <div className="flex flex-col">
-              <h6>John Doe</h6>
+              <h6>{decodedToken?.email.split("@")[0]}</h6>
               <p>
-                {typeof window !== "undefined" &&
-                localStorage.getItem("selected-role") === null
-                  ? "Content Creator"
-                  : localStorage.getItem("selected-role")}
+                {typeof window !== "undefined"
+                  ? localStorage.getItem("selected-role") ??
+                    decodedToken?.department[0]
+                  : decodedToken?.department[0]}
               </p>
             </div>
           </div>
@@ -196,8 +196,9 @@ const SideNav = ({
           getValue={getRole}
           label={
             typeof window !== "undefined"
-              ? localStorage.getItem("selected-role") ?? "Content Creator"
-              : "Content Creator"
+              ? localStorage.getItem("selected-role") ??
+                decodedToken?.department[0]
+              : decodedToken?.department[0]
           }
         />
 
