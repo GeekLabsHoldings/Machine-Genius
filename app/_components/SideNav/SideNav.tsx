@@ -194,6 +194,11 @@ const SideNav = ({
           theme="dark"
           whenSideNavClosed={!isSideNavOpen}
           getValue={getRole}
+          label={
+            typeof window !== "undefined"
+              ? localStorage.getItem("selected-role") ?? "Content Creator"
+              : "Content Creator"
+          }
         />
 
         <div className={styles.line}></div>
