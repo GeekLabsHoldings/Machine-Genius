@@ -9,9 +9,12 @@ import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
 import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
@@ -49,7 +52,7 @@ export default function ShowErrorsPage() {
       ...finalArticle,
       articles: [
         {
-          ...finalArticle.articles[0],
+          ...finalArticle?.articles[0],
           content: finalArticleContentRef.current,
         },
       ],
@@ -92,17 +95,19 @@ export default function ShowErrorsPage() {
     setTriggerStartChecks(true);
   }
 
-  // useEffect(() => {
-  // ===== log data =====
-  // console.log("finalArticle:", finalArticle);
-  // ===== if there is no data, redirect to the choose brand page =====
-  // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
-  // window.alert(
-  //   "No data is available. You will be redirected to refetch new data!"
-  // );
-  // router.push("/content-creator/create/choose-brand");
-  // }
-  // }, []);
+  useEffect(() => {
+    // ===== log data =====
+    // console.log("finalArticle:", finalArticle);
+    // ===== if there is no data, redirect to the choose brand page =====
+    if (!finalArticle) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   useEffect(() => {
     if (triggerStartChecks === false) {
