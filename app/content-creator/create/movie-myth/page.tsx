@@ -64,7 +64,7 @@ const MovieMyth = () => {
       xhr.send(formData);
     } catch (error: any) {
       toast.error("Something went wrong! Contact backend department");
-      setError(error.message);
+      setError(error?.message);
       console.error("Error in uploadVideo:", error);
       setIsLoading(false);
     }
