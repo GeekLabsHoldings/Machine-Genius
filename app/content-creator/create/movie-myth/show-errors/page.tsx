@@ -10,6 +10,7 @@ import HighlightedContent from "@/app/_components/HighlightedContent/Highlighted
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 
 const ShowErrors = () => {
   const dispatch = useDispatch();
@@ -321,6 +322,7 @@ const ShowErrors = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
@@ -379,6 +381,7 @@ const ShowErrors = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -431,6 +434,7 @@ const ShowErrors = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;

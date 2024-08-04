@@ -180,6 +180,7 @@ export default function CreateArticlePage() {
             break;
           }
         } catch (error) {
+          toast.error("Something went wrong! Contact backend department");
           console.error("Error finalizeContent:", error);
         } finally {
           attempts++;

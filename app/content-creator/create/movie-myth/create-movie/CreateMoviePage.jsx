@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 // import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
 const VideoPlayer = dynamic(
   () => import("@/app/_components/VideoPlayer/VideoPlayer"),
@@ -149,6 +150,7 @@ const CreateMovie = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error finalizeContent:", error);
       } finally {
         attempts++;

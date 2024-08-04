@@ -154,6 +154,7 @@ export default function ChooseBrandPage() {
       const json = await res.json();
       await setTwitterDataAsync(json.allArticles);
     } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
       console.error("Error getCollectedData:", error);
     }
   }
