@@ -81,10 +81,10 @@ export default function ChooseBrandPage() {
     console.log(`selectedBrand:`, selectedBrand);
   }, [selectedBrand]);
 
-  async function setCollectedDataAsync(json: any) {
-    setCollectedData(json.organizedArticles);
-    return Promise.resolve(); // Ensure this function is awaited properly
-  }
+  // async function setCollectedDataAsync(json: any) {
+  //   setCollectedData(json.organizedArticles);
+  //   return Promise.resolve(); // Ensure this function is awaited properly
+  // }
 
   async function getCollectedData() {
     let postBody: any = {};
@@ -128,7 +128,8 @@ export default function ChooseBrandPage() {
     }
 
     if (json?.organizedArticles) {
-      await setCollectedDataAsync(json);
+      // await setCollectedDataAsync(json);
+      setCollectedData(json.organizedArticles);
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
@@ -165,9 +166,7 @@ export default function ChooseBrandPage() {
     if (selectedBrand === "Investorcracy") {
       // await getTwitterData();
     }
-    if (collectedData) {
-      router.replace("/content-creator/create/choose-articles");
-    }
+    router.replace("/content-creator/create/choose-articles");
   }
 
   if (IsLoading) {
