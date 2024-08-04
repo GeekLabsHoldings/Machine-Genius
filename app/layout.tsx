@@ -36,8 +36,9 @@ export default function RootLayout({
           </GlobalContextProvider>
         </Provider>
         <Toaster
+          position="top-center"
           containerStyle={{
-            top: 58.5,
+            zIndex: 91474836471,
           }}
         />
         <Offline>
