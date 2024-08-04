@@ -193,11 +193,6 @@ const CreateMovie = () => {
     let clientX, clientY;
 
     if (articleContent && button) {
-      articleContent.addEventListener("mousedown", function (event) {
-        clientX = event.pageX;
-        clientY = event.pageY;
-      });
-
       articleContent.addEventListener("mouseup", () => {
         let selectionFromDocument = document.getSelection();
         let textValue = selectionFromDocument.toString();
@@ -205,39 +200,14 @@ const CreateMovie = () => {
         if (textValue == "") {
           button.style.display = "none";
         } else {
-          // Get coOrdinates of the content div
-          let coOrdinates = articleContent.getBoundingClientRect();
-
-          // Calculate button dimensions
-          let buttonWidth = button.offsetWidth;
-          let buttonHeight = button.offsetHeight;
-
-          // Calculate maximum allowable positions
-          let maxPosX = coOrdinates.right - buttonWidth;
-          let maxPosY = coOrdinates.bottom - buttonHeight;
-
-          // Constrain posX and posY
-          let posX = Math.min(
-            Math.max(clientX - Math.round(coOrdinates.left), 0),
-            maxPosX
-          );
-          let posY = Math.min(
-            Math.max(clientY - Math.round(coOrdinates.top) - 40, 0),
-            maxPosY
-          );
-
           // Set the display style of the button to block
           button.style.display = "block";
-          // Set the position of the button
-          button.style.left = posX + "px";
-          button.style.top = posY + "px";
         }
       });
     }
 
     return () => {
       if (articleContent && button) {
-        articleContent.removeEventListener("mousedown", () => {});
         articleContent.removeEventListener("mouseup", () => {});
       }
     };
@@ -262,15 +232,6 @@ const CreateMovie = () => {
   return (
     <div className="flex flex-col gap-[1vw]">
       <div className="flex justify-center items-center pageHeader h-[75vh] py-[1.5vw] w-full gap-[2vw]">
-        <button
-          id="highlight-btn"
-          className={`${styles.highlightBtn}`}
-          onClick={() => {
-            handleSelectedText();
-          }}
-        >
-          Select
-        </button>
         {/* transcript section */}
         <div
           className={`${styles.createMovie} w-5/12 h-full`}
@@ -305,6 +266,15 @@ const CreateMovie = () => {
                     </div>
                   );
                 })}
+            <button
+              id="highlight-btn"
+              className={`${styles.highlightBtn}`}
+              onClick={() => {
+                handleSelectedText();
+              }}
+            >
+              Select
+            </button>
           </div>
         </div>
         {/* section to display your selected movie */}
