@@ -168,7 +168,6 @@ const CreateMovie = () => {
     }
   }
 
-
   const handleSelectedText = () => {
     const button = document.getElementById("highlight-btn");
     const selection = window.getSelection();
@@ -334,7 +333,12 @@ const CreateMovie = () => {
           btnColor="black"
           // href={"/content-creator/create/movie-myth/final-movie"}
           onClick={() => {
-            finalizeContent();
+            // console.log(selectedText);
+            if (!selectedText.some((e) => e.text.length > 0)) {
+              toast.error("Please select some text to continue!");
+            } else {
+              finalizeContent();
+            }
           }}
         />
       </div>
