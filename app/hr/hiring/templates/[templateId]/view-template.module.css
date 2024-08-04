@@ -110,3 +110,7 @@
     max-height: unset;
     overflow-y: unset;
 }
+.card_body ol {
+    list-style: disc;
+    margin-left: 1vw;
+}
