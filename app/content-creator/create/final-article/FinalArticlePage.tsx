@@ -9,9 +9,12 @@ import { useContext } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function FinalArticlePage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
 
@@ -31,21 +34,16 @@ export default function FinalArticlePage() {
   //   console.log("finalArticle", finalArticle);
   // }, []);
 
-  // useEffect(() => {
-  //   if (
-  //     !finalArticle &&
-  //     !sessionStorage.getItem("finalArticle")
-  // ||
-  // !finalArticle.articles[0] ||
-  // !finalArticle.articles[0]?.content ||
-  // finalArticle.success !== true
-  // ) {
-  // window.alert(
-  //   "No data is available. You will be redirected to refetch new data!"
-  // );
-  // router.push("/content-creator/create/choose-brand");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!finalArticle) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   // async function setIsLoadingAsync() {
   //   setIsLoading(true);
@@ -131,6 +129,7 @@ export default function FinalArticlePage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
@@ -190,6 +189,7 @@ export default function FinalArticlePage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -242,6 +242,7 @@ export default function FinalArticlePage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;

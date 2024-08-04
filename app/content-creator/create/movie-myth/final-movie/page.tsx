@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 
 const FinalMovie = () => {
   const dispatch = useDispatch();
@@ -105,6 +106,7 @@ const FinalMovie = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
@@ -164,6 +166,7 @@ const FinalMovie = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -216,6 +219,7 @@ const FinalMovie = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;

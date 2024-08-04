@@ -6,8 +6,11 @@ import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import { globalContext } from "@/app/_context/store";
 import { useContext, useEffect, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function ChooseArticlesPage() {
+  const router = useRouter();
   // favorite icon
   const favIcon = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
@@ -66,16 +69,18 @@ export default function ChooseArticlesPage() {
     setTwitterData,
   } = useContext(globalContext);
 
-  // useEffect(() => {
+  useEffect(() => {
     // console.log("collectedData:", collectedData);
+    if (!collectedData) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
 
-    // if (!collectedData && !sessionStorage.getItem("collectedData")) {
-      // window.alert(
-      //   "No data is available. You will be redirected to refetch new data!"
-      // );
-      // router.push("/content-creator/create/choose-brand");
-  //   }
-  // }, []);
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   useEffect(() => {
     console.log("choosedArticles:", choosedArticles);
@@ -142,7 +147,9 @@ export default function ChooseArticlesPage() {
                   {item?.articleJson.map((ele: any, j: number) => (
                     <div
                       className={`${styles.article_with_check} group`}
-                      style={{ "--module-color": "#2A2B2A" } as React.CSSProperties}
+                      style={
+                        { "--module-color": "#2A2B2A" } as React.CSSProperties
+                      }
                       key={`${j}-${ele.title}`}
                     >
                       <CustomCheckBox
@@ -184,65 +191,64 @@ export default function ChooseArticlesPage() {
                 </TopicColapse>
               ))}
 
-
-{twitterData && twitterData
-              ?.filter((item: any) => item.tweets.length > 0)
-              .map((item: any, i: number) => (
-                <TopicColapse
-                  forComments={false}
-                  svgBtn={favIcon}
-                  title={item.account}
-                  key={`${i}-${item.account}`}
-                  date={"April 16th 2024"}
-                  hasCheckedArticles={() => hasCheckedArticles(i)}
-                >
-                  {item?.tweets.map((ele: any, j: number) => (
-                    <div
-                      className={`${styles.article_with_check} group`}
-                      style={{ "--module-color": "#2A2B2A" } as React.CSSProperties}
-                      key={`${j}-${ele.href}`}
-                    >
-                      <CustomCheckBox
-                        name="select-articles"
-                        value={ele?.href}
-                        accentColor="#2A2B2A"
-                        onChange={() => {
-                          // setChoosedArticles((prevArticles: any) => [
-                          //   ...prevArticles,
-                          //   ele,
-                          // ])
-
-                          setChoosedArticles((prevArticles: any) => {
-                            if (
-                              prevArticles.some(
-                                (article: any) => article.href === ele.href
-                              )
-                            ) {
-                              return prevArticles.filter(
-                                (article: any) => article.href !== ele.href
-                              );
-                            } else {
-                              return [...prevArticles, ele];
-                            }
-                          });
-                        }}
-                        checked={choosedArticles.some(
-                          (article: any) => article.href === ele.href
-                        )}
-                      />
-                      <label
-                        className={`${styles.article}`}
-                        onClick={() => setPreviewText(ele.content)}
+            {twitterData &&
+              twitterData
+                ?.filter((item: any) => item.tweets.length > 0)
+                .map((item: any, i: number) => (
+                  <TopicColapse
+                    forComments={false}
+                    svgBtn={favIcon}
+                    title={item.account}
+                    key={`${i}-${item.account}`}
+                    date={"April 16th 2024"}
+                    hasCheckedArticles={() => hasCheckedArticles(i)}
+                  >
+                    {item?.tweets.map((ele: any, j: number) => (
+                      <div
+                        className={`${styles.article_with_check} group`}
+                        style={
+                          { "--module-color": "#2A2B2A" } as React.CSSProperties
+                        }
+                        key={`${j}-${ele.href}`}
                       >
-                        {ele?.content}
-                      </label>
-                    </div>
-                  ))}
-                </TopicColapse>
-              ))}
+                        <CustomCheckBox
+                          name="select-articles"
+                          value={ele?.href}
+                          accentColor="#2A2B2A"
+                          onChange={() => {
+                            // setChoosedArticles((prevArticles: any) => [
+                            //   ...prevArticles,
+                            //   ele,
+                            // ])
 
-
-
+                            setChoosedArticles((prevArticles: any) => {
+                              if (
+                                prevArticles.some(
+                                  (article: any) => article.href === ele.href
+                                )
+                              ) {
+                                return prevArticles.filter(
+                                  (article: any) => article.href !== ele.href
+                                );
+                              } else {
+                                return [...prevArticles, ele];
+                              }
+                            });
+                          }}
+                          checked={choosedArticles.some(
+                            (article: any) => article.href === ele.href
+                          )}
+                        />
+                        <label
+                          className={`${styles.article}`}
+                          onClick={() => setPreviewText(ele.content)}
+                        >
+                          {ele?.content}
+                        </label>
+                      </div>
+                    ))}
+                  </TopicColapse>
+                ))}
           </div>
         </div>
 

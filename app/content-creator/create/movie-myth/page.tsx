@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 
 const MovieMyth = () => {
   const dispatch = useDispatch();
@@ -52,9 +53,6 @@ const MovieMyth = () => {
           const response = JSON.parse(xhr.responseText);
           dispatch(contentCreatorActions.setVideoTranscription(response));
           router.replace("/content-creator/create/movie-myth/create-movie");
-        } else {
-          throw new Error("Failed to upload video");
-          setIsLoading(false);
         }
       };
 
@@ -65,7 +63,8 @@ const MovieMyth = () => {
 
       xhr.send(formData);
     } catch (error: any) {
-      setError(error.message);
+      toast.error("Something went wrong! Contact backend department");
+      setError(error?.message);
       console.error("Error in uploadVideo:", error);
       setIsLoading(false);
     }

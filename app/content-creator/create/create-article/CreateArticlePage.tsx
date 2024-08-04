@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 
 export default function CreateArticlePage() {
   const dispatch = useDispatch();
@@ -131,7 +132,7 @@ export default function CreateArticlePage() {
 
   async function finalizeContent() {
     if (selectedText.length === 0) {
-      // window.alert("Please select at least one article!");
+      toast.error("Please select at least one article!");
       return;
     } else {
       let brandNamePayload = "";
@@ -179,6 +180,7 @@ export default function CreateArticlePage() {
             break;
           }
         } catch (error) {
+          toast.error("Something went wrong! Contact backend department");
           console.error("Error finalizeContent:", error);
         } finally {
           attempts++;
@@ -248,16 +250,6 @@ export default function CreateArticlePage() {
   }, [choosedArticles]);
 
   useEffect(() => {
-    // if (
-      // (!collectedData || choosedArticles.length === 0) &&
-      // !sessionStorage.getItem("choosedArticles")
-    // ) {
-      // window.alert(
-      //   "No data is available. You will be redirected to refetch new data!"
-      // );
-      // router.push("/content-creator/create/choose-brand");
-    // }
-
     const button = document.getElementById("highlight-btn");
     const articleContent = document.querySelector("#article-content");
     let clientX: any, clientY: any;
@@ -311,6 +303,17 @@ export default function CreateArticlePage() {
         articleContent.removeEventListener("mouseup", () => {});
       }
     };
+  }, []);
+
+  useEffect(() => {
+    if (!collectedData) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
   }, []);
 
   if (IsLoading) {

@@ -7,12 +7,14 @@ import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-const ShowErrors = () => {
+export default function ShowErrorsPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
@@ -31,106 +33,33 @@ const ShowErrors = () => {
     plagiarism: "pass",
     ai: "waiting",
   });
+
   const finalArticleRef = useRef<HTMLDivElement>(null);
 
-  const saveCursorPosition = (): number | null => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0 || !finalArticleRef.current) {
-      return null;
-    }
-
-    const range = selection.getRangeAt(0);
-    const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(finalArticleRef.current);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-
-    return preCaretRange.toString().length;
-  };
-
-  const restoreCursorPosition = (position: number | null) => {
-    if (position === null || !finalArticleRef.current) {
-      return;
-    }
-    // if id=finalArticle have children ?
-
-    if (finalArticleRef.current.children.length > 1) {
-      const selection = window.getSelection();
-      const range = document.createRange();
-
-      if (selection) {
-        const paragraphs = Array.from(
-          finalArticleRef.current.children
-        ) as HTMLElement[];
-        let remainingPosition = position;
-        let found = false;
-
-        for (let i = 0; i < paragraphs.length; i++) {
-          const paragraph = paragraphs[i];
-          if (
-            paragraph.nodeType === Node.ELEMENT_NODE &&
-            paragraph.firstChild
-          ) {
-            const textNode = paragraph.firstChild as Node;
-            const textLength = textNode.textContent?.length || 0;
-
-            if (remainingPosition <= textLength) {
-              // Found the correct paragraph
-              const validPosition = Math.min(remainingPosition, textLength);
-              range.setStart(textNode, validPosition);
-              range.setEnd(textNode, validPosition);
-              found = true;
-              break;
-            } else {
-              remainingPosition -= textLength;
-            }
-          }
-        }
-
-        if (found) {
-          selection.removeAllRanges();
-          selection.addRange(range);
-
-          // Scroll to the cursor position
-          setTimeout(() => {
-            const tempAnchorEl = document.createElement("br");
-            range.insertNode(tempAnchorEl);
-            tempAnchorEl.scrollIntoView({
-              block: "end", // Change to 'start' if needed
-            });
-            tempAnchorEl.remove();
-          }, 0);
-        }
-      }
+  function finalArticleContentInit() {
+    if (typeof window !== "undefined") {
+      const finalArticleInitValue = sessionStorage.getItem("finalArticle");
+      return finalArticleInitValue
+        ? JSON.parse(finalArticleInitValue)?.articles[0]?.content
+        : finalArticleRef.current?.innerText;
     } else {
-      const selection = window.getSelection();
-      const range = document.createRange();
-
-      if (selection && finalArticleRef.current && position !== null) {
-        const textNode = finalArticleRef.current.firstChild;
-
-        if (textNode && textNode.nodeType === Node.TEXT_NODE) {
-          const textLength = textNode.textContent?.length || 0;
-          const validPosition = Math.min(position, textLength);
-
-          range.setStart(textNode, validPosition);
-          range.setEnd(textNode, validPosition);
-
-          selection.removeAllRanges();
-          selection.addRange(range);
-
-          // Scroll to the cursor position
-          setTimeout(() => {
-            const tempAnchorEl = document.createElement("br");
-            range.insertNode(tempAnchorEl);
-            tempAnchorEl.scrollIntoView({
-              block: "end", // Change to 'start' if needed
-            });
-            tempAnchorEl.remove();
-          }, 0);
-        }
-      }
+      return finalArticleRef.current?.innerText;
     }
-  };
+  }
+  const finalArticleContentRef = useRef(finalArticleContentInit());
+  useEffect(() => {
+    const updatedArticle = {
+      ...finalArticle,
+      articles: [
+        {
+          ...finalArticle?.articles[0],
+          content: finalArticleContentRef.current,
+        },
+      ],
+    };
+
+    sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
+  }, [finalArticle, finalArticleContentRef.current]);
 
   async function startChecks() {
     await checkGrammer();
@@ -139,17 +68,11 @@ const ShowErrors = () => {
     return Promise.resolve();
   }
 
+  // todo
   function handleNavigate() {
     // must be first line.
     if (finalArticleRef.current) {
-      const finalArticleContent = finalArticleRef.current.innerText
-        .replace(/[*#]/g, "") // Remove asterisks and hash symbols
-        .replace(/[’]/g, "'") // Replace right single quotes with regular single quotes
-        .replace(/[‘]/g, "'") // Replace left single quotes with regular single quotes
-        .replace(/[“]/g, '"') // Replace left double quotes with regular double quotes
-        .replace(/[”]/g, '"') // Replace right double quotes with regular double quotes
-        .replace(/\s+/g, " ") // Normalize whitespace to a single space
-        .trim(); // Trim leading and trailing whitespace
+      const finalArticleContent = finalArticleRef.current.innerText;
 
       const updatedArticle = {
         ...finalArticle,
@@ -172,17 +95,19 @@ const ShowErrors = () => {
     setTriggerStartChecks(true);
   }
 
-  // useEffect(() => {
-  // ===== log data =====
-  // console.log("finalArticle:", finalArticle);
-  // ===== if there is no data, redirect to the choose brand page =====
-  // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
-  // window.alert(
-  //   "No data is available. You will be redirected to refetch new data!"
-  // );
-  // router.push("/content-creator/create/choose-brand");
-  // }
-  // }, []);
+  useEffect(() => {
+    // ===== log data =====
+    // console.log("finalArticle:", finalArticle);
+    // ===== if there is no data, redirect to the choose brand page =====
+    if (!finalArticle) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   useEffect(() => {
     if (triggerStartChecks === false) {
@@ -224,67 +149,70 @@ const ShowErrors = () => {
     }
   }, [IsLoading]);
 
-  // useEffect(() => {
-  //   const handleBlur = () => {
-  //     if (finalArticleRef.current) {
-  //       contentRef.current = finalArticleRef.current.innerText;
-  //       const updatedArticle = {
-  //         ...finalArticle,
-  //         articles: [
-  //           {
-  //             ...finalArticle.articles[0],
-  //             content: contentRef.current,
-  //           },
-  //         ],
-  //       };
-  //       dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-  //     }
-  //   };
-  //   const currentRef = finalArticleRef.current;
-  //   if (currentRef) {
-  //     currentRef.addEventListener("blur", handleBlur);
-  //   }
-  //   return () => {
-  //     if (currentRef) {
-  //       currentRef.removeEventListener("blur", handleBlur);
-  //     }
-  //   };
-  // }, [dispatch, finalArticle]);
-
   useEffect(() => {
     const handleInput = () => {
+      console.log("handleInput");
       if (finalArticleRef.current) {
-        const cursorPosition = saveCursorPosition();
-        const finalArticleContent = finalArticleRef.current.innerText;
-
+        finalArticleContentRef.current = finalArticleRef.current.innerText;
         const updatedArticle = {
           ...finalArticle,
           articles: [
             {
               ...finalArticle.articles[0],
-              content: finalArticleContent,
+              content: finalArticleContentRef.current,
             },
           ],
         };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-        setTimeout(() => {
-          restoreCursorPosition(cursorPosition);
-        }, 0);
+        sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
       }
     };
 
-    const currentRef = finalArticleRef.current;
-    if (currentRef) {
-      currentRef.addEventListener("input", handleInput);
+    if (finalArticleRef.current) {
+      finalArticleRef.current.addEventListener("input", handleInput);
     }
 
     return () => {
-      if (currentRef) {
-        currentRef.removeEventListener("input", handleInput);
+      if (finalArticleRef.current) {
+        finalArticleRef.current.removeEventListener("input", handleInput);
       }
     };
-  }, [finalArticle]);
+  }, [finalArticle, finalArticleContentRef.current]);
+
+  useEffect(() => {
+    const handleBlur = () => {
+      console.log("handleBlur");
+      if (typeof window !== undefined) {
+        const updatedFinalArticle = sessionStorage.getItem("finalArticle");
+        if (updatedFinalArticle) {
+          dispatch(
+            contentCreatorActions.setFinalArticle(
+              JSON.parse(updatedFinalArticle)
+            )
+          );
+        }
+      } else {
+        const updatedFinalArticle = {
+          ...finalArticle,
+          articles: [
+            {
+              ...finalArticle.articles[0],
+              content: finalArticleContentRef.current,
+            },
+          ],
+        };
+        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
+      }
+    };
+
+    if (finalArticleRef.current) {
+      finalArticleRef.current.addEventListener("blur", handleBlur);
+    }
+    return () => {
+      if (finalArticleRef.current) {
+        finalArticleRef.current.removeEventListener("blur", handleBlur);
+      }
+    };
+  }, [finalArticle, dispatch, finalArticleContentRef.current]);
 
   function highlightText(text: any, start: any, end: any) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
@@ -321,6 +249,7 @@ const ShowErrors = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
@@ -379,6 +308,7 @@ const ShowErrors = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -431,6 +361,7 @@ const ShowErrors = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;
@@ -527,7 +458,7 @@ const ShowErrors = () => {
               <h1 className="mx-auto font-bold text-2xl">
                 {finalArticle?.articles[0]?.title}
               </h1>
-
+              {/* 
               <div
                 id="finalArticle"
                 ref={finalArticleRef}
@@ -561,29 +492,37 @@ const ShowErrors = () => {
                 ) : (
                   <p>{finalArticle?.articles[0]?.content}</p>
                 )}
+              </div> */}
+
+              <div
+                id="finalArticle"
+                ref={finalArticleRef}
+                contentEditable={true}
+                className={`${styles.articleContent}`}
+                // onInput={handleInput}
+              >
+                <p>{finalArticle?.articles[0]?.content}</p>
               </div>
             </div>
           </div>
         </div>
+
         {/* 01-2. Preview Errors */}
         <div className={styles.scripts_wrapper + " w-2/5"}>
           <div className={styles.header}>
             <h6>Issues</h6>
             <h6>({checkGrammerResults.length + checkAiResults.length})</h6>
           </div>
-          <div className={styles.select_article_container}>
+
+          <div className={styles.errors_container}>
             {checkGrammerResults.map((item: any, index: number) => {
               return (
                 <ErrorCollapse
                   key={index}
                   title="Grammer"
                   onClick={() => {
-                    const cursorPosition = saveCursorPosition();
                     setSelectedIssue(item);
                     setIssueType("grammer");
-                    setTimeout(() => {
-                      restoreCursorPosition(cursorPosition);
-                    }, 0);
                     // console.log("grammer item clicked:", item);
                   }}
                 >
@@ -625,12 +564,8 @@ const ShowErrors = () => {
                   key={index}
                   title="AI"
                   onClick={() => {
-                    const cursorPosition = saveCursorPosition();
                     setSelectedIssue(item);
                     setIssueType("ai");
-                    setTimeout(() => {
-                      restoreCursorPosition(cursorPosition);
-                    }, 0);
                     // console.log("ai item clicked:", item);
                   }}
                 >
@@ -646,6 +581,14 @@ const ShowErrors = () => {
                 </ErrorCollapse>
               );
             })}
+
+            {/* error Collapse */}
+            {/* <ErrorCollapse title="Plagiarism">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque
+                doloribus ratione non similique velit modi eum repudiandae, nam
+                saepe amet quaerat quasi placeat, dolore molestiae magnam iure
+                earum ipsam. Soluta.
+              </ErrorCollapse> */}
           </div>
         </div>
       </div>
@@ -668,6 +611,4 @@ const ShowErrors = () => {
       </div>
     </div>
   );
-};
-
-export default ShowErrors;
+}

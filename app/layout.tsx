@@ -7,6 +7,8 @@ import styles from "./mainLayout.module.css"; // Importing styles for the main l
 import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
+import { Toaster } from "react-hot-toast";
+import { Offline } from "react-detect-offline";
 
 // Initializing Inter font with Latin subset
 // const inter = Inter({ subsets: ["latin"] });
@@ -33,6 +35,17 @@ export default function RootLayout({
             </div>
           </GlobalContextProvider>
         </Provider>
+        <Toaster
+          position="top-center"
+          containerStyle={{
+            zIndex: 91474836471,
+          }}
+        />
+        <Offline>
+          <div className="offlineMsg">
+            Oops! It seems like you&apos;re currently offline
+          </div>
+        </Offline>
       </body>
     </html>
   );
