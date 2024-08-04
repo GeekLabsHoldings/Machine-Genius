@@ -19,9 +19,6 @@ export default function CreatePage() {
     setCollectedData,
     setTwitterData,
     setChoosedArticles,
-    // setFinalArticle,
-    // setCheckGrammerResults,
-    // setCheckAiResults,
     setGeneratedTitles,
     setLockedGeneratedTitles
   } = useContext(globalContext);
@@ -32,14 +29,12 @@ export default function CreatePage() {
     setCollectedData(null);
     setTwitterData(null);
     setChoosedArticles([]);
-    // setFinalArticle(null);
     dispatch(contentCreatorActions.setFinalArticle(null));
-    // setCheckGrammerResults([]);
-    // setCheckAiResults([]);
     dispatch(contentCreatorActions.setCheckGrammerResults([]));
     dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);
     setLockedGeneratedTitles([]);
+    dispatch(contentCreatorActions.setVideoTranscription(null));
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
@@ -51,6 +46,7 @@ export default function CreatePage() {
       sessionStorage.removeItem("checkAiResults");
       sessionStorage.removeItem("generatedTitles");
       sessionStorage.removeItem("lockedGeneratedTitles");
+      sessionStorage.removeItem("videoTranscription");
     }
   }, []);
 
