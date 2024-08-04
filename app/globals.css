@@ -6,18 +6,192 @@
 @tailwind utilities;
 /* ===== End Imports ==== */
 
+/* ===== Start Variables ===== */
 :root {
+  /* ===== Colors ===== */
   --dark: #2a2b2a;
   --white: #fffffb;
   --orange: #f36f24;
   --lite-orange: #feede0;
+  /* ===== Values ===== */
+  --1px: clamp(1px, calc(0.013vw + 0.05rem), 1000px);
+  --2px: clamp(2px, calc(0.063vw + 0.05rem), 1000px);
+  --3px: clamp(3px, calc(0.115vw + 0.05rem), 1000px);
+  --4px: clamp(4px, calc(0.16vw + 0.05rem), 1000px);
+  --5px: clamp(5px, calc(0.22vw + 0.05rem), 1000px);
+  --6px: clamp(6px, calc(0.28vw + 0.05rem), 1000px);
+  --7px: clamp(7px, calc(0.31vw + 0.05rem), 1000px);
+  --8px: clamp(8px, calc(0.35vw + 0.1rem), 1000px);
+  --9px: clamp(9px, calc(0.4vw + 0.1rem), 1000px);
+  --10px: clamp(10px, calc(0.45vw + 0.1rem), 1000px);
+  --11px: clamp(10px, calc(0.515vw + 0.1rem), 1000px);
+  --12px: clamp(10px, calc(0.56vw + 0.1rem), 1000px);
+  --13px: clamp(10px, calc(0.61vw + 0.1rem), 1000px);
+  --14px: clamp(10px, calc(0.66vw + 0.1rem), 1000px);
+  --15px: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+  --16px: clamp(10px, calc(0.75vw + 0.1rem), 1000px);
+  --17px: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  --18px: clamp(10px, calc(0.85vw + 0.1rem), 1000px);
+  --19px: clamp(10px, calc(0.9vw + 0.1rem), 1000px);
+  --20px: clamp(10px, calc(0.94vw + 0.1rem), 1000px);
+  --21px: clamp(10px, calc(0.99vw + 0.1rem), 1000px);
+  --22px: clamp(10px, calc(1.035vw + 0.1rem), 1000px);
+  --23px: clamp(10px, calc(1.085vw + 0.1rem), 1000px);
+  --24px: clamp(10px, calc(1.13vw + 0.1rem), 1000px);
+  --25px: clamp(10px, calc(1.18vw + 0.1rem), 1000px);
+  --26px: clamp(10px, calc(1.225vw + 0.1rem), 1000px);
+  --27px: clamp(10px, calc(1.27vw + 0.1rem), 1000px);
+  --28px: clamp(10px, calc(1.32vw + 0.1rem), 1000px);
+  --29px: clamp(10px, calc(1.37vw + 0.1rem), 1000px);
+  --30px: clamp(10px, calc(1.415vw + 0.1rem), 1000px);
+  --31px: clamp(10px, calc(1.46vw + 0.1rem), 1000px);
+  --32px: clamp(10px, calc(1.51vw + 0.1rem), 1000px);
+  --33px: clamp(10px, calc(1.555vw + 0.1rem), 1000px);
+  --34px: clamp(10px, calc(1.605vw + 0.1rem), 1000px);
+  --35px: clamp(10px, calc(1.65vw + 0.1rem), 1000px);
+  --36px: clamp(10px, calc(1.7vw + 0.1rem), 1000px);
+  --37px: clamp(10px, calc(1.75vw + 0.1rem), 1000px);
+  --38px: clamp(10px, calc(1.8vw + 0.1rem), 1000px);
+  --39px: clamp(10px, calc(1.85vw + 0.1rem), 1000px);
+  --40px: clamp(10px, calc(1.89vw + 0.1rem), 1000px);
+  --41px: clamp(10px, calc(1.94vw + 0.1rem), 1000px);
+  --42px: clamp(10px, calc(1.99vw + 0.1rem), 1000px);
+  --43px: clamp(10px, calc(2.04vw + 0.1rem), 1000px);
+  --44px: clamp(10px, calc(2.09vw + 0.1rem), 1000px);
+  --45px: clamp(10px, calc(2.13vw + 0.1rem), 1000px);
+  --46px: clamp(10px, calc(2.18vw + 0.1rem), 1000px);
+  --47px: clamp(10px, calc(2.23vw + 0.1rem), 1000px);
+  --48px: clamp(10px, calc(2.27vw + 0.1rem), 1000px);
+  --49px: clamp(10px, calc(2.325vw + 0.1rem), 1000px);
+  --50px: clamp(10px, calc(2.375vw + 0.1rem), 1000px);
+  --51px: clamp(10px, calc(2.425vw + 0.1rem), 1000px);
+  --55px: clamp(10px, calc(2.944vw + 0.1rem), 1000px);
+  --58px: clamp(10px, calc(3.111vw + 0.1rem), 1000px);
+  --60px: clamp(10px, calc(3.222vw + 0.1rem), 1000px);
+  --64px: clamp(10px, calc(3.444vw + 0.1rem), 1000px);
+  --65px: clamp(10px, calc(3.5vw + 0.1rem), 1000px);
+  --66px: clamp(10px, calc(3.556vw + 0.1rem), 1000px);
+  --68px: clamp(10px, calc(3.667vw + 0.1rem), 1000px);
+  --71px: clamp(10px, calc(3.25vw + 0.1rem), 1000px);
+  --72px: clamp(10px, calc(3.5vw + 0.1rem), 1000px);
+  --75px: clamp(10px, calc(4.056vw + 0.1rem), 1000px);
+  --77px: clamp(10px, calc(4.167vw + 0.1rem), 1000px);
+  --78px: clamp(10px, calc(4.222vw + 0.1rem), 1000px);
+  --80px: clamp(10px, calc(4.3vw + 0.1rem), 1000px);
+  --81px: clamp(10px, calc(4.5vw + 0.1rem), 1000px);
+  --83px: clamp(10px, calc(4.611vw + 0.1rem), 1000px);
+  --89px: clamp(10px, calc(4.944vw + 0.1rem), 1000px);
+  --90px: clamp(10px, calc(4.62vw + 0.1rem), 1000px);
+  --96px: clamp(10px, calc(5.222vw + 0.1rem), 1000px);
+  --98px: clamp(10px, calc(5.333vw + 0.1rem), 1000px);
+  --102px: clamp(10px, calc(5.556vw + 0.1rem), 1000px);
+  --111px: clamp(10px, calc(6.056vw + 0.1rem), 1000px);
+  --115px: clamp(10px, calc(6.389vw + 0.1rem), 1000px);
+  --116px: clamp(10px, calc(6.444vw + 0.1rem), 1000px);
+  --120px: clamp(10px, calc(6.18vw + 0.1rem), 1000px);
+  --128px: clamp(10px, calc(6.59vw + 0.1rem), 1000px);
+  --130px: clamp(10px, calc(7.222vw + 0.1rem), 1000px);
+  --146px: clamp(10px, calc(7.52vw + 0.1rem), 1000px);
+  --148px: clamp(10px, calc(8.222vw + 0.1rem), 1000px);
+  --150px: clamp(10px, calc(8.333vw + 0.1rem), 1000px);
+  --151px: clamp(10px, calc(8.389vw + 0.1rem), 1000px);
+  --154px: clamp(10px, calc(8.556vw + 0.1rem), 1000px);
+  --155px: clamp(10px, calc(8.611vw + 0.1rem), 1000px);
+  --158px: clamp(10px, calc(8.667vw + 0.1rem), 1000px);
+  --163px: clamp(10px, calc(9.056vw + 0.1rem), 1000px);
+  --165px: clamp(10px, calc(9.167vw + 0.1rem), 1000px);
+  --167px: clamp(10px, calc(9.278vw + 0.1rem), 1000px);
+  --198px: clamp(10px, calc(11vw + 0.1rem), 1000px);
+  --200px: clamp(10px, calc(11.111vw + 0.1rem), 1000px);
+  --202px: clamp(10px, calc(11.222vw + 0.1rem), 1000px);
+  --220px: clamp(10px, calc(11.5vw + 0.1rem), 1000px);
+  --252px: clamp(10px, calc(13.889vw + 0.1rem), 1000px);
+  --258px: clamp(10px, calc(13.35vw + 0.1rem), 1000px);
+  --264px: clamp(10px, calc(14.667vw + 0.1rem), 1000px);
+  --274px: clamp(10px, calc(15.111vw + 0.1rem), 1000px);
+  --313px: clamp(10px, calc(17.389vw + 0.1rem), 1000px);
+  --319px: clamp(10px, calc(17.722vw + 0.1rem), 1000px);
+  --328px: clamp(10px, calc(18.222vw + 0.1rem), 1000px);
+  --339px: clamp(10px, calc(17.6vw + 0.1rem), 1000px);
+  --340px: clamp(10px, calc(18.889vw + 0.1rem), 1000px);
+  --351px: clamp(10px, calc(18.2vw + 0.1rem), 1000px);
+  --366px: clamp(10px, calc(19vw + 0.1rem), 1000px);
+  --370px: clamp(10px, calc(20.556vw + 0.1rem), 1000px);
+  --375px: clamp(10px, calc(20.833vw + 0.1rem), 1000px);
+  --389px: clamp(10px, calc(21.611vw + 0.1rem), 1000px);
+  --409px: clamp(10px, calc(22.722vw + 0.1rem), 1000px);
+  --411px: clamp(10px, calc(20vw + 0.1rem), 1000px);
+  --500px: clamp(10px, calc(27.778vw + 0.1rem), 1000px);
+  --502px: clamp(10px, calc(27.889vw + 0.1rem), 1000px);
+  --511px: clamp(10px, calc(28.389vw + 0.1rem), 1000px);
+  --542px: clamp(10px, calc(30.111vw + 0.1rem), 1000px);
+  --635px: clamp(10px, calc(33vw + 0.1rem), 1000px);
+  --667px: clamp(10px, calc(37.056vw + 0.1rem), 1000px);
+  --676px: clamp(10px, calc(37.556vw + 0.1rem), 1000px);
+  --689px: clamp(10px, calc(38.278vw + 0.1rem), 1000px);
+  --700px: clamp(10px, calc(38.889vw + 0.1rem), 1000px);
+  --721px: clamp(10px, calc(40.056vw + 0.1rem), 1000px);
+
+  /* Vertical Spacings */
+  --sy-1px: clamp(1px, calc(0.028vh + 0.05rem), 1000px);
+  --sy-2px: clamp(2px, calc(0.129vh + 0.05rem), 1000px);
+  --sy-3px: clamp(3px, calc(0.235vh + 0.05rem), 1000px);
+  --sy-4px: clamp(4px, calc(0.344vh + 0.05rem), 1000px);
+  --sy-5px: clamp(5px, calc(0.465vh + 0.05rem), 1000px);
+  --sy-6px: clamp(6px, calc(0.56vh + 0.05rem), 1000px);
+  --sy-7px: clamp(7px, calc(0.675vh + 0.05rem), 1000px);
+  --sy-8px: clamp(8px, calc(0.78vh + 0.05rem), 1000px);
+  --sy-9px: clamp(9px, calc(0.8vh + 0.1rem), 1000px);
+  --sy-10px: clamp(10px, calc(0.905vh + 0.1rem), 1000px);
+  --sy-11px: clamp(10px, calc(1.01vh + 0.1rem), 1000px);
+  --sy-12px: clamp(10px, calc(1.12vh + 0.1rem), 1000px);
+  --sy-13px: clamp(10px, calc(1.23vh + 0.1rem), 1000px);
+  --sy-14px: clamp(10px, calc(1.33vh + 0.1rem), 1000px);
+  --sy-15px: clamp(10px, calc(1.45vh + 0.1rem), 1000px);
+  --sy-16px: clamp(10px, calc(1.55vh + 0.1rem), 1000px);
+  --sy-17px: clamp(10px, calc(1.66vh + 0.1rem), 1000px);
+  --sy-18px: clamp(10px, calc(1.77vh + 0.1rem), 1000px);
+  --sy-19px: clamp(10px, calc(1.88vh + 0.1rem), 1000px);
+  --sy-20px: clamp(10px, calc(1.99vh + 0.1rem), 1000px);
+  --sy-21px: clamp(10px, calc(2.1vh + 0.1rem), 1000px);
+  --sy-22px: clamp(10px, calc(2.2vh + 0.1rem), 1000px);
+  --sy-23px: clamp(10px, calc(2.3vh + 0.1rem), 1000px);
+  --sy-24px: clamp(10px, calc(2.415vh + 0.1rem), 1000px);
+  --sy-25px: clamp(10px, calc(2.515vh + 0.1rem), 1000px);
+  --sy-26px: clamp(10px, calc(2.625vh + 0.1rem), 1000px);
+  --sy-27px: clamp(10px, calc(2.725vh + 0.1rem), 1000px);
+  --sy-28px: clamp(10px, calc(2.835vh + 0.1rem), 1000px);
+  --sy-29px: clamp(10px, calc(2.95vh + 0.1rem), 1000px);
+  --sy-30px: clamp(10px, calc(3.05vh + 0.1rem), 1000px);
+  --sy-31px: clamp(10px, calc(3.17vh + 0.1rem), 1000px);
+  --sy-32px: clamp(10px, calc(3.27vh + 0.1rem), 1000px);
+  --sy-33px: clamp(10px, calc(3.38vh + 0.1rem), 1000px);
+  --sy-35px: clamp(10px, calc(3.763vh + 0.1rem), 1000px);
+  --sy-38px: clamp(10px, calc(4.1vh + 0.1rem), 1000px);
+  --sy-40px: clamp(10px, calc(4.3vh + 0.1rem), 1000px);
+  --sy-44px: clamp(10px, calc(4.8vh + 0.1rem), 1000px);
+  --sy-48px: clamp(10px, calc(5.1vh + 0.1rem), 1000px);
+  --sy-50px: clamp(10px, calc(5.376vh + 0.1rem), 1000px);
+  --sy-60px: clamp(10px, calc(6.452vh + 0.1rem), 1000px);
+  --sy-64px: clamp(10px, calc(6.882vh + 0.1rem), 1000px);
+  --sy-80px: clamp(10px, calc(8.55vh + 0.1rem), 1000px);
+  --sy-90px: clamp(10px, calc(9.53vh + 0.1rem), 1000px);
+  --sy-95px: clamp(10px, calc(10.215vh + 0.1rem), 1000px);
+  --sy-100px: clamp(10px, calc(10.753vh + 0.1rem), 1000px);
+  --sy-118px: clamp(10px, calc(12.38vh + 0.1rem), 1000px);
+  --sy-136px: clamp(10px, calc(14.2vh + 0.1rem), 1000px);
+  --sy-160px: clamp(10px, calc(14.3vh + 0.1rem), 1000px);
+  --sy-165px: clamp(10px, calc(16.6vh + 0.1rem), 1000px);
+  --sy-170px: clamp(10px, calc(18.15vh + 0.1rem), 1000px);
 }
+/* ===== End Variables ===== */
 
 * {
   font-family: "DM Sans", sans-serif;
   padding: 0;
   margin: 0;
   line-height: normal;
+  font-size: var(--16px);
   transition: all 0.3s;
 }
 
@@ -238,7 +412,7 @@ img {
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
 .brands .slick-slide > div {
-  margin: 0 clamp(10px,calc(1.2vw + 0.1rem),60px); /* Adjust the value as needed */
+  margin: 0 clamp(10px, calc(1.2vw + 0.1rem), 60px); /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
 
@@ -276,3 +450,15 @@ img {
 .custom_arrows.slick-arrow.slick-prev.slick-disabled > svg > path {
   fill: #d9d9d9;
 }
+
+/* Start Offline Message */
+.offlineMsg {
+  position: fixed !important;
+  bottom: var(--15px);
+  right: var(--15px);
+  border-radius: var(--5px);
+  background-color: #2a2b2a;
+  color: white;
+  padding: var(--12px);
+}
+/* End Offline Message */

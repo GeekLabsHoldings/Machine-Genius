@@ -21,6 +21,7 @@
     "@mui/x-date-pickers": "^7.3.1",
     "@mux/mux-player-react": "^2.5.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "@types/react-detect-offline": "^2.4.5",
     "apexcharts": "^3.49.1",
     "dayjs": "^1.11.11",
     "embla-carousel": "^8.0.2",
