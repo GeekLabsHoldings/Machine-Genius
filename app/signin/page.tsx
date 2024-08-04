@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"; // Importing useRouter hook from Ne
 import { useFormik } from "formik";
 import { globalContext } from "@/app/_context/store";
 import { JwtPayload, jwtDecode } from "jwt-decode";
+import toast from "react-hot-toast";
 
 // SignIn component
 const SignIn = () => {
@@ -21,6 +22,7 @@ const SignIn = () => {
   // State to manage showing welcome message
   const [ShowWelcomeMesage, setShowWelcomeMesage] = useState(false);
   const router = useRouter();
+  const [loader, setLoader] = useState(false);
 
   let user = {
     email: "",
@@ -79,6 +81,7 @@ const SignIn = () => {
   }, [decodedToken]);
 
   async function loginToAccount(values: any) {
+    setLoader(true);
     try {
       const res = await fetch(
         `https://machine-genius.onrender.com/authentication`,
@@ -90,10 +93,11 @@ const SignIn = () => {
           body: JSON.stringify(values),
         }
       );
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
       const json = await res.json();
+      // console.log(`json`, json.message);
+      if (json.message === "invalid credentials") {
+        toast.error("Invalid email or password");
+      }
       if (json.message === "Logged in successfully") {
         setTokenAsync(json);
         setTimeout(() => {
@@ -103,6 +107,7 @@ const SignIn = () => {
     } catch (e) {
       console.error("Error loginToAccount:", e);
     }
+    setLoader(false);
   }
 
   const formikObj = useFormik({
@@ -227,7 +232,7 @@ const SignIn = () => {
 
           <CustomBtn
             type="submit"
-            word="Sign In"
+            word={loader ? "Loading..." : "Sign In"}
             btnColor="black"
             disabled={formikObj.dirty === false}
           />
