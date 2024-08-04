@@ -313,7 +313,7 @@ const CreateMovie = () => {
             className={`${styles.box} flex justify-center items-center ${styles.movieWrapper}`}
           >
             <VideoPlayer
-              src="/1 - Trim1.mp4"
+              src={videoTranscription?.movie_url}
               highlightTime={highlightTime}
               videoRef={videoRef}
             />
