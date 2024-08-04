@@ -132,7 +132,7 @@ export default function CreateArticlePage() {
 
   async function finalizeContent() {
     if (selectedText.length === 0) {
-      // window.alert("Please select at least one article!");
+      toast.error("Please select at least one article!");
       return;
     } else {
       let brandNamePayload = "";
