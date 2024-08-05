@@ -16,6 +16,7 @@ export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState<boolean>(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
   const checkGrammerResults = useSelector(
@@ -96,6 +97,7 @@ export default function ShowErrorsPage() {
   }
 
   useEffect(() => {
+    setIsHydrated(true);
     // ===== log data =====
     // console.log("finalArticle:", finalArticle);
     // ===== if there is no data, redirect to the choose brand page =====
@@ -379,6 +381,16 @@ export default function ShowErrorsPage() {
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
+  }
+
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+        </div>
+      </div>
+    );
   }
 
   if (IsLoading) {
