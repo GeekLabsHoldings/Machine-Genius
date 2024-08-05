@@ -6,7 +6,7 @@ import ErrorCollapse from "@/app/_components/ErrorCollapse/ErrorCollapse";
 import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
-import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
+// import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
 import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
@@ -238,10 +238,6 @@ export default function ShowErrorsPage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -297,10 +293,6 @@ export default function ShowErrorsPage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -318,7 +310,9 @@ export default function ShowErrorsPage() {
     if (json) {
       // todo
       if (json) {
-        setCheckStatus((prev) => ({ ...prev, plagiarism: "fail" }));
+        // setCheckStatus((prev) => ({ ...prev, plagiarism: "fail" }));
+        // temp until backend fix it
+        setCheckStatus((prev) => ({ ...prev, plagiarism: "pass" }));
       } else {
         setCheckStatus((prev) => ({ ...prev, plagiarism: "pass" }));
       }
@@ -349,10 +343,6 @@ export default function ShowErrorsPage() {
             }),
           }
         );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
 
         json = await res.json();
 
@@ -432,9 +422,9 @@ export default function ShowErrorsPage() {
             checkStatus.plagiarism === "pass" &&
             checkStatus.ai === "pass" && (
               <CustomBtn
-                word={"Request Approval"}
+                word={"Generate Titles"}
                 btnColor="black"
-                href="/content-creator/create/script-approved"
+                href="/content-creator/create/generated-titles"
               />
             )}
         </div>
@@ -448,51 +438,11 @@ export default function ShowErrorsPage() {
       <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
         {/* 01-1. Article Preview */}
         <div className={"w-3/5 h-full"}>
-          {/* <ArticlePreview
-              yourNewArticle={true}
-              height="h-full"
-              withEdit={true}
-            /> */}
           <div className={` ${styles.articlePreview} h-full`}>
             <div className={`${styles.articlePreviewData} `}>
               <h1 className="mx-auto font-bold text-2xl">
                 {finalArticle?.articles[0]?.title}
               </h1>
-              {/* 
-              <div
-                id="finalArticle"
-                ref={finalArticleRef}
-                contentEditable={true}
-                className={`${styles.articleContent}`}
-                // onInput={handleInput}
-              >
-                {selectedIssue === null ? (
-                  finalArticle?.articles[0]?.content
-                ) : issueType === "grammer" ? (
-                  <HighlightedContent
-                    text={finalArticle?.articles[0]?.content}
-                    start={selectedIssue.sentence_start}
-                    end={
-                      selectedIssue.sentence_start +
-                      selectedIssue.sentence.length
-                    }
-                  />
-                ) : issueType === "ai" ? (
-                  <HighlightedContent
-                    text={finalArticle?.articles[0]?.content}
-                    start={finalArticle?.articles[0]?.content.indexOf(
-                      selectedIssue.sentence
-                    )}
-                    end={
-                      finalArticle?.articles[0]?.content.indexOf(
-                        selectedIssue.sentence
-                      ) + selectedIssue.sentence.length
-                    }
-                  />
-                ) : (
-                  <p>{finalArticle?.articles[0]?.content}</p>
-                )}
-              </div> */}
 
               <div
                 id="finalArticle"

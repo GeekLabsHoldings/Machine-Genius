@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./uploadMovie.module.css";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,12 @@ const MovieMyth = () => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  useEffect(() => {
+    dispatch(contentCreatorActions.setVideoTranscription(null));
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("videoTranscription");
+    }
+  }, []);
 
   async function uploadVideo(file: File) {
     setIsLoading(true);
@@ -53,10 +59,15 @@ const MovieMyth = () => {
           const response = JSON.parse(xhr.responseText);
           dispatch(contentCreatorActions.setVideoTranscription(response));
           router.replace("/content-creator/create/movie-myth/create-movie");
+        } else {
+          toast.error(`Upload failed with status: ${xhr.status}`);
+          setError(`Upload failed with status: ${xhr.status}`);
+          setIsLoading(false);
         }
       };
 
       xhr.onerror = () => {
+        toast.error("Something went wrong! Contact backend department");
         setError("Upload failed due to an error.");
         setIsLoading(false);
       };

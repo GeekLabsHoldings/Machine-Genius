@@ -169,10 +169,6 @@ export default function CreateArticlePage() {
             }
           );
 
-          if (!res.ok) {
-            throw new Error("Failed to fetch data");
-          }
-
           json = await res.json();
 
           if (json.articles[0]?.content) {
@@ -306,7 +302,7 @@ export default function CreateArticlePage() {
   }, []);
 
   useEffect(() => {
-    if (!collectedData) {
+    if (!selectedBrand) {
       toast.error(
         "No data is available. You will be redirected to refetch new data!"
       );

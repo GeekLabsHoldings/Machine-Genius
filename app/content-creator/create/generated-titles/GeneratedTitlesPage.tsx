@@ -2,7 +2,7 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./generated-titles.module.css";
 import TitleCheckWithLock from "@/app/_components/TitleCheckWithLock/TitleCheckWithLock";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
@@ -23,16 +23,21 @@ const GeneratedTitlesPage = () => {
     generatedTitles,
     setGeneratedTitles,
     lockedGeneratedTitles,
+    setLockedGeneratedTitles
   } = useContext(globalContext);
   const [IsLoading, setIsLoading] = useState(false);
   // state that make create my title disabled or abled
   const [isCreateMyOwnDisabled, setIsCreateMyOwnDisabled] = useState(true);
 
-  async function reGenerateTitles() {
+  async function handleGenerateTitles() {
     setIsLoading(true);
     await generateTitles();
     setIsLoading(false);
   }
+
+  useEffect(() => {
+    handleGenerateTitles();
+  }, []);
 
   if (IsLoading) {
     return (
@@ -55,7 +60,7 @@ const GeneratedTitlesPage = () => {
               word="Re-Generate"
               btnColor="black"
               icon={ReGenerateIcon}
-              onClick={reGenerateTitles}
+              onClick={handleGenerateTitles}
             />
           </div>
 
@@ -136,12 +141,12 @@ const GeneratedTitlesPage = () => {
           word={"Back"}
           btnColor="white"
           // href={"/content-creator/create/generating-titles"}
-          href={"/content-creator/create/comments-on-article"}
+          href={"/content-creator/create/show-errors"}
         />
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/content-creator/create/article-images-generating"}
+          // href={"/content-creator/create/article-images-generating"}
         />
       </div>
     </div>

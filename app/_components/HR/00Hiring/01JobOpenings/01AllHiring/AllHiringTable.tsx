@@ -1,124 +1,46 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./AllHiringTable.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
+interface HiringData {
+  _id: string;
+  title: string;
+  level: string;
+  department: string;
+  createdBy: { firstName: string; theme: string };
+  status: string;
+}
+
 export default function AllHiringTable() {
-  // An array of objects representing the rows of the table body.
-  const taleData = [
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Pending",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Completed",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Pending",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Completed",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Pending",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Completed",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Pending",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Completed",
-    },
-  ];
+  const [data, setData] = useState<HiringData[]>([]);
+  const [skip, setSkip] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          `https://machine-genius.onrender.com/hr/hiring/hiring?limit=10&skip=${skip}&type=All`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        const result = await res.json();
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [skip]);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div className={styles.database_table}>
       {/* Table Header */}
@@ -210,35 +132,32 @@ export default function AllHiringTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {taleData.map((ele, idx) => (
-          <ul className="w-[100%]">
-            <li className="w-[20%]">{ele.job_title}</li>
+        {data?.map((ele, idx) => (
+          <ul className="w-[100%]" key={ele._id}>
+            <li className="w-[20%]">{ele.title}</li>
             <li className="w-[20%]">{ele.level}</li>
             <li className="w-[20%]">{ele.department}</li>
             <li className="w-[20%]">
               <span
                 style={{
-                  background:
-                    ele.requested_by === "Abdulrahman"
-                      ? "rgba(49, 178, 233, 0.70)"
-                      : ele.requested_by === "Kamel"
-                      ? "rgba(225, 198, 85, 0.70)"
-                      : ele.requested_by === "Sherry"
-                      ? "rgba(155, 95, 191, 0.70)"
-                      : ele.requested_by === "Manar"
-                      ? "rgba(243, 111, 36, 0.70)"
-                      : "",
+                  background: ele.createdBy.theme,
                 }}
               >
-                {ele.requested_by}
+                {ele?.createdBy.firstName}
               </span>
             </li>
             <li
-              className={`w-[20%] ${
-                ele.hiringStatus === "Completed" && "opacity-50"
-              }`}
+              className={`w-[20%] ${ele.status ? "opacity-50" : "Completed"}`}
             >
-              <CustomBtn btnColor="black" word={ele.hiringStatus} />
+              <CustomBtn
+                btnColor="black"
+                word={ele.status ? "Completed" : "Pending"}
+                href={
+                  ele.status
+                    ? ``
+                    : `/hr/hiring/job-openings/start-hiring/${ele._id}`
+                }
+              />
             </li>
           </ul>
         ))}
