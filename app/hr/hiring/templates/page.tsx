@@ -52,13 +52,15 @@ const Page = () => {
   const [unattchedTemplates,setUnattachedTemplates] = useState<unattchedTemplates[]>([])
 
   async function getData() {
+    const token = localStorage.getItem("token")
+
     const res = await fetch(
       "https://machine-genius.onrender.com/hr/group/groups-template",
       {
         method: "get",
         headers: {
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE4Y2VmYTg5MDkwMWIxZDQxYjQ0M2MiLCJlbWFpbCI6ImFkZWxzaG9rcnlnZWVrbGFic0BnbWFpbC5jb20iLCJkZXBhcnRtZW50IjpbIioiXSwicm9sZSI6IkNFTyIsImlhdCI6MTcyMjc1NjI0MSwiZXhwIjoxNzIyNzg4NjQxfQ.7NzT0KE5QdlnHv8IJhtX2D02x-irjNO1pcA9p1M2MeM",
+          `Bearer ${token}`,
         },
       }
     );
@@ -71,13 +73,15 @@ const Page = () => {
     
   }
   async function getUnattachedData() {
+    const token = localStorage.getItem("token")
+
     const res = await fetch(
       "https://machine-genius.onrender.com/hr/template/un-attached",
       {
         method: "get",
         headers: {
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE4Y2VmYTg5MDkwMWIxZDQxYjQ0M2MiLCJlbWFpbCI6ImFkZWxzaG9rcnlnZWVrbGFic0BnbWFpbC5jb20iLCJkZXBhcnRtZW50IjpbIioiXSwicm9sZSI6IkNFTyIsImlhdCI6MTcyMjc1NjI0MSwiZXhwIjoxNzIyNzg4NjQxfQ.7NzT0KE5QdlnHv8IJhtX2D02x-irjNO1pcA9p1M2MeM",
+          `Bearer ${token}`,
         },
       }
     );

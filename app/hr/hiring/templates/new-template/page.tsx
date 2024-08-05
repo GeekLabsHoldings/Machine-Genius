@@ -5,6 +5,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import { json } from "stream/consumers";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -37,6 +38,7 @@ interface Template {
 const Page = () => {
   const [Templates, setTemplates] = useState<Template[]>([]);
   const [groups, setGroups] = useState<any>([]);
+  const [tempOptions, setTempOptions] = useState<any>([]);
 
   const handleDelete = (index: any) => {
     setTemplates(Templates.filter((_, i) => i !== index));
@@ -67,50 +69,125 @@ const Page = () => {
   };
 
   async function getGroups() {
+    const token = localStorage.getItem("token");
     try {
-        const res = await fetch("https://machine-genius.onrender.com/hr/group/groups",{
-            method: "get",
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE4Y2VmYTg5MDkwMWIxZDQxYjQ0M2MiLCJlbWFpbCI6ImFkZWxzaG9rcnlnZWVrbGFic0BnbWFpbC5jb20iLCJkZXBhcnRtZW50IjpbIioiXSwicm9sZSI6IkNFTyIsImlhdCI6MTcyMjc1NjI0MSwiZXhwIjoxNzIyNzg4NjQxfQ.7NzT0KE5QdlnHv8IJhtX2D02x-irjNO1pcA9p1M2MeM",
-        },
-        })
-        const data = await res.json()
-        console.log(groups);
-        
-        setGroups(data)
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/group/groups",
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      setGroups(data);
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
     }
   }
-  async function createTemplate(){
-    const templatesWithoutIsEditable = Templates.map(({ isEditable, ...rest }) => rest);
-    const inputElement = document.querySelector("input.title") as HTMLInputElement;
-const inputValue = inputElement?.value;
+  async function getUnattachedTemplates() {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/template/un-attached",
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      setTempOptions(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function createGroup() {
+    const token = localStorage.getItem("token");
     const formData = new FormData()
-    formData.append("title",inputValue)
+    let groupTitleEle = document.querySelector("input.groupTitle") as HTMLInputElement
+    let groupTitle = groupTitleEle.value
+    formData.append("title",groupTitle)
+    let groupDescEle = document.querySelector("textarea.groupDesc") as HTMLInputElement
+    let groupDesc = groupDescEle.value
+    formData.append("description",groupDesc)
+    let groupDet = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map((e)=>e.getAttribute("id"))
+    formData.append("templates",JSON.stringify(groupDet))
+    
+    // Convert form data to JSON
+  const jsonObject: Record<string, any> = {};
+  formData.forEach((value, key) => {
+    // Check if the field is 'templates' and parse it as JSON
+    if (key === 'templates') {
+      try {
+        jsonObject[key] = JSON.parse(value as string);
+      } catch (e) {
+        console.error('Error parsing templates field:', e);
+        jsonObject[key] = [];
+      }
+    } else {
+      jsonObject[key] = value;
+    }
+  });
+
+  // Optionally convert the JSON object to a JSON string
+  const jsonString = JSON.stringify(jsonObject, null, 2); // Pretty-print JSON with 2-space indentation
+
+  console.log(jsonString); // Output the JSON string for testing
+
+    
+    try {
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/group/create",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body:jsonString
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+    getGroups();
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  async function createTemplate() {
+    const templatesWithoutIsEditable = Templates.map(
+      ({ isEditable, ...rest }) => rest
+    );
+    const inputElement = document.querySelector(
+      "input.title"
+    ) as HTMLInputElement;
+    const inputValue = inputElement?.value;
+    const formData = new FormData();
+    formData.append("title", inputValue);
     console.log(inputValue);
-    formData.append("details",JSON.stringify(Templates))
+    formData.append("details", JSON.stringify(Templates));
     console.log(JSON.stringify(templatesWithoutIsEditable));
-    
 
-    
-// try {
-//     const res = await fetch("https://machine-genius.onrender.com/hr/template/create",{
-//         method: "post",
-//     headers: {
-//       Authorization:
-//         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE4Y2VmYTg5MDkwMWIxZDQxYjQ0M2MiLCJlbWFpbCI6ImFkZWxzaG9rcnlnZWVrbGFic0BnbWFpbC5jb20iLCJkZXBhcnRtZW50IjpbIioiXSwicm9sZSI6IkNFTyIsImlhdCI6MTcyMjc1NjI0MSwiZXhwIjoxNzIyNzg4NjQxfQ.7NzT0KE5QdlnHv8IJhtX2D02x-irjNO1pcA9p1M2MeM",
-//     },
-//     })
-//     const data = await res.json()
-//     console.log(groups);
+    // try {
+    //     const res = await fetch("https://machine-genius.onrender.com/hr/template/create",{
+    //         method: "post",
+    //     headers: {
+    //       Authorization:
+    //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE4Y2VmYTg5MDkwMWIxZDQxYjQ0M2MiLCJlbWFpbCI6ImFkZWxzaG9rcnlnZWVrbGFic0BnbWFpbC5jb20iLCJkZXBhcnRtZW50IjpbIioiXSwicm9sZSI6IkNFTyIsImlhdCI6MTcyMjc1NjI0MSwiZXhwIjoxNzIyNzg4NjQxfQ.7NzT0KE5QdlnHv8IJhtX2D02x-irjNO1pcA9p1M2MeM",
+    //     },
+    //     })
+    //     const data = await res.json()
+    //     console.log(groups);
 
-// } catch (error) {
-//     console.log(error);
-    
-// }
+    // } catch (error) {
+    //     console.log(error);
+
+    // }
   }
 
   // State for controlling the modal open/close state
@@ -120,9 +197,15 @@ const inputValue = inputElement?.value;
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
+  useEffect(() => {
+    getGroups();
+    getUnattachedTemplates();
+    
+  }, []);
   useEffect(()=>{
-getGroups()
-  },[])
+    console.log(document.querySelectorAll('input[type="checkbox"]:checked'));
+
+  },[open])
   return (
     <div className="flex flex-col h-full">
       {/* chhose brand select */}
@@ -154,20 +237,25 @@ getGroups()
                 stroke="#2A2B2A"
               />
             </svg>
-            <input type="text" placeholder="Template Title*" className="title"/>
+            <input
+              type="text"
+              placeholder="Template Title*"
+              className="title templateTitle"
+            />
           </div>
 
           <div className={styles.choose_group}>
             Add to{" "}
-            <CustomSelectInput getValue={val=>console.log(val)
-            } options={groups.map((e:any,i:any)=>e.title)}>
+            <CustomSelectInput
+              getValue={(val) => console.log(val)}
+              options={groups.map((e: any, i: any) => e.title)}
+            >
               <CustomBtn
                 btnColor="black"
                 word="Add New Group"
                 icon={addIcon}
                 width="w-full"
                 onClick={handleOpen}
-                
               />
             </CustomSelectInput>{" "}
             group
@@ -248,7 +336,7 @@ getGroups()
           btnColor="black"
           href=""
           paddingVal="px-[1.5vw] py-[0.5vw]"
-          onClick={()=>createTemplate()}
+          onClick={() => createTemplate()}
         />
       </div>
 
@@ -263,7 +351,7 @@ getGroups()
           <form className={`${styles.modalBox}`}>
             <div className={styles.group_title}>
               {/* Modal title */}
-              <input type="text" placeholder="Group Title*" />
+              <input type="text" placeholder="Group Title*" className="groupTitle"/>
               {/* Close button */}
               <div
                 onClick={() => {
@@ -286,43 +374,23 @@ getGroups()
               </div>
             </div>
             <div className={styles.group_description}>
-              <textarea placeholder="Group description..." rows={4} />
+              <textarea placeholder="Group description..." rows={4} className="groupDesc"/>
             </div>
 
             <h6>Add Templates:</h6>
             <div className={styles.add_templates}>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="Video-Editor" accentColor="black"/>
-                <label htmlFor="Video-Editor">Video Editor</label>
-              </div>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="Front-End-Dev" accentColor="black"/>
-                <label htmlFor="Front-End-Dev">Front End Dev</label>
-              </div>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="UX/UI-Designer" accentColor="black"/>
-                <label htmlFor="UX/UI-Designer">UX/UI Designer</label>
-              </div>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="Back-End-Dev" accentColor="black" />
-                <label htmlFor="Back-End-Dev">Back End Dev</label>
-              </div>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="Graphic-Design" accentColor="black"/>
-                <label htmlFor="Graphic-Design">Graphic Design</label>
-              </div>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="Full-Stack-Dev" accentColor="black" />
-                <label htmlFor="Full-Stack-Dev">Full Stack Dev</label>
-              </div>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="Content-Writer" accentColor="black"/>
-                <label htmlFor="Content-Writer">Content Writer</label>
-              </div>
-              <div className={styles.template_item}>
-                <CustomCheckBox name="add-template" id="HR" accentColor="black"/>
-                <label htmlFor="HR">HR</label>
-              </div>
+              {tempOptions?.map((e: any, i: number) => {
+                return (
+                  <div key={i} className={styles.template_item}>
+                    <CustomCheckBox
+                      name="add-template"
+                      id={e._id}
+                      accentColor="black"
+                    />
+                    <label htmlFor={e._id}>{e.title}</label>
+                  </div>
+                );
+              })}
             </div>
 
             <CustomBtn
@@ -330,6 +398,10 @@ getGroups()
               word="Create Group"
               icon={addIcon}
               width="w-full"
+              onClick={(e)=>{
+                e?.preventDefault();
+                createGroup()
+              }}
             />
           </form>
         </Box>
