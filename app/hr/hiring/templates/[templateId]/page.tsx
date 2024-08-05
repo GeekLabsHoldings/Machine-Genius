@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import styles from "./view-template.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import $ from "jquery";
@@ -32,8 +32,37 @@ const addIcon = (
   </svg>
 );
 
-const Page = () => {
+interface Detail {
+  title: string;
+  description: string;
+  _id: string;
+}
+interface templateDet {
+  
+    "_id": string,
+    "title": string,
+    "department": string,
+    "level": string,
+    "details": Detail[];
+    "role": string,
+    "__v": number
+  
+}
+const defaultTemplateDet: templateDet = {
+  _id: '',
+  title: '',
+  department: '',
+  level: '',
+  details: [],  // Ensure details is initialized as an empty array
+  role: '',
+  __v: 0
+};
+
+
+export default function TemplateDetails ({ params }: { params: { templateId: string } }) {
   const [Iseditable, setIseditable] = useState(false);
+  console.log(params);
+  
 
   const handleEditCard = (e: any) => {
     console.log($(e.target).parents(`.${styles.card}`));
@@ -48,6 +77,30 @@ const Page = () => {
     $(e.target).parents(`.${styles.card}`).removeClass(styles.editable);
     $(`.${styles.card}`).removeClass(styles.disabled);
   };
+const [templateDet,setTemplateDet] = useState<templateDet>(defaultTemplateDet)
+
+  async function getTemplate() {
+    const res = await fetch(
+      `https://machine-genius.onrender.com/hr/template/one-template/${params.templateId}`,
+      {
+        method: "get",
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE4Y2VmYTg5MDkwMWIxZDQxYjQ0M2MiLCJlbWFpbCI6ImFkZWxzaG9rcnlnZWVrbGFic0BnbWFpbC5jb20iLCJkZXBhcnRtZW50IjpbIioiXSwicm9sZSI6IkNFTyIsImlhdCI6MTcyMjc1NjI0MSwiZXhwIjoxNzIyNzg4NjQxfQ.7NzT0KE5QdlnHv8IJhtX2D02x-irjNO1pcA9p1M2MeM",
+        },
+      }
+    );
+    // The return value is *not* serialized
+    // You can return Date, Map, Set, etc.
+  
+    const data = await res.json();
+    setTemplateDet(data)
+    console.log(data);
+    
+  }
+  useEffect(()=>{
+getTemplate()
+  },[])
 
   return (
     <div className="flex flex-col h-full">
@@ -57,7 +110,7 @@ const Page = () => {
         }
       >
         <div className="flex items-center justify-between gap-[2vw] mb-[1.5vw]">
-          <h5>Video Editor Template</h5>
+          <h5>{templateDet.title} Template</h5>
           {Iseditable ? (
             <CustomBtn
               btnColor="black"
@@ -102,7 +155,7 @@ const Page = () => {
                   )}
                 </div>
                 <div className={styles.card_body}>
-                  <p>Video Editor</p>
+                  <p>{templateDet.role}</p>
                 </div>
                 <div className={styles.card_actions}>
                   <CustomBtn btnColor="white" word="Delete Card" />
@@ -136,7 +189,7 @@ const Page = () => {
                   )}
                 </div>
                 <div className={styles.card_body}>
-                  <p>Senior</p>
+                  <p>{templateDet.level}</p>
                 </div>
                 <div className={styles.card_actions}>
                   <CustomBtn btnColor="white" word="Delete Card" />
@@ -170,24 +223,7 @@ const Page = () => {
                   </button>
                 )}
               </div>
-              <div className={styles.card_body}>
-                <ul>
-                  <li>
-                    Edit and enhance video footage to create engaging content.
-                  </li>
-                  <li>
-                    Collaborate with team members to meet project requirements
-                    and deadlines.
-                  </li>
-                  <li>
-                    Stay updated on industry trends and techniques to improve
-                    editing skills.
-                  </li>
-                  <li>
-                    Contribute creative ideas to enhance the overall quality of
-                    video content.
-                  </li>
-                </ul>
+              <div className={`${styles.card_body}`} dangerouslySetInnerHTML={{__html:templateDet.details[1]?.description}}>
               </div>
               <div className={styles.card_actions}>
                 <CustomBtn btnColor="white" word="Delete Card" />
@@ -273,27 +309,7 @@ const Page = () => {
                 )}
               </div>
               <div className={styles.card_body}>
-                <p>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illo
-                  dolorem a assumenda quis temporibus asperiores.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Illum, quo neque. Ipsum odio animi eaque ullam facilis.
-                  Voluptatem, pariatur omnis.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Perferendis, porro vel ratione accusantium aspernatur velit
-                  cumque necessitatibus dolores enim consequatur unde deserunt
-                  maxime nulla? Doloribus.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Perferendis, porro vel ratione accusantium aspernatur velit
-                  cumque necessitatibus dolores enim consequatur unde deserunt
-                  maxime nulla? Doloribus.
-                </p>
+                {templateDet?.details[0]?.description}
               </div>
               <div className={styles.card_actions}>
                 <CustomBtn btnColor="white" word="Delete Card" />
@@ -380,4 +396,3 @@ const Page = () => {
   );
 };
 
-export default Page;
