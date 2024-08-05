@@ -23,12 +23,13 @@ const GeneratedTitlesPage = () => {
     generatedTitles,
     setGeneratedTitles,
     lockedGeneratedTitles,
+    setLockedGeneratedTitles
   } = useContext(globalContext);
   const [IsLoading, setIsLoading] = useState(false);
   // state that make create my title disabled or abled
   const [isCreateMyOwnDisabled, setIsCreateMyOwnDisabled] = useState(true);
 
-  async function reGenerateTitles() {
+  async function handleGenerateTitles() {
     setIsLoading(true);
     await generateTitles();
     setIsLoading(false);
@@ -55,7 +56,7 @@ const GeneratedTitlesPage = () => {
               word="Re-Generate"
               btnColor="black"
               icon={ReGenerateIcon}
-              onClick={reGenerateTitles}
+              onClick={handleGenerateTitles}
             />
           </div>
 
