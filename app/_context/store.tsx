@@ -14,6 +14,8 @@ const initialContextState = {
   // ===== 00. End Authentication =====
 
   // ===== 01. Start Content Creator =====
+  selectedContentType: "" as any,
+  setSelectedContentType: (contentType: any) => {},
   selectedBrand: "" as any,
   setSelectedBrand: (brand: any) => {},
   collectedData: null as any,
@@ -22,14 +24,6 @@ const initialContextState = {
   setTwitterData: (data: any) => {},
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
-
-  // finalArticle: null as any,
-  // setFinalArticle: (article: any) => {},
-  // checkGrammerResults: [] as any,
-  // setCheckGrammerResults: (result: any) => {},
-  // checkAiResults: [] as any,
-  // setCheckAiResults: (result: any) => {},
-
   generateTitles: () => {},
   generatedTitles: [] as any,
   setGeneratedTitles: (titles: any) => {},
@@ -109,7 +103,10 @@ export default function GlobalContextProvider({
     const correspondingRoutePath = handleSetRouteToDirect(role).split("/")[1];
     console.log(`correspondingRoutePath:`, correspondingRoutePath);
     console.log(`currentpath:`, path);
-    if (!path.includes(correspondingRoutePath) && !decodedToken?.department.includes("*")) {
+    if (
+      !path.includes(correspondingRoutePath) &&
+      !decodedToken?.department.includes("*")
+    ) {
       const correspondingRoute = handleSetRouteToDirect(role);
       router.replace(correspondingRoute);
       console.log("~~~---***INvalid path***---~~~", path);
@@ -137,6 +134,19 @@ export default function GlobalContextProvider({
   // ===== 00. End Authentication =====
 
   // ===== 01. Start Content Creator =====
+  function selectedContentTypeInit() {
+    if (typeof window !== "undefined") {
+      const selectedContentTypeInitValue = sessionStorage.getItem("selectedContentType");
+      return selectedContentTypeInitValue ? selectedContentTypeInitValue : "";
+    } else {
+      return "";
+    }
+  }
+  const [selectedContentType, setSelectedContentType] = useState<any>(selectedContentTypeInit());
+  useEffect(() => {
+    sessionStorage.setItem("selectedContentType", selectedContentType);
+  }, [selectedContentType]);
+
   function selectedBrandInit() {
     if (typeof window !== "undefined") {
       const selectedBrandInitValue = sessionStorage.getItem("selectedBrand");
@@ -210,7 +220,6 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
   }, [finalArticle]);
 
-
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
   //   checkGrammerResultsInit()
   // );
@@ -253,8 +262,6 @@ export default function GlobalContextProvider({
             }),
           }
         );
-
-
 
         json = await res.json();
 
@@ -320,7 +327,10 @@ export default function GlobalContextProvider({
     (state: any) => state.contentCreator.videoTranscription
   );
   useEffect(() => {
-    sessionStorage.setItem("videoTranscription", JSON.stringify(videoTranscription));
+    sessionStorage.setItem(
+      "videoTranscription",
+      JSON.stringify(videoTranscription)
+    );
   }, [videoTranscription]);
   // ===== 01. End Content Creator =====
 
@@ -334,6 +344,8 @@ export default function GlobalContextProvider({
     // ===== 00. End Authentication =====
 
     // ===== 01. Start Content Creator =====
+    selectedContentType,
+    setSelectedContentType,
     selectedBrand,
     setSelectedBrand,
     collectedData,
@@ -342,14 +354,6 @@ export default function GlobalContextProvider({
     setTwitterData,
     choosedArticles,
     setChoosedArticles,
-
-    // finalArticle,
-    // setFinalArticle,
-    // checkGrammerResults,
-    // setCheckGrammerResults,
-    // checkAiResults,
-    // setCheckAiResults,
-
     generateTitles,
     generatedTitles,
     setGeneratedTitles,
