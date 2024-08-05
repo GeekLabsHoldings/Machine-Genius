@@ -144,9 +144,9 @@ const GeneratedTitlesPage = () => {
           href={"/content-creator/create/show-errors"}
         />
         <CustomBtn
-          word={"Next"}
+          word={"Send"}
           btnColor="black"
-          // href={"/content-creator/create/article-images-generating"}
+          href={"/content-creator/create/schedule-script"}
         />
       </div>
     </div>
