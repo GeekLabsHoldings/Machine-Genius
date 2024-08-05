@@ -254,9 +254,7 @@ export default function GlobalContextProvider({
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
+
 
         json = await res.json();
 

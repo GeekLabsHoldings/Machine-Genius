@@ -546,7 +546,7 @@ export default function ShowErrorsPage() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href="/content-creator/create/final-article"
+          href="/content-creator/create/movie-myth/final-movie"
         />
         <CustomBtn
           word={"Fix & Check"}
@@ -554,6 +554,7 @@ export default function ShowErrorsPage() {
           onClick={() => {
             handleNavigate();
           }}
+          // href="/content-creator/create/movie-myth/article-ready"
         />
       </div>
     </div>

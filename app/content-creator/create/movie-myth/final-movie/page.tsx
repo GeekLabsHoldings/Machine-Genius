@@ -9,9 +9,11 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const FinalMovie = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
 
@@ -26,6 +28,17 @@ const FinalMovie = () => {
     plagiarism: "waiting",
     ai: "waiting",
   });
+
+  useEffect(() => {
+    if (!finalArticle) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   async function startChecks() {
     await checkGrammer();
@@ -95,10 +108,6 @@ const FinalMovie = () => {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -155,10 +164,6 @@ const FinalMovie = () => {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -207,10 +212,6 @@ const FinalMovie = () => {
             }),
           }
         );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
 
         json = await res.json();
 
@@ -316,7 +317,7 @@ const FinalMovie = () => {
           word={"Next"}
           btnColor="black"
           onClick={handleNavigate}
-        //   href="/content-creator/create/movie-myth/show-errors"
+          //   href="/content-creator/create/movie-myth/show-errors"
         />
       </div>
     </div>

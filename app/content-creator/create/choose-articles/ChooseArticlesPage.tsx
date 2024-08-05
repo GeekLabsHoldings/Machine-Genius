@@ -57,7 +57,7 @@ export default function ChooseArticlesPage() {
     </svg>
   );
 
-  // const [isChoosedArticles, setIsChoosedArticles] = useState(false);
+  const [isChoosedArticles, setIsChoosedArticles] = useState(false);
   const [previewText, setPreviewText] = useState<any>("");
 
   const {
@@ -84,11 +84,11 @@ export default function ChooseArticlesPage() {
 
   useEffect(() => {
     console.log("choosedArticles:", choosedArticles);
-    // if (choosedArticles.length > 0) {
-    //   setIsChoosedArticles(true);
-    // } else {
-    //   setIsChoosedArticles(false);
-    // }
+    if (choosedArticles.length > 0) {
+      setIsChoosedArticles(true);
+    } else {
+      setIsChoosedArticles(false);
+    }
   }, [choosedArticles]);
 
   function hasCheckedArticles(i: number) {
@@ -270,7 +270,7 @@ export default function ChooseArticlesPage() {
           href={"/content-creator/create/choose-brand"}
         />
 
-        {/* {isChoosedArticles ? (
+        {isChoosedArticles ? (
           <CustomBtn
             word="Next"
             btnColor="black"
@@ -280,19 +280,18 @@ export default function ChooseArticlesPage() {
           <CustomBtn
             word="Next"
             btnColor="black"
-            href="#"
             onClick={(e) => {
-              e.preventDefault();
-              // window.alert("Please select at least one article");
+              e?.preventDefault();
+              toast.error("Please select at least one article!");
             }}
           />
-        )} */}
+        )}
 
-        <CustomBtn
+        {/* <CustomBtn
           word="Next"
           btnColor="black"
           href="/content-creator/create/create-article"
-        />
+        /> */}
       </div>
     </div>
   );

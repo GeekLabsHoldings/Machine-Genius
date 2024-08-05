@@ -81,10 +81,10 @@ export default function ChooseBrandPage() {
     console.log(`selectedBrand:`, selectedBrand);
   }, [selectedBrand]);
 
-  // async function setCollectedDataAsync(json: any) {
-  //   setCollectedData(json.organizedArticles);
-  //   return Promise.resolve(); // Ensure this function is awaited properly
-  // }
+  async function setCollectedDataAsync(json: any) {
+    setCollectedData(json.organizedArticles);
+    return Promise.resolve(); // Ensure this function is awaited properly
+  }
 
   async function getCollectedData() {
     let postBody: any = {};
@@ -128,8 +128,8 @@ export default function ChooseBrandPage() {
     }
 
     if (json?.organizedArticles) {
-      // await setCollectedDataAsync(json);
-      setCollectedData(json.organizedArticles);
+      await setCollectedDataAsync(json);
+      // setCollectedData(json.organizedArticles);
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
@@ -148,9 +148,7 @@ export default function ChooseBrandPage() {
         `https://backendmachinegenius.onrender.com/collect/twitter/PLTR`
       );
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
+
 
       const json = await res.json();
       await setTwitterDataAsync(json.allArticles);

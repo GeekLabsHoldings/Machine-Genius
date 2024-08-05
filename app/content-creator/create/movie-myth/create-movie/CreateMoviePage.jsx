@@ -27,7 +27,6 @@ const CreateMovie = () => {
   );
 
   const { selectedBrand } = useContext(globalContext);
-
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {
@@ -105,66 +104,69 @@ const CreateMovie = () => {
   }, [videoRef]);
 
   async function finalizeContent() {
-    let brandNamePayload = "";
-    console.log(`selectedBrand`, selectedBrand);
-    console.log(`selectedText`, selectedText);
-
-    if (selectedBrand === "PST Canada") {
-      brandNamePayload = "StreetPolitics";
-    } else if (selectedBrand === "Investorcracy") {
-      brandNamePayload = "Investocracy";
-    } else if (selectedBrand === "Movie Myth") {
-      brandNamePayload = "Moviemyth";
-    }
-    console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
-    setIsLoading(true);
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/script/finalize-content`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // body: JSON.stringify(postBody),
-            body: JSON.stringify({
-              selectedContent: selectedText.map((item) => item.text).join(" "),
-              brandName: brandNamePayload,
-            }),
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
-        json = await res.json();
-
-        if (json.articles[0]?.content) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error finalizeContent:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json?.articles[0]?.content) {
-      // await setFinalArticleAsync(json);
-      dispatch(contentCreatorActions.setFinalArticle(json));
-      router.replace("/content-creator/create/movie-myth/final-movie");
+    if (selectedText.length === 0) {
+      toast.error("Please select at least one article!");
+      return;
     } else {
-      // setIsRetry(true);
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
+      let brandNamePayload = "";
+      console.log(`selectedBrand`, selectedBrand);
+      console.log(`selectedText`, selectedText);
+
+      if (selectedBrand === "PST Canada") {
+        brandNamePayload = "StreetPolitics";
+      } else if (selectedBrand === "Investorcracy") {
+        brandNamePayload = "Investocracy";
+      } else if (selectedBrand === "Movie Myth") {
+        brandNamePayload = "Moviemyth";
+      }
+      console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
+      setIsLoading(true);
+      const maxRetries = 2; // Define the maximum number of retries
+      let attempts = 0;
+      let json = null;
+
+      while (attempts < maxRetries) {
+        try {
+          const res = await fetch(
+            `https://backendmachinegenius.onrender.com/script/finalize-content`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              // body: JSON.stringify(postBody),
+              body: JSON.stringify({
+                selectedContent: selectedText
+                  .map((item) => item.text)
+                  .join(" "),
+                brandName: brandNamePayload,
+              }),
+            }
+          );
+
+          json = await res.json();
+
+          if (json.articles[0]?.content) {
+            // If content is found, break the loop
+            break;
+          }
+        } catch (error) {
+          toast.error("Something went wrong! Contact backend department");
+          console.error("Error finalizeContent:", error);
+        } finally {
+          attempts++;
+        }
+      }
+
+      if (json?.articles[0]?.content) {
+        // await setFinalArticleAsync(json);
+        dispatch(contentCreatorActions.setFinalArticle(json));
+        router.replace("/content-creator/create/movie-myth/final-movie");
+      } else {
+        // setIsRetry(true);
+        // window.alert("Failed to generate content after multiple attempts");
+        // router.push("/content-creator/create/choose-brand");
+      }
     }
   }
 
@@ -190,7 +192,6 @@ const CreateMovie = () => {
   useEffect(() => {
     const button = document.getElementById("highlight-btn");
     const articleContent = document.querySelector("#article-content");
-    let clientX, clientY;
 
     if (articleContent && button) {
       articleContent.addEventListener("mouseup", () => {
@@ -211,6 +212,17 @@ const CreateMovie = () => {
         articleContent.removeEventListener("mouseup", () => {});
       }
     };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedBrand || !videoTranscription) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
   }, []);
 
   useEffect(() => {
