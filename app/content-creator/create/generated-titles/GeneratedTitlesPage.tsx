@@ -23,7 +23,7 @@ const GeneratedTitlesPage = () => {
     generatedTitles,
     setGeneratedTitles,
     lockedGeneratedTitles,
-    setLockedGeneratedTitles
+    setLockedGeneratedTitles,
   } = useContext(globalContext);
   const [IsLoading, setIsLoading] = useState(false);
   // state that make create my title disabled or abled
@@ -74,7 +74,9 @@ const GeneratedTitlesPage = () => {
             <div className="h-full overflow-y-auto p-[1vw] space-y-[1vw]">
               {generatedTitles.map((title: any, index: any) => {
                 if (
-                  lockedGeneratedTitles.map((item: any) => item.order).includes(index)
+                  lockedGeneratedTitles
+                    .map((item: any) => item.order)
+                    .includes(index)
                 ) {
                   const lockedTitle = lockedGeneratedTitles.find(
                     (item: any) => item.order === index
