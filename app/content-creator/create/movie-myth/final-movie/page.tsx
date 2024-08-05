@@ -16,6 +16,7 @@ const FinalMovie = () => {
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
@@ -30,6 +31,7 @@ const FinalMovie = () => {
   });
 
   useEffect(() => {
+    setIsHydrated(true);
     if (!finalArticle) {
       toast.error(
         "No data is available. You will be redirected to refetch new data!"
@@ -248,6 +250,19 @@ const FinalMovie = () => {
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
+  }
+
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle
+            needTxt={false}
+            title="Genius is Loading..."
+          />
+        </div>
+      </div>
+    );
   }
 
   if (IsLoading) {
