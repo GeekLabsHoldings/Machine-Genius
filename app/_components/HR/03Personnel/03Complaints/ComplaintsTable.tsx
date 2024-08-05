@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./ComplaintsTable.module.css";
 import { truncateText } from "@/app/_utils/text";
 import RequestedByCard from "./RequestedByCard";
@@ -96,6 +96,32 @@ export default function ComplaintsTable() {
       />
     </svg>
   );
+  const [complaints,setComplaints] = useState([])
+
+  async function getComplaints() {
+    const token = localStorage.getItem("token");
+    try {
+      console.log("xzcasdqe");
+      
+      const data = await fetch(
+        "https://machine-genius.onrender.com/hr/complaint/get-all?name=&department=&solve=&urgencyLevel=&limit&skip",
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const res = await data.json();
+      setComplaints(res)
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(()=>{
+    getComplaints()
+  },[])
 
   return (
     <div className={`${styles.tableContainer} h-[65vh]`}>
@@ -122,27 +148,24 @@ export default function ComplaintsTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e) => (
-            <ul className="w-[100%] relative" key={e.complaintId}>
+          {complaints.map((e:any,i) => (
+            <ul className="w-[100%] relative" key={e._id}>
               <div className="absolute">{e.newStatus && newRibbon}</div>
               <li className="w-[20%]">{e.complaintIssue}</li>
               <li className="w-[30%]">
-                {truncateText(e.complaintDescription, 35)}
+                {truncateText(e.description, 35)}
               </li>
               <li className="w-[20%]">
                 <RequestedByCard
                   name={e.requestedBy}
-                  color={e.requestedByColor}
+                  color={e.employee.theme}
                 />
               </li>
               <li
-                className={`w-[15%] ${
-                  e.urgencyLevel === "High"
-                    ? styles.highUrgencyLevel
-                    : e.urgencyLevel === "Mid"
-                    ? styles.midUrgencyLevel
-                    : ""
-                }`}
+                className={`w-[15%] `}
+                style={{
+                  color:`${e.employee.theme}`
+                }}
               >
                 {e.urgencyLevel}
               </li>
