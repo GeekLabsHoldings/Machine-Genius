@@ -137,12 +137,12 @@ const GeneratedTitlesPage = () => {
           word={"Back"}
           btnColor="white"
           // href={"/content-creator/create/generating-titles"}
-          href={"/content-creator/create/comments-on-article"}
+          href={"/content-creator/create/show-errors"}
         />
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/content-creator/create/article-images-generating"}
+          // href={"/content-creator/create/article-images-generating"}
         />
       </div>
     </div>
