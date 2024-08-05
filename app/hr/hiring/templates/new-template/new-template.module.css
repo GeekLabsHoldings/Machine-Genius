@@ -78,7 +78,7 @@
     font-size: clamp(16px, calc(0.9vw + 0.1rem), 1000px);
     font-weight: 700;
     width: 100%;
-    pointer-events: none;
+    /* pointer-events: none; */
 }
 
 .card .card_header input::placeholder {
@@ -99,9 +99,8 @@
     outline: none;
     border: none;
     width: 100%;
-    height: 100%;
     margin-bottom: 1vw;
-    pointer-events: none;
+    /* pointer-events: none; */
     resize: none;
 }
 

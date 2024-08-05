@@ -14,10 +14,10 @@
 
 .scripts_wrapper .header h6{
     font-weight: 700;
-    font-size: clamp(14px,  calc( 2vw + 0.1rem ) , 900px);
+    font-size: clamp(14px,  calc( 1.5vw + 0.1rem ) , 900px);
 }
 
-.scripts_wrapper .select_article_container{
+.scripts_wrapper .errors_container{
     box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
     border: 1px solid transparent;
     border-radius: clamp(10px,  calc( 1.4vw + 0.1rem ) , 1000px);

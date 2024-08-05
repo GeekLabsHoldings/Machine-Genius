@@ -6,13 +6,14 @@ import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { globalContext } from "@/app/_context/store";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 
 export default function ChooseBrandPage() {
   const dispatch = useDispatch();
@@ -20,15 +21,13 @@ export default function ChooseBrandPage() {
 
   const {
     setSelectedBrand,
+    collectedData,
     setCollectedData,
     setTwitterData,
     setChoosedArticles,
-    // setFinalArticle,
-    // setCheckGrammerResults,
-    // setCheckAiResults,
     selectedBrand,
     setGeneratedTitles,
-    setLockedGeneratedTitles
+    setLockedGeneratedTitles,
   } = useContext(globalContext);
 
   // reset all the data
@@ -37,25 +36,24 @@ export default function ChooseBrandPage() {
     setCollectedData(null);
     setTwitterData(null);
     setChoosedArticles([]);
-    // setFinalArticle(null);
     dispatch(contentCreatorActions.setFinalArticle(null));
-    // setCheckGrammerResults([]);
-    // setCheckAiResults([]);
     dispatch(contentCreatorActions.setCheckGrammerResults([]));
     dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);
     setLockedGeneratedTitles([]);
+    dispatch(contentCreatorActions.setVideoTranscription(null));
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedBrand");
       sessionStorage.removeItem("collectedData");
       sessionStorage.removeItem("twitterData");
       sessionStorage.removeItem("choosedArticles");
-      sessionStorage.removeItem("selectedText"); 
+      sessionStorage.removeItem("selectedText");
       sessionStorage.removeItem("finalArticle");
       sessionStorage.removeItem("checkGrammerResults");
       sessionStorage.removeItem("checkAiResults");
       sessionStorage.removeItem("generatedTitles");
       sessionStorage.removeItem("lockedGeneratedTitles");
+      sessionStorage.removeItem("videoTranscription");
     }
   }, []);
 
@@ -71,7 +69,7 @@ export default function ChooseBrandPage() {
   ];
 
   const [stockNameValue, setStockNameValue] = useState("PLTR");
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStockNameValue((event.target as HTMLInputElement).value);
   };
   // function that get select value by sending to custom select as a prop
@@ -81,14 +79,9 @@ export default function ChooseBrandPage() {
 
   useEffect(() => {
     console.log(`selectedBrand:`, selectedBrand);
-    // navigate to movie myth if user select movie myth option
-    if (selectedBrand === "Movie Myth") {
-      router.replace("/content-creator/create/movie-myth");
-    }
   }, [selectedBrand]);
 
-
-  async function setCollectedDataAsync(json:any) {
+  async function setCollectedDataAsync(json: any) {
     setCollectedData(json.organizedArticles);
     return Promise.resolve(); // Ensure this function is awaited properly
   }
@@ -108,25 +101,26 @@ export default function ChooseBrandPage() {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(`https://backendmachinegenius.onrender.com/generate-content`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(postBody),
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/generate-content`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(postBody),
+          }
+        );
         json = await res.json();
-
+        if (json.success === false) {
+          toast.error("Something went wrong! Contact backend department");
+        }
         if (json?.organizedArticles) {
           // If valid data is found, break the loop
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error getCollectedData:", error);
       } finally {
         attempts++;
@@ -135,6 +129,7 @@ export default function ChooseBrandPage() {
 
     if (json?.organizedArticles) {
       await setCollectedDataAsync(json);
+      // setCollectedData(json.organizedArticles);
     } else {
       setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
@@ -142,31 +137,31 @@ export default function ChooseBrandPage() {
     }
   }
 
-
-  async function setTwitterDataAsync(json:any) {
+  async function setTwitterDataAsync(json: any) {
     setTwitterData(json);
     return Promise.resolve(); // Ensure this function is awaited properly
   }
 
   async function getTwitterData() {
     try {
-      const res = await fetch(`https://backendmachinegenius.onrender.com/collect/twitter/PLTR`);
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/collect/twitter/PLTR`
+      );
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
+
 
       const json = await res.json();
       await setTwitterDataAsync(json.allArticles);
     } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
       console.error("Error getCollectedData:", error);
     }
   }
 
-  async function generateContent(){
+  async function generateContent() {
     setIsLoading(true);
     await getCollectedData();
-    if (selectedBrand === "Investorcracy"){
+    if (selectedBrand === "Investorcracy") {
       // await getTwitterData();
     }
     router.replace("/content-creator/create/choose-articles");
@@ -206,26 +201,43 @@ export default function ChooseBrandPage() {
           getValue={getValue}
         />
 
-
         {selectedBrand === "Investorcracy" && (
-  <FormControl sx={{marginTop: "2vh"}}>
-      <RadioGroup
-        aria-labelledby="demo-controlled-radio-buttons-group"
-        name="controlled-radio-buttons-group"
-        value={stockNameValue}
-        onChange={handleChange}
-      >
-        <FormControlLabel value="NVDA" control={<Radio />} label="NVIDIA" />
-        <FormControlLabel value="AAPL" control={<Radio />} label="Apple" />
-        <FormControlLabel value="AMD" control={<Radio />} label="AMD" />
-        <FormControlLabel value="AMZN" control={<Radio />} label="Amazon" />
-        <FormControlLabel value="PLTR" control={<Radio />} label="Palantir" />
-        <FormControlLabel value="TSLA" control={<Radio />} label="Tesla" />
-      </RadioGroup>
-    </FormControl>
-)}
-
-
+          <FormControl sx={{ marginTop: "2vh" }}>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={stockNameValue}
+              onChange={handleChange}
+            >
+              <FormControlLabel
+                value="NVDA"
+                control={<Radio />}
+                label="NVIDIA"
+              />
+              <FormControlLabel
+                value="AAPL"
+                control={<Radio />}
+                label="Apple"
+              />
+              <FormControlLabel value="AMD" control={<Radio />} label="AMD" />
+              <FormControlLabel
+                value="AMZN"
+                control={<Radio />}
+                label="Amazon"
+              />
+              <FormControlLabel
+                value="PLTR"
+                control={<Radio />}
+                label="Palantir"
+              />
+              <FormControlLabel
+                value="TSLA"
+                control={<Radio />}
+                label="Tesla"
+              />
+            </RadioGroup>
+          </FormControl>
+        )}
       </div>
 
       {/* buttons to move to last or next page */}
@@ -239,11 +251,10 @@ export default function ChooseBrandPage() {
           word="Next"
           btnColor="black"
           onClick={() => {
-            if (
-              selectedBrand !== "PST Canada" &&
-              selectedBrand !== "Investorcracy"
-            ) {
-              // window.alert("Please select PST Canada or Investorcracy!");
+            if (!selectedBrand) {
+              toast.error("Please select a brand!");
+            } else if (selectedBrand === "Movie Myth") {
+              router.replace("/content-creator/create/movie-myth");
             } else {
               generateContent();
             }

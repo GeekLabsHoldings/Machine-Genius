@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 // import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
 const VideoPlayer = dynamic(
   () => import("@/app/_components/VideoPlayer/VideoPlayer"),
@@ -26,7 +27,6 @@ const CreateMovie = () => {
   );
 
   const { selectedBrand } = useContext(globalContext);
-
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {
@@ -104,68 +104,71 @@ const CreateMovie = () => {
   }, [videoRef]);
 
   async function finalizeContent() {
-    let brandNamePayload = "";
-    console.log(`selectedBrand`, selectedBrand);
-    console.log(`selectedText`, selectedText);
+    if (selectedText.length === 0) {
+      toast.error("Please select at least one article!");
+      return;
+    } else {
+      let brandNamePayload = "";
+      console.log(`selectedBrand`, selectedBrand);
+      console.log(`selectedText`, selectedText);
 
-    if (selectedBrand === "PST Canada") {
-      brandNamePayload = "StreetPolitics";
-    } else if (selectedBrand === "Investorcracy") {
-      brandNamePayload = "Investocracy";
-    } else if (selectedBrand === "Movie Myth") {
-      brandNamePayload = "Moviemyth";
-    }
-    console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
-    setIsLoading(true);
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
+      if (selectedBrand === "PST Canada") {
+        brandNamePayload = "StreetPolitics";
+      } else if (selectedBrand === "Investorcracy") {
+        brandNamePayload = "Investocracy";
+      } else if (selectedBrand === "Movie Myth") {
+        brandNamePayload = "Moviemyth";
+      }
+      console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
+      setIsLoading(true);
+      const maxRetries = 2; // Define the maximum number of retries
+      let attempts = 0;
+      let json = null;
 
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/script/finalize-content`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // body: JSON.stringify(postBody),
-            body: JSON.stringify({
-              selectedContent: selectedText.map((item) => item.text).join(" "),
-              brandName: brandNamePayload,
-            }),
+      while (attempts < maxRetries) {
+        try {
+          const res = await fetch(
+            `https://backendmachinegenius.onrender.com/script/finalize-content`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              // body: JSON.stringify(postBody),
+              body: JSON.stringify({
+                selectedContent: selectedText
+                  .map((item) => item.text)
+                  .join(" "),
+                brandName: brandNamePayload,
+              }),
+            }
+          );
+
+          json = await res.json();
+
+          if (json.articles[0]?.content) {
+            // If content is found, break the loop
+            break;
           }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
+        } catch (error) {
+          toast.error("Something went wrong! Contact backend department");
+          console.error("Error finalizeContent:", error);
+        } finally {
+          attempts++;
         }
+      }
 
-        json = await res.json();
-
-        if (json.articles[0]?.content) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        console.error("Error finalizeContent:", error);
-      } finally {
-        attempts++;
+      if (json?.articles[0]?.content) {
+        // await setFinalArticleAsync(json);
+        dispatch(contentCreatorActions.setFinalArticle(json));
+        router.replace("/content-creator/create/movie-myth/final-movie");
+      } else {
+        // setIsRetry(true);
+        // window.alert("Failed to generate content after multiple attempts");
+        // router.push("/content-creator/create/choose-brand");
       }
     }
-
-    if (json?.articles[0]?.content) {
-      // await setFinalArticleAsync(json);
-      dispatch(contentCreatorActions.setFinalArticle(json));
-      router.replace("/content-creator/create/movie-myth/final-movie");
-    } else {
-      // setIsRetry(true);
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
-    }
   }
-
 
   const handleSelectedText = () => {
     const button = document.getElementById("highlight-btn");
@@ -189,14 +192,8 @@ const CreateMovie = () => {
   useEffect(() => {
     const button = document.getElementById("highlight-btn");
     const articleContent = document.querySelector("#article-content");
-    let clientX, clientY;
 
     if (articleContent && button) {
-      articleContent.addEventListener("mousedown", function (event) {
-        clientX = event.pageX;
-        clientY = event.pageY;
-      });
-
       articleContent.addEventListener("mouseup", () => {
         let selectionFromDocument = document.getSelection();
         let textValue = selectionFromDocument.toString();
@@ -204,42 +201,28 @@ const CreateMovie = () => {
         if (textValue == "") {
           button.style.display = "none";
         } else {
-          // Get coOrdinates of the content div
-          let coOrdinates = articleContent.getBoundingClientRect();
-
-          // Calculate button dimensions
-          let buttonWidth = button.offsetWidth;
-          let buttonHeight = button.offsetHeight;
-
-          // Calculate maximum allowable positions
-          let maxPosX = coOrdinates.right - buttonWidth;
-          let maxPosY = coOrdinates.bottom - buttonHeight;
-
-          // Constrain posX and posY
-          let posX = Math.min(
-            Math.max(clientX - Math.round(coOrdinates.left), 0),
-            maxPosX
-          );
-          let posY = Math.min(
-            Math.max(clientY - Math.round(coOrdinates.top) - 40, 0),
-            maxPosY
-          );
-
           // Set the display style of the button to block
           button.style.display = "block";
-          // Set the position of the button
-          button.style.left = posX + "px";
-          button.style.top = posY + "px";
         }
       });
     }
 
     return () => {
       if (articleContent && button) {
-        articleContent.removeEventListener("mousedown", () => {});
         articleContent.removeEventListener("mouseup", () => {});
       }
     };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedBrand || !videoTranscription) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
   }, []);
 
   useEffect(() => {
@@ -261,15 +244,6 @@ const CreateMovie = () => {
   return (
     <div className="flex flex-col gap-[1vw]">
       <div className="flex justify-center items-center pageHeader h-[75vh] py-[1.5vw] w-full gap-[2vw]">
-        <button
-          id="highlight-btn"
-          className={`${styles.highlightBtn}`}
-          onClick={() => {
-            handleSelectedText();
-          }}
-        >
-          Select
-        </button>
         {/* transcript section */}
         <div
           className={`${styles.createMovie} w-5/12 h-full`}
@@ -304,6 +278,15 @@ const CreateMovie = () => {
                     </div>
                   );
                 })}
+            <button
+              id="highlight-btn"
+              className={`${styles.highlightBtn}`}
+              onClick={() => {
+                handleSelectedText();
+              }}
+            >
+              Select
+            </button>
           </div>
         </div>
         {/* section to display your selected movie */}
@@ -332,7 +315,12 @@ const CreateMovie = () => {
           btnColor="black"
           // href={"/content-creator/create/movie-myth/final-movie"}
           onClick={() => {
-            finalizeContent();
+            // console.log(selectedText);
+            if (!selectedText.some((e) => e.text.length > 0)) {
+              toast.error("Please select some text to continue!");
+            } else {
+              finalizeContent();
+            }
           }}
         />
       </div>

@@ -6,12 +6,15 @@ import ErrorCollapse from "@/app/_components/ErrorCollapse/ErrorCollapse";
 import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
-import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
+// import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
 import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
@@ -49,7 +52,7 @@ export default function ShowErrorsPage() {
       ...finalArticle,
       articles: [
         {
-          ...finalArticle.articles[0],
+          ...finalArticle?.articles[0],
           content: finalArticleContentRef.current,
         },
       ],
@@ -92,17 +95,19 @@ export default function ShowErrorsPage() {
     setTriggerStartChecks(true);
   }
 
-  // useEffect(() => {
-  // ===== log data =====
-  // console.log("finalArticle:", finalArticle);
-  // ===== if there is no data, redirect to the choose brand page =====
-  // if (!finalArticle && !sessionStorage.getItem("finalArticle")) {
-  // window.alert(
-  //   "No data is available. You will be redirected to refetch new data!"
-  // );
-  // router.push("/content-creator/create/choose-brand");
-  // }
-  // }, []);
+  useEffect(() => {
+    // ===== log data =====
+    // console.log("finalArticle:", finalArticle);
+    // ===== if there is no data, redirect to the choose brand page =====
+    if (!finalArticle) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   useEffect(() => {
     if (triggerStartChecks === false) {
@@ -233,10 +238,6 @@ export default function ShowErrorsPage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -244,6 +245,7 @@ export default function ShowErrorsPage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
@@ -291,10 +293,6 @@ export default function ShowErrorsPage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -302,6 +300,7 @@ export default function ShowErrorsPage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -343,10 +342,6 @@ export default function ShowErrorsPage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -354,6 +349,7 @@ export default function ShowErrorsPage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;
@@ -440,51 +436,11 @@ export default function ShowErrorsPage() {
       <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
         {/* 01-1. Article Preview */}
         <div className={"w-3/5 h-full"}>
-          {/* <ArticlePreview
-              yourNewArticle={true}
-              height="h-full"
-              withEdit={true}
-            /> */}
           <div className={` ${styles.articlePreview} h-full`}>
             <div className={`${styles.articlePreviewData} `}>
               <h1 className="mx-auto font-bold text-2xl">
                 {finalArticle?.articles[0]?.title}
               </h1>
-              {/* 
-              <div
-                id="finalArticle"
-                ref={finalArticleRef}
-                contentEditable={true}
-                className={`${styles.articleContent}`}
-                // onInput={handleInput}
-              >
-                {selectedIssue === null ? (
-                  finalArticle?.articles[0]?.content
-                ) : issueType === "grammer" ? (
-                  <HighlightedContent
-                    text={finalArticle?.articles[0]?.content}
-                    start={selectedIssue.sentence_start}
-                    end={
-                      selectedIssue.sentence_start +
-                      selectedIssue.sentence.length
-                    }
-                  />
-                ) : issueType === "ai" ? (
-                  <HighlightedContent
-                    text={finalArticle?.articles[0]?.content}
-                    start={finalArticle?.articles[0]?.content.indexOf(
-                      selectedIssue.sentence
-                    )}
-                    end={
-                      finalArticle?.articles[0]?.content.indexOf(
-                        selectedIssue.sentence
-                      ) + selectedIssue.sentence.length
-                    }
-                  />
-                ) : (
-                  <p>{finalArticle?.articles[0]?.content}</p>
-                )}
-              </div> */}
 
               <div
                 id="finalArticle"

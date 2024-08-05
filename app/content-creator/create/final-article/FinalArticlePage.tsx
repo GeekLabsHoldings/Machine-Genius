@@ -4,14 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from "./final-artical.module.css";
-import { globalContext } from "@/app/_context/store";
-import { useContext } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function FinalArticlePage() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
 
@@ -31,26 +32,16 @@ export default function FinalArticlePage() {
   //   console.log("finalArticle", finalArticle);
   // }, []);
 
-  // useEffect(() => {
-  //   if (
-  //     !finalArticle &&
-  //     !sessionStorage.getItem("finalArticle")
-  // ||
-  // !finalArticle.articles[0] ||
-  // !finalArticle.articles[0]?.content ||
-  // finalArticle.success !== true
-  // ) {
-  // window.alert(
-  //   "No data is available. You will be redirected to refetch new data!"
-  // );
-  // router.push("/content-creator/create/choose-brand");
-  //   }
-  // }, []);
-
-  // async function setIsLoadingAsync() {
-  //   setIsLoading(true);
-  //   return Promise.resolve();
-  // }
+  useEffect(() => {
+    if (!finalArticle) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   async function startChecks() {
     await checkGrammer();
@@ -120,10 +111,6 @@ export default function FinalArticlePage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -131,6 +118,7 @@ export default function FinalArticlePage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
@@ -179,10 +167,6 @@ export default function FinalArticlePage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -190,6 +174,7 @@ export default function FinalArticlePage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -231,10 +216,6 @@ export default function FinalArticlePage() {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -242,6 +223,7 @@ export default function FinalArticlePage() {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;
@@ -309,12 +291,6 @@ export default function FinalArticlePage() {
       <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] w-11/12 ">
         {/* section to display article */}
         <div className="w-4/5 mx-auto h-full">
-          {/* <ArticlePreview
-                isEditable={false}
-                yourNewArticle={true}
-                finalArticle={finalArticle}
-              /> */}
-
           <div className={` ${styles.articlePreview} h-full `}>
             <div className={`${styles.articlePreviewData} `}>
               <h1 className="mx-auto font-bold text-2xl">
@@ -327,15 +303,6 @@ export default function FinalArticlePage() {
                 contentEditable={true}
                 className={`${styles.articleContent}`}
               >
-                {/* {finalArticle?.articles[0]?.content
-                  .match(/[^\.!\?]+[\.!\?]+/g)
-                  ?.map((e: any, index: number) => (
-                    <>
-                      <p key={index}>{e}</p>
-                      <br />
-                    </>
-                  ))} */}
-
                 {finalArticle?.articles[0]?.content}
               </div>
             </div>

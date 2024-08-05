@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
@@ -253,9 +254,7 @@ export default function GlobalContextProvider({
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
+
 
         json = await res.json();
 
@@ -264,6 +263,7 @@ export default function GlobalContextProvider({
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error generateTitles:", error);
       } finally {
         attempts++;

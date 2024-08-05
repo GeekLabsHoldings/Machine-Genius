@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./uploadMovie.module.css";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
 
 const MovieMyth = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,12 @@ const MovieMyth = () => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  useEffect(() => {
+    dispatch(contentCreatorActions.setVideoTranscription(null));
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("videoTranscription");
+    }
+  }, []);
 
   async function uploadVideo(file: File) {
     setIsLoading(true);
@@ -53,19 +60,22 @@ const MovieMyth = () => {
           dispatch(contentCreatorActions.setVideoTranscription(response));
           router.replace("/content-creator/create/movie-myth/create-movie");
         } else {
-          throw new Error("Failed to upload video");
+          toast.error(`Upload failed with status: ${xhr.status}`);
+          setError(`Upload failed with status: ${xhr.status}`);
           setIsLoading(false);
         }
       };
 
       xhr.onerror = () => {
+        toast.error("Something went wrong! Contact backend department");
         setError("Upload failed due to an error.");
         setIsLoading(false);
       };
 
       xhr.send(formData);
     } catch (error: any) {
-      setError(error.message);
+      toast.error("Something went wrong! Contact backend department");
+      setError(error?.message);
       console.error("Error in uploadVideo:", error);
       setIsLoading(false);
     }
