@@ -6,15 +6,14 @@ import {
   ArticleNames,
   Brands,
   ContentTypeFilter,
-  YourArticles,
 } from "@/app/_data/data";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const ArticleDatabase = () => {
-  const [articlesDatabase, setArticlesDatabase] = useState<any>([]);
+const ContentDatabase = () => {
+  const [contentDatabase, setContentDatabase] = useState<any>([]);
 
-  async function getArticleDatabase() {
+  async function getContentDatabase() {
     const maxRetries = 2; // Define the maximum number of retries
     let attempts = 0;
     let json = null;
@@ -31,14 +30,14 @@ const ArticleDatabase = () => {
         }
       } catch (error) {
         toast.error("Something went wrong! Contact backend department");
-        console.error("Error getArticleDatabase:", error);
+        console.error("Error getContentDatabase:", error);
       } finally {
         attempts++;
       }
     }
 
     if (json) {
-      setArticlesDatabase(json);
+      setContentDatabase(json);
       // setCollectedData(json.organizedArticles);
     } else {
       // setIsRetry(true);
@@ -47,39 +46,40 @@ const ArticleDatabase = () => {
     }
   }
 
-  useEffect(()=>{
-    getArticleDatabase();
-  }, [])
+  useEffect(() => {
+    getContentDatabase();
+  }, []);
 
-  const renderYourArticles = articlesDatabase.map((oneArticle:any, idx:any) => (
-    <ul
-      key={idx}
-      className={`${styles.tableBody} borderBottom articleRow `}
-      // onClick={(e)=>{handleSelectedBg(e)}}
-    >
-      <li className="w-[10%]">{oneArticle._id}</li>
-      <li className="w-3/12 ">{oneArticle.content_title}</li>
-      <li className="w-1/12 ">
-        <span
-          className={
-            oneArticle.brand === "STP"
-              ? "bg-[#31B2E9B2]"
-              : oneArticle.brand === "Canada"
-              ? "bg-[#E9313EB2]"
-              : oneArticle.brand === "PST Asia"
-              ? "bg-[#E1C655B2]"
-              : oneArticle.brand === "Investocracy"
-              ? "bg-[#5FA85BB5]"
-              : "bg-[#F36F24B2]"
-          }
-        >
-          {oneArticle.brand}
-        </span>
-      </li>
-      <li className={`w-2/12  ${styles.contentType}`}>
-        {oneArticle.content_type}
-      </li>
-      {/* <li className="w-1/12 ">
+  const renderYourArticles = contentDatabase.map(
+    (oneArticle: any, idx: any) => (
+      <ul
+        key={idx}
+        className={`${styles.tableBody} borderBottom articleRow `}
+        // onClick={(e)=>{handleSelectedBg(e)}}
+      >
+        <li className="w-[10%]">{oneArticle._id}</li>
+        <li className="w-3/12 ">{oneArticle.content_title}</li>
+        <li className="w-1/12 ">
+          <span
+            className={
+              oneArticle.brand === "STP"
+                ? "bg-[#31B2E9B2]"
+                : oneArticle.brand === "Canada"
+                ? "bg-[#E9313EB2]"
+                : oneArticle.brand === "PST Asia"
+                ? "bg-[#E1C655B2]"
+                : oneArticle.brand === "Investocracy"
+                ? "bg-[#5FA85BB5]"
+                : "bg-[#F36F24B2]"
+            }
+          >
+            {oneArticle.brand}
+          </span>
+        </li>
+        <li className={`w-2/12  ${styles.contentType}`}>
+          {oneArticle.content_type}
+        </li>
+        {/* <li className="w-1/12 ">
         <div className={`${styles.viewsDiv} flex`}>
           <h6>
             {oneArticle.views > 999
@@ -111,16 +111,19 @@ const ArticleDatabase = () => {
           {oneArticle.approvals}
         </span>
       </li> */}
-      {/* <li className="w-1/12 ">{oneArticle.date}</li> */}
-      <li className={` w-1/12 ${styles.edit}`}>
-        <button
-        onClick={()=>{
-          // todo: redirect to edit page
-        }}
-        >Edit</button>
-      </li>
-    </ul>
-  ));
+        {/* <li className="w-1/12 ">{oneArticle.date}</li> */}
+        <li className={` w-1/12 ${styles.edit}`}>
+          <button
+            onClick={() => {
+              // todo: redirect to edit page
+            }}
+          >
+            Edit
+          </button>
+        </li>
+      </ul>
+    )
+  );
 
   return (
     <div className={`${styles.articleDatabase} w-full h-full pt-[0.5vw]`}>
@@ -211,4 +214,4 @@ const ArticleDatabase = () => {
   );
 };
 
-export default ArticleDatabase;
+export default ContentDatabase;
