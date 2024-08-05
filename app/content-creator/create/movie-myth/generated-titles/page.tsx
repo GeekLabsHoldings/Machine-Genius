@@ -24,7 +24,7 @@ const GeneratedTitles = () => {
                         <h6>Titles Generated</h6>
 
                         {/* regenerate titles button */}
-                        <CustomBtn word="Re-Generate" btnColor="black" href="/content-creator/generated-titles" icon={ReGenerateIcon} />
+                        <CustomBtn word="Re-Generate" btnColor="black" href="/content-creator/create/generated-titles/" icon={ReGenerateIcon} />
                     </div>
 
                     {/* generated titles container */}

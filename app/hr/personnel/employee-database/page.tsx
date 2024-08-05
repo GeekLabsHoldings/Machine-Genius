@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import EmployeeDatabaseTable from "@/app/_components/HR/03Personnel/01EmployeeDatabase/EmployeeDatabaseTable";
+import { headers } from "next/headers";
 
 export default function Page() {
   // options for roles
@@ -101,6 +102,7 @@ export default function Page() {
       }
     }
   }
+  
 
   useEffect(() => {
     // Retrieve the table element by its ID from the document and cast it to HTMLTableElement or null if not found.

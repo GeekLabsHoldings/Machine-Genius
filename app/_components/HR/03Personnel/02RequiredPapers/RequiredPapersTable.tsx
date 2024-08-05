@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./RequiredPapersTable.module.css";
 import Link from "next/link";
 
@@ -188,6 +188,34 @@ export default function RequiredPapersTable() {
       gradCert: "JohnDoeID.pdf",
     },
   ];
+
+  const [papers,setPapers] = useState([])
+
+
+  async function getrequiredPapers() {
+    const token = localStorage.getItem("token");
+    try {
+      console.log("xzcasdqe");
+      
+      const data = await fetch(
+        "https://machine-genius.onrender.com/hr/employee-paper/get-paper",
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const res = await data.json();
+      setPapers(res)
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(()=>{
+getrequiredPapers()
+  },[])
 
   return (
     <div className={`${styles.tableContainer} h-[68vh]`}>

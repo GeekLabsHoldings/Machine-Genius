@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./EmployeeDatabaseTable.module.css";
 import { truncateText } from "../../../../_utils/text";
 import Link from "next/link";
@@ -11,188 +11,32 @@ import Link from "next/link";
  */
 export default function EmployeeDatabaseTable() {
   // An array of objects representing the rows of the table body.
-  const bodyRow = [
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Video Editor",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Video Editor",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Video Editor",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Graphic Designer",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "UX/UI",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Manager",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Front End Dev",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Video Editor",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Video Editor",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Video Editor",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Video Editor",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Content Writer",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Manager",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Manager",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Content Writer",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Content Writer",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Graphic Designer",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-    {
-      firstName: "John",
-      lastName: "Doe",
-      mobile: "+0202123456789",
-      email: "johndoe@gmail.com",
-      linkedin: "https://www.linkedin.com/jogndoe",
-      role: "Graphic Designer",
-      cv: "JohnDoeID.pdf",
-      port: "loream",
-    },
-  ];
+  const [employees,setEmployees] = useState([])
+
+  async function getEmployees() {
+    const token = localStorage.getItem("token");
+    try {
+      console.log("xzcasdqe");
+      
+      const data = await fetch(
+        "https://machine-genius.onrender.com/hr/employee/data?name=&department=&limit&skip",
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const res = await data.json();
+      setEmployees(res)
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(()=>{
+    getEmployees()
+  },[])
 
   return (
     <div className={`${styles.tableContainer} h-[68vh]`}>
@@ -212,29 +56,29 @@ export default function EmployeeDatabaseTable() {
           <li className="w-[12%]">
             <span>Email</span>
           </li>
-          <li className="w-[8%]">
+          {/* <li className="w-[8%]">
             <span>LinkedIn</span>
-          </li>
+          </li> */}
           <li className="w-[12%]">
             <span>Role</span>
           </li>
-          <li className="w-[7%]">
+          {/* <li className="w-[7%]">
             <span>CV</span>
-          </li>
-          <li className="w-[7%]">
+          </li> */}
+          {/* <li className="w-[7%]">
             <span>Port</span>
+          </li> */}
+          <li className="w-[14%]">
+            <span>Type</span>
           </li>
-          <li className="w-[7%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[7%]">
+          <li className="w-[14%]">
             <span>Lorem</span>
           </li>
         </ul>
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
+          {employees.map((e:any, idx) => (
             <ul key={idx} className={`space-x-2`}>
               <li className="w-[10%]">
                 <span>{e.firstName}</span>
@@ -243,31 +87,31 @@ export default function EmployeeDatabaseTable() {
                 <span>{e.lastName}</span>
               </li>
               <li className="w-[12%]">
-                <span>{e.mobile}</span>
+                <span>{e.phoneNumber}</span>
               </li>
               <li className="w-[12%]">
                 <span>{e.email}</span>
               </li>
-              <li className="w-[8%]">
+              {/* <li className="w-[8%]">
                 <Link href={e.linkedin} target="_blank">
                   <span>{truncateText(e.linkedin, 20)}</span>
                 </Link>
-              </li>
+              </li> */}
               <li className="w-[12%]">
                 <span>{e.role}</span>
               </li>
-              <li className="w-[7%]">
+              {/* <li className="w-[7%]">
                 <Link href="#" target="_blank">
                   <span>{e.cv}</span>
                 </Link>
-              </li>
-              <li className="w-[7%]">
+              </li> */}
+              {/* <li className="w-[7%]">
                 <span>{e.port}</span>
+              </li> */}
+              <li className="w-[14%]">
+                <span>{e.type}</span>
               </li>
-              <li className="w-[7%]">
-                <span>Lorem</span>
-              </li>
-              <li className="w-[7%]">
+              <li className="w-[14%]">
                 <span>Lorem</span>
               </li>
             </ul>

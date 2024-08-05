@@ -310,7 +310,9 @@ export default function ShowErrorsPage() {
     if (json) {
       // todo
       if (json) {
-        setCheckStatus((prev) => ({ ...prev, plagiarism: "fail" }));
+        // setCheckStatus((prev) => ({ ...prev, plagiarism: "fail" }));
+        // temp until backend fix it
+        setCheckStatus((prev) => ({ ...prev, plagiarism: "pass" }));
       } else {
         setCheckStatus((prev) => ({ ...prev, plagiarism: "pass" }));
       }
@@ -420,9 +422,9 @@ export default function ShowErrorsPage() {
             checkStatus.plagiarism === "pass" &&
             checkStatus.ai === "pass" && (
               <CustomBtn
-                word={"Request Approval"}
+                word={"Generate Titles"}
                 btnColor="black"
-                href="/content-creator/create/script-approved"
+                href="/content-creator/create/generated-titles"
               />
             )}
         </div>
