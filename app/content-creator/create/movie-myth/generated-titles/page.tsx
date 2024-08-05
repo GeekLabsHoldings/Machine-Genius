@@ -28,6 +28,7 @@ const GeneratedTitles = () => {
   const [IsLoading, setIsLoading] = useState(false);
   // state that make create my title disabled or abled
   const [isCreateMyOwnDisabled, setIsCreateMyOwnDisabled] = useState(true);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   async function handleGenerateTitles() {
     setIsLoading(true);
@@ -36,8 +37,19 @@ const GeneratedTitles = () => {
   }
 
   useEffect(() => {
+    setIsHydrated(true);
     handleGenerateTitles();
   }, []);
+
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+        </div>
+      </div>
+    );
+  }
 
   if (IsLoading) {
     return (
