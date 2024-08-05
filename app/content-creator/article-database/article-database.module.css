@@ -91,7 +91,7 @@
     width: 1vw;
     height: 1vh;
 }
-.edit a{
+.edit button{
     text-decoration: underline;
 }
 .tableBody li span{
