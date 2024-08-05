@@ -241,38 +241,27 @@ getrequiredPapers()
           <li className="w-[20%]">
             <span>Graduation Certificate</span>
           </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
+         
         </ul>
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
+          {papers.map((e:any, idx:any) => (
             <ul key={idx}>
               <li className="w-[20%]">
-                <span>{e.name}</span>
+                <span>{e.employee.firstName + "" +e.employee.lastName}</span>
               </li>
               <li className="w-[20%]">
                 <Link href="#" target="_blank">
                   <span
                     style={{
                       color:
-                        e.insurance === "Not Received" ? "#E9313E" : "#0066FF",
+                        e.insuranceUrl === "Not Received" ? "#E9313E" : "#0066FF",
                       textDecoration:
-                        e.insurance !== "Not Received" ? "underline" : "none",
+                        e.insuranceUrl !== "Not Received" ? "underline" : "none",
                     }}
                   >
-                    {e.insurance}
+                    {e.insuranceUrl}
                   </span>
                 </Link>
               </li>
@@ -280,27 +269,27 @@ getrequiredPapers()
                 <span
                   style={{
                     color:
-                      e.criminalRecord === "Not Received"
+                      e.criminalRecordUrl === "Not Received"
                         ? "#E9313E"
                         : "#0066FF",
                     textDecoration:
-                      e.criminalRecord !== "Not Received"
+                      e.criminalRecordUrl !== "Not Received"
                         ? "underline"
                         : "none",
                   }}
                 >
-                  {e.criminalRecord}
+                  {e.criminalRecordUrl}
                 </span>
               </li>
               <li className="w-[20%]">
                 <span
                   style={{
-                    color: e.idScan === "Not Received" ? "#E9313E" : "#0066FF",
+                    color: e.IdScanUrl === "Not Received" ? "#E9313E" : "#0066FF",
                     textDecoration:
-                      e.idScan !== "Not Received" ? "underline" : "none",
+                      e.IdScanUrl !== "Not Received" ? "underline" : "none",
                   }}
                 >
-                  {e.idScan}
+                  {e.IdScanUrl}
                 </span>
               </li>
               <li className="w-[20%]">
@@ -308,12 +297,12 @@ getrequiredPapers()
                   <span
                     style={{
                       color:
-                        e.military === "Not Received" ? "#E9313E" : "#0066FF",
+                        e.militaryUrl === "Not Received" ? "#E9313E" : "#0066FF",
                       textDecoration:
-                        e.military !== "Not Received" ? "underline" : "none",
+                        e.militaryUrl !== "Not Received" ? "underline" : "none",
                     }}
                   >
-                    {e.military}
+                    {e.militaryUrl}
                   </span>
                 </Link>
               </li>
@@ -321,28 +310,15 @@ getrequiredPapers()
                 <span
                   style={{
                     color:
-                      e.gradCert === "Not Received" ? "#E9313E" : "#0066FF",
+                      e.graduationCertificateUrl === "Not Received" ? "#E9313E" : "#0066FF",
                     textDecoration:
-                      e.gradCert !== "Not Received" ? "underline" : "none",
+                      e.graduationCertificateUrl !== "Not Received" ? "underline" : "none",
                   }}
                 >
-                  {e.gradCert}
+                  {e.graduationCertificateUrl}
                 </span>
               </li>
-              <li className="w-[20%]">
-                <Link href="#" target="_blank">
-                  <span>Lorem</span>
-                </Link>
-              </li>
-              <li className="w-[20%]">
-                <span>Lorem</span>
-              </li>
-              <li className="w-[20%]">
-                <span>Lorem</span>
-              </li>
-              <li className="w-[20%]">
-                <span>Lorem</span>
-              </li>
+             
             </ul>
           ))}
         </div>
