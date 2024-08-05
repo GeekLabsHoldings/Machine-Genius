@@ -2,7 +2,7 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./generated-titles.module.css";
 import TitleCheckWithLock from "@/app/_components/TitleCheckWithLock/TitleCheckWithLock";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
@@ -34,6 +34,10 @@ const GeneratedTitlesPage = () => {
     await generateTitles();
     setIsLoading(false);
   }
+
+  useEffect(() => {
+    handleGenerateTitles();
+  }, []);
 
   if (IsLoading) {
     return (
