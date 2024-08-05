@@ -269,7 +269,11 @@ export default function Page({ params }: { params: { slug: string } }) {
                     </span>
                     <p
                       className="outline-none"
-                      ref={(el) => (textRef.current[index] = el)}
+                      ref={(el: HTMLParagraphElement | null) => {
+                        if (el) {
+                          textRef.current[index] = el;
+                        }
+                      }}
                       onInput={(e) => handleOnChange(e, index)}
                       onBlur={handleBlur}
                       contentEditable={isEditing}

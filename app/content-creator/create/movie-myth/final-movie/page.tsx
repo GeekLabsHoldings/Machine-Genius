@@ -8,11 +8,15 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const FinalMovie = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
@@ -25,6 +29,18 @@ const FinalMovie = () => {
     plagiarism: "waiting",
     ai: "waiting",
   });
+
+  useEffect(() => {
+    setIsHydrated(true);
+    if (!finalArticle) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   async function startChecks() {
     await checkGrammer();
@@ -94,10 +110,6 @@ const FinalMovie = () => {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -105,6 +117,7 @@ const FinalMovie = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkGrammer:", error);
       } finally {
         attempts++;
@@ -153,10 +166,6 @@ const FinalMovie = () => {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -164,6 +173,7 @@ const FinalMovie = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -205,10 +215,6 @@ const FinalMovie = () => {
           }
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
         json = await res.json();
 
         if (json) {
@@ -216,6 +222,7 @@ const FinalMovie = () => {
           break;
         }
       } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;
@@ -243,6 +250,16 @@ const FinalMovie = () => {
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
+  }
+
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+        </div>
+      </div>
+    );
   }
 
   if (IsLoading) {
@@ -312,7 +329,7 @@ const FinalMovie = () => {
           word={"Next"}
           btnColor="black"
           onClick={handleNavigate}
-        //   href="/content-creator/create/movie-myth/show-errors"
+          //   href="/content-creator/create/movie-myth/show-errors"
         />
       </div>
     </div>
