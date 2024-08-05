@@ -425,6 +425,7 @@ export default function ShowErrorsPage() {
                 word={"Generate Titles"}
                 btnColor="black"
                 // href="/content-creator/create/script-approved"
+                href="/content-creator/create/movie-myth/generated-titles"
               />
             )}
         </div>
