@@ -2,7 +2,8 @@
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 
 const initialContextState = {
@@ -24,6 +25,16 @@ const initialContextState = {
   setTwitterData: (data: any) => {},
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
+  checkStatus: {
+    grammar: "waiting",
+    // todo: temp until backend fix it
+    plagiarism: "pass",
+    ai: "waiting",
+  },
+  setCheckStatus: (status: any) => {},
+  checkGrammer: () => {},
+  checkPlagiarism: () => {},
+  checkAi: () => {},
   generateTitles: () => {},
   generatedTitles: [] as any,
   setGeneratedTitles: (titles: any) => {},
@@ -43,6 +54,7 @@ export default function GlobalContextProvider({
 }) {
   const router = useRouter();
   const path = usePathname();
+  const dispatch = useDispatch();
 
   // ===== 00. Start Authentication =====
   function handleSetRouteToDirect(role: string) {
@@ -136,13 +148,17 @@ export default function GlobalContextProvider({
   // ===== 01. Start Content Creator =====
   function selectedContentTypeInit() {
     if (typeof window !== "undefined") {
-      const selectedContentTypeInitValue = sessionStorage.getItem("selectedContentType");
+      const selectedContentTypeInitValue = sessionStorage.getItem(
+        "selectedContentType"
+      );
       return selectedContentTypeInitValue ? selectedContentTypeInitValue : "";
     } else {
       return "";
     }
   }
-  const [selectedContentType, setSelectedContentType] = useState<any>(selectedContentTypeInit());
+  const [selectedContentType, setSelectedContentType] = useState<any>(
+    selectedContentTypeInit()
+  );
   useEffect(() => {
     sessionStorage.setItem("selectedContentType", selectedContentType);
   }, [selectedContentType]);
@@ -220,6 +236,12 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
   }, [finalArticle]);
 
+  const [checkStatus, setCheckStatus] = useState({
+    grammar: "waiting",
+    // todo: temp until backend fix it
+    plagiarism: "pass",
+    ai: "waiting",
+  });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
   //   checkGrammerResultsInit()
   // );
@@ -232,6 +254,113 @@ export default function GlobalContextProvider({
       JSON.stringify(checkGrammerResults)
     );
   }, [checkGrammerResults]);
+  async function checkGrammer() {
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/grammar-check`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              document: finalArticle?.articles[0]?.content,
+            }),
+          }
+        );
+
+        json = await res.json();
+
+        if (json.success === true) {
+          // If content is found, break the loop
+          break;
+        }
+      } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
+        console.error("Error checkGrammer:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+      if (
+        json?.grammarIssues.filter(
+          (item: any) => item.general_error_type !== "Other"
+        ).length > 0
+      ) {
+        setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
+      } else {
+        setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+      }
+
+      let filteredJson = json?.grammarIssues.filter(
+        (item: any) => item.general_error_type !== "Other"
+      );
+      dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
+    } else {
+      setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.push("/content-creator/create/choose-brand");
+    }
+  }
+
+  async function checkPlagiarism() {
+    const maxRetries = 1; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/plagiarism-check`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: finalArticle?.articles[0]?.content,
+            }),
+          }
+        );
+
+        json = await res.json();
+
+        if (json) {
+          // If content is found, break the loop
+          break;
+        }
+      } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
+        console.error("Error checkPlagiarism:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+      // todo
+      if (json) {
+        // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fail" }));
+        // todo: temp until backend fix it
+        setCheckStatus((prev: any) => ({ ...prev, plagiarism: "pass" }));
+      } else {
+        setCheckStatus((prev: any) => ({ ...prev, plagiarism: "pass" }));
+      }
+      console.log("checkPlagiarismResult", json);
+    } else {
+      // todo: uncomment after backend fix it
+      // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fetchError" }));
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.push("/content-creator/create/choose-brand");
+    }
+  }
 
   // const [checkAiResults, setCheckAiResults] = useState<any>(
   //   checkAiResultsInit()
@@ -242,6 +371,62 @@ export default function GlobalContextProvider({
   useEffect(() => {
     sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
   }, [checkAiResults]);
+  async function checkAi() {
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(
+          `https://backendmachinegenius.onrender.com/AI-check`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              document: finalArticle?.articles[0]?.content,
+            }),
+          }
+        );
+
+        json = await res.json();
+
+        if (json) {
+          // If content is found, break the loop
+          break;
+        }
+      } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
+        console.error("Error checkAi:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+      if (
+        // json.documents[0].class_probabilities.human < 0.8
+        json?.documents[0]?.sentences.some(
+          (sentence: any) => sentence.highlight_sentence_for_ai
+        )
+      ) {
+        setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+      } else {
+        setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
+      }
+      console.log("checkAiResult", json);
+      let filteredJson = json?.documents[0]?.sentences.filter(
+        (sentence: any) => sentence.highlight_sentence_for_ai
+      );
+      dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
+    } else {
+      setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.push("/content-creator/create/choose-brand");
+    }
+  }
 
   async function generateTitles() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -354,6 +539,11 @@ export default function GlobalContextProvider({
     setTwitterData,
     choosedArticles,
     setChoosedArticles,
+    checkStatus,
+    setCheckStatus,
+    checkGrammer,
+    checkPlagiarism,
+    checkAi,
     generateTitles,
     generatedTitles,
     setGeneratedTitles,
