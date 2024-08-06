@@ -53,6 +53,7 @@ const GeneratedTitlesPage = () => {
   useEffect(() => {
     setIsHydrated(true);
     handleGenerateTitles();
+    // Cleanup
     return () => {
       setEditContentData(null);
       sessionStorage.removeItem("editContentData");

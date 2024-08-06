@@ -59,7 +59,7 @@ const ContentDatabase = () => {
         className={`${styles.tableBody} borderBottom articleRow `}
         // onClick={(e)=>{handleSelectedBg(e)}}
       >
-        <li className="w-[10%]">{idx}</li>
+        <li className="w-[10%]">{idx+1}</li>
         <li className="w-[60%]">{oneArticle?.content_title}</li>
         <li className="w-[10%]">
           <span

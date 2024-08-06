@@ -4,8 +4,7 @@ import { useEffect, useRef, useState, useContext } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 import styles from "./final-artical.module.css";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,6 @@ export default function FinalArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-
   const {
     checkStatus,
     startChecks,

@@ -1,8 +1,18 @@
+"use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import { useEffect, useContext } from "react";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 // page appears when genuis finished checking
 const ArticleReady = () => {
+  const { setEditContentData } = useContext(globalContext);
+  useEffect(() => {
+    setEditContentData(null);
+    sessionStorage.removeItem("editContentData");
+  }, []);
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw] space-y-[2vw]">

@@ -1,12 +1,11 @@
 "use client";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
-import styles from "./final-movie.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
-import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useEffect, useRef, useState, useContext } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
+import styles from "./final-movie.module.css";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -18,8 +17,14 @@ const FinalMovie = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-  const { checkStatus, startChecks } =
-    useContext(globalContext);
+  const {
+    checkStatus,
+    startChecks,
+    editContentData,
+    setEditContentData,
+    setSelectedBrand,
+    setSelectedContentType,
+  } = useContext(globalContext);
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
@@ -28,7 +33,7 @@ const FinalMovie = () => {
 
   useEffect(() => {
     setIsHydrated(true);
-    if (!finalArticle) {
+    if (!finalArticle && !editContentData) {
       toast.error(
         "No data is available. You will be redirected to refetch new data!"
       );
@@ -37,6 +42,28 @@ const FinalMovie = () => {
       }, 1500);
     }
   }, []);
+
+  function handleDisplayContentDataToEdit() {
+    const updatedArticle = {
+      ...finalArticle,
+      articles: [
+        {
+          title: editContentData.content_title,
+          content: editContentData.content,
+        },
+      ],
+    };
+    dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+    setSelectedBrand(editContentData.brand);
+    setSelectedContentType(editContentData.content_type);
+  }
+
+  useEffect(() => {
+    if (editContentData) {
+      // console.log("editContentData11", editContentData);
+      handleDisplayContentDataToEdit();
+    }
+  }, [editContentData]);
 
   function handleNavigate() {
     // must be first line.
