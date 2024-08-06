@@ -121,7 +121,7 @@ const Page = () => {
         >
           {groupTemplates?.map((e, i) => {
             return (
-              <div className={`bg-red-400 ${styles.box}`}>
+              <div className={` ${styles.box}`}>
                 <div className={`${styles.header}`}>
                   <div className="flex items-center gap-[1vw]">
                     {e.icon}

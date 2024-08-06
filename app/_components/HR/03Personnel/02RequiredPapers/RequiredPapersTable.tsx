@@ -249,75 +249,75 @@ getrequiredPapers()
           {papers.map((e:any, idx:any) => (
             <ul key={idx}>
               <li className="w-[20%]">
-                <span>{e.employee.firstName + "" +e.employee.lastName}</span>
+                <span>{e.employee.firstName + " " +e.employee.lastName}</span>
               </li>
               <li className="w-[20%]">
-                <Link href="#" target="_blank">
+                <Link href={e.insuranceUrl} target="_blank">
                   <span
                     style={{
                       color:
-                        e.insuranceUrl === "Not Received" ? "#E9313E" : "#0066FF",
+                        e.insuranceUrl === "" ? "#E9313E" : "#0066FF",
                       textDecoration:
-                        e.insuranceUrl !== "Not Received" ? "underline" : "none",
+                        e.insuranceUrl !== "" ? "underline" : "none",
                     }}
                   >
-                    {e.insuranceUrl}
+                    {e.insuranceUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                   </span>
                 </Link>
               </li>
-              <li className="w-[20%]">
+              <Link href={e.criminalRecordUrl} className="w-[20%] flex justify-center">
                 <span
                   style={{
                     color:
-                      e.criminalRecordUrl === "Not Received"
+                      e.criminalRecordUrl === ""
                         ? "#E9313E"
                         : "#0066FF",
                     textDecoration:
-                      e.criminalRecordUrl !== "Not Received"
+                      e.criminalRecordUrl !== ""
                         ? "underline"
                         : "none",
                   }}
                 >
-                  {e.criminalRecordUrl}
+                  {e.criminalRecordUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                 </span>
-              </li>
-              <li className="w-[20%]">
+              </Link>
+              <Link href={e.IdScanUrl} className="w-[20%] flex justify-center">
                 <span
                   style={{
-                    color: e.IdScanUrl === "Not Received" ? "#E9313E" : "#0066FF",
+                    color: e.IdScanUrl === "" ? "#E9313E" : "#0066FF",
                     textDecoration:
-                      e.IdScanUrl !== "Not Received" ? "underline" : "none",
+                      e.IdScanUrl !== "" ? "underline" : "none",
                   }}
                 >
-                  {e.IdScanUrl}
+                  {e.IdScanUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                 </span>
-              </li>
+              </Link>
               <li className="w-[20%]">
-                <Link href="#" target="_blank">
+                <Link href={e.militaryUrl} target="_blank">
                   <span
                     style={{
                       color:
-                        e.militaryUrl === "Not Received" ? "#E9313E" : "#0066FF",
+                        e.militaryUrl === "" ? "#E9313E" : "#0066FF",
                       textDecoration:
-                        e.militaryUrl !== "Not Received" ? "underline" : "none",
+                        e.militaryUrl !== "" ? "underline" : "none",
                     }}
                   >
-                    {e.militaryUrl}
+                    {e.militaryUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                   </span>
                 </Link>
               </li>
-              <li className="w-[20%]">
+              <Link href={e.graduationCertificateUrl} className="w-[20%] flex justify-center">
                 <span
                   style={{
                     color:
-                      e.graduationCertificateUrl === "Not Received" ? "#E9313E" : "#0066FF",
+                      e.graduationCertificateUrl === "" ? "#E9313E" : "#0066FF",
                     textDecoration:
-                      e.graduationCertificateUrl !== "Not Received" ? "underline" : "none",
+                      e.graduationCertificateUrl !== "" ? "underline" : "none",
                   }}
                 >
-                  {e.graduationCertificateUrl}
+                  {e.graduationCertificateUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                 </span>
-              </li>
+              </Link>
              
             </ul>
           ))}

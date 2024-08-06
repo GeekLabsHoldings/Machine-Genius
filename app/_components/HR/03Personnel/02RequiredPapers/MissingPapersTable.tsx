@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./MissingPapersTable.module.css";
 import Link from "next/link";
 
@@ -61,13 +61,46 @@ export default function MissingPapersTable() {
     },
   ];
 
+  const [papers,setPapers] = useState([])
+  const [shownpapers,setShownPapers] = useState([])
+
+
+  async function getrequiredPapers() {
+    const token = localStorage.getItem("token");
+    try {
+      console.log("xzcasdqe");
+      
+      const data = await fetch(
+        "https://machine-genius.onrender.com/hr/employee-paper/get-paper",
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const res = await data.json();
+      setPapers(res)
+      console.log(res);
+      console.log(res.filter((e:any)=>Object.values(e).includes("")));
+      setShownPapers(res.filter((e:any)=>Object.values(e).includes("")))
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(()=>{
+getrequiredPapers()
+  },[])
+
+
   return (
     <div className={`${styles.tableContainer} h-[68vh]`}>
       {/* Start Table */}
       <div className={styles.table + " max-w-full"} id="table">
         {/* Table Header */}
         <ul className={styles.table_header}>
-          <li className="w-[20%]">
+        <li className="w-[20%]">
             <span>Employee Name</span>
           </li>
           <li className="w-[20%]">
@@ -85,108 +118,82 @@ export default function MissingPapersTable() {
           <li className="w-[20%]">
             <span>Graduation Certificate</span>
           </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[20%]">
-            <span>Lorem</span>
-          </li>
         </ul>
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
+          {shownpapers.map((e:any, idx) => (
             <ul key={idx}>
               <li className="w-[20%]">
-                <span>{e.name}</span>
+                <span>{e.employee.firstName + " " +e.employee.lastName}</span>
               </li>
               <li className="w-[20%]">
-                <Link href="#" target="_blank">
+                <Link href={e.insuranceUrl} target="_blank">
                   <span
                     style={{
                       color:
-                        e.insurance === "Not Received" ? "#E9313E" : "#0066FF",
+                        e.insuranceUrl === "" ? "#E9313E" : "#0066FF",
                       textDecoration:
-                        e.insurance !== "Not Received" ? "underline" : "none",
+                        e.insuranceUrl !== "" ? "underline" : "none",
                     }}
                   >
-                    {e.insurance}
+                    {e.insuranceUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                   </span>
                 </Link>
               </li>
-              <li className="w-[20%]">
+              <Link href={e.criminalRecordUrl} className="w-[20%] flex justify-center">
                 <span
                   style={{
                     color:
-                      e.criminalRecord === "Not Received"
+                      e.criminalRecordUrl === ""
                         ? "#E9313E"
                         : "#0066FF",
                     textDecoration:
-                      e.criminalRecord !== "Not Received"
+                      e.criminalRecordUrl !== ""
                         ? "underline"
                         : "none",
                   }}
                 >
-                  {e.criminalRecord}
+                  {e.criminalRecordUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                 </span>
-              </li>
-              <li className="w-[20%]">
+              </Link>
+              <Link href={e.IdScanUrl} className="w-[20%] flex justify-center">
                 <span
                   style={{
-                    color: e.idScan === "Not Received" ? "#E9313E" : "#0066FF",
+                    color: e.IdScanUrl === "" ? "#E9313E" : "#0066FF",
                     textDecoration:
-                      e.idScan !== "Not Received" ? "underline" : "none",
+                      e.IdScanUrl !== "" ? "underline" : "none",
                   }}
                 >
-                  {e.idScan}
+                  {e.IdScanUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                 </span>
-              </li>
+              </Link>
               <li className="w-[20%]">
-                <Link href="#" target="_blank">
+                <Link href={e.militaryUrl} target="_blank">
                   <span
                     style={{
                       color:
-                        e.military === "Not Received" ? "#E9313E" : "#0066FF",
+                        e.militaryUrl === "" ? "#E9313E" : "#0066FF",
                       textDecoration:
-                        e.military !== "Not Received" ? "underline" : "none",
+                        e.militaryUrl !== "" ? "underline" : "none",
                     }}
                   >
-                    {e.military}
+                    {e.militaryUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                   </span>
                 </Link>
               </li>
-              <li className="w-[20%]">
+              <Link href={e.graduationCertificateUrl} className="w-[20%] flex justify-center">
                 <span
                   style={{
                     color:
-                      e.gradCert === "Not Received" ? "#E9313E" : "#0066FF",
+                      e.graduationCertificateUrl === "" ? "#E9313E" : "#0066FF",
                     textDecoration:
-                      e.gradCert !== "Not Received" ? "underline" : "none",
+                      e.graduationCertificateUrl !== "" ? "underline" : "none",
                   }}
                 >
-                  {e.gradCert}
+                  {e.graduationCertificateUrl ? e.employee.firstName + "" +e.employee.lastName + "ID.pdf" : "Not Received"}
                 </span>
-              </li>
-              <li className="w-[20%]">
-                <Link href="#" target="_blank">
-                  <span>Lorem</span>
-                </Link>
-              </li>
-              <li className="w-[20%]">
-                <span>Lorem</span>
-              </li>
-              <li className="w-[20%]">
-                <span>Lorem</span>
-              </li>
-              <li className="w-[20%]">
-                <span>Lorem</span>
-              </li>
+              </Link>
             </ul>
           ))}
         </div>

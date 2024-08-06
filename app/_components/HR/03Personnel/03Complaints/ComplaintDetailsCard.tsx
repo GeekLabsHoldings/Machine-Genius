@@ -8,7 +8,9 @@ import styles from "./ComplaintDetailsCard.module.css"; // Import CSS module for
  *
  * @return {JSX.Element} The rendered card component.
  */
-export default function ComplaintDetailsCard() {
+export default function ComplaintDetailsCard({details}:any) {
+  console.log(details);
+  
   return (
     // Main container for the ComplaintDetailsCard with border and padding styles
     <div
@@ -18,16 +20,16 @@ export default function ComplaintDetailsCard() {
       <div className="grid grid-cols-2 gap-y-4 gap-x-1 mb-4">
         {/* Requested By */}
         <span className="font-semibold">Requested By</span>
-        <span>Shahenda El Naggar</span>
+        <span>{details?.employee?.firstName + " " + details?.employee?.lastName}</span>
         {/* Request Date */}
         <span className="font-semibold">Request Date</span>
-        <span>20th March 2024</span>
+        <span>{new Date(details?.createdAt).toLocaleDateString("en-GB",{year: 'numeric', month: 'long', day: 'numeric'})}</span>
         {/* Complaint Issue */}
         <span className="font-semibold">Complaint Issue</span>
-        <span>Bullying</span>
+        <span>{details?.complaintIssue}</span>
         {/* Urgency Level */}
         <span className="font-semibold">Urgency Level</span>
-        <span>High</span>
+        <span>{details?.urgencyLevel}</span>
       </div>
       {/* Card Body - Contains the description of the complaint */}
       <div className="mt-[7vh]">
@@ -35,16 +37,7 @@ export default function ComplaintDetailsCard() {
         <div className="font-semibold mb-2">Complaint Description</div>
         {/* Complaint Description Text */}
         <p className="text-gray-700">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-        <p className="text-gray-700 mt-2">
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
+         {details?.description}
         </p>
       </div>
     </div>

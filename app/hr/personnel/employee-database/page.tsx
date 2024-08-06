@@ -102,6 +102,46 @@ export default function Page() {
       }
     }
   }
+    // An array of objects representing the rows of the table body.
+    const [filter,setFilter] = useState<string|number>("")
+    const [employees,setEmployees] = useState([])
+    const [shownEmployees,setShownEmployees] = useState([])
+    const [roles,setRoles] = useState<any>([])
+  
+    async function getEmployees() {
+      const token = localStorage.getItem("token");
+      try {
+        console.log("xzcasdqe");
+        
+        const data = await fetch(
+          "https://machine-genius.onrender.com/hr/employee/data?name=&department=&limit&skip",
+          {
+            method: "get",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const res = await data.json();
+        setEmployees(res)
+        setShownEmployees(res)
+        console.log(res);
+        setRoles([...new Set(res.map((e:any)=>e.role))])
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    useEffect(()=>{
+      getEmployees()
+    },[])
+    useEffect(()=>{
+      console.log(roles);
+      
+    },[roles])
+    useEffect(()=>{
+      const filteredEmployees = employees.filter((e:any)=>e.role == filter)
+      setShownEmployees(filteredEmployees)
+    },[filter])
   
 
   useEffect(() => {
@@ -130,7 +170,12 @@ export default function Page() {
             {/* Select Input for Roles */}
             <div className={`w-8/12 flex items-end gap-[1vw]`}>
               <div className="flex flex-col w-1/4 gap-[0.3vw]">
-                <CustomSelectInput label="All Roles" options={rolesOptions} />
+                <CustomSelectInput label="All Roles" options={roles} getValue={
+                  (val)=>{console.log(val);
+                    setFilter(val)
+                  }
+                  
+                } />
               </div>
             </div>
 
@@ -160,7 +205,7 @@ export default function Page() {
       </div>
 
       {/* Employee Database Table */}
-      <EmployeeDatabaseTable />
+      <EmployeeDatabaseTable employees={shownEmployees}/>
     </>
   );
 }

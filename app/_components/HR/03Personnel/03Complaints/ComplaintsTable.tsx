@@ -157,9 +157,10 @@ export default function ComplaintsTable() {
               </li>
               <li className="w-[20%]">
                 <RequestedByCard
-                  name={e.requestedBy}
+                  name={e.employee.firstName + " " + e.employee.lastName}
                   color={e.employee.theme}
                 />
+                
               </li>
               <li
                 className={`w-[15%] `}
@@ -173,7 +174,7 @@ export default function ComplaintsTable() {
                 <CustomBtn
                   btnColor="black"
                   word="Preview"
-                  href={`/hr/personnel/complaints/complaintDetails/`}
+                  href={`/hr/personnel/complaints/${e._id}/`}
                 />
               </li>
             </ul>

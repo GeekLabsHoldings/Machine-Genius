@@ -9,34 +9,9 @@ import Link from "next/link";
  *
  * @return {JSX.Element} The rendered employee database table.
  */
-export default function EmployeeDatabaseTable() {
+export default function EmployeeDatabaseTable({employees}:any) {
   // An array of objects representing the rows of the table body.
-  const [employees,setEmployees] = useState([])
 
-  async function getEmployees() {
-    const token = localStorage.getItem("token");
-    try {
-      console.log("xzcasdqe");
-      
-      const data = await fetch(
-        "https://machine-genius.onrender.com/hr/employee/data?name=&department=&limit&skip",
-        {
-          method: "get",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const res = await data.json();
-      setEmployees(res)
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  useEffect(()=>{
-    getEmployees()
-  },[])
 
   return (
     <div className={`${styles.tableContainer} h-[68vh]`}>
@@ -78,7 +53,7 @@ export default function EmployeeDatabaseTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {employees.map((e:any, idx) => (
+          {employees.map((e:any, idx:any) => (
             <ul key={idx} className={`space-x-2`}>
               <li className="w-[10%]">
                 <span>{e.firstName}</span>

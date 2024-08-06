@@ -225,7 +225,7 @@ getTemplate()
                   </button>
                 )}
               </div>
-              <div className={`${styles.card_body}`} dangerouslySetInnerHTML={{__html:templateDet.details[1]?.description}}>
+              <div className={`${styles.card_body}`} dangerouslySetInnerHTML={{__html:templateDet.details[0]?.description}}>
               </div>
               <div className={styles.card_actions}>
                 <CustomBtn btnColor="white" word="Delete Card" />
