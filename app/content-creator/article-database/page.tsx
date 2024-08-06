@@ -95,7 +95,7 @@ const ContentDatabase = () => {
   );
 
   useEffect(() => {
-    console.log("editContentData", editContentData);
+    // console.log("editContentData", editContentData);
     if (editContentData) {
       editContentData.brand === "Movie Myth"
         ? router.replace("/content-creator/create/movie-myth/final-movie")

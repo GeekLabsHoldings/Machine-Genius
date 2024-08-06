@@ -17,8 +17,14 @@ export default function FinalArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
 
-  const { checkStatus, startChecks, editContentData, setEditContentData } =
-    useContext(globalContext);
+  const {
+    checkStatus,
+    startChecks,
+    editContentData,
+    setEditContentData,
+    setSelectedBrand,
+    setSelectedContentType,
+  } = useContext(globalContext);
 
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
@@ -31,13 +37,6 @@ export default function FinalArticlePage() {
   // }, []);
 
   useEffect(() => {
-    if (editContentData){
-      // todo
-      setEditContentData(null);
-      sessionStorage.removeItem("editContentData");
-      console.log("editContentData11", editContentData);
-    }
-
     if (!finalArticle && !editContentData) {
       toast.error(
         "No data is available. You will be redirected to refetch new data!"
@@ -46,7 +45,25 @@ export default function FinalArticlePage() {
         router.replace("/content-creator/create/choose-brand");
       }, 1500);
     }
+    // Cleanup
+    return () => {
+      setEditContentData(null);
+      sessionStorage.removeItem("editContentData");
+    };
   }, []);
+
+  function handleDisplayContentDataToEdit() {
+    dispatch(contentCreatorActions.setFinalArticle(editContentData.content));
+    setSelectedBrand(editContentData.brand);
+    setSelectedContentType(editContentData.contentType);
+  }
+
+  useEffect(() => {
+    if (editContentData) {
+      // console.log("editContentData11", editContentData);
+      handleDisplayContentDataToEdit();
+    }
+  }, [editContentData]);
 
   function handleNavigate() {
     // must be first line.
