@@ -2,10 +2,14 @@
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./article-database.module.css";
 import { ArticleNames, Brands, ContentTypeFilter } from "@/app/_data/data";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import toast from "react-hot-toast";
+import { truncateText } from "@/app/_utils/text";
+import { globalContext } from "@/app/_context/store";
+import { useRouter } from "next/navigation";
 
 const ContentDatabase = () => {
+  const router = useRouter();
   const [contentDatabase, setContentDatabase] = useState<any>([]);
 
   async function getContentDatabase() {
@@ -40,7 +44,11 @@ const ContentDatabase = () => {
     }
   }
 
+  const { editContentData, setEditContentData } = useContext(globalContext);
+
   useEffect(() => {
+    setEditContentData(null);
+    sessionStorage.removeItem("editContentData");
     getContentDatabase();
   }, []);
 
@@ -51,33 +59,32 @@ const ContentDatabase = () => {
         className={`${styles.tableBody} borderBottom articleRow `}
         // onClick={(e)=>{handleSelectedBg(e)}}
       >
-        <li className="w-[30%]">{oneArticle._id}</li>
-        <li className="w-[40%]">{oneArticle.content_title}</li>
+        <li className="w-[30%]">{oneArticle?._id}</li>
+        <li className="w-[40%]">{oneArticle?.content_title}</li>
         <li className="w-[10%]">
           <span
             className={
-              oneArticle.brand === "STP"
+              oneArticle?.brand === "PST Canada"
                 ? "bg-[#31B2E9B2]"
-                : oneArticle.brand === "Canada"
+                : oneArticle?.brand === "PST USA"
                 ? "bg-[#E9313EB2]"
-                : oneArticle.brand === "PST Asia"
+                : oneArticle?.brand === "Movie Myth"
                 ? "bg-[#E1C655B2]"
-                : oneArticle.brand === "Investocracy"
+                : oneArticle?.brand === "Investorcracy"
                 ? "bg-[#5FA85BB5]"
                 : "bg-[#F36F24B2]"
             }
           >
-            {oneArticle.brand}
+            {oneArticle?.brand}
           </span>
         </li>
         <li className={`w-[10%]  ${styles.contentType}`}>
-          {oneArticle.content_type}
+          {oneArticle?.content_type}
         </li>
-
         <li className={` w-[10%] ${styles.edit}`}>
           <button
             onClick={() => {
-              // todo: redirect to edit page
+              setEditContentData(oneArticle);
             }}
           >
             Edit
@@ -87,6 +94,15 @@ const ContentDatabase = () => {
     )
   );
 
+  useEffect(() => {
+    console.log("editContentData", editContentData);
+    if (editContentData) {
+      editContentData.brand === "Movie Myth"
+        ? router.replace("/content-creator/create/movie-myth/final-movie")
+        : router.replace("/content-creator/create/final-article");
+    }
+  }, [editContentData]);
+
   return (
     <div className={`${styles.articleDatabase} w-full h-full pt-[0.5vw]`}>
       {/* filters options to filter and edit data in table */}
@@ -95,15 +111,36 @@ const ContentDatabase = () => {
         <div className={`${styles.filters} flex gap-[1vw]`}>
           <div className="flex flex-col w-2/12 gap-[0.3vw]">
             <h5>Content Title</h5>
-            <CustomSelectInput label="All" options={ArticleNames} />
+            <CustomSelectInput
+              label="All"
+              options={contentDatabase.map((item: any) =>
+                truncateText(item.content_title, 25)
+              )}
+            />
           </div>
           <div className="flex flex-col w-2/12 gap-[0.3vw]">
             <h5>Brand</h5>
-            <CustomSelectInput label="All" options={Brands} />
+            <CustomSelectInput
+              label="All"
+              options={contentDatabase
+                .map((item: any) => item.brand)
+                .filter(
+                  (item: any, index: any, self: any) =>
+                    self.indexOf(item) === index
+                )}
+            />
           </div>
           <div className="flex flex-col w-2/12 gap-[0.3vw]">
             <h5>Content Type</h5>
-            <CustomSelectInput label="All" options={ContentTypeFilter} />
+            <CustomSelectInput
+              label="All"
+              options={contentDatabase
+                .map((item: any) => item.content_type)
+                .filter(
+                  (item: any, index: any, self: any) =>
+                    self.indexOf(item) === index
+                )}
+            />
           </div>
         </div>
       </div>

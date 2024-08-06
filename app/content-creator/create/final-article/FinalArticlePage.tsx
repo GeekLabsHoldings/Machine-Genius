@@ -17,7 +17,7 @@ export default function FinalArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
 
-  const { checkStatus, startChecks } =
+  const { checkStatus, startChecks, editContentData, setEditContentData } =
     useContext(globalContext);
 
   const finalArticle: any = useSelector(
@@ -31,7 +31,14 @@ export default function FinalArticlePage() {
   // }, []);
 
   useEffect(() => {
-    if (!finalArticle) {
+    if (editContentData){
+      // todo
+      setEditContentData(null);
+      sessionStorage.removeItem("editContentData");
+      console.log("editContentData11", editContentData);
+    }
+
+    if (!finalArticle && !editContentData) {
       toast.error(
         "No data is available. You will be redirected to refetch new data!"
       );

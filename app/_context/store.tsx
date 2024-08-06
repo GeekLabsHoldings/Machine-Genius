@@ -43,6 +43,8 @@ const initialContextState = {
   setLockedGeneratedTitles: (titles: any) => {},
   selectedContentTitle: "",
   setSelectedContentTitle: (title: any) => {},
+  editContentData: null as any,
+  setEditContentData: (id: any) => {},
   // ===== 01. End Content Creator =====
 };
 
@@ -495,8 +497,6 @@ export default function GlobalContextProvider({
     console.log("generatedTitles:", generatedTitles);
   }, [generatedTitles]);
 
-
-
   function selectedContentTitleInit() {
     if (typeof window !== "undefined") {
       const selectedContentTitleInitValue = sessionStorage.getItem(
@@ -513,10 +513,6 @@ export default function GlobalContextProvider({
   useEffect(() => {
     sessionStorage.setItem("selectedContentTitle", selectedContentTitle);
   }, [selectedContentTitle]);
-
-
-
-
 
   function lockedGeneratedTitlesInit() {
     if (typeof window !== "undefined") {
@@ -550,6 +546,24 @@ export default function GlobalContextProvider({
       JSON.stringify(videoTranscription)
     );
   }, [videoTranscription]);
+
+  function editContentDataInit() {
+    if (typeof window !== "undefined") {
+      const editContentDataInitValue =
+        sessionStorage.getItem("editContentData");
+      return editContentDataInitValue
+        ? JSON.parse(editContentDataInitValue)
+        : null;
+    } else {
+      return null;
+    }
+  }
+  const [editContentData, setEditContentData] = useState<any>(
+    editContentDataInit()
+  );
+  useEffect(() => {
+    sessionStorage.setItem("editContentData", JSON.stringify(editContentData));
+  }, [editContentData]);
   // ===== 01. End Content Creator =====
 
   // Create a context value object
@@ -585,6 +599,8 @@ export default function GlobalContextProvider({
     setLockedGeneratedTitles,
     selectedContentTitle,
     setSelectedContentTitle,
+    editContentData,
+    setEditContentData,
     // ===== 01. End Content Creator =====
   };
 
