@@ -27,19 +27,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isHydrated, setIsHydrated] = useState(false);
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-  if (!isHydrated) {
-    return (
-      <div className="bg-white min-h-screen flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
-        <div className={`flex flex-col justify-center items-center`}>
-          <LogoAndTitle needTxt={false} title="Genius is Loading..." />
-        </div>
-      </div>
-    );
-  }
+  // const [isHydrated, setIsHydrated] = useState(false);
+  // useEffect(() => {
+  //   setIsHydrated(true);
+  // }, []);
+  // if (!isHydrated) {
+  //   return (
+  //     <div className="bg-white min-h-screen flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+  //       <div className={`flex flex-col justify-center items-center`}>
+  //         <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <html lang="en">
