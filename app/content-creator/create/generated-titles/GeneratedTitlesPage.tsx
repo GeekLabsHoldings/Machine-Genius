@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const ReGenerateIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13" fill="none">
@@ -18,16 +21,28 @@ const ReGenerateIcon = (
 
 const GeneratedTitlesPage = () => {
   const {
-    // finalArticle,
+    selectedContentType,
+    selectedBrand,
     generateTitles,
     generatedTitles,
     setGeneratedTitles,
     lockedGeneratedTitles,
-    setLockedGeneratedTitles
+    setLockedGeneratedTitles,
+    selectedContentTitle,
+    setSelectedContentTitle,
+    editContentData,
+    setEditContentData,
   } = useContext(globalContext);
+  const finalArticle = useSelector(
+    (state: any) => state.contentCreator.finalArticle
+  );
+  const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
+  const [IsSendLoading, setIsSendLoading] = useState(false);
   // state that make create my title disabled or abled
   const [isCreateMyOwnDisabled, setIsCreateMyOwnDisabled] = useState(true);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [triggerSendContent, setTriggerSendContent] = useState(false);
 
   async function handleGenerateTitles() {
     setIsLoading(true);
@@ -36,13 +51,129 @@ const GeneratedTitlesPage = () => {
   }
 
   useEffect(() => {
+    setIsHydrated(true);
     handleGenerateTitles();
+    // Cleanup
+    return () => {
+      setEditContentData(null);
+      sessionStorage.removeItem("editContentData");
+    };
   }, []);
+
+  function handleSelectTitle() {
+    if (selectedContentTitle) {
+      setTriggerSendContent(true);
+    } else {
+      toast.error("Please select a title!");
+    }
+  }
+
+  useEffect(() => {
+    if (triggerSendContent) {
+      handleSendContent();
+    }
+  }, [triggerSendContent]);
+
+  function generateData() {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' } as const;
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-GB', options);
+    
+    // toLocaleDateString returns month abbreviation, convert to full month name
+    const monthAbbreviations = {
+      "Jan": "January",
+      "Feb": "February",
+      "Mar": "March",
+      "Apr": "April",
+      "May": "May",
+      "Jun": "June",
+      "Jul": "July",
+      "Aug": "August",
+      "Sep": "September",
+      "Oct": "October",
+      "Nov": "November",
+      "Dec": "December"
+    };
+    const [day, monthAbbrev, year] = formattedDate.split(' ') as [string, keyof typeof monthAbbreviations, string];
+    const month = monthAbbreviations[monthAbbrev];
+  
+    return `${day} ${month} ${year}`;
+  }
+
+  async function handleSendContent() {
+    let endpoint = editContentData
+      ? `https://backendmachinegenius.onrender.com/content/${editContentData._id}`
+      : "https://backendmachinegenius.onrender.com/content";
+    let method = editContentData ? "PATCH" : "POST";
+    setIsSendLoading(true);
+    let postBody: any = {
+      content_title: selectedContentTitle,
+      content: finalArticle?.articles[0]?.content,
+      brand: selectedBrand,
+      content_type: selectedContentType,
+      ...(method === "POST" && { date: generateData() }),
+    };
+
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(endpoint, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postBody),
+        });
+        json = await res.json();
+        if (json) {
+          // If valid data is found, break the loop
+          break;
+        }
+      } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
+        console.error("Error handleSendContent:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+      // toast.success("Content sent successfully");
+      router.replace("/content-creator/create/schedule-script");
+    } else {
+      // setIsRetry(true);
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.push("/content-creator/create/choose-brand");
+    }
+  }
+
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+        </div>
+      </div>
+    );
+  }
 
   if (IsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
         <LogoAndTitle needTxt={false} title="Generating Titles.." />
+      </div>
+    );
+  }
+
+  if (IsSendLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle needTxt={false} title="Sending Content..." />
+        </div>
       </div>
     );
   }
@@ -74,7 +205,9 @@ const GeneratedTitlesPage = () => {
             <div className="h-full overflow-y-auto p-[1vw] space-y-[1vw]">
               {generatedTitles.map((title: any, index: any) => {
                 if (
-                  lockedGeneratedTitles.map((item: any) => item.order).includes(index)
+                  lockedGeneratedTitles
+                    .map((item: any) => item.order)
+                    .includes(index)
                 ) {
                   const lockedTitle = lockedGeneratedTitles.find(
                     (item: any) => item.order === index
@@ -131,7 +264,16 @@ const GeneratedTitlesPage = () => {
           onClick={() => setIsCreateMyOwnDisabled(false)}
         >
           <label htmlFor="add-title">Create My Own</label>
-          <input type="text" id="add-title" disabled={isCreateMyOwnDisabled} />
+          <input
+            type="text"
+            id="add-title"
+            disabled={isCreateMyOwnDisabled}
+            value={selectedContentTitle}
+            onChange={(e) => {
+              setSelectedContentTitle(e.target.value);
+            }}
+            placeholder="Enter your title"
+          />
         </div>
       </div>
 
@@ -146,7 +288,10 @@ const GeneratedTitlesPage = () => {
         <CustomBtn
           word={"Send"}
           btnColor="black"
-          href={"/content-creator/create/schedule-script"}
+          // href={"/content-creator/create/schedule-script"}
+          onClick={() => {
+            handleSelectTitle();
+          }}
         />
       </div>
     </div>

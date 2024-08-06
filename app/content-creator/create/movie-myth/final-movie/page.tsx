@@ -1,15 +1,15 @@
 "use client";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
-import styles from "./final-movie.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { useEffect, useRef, useState, useContext } from "react";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
+import styles from "./final-movie.module.css";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
-import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 
 const FinalMovie = () => {
   const dispatch = useDispatch();
@@ -17,22 +17,23 @@ const FinalMovie = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-
+  const {
+    checkStatus,
+    startChecks,
+    editContentData,
+    setEditContentData,
+    setSelectedBrand,
+    setSelectedContentType,
+  } = useContext(globalContext);
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
 
   const finalArticleRef = useRef<HTMLDivElement>(null);
 
-  const [checkStatus, setCheckStatus] = useState({
-    grammar: "waiting",
-    plagiarism: "waiting",
-    ai: "waiting",
-  });
-
   useEffect(() => {
     setIsHydrated(true);
-    if (!finalArticle) {
+    if (!finalArticle && !editContentData) {
       toast.error(
         "No data is available. You will be redirected to refetch new data!"
       );
@@ -42,12 +43,27 @@ const FinalMovie = () => {
     }
   }, []);
 
-  async function startChecks() {
-    await checkGrammer();
-    await checkPlagiarism();
-    await checkAi();
-    return Promise.resolve();
+  function handleDisplayContentDataToEdit() {
+    const updatedArticle = {
+      ...finalArticle,
+      articles: [
+        {
+          title: editContentData.content_title,
+          content: editContentData.content,
+        },
+      ],
+    };
+    dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+    setSelectedBrand(editContentData.brand);
+    setSelectedContentType(editContentData.content_type);
   }
+
+  useEffect(() => {
+    if (editContentData) {
+      // console.log("editContentData11", editContentData);
+      handleDisplayContentDataToEdit();
+    }
+  }, [editContentData]);
 
   function handleNavigate() {
     // must be first line.
@@ -89,168 +105,6 @@ const FinalMovie = () => {
       startChecks();
     }
   }, [startNav]);
-
-  async function checkGrammer() {
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/grammar-check`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              document: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error checkGrammer:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      if (
-        json.grammarIssues.filter(
-          (item: any) => item.general_error_type !== "Other"
-        ).length > 0
-      ) {
-        setCheckStatus((prev) => ({ ...prev, grammar: "fail" }));
-      } else {
-        setCheckStatus((prev) => ({ ...prev, grammar: "pass" }));
-      }
-
-      let filteredJson = json.grammarIssues.filter(
-        (item: any) => item.general_error_type !== "Other"
-      );
-      dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
-    } else {
-      setCheckStatus((prev) => ({ ...prev, grammar: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
-    }
-  }
-
-  async function checkPlagiarism() {
-    const maxRetries = 1; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/plagiarism-check`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              text: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error checkPlagiarism:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      // todo
-      if (json) {
-        setCheckStatus((prev) => ({ ...prev, plagiarism: "fail" }));
-      } else {
-        setCheckStatus((prev) => ({ ...prev, plagiarism: "pass" }));
-      }
-      console.log("checkPlagiarismResult", json);
-    } else {
-      setCheckStatus((prev) => ({ ...prev, plagiarism: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
-    }
-  }
-
-  async function checkAi() {
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/AI-check`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              document: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error checkAi:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      if (
-        // json.documents[0].class_probabilities.human < 0.8
-        json.documents[0].sentences.some(
-          (sentence: any) => sentence.highlight_sentence_for_ai
-        )
-      ) {
-        setCheckStatus((prev) => ({ ...prev, ai: "fail" }));
-      } else {
-        setCheckStatus((prev) => ({ ...prev, ai: "pass" }));
-      }
-      console.log("checkAiResult", json);
-      let filteredJson = json.documents[0].sentences.filter(
-        (sentence: any) => sentence.highlight_sentence_for_ai
-      );
-      dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
-    } else {
-      setCheckStatus((prev) => ({ ...prev, ai: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
-    }
-  }
 
   if (!isHydrated) {
     return (

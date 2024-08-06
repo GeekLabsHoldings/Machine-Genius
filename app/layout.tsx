@@ -8,7 +8,8 @@ import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
 import { Toaster } from "react-hot-toast";
-import { Offline } from "react-detect-offline";
+import { useEffect, useState } from "react";
+import LogoAndTitle from "./_components/LogoAndTitle/LogoAndTitle";
 
 // Initializing Inter font with Latin subset
 // const inter = Inter({ subsets: ["latin"] });
@@ -25,6 +26,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const [isHydrated, setIsHydrated] = useState(false);
+  // useEffect(() => {
+  //   setIsHydrated(true);
+  // }, []);
+  // if (!isHydrated) {
+  //   return (
+  //     <div className="bg-white min-h-screen flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+  //       <div className={`flex flex-col justify-center items-center`}>
+  //         <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   return (
     <html lang="en">
       <body>
@@ -41,11 +56,6 @@ export default function RootLayout({
             zIndex: 91474836471,
           }}
         />
-        <Offline>
-          <div className="offlineMsg">
-            Oops! It seems like you&apos;re currently offline
-          </div>
-        </Offline>
       </body>
     </html>
   );
