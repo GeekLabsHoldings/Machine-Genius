@@ -17,12 +17,8 @@ export default function FinalArticlePage() {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
 
-  const {
-    checkStatus,
-    checkGrammer,
-    checkPlagiarism,
-    checkAi,
-  } = useContext(globalContext);
+  const { checkStatus, checkGrammer, checkPlagiarism, checkAi } =
+    useContext(globalContext);
 
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
@@ -92,8 +88,6 @@ export default function FinalArticlePage() {
       startChecks();
     }
   }, [startNav]);
-
-
 
   if (IsLoading) {
     return (

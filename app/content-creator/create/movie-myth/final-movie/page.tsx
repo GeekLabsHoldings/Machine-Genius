@@ -18,12 +18,8 @@ const FinalMovie = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-  const {
-    checkStatus,
-    checkGrammer,
-    checkPlagiarism,
-    checkAi,
-  } = useContext(globalContext);
+  const { checkStatus, checkGrammer, checkPlagiarism, checkAi } =
+    useContext(globalContext);
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
