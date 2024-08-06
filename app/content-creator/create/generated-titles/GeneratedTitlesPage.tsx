@@ -30,6 +30,8 @@ const GeneratedTitlesPage = () => {
     setLockedGeneratedTitles,
     selectedContentTitle,
     setSelectedContentTitle,
+    editContentData,
+    setEditContentData,
   } = useContext(globalContext);
   const finalArticle = useSelector(
     (state: any) => state.contentCreator.finalArticle
@@ -51,6 +53,10 @@ const GeneratedTitlesPage = () => {
   useEffect(() => {
     setIsHydrated(true);
     handleGenerateTitles();
+    return () => {
+      setEditContentData(null);
+      sessionStorage.removeItem("editContentData");
+    };
   }, []);
 
   function handleSelectTitle() {
@@ -68,6 +74,10 @@ const GeneratedTitlesPage = () => {
   }, [triggerSendContent]);
 
   async function handleSendContent() {
+    let endpoint = editContentData
+      ? `https://backendmachinegenius.onrender.com/content/${editContentData._id}`
+      : "https://backendmachinegenius.onrender.com/content";
+    let method = editContentData ? "PATCH" : "POST";
     setIsSendLoading(true);
     let postBody: any = {
       content_title: selectedContentTitle,
@@ -82,16 +92,13 @@ const GeneratedTitlesPage = () => {
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/content`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(postBody),
-          }
-        );
+        const res = await fetch(endpoint, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postBody),
+        });
         json = await res.json();
         if (json) {
           // If valid data is found, break the loop
