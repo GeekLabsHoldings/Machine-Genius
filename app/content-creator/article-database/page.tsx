@@ -59,8 +59,8 @@ const ContentDatabase = () => {
         className={`${styles.tableBody} borderBottom articleRow `}
         // onClick={(e)=>{handleSelectedBg(e)}}
       >
-        <li className="w-[30%]">{oneArticle?._id}</li>
-        <li className="w-[40%]">{oneArticle?.content_title}</li>
+        <li className="w-[10%]">{idx}</li>
+        <li className="w-[60%]">{oneArticle?.content_title}</li>
         <li className="w-[10%]">
           <span
             className={
@@ -151,8 +151,8 @@ const ContentDatabase = () => {
           <ul
             className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
           >
-            <li className="w-[30%]">#</li>
-            <li className="w-[40%] ">Content Title</li>
+            <li className="w-[10%]">#</li>
+            <li className="w-[60%] ">Content Title</li>
             <li className="w-[10%] ">Brand</li>
             <li className="w-[10%] ">Content Type</li>
             <li className="w-[10%]">Edit</li>
