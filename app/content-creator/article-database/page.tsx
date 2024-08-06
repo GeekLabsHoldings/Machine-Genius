@@ -124,15 +124,6 @@ const ContentDatabase = () => {
         <h3>Filter By:</h3>
         <div className={`${styles.filters} flex gap-[1vw]`}>
           <div className="flex flex-col w-2/12 gap-[0.3vw]">
-            <h5>Content Title</h5>
-            <CustomSelectInput
-              label="All"
-              options={contentDatabase.map((item: any) =>
-                truncateText(item.content_title, 25)
-              )}
-            />
-          </div>
-          <div className="flex flex-col w-2/12 gap-[0.3vw]">
             <h5>Brand</h5>
             <CustomSelectInput
               label="All"
