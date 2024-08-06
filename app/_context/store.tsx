@@ -35,6 +35,7 @@ const initialContextState = {
   checkGrammer: () => {},
   checkPlagiarism: () => {},
   checkAi: () => {},
+  startChecks: () => {},
   generateTitles: () => {},
   generatedTitles: [] as any,
   setGeneratedTitles: (titles: any) => {},
@@ -428,6 +429,13 @@ export default function GlobalContextProvider({
     }
   }
 
+  async function startChecks() {
+    await checkGrammer();
+    await checkPlagiarism();
+    await checkAi();
+    return Promise.resolve();
+  }
+
   async function generateTitles() {
     const maxRetries = 2; // Define the maximum number of retries
     let attempts = 0;
@@ -544,6 +552,7 @@ export default function GlobalContextProvider({
     checkGrammer,
     checkPlagiarism,
     checkAi,
+    startChecks,
     generateTitles,
     generatedTitles,
     setGeneratedTitles,

@@ -23,9 +23,7 @@ export default function ShowErrorsPage() {
   const {
     checkStatus,
     setCheckStatus,
-    checkGrammer,
-    checkPlagiarism,
-    checkAi,
+    startChecks
   } = useContext(globalContext);
   const checkGrammerResults = useSelector(
     (state: any) => state.contentCreator.checkGrammerResults
@@ -64,13 +62,6 @@ export default function ShowErrorsPage() {
 
     sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
   }, [finalArticle, finalArticleContentRef.current]);
-
-  async function startChecks() {
-    await checkGrammer();
-    await checkPlagiarism();
-    await checkAi();
-    return Promise.resolve();
-  }
 
   // todo
   function handleNavigate() {

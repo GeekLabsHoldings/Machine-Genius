@@ -18,7 +18,7 @@ const FinalMovie = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-  const { checkStatus, checkGrammer, checkPlagiarism, checkAi } =
+  const { checkStatus, startChecks } =
     useContext(globalContext);
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
@@ -37,13 +37,6 @@ const FinalMovie = () => {
       }, 1500);
     }
   }, []);
-
-  async function startChecks() {
-    await checkGrammer();
-    await checkPlagiarism();
-    await checkAi();
-    return Promise.resolve();
-  }
 
   function handleNavigate() {
     // must be first line.
