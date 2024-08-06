@@ -74,6 +74,40 @@ const GeneratedTitles = () => {
     }
   }, [triggerSendContent]);
 
+  function generateData() {
+    const options = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    } as const;
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString("en-GB", options);
+
+    // toLocaleDateString returns month abbreviation, convert to full month name
+    const monthAbbreviations = {
+      Jan: "January",
+      Feb: "February",
+      Mar: "March",
+      Apr: "April",
+      May: "May",
+      Jun: "June",
+      Jul: "July",
+      Aug: "August",
+      Sep: "September",
+      Oct: "October",
+      Nov: "November",
+      Dec: "December",
+    };
+    const [day, monthAbbrev, year] = formattedDate.split(" ") as [
+      string,
+      keyof typeof monthAbbreviations,
+      string
+    ];
+    const month = monthAbbreviations[monthAbbrev];
+
+    return `${day} ${month} ${year}`;
+  }
+
   async function handleSendContent() {
     let endpoint = editContentData
       ? `https://backendmachinegenius.onrender.com/content/${editContentData._id}`
@@ -85,6 +119,7 @@ const GeneratedTitles = () => {
       content: finalArticle?.articles[0]?.content,
       brand: selectedBrand,
       content_type: selectedContentType,
+      ...(method === "POST" && { date: generateData() }),
     };
 
     const maxRetries = 2; // Define the maximum number of retries
