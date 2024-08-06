@@ -8,7 +8,6 @@ import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
 import { Toaster } from "react-hot-toast";
-import { Offline } from "react-detect-offline";
 import { useEffect, useState } from "react";
 import LogoAndTitle from "./_components/LogoAndTitle/LogoAndTitle";
 
@@ -57,11 +56,6 @@ export default function RootLayout({
             zIndex: 91474836471,
           }}
         />
-        <Offline>
-          <div className="offlineMsg">
-            Oops! It seems like you&apos;re currently offline
-          </div>
-        </Offline>
       </body>
     </html>
   );
