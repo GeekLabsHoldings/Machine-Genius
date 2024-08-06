@@ -47,11 +47,6 @@ export default function FinalArticlePage() {
         router.replace("/content-creator/create/choose-brand");
       }, 1500);
     }
-    // Cleanup
-    return () => {
-      setEditContentData(null);
-      sessionStorage.removeItem("editContentData");
-    };
   }, []);
 
   function handleDisplayContentDataToEdit() {
