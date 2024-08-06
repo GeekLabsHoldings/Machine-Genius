@@ -41,6 +41,8 @@ const initialContextState = {
   setGeneratedTitles: (titles: any) => {},
   lockedGeneratedTitles: [] as any,
   setLockedGeneratedTitles: (titles: any) => {},
+  selectedContentTitle: "",
+  setSelectedContentTitle: (title: any) => {},
   // ===== 01. End Content Creator =====
 };
 
@@ -493,6 +495,29 @@ export default function GlobalContextProvider({
     console.log("generatedTitles:", generatedTitles);
   }, [generatedTitles]);
 
+
+
+  function selectedContentTitleInit() {
+    if (typeof window !== "undefined") {
+      const selectedContentTitleInitValue = sessionStorage.getItem(
+        "selectedContentTitle"
+      );
+      return selectedContentTitleInitValue ? selectedContentTitleInitValue : "";
+    } else {
+      return "";
+    }
+  }
+  const [selectedContentTitle, setSelectedContentTitle] = useState<any>(
+    selectedContentTitleInit()
+  );
+  useEffect(() => {
+    sessionStorage.setItem("selectedContentTitle", selectedContentTitle);
+  }, [selectedContentTitle]);
+
+
+
+
+
   function lockedGeneratedTitlesInit() {
     if (typeof window !== "undefined") {
       const lockedGeneratedTitlesInitValue = sessionStorage.getItem(
@@ -558,6 +583,8 @@ export default function GlobalContextProvider({
     setGeneratedTitles,
     lockedGeneratedTitles,
     setLockedGeneratedTitles,
+    selectedContentTitle,
+    setSelectedContentTitle,
     // ===== 01. End Content Creator =====
   };
 
