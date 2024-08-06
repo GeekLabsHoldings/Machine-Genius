@@ -16,6 +16,7 @@ export default function FinalArticlePage() {
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   const [startNav, setStartNav] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const {
     checkStatus,
@@ -37,6 +38,7 @@ export default function FinalArticlePage() {
   // }, []);
 
   useEffect(() => {
+    setIsHydrated(true);
     if (!finalArticle && !editContentData) {
       toast.error(
         "No data is available. You will be redirected to refetch new data!"
@@ -53,9 +55,18 @@ export default function FinalArticlePage() {
   }, []);
 
   function handleDisplayContentDataToEdit() {
-    dispatch(contentCreatorActions.setFinalArticle(editContentData.content));
+    const updatedArticle = {
+      ...finalArticle,
+      articles: [
+        {
+          title: editContentData.content_title,
+          content: editContentData.content,
+        },
+      ],
+    };
+    dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
     setSelectedBrand(editContentData.brand);
-    setSelectedContentType(editContentData.contentType);
+    setSelectedContentType(editContentData.content_type);
   }
 
   useEffect(() => {
@@ -105,6 +116,16 @@ export default function FinalArticlePage() {
       startChecks();
     }
   }, [startNav]);
+
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={`${styles.genuisWorking}`}>
+          <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+        </div>
+      </div>
+    );
+  }
 
   if (IsLoading) {
     return (

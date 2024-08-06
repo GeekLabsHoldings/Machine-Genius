@@ -1,7 +1,7 @@
 "use client";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./article-database.module.css";
-import { ArticleNames, Brands, ContentTypeFilter } from "@/app/_data/data";
+// import { ArticleNames, Brands, ContentTypeFilter } from "@/app/_data/data";
 import { useEffect, useState, useContext } from "react";
 import toast from "react-hot-toast";
 import { truncateText } from "@/app/_utils/text";
