@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./uploadMovie.module.css";
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 const MovieMyth = () => {
   const dispatch = useDispatch();
@@ -14,10 +15,14 @@ const MovieMyth = () => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { setEditContentData } = useContext(globalContext);
+  // reset all the data
   useEffect(() => {
     dispatch(contentCreatorActions.setVideoTranscription(null));
+    setEditContentData(null);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("videoTranscription");
+      sessionStorage.removeItem("editContentData");
     }
   }, []);
 
