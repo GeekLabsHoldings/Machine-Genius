@@ -23,6 +23,8 @@ export default function CreatePage() {
     setChoosedArticles,
     setGeneratedTitles,
     setLockedGeneratedTitles,
+    setSelectedContentTitle,
+    setEditContentData
   } = useContext(globalContext);
 
   // reset all the data
@@ -37,7 +39,9 @@ export default function CreatePage() {
     dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);
     setLockedGeneratedTitles([]);
+    setSelectedContentTitle("");
     dispatch(contentCreatorActions.setVideoTranscription(null));
+    setEditContentData(null);
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("selectedContentType");
       sessionStorage.removeItem("selectedBrand");
@@ -50,7 +54,9 @@ export default function CreatePage() {
       sessionStorage.removeItem("checkAiResults");
       sessionStorage.removeItem("generatedTitles");
       sessionStorage.removeItem("lockedGeneratedTitles");
+      sessionStorage.removeItem("selectedContentTitle");
       sessionStorage.removeItem("videoTranscription");
+      sessionStorage.removeItem("editContentData");
     }
   }, []);
 

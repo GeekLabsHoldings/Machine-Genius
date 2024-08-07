@@ -122,7 +122,7 @@ export default function GlobalContextProvider({
     console.log(`currentpath:`, path);
     if (
       !path.includes(correspondingRoutePath) &&
-      !decodedToken?.department.includes("*")
+      !decodedToken?.department.includes("CEO")
     ) {
       const correspondingRoute = handleSetRouteToDirect(role);
       router.replace(correspondingRoute);

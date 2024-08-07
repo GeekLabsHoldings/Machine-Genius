@@ -3,7 +3,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useEffect, useRef, useState, useContext } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
-import styles from "./final-artical.module.css";
+import styles from "./final-article.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
@@ -35,18 +35,6 @@ export default function FinalArticlePage() {
   //   console.log("finalArticle", finalArticle);
   // }, []);
 
-  useEffect(() => {
-    setIsHydrated(true);
-    if (!finalArticle && !editContentData) {
-      toast.error(
-        "No data is available. You will be redirected to refetch new data!"
-      );
-      setTimeout(() => {
-        router.replace("/content-creator/create/choose-brand");
-      }, 1500);
-    }
-  }, []);
-
   function handleDisplayContentDataToEdit() {
     const updatedArticle = {
       ...finalArticle,
@@ -68,6 +56,18 @@ export default function FinalArticlePage() {
       handleDisplayContentDataToEdit();
     }
   }, [editContentData]);
+
+  useEffect(() => {
+    setIsHydrated(true);
+    if (!finalArticle && !editContentData) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   function handleNavigate() {
     // must be first line.
@@ -178,11 +178,20 @@ export default function FinalArticlePage() {
       </div>
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          href={"/content-creator/create/create-article"}
-        />
+        {editContentData ? (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/article-database"}
+          />
+        ) : (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/create/create-article"}
+          />
+        )}
+
         <CustomBtn
           word={"Next"}
           btnColor="black"

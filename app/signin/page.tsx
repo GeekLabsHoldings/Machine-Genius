@@ -138,7 +138,7 @@ const SignIn = () => {
   function handleSetRouteToDirect() {
     if (
       decodedToken?.department.includes("ContentCreator") ||
-      decodedToken?.department.includes("*")
+      decodedToken?.department.includes("CEO")
     ) {
       return "/content-creator/dashboard";
     } else if (decodedToken?.department.includes("Video Editing")) {
