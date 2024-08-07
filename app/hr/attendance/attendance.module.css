@@ -1,11 +1,11 @@
-.attendance .tab{
+.attendance .tab {
   font-size: 24px;
   font-weight: 700;
 }
 
 .attendance .tabHeader {
-    font-weight: 300;
-    font-size: 16px;
+  font-weight: 300;
+  font-size: 16px;
 }
 
 .attendance .tab {
@@ -23,4 +23,28 @@
 }
 .tabs .tab:not(:first-child) {
   padding-left: 10px;
+}
+
+.ticketingPage h5 {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+
+.accountName__filter {
+  width: clamp(10rem, calc(15vw + 0.1rem), 100%);
+}
+
+.bankName__filter,
+.country__filter {
+  width: clamp(10rem, calc(5vw + 0.1rem), 100%);
+}
+
+.input {
+  padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
+  border-bottom: 1px solid var(--dark);
+  color: var(--dark);
+}
+
+.input:focus {
+  outline: none;
 }
