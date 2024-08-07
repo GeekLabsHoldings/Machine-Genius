@@ -186,7 +186,7 @@ const SideNav = ({
 
         <CustomSelectInput
           options={
-            decodedToken?.department.includes("*")
+            decodedToken?.department.includes("CEO")
               ? rols
               : rols.filter((role: any) => role === decodedToken?.department[0])
           }
