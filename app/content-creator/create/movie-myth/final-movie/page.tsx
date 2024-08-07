@@ -31,18 +31,6 @@ const FinalMovie = () => {
 
   const finalArticleRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setIsHydrated(true);
-    if (!finalArticle && !editContentData) {
-      toast.error(
-        "No data is available. You will be redirected to refetch new data!"
-      );
-      setTimeout(() => {
-        router.replace("/content-creator/create/choose-brand");
-      }, 1500);
-    }
-  }, []);
-
   function handleDisplayContentDataToEdit() {
     const updatedArticle = {
       ...finalArticle,
@@ -64,6 +52,18 @@ const FinalMovie = () => {
       handleDisplayContentDataToEdit();
     }
   }, [editContentData]);
+
+  useEffect(() => {
+    setIsHydrated(true);
+    if (!finalArticle && !editContentData) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
 
   function handleNavigate() {
     // must be first line.
