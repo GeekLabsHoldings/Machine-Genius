@@ -23,6 +23,7 @@ export default function CreatePage() {
     setChoosedArticles,
     setGeneratedTitles,
     setLockedGeneratedTitles,
+    setSelectedContentTitle,
     setEditContentData
   } = useContext(globalContext);
 
@@ -38,6 +39,7 @@ export default function CreatePage() {
     dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);
     setLockedGeneratedTitles([]);
+    setSelectedContentTitle("");
     dispatch(contentCreatorActions.setVideoTranscription(null));
     setEditContentData(null);
     if (typeof window !== "undefined") {
@@ -52,6 +54,7 @@ export default function CreatePage() {
       sessionStorage.removeItem("checkAiResults");
       sessionStorage.removeItem("generatedTitles");
       sessionStorage.removeItem("lockedGeneratedTitles");
+      sessionStorage.removeItem("selectedContentTitle");
       sessionStorage.removeItem("videoTranscription");
       sessionStorage.removeItem("editContentData");
     }
