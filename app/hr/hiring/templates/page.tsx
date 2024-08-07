@@ -116,12 +116,12 @@ const Page = () => {
         <div
           className={
             styles.templates_group_slider +
-            " grid lg:grid-cols-3 xl:grid-cols-4 gap-[1vw] mb-3"
+            " flex flex-nowrap gap-[1vw] mb-3 w-[70%] overflow-x-scroll py-8"
           }
         >
           {groupTemplates?.map((e, i) => {
             return (
-              <div className={` ${styles.box}`}>
+              <div className={` ${styles.box} !w-[400px] shrink-0`}>
                 <div className={`${styles.header}`}>
                   <div className="flex items-center gap-[1vw]">
                     {e.icon}

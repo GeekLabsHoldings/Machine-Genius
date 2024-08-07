@@ -2,11 +2,14 @@
 import "../../video-editor/calender/calender.css"; // Importing CSS styles for the calendar component
 import FullCalendar from "@fullcalendar/react"; // Importing the FullCalendar component
 import dayGridPlugin from "@fullcalendar/daygrid"; // Importing the dayGridPlugin for FullCalendar
-import { useState } from "react"; // Importing React hooks for state management
+import { useEffect, useState } from "react"; // Importing React hooks for state management
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing custom select input component
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Importing custom button component
 import eventContentImg from "../../../public/assets/calender event content img.png"; // Importing event content image
 import Image from "next/image"; // Importing Next.js Image component for optimized image loading
+import interactionPlugin from '@fullcalendar/interaction'; // needed for dayClick
+import { headers } from "next/headers";
+import { title } from "process";
 
 // Calendar component definition
 export default function Calendar() {
@@ -22,107 +25,147 @@ export default function Calendar() {
   ];
 
   // Array of calendar events
-  const calenderEvents = [
-    {
-      title: "event 1",
-      start: "2024-04-26",
-      end: "2024-04-30",
-      backgroundColor: "#09c",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 2",
-      date: "2024-04-26",
-      backgroundColor: "#F36F24",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 2",
-      date: "2024-04-26",
-      backgroundColor: "#000",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 2",
-      date: "2024-04-26",
-      backgroundColor: "rgba(95, 168, 91, 0.71)",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 3",
-      date: "2024-04-02",
-      backgroundColor: "#F36F24",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 3",
-      date: "2024-04-02",
-      backgroundColor: "#F36F24",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 3",
-      date: "2024-04-02",
-      backgroundColor: "#F36F24",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 3",
-      date: "2024-04-02",
-      backgroundColor: "#F36F24",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 3",
-      date: "2024-04-02",
-      backgroundColor: "#F36F24",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-    {
-      title: "event 3",
-      date: "2024-04-02",
-      backgroundColor: "#F36F24",
-      articleImg: "../../../public/assets/calender event content img.png",
-      article:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate vLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit es",
-      articleTitle: "Canada’s PM Quits",
-    },
-  ];
+  const [currentEvents, setCurrentEvents] = useState([]);
 
   // State to manage the selected event
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+
+  const handleDateClick = (selected:any) => {
+    console.log(selected.view);
+    const title = prompt("Please enter a new title for your event");
+    const bg = prompt("Please enter a new background");
+    const calendarApi = selected.view.calendar;
+    console.log(calendarApi);
+    
+    calendarApi.unselect();
+
+    if (title) {
+      calendarApi.addEvent({
+        id: `${selected.dateStr}-${title}`,
+        title,
+        start: selected.startStr,
+        end: selected.endStr,
+        backgroundColor:bg,
+        borderColor:"transparent"
+      });
+    }
+    createSchedule(title, selected.startStr, selected.endStr, bg)
+  };
+
+  async function createSchedule(title:any, start:any, end:any, backgroundColor:any) {
+    const token = localStorage.getItem("token")
+    try {
+      const data = await fetch("https://machine-genius.onrender.com/hr/event/create",{
+        method:"post",
+        
+          headers:{
+            "Content-Type": "application/json",
+              Authorization:`Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title,
+            start,
+            end,
+            backgroundColor,
+          })
+        
+      })
+      const res = await data.json()
+      console.log(res);
+      getSchedule()
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  async function getSchedule() {
+    const token = localStorage.getItem("token")
+    try {
+      const data = await fetch("https://machine-genius.onrender.com/user/task/all",{
+        method:"get",
+          headers:{
+            "Content-Type": "application/json",
+              Authorization:`Bearer ${token}`
+          },
+        
+      })
+      const res = await data.json()
+      console.log(res);
+
+      setCurrentEvents(res)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  async function deleteSchedule(id:any) {
+    const token = localStorage.getItem("token")
+    try {
+      const data = await fetch(`https://machine-genius.onrender.com/hr/event/delete/${id}`,{
+        method:"delete",
+          headers:{
+            "Content-Type": "application/json",
+              Authorization:`Bearer ${token}`
+          },
+        
+      })
+      const res = await data.json()
+      console.log(res);
+
+getSchedule()      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+  async function updateSchedule(id:any ,title:any, start:any, end:any, backgroundColor:any) {
+    const token = localStorage.getItem("token")
+    try {
+      const data = await fetch(`https://machine-genius.onrender.com/hr/event/edit-event/${id}`,{
+        method:"put",
+          headers:{
+            "Content-Type": "application/json",
+              Authorization:`Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title,
+            start,
+            end,
+            backgroundColor,
+          })
+        
+      })
+      const res = await data.json()
+      console.log(res);
+
+getSchedule()      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
   // Function to handle event click
   const handleEventClick = (info: any) => {
     setSelectedEvent(info.event);
     console.log(selectedEvent); // Log the selected event
+    console.log(info);
+    console.log(info.event._def.extendedProps._id);
+    let id = info.event._def.extendedProps._id
+    if (
+      window.confirm(`Do you want to delete the event `)){
+    deleteSchedule(id)
+      } else if (window.confirm(`Do you want to edit this event `)) {
+        const title = prompt("Please enter a new title for your event");
+    const bg = prompt("Please enter a new background");
+    const start = prompt("Please enter a start date in this form YYYY-MM-DD");
+    const end = prompt("Please enter a end date in this form YYYY-MM-DD");
+    if (title) {
+      updateSchedule(id , title, start, end, bg )
+    }
+      } 
   };
 
   // Function to close the selected event
@@ -152,6 +195,9 @@ export default function Calendar() {
       />
     </svg>
   );
+  useEffect(()=>{
+getSchedule()
+  },[])
 
   // Render the calendar component
   return (
@@ -174,20 +220,26 @@ export default function Calendar() {
       </div>
       {/* FullCalendar component */}
       <FullCalendar
-        plugins={[dayGridPlugin]}
-        headerToolbar={{
-          left: "prev,next title today",
-          right: "",
-        }}
-        initialView="dayGridMonth"
-        events={calenderEvents}
-        eventClick={(e) => handleEventClick(e)}
-        height={"100%"}
-        eventBorderColor="transparent"
-        dayMaxEvents={3}
-        buttonText={{ today: `${day} / ${month}` }}
-        droppable={true}
-      />
+            height="75vh"
+            plugins={[
+              dayGridPlugin,
+              interactionPlugin,
+            ]}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "",
+            }}
+            initialView="dayGridMonth"
+            editable={true}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            select={handleDateClick}
+            eventClick={(e)=>handleEventClick(e)}
+            
+            events={currentEvents}
+          />
       {/* Selected event content */}
       {selectedEvent ? (
         <>
