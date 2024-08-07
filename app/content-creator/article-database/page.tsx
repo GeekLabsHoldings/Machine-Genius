@@ -2,7 +2,7 @@
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./article-database.module.css";
 // import { ArticleNames, Brands, ContentTypeFilter } from "@/app/_data/data";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 const ContentDatabase = () => {
   const router = useRouter();
   const [contentDatabase, setContentDatabase] = useState<any>([]);
+  const editBtnClicked = useRef(false);
 
   async function getContentDatabase() {
     const maxRetries = 2; // Define the maximum number of retries
@@ -39,7 +40,7 @@ const ContentDatabase = () => {
     } else {
       // setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
+      // router.replace("/content-creator/dashboard");
     }
   }
 
@@ -48,6 +49,7 @@ const ContentDatabase = () => {
   useEffect(() => {
     setEditContentData(null);
     sessionStorage.removeItem("editContentData");
+    editBtnClicked.current = false;
     getContentDatabase();
   }, []);
 
@@ -98,6 +100,7 @@ const ContentDatabase = () => {
           <button
             onClick={() => {
               setEditContentData(oneArticle);
+              editBtnClicked.current = true;
             }}
           >
             Edit
@@ -107,14 +110,22 @@ const ContentDatabase = () => {
     )
   );
 
-  useEffect(() => {
-    // console.log("editContentData", editContentData);
+  function handleNavigateToEditPage() {
     if (editContentData) {
       editContentData.brand === "Movie Myth"
         ? router.replace("/content-creator/create/movie-myth/final-movie")
         : router.replace("/content-creator/create/final-article");
     }
-  }, [editContentData]);
+  }
+
+  useEffect(() => {
+    if (editBtnClicked.current) {
+      editBtnClicked.current = false;
+      handleNavigateToEditPage();
+      return;
+    }
+  }, [editBtnClicked.current]);
+
 
   return (
     <div className={`${styles.articleDatabase} w-full h-full pt-[0.5vw]`}>

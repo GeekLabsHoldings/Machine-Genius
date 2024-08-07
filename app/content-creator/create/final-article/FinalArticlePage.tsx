@@ -178,11 +178,20 @@ export default function FinalArticlePage() {
       </div>
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          href={"/content-creator/create/create-article"}
-        />
+        {editContentData ? (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/article-database"}
+          />
+        ) : (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/create/create-article"}
+          />
+        )}
+
         <CustomBtn
           word={"Next"}
           btnColor="black"

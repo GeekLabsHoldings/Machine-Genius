@@ -174,11 +174,20 @@ const FinalMovie = () => {
       </div>
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          href={"/content-creator/create/movie-myth/create-movie"}
-        />
+        {editContentData ? (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/article-database"}
+          />
+        ) : (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/create/movie-myth/create-movie"}
+          />
+        )}
+
         <CustomBtn
           word={"Next"}
           btnColor="black"
