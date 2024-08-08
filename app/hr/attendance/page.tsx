@@ -237,7 +237,12 @@ export default function Page() {
                           className=" grow px-3 py-1.5 focus:outline-none"
                           required
                           onChange={(e) => {
-                            setFilter({ ...fillter, date: e.target.value });
+                            const date = new Date(e.target.value);
+
+                            // Get the time in milliseconds and convert to seconds
+                            const seconds = Math.floor(date.getTime() / 1000);
+                            console.log(seconds);
+                            setFilter({ ...fillter, date: seconds.toString() });
                           }}
                         />
                       </div>
