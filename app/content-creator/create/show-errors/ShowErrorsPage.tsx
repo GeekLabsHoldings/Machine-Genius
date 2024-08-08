@@ -145,6 +145,7 @@ export default function ShowErrorsPage() {
   useEffect(() => {
     const handleBlur = () => {
       console.log("handleBlur");
+      // window.alert("handleBlur");
       if (typeof window !== undefined) {
         const updatedFinalArticle = sessionStorage.getItem("finalArticle");
         if (updatedFinalArticle) {
@@ -273,28 +274,6 @@ export default function ShowErrorsPage() {
   // todo
   function handleNavigate() {
     handleFixGrammerIssue();
-    // must be first line.
-    // if (finalArticleRef.current) {
-    //   const finalArticleContent = finalArticleRef.current.innerText;
-
-    //   const updatedArticle = {
-    //     ...finalArticle,
-    //     articles: [
-    //       {
-    //         ...finalArticle.articles[0],
-    //         content: finalArticleContent,
-    //       },
-    //     ],
-    //   };
-
-    //   dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-    //   console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
-    // } else {
-    //   console.log(
-    //     "xxxxxxxxxxxxxxxxxx-finalArticleRef.current is null-xxxxxxxxxxxxxxxxxx"
-    //   );
-    // }
-
     setTriggerStartChecks(true);
   }
 
