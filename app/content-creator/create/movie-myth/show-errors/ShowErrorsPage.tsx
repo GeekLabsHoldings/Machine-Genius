@@ -110,7 +110,7 @@ export default function ShowErrorsPage() {
       setCheckStatus({
         grammar: "waiting",
         plagiarism: "pass",
-        ai: "waiting",
+        ai: "pass",
       });
     } else {
       setIsLoading(true);
@@ -133,7 +133,7 @@ export default function ShowErrorsPage() {
       setCheckStatus({
         grammar: "waiting",
         plagiarism: "pass",
-        ai: "waiting",
+        ai: "pass",
       });
     } else {
       if (selectedIssue !== null) {

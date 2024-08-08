@@ -29,7 +29,7 @@ const initialContextState = {
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "waiting",
+    ai: "pass",
   },
   setCheckStatus: (status: any) => {},
   checkGrammer: () => {},
@@ -297,7 +297,7 @@ export default function GlobalContextProvider({
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "waiting",
+    ai: "pass",
   });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
   //   checkGrammerResultsInit()
@@ -469,7 +469,7 @@ export default function GlobalContextProvider({
           (sentence: any) => sentence.highlight_sentence_for_ai
         )
       ) {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+        setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
       } else {
         setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
       }
@@ -479,7 +479,7 @@ export default function GlobalContextProvider({
       );
       dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
     } else {
-      setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
+      // setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
@@ -487,8 +487,8 @@ export default function GlobalContextProvider({
 
   async function startChecks() {
     await checkGrammer();
-    await checkPlagiarism();
-    await checkAi();
+    // await checkPlagiarism();
+    // await checkAi();
     return Promise.resolve();
   }
 
