@@ -36,7 +36,7 @@ export default function RootLayout({
         <body>
           <Provider store={store}>
             <GlobalContextProvider>
-              <div className="bg-white min-h-screen w-full overflow-hidden flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+              <div className="bg-white min-h-screen w-full overflow-hidden flex flex-col justify-center items-center mx-auto py-[1.5vw]">
                 <div className={`flex flex-col justify-center items-center`}>
                   <LogoAndTitle needTxt={false} title="Genius is Loading..." />
                 </div>
