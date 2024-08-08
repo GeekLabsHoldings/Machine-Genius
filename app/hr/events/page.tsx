@@ -338,7 +338,7 @@ export default function Calendar() {
             x
           </span>
           <h3 className=" font-bold text-[24px] text-center mb-6">
-            Do you want to edit this event
+            Do you want to delete this event
           </h3>
           <div className=" flex gap-4 justify-center items-center">
             <button
