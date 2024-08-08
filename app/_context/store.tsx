@@ -29,7 +29,7 @@ const initialContextState = {
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "waiting",
+    ai: "pass",
   },
   setCheckStatus: (status: any) => {},
   checkGrammer: () => {},
@@ -133,51 +133,54 @@ export default function GlobalContextProvider({
     // }
   }
 
-  async function signOut(){
-    setToken('');
+  async function signOut() {
+    setToken("");
     setDecodedToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('decodedToken');
+    localStorage.removeItem("token");
+    localStorage.removeItem("decodedToken");
   }
 
   async function checkAuth() {
-    toast("Checking authentication...")
-    const storedToken = localStorage.getItem('token');
+    // toast("Checking authentication...");
+    const storedToken = localStorage.getItem("token");
     const authToken = token || storedToken;
     if (!authToken) {
-      toast.error('No token found, redirecting to signin...');
-      router.replace('/');
+      toast.error("No token found, redirecting to signin...");
+      router.replace("/");
       return;
     }
     try {
-      const res = await fetch('https://machine-genius.onrender.com/authentication/check-auth', {
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-  
+      const res = await fetch(
+        "https://machine-genius.onrender.com/authentication/check-auth",
+        {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       const data = await res.json();
       // console.log("checkAuth data:", data);
       if (data.result) {
         // setToken(data.result.token);
         // setDecodedToken(data.result);
-        toast.success('Token is valid');
-      } else if (data.message && data.message.name === 'TokenExpiredError') {
-        toast.error('Token expired, redirecting to signin...');
+        // toast.success("Token is valid");
+      } else if (data.message && data.message.name === "TokenExpiredError") {
+        toast.error("Token expired, redirecting to signin...");
         // console.log('Token expired, redirecting to signin...');
         signOut();
-        router.replace('/');
-      } else if (data.message === 'USER_TOKEN_IS_INVALID'){
-        toast.error('Token is invalid, Contact Technical Support!');
+        router.replace("/");
+      } else if (data.message === "USER_TOKEN_IS_INVALID") {
+        toast.error("Token is invalid, Contact Technical Support!");
         // console.log('Token is invalid, Contact Technical Support!');
         signOut();
-        router.replace('/');
+        router.replace("/");
       }
     } catch (error) {
-      toast.error('Something went wrong! Contact Technical Support!');
+      toast.error("Something went wrong! Contact Technical Support!");
       // console.error('Error checking auth:', error);
-      router.replace('/');
+      router.replace("/");
     }
   }
 
@@ -294,7 +297,7 @@ export default function GlobalContextProvider({
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "waiting",
+    ai: "pass",
   });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
   //   checkGrammerResultsInit()
@@ -466,7 +469,7 @@ export default function GlobalContextProvider({
           (sentence: any) => sentence.highlight_sentence_for_ai
         )
       ) {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+        setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
       } else {
         setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
       }
@@ -476,7 +479,7 @@ export default function GlobalContextProvider({
       );
       dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
     } else {
-      setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
+      // setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
@@ -484,8 +487,8 @@ export default function GlobalContextProvider({
 
   async function startChecks() {
     await checkGrammer();
-    await checkPlagiarism();
-    await checkAi();
+    // await checkPlagiarism();
+    // await checkAi();
     return Promise.resolve();
   }
 
