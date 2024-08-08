@@ -141,7 +141,7 @@ export default function GlobalContextProvider({
   }
 
   async function checkAuth() {
-    toast("Checking authentication...");
+    // toast("Checking authentication...");
     const storedToken = localStorage.getItem("token");
     const authToken = token || storedToken;
     if (!authToken) {
@@ -165,7 +165,7 @@ export default function GlobalContextProvider({
       if (data.result) {
         // setToken(data.result.token);
         // setDecodedToken(data.result);
-        toast.success("Token is valid");
+        // toast.success("Token is valid");
       } else if (data.message && data.message.name === "TokenExpiredError") {
         toast.error("Token expired, redirecting to signin...");
         // console.log('Token expired, redirecting to signin...');
