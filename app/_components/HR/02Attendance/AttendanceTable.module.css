@@ -18,7 +18,7 @@
   flex-direction: column;
   overflow-x: auto;
   /* Set a fixed width for the table */
-  width: 87vw;
+  width: 100%;
 }
 
 /* ===== Table Header ===== */
@@ -26,8 +26,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 180vw;
+  /* justify-content: space-between; */
   /* border-bottom: 1px solid var(--dark); */ /* replaced with ::after */
 }
 
@@ -55,6 +54,7 @@
     clamp(16px, calc(1.5vw + 0.1rem), 1000px);
   display: flex;
   align-items: center;
+  width: clamp(10%, calc(30vw + 0.1rem), 1000px);
   justify-content: center;
   /* gap: 0.5vw; */
   /* test */
@@ -72,7 +72,6 @@
   display: flex;
   flex-direction: column;
   overflow: auto;
-  width: 180vw;
   /* test */ /* Ensure the rows match the table's width */
 }
 
@@ -80,7 +79,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   /* border-bottom: 1px solid rgba(42, 43, 42, 0.29); */ /* replaced with ::after */
 }
 
@@ -122,6 +121,7 @@
     clamp(10px, calc(1.2vw + 0.1rem), 1000px);
   display: flex;
   align-items: center;
+  width: clamp(10%, calc(30vw + 0.1rem), 1000px);
   justify-content: center;
   /* test */
   /* width: 12.5%; Ensure the body items have a fixed width */

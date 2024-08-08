@@ -56,15 +56,20 @@ const SignIn = () => {
       logInLogo.style.transform = "scale(150)";
     }
     setShowWelcomeMesage(true);
-    // Redirect to dashboard after a delay
-    // setTimeout(() => {
-    //     router.push('')
-    // }, 500); // 3000 milliseconds = 3 seconds
   }
+
+  // useEffect hook to trigger animation
+  useEffect(() => {
+    setStartAnimation(true);
+  }, []);
 
   useEffect(() => {
     if (token) {
-      handleNavToDashboard();
+      const route = handleSetRouteToDirect();
+      let timeout = setTimeout(() => {
+        router.replace(route);
+      }, 1);
+      return () => clearTimeout(timeout);
     }
   }, []);
 
@@ -130,11 +135,6 @@ const SignIn = () => {
     // },
   });
 
-  // useEffect hook to trigger animation
-  useEffect(() => {
-    setStartAnimation(true);
-  }, []);
-
   function handleSetRouteToDirect() {
     if (
       decodedToken?.department.includes("ContentCreator") ||
@@ -167,10 +167,15 @@ const SignIn = () => {
     return "/"; // Default return value
   }
 
-  function handleNavToDashboard() {
-    const route = handleSetRouteToDirect();
-    router.replace(route);
-  }
+  useEffect(() => {
+    if (ShowWelcomeMesage) {
+      const route = handleSetRouteToDirect();
+      let timeout = setTimeout(() => {
+        router.replace(route);
+      }, 1550);
+      return () => clearTimeout(timeout);
+    }
+  }, [ShowWelcomeMesage]);
 
   return (
     <div
@@ -250,11 +255,6 @@ const SignIn = () => {
           Hi {decodedToken?.email.split("@")[0]}, <br />
           Let’s have a productive day!
         </h2>
-        <CustomBtn
-          btnColor="black"
-          word="Dashboard"
-          onClick={handleNavToDashboard}
-        />
       </div>
     </div>
   );

@@ -2,18 +2,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./CustomSelectInput.module.css";
 
-interface Iprops {
+interface Iprops<T> {
   label?: string | number;
   options: string[] | number[];
   icon?: any;
   theme?: "dark";
   whenSideNavClosed?: boolean;
-  getValue?: (value: string | number) => void;
+  getValue?: (value: T) => void;
   paddingVal?: string;
   children?: React.ReactNode;
 }
 
-const CustomSelectInput = (props: Iprops) => {
+const CustomSelectInput = <T,>(props: Iprops<T>) => {
   const [isActive, setIsActive] = useState(false);
   const [selected, setIsSelected] = useState(
     props.label ? props.label : props.options[0]
