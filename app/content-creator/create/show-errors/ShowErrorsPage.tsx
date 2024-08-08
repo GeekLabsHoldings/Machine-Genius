@@ -59,33 +59,6 @@ export default function ShowErrorsPage() {
     sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
   }, [finalArticle, finalArticleContentRef.current]);
 
-  // todo
-  function handleNavigate() {
-    // must be first line.
-    if (finalArticleRef.current) {
-      const finalArticleContent = finalArticleRef.current.innerText;
-
-      const updatedArticle = {
-        ...finalArticle,
-        articles: [
-          {
-            ...finalArticle.articles[0],
-            content: finalArticleContent,
-          },
-        ],
-      };
-
-      dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-      console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
-    } else {
-      console.log(
-        "xxxxxxxxxxxxxxxxxx-finalArticleRef.current is null-xxxxxxxxxxxxxxxxxx"
-      );
-    }
-
-    setTriggerStartChecks(true);
-  }
-
   useEffect(() => {
     // ===== log data =====
     // console.log("finalArticle:", finalArticle);
@@ -260,61 +233,69 @@ export default function ShowErrorsPage() {
     );
   }
 
-  function handleFixGrammerIssue(item: any) {
-    console.log("item", item);
-    // console.log("item_sentencePosition", finalArticle.articles[0].content.indexOf(item.sentence));
-    // console.log("item_sentence_wordToReplace", item.sentence.slice(item.start, item.end));
-    // console.log("item_sentence_indexOfWordToReplace", item.sentence.indexOf(item.sentence.slice(item.start, item.end)));
-    // console.log("replacedSentence", item.sentence.replace(item.sentence.slice(item.start, item.end), item.replacement));
-    let replacedSentence =
-      item.sentence.slice(0, item.start) +
-      item.replacement +
-      item.sentence.slice(item.end);
-
-    console.log("replacedSentence", replacedSentence);
-
+  function handleFixGrammerIssue() {
     if (typeof window !== undefined) {
       const storedFinalArticle = sessionStorage.getItem("finalArticle");
-
       if (storedFinalArticle) {
         let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
+        let storedFinalArticleContent =
+          parsedStoredFinalArticle.articles[0].content;
 
-        // console.log("storedFinalArticle", parsedStoredFinalArticle.articles[0].content)
-        let updatedFinalArticleContent =
-          parsedStoredFinalArticle.articles[0].content.replace(
+        for (let i = 0; i < checkGrammerResults.length; i++) {
+          let item = checkGrammerResults[i];
+
+          let replacedSentence =
+            item.sentence.slice(0, item.start) +
+            item.replacement +
+            item.sentence.slice(item.end);
+
+          storedFinalArticleContent = storedFinalArticleContent.replace(
             item.sentence,
             replacedSentence
           );
+        }
 
         const updatedFinalArticle = {
           ...parsedStoredFinalArticle,
           articles: [
             {
               ...parsedStoredFinalArticle.articles[0],
-              content: updatedFinalArticleContent,
+              content: storedFinalArticleContent,
             },
           ],
         };
 
         dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
-    } else {
-      let updatedFinalArticleContent = finalArticle.articles[0].content.replace(
-        item.sentence,
-        replacedSentence
-      );
-
-      const updatedFinalArticle = {
-        ...finalArticle,
-        articles: [
-          {
-            ...finalArticle.articles[0],
-            content: updatedFinalArticleContent,
-          },
-        ],
-      };
-      dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
     }
+  }
+
+  // todo
+  function handleNavigate() {
+    handleFixGrammerIssue();
+    // must be first line.
+    // if (finalArticleRef.current) {
+    //   const finalArticleContent = finalArticleRef.current.innerText;
+
+    //   const updatedArticle = {
+    //     ...finalArticle,
+    //     articles: [
+    //       {
+    //         ...finalArticle.articles[0],
+    //         content: finalArticleContent,
+    //       },
+    //     ],
+    //   };
+
+    //   dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+    //   console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
+    // } else {
+    //   console.log(
+    //     "xxxxxxxxxxxxxxxxxx-finalArticleRef.current is null-xxxxxxxxxxxxxxxxxx"
+    //   );
+    // }
+
+    setTriggerStartChecks(true);
   }
 
   return (
@@ -388,7 +369,7 @@ export default function ShowErrorsPage() {
                       <span className="font-bold">With:</span>{" "}
                       {item.replacement}
                     </p>
-                    <div className="flex justify-end">
+                    {/* <div className="flex justify-end">
                       <CustomBtn
                         word={"Fix"}
                         btnColor="black"
@@ -397,7 +378,7 @@ export default function ShowErrorsPage() {
                           handleFixGrammerIssue(item);
                         }}
                       ></CustomBtn>
-                    </div>
+                    </div> */}
                   </>
                 </ErrorCollapse>
               );
