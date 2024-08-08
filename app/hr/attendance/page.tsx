@@ -114,6 +114,12 @@ export default function Page() {
     };
   }, []);
 
+  useEffect(() => {
+    if (activeTab === 1) {
+      setFilter({ name: "", department: "", date: "" });
+    }
+  }, [activeTab]);
+
   return (
     <section className={`${styles.attendance}`}>
       {/* Container */}
