@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./attendance.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import NotificationsBreakGrid from "@/app/_components/HR/02Attendance/NotificationsBreakGrid";
+import debounce from "debounce";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<number>(1);
@@ -201,9 +202,9 @@ export default function Page() {
                         placeholder="Name"
                         required
                         className={`${styles.input}`}
-                        onChange={(e) => {
+                        onChange={debounce((e) => {
                           setFilter({ ...fillter, name: e.target.value });
-                        }}
+                        }, 500)}
                       />
                     </div>
                     <div className="flex flex-col w-1/4 gap-[0.3vw]">
