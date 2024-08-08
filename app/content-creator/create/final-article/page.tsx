@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import React from "react";
 
 export default function Page() {
-  const FinalArticle = dynamic(() => import("./FinalArticlePage"), {
+  const FinalArticle = dynamic(() => import("@/app/_components/ContentCreator/FinalArticlePage"), {
     ssr: false,
   });
 
