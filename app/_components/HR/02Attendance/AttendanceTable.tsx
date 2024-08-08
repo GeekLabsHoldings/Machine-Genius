@@ -17,7 +17,13 @@ interface Attendance {
  *
  * @return {JSX.Element} The rendered attendance table component.
  */
-export default function AttendanceTable() {
+export default function AttendanceTable({
+  activeTab,
+  filter,
+}: {
+  activeTab: number;
+  filter: { name: string; department: string; date: string };
+}): JSX.Element {
   // An array of objects representing the rows of the table body.
 
   const [attendance, setAttendance] = useState<Attendance[]>([
@@ -53,6 +59,14 @@ export default function AttendanceTable() {
       console.error("Error fetching data:", error);
     }
   }, []);
+
+  useEffect(() => {
+    console.log(filter);
+  }, [filter]);
+
+  useEffect(() => {
+    console.log(attendance);
+  }, [attendance]);
 
   const yellowWarning = (
     <svg
@@ -95,9 +109,11 @@ export default function AttendanceTable() {
           <li>
             <span>Checked In</span>
           </li>
-          <li>
-            <span>Checked Out</span>
-          </li>
+          {activeTab === 2 && (
+            <li>
+              <span>Checked Out</span>
+            </li>
+          )}
           <li>
             <span>Warning Count</span>
           </li>
@@ -131,9 +147,11 @@ export default function AttendanceTable() {
               <li>
                 <span>{e.checkedIn}</span>
               </li>
-              <li>
-                <span>{e.checkedOut}</span>
-              </li>
+              {activeTab == 2 && (
+                <li>
+                  <span>{e.checkedOut}</span>
+                </li>
+              )}
               <li>
                 <span
                   style={{

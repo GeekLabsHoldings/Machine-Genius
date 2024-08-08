@@ -10,6 +10,11 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState<number>(1);
   const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
   const [fillColorRight, setFillColorRight] = useState("#2A2B2A");
+  const [fillter, setFilter] = useState({
+    name: "",
+    department: "",
+    date: "",
+  });
 
   const leftArrow = (
     <svg
@@ -190,6 +195,9 @@ export default function Page() {
                         placeholder="Name"
                         required
                         className={`${styles.input}`}
+                        onChange={(e) => {
+                          setFilter({ ...fillter, name: e.target.value });
+                        }}
                       />
                     </div>
                     <div className="flex flex-col w-1/4 gap-[0.3vw]">
@@ -197,6 +205,9 @@ export default function Page() {
                       <CustomSelectInput
                         label="All"
                         options={["All", "HR", "Finance", "IT", "Operations"]}
+                        getValue={(value: string) => {
+                          setFilter({ ...fillter, department: value });
+                        }}
                       />
                     </div>
                     <div className={`flex flex-col gap-[0.3vw]`}>
@@ -225,6 +236,9 @@ export default function Page() {
                           id="subjectLine"
                           className=" grow px-3 py-1.5 focus:outline-none"
                           required
+                          onChange={(e) => {
+                            setFilter({ ...fillter, date: e.target.value });
+                          }}
                         />
                       </div>
                     </div>
@@ -264,7 +278,7 @@ export default function Page() {
               </div>
 
               {/* Today’s Attendance Table */}
-              <AttendanceTable />
+              <AttendanceTable activeTab={activeTab} filter={fillter} />
             </div>
           </>
         )}
