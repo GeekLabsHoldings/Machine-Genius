@@ -75,28 +75,36 @@ const GeneratedTitlesPage = () => {
   }, [triggerSendContent]);
 
   function generateData() {
-    const options = { day: '2-digit', month: 'short', year: 'numeric' } as const;
+    const options = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    } as const;
     const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-GB', options);
-    
+    const formattedDate = today.toLocaleDateString("en-GB", options);
+
     // toLocaleDateString returns month abbreviation, convert to full month name
     const monthAbbreviations = {
-      "Jan": "January",
-      "Feb": "February",
-      "Mar": "March",
-      "Apr": "April",
-      "May": "May",
-      "Jun": "June",
-      "Jul": "July",
-      "Aug": "August",
-      "Sep": "September",
-      "Oct": "October",
-      "Nov": "November",
-      "Dec": "December"
+      Jan: "January",
+      Feb: "February",
+      Mar: "March",
+      Apr: "April",
+      May: "May",
+      Jun: "June",
+      Jul: "July",
+      Aug: "August",
+      Sep: "September",
+      Oct: "October",
+      Nov: "November",
+      Dec: "December",
     };
-    const [day, monthAbbrev, year] = formattedDate.split(' ') as [string, keyof typeof monthAbbreviations, string];
+    const [day, monthAbbrev, year] = formattedDate.split(" ") as [
+      string,
+      keyof typeof monthAbbreviations,
+      string
+    ];
     const month = monthAbbreviations[monthAbbrev];
-  
+
     return `${day} ${month} ${year}`;
   }
 
@@ -142,7 +150,11 @@ const GeneratedTitlesPage = () => {
 
     if (json) {
       // toast.success("Content sent successfully");
-      router.replace("/content-creator/create/schedule-script");
+      if (selectedBrand === "Movie Myth") {
+        router.replace("/content-creator/create/movie-myth/article-ready");
+      } else {
+        router.replace("/content-creator/create/schedule-script");
+      }
     } else {
       // setIsRetry(true);
       // window.alert("Failed to generate content after multiple attempts");
@@ -279,12 +291,19 @@ const GeneratedTitlesPage = () => {
 
       {/* Next & Back Buttons to navigate to next and back pages */}
       <div className="flex justify-between">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          // href={"/content-creator/create/generating-titles"}
-          href={"/content-creator/create/show-errors"}
-        />
+        {selectedBrand === "Movie Myth" ? (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href="/content-creator/create/movie-myth/show-errors"
+          />
+        ) : (
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/create/show-errors"}
+          />
+        )}
         <CustomBtn
           word={"Send"}
           btnColor="black"
