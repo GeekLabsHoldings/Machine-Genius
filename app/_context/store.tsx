@@ -133,9 +133,58 @@ export default function GlobalContextProvider({
     // }
   }
 
+  async function signOut(){
+    setToken('');
+    setDecodedToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('decodedToken');
+  }
+
+  async function checkAuth() {
+    toast("Checking authentication...")
+    const storedToken = localStorage.getItem('token');
+    const authToken = token || storedToken;
+    if (!authToken) {
+      toast.error('No token found, redirecting to signin...');
+      router.replace('/');
+      return;
+    }
+    try {
+      const res = await fetch('https://machine-genius.onrender.com/authentication/check-auth', {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const data = await res.json();
+      // console.log("checkAuth data:", data);
+      if (data.result) {
+        // setToken(data.result.token);
+        // setDecodedToken(data.result);
+        toast.success('Token is valid');
+      } else if (data.message && data.message.name === 'TokenExpiredError') {
+        toast.error('Token expired, redirecting to signin...');
+        // console.log('Token expired, redirecting to signin...');
+        signOut();
+        router.replace('/');
+      } else if (data.message === 'USER_TOKEN_IS_INVALID'){
+        toast.error('Token is invalid, Contact Technical Support!');
+        // console.log('Token is invalid, Contact Technical Support!');
+        signOut();
+        router.replace('/');
+      }
+    } catch (error) {
+      toast.error('Something went wrong! Contact Technical Support!');
+      // console.error('Error checking auth:', error);
+      router.replace('/');
+    }
+  }
+
   useEffect(() => {
     if (token) {
       console.log("=+==+==There is Token=+==+==");
+      checkAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
       console.log("Redirecting to signin...");
