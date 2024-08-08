@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./AttendanceTable.module.css";
+import { data } from "jquery";
 
 interface Attendance {
   firstName: string;
@@ -42,7 +43,7 @@ export default function AttendanceTable({
     // Fetch the attendance data from the server.
     try {
       fetch(
-        "https://machine-genius.onrender.com/hr/attendance/today-attendance",
+        `https://machine-genius.onrender.com/hr/attendance/today-attendance?name=${filter.name}&day=${filter.data}&department=${filter.department}`,
         {
           method: "GET",
           headers: {
@@ -58,7 +59,7 @@ export default function AttendanceTable({
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  }, []);
+  }, [filter]);
 
   useEffect(() => {
     console.log(filter);
