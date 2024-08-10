@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 const ContentDatabase = () => {
   const router = useRouter();
   const [contentDatabase, setContentDatabase] = useState<any>([]);
+  const [filteredContentDatabase, setFilteredContentDatabase] = useState<any>(
+    []
+  );
   const editBtnClicked = useRef(false);
 
   async function getContentDatabase() {
@@ -46,6 +49,29 @@ const ContentDatabase = () => {
 
   const { editContentData, setEditContentData } = useContext(globalContext);
 
+  const [filterBy, setFilterBy] = useState({
+    brand: "",
+    contentType: "",
+    date: "",
+  });
+
+  useEffect(() => {
+    const filteredData = contentDatabase.filter((item: any) => {
+      if (filterBy.brand) {
+        return item.brand === filterBy.brand;
+      }
+      if (filterBy.contentType) {
+        return item.content_type === filterBy.contentType;
+      }
+      if (filterBy.date) {
+        return item.date === filterBy.date;
+      }
+    });
+    setFilteredContentDatabase(
+      filteredData.length ? filteredData : contentDatabase
+    );
+  }, [filterBy, contentDatabase]);
+
   useEffect(() => {
     setEditContentData(null);
     sessionStorage.removeItem("editContentData");
@@ -64,7 +90,7 @@ const ContentDatabase = () => {
     return formattedDate;
   }
 
-  const renderYourArticles = contentDatabase.map(
+  const renderYourArticles = filteredContentDatabase.map(
     (oneArticle: any, idx: any) => (
       <ul
         key={idx}
@@ -126,7 +152,6 @@ const ContentDatabase = () => {
     }
   }, [editBtnClicked.current]);
 
-
   return (
     <div className={`${styles.articleDatabase} w-full h-full pt-[0.5vw]`}>
       {/* filters options to filter and edit data in table */}
@@ -136,25 +161,41 @@ const ContentDatabase = () => {
           <div className="flex flex-col w-2/12 gap-[0.3vw]">
             <h5>Brand</h5>
             <CustomSelectInput
-              label="All"
-              options={contentDatabase
-                .map((item: any) => item.brand)
-                .filter(
-                  (item: any, index: any, self: any) =>
-                    self.indexOf(item) === index
-                )}
+              options={[
+                "All",
+                ...contentDatabase
+                  .map((item: any) => item.brand)
+                  .filter(
+                    (item: any, index: any, self: any) =>
+                      self.indexOf(item) === index
+                  ),
+              ]}
+              getValue={(value: string) =>
+                setFilterBy({
+                  ...filterBy,
+                  brand: value === "All" ? "" : value,
+                })
+              }
             />
           </div>
           <div className="flex flex-col w-2/12 gap-[0.3vw]">
             <h5>Content Type</h5>
             <CustomSelectInput
-              label="All"
-              options={contentDatabase
-                .map((item: any) => item.content_type)
-                .filter(
-                  (item: any, index: any, self: any) =>
-                    self.indexOf(item) === index
-                )}
+              options={[
+                "All",
+                ...contentDatabase
+                  .map((item: any) => item.content_type)
+                  .filter(
+                    (item: any, index: any, self: any) =>
+                      self.indexOf(item) === index
+                  ),
+              ]}
+              getValue={(value: string) =>
+                setFilterBy({
+                  ...filterBy,
+                  contentType: value === "All" ? "" : value,
+                })
+              }
             />
           </div>
           <div className="flex flex-col w-[10%] gap-[0.3vw]">
