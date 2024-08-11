@@ -26,7 +26,7 @@ const CreateMovie = () => {
     (state) => state.contentCreator.videoTranscription
   );
 
-  const { selectedBrand } = useContext(globalContext);
+  const { selectedContentType ,selectedBrand } = useContext(globalContext);
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {
@@ -128,7 +128,9 @@ const CreateMovie = () => {
       while (attempts < maxRetries) {
         try {
           const res = await fetch(
-            `https://backendmachinegenius.onrender.com/script/finalize-content`,
+            `https://backendmachinegenius.onrender.com/${
+              selectedContentType === "Script" ? "script" : "article"
+            }/finalize-content`,
             {
               method: "POST",
               headers: {
@@ -139,7 +141,9 @@ const CreateMovie = () => {
                 selectedContent: selectedText
                   .map((item) => item.text)
                   .join(" "),
-                brandName: brandNamePayload,
+                ...(selectedContentType === "Script" && {
+                  brandName: brandNamePayload,
+                }),
               }),
             }
           );

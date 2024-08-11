@@ -134,10 +134,11 @@ export default function GlobalContextProvider({
   }
 
   async function signOut() {
-    setToken("");
-    setDecodedToken(null);
+    // toast("signOut ...");
     localStorage.removeItem("token");
     localStorage.removeItem("decodedToken");
+    setToken("");
+    setDecodedToken(null);
   }
 
   async function checkAuth() {
