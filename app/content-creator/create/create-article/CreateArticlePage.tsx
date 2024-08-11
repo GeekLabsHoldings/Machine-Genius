@@ -23,6 +23,7 @@ export default function CreateArticlePage() {
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
   // state keeps selected text to display them in selection section
   const {
+    selectedContentType,
     selectedBrand,
     setSelectedBrand,
     collectedData,
@@ -153,7 +154,9 @@ export default function CreateArticlePage() {
       while (attempts < maxRetries) {
         try {
           const res = await fetch(
-            `https://backendmachinegenius.onrender.com/script/finalize-content`,
+            `https://backendmachinegenius.onrender.com/${
+              selectedContentType === "Script" ? "script" : "article"
+            }/finalize-content`,
             {
               method: "POST",
               headers: {
@@ -164,7 +167,9 @@ export default function CreateArticlePage() {
                 selectedContent: selectedText
                   .map((item: any) => item.text)
                   .join(" "),
-                brandName: brandNamePayload,
+                ...(selectedContentType === "Script" && {
+                  brandName: brandNamePayload,
+                }),
               }),
             }
           );
