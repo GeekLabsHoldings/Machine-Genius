@@ -26,7 +26,7 @@ const CreateMovie = () => {
     (state) => state.contentCreator.videoTranscription
   );
 
-  const { selectedBrand } = useContext(globalContext);
+  const { selectedContentType ,selectedBrand } = useContext(globalContext);
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {
