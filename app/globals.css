@@ -462,3 +462,8 @@ img {
   padding: var(--12px);
 }
 /* End Offline Message */
+
+
+.eventsCalendar.full-calender .fc .fc-event.fc-event-start.fc-event-end.fc-event-past.fc-daygrid-event.fc-daygrid-block-event.fc-h-event {
+  width: 100% !important;
+}

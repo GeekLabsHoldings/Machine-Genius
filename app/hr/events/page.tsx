@@ -212,7 +212,7 @@ export default function Calendar() {
   // Render the calendar component
   return (
     <>
-      <div className="pt-[1.5vw] h-full w-full full-calender relative">
+      <div className="pt-[1.5vw] h-full w-full full-calender relative eventsCalendar">
         {/* Filters section */}
         <div className="flex justify-between filters">
           <div className="w-[30%] flex items-center gap-[2vw]">
