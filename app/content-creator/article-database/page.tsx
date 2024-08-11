@@ -91,8 +91,9 @@ const ContentDatabase = () => {
     return formattedDate;
   }
 
-  const renderYourArticles = filteredContentDatabase.map(
-    (oneArticle: any, idx: any) => (
+  const renderYourArticles = filteredContentDatabase
+    .reverse()
+    .map((oneArticle: any, idx: any) => (
       <ul
         key={idx}
         className={`${styles.tableBody} borderBottom articleRow `}
@@ -134,8 +135,7 @@ const ContentDatabase = () => {
           </button>
         </li>
       </ul>
-    )
-  );
+    ));
 
   function handleNavigateToEditPage() {
     if (editContentData) {
