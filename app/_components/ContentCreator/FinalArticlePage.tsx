@@ -17,6 +17,7 @@ export default function FinalArticlePage() {
   const [startNav, setStartNav] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const {
+    selectedContentType,
     checkStatus,
     startChecks,
     editContentData,
@@ -32,9 +33,15 @@ export default function FinalArticlePage() {
 
   const finalArticleRef = useRef<HTMLDivElement>(null);
 
-  // useEffect(() => {
-  //   console.log("finalArticle", finalArticle);
-  // }, []);
+  useEffect(() => {
+    // console.log("finalArticle", finalArticle);
+    // todo: remove after backend is ready
+    if (selectedContentType === "Article"){
+      toast.error("Please note that the prompt for 'Article' is not ready yet!");
+      toast.error("Please note that the prompt for 'Article' is not ready yet!");
+      toast.error("Please note that the prompt for 'Article' is not ready yet!");
+    }
+  }, []);
 
   function handleDisplayContentDataToEdit() {
     const updatedArticle = {
