@@ -78,7 +78,7 @@ export default function ShowErrorsPage() {
       setCheckStatus({
         grammar: "waiting",
         plagiarism: "pass",
-        ai: "pass",
+        ai: "waiting",
       });
     } else {
       setIsLoading(true);
@@ -101,7 +101,7 @@ export default function ShowErrorsPage() {
       setCheckStatus({
         grammar: "waiting",
         plagiarism: "pass",
-        ai: "pass",
+        ai: "waiting",
       });
     } else {
       if (selectedIssue !== null) {
@@ -222,7 +222,9 @@ export default function ShowErrorsPage() {
 
   // todo
   function handleNavigate() {
-    handleFixGrammerIssue();
+    if (checkGrammerResults.length) {
+      handleFixGrammerIssue();
+    }
     setTriggerStartChecks(true);
   }
 
@@ -389,6 +391,16 @@ export default function ShowErrorsPage() {
                       </span>
                       "<span>{item.sentence}</span>"
                     </p>
+                    <div className="flex justify-end">
+                      <CustomBtn
+                        word={"Fix"}
+                        btnColor="black"
+                        paddingVal={"py-[0.5vw] px-[1vw]"}
+                        onClick={() => {
+                          // handleFixGrammerIssue(item);
+                        }}
+                      ></CustomBtn>
+                    </div>
                   </>
                 </ErrorCollapse>
               );
