@@ -17,6 +17,7 @@ export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState<boolean>(false);
+  const [IsLoadingParaphrase, setIsLoadingParaphrase] = useState<boolean>(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
   const {
@@ -226,7 +227,7 @@ export default function ShowErrorsPage() {
   }
 
   async function paraphraseSentence(sentence: string) {
-    setIsLoading(true);
+    setIsLoadingParaphrase(true);
     try {
       const res = await fetch(`https://api.ai21.com/studio/v1/paraphrase`, {
         method: "POST",
@@ -250,41 +251,41 @@ export default function ShowErrorsPage() {
       toast.error("Something went wrong! Error Paraphrase AI");
       console.error("Error paraphraseSentence:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingParaphrase(false);
     }
   }
 
-  function handleFixAiIssue(item: any) {
+  async function handleFixAiIssue(item: any) {
     console.log("item", item);
-    const replacedSentence = paraphraseSentence(item.sentence);
+    const replacedSentence = await paraphraseSentence(item.sentence);
     console.log("replacedSentence", replacedSentence);
 
-    // if (typeof window !== undefined) {
-    //   const storedFinalArticle = sessionStorage.getItem("finalArticle");
+    if (typeof window !== undefined) {
+      const storedFinalArticle = sessionStorage.getItem("finalArticle");
 
-    //   if (storedFinalArticle) {
-    //     let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
+      if (storedFinalArticle) {
+        let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
 
-    //     // console.log("storedFinalArticle", parsedStoredFinalArticle.articles[0].content)
-    //     let updatedFinalArticleContent =
-    //       parsedStoredFinalArticle.articles[0].content.replace(
-    //         item.sentence,
-    //         replacedSentence
-    //       );
+        // console.log("storedFinalArticle", parsedStoredFinalArticle.articles[0].content)
+        let updatedFinalArticleContent =
+          parsedStoredFinalArticle.articles[0].content.replace(
+            item.sentence,
+            replacedSentence
+          );
 
-    //     const updatedFinalArticle = {
-    //       ...parsedStoredFinalArticle,
-    //       articles: [
-    //         {
-    //           ...parsedStoredFinalArticle.articles[0],
-    //           content: updatedFinalArticleContent,
-    //         },
-    //       ],
-    //     };
+        const updatedFinalArticle = {
+          ...parsedStoredFinalArticle,
+          articles: [
+            {
+              ...parsedStoredFinalArticle.articles[0],
+              content: updatedFinalArticleContent,
+            },
+          ],
+        };
 
-    //     dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
-    //   }
-    // }
+        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
+      }
+    }
   }
 
   // todo
@@ -372,7 +373,7 @@ export default function ShowErrorsPage() {
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >
-                <p>{finalArticle?.articles[0]?.content}</p>
+                <p>{IsLoadingParaphrase ? "Loading..." : finalArticle?.articles[0]?.content}</p>
               </div>
             </div>
           </div>
@@ -465,6 +466,7 @@ export default function ShowErrorsPage() {
                         onClick={() => {
                           handleFixAiIssue(item);
                         }}
+                        disabled={IsLoadingParaphrase}
                       ></CustomBtn>
                     </div>
                   </>
