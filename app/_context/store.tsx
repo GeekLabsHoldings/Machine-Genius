@@ -133,12 +133,14 @@ export default function GlobalContextProvider({
     // }
   }
 
-  async function signOut() {
+  function signOut() {
     // toast("signOut ...");
     localStorage.removeItem("token");
     localStorage.removeItem("decodedToken");
     setToken("");
     setDecodedToken(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("decodedToken");
   }
 
   async function checkAuth() {
@@ -181,6 +183,7 @@ export default function GlobalContextProvider({
     } catch (error) {
       toast.error("Something went wrong! Contact Technical Support!");
       // console.error('Error checking auth:', error);
+      signOut();
       router.replace("/");
     }
   }
