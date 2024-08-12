@@ -19,8 +19,13 @@ export default function ShowErrorsPage() {
   const [IsLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
-  const { checkStatus, setCheckStatus, startChecks, selectedBrand } =
-    useContext(globalContext);
+  const {
+    selectedContentType,
+    checkStatus,
+    setCheckStatus,
+    startChecks,
+    selectedBrand,
+  } = useContext(globalContext);
   const checkGrammerResults = useSelector(
     (state: any) => state.contentCreator.checkGrammerResults
   );
@@ -183,7 +188,7 @@ export default function ShowErrorsPage() {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
   }
 
-  function handleFixGrammerIssue() {
+  function handleFixGrammerIssues() {
     if (typeof window !== undefined) {
       const storedFinalArticle = sessionStorage.getItem("finalArticle");
       if (storedFinalArticle) {
@@ -220,10 +225,72 @@ export default function ShowErrorsPage() {
     }
   }
 
+  async function paraphraseSentence(sentence: string) {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`https://api.ai21.com/studio/v1/paraphrase`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_AIPARAPHRASE_API_KEY}`,
+        },
+        body: JSON.stringify({
+          "text": sentence,
+          "style": "casual",
+          "startIndex": 0
+        }),
+      });
+
+      const json = await res.json();
+
+      if (json) {
+        return json?.suggestions[0].text;
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Error Paraphrase AI");
+      console.error("Error paraphraseSentence:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handleFixAiIssue(item: any) {
+    console.log("item", item);
+    const replacedSentence = paraphraseSentence(item.sentence);
+    console.log("replacedSentence", replacedSentence);
+
+    // if (typeof window !== undefined) {
+    //   const storedFinalArticle = sessionStorage.getItem("finalArticle");
+
+    //   if (storedFinalArticle) {
+    //     let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
+
+    //     // console.log("storedFinalArticle", parsedStoredFinalArticle.articles[0].content)
+    //     let updatedFinalArticleContent =
+    //       parsedStoredFinalArticle.articles[0].content.replace(
+    //         item.sentence,
+    //         replacedSentence
+    //       );
+
+    //     const updatedFinalArticle = {
+    //       ...parsedStoredFinalArticle,
+    //       articles: [
+    //         {
+    //           ...parsedStoredFinalArticle.articles[0],
+    //           content: updatedFinalArticleContent,
+    //         },
+    //       ],
+    //     };
+
+    //     dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
+    //   }
+    // }
+  }
+
   // todo
   function handleNavigate() {
     if (checkGrammerResults.length) {
-      handleFixGrammerIssue();
+      handleFixGrammerIssues();
     }
     setTriggerStartChecks(true);
   }
@@ -234,7 +301,7 @@ export default function ShowErrorsPage() {
         <div className={`${styles.genuisWorking} m-auto`}>
           <LogoAndTitle
             needTxt={false}
-            title="Genius is working on your article.."
+            title={`Genius is working on your ${selectedContentType.toLowerCase()}..`}
           />
           <div className={`${styles.allCheckers} w-full`}>
             <SpecificChecker
@@ -384,7 +451,6 @@ export default function ShowErrorsPage() {
                   }}
                 >
                   <>
-                    {/* <p><span className="font-bold">Grammar Issue:</span> {item.description}</p> */}
                     <p>
                       <span className="font-bold">
                         In the following sentence:{" "}
@@ -397,7 +463,7 @@ export default function ShowErrorsPage() {
                         btnColor="black"
                         paddingVal={"py-[0.5vw] px-[1vw]"}
                         onClick={() => {
-                          // handleFixGrammerIssue(item);
+                          handleFixAiIssue(item);
                         }}
                       ></CustomBtn>
                     </div>

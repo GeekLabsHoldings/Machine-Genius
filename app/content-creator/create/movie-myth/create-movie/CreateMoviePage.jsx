@@ -300,7 +300,8 @@ const CreateMovie = () => {
             className={`${styles.box} flex justify-center items-center ${styles.movieWrapper}`}
           >
             <VideoPlayer
-              src={videoTranscription?.movie_url}
+              // src={videoTranscription?.movie_url}
+              src={`http://34.206.30.166:443/uploads/movie.mp4`}
               highlightTime={highlightTime}
               videoRef={videoRef}
             />
