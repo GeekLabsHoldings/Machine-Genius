@@ -454,7 +454,7 @@ export default function GlobalContextProvider({
           headers: {
             'Accept': "application/json",
             "Content-Type": "application/json",
-            "x-api-key": process.env.GPTZERO_API_KEY as string,
+            "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
           },
           body: JSON.stringify({
             document: finalArticle?.articles[0]?.content,
