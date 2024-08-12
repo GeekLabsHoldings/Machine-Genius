@@ -157,7 +157,7 @@ export default function GlobalContextProvider({
         "https://machine-genius.onrender.com/authentication/check-auth",
         {
           headers: {
-            'Authorization': `Bearer ${authToken}`,
+            Authorization: `Bearer ${authToken}`,
             "Content-Type": "application/json",
           },
         }
@@ -301,7 +301,7 @@ export default function GlobalContextProvider({
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "pass",
+    ai: "waiting",
   });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
   //   checkGrammerResultsInit()
@@ -323,7 +323,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `http://52.55.179.234:3000/grammar-check`,
+          `https://backendmachinegenius.onrender.com/grammar-check`,
           {
             method: "POST",
             headers: {
@@ -379,7 +379,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `http://52.55.179.234:3000/plagiarism-check`,
+          `https://backendmachinegenius.onrender.com/plagiarism-check`,
           {
             method: "POST",
             headers: {
@@ -433,24 +433,35 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
   }, [checkAiResults]);
   async function checkAi() {
+    if (!finalArticle.articles[0].content || finalArticle.articles[0].content.length<1){
+      toast.error("No content found!");
+      return;
+    }
+    if (finalArticle.articles[0].content.length>50000){
+      toast.error("Content length must be between 1 and 50000 characters!");
+      return;
+    }
+
+
     const maxRetries = 2; // Define the maximum number of retries
     let attempts = 0;
     let json = null;
 
     while (attempts < maxRetries) {
       try {
-        const res = await fetch(
-          `http://52.55.179.234:3000/AI-check`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              document: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
+        const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
+          method: "POST",
+          headers: {
+            'Accept': "application/json",
+            "Content-Type": "application/json",
+            "x-api-key": process.env.GPTZERO_API_KEY as string,
+          },
+          body: JSON.stringify({
+            document: finalArticle?.articles[0]?.content,
+            version: "2024-01-09",
+            multilingual: false,
+          }),
+        });
 
         json = await res.json();
 
@@ -459,7 +470,7 @@ export default function GlobalContextProvider({
           break;
         }
       } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong! Error checking AI");
         console.error("Error checkAi:", error);
       } finally {
         attempts++;
@@ -473,7 +484,7 @@ export default function GlobalContextProvider({
           (sentence: any) => sentence.highlight_sentence_for_ai
         )
       ) {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
+        setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
       } else {
         setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
       }
@@ -483,7 +494,7 @@ export default function GlobalContextProvider({
       );
       dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
     } else {
-      // setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
+      setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
       // window.alert("Failed to generate content after multiple attempts");
       // router.push("/content-creator/create/choose-brand");
     }
@@ -492,7 +503,7 @@ export default function GlobalContextProvider({
   async function startChecks() {
     await checkGrammer();
     // await checkPlagiarism();
-    // await checkAi();
+    await checkAi();
     return Promise.resolve();
   }
 
@@ -504,7 +515,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `http://52.55.179.234:3000/generate-titles`,
+          `https://backendmachinegenius.onrender.com/generate-titles`,
           {
             method: "POST",
             headers: {

@@ -110,8 +110,8 @@ const GeneratedTitlesPage = () => {
 
   async function handleSendContent() {
     let endpoint = editContentData
-      ? `http://52.55.179.234:3000/content/${editContentData._id}`
-      : "http://52.55.179.234:3000/content";
+      ? `https://backendmachinegenius.onrender.com/content/${editContentData._id}`
+      : "https://backendmachinegenius.onrender.com/content";
     let method = editContentData ? "PATCH" : "POST";
     setIsSendLoading(true);
     let postBody: any = {
