@@ -13,7 +13,7 @@ const ChooseContent = () => {
   // async function generateContent() {
   //   setIsLoading(true);
   //   try {
-  //     const res = await fetch(`https://backendmachinegenius.onrender.com/generate-content`);
+  //     const res = await fetch(`http://52.55.179.234:3000/generate-content`);
   //     if (!res.ok) {
   //       throw new Error("Failed to fetch data");
   //     }

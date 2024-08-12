@@ -23,7 +23,7 @@ const ContentDatabase = () => {
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://backendmachinegenius.onrender.com/content`
+          `http://52.55.179.234:3000/content`
         );
         json = await res.json();
         if (json) {

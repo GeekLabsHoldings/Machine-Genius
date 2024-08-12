@@ -320,7 +320,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://backendmachinegenius.onrender.com/grammar-check`,
+          `http://52.55.179.234:3000/grammar-check`,
           {
             method: "POST",
             headers: {
@@ -376,7 +376,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://backendmachinegenius.onrender.com/plagiarism-check`,
+          `http://52.55.179.234:3000/plagiarism-check`,
           {
             method: "POST",
             headers: {
@@ -437,7 +437,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://backendmachinegenius.onrender.com/AI-check`,
+          `http://52.55.179.234:3000/AI-check`,
           {
             method: "POST",
             headers: {
@@ -501,7 +501,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://backendmachinegenius.onrender.com/generate-titles`,
+          `http://52.55.179.234:3000/generate-titles`,
           {
             method: "POST",
             headers: {
