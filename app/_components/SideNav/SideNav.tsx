@@ -143,8 +143,8 @@ const SideNav = ({
   return (
     <div
       className={`${styles.side_Nav} ${isSideNavOpen ? "" : styles.close}`}
-      onMouseEnter={() => setIsSideNavOpen(!isSideNavOpen)}
-      onMouseLeave={() => setIsSideNavOpen(!isSideNavOpen)}
+      onMouseEnter={() => setIsSideNavOpen((prev: any) => !prev)}
+      onMouseLeave={() => setIsSideNavOpen((prev: any) => !prev)}
     >
       <div>
         <div

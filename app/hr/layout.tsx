@@ -248,7 +248,9 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page wrapper */}
-      <div className={styles.Page_Wrapper}>
+      <div
+        className={`${styles.Page_Wrapper} ${!isSideNavOpen && styles.close}`}
+      >
         {/* Title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Children components */}
