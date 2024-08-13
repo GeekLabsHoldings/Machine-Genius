@@ -29,7 +29,7 @@ const initialContextState = {
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "pass",
+    ai: "waiting",
   },
   setCheckStatus: (status: any) => {},
   checkGrammer: () => {},
@@ -501,9 +501,13 @@ export default function GlobalContextProvider({
   }
 
   async function startChecks() {
-    await checkGrammer();
+    if(checkStatus.grammar !== "pass"){
+      await checkGrammer();
+    }
     // await checkPlagiarism();
-    await checkAi();
+    if(checkStatus.ai !== "pass"){
+      await checkAi();
+    }
     return Promise.resolve();
   }
 

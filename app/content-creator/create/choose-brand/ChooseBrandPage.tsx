@@ -25,10 +25,11 @@ export default function ChooseBrandPage() {
     setCollectedData,
     setTwitterData,
     setChoosedArticles,
+    setCheckStatus,
     selectedBrand,
     setGeneratedTitles,
     setLockedGeneratedTitles,
-    setEditContentData
+    setEditContentData,
   } = useContext(globalContext);
 
   // reset all the data
@@ -38,6 +39,12 @@ export default function ChooseBrandPage() {
     setTwitterData(null);
     setChoosedArticles([]);
     dispatch(contentCreatorActions.setFinalArticle(null));
+    setCheckStatus({
+      grammar: "waiting",
+      // todo: temp until backend fix it
+      plagiarism: "pass",
+      ai: "waiting",
+    });
     dispatch(contentCreatorActions.setCheckGrammerResults([]));
     dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);
@@ -150,8 +157,6 @@ export default function ChooseBrandPage() {
       const res = await fetch(
         `https://backendmachinegenius.onrender.com/collect/twitter/PLTR`
       );
-
-
 
       const json = await res.json();
       await setTwitterDataAsync(json.allArticles);

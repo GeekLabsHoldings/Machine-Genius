@@ -21,10 +21,11 @@ export default function CreatePage() {
     setCollectedData,
     setTwitterData,
     setChoosedArticles,
+    setCheckStatus,
     setGeneratedTitles,
     setLockedGeneratedTitles,
     setSelectedContentTitle,
-    setEditContentData
+    setEditContentData,
   } = useContext(globalContext);
 
   // reset all the data
@@ -35,6 +36,12 @@ export default function CreatePage() {
     setTwitterData(null);
     setChoosedArticles([]);
     dispatch(contentCreatorActions.setFinalArticle(null));
+    setCheckStatus({
+      grammar: "waiting",
+      // todo: temp until backend fix it
+      plagiarism: "pass",
+      ai: "waiting",
+    });
     dispatch(contentCreatorActions.setCheckGrammerResults([]));
     dispatch(contentCreatorActions.setCheckAiResults([]));
     setGeneratedTitles([]);

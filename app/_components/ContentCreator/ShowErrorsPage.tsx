@@ -17,7 +17,8 @@ export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState<boolean>(false);
-  const [IsLoadingParaphrase, setIsLoadingParaphrase] = useState<boolean>(false);
+  const [IsLoadingParaphrase, setIsLoadingParaphrase] =
+    useState<boolean>(false);
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
   const {
@@ -82,9 +83,9 @@ export default function ShowErrorsPage() {
   useEffect(() => {
     if (triggerStartChecks === false) {
       setCheckStatus({
-        grammar: "waiting",
+        grammar: checkStatus.grammar !== "pass" ? "waiting" : "pass",
         plagiarism: "pass",
-        ai: "waiting",
+        ai: checkStatus.ai !== "pass" ? "waiting" : "pass",
       });
     } else {
       setIsLoading(true);
@@ -105,9 +106,9 @@ export default function ShowErrorsPage() {
         setTriggerStartChecks(false);
       }
       setCheckStatus({
-        grammar: "waiting",
+        grammar: checkStatus.grammar !== "pass" ? "waiting" : "pass",
         plagiarism: "pass",
-        ai: "waiting",
+        ai: checkStatus.ai !== "pass" ? "waiting" : "pass",
       });
     } else {
       if (selectedIssue !== null) {
@@ -189,7 +190,7 @@ export default function ShowErrorsPage() {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
   }
 
-  function handleFixGrammerIssues() {
+  async function handleFixGrammerIssues() {
     if (typeof window !== undefined) {
       const storedFinalArticle = sessionStorage.getItem("finalArticle");
       if (storedFinalArticle) {
@@ -233,12 +234,12 @@ export default function ShowErrorsPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_AIPARAPHRASE_API_KEY}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_AIPARAPHRASE_API_KEY}`,
         },
         body: JSON.stringify({
-          "text": sentence,
-          "style": "casual",
-          "startIndex": 0
+          text: sentence,
+          style: "casual",
+          startIndex: 0,
         }),
       });
 
@@ -288,10 +289,47 @@ export default function ShowErrorsPage() {
     }
   }
 
+  async function handleFixAiIssues() {
+    if (typeof window !== undefined) {
+      const storedFinalArticle = sessionStorage.getItem("finalArticle");
+      if (storedFinalArticle) {
+        let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
+        let storedFinalArticleContent =
+          parsedStoredFinalArticle.articles[0].content;
+
+        for (let i = 0; i < checkAiResults.length; i++) {
+          let item = checkAiResults[i];
+
+          let replacedSentence = await paraphraseSentence(item.sentence);
+
+          storedFinalArticleContent = storedFinalArticleContent.replace(
+            item.sentence,
+            replacedSentence
+          );
+        }
+
+        const updatedFinalArticle = {
+          ...parsedStoredFinalArticle,
+          articles: [
+            {
+              ...parsedStoredFinalArticle.articles[0],
+              content: storedFinalArticleContent,
+            },
+          ],
+        };
+
+        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
+      }
+    }
+  }
+
   // todo
-  function handleNavigate() {
+  async function handleNavigate() {
     if (checkGrammerResults.length) {
-      handleFixGrammerIssues();
+      await handleFixGrammerIssues();
+    }
+    if (checkAiResults.length) {
+      await handleFixAiIssues();
     }
     setTriggerStartChecks(true);
   }
@@ -373,7 +411,11 @@ export default function ShowErrorsPage() {
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >
-                <p>{IsLoadingParaphrase ? "Loading..." : finalArticle?.articles[0]?.content}</p>
+                <p>
+                  {IsLoadingParaphrase
+                    ? "Loading..."
+                    : finalArticle?.articles[0]?.content}
+                </p>
               </div>
             </div>
           </div>
@@ -492,12 +534,14 @@ export default function ShowErrorsPage() {
             word={"Back"}
             btnColor="black"
             href="/content-creator/create/movie-myth/final-movie"
+            disabled={IsLoadingParaphrase}
           />
         ) : (
           <CustomBtn
             word={"Back"}
             btnColor="white"
             href="/content-creator/create/final-article"
+            disabled={IsLoadingParaphrase}
           />
         )}
         <CustomBtn
@@ -506,6 +550,7 @@ export default function ShowErrorsPage() {
           onClick={() => {
             handleNavigate();
           }}
+          disabled={IsLoadingParaphrase}
         />
       </div>
     </div>
