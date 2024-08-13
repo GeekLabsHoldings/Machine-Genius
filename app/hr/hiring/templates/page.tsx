@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import styles from "./templates.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { SimplePagination } from "@/app/_components/Pagination/pagination";
-import { data } from "jquery";
+import { Box, Modal } from "@mui/material";
+import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import { group } from "node:console";
 
 const addIcon = (
   <svg
@@ -46,11 +48,31 @@ interface unattchedTemplates {
   __v: number;
 }
 
+const tempOptions = {
+  Job_Listings: "Job Listings",
+  Schedule_Interview_Call: "Schedule Interview Call",
+  Tasks: "Tasks",
+  Schedule_Face_To_Face_Interview: "Schedule Face To Face Interview",
+  Job_Offer: "Job Offer",
+  Required_Documents: "Required Documents",
+};
+
 const Page = () => {
   const [groupTemplates, setGroupTemplates] = useState<GroupTemplate[]>([]);
   const [unattchedTemplates, setUnattachedTemplates] = useState<
     unattchedTemplates[]
   >([]);
+  // State for controlling the modal open/close state
+  const [open, setOpen] = useState(false);
+  // Function to handle modal open.
+  const handleOpen = () => setOpen(true);
+  // Function to handle modal close.
+  const handleClose = () => setOpen(false);
+  const [newGroup, setNewGroup] = useState<any>({
+    title: "",
+    description: "",
+  });
+  const [setp, setStep] = useState("");
 
   async function getData() {
     const token = localStorage.getItem("token");
@@ -91,6 +113,36 @@ const Page = () => {
     console.log(data);
   }
 
+  async function createGroup() {
+    try {
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/group/create",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: newGroup.title,
+
+            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+            description: newGroup.description,
+            step: setp,
+          }),
+        }
+      );
+
+      const data = await res.json();
+      console.log(data);
+
+      setGroupTemplates([...groupTemplates, { ...data, templates: [] }]);
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     getData();
     getUnattachedData();
@@ -116,7 +168,7 @@ const Page = () => {
         <div
           className={
             styles.templates_group_slider +
-            " flex flex-nowrap gap-[1vw] mb-3 w-[70%] overflow-x-scroll py-8"
+            " flex flex-nowrap gap-[1vw] mb-3 w-full overflow-x-scroll py-8"
           }
         >
           {groupTemplates?.map((e, i) => {
@@ -124,7 +176,11 @@ const Page = () => {
               <div className={` ${styles.box} !w-[400px] shrink-0`}>
                 <div className={`${styles.header}`}>
                   <div className="flex items-center gap-[1vw]">
-                    {e.icon}
+                    <img
+                      src={e.icon}
+                      alt=""
+                      className="w-[2.5vw] h-[2.5vw] object-cover"
+                    />
                     <p>{e?.title}</p>
                   </div>
                   <button>
@@ -169,7 +225,12 @@ const Page = () => {
         </div>
 
         <div className=" w-fit ml-auto">
-          <CustomBtn btnColor="black" word="New Group" icon={addIcon} />
+          <CustomBtn
+            btnColor="black"
+            word="New Group"
+            icon={addIcon}
+            onClick={handleOpen}
+          />
         </div>
       </div>
 
@@ -205,7 +266,7 @@ const Page = () => {
                     btnColor="black"
                     word="View Template"
                     width="w-full"
-                    href="/hr/hiring/templates/view-template"
+                    href={`/hr/hiring/templates/${e._id}`}
                   />
                 </div>
               </div>
@@ -218,14 +279,98 @@ const Page = () => {
             btnColor="black"
             word="New Template"
             icon={addIcon}
-            href="/hr/hiring/templates/new-template"
+            href="/hr/hiring/templates/select-template"
           />
         </div>
       </div>
+      <Modal
+        className={`${styles.modal}`}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box>
+          <form className={`${styles.modalBox}`}>
+            <div className={styles.group_title}>
+              {/* Modal title */}
+              <input
+                type="text"
+                placeholder="Group Title*"
+                className="groupTitle"
+                value={newGroup.title}
+                onChange={(e) => {
+                  setNewGroup({ ...newGroup, title: e.target.value });
+                }}
+              />
+              {/* Close button */}
+              <div
+                onClick={() => {
+                  handleClose();
+                }}
+                className="cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M11.0125 13.9613L18.4214 21.3616C18.8145 21.7543 19.3477 21.9749 19.9037 21.9749C20.4597 21.9749 20.9929 21.7543 21.386 21.3616C21.7791 20.969 22 20.4364 22 19.881C22 19.3257 21.7791 18.7931 21.386 18.4004L13.9744 11L21.3846 3.59962C21.5792 3.40518 21.7335 3.17437 21.8388 2.92035C21.944 2.66634 21.9982 2.39411 21.9981 2.11919C21.998 1.84428 21.9438 1.57207 21.8384 1.3181C21.733 1.06414 21.5786 0.833399 21.3839 0.639051C21.1892 0.444703 20.9582 0.290556 20.7039 0.185411C20.4496 0.0802654 20.177 0.026181 19.9018 0.0262458C19.6266 0.0263106 19.354 0.080523 19.0998 0.185788C18.8455 0.291053 18.6145 0.445309 18.42 0.639749L11.0125 8.04013L3.6037 0.639749C3.41048 0.439732 3.17931 0.280156 2.92369 0.170331C2.66806 0.0605069 2.3931 0.00263317 2.11484 8.77827e-05C1.83659 -0.0024576 1.56061 0.0503759 1.30301 0.155506C1.04541 0.260635 0.811359 0.415956 0.614501 0.612405C0.417642 0.808853 0.261924 1.0425 0.156431 1.2997C0.0509388 1.5569 -0.00221519 1.83252 7.07167e-05 2.11046C0.00235662 2.3884 0.0600364 2.6631 0.169745 2.91854C0.279454 3.17398 0.438994 3.40503 0.639057 3.59823L8.05068 11L0.640455 18.4018C0.440392 18.595 0.280852 18.826 0.171143 19.0815C0.0614341 19.3369 0.00375362 19.6116 0.00146772 19.8895C-0.000818188 20.1675 0.0523358 20.4431 0.157828 20.7003C0.263321 20.9575 0.419039 21.1911 0.615898 21.3876C0.812756 21.584 1.04681 21.7394 1.30441 21.8445C1.562 21.9496 1.83798 22.0025 2.11624 21.9999C2.3945 21.9974 2.66946 21.9395 2.92508 21.8297C3.18071 21.7198 3.41188 21.5603 3.6051 21.3603L11.0125 13.9613Z"
+                    fill="#BDBDBD"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className={styles.group_description}>
+              <textarea
+                placeholder="Group description..."
+                rows={4}
+                className="groupDesc"
+                value={newGroup.description}
+                onChange={(e) => {
+                  setNewGroup({ ...newGroup, description: e.target.value });
+                }}
+              />
+            </div>
+
+            <h6>Select Group Type:</h6>
+            <div className={styles.add_templates}>
+              {Object.entries(tempOptions).map(([key, value], i) => {
+                return (
+                  <div key={i} className={styles.template_item}>
+                    <CustomCheckBox
+                      name="add-template"
+                      id={key}
+                      accentColor="black"
+                      type="Radio"
+                      onClick={(e) => {
+                        setStep(key);
+                      }}
+                    />
+                    <label htmlFor={key}>{value}</label>
+                  </div>
+                );
+              })}
+            </div>
+
+            <CustomBtn
+              btnColor="black"
+              word="Create Group"
+              icon={addIcon}
+              width="w-full"
+              onClick={(e) => {
+                e?.preventDefault();
+                createGroup();
+              }}
+            />
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
 };
 
 export default Page;
-
-

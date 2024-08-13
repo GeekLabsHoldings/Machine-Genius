@@ -131,6 +131,7 @@
   --689px: clamp(10px, calc(38.278vw + 0.1rem), 1000px);
   --700px: clamp(10px, calc(38.889vw + 0.1rem), 1000px);
   --721px: clamp(10px, calc(40.056vw + 0.1rem), 1000px);
+  --900px: clamp(10px, calc(50vw + 0.1rem), 1000px);
 
   /* Vertical Spacings */
   --sy-1px: clamp(1px, calc(0.028vh + 0.05rem), 1000px);

@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import styles from "./new-template.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
-import { json } from "stream/consumers";
+import { templatesContext } from "../_context/templatesContext";
+import TemplateDetails from "../[templateId]/page";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -18,16 +19,22 @@ const addIcon = (
   </svg>
 );
 
-const options = [
-  "jop listings",
-  "tasks",
-  "offers",
-  "HR Questions",
-  "jop listings",
-  "tasks",
-  "offers",
-  "HR Questions",
-];
+const positions = {
+  Backend: "Backend",
+  Frontend: "Frontend",
+  Full_Stack: "Full_Stack",
+  ContentWriter: "ContentWriter",
+  Payroll: "Payroll",
+  CEO: "CEO",
+};
+
+const levels = {
+  FRESH: "FreshGraduation",
+  JUNIOR: "Junior",
+  MID: "Mid-level",
+  SENIOR: "Senior",
+  EXPERT: "Expert",
+};
 
 interface Template {
   title: string;
@@ -35,10 +42,40 @@ interface Template {
   isEditable: boolean;
 }
 
+const templateContent = [
+  {
+    title: "Responsibilities",
+    description: "kjhklhgkjhgkjhgkjhgkjhkjhg khg kjhg kjhg kjhkjhg kj",
+  },
+  {
+    title: "Qualifications",
+    description: "Collaborate with team members to meet project requirements.",
+  },
+  {
+    title: "Job Description",
+    description: "Stay updated on industry trends and techniques.",
+  },
+  {
+    title: "Benefits",
+    description: "Contribute creative ideas to enhance the overall quality.",
+  },
+];
+
 const Page = () => {
   const [Templates, setTemplates] = useState<Template[]>([]);
   const [groups, setGroups] = useState<any>([]);
+  const [groupID, setGroupID] = useState("");
   const [tempOptions, setTempOptions] = useState<any>([]);
+  const { templates } = useContext(templatesContext);
+  const templateContentRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [position, setPosition] = useState("");
+  const [level, setLevel] = useState("");
+  const [tempDetails, setTempDetails] = useState<any>([]);
+
+  const [newGroup, setNewGroup] = useState<any>({
+    title: "",
+    description: "",
+  });
 
   const handleDelete = (index: any) => {
     setTemplates(Templates.filter((_, i) => i !== index));
@@ -68,11 +105,32 @@ const Page = () => {
     ]);
   };
 
+  const handleOnChange = (e: any, index: number) => {
+    console.log(
+      "templateContentRef.current[index]",
+      templateContentRef.current[index]
+    );
+    console.log("e.target.innerHTML", e.target.innerHTML);
+    templateContentRef.current[index] = e.target.innerHTML;
+    console.log(templateContentRef.current);
+  };
+
+  const handleBlur = () => {
+    const newArr = [...tempDetails];
+    console.log("newArr", newArr);
+    console.log("templateContentRef.current", templateContentRef.current);
+    templateContentRef.current.forEach((item, index) => {
+      console.log("item", item);
+      newArr[index] = item;
+    });
+    setTempDetails(newArr);
+  };
+
   async function getGroups() {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        "https://machine-genius.onrender.com/hr/group/groups",
+        `https://machine-genius.onrender.com/hr/group/groups/${templates.key}`,
         {
           method: "get",
           headers: {
@@ -86,6 +144,12 @@ const Page = () => {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    console.log(tempDetails);
+    console.log(templateContentRef.current);
+  }, [tempDetails]);
+
   async function getUnattachedTemplates() {
     const token = localStorage.getItem("token");
     try {
@@ -106,39 +170,6 @@ const Page = () => {
     }
   }
   async function createGroup() {
-    const token = localStorage.getItem("token");
-    const formData = new FormData()
-    let groupTitleEle = document.querySelector("input.groupTitle") as HTMLInputElement
-    let groupTitle = groupTitleEle.value
-    formData.append("title",groupTitle)
-    let groupDescEle = document.querySelector("textarea.groupDesc") as HTMLInputElement
-    let groupDesc = groupDescEle.value
-    formData.append("description",groupDesc)
-    let groupDet = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map((e)=>e.getAttribute("id"))
-    formData.append("templates",JSON.stringify(groupDet))
-    
-    // Convert form data to JSON
-  const jsonObject: Record<string, any> = {};
-  formData.forEach((value, key) => {
-    // Check if the field is 'templates' and parse it as JSON
-    if (key === 'templates') {
-      try {
-        jsonObject[key] = JSON.parse(value as string);
-      } catch (e) {
-        console.error('Error parsing templates field:', e);
-        jsonObject[key] = [];
-      }
-    } else {
-      jsonObject[key] = value;
-    }
-  });
-
-  // Optionally convert the JSON object to a JSON string
-  const jsonString = JSON.stringify(jsonObject, null, 2); // Pretty-print JSON with 2-space indentation
-
-  console.log(jsonString); // Output the JSON string for testing
-
-    
     try {
       const res = await fetch(
         "https://machine-genius.onrender.com/hr/group/create",
@@ -146,48 +177,54 @@ const Page = () => {
           method: "post",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body:jsonString
+          body: JSON.stringify({
+            title: newGroup.title,
+
+            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+            description: newGroup.description,
+            step: templates.key,
+          }),
         }
       );
+
       const data = await res.json();
       console.log(data);
-    getGroups();
+      getGroups();
     } catch (error) {
       console.log(error);
-      
     }
   }
   async function createTemplate() {
-    const templatesWithoutIsEditable = Templates.map(
-      ({ isEditable, ...rest }) => rest
-    );
-    const inputElement = document.querySelector(
-      "input.title"
-    ) as HTMLInputElement;
-    const inputValue = inputElement?.value;
-    const formData = new FormData();
-    formData.append("title", inputValue);
-    console.log(inputValue);
-    formData.append("details", JSON.stringify(Templates));
-    console.log(JSON.stringify(templatesWithoutIsEditable));
+    const body = {
+      title: templates.value,
+      details: templateContent.map((item, idx) => ({
+        title: item.title,
+        description: tempDetails[idx],
+      })),
+      group_id: groupID,
+      role: position,
+      level: level,
+    };
 
-    // try {
-    //     const res = await fetch("https://machine-genius.onrender.com/hr/template/create",{
-    //         method: "post",
-    //     headers: {
-    //       Authorization:
-    //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NmE4Y2VmYTg5MDkwMWIxZDQxYjQ0M2MiLCJlbWFpbCI6ImFkZWxzaG9rcnlnZWVrbGFic0BnbWFpbC5jb20iLCJkZXBhcnRtZW50IjpbIioiXSwicm9sZSI6IkNFTyIsImlhdCI6MTcyMjc1NjI0MSwiZXhwIjoxNzIyNzg4NjQxfQ.7NzT0KE5QdlnHv8IJhtX2D02x-irjNO1pcA9p1M2MeM",
-    //     },
-    //     })
-    //     const data = await res.json()
-    //     console.log(groups);
-
-    // } catch (error) {
-    //     console.log(error);
-
-    // }
+    try {
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/template/create",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const data = await res.json();
+      console.log(groups);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // State for controlling the modal open/close state
@@ -198,14 +235,26 @@ const Page = () => {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
+    if (templateContentRef) {
+      templateContentRef.current = templateContentRef.current.slice(
+        0,
+        templateContent.length || 0
+      );
+    }
+
+    templateContentRef.current =
+      templateContent?.map((item: any) => item.description) || [];
+    const newArr = templateContent?.map((item: any) => item.description) || [];
+    setTempDetails(newArr);
+
     getGroups();
     getUnattachedTemplates();
-    
   }, []);
-  useEffect(()=>{
-    console.log(document.querySelectorAll('input[type="checkbox"]:checked'));
 
-  },[open])
+  useEffect(() => {
+    console.log(document.querySelectorAll('input[type="checkbox"]:checked'));
+  }, [open]);
+
   return (
     <div className="flex flex-col h-full">
       {/* chhose brand select */}
@@ -216,7 +265,7 @@ const Page = () => {
       >
         <div className={styles.header}>
           <div className={styles.template_name}>
-            <svg
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               width="44"
               height="43"
@@ -234,20 +283,21 @@ const Page = () => {
                 height="40.6498"
                 rx="7.5"
                 transform="rotate(0.571188 0.909053 0.50496)"
+                    onBlur={handleBlur}
                 stroke="#2A2B2A"
               />
-            </svg>
-            <input
-              type="text"
-              placeholder="Template Title*"
-              className="title templateTitle"
-            />
+            </svg> */}
+            <div className="text-[--32px] font-bold underline">
+              {templates.value}
+            </div>
           </div>
 
           <div className={styles.choose_group}>
             Add to{" "}
             <CustomSelectInput
-              getValue={(val) => console.log(val)}
+              getValue={(val: string) =>
+                setGroupID(groups.find((e: any) => e.title === val)?._id)
+              }
               options={groups.map((e: any, i: any) => e.title)}
             >
               <CustomBtn
@@ -319,6 +369,104 @@ const Page = () => {
             );
           })}
         </div>
+        <div className="grid grid-cols-2 gap-[1.5vw] h-full overflow-auto">
+          <div className=" space-y-[1.5vw]">
+            <div className="grid grid-cols-2 gap-[1.5vw]">
+              <div className={styles.card}>
+                <div className={styles.card_header}>
+                  <h6 className="text-[--20px] font-bold">Job Position</h6>
+                  <span className="text-[--16px] text-[#878787] font-medium">
+                    (Title)
+                  </span>
+                </div>
+                <div className={styles.card_body}>
+                  {/* <p>{templateDet.role}</p> */}
+                  <CustomSelectInput
+                    getValue={(val: string) => setPosition(val)}
+                    options={Object.values(positions)}
+                  />
+                </div>
+              </div>
+              <div className={styles.card}>
+                <div className={styles.card_header}>
+                  <h6 className="text-[--20px] font-bold">
+                    Level of Expertise
+                  </h6>
+                </div>
+                <div className={styles.card_body}>
+                  {/* <p>{templateDet.level}</p> */}
+                  <CustomSelectInput
+                    getValue={(val: string) => setLevel(val)}
+                    options={Object.values(levels)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          {templateContent.map((e, i) => {
+            return (
+              <div className="space-y-[1.5vw]" key={i}>
+                <div className={styles.card}>
+                  <div className={styles.card_header}>
+                    <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                  </div>
+                  <div
+                    className={`${styles.card_body} text-[--16px] outline-none`}
+                    dangerouslySetInnerHTML={{
+                      __html: tempDetails[i],
+                    }}
+                    contentEditable
+                    // onClick={(e) => {
+                    //   // check if the description is empty
+                    //   const description = e.currentTarget.textContent;
+                    //   if (description === "") {
+                    //     document.execCommand("insertHTML", false, "<li>");
+                    //     return;
+                    //   }
+                    // }}
+                    onKeyDownCapture={(
+                      e: React.KeyboardEvent<HTMLDivElement>
+                    ) => {
+                      // check if the cursor is at the start or in the middle of the line
+
+                      const target = e.target as HTMLDivElement; // Type assertion
+
+                      if (
+                        target.textContent === "" &&
+                        target.nodeName === "DIV" &&
+                        target.childNodes.length === 0
+                      ) {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                        }
+                        document.execCommand("insertHTML", false, "<li>");
+                      }
+
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        // chwck if previous line is empty
+                        const selection = window.getSelection();
+                        console.log(selection);
+                        const range = selection?.getRangeAt(0);
+                        console.log(range);
+                        const start = range?.startContainer;
+                        if (
+                          start?.nodeName === "LI" &&
+                          start?.textContent === ""
+                        ) {
+                        } else {
+                          document.execCommand("insertHTML", false, "<li>");
+                        }
+                      }
+                    }}
+                    onInput={(e) => handleOnChange(e, i)}
+                    onBlur={handleBlur}
+                  ></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* buttons to move to last or next page */}
@@ -351,7 +499,15 @@ const Page = () => {
           <form className={`${styles.modalBox}`}>
             <div className={styles.group_title}>
               {/* Modal title */}
-              <input type="text" placeholder="Group Title*" className="groupTitle"/>
+              <input
+                type="text"
+                placeholder="Group Title*"
+                className="groupTitle"
+                value={newGroup.title}
+                onChange={(e) => {
+                  setNewGroup({ ...newGroup, title: e.target.value });
+                }}
+              />
               {/* Close button */}
               <div
                 onClick={() => {
@@ -374,10 +530,18 @@ const Page = () => {
               </div>
             </div>
             <div className={styles.group_description}>
-              <textarea placeholder="Group description..." rows={4} className="groupDesc"/>
+              <textarea
+                placeholder="Group description..."
+                rows={4}
+                className="groupDesc"
+                value={newGroup.description}
+                onChange={(e) => {
+                  setNewGroup({ ...newGroup, description: e.target.value });
+                }}
+              />
             </div>
 
-            <h6>Add Templates:</h6>
+            {/* <h6>Add Templates:</h6>
             <div className={styles.add_templates}>
               {tempOptions?.map((e: any, i: number) => {
                 return (
@@ -390,17 +554,17 @@ const Page = () => {
                     <label htmlFor={e._id}>{e.title}</label>
                   </div>
                 );
-              })}
-            </div>
+              })} 
+            </div> */}
 
             <CustomBtn
               btnColor="black"
               word="Create Group"
               icon={addIcon}
               width="w-full"
-              onClick={(e)=>{
+              onClick={(e) => {
                 e?.preventDefault();
-                createGroup()
+                createGroup();
               }}
             />
           </form>

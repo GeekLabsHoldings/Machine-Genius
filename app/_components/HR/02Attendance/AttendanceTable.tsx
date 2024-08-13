@@ -146,19 +146,13 @@ export default function AttendanceTable({
                 <span>{e.department.join(", ")}</span>
               </li>
               <li>
-                <span>
-                  {new Date(
-                    new Date(e.checkedIn).getTime() * 1000
-                  ).toLocaleTimeString()}
-                </span>
+                <span>{new Date(e.checkedIn).toLocaleTimeString()}</span>
               </li>
               {activeTab == 2 && (
                 <li>
                   <span>
                     {e.checkedOut
-                      ? new Date(
-                          new Date(e.checkedOut).getTime() * 1000
-                        ).toLocaleTimeString()
+                      ? new Date(e.checkedOut).toLocaleTimeString()
                       : "-"}
                   </span>
                 </li>

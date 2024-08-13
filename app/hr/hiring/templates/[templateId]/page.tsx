@@ -1,8 +1,11 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import styles from "./view-template.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import $ from "jquery";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { templatesContext } from "../_context/templatesContext";
+import { Box, Modal } from "@mui/material";
 
 const editIcon = (
   <svg
@@ -38,363 +41,491 @@ interface Detail {
   _id: string;
 }
 interface templateDet {
-  
-    "_id": string,
-    "title": string,
-    "department": string,
-    "level": string,
-    "details": Detail[];
-    "role": string,
-    "__v": number
-  
+  _id: string;
+  title: string;
+  department: string;
+  level: string;
+  details: Detail[];
+  role: string;
+  group_id: { _id: string; step: string };
+  __v: number;
 }
 const defaultTemplateDet: templateDet = {
-  _id: '',
-  title: '',
-  department: '',
-  level: '',
-  details: [],  // Ensure details is initialized as an empty array
-  role: '',
-  __v: 0
+  _id: "",
+  title: "",
+  department: "",
+  level: "",
+  details: [], // Ensure details is initialized as an empty array
+  role: "",
+  group_id: { _id: "", step: "" },
+  __v: 0,
 };
 
+const templateContent = [
+  {
+    title: "Responsibilities",
+    description: "kjhklhgkjhgkjhgkjhgkjhkjhg khg kjhg kjhg kjhkjhg kj",
+  },
+  {
+    title: "Qualifications",
+    description: "Collaborate with team members to meet project requirements.",
+  },
+  {
+    title: "Job Description",
+    description: "Stay updated on industry trends and techniques.",
+  },
+  {
+    title: "Benefits",
+    description: "Contribute creative ideas to enhance the overall quality.",
+  },
+];
 
-export default function TemplateDetails ({ params }: { params: { templateId: string } }) {
-  const [Iseditable, setIseditable] = useState(false);
-  console.log(params);
-  
+const positions = {
+  Backend: "Backend",
+  Frontend: "Frontend",
+  Full_Stack: "Full_Stack",
+  ContentWriter: "ContentWriter",
+  Payroll: "Payroll",
+  CEO: "CEO",
+};
 
-  const handleEditCard = (e: any) => {
-    console.log($(e.target).parents(`.${styles.card}`));
-    $(`.${styles.card}`)
-      .not($(e.target).parents(`.${styles.card}`))
-      .addClass(styles.disabled);
-    $(e.target).parents(`.${styles.card}`).addClass(styles.editable);
-  };
+const levels = {
+  FRESH: "FreshGraduation",
+  JUNIOR: "Junior",
+  MID: "Mid-level",
+  SENIOR: "Senior",
+  EXPERT: "Expert",
+};
 
-  const handleSaveCard = (e: any) => {
-    console.log($(e.target).parents(`.${styles.card}`));
-    $(e.target).parents(`.${styles.card}`).removeClass(styles.editable);
-    $(`.${styles.card}`).removeClass(styles.disabled);
-  };
-const [templateDet,setTemplateDet] = useState<templateDet>(defaultTemplateDet)
+export default function TemplateDetails({
+  params,
+}: {
+  params: { templateId: string };
+}) {
+  const [position, setPosition] = useState("");
+  const [level, setLevel] = useState("");
+  const templateContentRef = useRef<(HTMLDivElement | null)[]>([]);
+  const [tempDetails, setTempDetails] = useState<any>([]);
+  const [groups, setGroups] = useState<any>([]);
+  const [groupID, setGroupID] = useState("");
+  const [newGroup, setNewGroup] = useState<any>({
+    title: "",
+    description: "",
+  });
+
+  // State for controlling the modal open/close state
+  const [open, setOpen] = useState(false);
+  // Function to handle modal open.
+  const handleOpen = () => setOpen(true);
+  // Function to handle modal close.
+  const handleClose = () => setOpen(false);
+
+  // const { templates } = useContext(templatesContext);
+  // console.log(params);
+
+  // const handleEditCard = (e: any) => {
+  //   console.log($(e.target).parents(`.${styles.card}`));
+  //   $(`.${styles.card}`)
+  //     .not($(e.target).parents(`.${styles.card}`))
+  //     .addClass(styles.disabled);
+  //   $(e.target).parents(`.${styles.card}`).addClass(styles.editable);
+  // };
+
+  // const handleSaveCard = (e: any) => {
+  //   console.log($(e.target).parents(`.${styles.card}`));
+  //   $(e.target).parents(`.${styles.card}`).removeClass(styles.editable);
+  //   $(`.${styles.card}`).removeClass(styles.disabled);
+  // };
+  const [templateDet, setTemplateDet] =
+    useState<templateDet>(defaultTemplateDet);
 
   async function getTemplate() {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
 
     const res = await fetch(
       `https://machine-genius.onrender.com/hr/template/one-template/${params.templateId}`,
       {
         method: "get",
         headers: {
-          Authorization:
-          `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
     // The return value is *not* serialized
     // You can return Date, Map, Set, etc.
-  
+
     const data = await res.json();
-    setTemplateDet(data)
+    setTemplateDet(data);
     console.log(data);
-    
   }
-  useEffect(()=>{
-getTemplate()
-  },[])
+  useEffect(() => {
+    getTemplate();
+  }, []);
+
+  useEffect(() => {
+    const newArr =
+      templateDet.details?.map((item: any) => item?.description) || [];
+    setTempDetails(newArr);
+    setLevel(templateDet.level);
+    setPosition(templateDet.role);
+    getGroups();
+    console.log("templateDet", templateDet);
+    if (tempDetails.group_id) {
+      setGroupID(templateDet?.group_id?._id);
+    }
+  }, [templateDet]);
+
+  const handleOnChange = (e: any, index: number) => {
+    console.log(
+      "templateContentRef.current[index]",
+      templateContentRef.current[index]
+    );
+    console.log("e.target.innerHTML", e.target.innerHTML);
+    templateContentRef.current[index] = e.target.innerHTML;
+    console.log(templateContentRef.current);
+  };
+
+  const handleBlur = () => {
+    const newArr = [...tempDetails];
+    console.log("newArr", newArr);
+    console.log("templateContentRef.current", templateContentRef.current);
+    templateContentRef.current.forEach((item, index) => {
+      console.log("item", item);
+      newArr[index] = item;
+    });
+    setTempDetails(newArr);
+  };
+
+  async function getGroups() {
+    const token = localStorage.getItem("token");
+    console.log("templateDet", templateDet?.group_id?.step);
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/group/groups/${templateDet.title.replace(
+          " ",
+          "_"
+        )}`,
+        {
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      setGroups(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function createGroup() {
+    try {
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/group/create",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: newGroup.title,
+
+            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+            description: newGroup.description,
+            step: templateDet.title.replace(" ", "_"),
+          }),
+        }
+      );
+
+      const data = await res.json();
+      console.log(data);
+      getGroups();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function updateTemplate() {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/template/${params.templateId}`,
+        {
+          method: "put",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: templateDet.title,
+            department: templateDet.department,
+            level: level,
+            role: position,
+            details: tempDetails.map((e: any, i: any) => ({
+              title: templateContent[i].title,
+              description: e,
+            })),
+            group_id: groupID || null,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    console.log("groupID", groupID);
+  }, [groupID]);
 
   return (
     <div className="flex flex-col h-full">
+      {/* chhose brand select */}
       <div
         className={
-          "flex flex-col h-[75vh] py-[1.5vw] " + styles.view_template_wrapper
+          "flex flex-col h-[75vh] py-[1.5vw] " + styles.add_new_template
         }
       >
-        <div className="flex items-center justify-between gap-[2vw] mb-[1.5vw]">
-          <h5>{templateDet.title} Template</h5>
-          {Iseditable ? (
-            <CustomBtn
-              btnColor="black"
-              word="Save & Exit"
-              paddingVal="px-[1.5vw] py-[0.5vw]"
-              onClick={() => setIseditable(false)}
-            />
-          ) : (
-            <CustomBtn
-              btnColor="white"
-              icon={editIcon}
-              word="Modify Template"
-              paddingVal="px-[1.5vw] py-[0.5vw]"
-              onClick={() => setIseditable(true)}
-            />
-          )}
+        <div className={styles.header}>
+          <div className={styles.template_name}>
+            {/* <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="44"
+              height="43"
+              viewBox="0 0 44 43"
+              fill="none"
+            >
+              <path
+                d="M22.6929 9.80264C16.2742 9.73865 11.0184 14.8902 10.9544 21.3094C10.8904 27.7286 16.0425 32.9839 22.4612 33.0479C28.8799 33.1119 34.1357 27.9603 34.1997 21.5411C34.2637 15.1219 29.1116 9.86663 22.6929 9.80264ZM25.8385 18.7176C26.4808 18.724 27.0206 19.4778 27.2279 20.5346C27.2644 20.7245 27.2139 20.9206 27.0906 21.0695C26.9673 21.2178 26.783 21.3039 26.5905 21.302L25.0361 21.2865C24.8426 21.2846 24.6605 21.1959 24.5402 21.0446C24.4194 20.8938 24.3734 20.6957 24.4142 20.5071C24.642 19.4541 25.1967 18.7112 25.8385 18.7176ZM19.3703 18.6531C20.0125 18.6595 20.5523 19.4139 20.7591 20.4702C20.7961 20.66 20.7457 20.8561 20.6219 21.005C20.4986 21.1534 20.3143 21.2395 20.1218 21.2375L18.5674 21.222C18.3743 21.2201 18.1923 21.1314 18.0715 20.9801C17.9512 20.8288 17.9046 20.6312 17.9454 20.4421C18.1727 19.3901 18.7275 18.6467 19.3703 18.6531ZM22.5029 28.8683C19.4774 28.8381 16.8519 27.1694 15.4583 24.7146C15.3446 24.5143 15.347 24.2692 15.4637 24.0708C15.5804 23.8723 15.7939 23.7526 16.0243 23.7549L29.0821 23.8851C29.3115 23.8874 29.523 24.0123 29.6357 24.2126C29.7495 24.4128 29.747 24.6584 29.6293 24.8553C28.1865 27.2824 25.5278 28.8984 22.5029 28.8683Z"
+                fill="#2A2B2A"
+              />
+              <rect
+                x="0.909053"
+                y="0.50496"
+                width="42.587"
+                height="40.6498"
+                rx="7.5"
+                transform="rotate(0.571188 0.909053 0.50496)"
+                    onBlur={handleBlur}
+                stroke="#2A2B2A"
+              />
+            </svg> */}
+            <div className="text-[--32px] font-bold underline">
+              {`${templateDet.title} Template`}
+            </div>
+          </div>
+
+          <div className={styles.choose_group}>
+            Add to{" "}
+            <CustomSelectInput
+              getValue={(val: string) =>
+                setGroupID(groups.find((e: any) => e.title === val)?._id)
+              }
+              options={groups.map((e: any, i: any) => e.title)}
+              label={groups.find((e: any) => e._id === groupID)?.title}
+            >
+              <CustomBtn
+                btnColor="black"
+                word="Add New Group"
+                icon={addIcon}
+                width="w-full"
+                onClick={handleOpen}
+              />
+            </CustomSelectInput>{" "}
+            group
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-[1.5vw] h-full overflow-auto">
-          <div className=" space-y-[1.5vw]">
-            <div className="grid grid-cols-2 gap-[1.5vw]">
-              <div className={styles.card}>
-                <div className={styles.card_header}>
-                  <h6>Job Position</h6>
-                  {Iseditable && (
-                    <button onClick={(e) => handleEditCard(e)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M1.58576 16.7395L0.0553957 20.8204C-0.00336969 20.9775 -0.0156878 21.1481 0.0199129 21.312C0.0555136 21.4758 0.137528 21.626 0.256162 21.7445C0.374795 21.863 0.525034 21.9449 0.688934 21.9803C0.852835 22.0157 1.02347 22.0032 1.18046 21.9443L5.26028 20.4139C5.72724 20.2391 6.15136 19.9662 6.50414 19.6138L18.322 7.79615C18.322 7.79615 17.9097 6.56046 16.6751 5.32477C15.4406 4.09025 14.2037 3.67796 14.2037 3.67796L2.38589 15.4956C2.03348 15.8484 1.76066 16.2725 1.58576 16.7395ZM15.8517 2.02999L17.4625 0.419279C17.7513 0.130446 18.1368 -0.053568 18.5398 0.0139815C19.107 0.107153 19.9746 0.388998 20.7922 1.20774C21.611 2.02649 21.8928 2.89299 21.986 3.46017C22.0536 3.86314 21.8696 4.24864 21.5807 4.53747L19.9688 6.14818C19.9688 6.14818 19.5577 4.91365 18.322 3.67913C17.0874 2.44227 15.8517 2.02999 15.8517 2.02999Z"
-                          fill="#2A2B2A"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-                <div className={styles.card_body}>
-                  <p>{templateDet.role}</p>
-                </div>
-                <div className={styles.card_actions}>
-                  <CustomBtn btnColor="white" word="Delete Card" />
-                  <CustomBtn
-                    btnColor="black"
-                    word="Save"
-                    onClick={(e) => handleSaveCard(e)}
-                  />
-                </div>
-              </div>
-              <div className={styles.card}>
-                <div className={styles.card_header}>
-                  <h6>Level of Expertise</h6>
-                  {Iseditable && (
-                    <button onClick={(e) => handleEditCard(e)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M1.58576 16.7395L0.0553957 20.8204C-0.00336969 20.9775 -0.0156878 21.1481 0.0199129 21.312C0.0555136 21.4758 0.137528 21.626 0.256162 21.7445C0.374795 21.863 0.525034 21.9449 0.688934 21.9803C0.852835 22.0157 1.02347 22.0032 1.18046 21.9443L5.26028 20.4139C5.72724 20.2391 6.15136 19.9662 6.50414 19.6138L18.322 7.79615C18.322 7.79615 17.9097 6.56046 16.6751 5.32477C15.4406 4.09025 14.2037 3.67796 14.2037 3.67796L2.38589 15.4956C2.03348 15.8484 1.76066 16.2725 1.58576 16.7395ZM15.8517 2.02999L17.4625 0.419279C17.7513 0.130446 18.1368 -0.053568 18.5398 0.0139815C19.107 0.107153 19.9746 0.388998 20.7922 1.20774C21.611 2.02649 21.8928 2.89299 21.986 3.46017C22.0536 3.86314 21.8696 4.24864 21.5807 4.53747L19.9688 6.14818C19.9688 6.14818 19.5577 4.91365 18.322 3.67913C17.0874 2.44227 15.8517 2.02999 15.8517 2.02999Z"
-                          fill="#2A2B2A"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </div>
-                <div className={styles.card_body}>
-                  <p>{templateDet.level}</p>
-                </div>
-                <div className={styles.card_actions}>
-                  <CustomBtn btnColor="white" word="Delete Card" />
-                  <CustomBtn
-                    btnColor="black"
-                    word="Save"
-                    onClick={(e) => handleSaveCard(e)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className={styles.card}>
+        <div className="flex flex-col flex-wrap gap-[1.5vw] w-full h-full overflow-auto">
+          <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+            <div className={`${styles.card} h-fit`}>
               <div className={styles.card_header}>
-                <h6>Responsibilities</h6>
-                {Iseditable && (
-                  <button onClick={(e) => handleEditCard(e)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M1.58576 16.7395L0.0553957 20.8204C-0.00336969 20.9775 -0.0156878 21.1481 0.0199129 21.312C0.0555136 21.4758 0.137528 21.626 0.256162 21.7445C0.374795 21.863 0.525034 21.9449 0.688934 21.9803C0.852835 22.0157 1.02347 22.0032 1.18046 21.9443L5.26028 20.4139C5.72724 20.2391 6.15136 19.9662 6.50414 19.6138L18.322 7.79615C18.322 7.79615 17.9097 6.56046 16.6751 5.32477C15.4406 4.09025 14.2037 3.67796 14.2037 3.67796L2.38589 15.4956C2.03348 15.8484 1.76066 16.2725 1.58576 16.7395ZM15.8517 2.02999L17.4625 0.419279C17.7513 0.130446 18.1368 -0.053568 18.5398 0.0139815C19.107 0.107153 19.9746 0.388998 20.7922 1.20774C21.611 2.02649 21.8928 2.89299 21.986 3.46017C22.0536 3.86314 21.8696 4.24864 21.5807 4.53747L19.9688 6.14818C19.9688 6.14818 19.5577 4.91365 18.322 3.67913C17.0874 2.44227 15.8517 2.02999 15.8517 2.02999Z"
-                        fill="#2A2B2A"
-                      />
-                    </svg>
-                  </button>
-                )}
+                <h6 className="text-[--20px] font-bold">Job Position</h6>
+                <span className="text-[--16px] text-[#878787] font-medium">
+                  (Title)
+                </span>
               </div>
-              <div className={`${styles.card_body}`} dangerouslySetInnerHTML={{__html:templateDet.details[0]?.description}}>
-              </div>
-              <div className={styles.card_actions}>
-                <CustomBtn btnColor="white" word="Delete Card" />
-                <CustomBtn
-                  btnColor="black"
-                  word="Save"
-                  onClick={(e) => handleSaveCard(e)}
+              <div className={styles.card_body}>
+                {/* <p>{templateDet.role}</p> */}
+                <CustomSelectInput
+                  getValue={(val: string) => setPosition(val)}
+                  options={Object.values(positions)}
+                  label={templateDet.role}
                 />
               </div>
             </div>
-            <div className={styles.card}>
+            <div className={`${styles.card} h-fit`}>
               <div className={styles.card_header}>
-                <h6>Qualifications</h6>
-                {Iseditable && (
-                  <button onClick={(e) => handleEditCard(e)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M1.58576 16.7395L0.0553957 20.8204C-0.00336969 20.9775 -0.0156878 21.1481 0.0199129 21.312C0.0555136 21.4758 0.137528 21.626 0.256162 21.7445C0.374795 21.863 0.525034 21.9449 0.688934 21.9803C0.852835 22.0157 1.02347 22.0032 1.18046 21.9443L5.26028 20.4139C5.72724 20.2391 6.15136 19.9662 6.50414 19.6138L18.322 7.79615C18.322 7.79615 17.9097 6.56046 16.6751 5.32477C15.4406 4.09025 14.2037 3.67796 14.2037 3.67796L2.38589 15.4956C2.03348 15.8484 1.76066 16.2725 1.58576 16.7395ZM15.8517 2.02999L17.4625 0.419279C17.7513 0.130446 18.1368 -0.053568 18.5398 0.0139815C19.107 0.107153 19.9746 0.388998 20.7922 1.20774C21.611 2.02649 21.8928 2.89299 21.986 3.46017C22.0536 3.86314 21.8696 4.24864 21.5807 4.53747L19.9688 6.14818C19.9688 6.14818 19.5577 4.91365 18.322 3.67913C17.0874 2.44227 15.8517 2.02999 15.8517 2.02999Z"
-                        fill="#2A2B2A"
-                      />
-                    </svg>
-                  </button>
-                )}
+                <h6 className="text-[--20px] font-bold">Level of Expertise</h6>
               </div>
               <div className={styles.card_body}>
-                <ul>
-                  <li>
-                    Edit and enhance video footage to create engaging content.
-                  </li>
-                  <li>
-                    Collaborate with team members to meet project requirements
-                    and deadlines.
-                  </li>
-                  <li>
-                    Stay updated on industry trends and techniques to improve
-                    editing skills.
-                  </li>
-                  <li>
-                    Contribute creative ideas to enhance the overall quality of
-                    video content.
-                  </li>
-                </ul>
-              </div>
-              <div className={styles.card_actions}>
-                <CustomBtn btnColor="white" word="Delete Card" />
-                <CustomBtn
-                  btnColor="black"
-                  word="Save"
-                  onClick={(e) => handleSaveCard(e)}
+                {/* <p>{templateDet.level}</p> */}
+                <CustomSelectInput
+                  getValue={(val: string) => setLevel(val)}
+                  options={Object.values(levels)}
+                  label={templateDet.level}
                 />
               </div>
             </div>
           </div>
-          <div className="space-y-[1.5vw]">
-            <div className={styles.card}>
-              <div className={styles.card_header}>
-                <h6>Job Description</h6>
-                {Iseditable && (
-                  <button onClick={(e) => handleEditCard(e)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M1.58576 16.7395L0.0553957 20.8204C-0.00336969 20.9775 -0.0156878 21.1481 0.0199129 21.312C0.0555136 21.4758 0.137528 21.626 0.256162 21.7445C0.374795 21.863 0.525034 21.9449 0.688934 21.9803C0.852835 22.0157 1.02347 22.0032 1.18046 21.9443L5.26028 20.4139C5.72724 20.2391 6.15136 19.9662 6.50414 19.6138L18.322 7.79615C18.322 7.79615 17.9097 6.56046 16.6751 5.32477C15.4406 4.09025 14.2037 3.67796 14.2037 3.67796L2.38589 15.4956C2.03348 15.8484 1.76066 16.2725 1.58576 16.7395ZM15.8517 2.02999L17.4625 0.419279C17.7513 0.130446 18.1368 -0.053568 18.5398 0.0139815C19.107 0.107153 19.9746 0.388998 20.7922 1.20774C21.611 2.02649 21.8928 2.89299 21.986 3.46017C22.0536 3.86314 21.8696 4.24864 21.5807 4.53747L19.9688 6.14818C19.9688 6.14818 19.5577 4.91365 18.322 3.67913C17.0874 2.44227 15.8517 2.02999 15.8517 2.02999Z"
-                        fill="#2A2B2A"
-                      />
-                    </svg>
-                  </button>
-                )}
+          {templateContent.map((e, i) => {
+            return (
+              <div className={`${styles.card} min-h-[--167px] w-[49%]`} key={i}>
+                <div className={styles.card_header}>
+                  <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                </div>
+                <div
+                  className={`${styles.card_body} text-[--16px] outline-none`}
+                  dangerouslySetInnerHTML={{
+                    __html: tempDetails[i],
+                  }}
+                  contentEditable
+                  // onClick={(e) => {
+                  //   // check if the description is empty
+                  //   const description = e.currentTarget.textContent;
+                  //   if (description === "") {
+                  //     document.execCommand("insertHTML", false, "<li>");
+                  //     return;
+                  //   }
+                  // }}
+                  onKeyDownCapture={(
+                    e: React.KeyboardEvent<HTMLDivElement>
+                  ) => {
+                    // check if the cursor is at the start or in the middle of the line
+
+                    const target = e.target as HTMLDivElement; // Type assertion
+
+                    if (
+                      target.textContent === "" &&
+                      target.nodeName === "DIV" &&
+                      target.childNodes.length === 0
+                    ) {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                      }
+                      document.execCommand("insertHTML", false, "<li>");
+                    }
+
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      // chwck if previous line is empty
+                      const selection = window.getSelection();
+                      console.log(selection);
+                      const range = selection?.getRangeAt(0);
+                      console.log(range);
+                      const start = range?.startContainer;
+                      if (
+                        start?.nodeName === "LI" &&
+                        start?.textContent === ""
+                      ) {
+                      } else {
+                        document.execCommand("insertHTML", false, "<li>");
+                      }
+                    }
+                  }}
+                  onInput={(e) => handleOnChange(e, i)}
+                  onBlur={handleBlur}
+                ></div>
               </div>
-              <div className={styles.card_body}>
-                {templateDet?.details[0]?.description}
-              </div>
-              <div className={styles.card_actions}>
-                <CustomBtn btnColor="white" word="Delete Card" />
-                <CustomBtn
-                  btnColor="black"
-                  word="Save"
-                  onClick={(e) => handleSaveCard(e)}
-                />
-              </div>
-            </div>
-            <div className={styles.card}>
-              <div className={styles.card_header}>
-                <h6>Benefits</h6>
-                {Iseditable && (
-                  <button onClick={(e) => handleEditCard(e)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M1.58576 16.7395L0.0553957 20.8204C-0.00336969 20.9775 -0.0156878 21.1481 0.0199129 21.312C0.0555136 21.4758 0.137528 21.626 0.256162 21.7445C0.374795 21.863 0.525034 21.9449 0.688934 21.9803C0.852835 22.0157 1.02347 22.0032 1.18046 21.9443L5.26028 20.4139C5.72724 20.2391 6.15136 19.9662 6.50414 19.6138L18.322 7.79615C18.322 7.79615 17.9097 6.56046 16.6751 5.32477C15.4406 4.09025 14.2037 3.67796 14.2037 3.67796L2.38589 15.4956C2.03348 15.8484 1.76066 16.2725 1.58576 16.7395ZM15.8517 2.02999L17.4625 0.419279C17.7513 0.130446 18.1368 -0.053568 18.5398 0.0139815C19.107 0.107153 19.9746 0.388998 20.7922 1.20774C21.611 2.02649 21.8928 2.89299 21.986 3.46017C22.0536 3.86314 21.8696 4.24864 21.5807 4.53747L19.9688 6.14818C19.9688 6.14818 19.5577 4.91365 18.322 3.67913C17.0874 2.44227 15.8517 2.02999 15.8517 2.02999Z"
-                        fill="#2A2B2A"
-                      />
-                    </svg>
-                  </button>
-                )}
-              </div>
-              <div className={styles.card_body}>
-                <ul>
-                  <li>
-                    Edit and enhance video footage to create engaging content.
-                  </li>
-                  <li>
-                    Collaborate with team members to meet project requirements
-                    and deadlines.
-                  </li>
-                  <li>
-                    Stay updated on industry trends and techniques to improve
-                    editing skills.
-                  </li>
-                  <li>
-                    Contribute creative ideas to enhance the overall quality of
-                    video content.
-                  </li>
-                </ul>
-              </div>
-              <div className={styles.card_actions}>
-                <CustomBtn btnColor="white" word="Delete Card" />
-                <CustomBtn
-                  btnColor="black"
-                  word="Save"
-                  onClick={(e) => handleSaveCard(e)}
-                />
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
 
-      {Iseditable && (
-        <div className="flex justify-end items-center w-full gap-[1vw]">
-          <CustomBtn
-            word="Add Card"
-            btnColor="white"
-            icon={addIcon}
-            width="w-[9vw]"
-            paddingVal="p-[0.5vw]"
-          />
-          <CustomBtn
-            word="Save Template"
-            btnColor="black"
-            paddingVal="p-[0.5vw]"
-            width="w-[9vw]"
-            onClick={() => setIseditable((prev) => !prev)}
-          />
-        </div>
-      )}
+      <div className="flex justify-end items-center w-full gap-[1vw]">
+        <CustomBtn
+          word="Save Template"
+          btnColor="black"
+          paddingVal="p-[0.5vw]"
+          width="w-[9vw]"
+          onClick={updateTemplate}
+        />
+      </div>
+      <Modal
+        className={`${styles.modal}`}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box>
+          <form className={`${styles.modalBox}`}>
+            <div className={styles.group_title}>
+              {/* Modal title */}
+              <input
+                type="text"
+                placeholder="Group Title*"
+                className="groupTitle"
+                value={newGroup.title}
+                onChange={(e) => {
+                  setNewGroup({ ...newGroup, title: e.target.value });
+                }}
+              />
+              {/* Close button */}
+              <div
+                onClick={() => {
+                  handleClose();
+                }}
+                className="cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M11.0125 13.9613L18.4214 21.3616C18.8145 21.7543 19.3477 21.9749 19.9037 21.9749C20.4597 21.9749 20.9929 21.7543 21.386 21.3616C21.7791 20.969 22 20.4364 22 19.881C22 19.3257 21.7791 18.7931 21.386 18.4004L13.9744 11L21.3846 3.59962C21.5792 3.40518 21.7335 3.17437 21.8388 2.92035C21.944 2.66634 21.9982 2.39411 21.9981 2.11919C21.998 1.84428 21.9438 1.57207 21.8384 1.3181C21.733 1.06414 21.5786 0.833399 21.3839 0.639051C21.1892 0.444703 20.9582 0.290556 20.7039 0.185411C20.4496 0.0802654 20.177 0.026181 19.9018 0.0262458C19.6266 0.0263106 19.354 0.080523 19.0998 0.185788C18.8455 0.291053 18.6145 0.445309 18.42 0.639749L11.0125 8.04013L3.6037 0.639749C3.41048 0.439732 3.17931 0.280156 2.92369 0.170331C2.66806 0.0605069 2.3931 0.00263317 2.11484 8.77827e-05C1.83659 -0.0024576 1.56061 0.0503759 1.30301 0.155506C1.04541 0.260635 0.811359 0.415956 0.614501 0.612405C0.417642 0.808853 0.261924 1.0425 0.156431 1.2997C0.0509388 1.5569 -0.00221519 1.83252 7.07167e-05 2.11046C0.00235662 2.3884 0.0600364 2.6631 0.169745 2.91854C0.279454 3.17398 0.438994 3.40503 0.639057 3.59823L8.05068 11L0.640455 18.4018C0.440392 18.595 0.280852 18.826 0.171143 19.0815C0.0614341 19.3369 0.00375362 19.6116 0.00146772 19.8895C-0.000818188 20.1675 0.0523358 20.4431 0.157828 20.7003C0.263321 20.9575 0.419039 21.1911 0.615898 21.3876C0.812756 21.584 1.04681 21.7394 1.30441 21.8445C1.562 21.9496 1.83798 22.0025 2.11624 21.9999C2.3945 21.9974 2.66946 21.9395 2.92508 21.8297C3.18071 21.7198 3.41188 21.5603 3.6051 21.3603L11.0125 13.9613Z"
+                    fill="#BDBDBD"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className={styles.group_description}>
+              <textarea
+                placeholder="Group description..."
+                rows={4}
+                className="groupDesc"
+                value={newGroup.description}
+                onChange={(e) => {
+                  setNewGroup({ ...newGroup, description: e.target.value });
+                }}
+              />
+            </div>
+
+            {/* <h6>Add Templates:</h6>
+            <div className={styles.add_templates}>
+              {tempOptions?.map((e: any, i: number) => {
+                return (
+                  <div key={i} className={styles.template_item}>
+                    <CustomCheckBox
+                      name="add-template"
+                      id={e._id}
+                      accentColor="black"
+                    />
+                    <label htmlFor={e._id}>{e.title}</label>
+                  </div>
+                );
+              })} 
+            </div> */}
+
+            <CustomBtn
+              btnColor="black"
+              word="Create Group"
+              icon={addIcon}
+              width="w-full"
+              onClick={(e) => {
+                e?.preventDefault();
+                createGroup();
+              }}
+            />
+          </form>
+        </Box>
+      </Modal>
     </div>
   );
-};
-
+}
