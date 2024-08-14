@@ -246,10 +246,9 @@ export default function Page() {
                           onChange={(e) => {
                             const date = new Date(e.target.value);
 
-                            // Get the time in milliseconds and convert to seconds
-                            const seconds = Math.floor(date.getTime() / 1000);
-                            console.log(seconds);
-                            setFilter({ ...fillter, date: seconds.toString() });
+                            // Get the time in milliseconds
+                            const ms = date.getTime();
+                            setFilter({ ...fillter, date: ms.toString() });
                           }}
                         />
                       </div>
