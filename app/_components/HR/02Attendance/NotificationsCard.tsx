@@ -8,6 +8,8 @@ import styles from "./NotificationsCard.module.css"; // Import CSS module for co
 interface IProps {
   bgColor: string; // Background color for the notification card
   btnText: string; // Text to display on the button
+  username: string; // Username of the employee
+  timeStamp: string; // Timestamp for the notification
 }
 
 /**
@@ -25,20 +27,25 @@ export default function NotificationsCard(props: IProps) {
       {/* Inner container with vertical layout and spacing between elements */}
       <div className="flex flex-col gap-[10px]">
         {/* Section for displaying the user name */}
-        <p className="font-bold">John Doe</p>
+        <p className="font-bold">{props.username}</p>
         {/* Container for displaying the date and time in a horizontal layout */}
         <div className="flex justify-between">
           {/* Date section */}
           <div>
             <span className="font-bold">Date:</span>
             <br />
-            <span>20 March</span>
+            <span>
+              {new Date(props.timeStamp).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+              })}
+            </span>
           </div>
           {/* Time section */}
           <div>
             <span className="font-bold">Time:</span>
             <br />
-            <span>9:45:20 AM</span>
+            <span>{new Date(props.timeStamp).toLocaleTimeString()}</span>
           </div>
         </div>
         {/* Container for the custom button with margin-top applied */}
