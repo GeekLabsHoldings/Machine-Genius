@@ -27,7 +27,11 @@ interface Candidate {
  *
  * @return {JSX.Element} The rendered table component.
  */
-export default function CandidateDatabaseTable() {
+export default function CandidateDatabaseTable({
+  filter,
+}: {
+  filter: { role: string };
+}) {
   // An array of objects representing the rows of the table body.
   const [candidates, setCandidates] = useState<Candidate[]>([
     {
@@ -51,12 +55,21 @@ export default function CandidateDatabaseTable() {
 
   useEffect(() => {
     // Fetch the candidate data from the server.
-    fetch("/api/candidates")
+    fetch(
+      `https://machine-genius.onrender.com/hr/candidate/all-candidate?role=${filter.role}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setCandidates(data);
       });
-  }, []);
+  }, [filter]);
 
   return (
     <div className={`${styles.tableContainer} h-[68vh]`}>
@@ -73,26 +86,20 @@ export default function CandidateDatabaseTable() {
           <li className="w-[12%]">
             <span>Mobile Number</span>
           </li>
-          <li className="w-[12%]">
+          <li className="w-[17%]">
             <span>Email</span>
           </li>
-          <li className="w-[8%]">
+          <li className="w-[17%]">
             <span>LinkedIn</span>
           </li>
           <li className="w-[12%]">
             <span>Role</span>
           </li>
-          <li className="w-[7%]">
+          <li className="w-[17%]">
             <span>CV</span>
           </li>
           <li className="w-[7%]">
-            <span>Port</span>
-          </li>
-          <li className="w-[7%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[7%]">
-            <span>Lorem</span>
+            <span>Portfolio</span>
           </li>
         </ul>
 
@@ -109,30 +116,32 @@ export default function CandidateDatabaseTable() {
               <li className="w-[12%]">
                 <span>{e.phoneNumber}</span>
               </li>
-              <li className="w-[12%]">
+              <li className="w-[17%]">
                 <span>{e.email}</span>
               </li>
-              <li className="w-[8%]">
-                <Link href={e.linkedIn} target="_blank">
-                  <span>{truncateText(e.linkedIn, 20)}</span>
+              <li className="w-[17%]">
+                <Link
+                  href={e.linkedIn}
+                  target="_blank"
+                  className="whitespace-nowrap overflow-hidden overflow-ellipsis"
+                >
+                  {truncateText(e.linkedIn, 100)}
                 </Link>
               </li>
               <li className="w-[12%]">
                 <span>{e.role}</span>
               </li>
-              <li className="w-[7%]">
-                <Link href="#" target="_blank">
-                  <span>{e.cvLink}</span>
+              <li className="w-[17%]">
+                <Link
+                  href={e.cvLink}
+                  target="_blank"
+                  className="whitespace-nowrap overflow-hidden overflow-ellipsis"
+                >
+                  {truncateText(e.cvLink, 100)}
                 </Link>
               </li>
               <li className="w-[7%]">
-                <span>{e.portfolio}</span>
-              </li>
-              <li className="w-[7%]">
-                <span>Lorem</span>
-              </li>
-              <li className="w-[7%]">
-                <span>Lorem</span>
+                <span>{e.portfolio || "-"}</span>
               </li>
             </ul>
           ))}

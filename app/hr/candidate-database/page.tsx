@@ -5,17 +5,20 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 
 export default function Page() {
   // options for roles
-  const rolesOptions: string[] = [
-    "Video Editor",
-    "Graphic Designer",
-    "Manager",
-    "UI/UX",
-    "Content Writer",
-    "Front End Dev",
-  ];
+  const rolesOptions: { [key: string]: string } = {
+    Backend: "Backend",
+    Frontend: "Frontend",
+    Full_Stack: "Full Stack",
+    ContentWriter: "Content Writer",
+    Payroll: "Payroll",
+    CEO: "CEO",
+  };
 
   const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
   const [fillColorRight, setFillColorRight] = useState("#2A2B2A");
+  const [filter, setFilter] = useState({
+    role: "",
+  });
 
   const leftArrow = (
     <svg
@@ -131,7 +134,19 @@ export default function Page() {
             <div className={`w-8/12 flex items-end gap-[1vw]`}>
               <div className="flex flex-col w-1/4 gap-[0.3vw]">
                 {/* Custom Select Input */}
-                <CustomSelectInput label="All Roles" options={rolesOptions} />
+                <CustomSelectInput
+                  label={filter.role || "All Roles"}
+                  options={Object.values(rolesOptions)}
+                  getValue={(value: string) => {
+                    setFilter({
+                      ...filter,
+                      role:
+                        Object.keys(rolesOptions).find(
+                          (key) => rolesOptions[key] === value
+                        ) || "",
+                    });
+                  }}
+                />
               </div>
             </div>
 
@@ -162,7 +177,7 @@ export default function Page() {
       </div>
 
       {/* Candidate Database Table */}
-      <CandidateDatabaseTable />
+      <CandidateDatabaseTable filter={filter} />
     </>
   );
 }
