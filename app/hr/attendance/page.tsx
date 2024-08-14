@@ -1,6 +1,6 @@
 "use client";
 import AttendanceTable from "@/app/_components/HR/02Attendance/AttendanceTable";
-import NotificationsAttendanceGrid from "@/app/_components/HR/02Attendance/NotificationsAttendanceGrid";
+// import NotificationsAttendanceGrid from "@/app/_components/HR/02Attendance/NotificationsAttendanceGrid";
 import React, { useEffect, useState } from "react";
 import styles from "./attendance.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
