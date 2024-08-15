@@ -113,11 +113,11 @@ const CreateMovie = () => {
       console.log(`selectedText`, selectedText);
 
       if (selectedBrand === "PST Canada") {
-        brandNamePayload = "StreetPolitics";
+        brandNamePayload = "streetPoliticsCanada";
       } else if (selectedBrand === "Investorcracy") {
-        brandNamePayload = "Investocracy";
+        brandNamePayload = "investocracy";
       } else if (selectedBrand === "Movie Myth") {
-        brandNamePayload = "Moviemyth";
+        brandNamePayload = "movieMyth";
       }
       console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
       setIsLoading(true);

@@ -99,9 +99,9 @@ export default function ChooseBrandPage() {
   async function getCollectedData() {
     let postBody: any = {};
     if (selectedBrand === "PST Canada") {
-      postBody.brandName = "STP";
+      postBody.brandName = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
-      postBody.brandName = "INV";
+      postBody.brandName = "investocracy";
       postBody.stockName = stockNameValue;
     }
 
