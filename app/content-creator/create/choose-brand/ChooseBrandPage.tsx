@@ -30,7 +30,7 @@ export default function ChooseBrandPage() {
     setSelectedBrand,
     collectedData,
     setCollectedData,
-    setTwitterData,
+    // setTwitterData,
     setChoosedArticles,
     setCheckStatus,
     selectedBrand,
@@ -44,7 +44,7 @@ export default function ChooseBrandPage() {
     function resetStateAndSessionStorage() {
       setSelectedBrand("");
       setCollectedData(null);
-      setTwitterData(null);
+      // setTwitterData(null);
       setChoosedArticles([]);
       dispatch(contentCreatorActions.setFinalArticle(null));
       setCheckStatus({
@@ -60,18 +60,22 @@ export default function ChooseBrandPage() {
       dispatch(contentCreatorActions.setVideoTranscription(null));
       setEditContentData(null);
       if (typeof window !== "undefined") {
-        sessionStorage.removeItem("selectedBrand");
-        sessionStorage.removeItem("collectedData");
-        sessionStorage.removeItem("twitterData");
-        sessionStorage.removeItem("choosedArticles");
-        sessionStorage.removeItem("selectedText");
-        sessionStorage.removeItem("finalArticle");
-        sessionStorage.removeItem("checkGrammerResults");
-        sessionStorage.removeItem("checkAiResults");
-        sessionStorage.removeItem("generatedTitles");
-        sessionStorage.removeItem("lockedGeneratedTitles");
-        sessionStorage.removeItem("videoTranscription");
-        sessionStorage.removeItem("editContentData");
+        const keysToRemove = [
+          "selectedBrand",
+          "collectedData",
+          "twitterData",
+          "choosedArticles",
+          "selectedText",
+          "finalArticle",
+          "checkGrammerResults",
+          "checkAiResults",
+          "generatedTitles",
+          "lockedGeneratedTitles",
+          "videoTranscription",
+          "editContentData",
+        ];
+
+        keysToRemove.forEach((key) => sessionStorage.removeItem(key));
       }
     }
     resetStateAndSessionStorage();
