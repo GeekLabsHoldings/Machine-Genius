@@ -260,6 +260,10 @@ export default function CreateArticlePage() {
         return;
       } else if (json && json?.articles[0]?.content) {
         dispatch(contentCreatorActions.setFinalArticle(json));
+        setPageState((prevState) => ({
+          ...prevState,
+          triggerNav: true,
+        }));
       }
     } catch (error) {
       console.error("Error finalizeContent:", error);
