@@ -1,12 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import styles from "./create-article.module.css";
-// import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
-// import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-// import { SelectArticleData } from "@/app/_data/data";
 import { globalContext } from "@/app/_context/store";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
@@ -14,19 +11,31 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+// import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
+// import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
+// import { SelectArticleData } from "@/app/_data/data";
 
 export default function CreateArticlePage() {
+  // ===== Start Hooks =====
   const dispatch = useDispatch();
   const router = useRouter();
-  const [IsLoading, setIsLoading] = useState(false);
-  const [IsRetry, setIsRetry] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<any>(null);
-  // state keeps selected text to display them in selection section
+  // ===== End Hooks =====
+
+  // ===== Start State =====
   const { selectedContentType, selectedBrand, choosedArticles } =
     useContext(globalContext);
-  // state to enable text selection when click on highlight button
-  const [beginSelect, setBeginSelect] = useState(false);
-  const [CheckAllSelectedText, setCheckAllSelectedText] = useState(false);
+  const [pageState, setPageState] = useState<{
+    isLoading: boolean;
+    isRetry: boolean;
+    triggerNav: boolean | null;
+  }>({
+    isLoading: false,
+    isRetry: false,
+    triggerNav: null,
+  });
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [CheckAllSelectedText, setCheckAllSelectedText] =
+    useState<boolean>(false);
 
   function selectedTextInit() {
     if (typeof window !== "undefined") {
@@ -40,7 +49,22 @@ export default function CreateArticlePage() {
   useEffect(() => {
     sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
   }, [selectedText]);
+  // ===== End State =====
 
+  // ===== Start Page Guard =====
+  useEffect(() => {
+    if (!selectedBrand) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, []);
+  // ===== End Page Guard =====
+
+  // ===== Start Helpers Functions =====
   const handleSelectedText = () => {
     const button = document.getElementById("highlight-btn");
     const selection = window.getSelection();
@@ -62,178 +86,6 @@ export default function CreateArticlePage() {
       }
     }
   };
-
-  // return selected text in selections
-  function renderSelectedTxt() {
-    return selectedText.map((item: any, index: any) => (
-      <div key={`${index}-${item.text}`}>
-        <div
-          className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}
-        >
-          <CustomCheckBox
-            value={item.text}
-            onChange={(e: any) => handleCheckChange(e, index)}
-            checked={item.checked}
-            accentColor="#2A2B2A"
-          />
-
-          <div className={`${styles.article_with_check} group`}>
-            <label className={`${styles.article}`}>{item.text}</label>
-          </div>
-        </div>
-      </div>
-    ));
-  }
-
-  const handleCheckChange = (e: any, index: any) => {
-    const newSelectedText = [...selectedText];
-    newSelectedText[index].checked = e.target.checked;
-    setSelectedText(newSelectedText);
-  };
-
-  const handleCheckAllSelectedText = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newCheckedState = !CheckAllSelectedText;
-    const newSelectedText = selectedText.map((item: any) => ({
-      ...item,
-      checked: newCheckedState,
-    }));
-    setSelectedText(newSelectedText);
-    setCheckAllSelectedText(newCheckedState);
-  };
-
-  function handleDeleteSelectedText() {
-    // delete checked from selected text
-    let newSelectedText = selectedText.filter((item: any) => !item.checked);
-    setSelectedText(newSelectedText);
-    // reset check all selected text
-    setCheckAllSelectedText(false);
-  }
-
-  // async function setFinalArticleAsync(json: any) {
-  //   setFinalArticle(json);
-  //   return Promise.resolve(); // Ensure this function is awaited properly
-  // }
-
-  async function finalizeContent() {
-    if (selectedText.length === 0) {
-      toast.error("Please select at least one article!");
-      return;
-    } else {
-      let brandNamePayload = "";
-      console.log(`selectedBrand`, selectedBrand);
-      console.log(`selectedText`, selectedText);
-
-      if (selectedBrand === "PST Canada") {
-        brandNamePayload = "StreetPolitics";
-      } else if (selectedBrand === "Investorcracy") {
-        brandNamePayload = "Investocracy";
-      }
-      console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
-      setIsLoading(true);
-      const maxRetries = 2; // Define the maximum number of retries
-      let attempts = 0;
-      let json = null;
-
-      while (attempts < maxRetries) {
-        try {
-          const res = await fetch(
-            `https://backendmachinegenius.onrender.com/${
-              selectedContentType === "Script" ? "script" : "article"
-            }/finalize-content`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              // body: JSON.stringify(postBody),
-              body: JSON.stringify({
-                selectedContent: selectedText
-                  .map((item: any) => item.text)
-                  .join(" "),
-                ...(selectedContentType === "Script" && {
-                  brandName: brandNamePayload,
-                }),
-              }),
-            }
-          );
-
-          json = await res.json();
-
-          if (json.articles[0]?.content) {
-            // If content is found, break the loop
-            break;
-          }
-        } catch (error) {
-          toast.error("Something went wrong! Contact backend department");
-          console.error("Error finalizeContent:", error);
-        } finally {
-          attempts++;
-        }
-      }
-
-      if (json?.articles[0]?.content) {
-        // await setFinalArticleAsync(json);
-        dispatch(contentCreatorActions.setFinalArticle(json));
-        router.replace("/content-creator/create/final-article");
-      } else {
-        setIsRetry(true);
-        // window.alert("Failed to generate content after multiple attempts");
-        // router.push("/content-creator/create/choose-brand");
-      }
-    }
-  }
-
-  // function that get role value from select option by send it as a prop
-  const getSelectedArticle = (value: string | number) => {
-    setSelectedArticle(value);
-  };
-
-  useEffect(() => {
-    console.log("selectedArticle:", selectedArticle);
-  }, [selectedArticle]);
-
-  function previewSelectedArticle() {
-    if (selectedArticle?.includes("x.com")) {
-      const selectedContent = choosedArticles.find(
-        (item: any) => item.href === selectedArticle
-      )?.content;
-      return selectedContent;
-    } else {
-      const selectedContent = choosedArticles.find(
-        (item: any) => item.title === selectedArticle
-      )?.content;
-      return selectedContent;
-    }
-  }
-
-  const isInitialMount = useRef(true);
-  useEffect(() => {
-    if (isInitialMount.current) {
-      console.log("selectedText-InitialMount:", selectedText);
-      isInitialMount.current = false;
-    } else {
-      console.log("selectedText-notInitialMount:", selectedText);
-    }
-  }, [selectedText]);
-
-  useEffect(() => {
-    console.log("choosedArticles:", choosedArticles);
-    console.log("selectedBrand:", selectedBrand);
-  }, [choosedArticles, selectedBrand]);
-
-  useEffect(() => {
-    if (!isInitialMount.current) {
-      const filteredSelectedText = selectedText.filter((item: any) =>
-        choosedArticles.some(
-          (article: any) => article.title === item.selectedFromArticle
-        )
-      );
-      console.log("filteredSelectedText:", filteredSelectedText);
-      setSelectedText(filteredSelectedText);
-    }
-  }, [choosedArticles]);
 
   useEffect(() => {
     const button = document.getElementById("highlight-btn");
@@ -291,32 +143,196 @@ export default function CreateArticlePage() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!selectedBrand) {
-      toast.error(
-        "No data is available. You will be redirected to refetch new data!"
-      );
-      setTimeout(() => {
-        router.replace("/content-creator/create/choose-brand");
-      }, 1500);
-    }
-  }, []);
+  const handleCheckChange = (e: any, index: any) => {
+    const newSelectedText = [...selectedText];
+    newSelectedText[index].checked = e.target.checked;
+    setSelectedText(newSelectedText);
+  };
 
-  if (IsLoading) {
+  const handleCheckAllSelectedText = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newCheckedState = !CheckAllSelectedText;
+    const newSelectedText = selectedText.map((item: any) => ({
+      ...item,
+      checked: newCheckedState,
+    }));
+    setSelectedText(newSelectedText);
+    setCheckAllSelectedText(newCheckedState);
+  };
+
+  function handleDeleteSelectedText() {
+    // delete checked from selected text
+    let newSelectedText = selectedText.filter((item: any) => !item.checked);
+    setSelectedText(newSelectedText);
+    // reset check all selected text
+    setCheckAllSelectedText(false);
+  }
+  // function that get role value from select option by send it as a prop
+  const getSelectedArticle = (value: string | number) => {
+    setSelectedArticle(value);
+  };
+  // ===== End Helpers Functions =====
+
+  // useEffect(() => {
+  //   console.log("selectedArticle:", selectedArticle);
+  // }, [selectedArticle]);
+
+  // useEffect(() => {
+  //   console.log("choosedArticles:", choosedArticles);
+  //   console.log("selectedBrand:", selectedBrand);
+  // }, [choosedArticles, selectedBrand]);
+
+  const isInitialMount = useRef(true);
+  useEffect(() => {
+    if (isInitialMount.current) {
+      // console.log("selectedText-InitialMount:", selectedText);
+      isInitialMount.current = false;
+    } else {
+      // console.log("selectedText-notInitialMount:", selectedText);
+    }
+  }, [selectedText]);
+
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      const filteredSelectedText = selectedText.filter((item: any) =>
+        choosedArticles.some(
+          (article: any) => article.title === item.selectedFromArticle
+        )
+      );
+      // console.log("filteredSelectedText:", filteredSelectedText);
+      setSelectedText(filteredSelectedText);
+    }
+  }, [choosedArticles]);
+
+  function handleFinalizeContentFailure() {
+    toast.error("Something went wrong! Contact backend department");
+    setPageState((prevState) => ({
+      ...prevState,
+      triggerNav: false,
+      isRetry: true,
+    }));
+    return;
+  }
+
+  async function finalizeContent() {
+    setPageState((prevState) => ({
+      ...prevState,
+      isLoading: true,
+    }));
+    // console.log(`selectedBrand`, selectedBrand);
+    // console.log(`selectedText`, selectedText);
+    let brandNamePayload = "";
+    if (selectedBrand === "PST Canada") {
+      brandNamePayload = "StreetPolitics";
+    } else if (selectedBrand === "Investorcracy") {
+      brandNamePayload = "Investocracy";
+    }
+    // console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
+
+    try {
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/${
+          selectedContentType === "Script" ? "script" : "article"
+        }/finalize-content`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            selectedContent: selectedText
+              .map((item: any) => item.text)
+              .join(" "),
+            ...(selectedContentType === "Script" && {
+              brandName: brandNamePayload,
+            }),
+          }),
+        }
+      );
+
+      const json = await res.json();
+      if (!json) {
+        handleFinalizeContentFailure();
+        return;
+      } else if (json.success === false) {
+        handleFinalizeContentFailure();
+        return;
+      } else if (json && json?.articles[0]?.content) {
+        dispatch(contentCreatorActions.setFinalArticle(json));
+      }
+    } catch (error) {
+      console.error("Error finalizeContent:", error);
+      handleFinalizeContentFailure();
+    }
+  }
+
+  useEffect(() => {
+    if (pageState.triggerNav === true) {
+      router.replace("/content-creator/create/final-article");
+    } else if (pageState.triggerNav === false) {
+      toast.error("Something went wrong! Contact backend department");
+    }
+  }, [pageState.triggerNav]);
+
+  // ===== Start HTML Return =====
+  function renderSelectedTxt() {
+    return selectedText.map((item: any, index: any) => (
+      <div key={`${index}-${item.text}`}>
+        <div
+          className={`${styles.singleArticle} flex items-center gap-[0.25vw]`}
+        >
+          <CustomCheckBox
+            value={item.text}
+            onChange={(e: any) => handleCheckChange(e, index)}
+            checked={item.checked}
+            accentColor="#2A2B2A"
+          />
+
+          <div className={`${styles.article_with_check} group`}>
+            <label className={`${styles.article}`}>{item.text}</label>
+          </div>
+        </div>
+      </div>
+    ));
+  }
+
+  function previewSelectedArticle() {
+    if (selectedArticle?.includes("x.com")) {
+      const selectedContent = choosedArticles.find(
+        (item: any) => item.href === selectedArticle
+      )?.content;
+      return selectedContent;
+    } else {
+      const selectedContent = choosedArticles.find(
+        (item: any) => item.title === selectedArticle
+      )?.content;
+      return selectedContent;
+    }
+  }
+
+  if (pageState.isLoading) {
     return (
       <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
         <LogoAndTitle
           needTxt={true}
-          textNeeded="Hold on tight."
-          title="Genius is working on your article.."
+          textNeeded={!pageState.isRetry ? "Hold on tight." : ""}
+          title={
+            !pageState.isRetry
+              ? "Genius is finalizing your content..."
+              : "Content finalization failed. Please retry."
+          }
         />
-        {IsRetry && (
+        {pageState.isRetry && (
           <CustomBtn
             btnColor="black"
             word="Retry"
             onClick={() => {
               finalizeContent();
-              setIsRetry(false);
+              setPageState((prevState) => ({
+                ...prevState,
+                isRetry: false,
+              }));
             }}
           />
         )}
@@ -334,7 +350,7 @@ export default function CreateArticlePage() {
             <div className={`${styles.articlesToSelect} h-[15%]`}>
               <h3>Articles</h3>
               <div className="flex items-center gap-3">
-                <div className="w-11/12">
+                <div className="w-full">
                   {/* select article to read */}
                   <CustomSelectInput
                     label="Select Article"
@@ -347,24 +363,6 @@ export default function CreateArticlePage() {
                     })}
                     getValue={getSelectedArticle}
                   />
-                </div>
-                {/* highlighting button */}
-                <div
-                  className={`w-1/12 flex justify-end cursor-pointern ${styles.highlightSvg}`}
-                  onClick={() => {
-                    setBeginSelect(true);
-                  }}
-                >
-                  <svg
-                    viewBox="0 0 30 29"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 26.6436L5.51027 28.4211L7.46523 26.4532L3.76819 22.7319L0 26.6436ZM6.87185 13.3208C6.58154 13.5787 6.37108 13.9153 6.26557 14.2903C6.16006 14.6653 6.16396 15.0629 6.27682 15.4357L6.99648 17.8132L4.18785 20.6409L9.49463 25.9825L12.2994 23.1593L14.6564 23.8854C15.4135 24.1185 16.2363 23.8848 16.7602 23.287L18.7207 20.9756L9.16155 11.3536L6.87185 13.3208ZM29.1131 4.40048L25.6279 0.892285C24.4979 -0.245102 22.6841 -0.302276 21.4852 0.761838L10.5082 10.1962L19.8705 19.6206L29.2427 8.5709C30.3004 7.36412 30.2436 5.53842 29.1131 4.40048Z"
-                      fill={`${beginSelect ? "#F36F24" : "#2A2B2A"}`}
-                    />
-                  </svg>
                 </div>
               </div>
             </div>
@@ -385,13 +383,7 @@ export default function CreateArticlePage() {
                     >
                       Select
                     </button>
-                    <p
-                      contentEditable={true}
-                      className={beginSelect ? styles.beginSelection : ""}
-                      // onMouseUp={handleSelectedText}
-                    >
-                      {previewSelectedArticle()}
-                    </p>
+                    <p contentEditable={true}>{previewSelectedArticle()}</p>
                   </div>
                 </div>
               </div>
@@ -452,10 +444,16 @@ export default function CreateArticlePage() {
           word={"Next"}
           btnColor="black"
           onClick={() => {
-            finalizeContent();
+            if (selectedText.length === 0) {
+              toast.error("Please select at least one article!");
+              return;
+            } else {
+              finalizeContent();
+            }
           }}
         />
       </div>
     </div>
   );
+  // ===== End HTML Return =====
 }
