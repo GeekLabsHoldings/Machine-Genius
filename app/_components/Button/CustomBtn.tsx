@@ -34,12 +34,7 @@ const CustomBtn = memo((props: IBtn) => {
         if (props.href) {
           router.replace(props.href);
         } else if (props.onClick) {
-          // Check if props.onClick expects an argument
-          if (props.onClick.length > 0) {
-            props.onClick(e); // Pass the event if the function expects an argument
-          } else {
-            props.onClick(); // Call without argument if the function does not expect one
-          }
+          props.onClick(e);
         }
       }}
     >
