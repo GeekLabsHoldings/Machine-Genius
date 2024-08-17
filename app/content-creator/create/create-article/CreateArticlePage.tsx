@@ -141,9 +141,9 @@ export default function CreateArticlePage() {
       console.log(`selectedText`, selectedText);
 
       if (selectedBrand === "PST Canada") {
-        brandNamePayload = "streetPoliticsCanada";
+        brandNamePayload = "StreetPolitics";
       } else if (selectedBrand === "Investorcracy") {
-        brandNamePayload = "investocracy";
+        brandNamePayload = "Investocracy";
       }
       console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
       setIsLoading(true);

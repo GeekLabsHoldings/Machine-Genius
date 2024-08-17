@@ -240,7 +240,7 @@ const SignIn = () => {
             type="submit"
             word={loader ? "Loading..." : "Sign In"}
             btnColor="black"
-            disabled={formikObj.dirty === false}
+            disabled={formikObj.dirty === false || loader}
           />
         </form>
       </div>
