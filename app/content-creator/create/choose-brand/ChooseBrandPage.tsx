@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 export default function ChooseBrandPage() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const abortControllerRef = useRef<AbortController | null>(null); // Store the AbortController in a ref
 
   const {
     setSelectedBrand,
@@ -74,9 +75,13 @@ export default function ChooseBrandPage() {
       }
     }
     resetStateAndSessionStorage();
+    return () => {
+      // Cleanup function to abort any pending requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, []);
-
-  const abortControllerRef = useRef<AbortController | null>(null); // Store the AbortController in a ref
 
   const [pageState, setPageState] = useState<{
     isLoading: boolean;
@@ -139,6 +144,9 @@ export default function ChooseBrandPage() {
   }
 
   async function getCollectedData() {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     abortControllerRef.current = new AbortController(); // Initialize the AbortController
     const { signal } = abortControllerRef.current;
 
@@ -302,6 +310,7 @@ export default function ChooseBrandPage() {
           onClick={() => {
             if (!selectedBrand) {
               toast.error("Please select a brand!");
+              return;
             } else if (selectedBrand === "Movie Myth") {
               router.replace("/content-creator/create/movie-myth");
             } else if (
