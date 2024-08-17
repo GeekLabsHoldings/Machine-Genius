@@ -1,0 +1,105 @@
+.whiteBtn{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+    font-weight: 700;
+    position: relative;
+    border-radius: 0.4rem;
+    color: rgba(42, 43, 42, 1);
+    background-color: rgba(255, 255, 251, 1);
+    border: 1px solid #2A2B2A;
+    transition: all 0.3s;
+    display: block;
+    overflow: hidden;
+}
+.whiteBtn:hover{
+    background-color: #2A2B2A;
+    color: rgba(255, 255, 251, 1);
+    border: 1px solid var(--white);
+}
+.blackBtn{
+    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+    font-weight: 700;
+    position: relative;
+    border-radius: 0.4rem;
+    color: rgba(255, 255, 251, 1);
+    background-color: #2A2B2A ;
+    border: 1px solid #2A2B2A;
+    transition: all 0.3s;
+    display: block;
+    overflow: hidden;
+}
+.blackBtn svg path{
+    fill: #FFFFFB;
+}
+.blackBtn:hover svg path{
+    fill: var(--dark);
+}
+.whiteBtn svg path{
+    fill: #2A2B2A;
+}
+.whiteBtn:hover svg path{
+    fill: var(--white);
+}
+.blackBtn:hover{
+    color: rgba(42, 43, 42, 1);
+    background-color:rgba(255, 255, 251, 1) ;
+}
+.iconAndTxtBtn{
+    /*padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(24px, calc(3vw + 0.1rem),140px);
+    */display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(10px, calc( 0.5vw + 0.1rem), 60px);
+    position: relative;
+    z-index: 2;
+    transition: all 0s;
+    -webkit-transition: all 0s;
+    -moz-transition: all 0s;
+    -ms-transition: all 0s;
+    -o-transition: all 0s;
+}
+.blackBtn::before{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 0%;
+    background-color: #fff;
+    z-index: 1;
+    border-radius: 50% 50% 0.4rem 0.4rem;
+    transition: all 0.3s;
+}
+.whiteBtn::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 0%;
+    background-color: #2A2B2A;
+    z-index: 1;
+    border-radius: 50% 50% 0.4rem 0.4rem;
+    transition: all 0.3s;
+}
+.blackBtn:hover::before,.whiteBtn:hover::before{
+    width: 100%;
+    height: 100%;
+}
+.blackBtn:hover svg path{
+    fill: #2A2B2A;
+}
+
+.blackBtn span , .whiteBtn span{
+    transition: all 0s;
+    -webkit-transition: all 0s;
+    -moz-transition: all 0s;
+    -ms-transition: all 0s;
+    -o-transition: all 0s;
+}
+
+
+.blackBtn svg , .whiteBtn svg{
+    width: clamp(10px, calc( 0.7vw + 0.1rem), 600px);
+}

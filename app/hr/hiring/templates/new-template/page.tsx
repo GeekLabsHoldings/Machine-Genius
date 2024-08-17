@@ -562,7 +562,7 @@ const Page = () => {
               word="Create Group"
               icon={addIcon}
               width="w-full"
-              onClick={(e) => {
+              onClick={(e?:React.MouseEvent<HTMLButtonElement>) => {
                 e?.preventDefault();
                 createGroup();
               }}

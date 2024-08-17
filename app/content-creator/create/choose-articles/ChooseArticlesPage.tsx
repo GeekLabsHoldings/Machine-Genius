@@ -285,7 +285,7 @@ export default function ChooseArticlesPage() {
           <CustomBtn
             word="Next"
             btnColor="black"
-            onClick={(e) => {
+            onClick={(e?: React.MouseEvent<HTMLButtonElement>) => {
               e?.preventDefault();
               toast.error("Please select at least one article!");
             }}
