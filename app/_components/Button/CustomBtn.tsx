@@ -1,4 +1,5 @@
 "use client";
+import React, { memo } from "react";
 import styles from "./CustumBtn.module.css";
 import { ButtonHTMLAttributes, ReactElement } from "react";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,7 @@ type IBtn = React.DetailedHTMLProps<
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const CustomBtn = (props: IBtn) => {
+const CustomBtn = memo((props: IBtn) => {
   const router = useRouter();
 
   return (
@@ -52,6 +53,6 @@ const CustomBtn = (props: IBtn) => {
       </div>
     </button>
   );
-};
+});
 
 export default CustomBtn;
