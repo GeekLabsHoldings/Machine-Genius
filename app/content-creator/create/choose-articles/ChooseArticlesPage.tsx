@@ -80,7 +80,7 @@ export default function ChooseArticlesPage() {
         router.replace("/content-creator/create/choose-brand");
       }, 1500);
     }
-  }, []);
+  }, [collectedData, router]);
 
   useEffect(() => {
     console.log("choosedArticles:", choosedArticles);
