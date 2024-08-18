@@ -111,8 +111,8 @@ export default function GlobalContextProvider({
     }
   }
 
-  const [token, setToken] = useState<any>(tokenInit());
-  const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit());
+  const [token, setToken] = useState<any>(tokenInit);
+  const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit);
 
   async function checkIfUserOnCorrespondingRoute() {
     // if (decodedToken) {
@@ -218,7 +218,7 @@ export default function GlobalContextProvider({
     }
   }
   const [selectedContentType, setSelectedContentType] = useState<any>(
-    selectedContentTypeInit()
+    selectedContentTypeInit
   );
   useEffect(() => {
     sessionStorage.setItem("selectedContentType", selectedContentType);
@@ -232,7 +232,7 @@ export default function GlobalContextProvider({
       return "";
     }
   }
-  const [selectedBrand, setSelectedBrand] = useState<any>(selectedBrandInit());
+  const [selectedBrand, setSelectedBrand] = useState<any>(selectedBrandInit);
   useEffect(() => {
     sessionStorage.setItem("selectedBrand", selectedBrand);
   }, [selectedBrand]);
@@ -245,7 +245,7 @@ export default function GlobalContextProvider({
       return null;
     }
   }
-  const [collectedData, setCollectedData] = useState<any>(collectedDataInit());
+  const [collectedData, setCollectedData] = useState<any>(collectedDataInit);
   useEffect(() => {
     sessionStorage.setItem("collectedData", JSON.stringify(collectedData));
   }, [collectedData]);
@@ -258,7 +258,7 @@ export default function GlobalContextProvider({
       return null;
     }
   }
-  const [twitterData, setTwitterData] = useState<any>(twitterDataInit());
+  const [twitterData, setTwitterData] = useState<any>(twitterDataInit);
   useEffect(() => {
     sessionStorage.setItem("twitterData", JSON.stringify(twitterData));
   }, [twitterData]);
@@ -275,7 +275,7 @@ export default function GlobalContextProvider({
     }
   }
   const [choosedArticles, setChoosedArticles] = useState<any>(
-    choosedArticlesInit()
+    choosedArticlesInit
   );
   useEffect(() => {
     sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));
@@ -289,7 +289,7 @@ export default function GlobalContextProvider({
   //     return null;
   //   }
   // }
-  // const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit());
+  // const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit);
   const finalArticle = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
@@ -304,7 +304,7 @@ export default function GlobalContextProvider({
     ai: "waiting",
   });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
-  //   checkGrammerResultsInit()
+  //   checkGrammerResultsInit
   // );
   const checkGrammerResults = useSelector(
     (state: any) => state.contentCreator.checkGrammerResults
@@ -424,7 +424,7 @@ export default function GlobalContextProvider({
   }
 
   // const [checkAiResults, setCheckAiResults] = useState<any>(
-  //   checkAiResultsInit()
+  //   checkAiResultsInit
   // );
   const checkAiResults = useSelector(
     (state: any) => state.contentCreator.checkAiResults
@@ -561,7 +561,7 @@ export default function GlobalContextProvider({
     }
   }
   const [generatedTitles, setGeneratedTitles] = useState<any>(
-    generatedTitlesInit()
+    generatedTitlesInit
   );
   useEffect(() => {
     sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
@@ -579,7 +579,7 @@ export default function GlobalContextProvider({
     }
   }
   const [selectedContentTitle, setSelectedContentTitle] = useState<any>(
-    selectedContentTitleInit()
+    selectedContentTitleInit
   );
   useEffect(() => {
     sessionStorage.setItem("selectedContentTitle", selectedContentTitle);
@@ -598,7 +598,7 @@ export default function GlobalContextProvider({
     }
   }
   const [lockedGeneratedTitles, setLockedGeneratedTitles] = useState<any>(
-    lockedGeneratedTitlesInit()
+    lockedGeneratedTitlesInit
   );
   useEffect(() => {
     sessionStorage.setItem(
@@ -630,7 +630,7 @@ export default function GlobalContextProvider({
     }
   }
   const [editContentData, setEditContentData] = useState<any>(
-    editContentDataInit()
+    editContentDataInit
   );
   useEffect(() => {
     sessionStorage.setItem("editContentData", JSON.stringify(editContentData));
