@@ -21,6 +21,7 @@ const ReGenerateIcon = (
 
 const GeneratedTitlesPage = () => {
   const {
+    token,
     selectedContentType,
     selectedBrand,
     generateTitles,
@@ -122,7 +123,7 @@ const GeneratedTitlesPage = () => {
       ...(method === "POST" && { date: generateData() }),
     };
 
-    const maxRetries = 2; // Define the maximum number of retries
+    const maxRetries = 1; // Define the maximum number of retries
     let attempts = 0;
     let json = null;
 
@@ -132,6 +133,11 @@ const GeneratedTitlesPage = () => {
           method: method,
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : token
+            }`,
           },
           body: JSON.stringify(postBody),
         });
@@ -175,7 +181,7 @@ const GeneratedTitlesPage = () => {
   if (IsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle needTxt={false} title="Generating Titles.." />
+        <LogoAndTitle needTxt={false} title="Generating Titles..." />
       </div>
     );
   }

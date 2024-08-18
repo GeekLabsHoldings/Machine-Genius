@@ -9,8 +9,8 @@ export const SimplePagination = ({
   onclickRight,
   onclickLeft,
 }: {
-  onclickRight: () => void;
-  onclickLeft: () => void;
+  onclickRight?: () => void;
+  onclickLeft?: () => void;
 }) => {
   const [active, setActive] = React.useState(1);
 
@@ -19,7 +19,9 @@ export const SimplePagination = ({
 
     setActive(active + 1);
 
-    onclickRight();
+    if (onclickRight) {
+      onclickRight();
+    }
   };
 
   const prev = () => {
@@ -27,7 +29,9 @@ export const SimplePagination = ({
 
     setActive(active - 1);
 
-    onclickLeft();
+    if (onclickLeft) {
+      onclickLeft();
+    }
   };
 
   return (
