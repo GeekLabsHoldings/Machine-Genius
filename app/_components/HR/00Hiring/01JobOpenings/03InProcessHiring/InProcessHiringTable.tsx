@@ -1,124 +1,60 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./InProcessHiringTable.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { useRouter } from "next/navigation";
 
 export default function InProcessHiringTable() {
-  // An array of objects representing the rows of the table body.
-  const taleData = [
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      candidates: "45",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "75",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "23",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "43",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      candidates: "45",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "75",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "23",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "43",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      candidates: "45",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "75",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "23",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "43",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      candidates: "45",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "75",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "23",
-      hiringStatus: "Continue",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      candidates: "43",
-      hiringStatus: "Continue",
-    },
-  ];
+  const router = useRouter();
+  const [data, setData] = useState<any>([]);
+  const [skip, setSkip] = useState(0);
+
+  async function updateNextStep() {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/hiring/next-step/${data[0]._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/start-hiring/${data[0]._id}`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          `https://machine-genius.onrender.com/hr/hiring/hiring?limit=10&skip=${skip}&type=Opening`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        const result = await res.json();
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [skip]);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div className={styles.database_table}>
       {/* Table Header */}
@@ -211,17 +147,33 @@ export default function InProcessHiringTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {taleData.map((ele, idx) => (
-          <ul className="w-[100%]" key={idx}>
-            <li className="w-[20%]">{ele.job_title}</li>
+        {data?.map((ele, idx) => (
+          <ul className="w-[100%]" key={ele._id}>
+            <li className="w-[20%]">{ele.title}</li>
             <li className="w-[20%]">{ele.level}</li>
             <li className="w-[20%]">{ele.department}</li>
-            <li className="w-[20%]">{ele.candidates}</li>
-            <li className={`w-[20%]`}>
+            <li className="w-[20%]">
+              <span
+                style={{
+                  background: ele.createdBy.theme,
+                }}
+              >
+                {ele?.createdBy.firstName}
+              </span>
+            </li>
+            <li
+              className={`w-[20%] ${
+                ele.hiringStatus === "In Process"
+                  ? "In Process"
+                  : ele.hiringStatus === "Completed"
+                  ? "opacity-50"
+                  : ""
+              }`}
+            >
               <CustomBtn
                 btnColor="black"
                 word={ele.hiringStatus}
-                href={`/hr/hiring/job-openings/prospects`}
+                href={`/hr/hiring/job-openings/start-hiring/${ele._id}`}
               />
             </li>
           </ul>

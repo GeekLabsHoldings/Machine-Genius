@@ -1,124 +1,60 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./HiringRequestsTable.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { useRouter } from "next/navigation";
 
 export default function HiringRequestsTable() {
-  // An array of objects representing the rows of the table body.
-  const taleData = [
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Front-End",
-      level: "Beginner",
-      department: "Front-End",
-      requested_by: "Abdulrahman",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Kamel",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Sherry",
-      hiringStatus: "Start Hiring",
-    },
-    {
-      job_title: "Video Editor",
-      level: "Beginner",
-      department: "Video Editing",
-      requested_by: "Manar",
-      hiringStatus: "Start Hiring",
-    },
-  ];
+  const router = useRouter();
+  const [data, setData] = useState<any>([]);
+  const [skip, setSkip] = useState(0);
+
+  async function updateNextStep() {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/hiring/next-step/${data[0]._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/start-hiring/${data[0]._id}`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          `https://machine-genius.onrender.com/hr/hiring/hiring?limit=10&skip=${skip}&type=Request`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        const result = await res.json();
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [skip]);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div className={styles.database_table}>
       {/* Table Header */}
@@ -210,34 +146,25 @@ export default function HiringRequestsTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {taleData.map((ele, idx) => (
-          <ul className="w-[100%]" key={idx}>
-            <li className="w-[20%]">{ele.job_title}</li>
+        {data?.map((ele: any) => (
+          <ul className="w-[100%]" key={ele._id}>
+            <li className="w-[20%]">{ele.title}</li>
             <li className="w-[20%]">{ele.level}</li>
             <li className="w-[20%]">{ele.department}</li>
             <li className="w-[20%]">
               <span
                 style={{
-                  background:
-                    ele.requested_by === "Abdulrahman"
-                      ? "rgba(49, 178, 233, 0.70)"
-                      : ele.requested_by === "Kamel"
-                      ? "rgba(225, 198, 85, 0.70)"
-                      : ele.requested_by === "Sherry"
-                      ? "rgba(155, 95, 191, 0.70)"
-                      : ele.requested_by === "Manar"
-                      ? "rgba(243, 111, 36, 0.70)"
-                      : "",
+                  background: ele.createdBy.theme,
                 }}
               >
-                {ele.requested_by}
+                {ele?.createdBy.firstName}
               </span>
             </li>
             <li className={`w-[20%]`}>
               <CustomBtn
                 btnColor="black"
-                word={ele.hiringStatus}
-                href={`/hr/hiring/job-openings/start-hiring`}
+                word="Start Hiring"
+                onClick={updateNextStep}
               />
             </li>
           </ul>

@@ -9,7 +9,7 @@ interface HiringData {
   level: string;
   department: string;
   createdBy: { firstName: string; theme: string };
-  status: string;
+  hiringStatus: string;
 }
 
 export default function AllHiringTable() {
@@ -147,13 +147,19 @@ export default function AllHiringTable() {
               </span>
             </li>
             <li
-              className={`w-[20%] ${ele.status ? "opacity-50" : "Completed"}`}
+              className={`w-[20%] ${
+                ele.hiringStatus === "In Process"
+                  ? "In Process"
+                  : ele.hiringStatus === "Completed"
+                  ? "opacity-50"
+                  : ""
+              }`}
             >
               <CustomBtn
                 btnColor="black"
-                word={ele.status ? "Completed" : "Pending"}
+                word={ele.hiringStatus}
                 href={
-                  ele.status
+                  ele.hiringStatus
                     ? ``
                     : `/hr/hiring/job-openings/start-hiring/${ele._id}`
                 }
