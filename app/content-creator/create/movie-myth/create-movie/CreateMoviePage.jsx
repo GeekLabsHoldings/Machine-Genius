@@ -121,7 +121,7 @@ const CreateMovie = () => {
       }
       console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
       setIsLoading(true);
-      const maxRetries = 2; // Define the maximum number of retries
+      const maxRetries = 1; // Define the maximum number of retries
       let attempts = 0;
       let json = null;
 
