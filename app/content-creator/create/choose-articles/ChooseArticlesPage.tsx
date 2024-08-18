@@ -4,7 +4,7 @@ import styles from "./chooseArticles.module.css";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 // import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
 import { globalContext } from "@/app/_context/store";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -65,8 +65,8 @@ export default function ChooseArticlesPage() {
     setChoosedArticles,
     collectedData,
     setCollectedData,
-    twitterData,
-    setTwitterData,
+    // twitterData,
+    // setTwitterData,
   } = useContext(globalContext);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function ChooseArticlesPage() {
         router.replace("/content-creator/create/choose-brand");
       }, 1500);
     }
-  }, []);
+  }, [collectedData, router]);
 
   useEffect(() => {
     console.log("choosedArticles:", choosedArticles);
@@ -91,7 +91,7 @@ export default function ChooseArticlesPage() {
     }
   }, [choosedArticles]);
 
-  function hasCheckedArticles(i: number) {
+  const hasCheckedArticles = useCallback((i: number) => {
     const topicCollapse = document.querySelectorAll(".topic_collapse")[i];
     const checkboxes = topicCollapse.querySelectorAll(
       'input[name="select-articles"]'
@@ -103,7 +103,31 @@ export default function ChooseArticlesPage() {
       }
     }
     return false;
-  }
+  }, []);
+
+  const handleCheckboxChange = useCallback(
+    (ele: any) => {
+      // setChoosedArticles((prevArticles: any) => [
+      //   ...prevArticles,
+      //   ele,
+      // ])
+
+      setChoosedArticles((prevArticles: any) => {
+        if (prevArticles.some((article: any) => article.title === ele.title)) {
+          return prevArticles.filter(
+            (article: any) => article.title !== ele.title
+          );
+        } else {
+          return [...prevArticles, ele];
+        }
+      });
+    },
+    [setChoosedArticles]
+  );
+
+  const handleLabelClick = useCallback((content: any) => {
+    setPreviewText(content);
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -156,33 +180,14 @@ export default function ChooseArticlesPage() {
                         name="select-articles"
                         value={ele?.title}
                         accentColor="#2A2B2A"
-                        onChange={() => {
-                          // setChoosedArticles((prevArticles: any) => [
-                          //   ...prevArticles,
-                          //   ele,
-                          // ])
-
-                          setChoosedArticles((prevArticles: any) => {
-                            if (
-                              prevArticles.some(
-                                (article: any) => article.title === ele.title
-                              )
-                            ) {
-                              return prevArticles.filter(
-                                (article: any) => article.title !== ele.title
-                              );
-                            } else {
-                              return [...prevArticles, ele];
-                            }
-                          });
-                        }}
+                        onChange={() => handleCheckboxChange(ele)}
                         checked={choosedArticles.some(
                           (article: any) => article.title === ele.title
                         )}
                       />
                       <label
                         className={`${styles.article}`}
-                        onClick={() => setPreviewText(ele.content)}
+                        onClick={() => handleLabelClick(ele.content)}
                       >
                         {ele?.title}
                       </label>
@@ -191,7 +196,7 @@ export default function ChooseArticlesPage() {
                 </TopicColapse>
               ))}
 
-            {twitterData &&
+            {/* {twitterData &&
               twitterData
                 ?.filter((item: any) => item.tweets.length > 0)
                 .map((item: any, i: number) => (
@@ -248,7 +253,7 @@ export default function ChooseArticlesPage() {
                       </div>
                     ))}
                   </TopicColapse>
-                ))}
+                ))} */}
           </div>
         </div>
 
@@ -280,18 +285,12 @@ export default function ChooseArticlesPage() {
           <CustomBtn
             word="Next"
             btnColor="black"
-            onClick={(e) => {
+            onClick={(e?: React.MouseEvent<HTMLButtonElement>) => {
               e?.preventDefault();
               toast.error("Please select at least one article!");
             }}
           />
         )}
-
-        {/* <CustomBtn
-          word="Next"
-          btnColor="black"
-          href="/content-creator/create/create-article"
-        /> */}
       </div>
     </div>
   );

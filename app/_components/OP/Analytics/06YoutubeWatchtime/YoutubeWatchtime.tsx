@@ -29,8 +29,8 @@ export default function YoutubeWatchtime() {
           y2="19.1002"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#49A677" />
-          <stop offset="1" stop-color="white" stop-opacity="0" />
+          <stop stopColor="#49A677" />
+          <stop offset="1" stopColor="white" stop-opacity="0" />
         </linearGradient>
       </defs>
     </svg>
@@ -62,8 +62,8 @@ export default function YoutubeWatchtime() {
           y2="21.6903"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#EB94A2" />
-          <stop offset="1" stop-color="#EB94A2" stop-opacity="0" />
+          <stop stopColor="#EB94A2" />
+          <stop offset="1" stopColor="#EB94A2" stop-opacity="0" />
         </linearGradient>
       </defs>
     </svg>

@@ -34,8 +34,8 @@ export default function ActivityOverview() {
           y2="29.8955"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#0062FF" />
-          <stop offset="1" stop-color="white" stop-opacity="0.01" />
+          <stop stopColor="#0062FF" />
+          <stop offset="1" stopColor="white" stop-opacity="0.01" />
         </linearGradient>
       </defs>
     </svg>
@@ -72,8 +72,8 @@ export default function ActivityOverview() {
           y2="29.5107"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#E1C655" />
-          <stop offset="1" stop-color="white" stop-opacity="0.01" />
+          <stop stopColor="#E1C655" />
+          <stop offset="1" stopColor="white" stop-opacity="0.01" />
         </linearGradient>
       </defs>
     </svg>
@@ -110,8 +110,8 @@ export default function ActivityOverview() {
           y2="30.3057"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#E9313E" />
-          <stop offset="1" stop-color="white" stop-opacity="0.01" />
+          <stop stopColor="#E9313E" />
+          <stop offset="1" stopColor="white" stop-opacity="0.01" />
         </linearGradient>
       </defs>
     </svg>

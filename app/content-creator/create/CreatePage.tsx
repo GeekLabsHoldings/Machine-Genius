@@ -3,17 +3,16 @@ import CustomSelectInput from "../../_components/CustomSelectInput/CustomSelectI
 import CustomBtn from "../../_components/Button/CustomBtn";
 import styles from "./Create.module.css";
 import { globalContext } from "@/app/_context/store";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 
-const options = ["Script", "Article"];
-
 export default function CreatePage() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const options = useMemo(() => ["Script", "Article"], []);
   const {
     selectedContentType,
     setSelectedContentType,
@@ -30,41 +29,45 @@ export default function CreatePage() {
 
   // reset all the data
   useEffect(() => {
-    setSelectedContentType("");
-    setSelectedBrand("");
-    setCollectedData(null);
-    setTwitterData(null);
-    setChoosedArticles([]);
-    dispatch(contentCreatorActions.setFinalArticle(null));
-    setCheckStatus({
-      grammar: "waiting",
-      // todo: temp until backend fix it
-      plagiarism: "pass",
-      ai: "waiting",
-    });
-    dispatch(contentCreatorActions.setCheckGrammerResults([]));
-    dispatch(contentCreatorActions.setCheckAiResults([]));
-    setGeneratedTitles([]);
-    setLockedGeneratedTitles([]);
-    setSelectedContentTitle("");
-    dispatch(contentCreatorActions.setVideoTranscription(null));
-    setEditContentData(null);
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("selectedContentType");
-      sessionStorage.removeItem("selectedBrand");
-      sessionStorage.removeItem("collectedData");
-      sessionStorage.removeItem("twitterData");
-      sessionStorage.removeItem("choosedArticles");
-      sessionStorage.removeItem("selectedText");
-      sessionStorage.removeItem("finalArticle");
-      sessionStorage.removeItem("checkGrammerResults");
-      sessionStorage.removeItem("checkAiResults");
-      sessionStorage.removeItem("generatedTitles");
-      sessionStorage.removeItem("lockedGeneratedTitles");
-      sessionStorage.removeItem("selectedContentTitle");
-      sessionStorage.removeItem("videoTranscription");
-      sessionStorage.removeItem("editContentData");
+    function resetStateAndSessionStorage() {
+      setSelectedContentType("");
+      setSelectedBrand("");
+      setCollectedData(null);
+      setTwitterData(null);
+      setChoosedArticles([]);
+      dispatch(contentCreatorActions.setFinalArticle(null));
+      setCheckStatus({
+        grammar: "waiting",
+        // todo: temp until backend fix it
+        plagiarism: "pass",
+        ai: "waiting",
+      });
+      dispatch(contentCreatorActions.setCheckGrammerResults([]));
+      dispatch(contentCreatorActions.setCheckAiResults([]));
+      setGeneratedTitles([]);
+      setLockedGeneratedTitles([]);
+      setSelectedContentTitle("");
+      dispatch(contentCreatorActions.setVideoTranscription(null));
+      setEditContentData(null);
+      if (typeof window !== "undefined") {
+        // sessionStorage.removeItem("selectedContentType");
+        // sessionStorage.removeItem("selectedBrand");
+        // sessionStorage.removeItem("collectedData");
+        // sessionStorage.removeItem("twitterData");
+        // sessionStorage.removeItem("choosedArticles");
+        // sessionStorage.removeItem("selectedText");
+        // sessionStorage.removeItem("finalArticle");
+        // sessionStorage.removeItem("checkGrammerResults");
+        // sessionStorage.removeItem("checkAiResults");
+        // sessionStorage.removeItem("generatedTitles");
+        // sessionStorage.removeItem("lockedGeneratedTitles");
+        // sessionStorage.removeItem("selectedContentTitle");
+        // sessionStorage.removeItem("videoTranscription");
+        // sessionStorage.removeItem("editContentData");
+        sessionStorage.clear();
+      }
     }
+    resetStateAndSessionStorage();
   }, []);
 
   // function that get select value by sending to custom select as a prop
