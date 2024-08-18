@@ -104,9 +104,9 @@ const ContentDatabase = () => {
         <li className="w-[10%]">
           <span
             className={
-              oneArticle?.brand === "PST Canada"
+              oneArticle?.brand === "Street Politics Canada"
                 ? "bg-[#31B2E9B2]"
-                : oneArticle?.brand === "PST USA"
+                : oneArticle?.brand === "Street Politics USA"
                 ? "bg-[#E9313EB2]"
                 : oneArticle?.brand === "Movie Myth"
                 ? "bg-[#E1C655B2]"

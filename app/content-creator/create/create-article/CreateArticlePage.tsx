@@ -223,10 +223,10 @@ export default function CreateArticlePage() {
     // console.log(`selectedBrand`, selectedBrand);
     // console.log(`selectedText`, selectedText);
     let brandNamePayload = "";
-    if (selectedBrand === "PST Canada") {
-      brandNamePayload = "StreetPolitics";
+    if (selectedBrand === "Street Politics Canada") {
+      brandNamePayload = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
-      brandNamePayload = "Investocracy";
+      brandNamePayload = "investocracy";
     }
     // console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
 
