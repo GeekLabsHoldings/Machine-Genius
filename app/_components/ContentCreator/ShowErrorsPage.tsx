@@ -407,7 +407,7 @@ export default function ShowErrorsPage() {
               <div
                 id="finalArticle"
                 ref={finalArticleRef}
-                contentEditable={true}
+                contentEditable={"plaintext-only"}
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >

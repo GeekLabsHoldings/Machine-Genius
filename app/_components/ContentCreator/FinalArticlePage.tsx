@@ -182,7 +182,7 @@ export default function FinalArticlePage() {
               <div
                 id="finalArticle"
                 ref={finalArticleRef}
-                contentEditable={true}
+                contentEditable={"plaintext-only"}
                 className={`${styles.articleContent}`}
               >
                 {finalArticle?.articles[0]?.content}

@@ -387,7 +387,7 @@ export default function CreateArticlePage() {
                     >
                       Select
                     </button>
-                    <p contentEditable={true}>{previewSelectedArticle()}</p>
+                    <p contentEditable={"plaintext-only"}>{previewSelectedArticle()}</p>
                   </div>
                 </div>
               </div>
