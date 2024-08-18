@@ -170,12 +170,12 @@ export default function GlobalContextProvider({
         // setDecodedToken(data.result);
         // toast.success("Token is valid");
       } else if (data.message && data.message.name === "TokenExpiredError") {
-        toast.error("Token expired, redirecting to signin...");
+        toast.error("Session expired, redirecting to signin...");
         // console.log('Token expired, redirecting to signin...');
         signOut();
         router.replace("/");
       } else if (data.message === "USER_TOKEN_IS_INVALID") {
-        toast.error("Token is invalid, Contact Technical Support!");
+        toast.error("Session expired, redirecting to signin...");
         // console.log('Token is invalid, Contact Technical Support!');
         signOut();
         router.replace("/");
