@@ -239,7 +239,7 @@ const CreateMovie = () => {
         <LogoAndTitle
           needTxt={true}
           textNeeded="Hold on tight."
-          title="Genius is working on your article.."
+          title="Genius is finalizing your content..."
         />
       </div>
     );

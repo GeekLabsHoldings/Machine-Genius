@@ -100,7 +100,7 @@ const MovieMyth = () => {
           <LogoAndTitle
             needTxt={true}
             textNeeded="Hold on tight."
-            title="Genius is working on your article.."
+            title="Genius is uploading your video.."
           />
           <div className="mt-4">
             Upload Progress: {uploadPercentage.toFixed(2)}%
