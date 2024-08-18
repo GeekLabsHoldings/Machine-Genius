@@ -50,20 +50,6 @@ export default function CreatePage() {
       dispatch(contentCreatorActions.setVideoTranscription(null));
       setEditContentData(null);
       if (typeof window !== "undefined") {
-        // sessionStorage.removeItem("selectedContentType");
-        // sessionStorage.removeItem("selectedBrand");
-        // sessionStorage.removeItem("collectedData");
-        // sessionStorage.removeItem("twitterData");
-        // sessionStorage.removeItem("choosedArticles");
-        // sessionStorage.removeItem("selectedText");
-        // sessionStorage.removeItem("finalArticle");
-        // sessionStorage.removeItem("checkGrammerResults");
-        // sessionStorage.removeItem("checkAiResults");
-        // sessionStorage.removeItem("generatedTitles");
-        // sessionStorage.removeItem("lockedGeneratedTitles");
-        // sessionStorage.removeItem("selectedContentTitle");
-        // sessionStorage.removeItem("videoTranscription");
-        // sessionStorage.removeItem("editContentData");
         sessionStorage.clear();
       }
     }
