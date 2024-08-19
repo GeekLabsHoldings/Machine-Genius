@@ -306,6 +306,9 @@ export default function ShowErrorsPage() {
             item.sentence,
             replacedSentence
           );
+
+          // Add a delay between requests to avoid hitting the rate limit
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }
 
         const updatedFinalArticle = {
