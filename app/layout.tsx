@@ -34,44 +34,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isHydrated, setIsHydrated] = useState(false);
+
   useEffect(() => {
     setIsHydrated(true);
   }, []);
-
-  if (!isHydrated) {
-    return (
-      <html lang="en">
-        <body>
-          <Provider store={store}>
-            <GlobalContextProvider>
-              <div className="bg-white min-h-screen w-full overflow-hidden flex flex-col justify-center items-center mx-auto py-[1.5vw]">
-                <div className={`flex flex-col justify-center items-center`}>
-                  <LogoAndTitle needTxt={false} title="Genius is Loading..." />
-                </div>
-              </div>
-            </GlobalContextProvider>
-          </Provider>
-        </body>
-      </html>
-    );
-  }
 
   return (
     <html lang="en">
       <body>
         <Provider store={store}>
           <GlobalContextProvider>
-            <div className={styles.main_wrapper}>
-              <div className="w-full h-100vh p-0 flex">{children}</div>
-            </div>
+            {isHydrated ? (
+              <div className={styles.main_wrapper}>
+                <div className="w-full h-100vh p-0 flex">{children}</div>
+              </div>
+            ) : (
+              // Simple fallback UI while hydration is pending
+              <div className="bg-white min-h-screen w-full overflow-hidden flex flex-col justify-center items-center mx-auto py-[1.5vw]">
+                <div className="flex flex-col justify-center items-center">
+                  <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+                </div>
+              </div>
+            )}
           </GlobalContextProvider>
         </Provider>
-        <Toaster
-          position="top-center"
-          containerStyle={{
-            zIndex: 91474836471,
-          }}
-        />
+        {isHydrated && (
+          <Toaster
+            position="top-center"
+            containerStyle={{
+              zIndex: 91474836471,
+            }}
+          />
+        )}
       </body>
     </html>
   );
