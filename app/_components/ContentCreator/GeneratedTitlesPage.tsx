@@ -23,13 +23,9 @@ const GeneratedTitlesPage = () => {
     selectedBrand,
     generateTitles,
     generatedTitles,
-    setGeneratedTitles,
     lockedGeneratedTitles,
-    setLockedGeneratedTitles,
     selectedContentTitle,
     setSelectedContentTitle,
-    editContentData,
-    setEditContentData,
   } = useContext(globalContext);
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);

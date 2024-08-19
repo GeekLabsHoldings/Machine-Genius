@@ -52,6 +52,7 @@ export default function CreateArticlePage() {
 
   const options = useMemo(() => {
     return choosedArticles.map((item: any) => {
+      // note: href is from twitter data
       return item.title || item.href;
     });
   }, [choosedArticles]);

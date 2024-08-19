@@ -17,7 +17,6 @@ const GeneratedThumbnailsPage = () => {
     selectedBrand,
     selectedContentTitle,
     generatedThumbnails,
-    setGeneratedThumbnails,
     generateThumbnails,
     selectedContentThumbnail,
     setSelectedContentThumbnail,
