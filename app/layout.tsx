@@ -7,7 +7,7 @@ import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
 // import { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import LogoAndTitle from "./_components/LogoAndTitle/LogoAndTitle";
 import dynamic from "next/dynamic";
 
@@ -26,6 +26,8 @@ const Toaster = dynamic(
     ssr: false,
   }
 );
+
+const MemoizedLogoAndTitle = memo(LogoAndTitle);
 
 // Root layout component
 export default function RootLayout({
@@ -52,7 +54,10 @@ export default function RootLayout({
               // Simple fallback UI while hydration is pending
               <div className="bg-white min-h-screen w-full overflow-hidden flex flex-col justify-center items-center mx-auto py-[1.5vw]">
                 <div className="flex flex-col justify-center items-center">
-                  <LogoAndTitle needTxt={false} title="Genius is Loading..." />
+                  <MemoizedLogoAndTitle
+                    needTxt={false}
+                    title="Genius is Loading..."
+                  />
                 </div>
               </div>
             )}
