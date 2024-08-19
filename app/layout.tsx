@@ -7,8 +7,6 @@ import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
 // import { Toaster } from "react-hot-toast";
-import { memo, useEffect, useState } from "react";
-import LogoAndTitle from "./_components/LogoAndTitle/LogoAndTitle";
 import dynamic from "next/dynamic";
 
 // Initializing Inter font with Latin subset
@@ -27,50 +25,28 @@ const Toaster = dynamic(
   }
 );
 
-const MemoizedLogoAndTitle = memo(LogoAndTitle);
-
 // Root layout component
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
   return (
     <html lang="en">
       <body>
         <Provider store={store}>
           <GlobalContextProvider>
-            {isHydrated ? (
-              <div className={styles.main_wrapper}>
-                <div className="w-full h-100vh p-0 flex">{children}</div>
-              </div>
-            ) : (
-              // Simple fallback UI while hydration is pending
-              <div className="bg-white min-h-screen w-full overflow-hidden flex flex-col justify-center items-center mx-auto py-[1.5vw]">
-                <div className="flex flex-col justify-center items-center">
-                  <MemoizedLogoAndTitle
-                    needTxt={false}
-                    title="Genius is Loading..."
-                  />
-                </div>
-              </div>
-            )}
+            <div className={styles.main_wrapper}>
+              <div className="w-full h-100vh p-0 flex">{children}</div>
+            </div>
           </GlobalContextProvider>
         </Provider>
-        {isHydrated && (
-          <Toaster
-            position="top-center"
-            containerStyle={{
-              zIndex: 91474836471,
-            }}
-          />
-        )}
+        <Toaster
+          position="top-center"
+          containerStyle={{
+            zIndex: 91474836471,
+          }}
+        />
       </body>
     </html>
   );
