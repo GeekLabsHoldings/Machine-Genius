@@ -228,7 +228,6 @@ export default function ShowErrorsPage() {
   }
 
   async function paraphraseSentence(sentence: string) {
-    setIsLoadingParaphrase(true);
     try {
       const res = await fetch(`https://api.ai21.com/studio/v1/paraphrase`, {
         method: "POST",
@@ -251,12 +250,11 @@ export default function ShowErrorsPage() {
     } catch (error) {
       toast.error("Something went wrong! Error Paraphrase AI");
       console.error("Error paraphraseSentence:", error);
-    } finally {
-      setIsLoadingParaphrase(false);
     }
   }
 
   async function handleFixAiIssue(item: any) {
+    setIsLoadingParaphrase(true);
     console.log("item", item);
     const replacedSentence = await paraphraseSentence(item.sentence);
     console.log("replacedSentence", replacedSentence);
@@ -287,9 +285,11 @@ export default function ShowErrorsPage() {
         dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
     }
+    setIsLoadingParaphrase(false);
   }
 
   async function handleFixAiIssues() {
+    setIsLoadingParaphrase(true);
     if (typeof window !== undefined) {
       const storedFinalArticle = sessionStorage.getItem("finalArticle");
       if (storedFinalArticle) {
@@ -324,6 +324,7 @@ export default function ShowErrorsPage() {
         dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
     }
+    // setIsLoadingParaphrase(false);
   }
 
   // todo
