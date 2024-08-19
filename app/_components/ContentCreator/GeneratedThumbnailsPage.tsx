@@ -57,6 +57,10 @@ const GeneratedThumbnailsPage = () => {
     } else {
       toast.error("Please select a thumbnail!");
     }
+    // todo: delete this condition after backend add Movie Myth brand
+    if (selectedBrand === "Movie Myth") {
+      setTriggerSendContent(true);
+    }
   }
 
   useEffect(() => {
@@ -236,10 +240,7 @@ const GeneratedThumbnailsPage = () => {
             {/* select wanted upload time and the default value is current time */}
             <div className={`flex flex-col gap-[0.8vw] ${styles.everySec}`}>
               <h5>Upload Time</h5>
-              <CustomSelectInput
-                label={currentTime}
-                options={[currentTime]}
-              />
+              <CustomSelectInput label={currentTime} options={[currentTime]} />
             </div>
           </div>
         </div>
