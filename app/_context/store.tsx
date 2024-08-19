@@ -553,6 +553,15 @@ export default function GlobalContextProvider({
     let attempts = 0;
     let json = null;
 
+    let brandNamePayload: string = "";
+    if (selectedBrand === "Street Politics Canada") {
+      brandNamePayload = "streetPoliticsCanada";
+    } else if (selectedBrand === "Investorcracy") {
+      brandNamePayload = "investocracy";
+    } else if (selectedBrand === "Movie Myth"){
+      brandNamePayload = "movieMyth";
+    }
+
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
@@ -563,6 +572,7 @@ export default function GlobalContextProvider({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              brandName: brandNamePayload,
               content: finalArticle?.articles[0]?.content,
             }),
           }
