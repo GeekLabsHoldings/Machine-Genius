@@ -7,6 +7,7 @@ import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import { templatesContext } from "../_context/templatesContext";
 import TemplateDetails from "../[templateId]/page";
+import { title } from "process";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -28,6 +29,11 @@ const positions = {
   CEO: "CEO",
 };
 
+const templatesWithPositionAndLevel = [
+  "Job_Listings",
+  "Interview_Call_Question",
+];
+
 const levels = {
   FRESH: "FreshGraduation",
   JUNIOR: "Junior",
@@ -42,24 +48,97 @@ interface Template {
   isEditable: boolean;
 }
 
-const templateContent = [
-  {
-    title: "Responsibilities",
-    description: "kjhklhgkjhgkjhgkjhgkjhkjhg khg kjhg kjhg kjhkjhg kj",
-  },
-  {
-    title: "Qualifications",
-    description: "Collaborate with team members to meet project requirements.",
-  },
-  {
-    title: "Job Description",
-    description: "Stay updated on industry trends and techniques.",
-  },
-  {
-    title: "Benefits",
-    description: "Contribute creative ideas to enhance the overall quality.",
-  },
-];
+const options: { [key: string]: string } = {
+  Job_Listings: "Job Listings",
+  Schedule_Interview_Call: "Schedule Interview Call",
+  Interview_Call_Question: "Interview Call Question",
+  Tasks: "Tasks",
+  Schedule_Face_To_Face_Interview: "Schedule Face To Face Interview",
+  Job_Offer: "Job Offer",
+  Required_Documents: "Required Documents",
+};
+
+type TemplateKey = keyof typeof options;
+
+interface TemplateContent {
+  [key: string]: {
+    title: string;
+    description: string;
+  }[];
+}
+
+const templateContent: TemplateContent = {
+  Job_Listings: [
+    {
+      title: "Responsibilities",
+      description: "kjhklhgkjhgkjhgkjhgkjhkjhg khg kjhg kjhg kjhkjhg kj",
+    },
+    {
+      title: "Qualifications",
+      description:
+        "Collaborate with team members to meet project requirements.",
+    },
+    {
+      title: "Job Description",
+      description: "Stay updated on industry trends and techniques.",
+    },
+    {
+      title: "Benefits",
+      description: "Contribute creative ideas to enhance the overall quality.",
+    },
+  ],
+  Schedule_Interview_Call: [
+    {
+      title: "Interview Call",
+      description: "Schedule an interview call with the candidate.",
+    },
+  ],
+  Interview_Call_Question: [
+    {
+      title: "Questions",
+      description: `
+        <li>What is your greatest strength?</li>
+        <li>What is your greatest weakness?</li>
+        <li>Why should we hire you?</li>
+        <li>What motivates you?</li>
+        <li>What are you passionate about?</li>`,
+    },
+  ],
+  Tasks: [
+    {
+      title: "Tasks",
+      description: `
+        <li>Task 1</li>
+        <li>Task 2</li>
+        <li>Task 3</li>
+        <li>Task 4</li>
+        <li>Task 5</li>`,
+    },
+  ],
+  Schedule_Face_To_Face_Interview: [
+    {
+      title: "Face To Face Interview",
+      description: "Schedule a face-to-face interview with the candidate.",
+    },
+  ],
+  Job_Offer: [
+    {
+      title: "Job Offer",
+      description: "Send a job offer to the candidate.",
+    },
+  ],
+  Required_Documents: [
+    {
+      title: "Documents",
+      description: `
+        <li>Document 1</li>
+        <li>Document 2</li>
+        <li>Document 3</li>
+        <li>Document 4</li>
+        <li>Document 5</li>`,
+    },
+  ],
+};
 
 const Page = () => {
   const [Templates, setTemplates] = useState<Template[]>([]);
@@ -71,7 +150,7 @@ const Page = () => {
   const [position, setPosition] = useState("");
   const [level, setLevel] = useState("");
   const [tempDetails, setTempDetails] = useState<any>([]);
-
+  const [tempKey, setTempKey] = useState<TemplateKey>("Job_Listings");
   const [newGroup, setNewGroup] = useState<any>({
     title: "",
     description: "",
@@ -196,10 +275,12 @@ const Page = () => {
       console.log(error);
     }
   }
+
   async function createTemplate() {
+    if (tempKey === "") return;
     const body = {
       title: templates.value,
-      details: templateContent.map((item, idx) => ({
+      details: templateContent[tempKey].map((item, idx) => ({
         title: item.title,
         description: tempDetails[idx],
       })),
@@ -221,6 +302,7 @@ const Page = () => {
         }
       );
       const data = await res.json();
+      console.log(templates);
       console.log(groups);
     } catch (error) {
       console.log(error);
@@ -235,21 +317,29 @@ const Page = () => {
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
+    setTempKey(templates.key);
+  }, []);
+
+  useEffect(() => {
+    if (tempKey === "") return;
+    console.log(tempKey);
     if (templateContentRef) {
       templateContentRef.current = templateContentRef.current.slice(
         0,
-        templateContent.length || 0
+        templateContent[tempKey].length || 0
       );
     }
 
     templateContentRef.current =
-      templateContent?.map((item: any) => item.description) || [];
-    const newArr = templateContent?.map((item: any) => item.description) || [];
+      templateContent[tempKey]?.map((item: any) => item.description) || [];
+    const newArr =
+      templateContent[tempKey]?.map((item: any) => item.description) || [];
+
     setTempDetails(newArr);
 
     getGroups();
     getUnattachedTemplates();
-  }, []);
+  }, [tempKey]);
 
   useEffect(() => {
     console.log(document.querySelectorAll('input[type="checkbox"]:checked'));
@@ -288,7 +378,7 @@ const Page = () => {
               />
             </svg> */}
             <div className="text-[--32px] font-bold underline">
-              {templates.value}
+              {templates.value} Template
             </div>
           </div>
 
@@ -296,9 +386,9 @@ const Page = () => {
             Add to{" "}
             <CustomSelectInput
               getValue={(val: string) =>
-                setGroupID(groups.find((e: any) => e.title === val)?._id)
+                setGroupID(groups.find((e: any) => e?.title === val)?._id)
               }
-              options={groups.map((e: any, i: any) => e.title)}
+              options={groups.map((e: any, i: any) => e?.title)}
             >
               <CustomBtn
                 btnColor="black"
@@ -312,67 +402,11 @@ const Page = () => {
           </div>
         </div>
 
-        <div className={styles.template_cards + " grid grid-cols-4 gap-[1vw]"}>
-          {Templates.map((e: any, i: number) => {
-            return (
-              <div
-                key={i}
-                className={`${styles.card} ${
-                  e.isEditable ? styles.editable : ""
-                }`}
-              >
-                <div className={styles.card_header}>
-                  <input
-                    type="text"
-                    placeholder="Card Title*"
-                    value={e.title}
-                    onFocus={() => {
-                      handleFocus(i, true);
-                      console.log(e);
-                    }}
-                    onBlur={() => handleFocus(i, false)}
-                    onChange={(event) =>
-                      handleTitleChange(i, event.target.value)
-                    }
-                  />
-                  <button onClick={() => handleDelete(i)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="17"
-                      height="17"
-                      viewBox="0 0 17 17"
-                      fill="none"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M13.0983 15.6111C13.7921 16.3049 14.9168 16.3049 15.6106 15.6111C16.3044 14.9173 16.3044 13.7926 15.6106 13.0988L10.586 8.07422L15.6106 3.04964C16.3044 2.35587 16.3044 1.23112 15.6106 0.537354C14.9168 -0.156415 13.7921 -0.156415 13.0983 0.537353L8.07373 5.56193L3.04915 0.537353C2.3554 -0.156403 1.23063 -0.156415 0.536865 0.537354C-0.156903 1.23112 -0.15689 2.35589 0.536865 3.04964L5.56144 8.07422L0.536865 13.0988C-0.156878 13.7925 -0.156903 14.9173 0.536865 15.6111C1.23063 16.3049 2.35541 16.3048 3.04915 15.6111L8.07373 10.5865L13.0983 15.6111Z"
-                        fill="#ACACAC"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className={styles.card_body}>
-                  <textarea
-                    placeholder="Card Description..."
-                    rows={3}
-                    value={e.description}
-                    onFocus={() => handleFocus(i, true)}
-                    onBlur={() => handleFocus(i, false)}
-                    onChange={(event) =>
-                      handleDescriptionChange(i, event.target.value)
-                    }
-                  />
-                  <CustomBtn word="Save" btnColor="black" />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="grid grid-cols-2 gap-[1.5vw] h-full overflow-auto">
-          <div className=" space-y-[1.5vw]">
-            <div className="grid grid-cols-2 gap-[1.5vw]">
-              <div className={styles.card}>
+        <div className="flex flex-col flex-wrap gap-[1.5vw] w-full h-full overflow-auto">
+          {/* Job position & Level */}
+          {templatesWithPositionAndLevel.includes(String(tempKey)) && (
+            <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+              <div className={`${styles.card} h-fit`}>
                 <div className={styles.card_header}>
                   <h6 className="text-[--20px] font-bold">Job Position</h6>
                   <span className="text-[--16px] text-[#878787] font-medium">
@@ -384,10 +418,11 @@ const Page = () => {
                   <CustomSelectInput
                     getValue={(val: string) => setPosition(val)}
                     options={Object.values(positions)}
+                    // label={templateDet.role}
                   />
                 </div>
               </div>
-              <div className={styles.card}>
+              <div className={`${styles.card} h-fit`}>
                 <div className={styles.card_header}>
                   <h6 className="text-[--20px] font-bold">
                     Level of Expertise
@@ -398,87 +433,151 @@ const Page = () => {
                   <CustomSelectInput
                     getValue={(val: string) => setLevel(val)}
                     options={Object.values(levels)}
+                    // label={templateDet.level}
                   />
                 </div>
               </div>
             </div>
-          </div>
-          {templateContent.map((e, i) => {
-            return (
-              <div className="space-y-[1.5vw]" key={i}>
-                <div className={styles.card}>
-                  <div className={styles.card_header}>
-                    <h6 className="text-[--20px] font-bold">{e.title}</h6>
-                  </div>
+          )}
+          {"Job_Listings" === tempKey
+            ? templateContent[tempKey]?.map((e, i) => {
+                return (
                   <div
-                    className={`${styles.card_body} text-[--16px] outline-none`}
-                    dangerouslySetInnerHTML={{
-                      __html: tempDetails[i],
-                    }}
-                    contentEditable
-                    // onClick={(e) => {
-                    //   // check if the description is empty
-                    //   const description = e.currentTarget.textContent;
-                    //   if (description === "") {
-                    //     document.execCommand("insertHTML", false, "<li>");
-                    //     return;
-                    //   }
-                    // }}
-                    onKeyDownCapture={(
-                      e: React.KeyboardEvent<HTMLDivElement>
-                    ) => {
-                      // check if the cursor is at the start or in the middle of the line
+                    className={`${styles.card} min-h-[--167px] w-[49%]`}
+                    key={i}
+                  >
+                    <div className={styles.card_header}>
+                      <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                    </div>
+                    <div
+                      className={`${styles.card_body} text-[--16px] outline-none`}
+                      dangerouslySetInnerHTML={{
+                        __html: tempDetails[i],
+                      }}
+                      contentEditable
+                      // onClick={(e) => {
+                      //   // check if the description is empty
+                      //   const description = e.currentTarget.textContent;
+                      //   if (description === "") {
+                      //     document.execCommand("insertHTML", false, "<li>");
+                      //     return;
+                      //   }
+                      // }}
+                      onKeyDownCapture={(
+                        e: React.KeyboardEvent<HTMLDivElement>
+                      ) => {
+                        // check if the cursor is at the start or in the middle of the line
 
-                      const target = e.target as HTMLDivElement; // Type assertion
+                        const target = e.target as HTMLDivElement; // Type assertion
 
-                      if (
-                        target.textContent === "" &&
-                        target.nodeName === "DIV" &&
-                        target.childNodes.length === 0
-                      ) {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                        }
-                        document.execCommand("insertHTML", false, "<li>");
-                      }
-
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        // chwck if previous line is empty
-                        const selection = window.getSelection();
-                        console.log(selection);
-                        const range = selection?.getRangeAt(0);
-                        console.log(range);
-                        const start = range?.startContainer;
                         if (
-                          start?.nodeName === "LI" &&
-                          start?.textContent === ""
+                          target.textContent === "" &&
+                          target.nodeName === "DIV" &&
+                          target.childNodes.length === 0
                         ) {
-                        } else {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                          }
                           document.execCommand("insertHTML", false, "<li>");
                         }
-                      }
-                    }}
-                    onInput={(e) => handleOnChange(e, i)}
-                    onBlur={handleBlur}
-                  ></div>
-                </div>
-              </div>
-            );
-          })}
+
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          // chwck if previous line is empty
+                          const selection = window.getSelection();
+                          console.log(selection);
+                          const range = selection?.getRangeAt(0);
+                          console.log(range);
+                          const start = range?.startContainer;
+                          if (
+                            start?.nodeName === "LI" &&
+                            start?.textContent === ""
+                          ) {
+                          } else {
+                            document.execCommand("insertHTML", false, "<li>");
+                          }
+                        }
+                      }}
+                      onInput={(e) => handleOnChange(e, i)}
+                      onBlur={handleBlur}
+                    ></div>
+                  </div>
+                );
+              })
+            : templateContent[tempKey]?.map((e, i) => {
+                return (
+                  <div
+                    className={`${styles.card} min-h-[--167px] w-[49%]`}
+                    key={i}
+                  >
+                    <div className={styles.card_header}>
+                      <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                    </div>
+                    <div
+                      className={`${styles.card_body} text-[--16px] outline-none`}
+                      dangerouslySetInnerHTML={{
+                        __html: tempDetails[i],
+                      }}
+                      contentEditable
+                      // onClick={(e) => {
+                      //   // check if the description is empty
+                      //   const description = e.currentTarget.textContent;
+                      //   if (description === "") {
+                      //     document.execCommand("insertHTML", false, "<li>");
+                      //     return;
+                      //   }
+                      // }}
+                      onKeyDownCapture={(
+                        e: React.KeyboardEvent<HTMLDivElement>
+                      ) => {
+                        // check if the cursor is at the start or in the middle of the line
+                        // const target = e.target as HTMLDivElement; // Type assertion
+                        // if (
+                        //   target.textContent === "" &&
+                        //   target.nodeName === "DIV" &&
+                        //   target.childNodes.length === 0
+                        // ) {
+                        //   if (e.key === "Enter") {
+                        //     e.preventDefault();
+                        //   }
+                        //   document.execCommand("insertHTML", false, "<li>");
+                        // }
+                        // if (e.key === "Enter") {
+                        //   e.preventDefault();
+                        //   // chwck if previous line is empty
+                        //   const selection = window.getSelection();
+                        //   console.log(selection);
+                        //   const range = selection?.getRangeAt(0);
+                        //   console.log(range);
+                        //   const start = range?.startContainer;
+                        //   if (
+                        //     start?.nodeName === "LI" &&
+                        //     start?.textContent === ""
+                        //   ) {
+                        //   } else {
+                        //     document.execCommand("insertHTML", false, "<li>");
+                        //   }
+                        // }
+                      }}
+                      onInput={(e) => handleOnChange(e, i)}
+                      onBlur={handleBlur}
+                    ></div>
+                  </div>
+                );
+              })}
         </div>
       </div>
 
       {/* buttons to move to last or next page */}
       <div className="flex justify-end items-center gap-[1vw]">
-        <CustomBtn
+        {/* <CustomBtn
           word="Add Card"
           btnColor="white"
           icon={addIcon}
           href=""
           paddingVal="px-[1.5vw] py-[0.5vw]"
           onClick={addNewTemplate}
-        />
+        /> */}
         <CustomBtn
           word="Save Template"
           btnColor="black"
@@ -562,7 +661,7 @@ const Page = () => {
               word="Create Group"
               icon={addIcon}
               width="w-full"
-              onClick={(e?:React.MouseEvent<HTMLButtonElement>) => {
+              onClick={(e?: React.MouseEvent<HTMLButtonElement>) => {
                 e?.preventDefault();
                 createGroup();
               }}

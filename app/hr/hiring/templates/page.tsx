@@ -236,7 +236,7 @@ const Page = () => {
                     return (
                       <div className={styles.item} key={i}>
                         <div className={styles.item_header}>
-                          <p>{t.title}</p>
+                          <p>{t.role}</p>
                           <span>{t.level}</span>
                         </div>
                         <div className={styles.item_body}>

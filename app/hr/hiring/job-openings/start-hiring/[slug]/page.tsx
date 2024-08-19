@@ -4,7 +4,7 @@ import React, { use, useEffect, useRef, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Link from "next/link";
-import { text } from "stream/consumers";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [data, setData] = useState<any>({});
@@ -12,7 +12,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const textRef = useRef<(HTMLParagraphElement | null)[]>([]);
   const textContent = useRef<string[]>([]);
   const [arrText, setArrText] = useState<string[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,6 +27,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         );
         const result = await res.json();
         setData(result);
+        console.log("result", result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -80,6 +81,27 @@ export default function Page({ params }: { params: { slug: string } }) {
     setArrText(newArr);
   };
 
+  async function updateNextStep() {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/hiring/next-step/${data._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
+
   return (
     <section>
       {/* Back To Complaint Table Button */}
@@ -132,7 +154,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                   " rotate-90 relative top-[50%] -translate-y-[50%]"
                 }
               />
-              <span>{data.jobTitle}</span>
+              <span>{data.role}</span>
             </div>
             {/* Level */}
             <div className="flex justify-between items-center">
@@ -213,7 +235,12 @@ export default function Page({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Template Preview Container */}
-        <div className={styles.templatePreviewContainer + " w-[60%] "}>
+        <div
+          className={
+            styles.templatePreviewContainer +
+            " w-[60%] h-[75vh] overflow-y-auto"
+          }
+        >
           {/* Template Preview Title */}
           <div className="flex justify-between items-center mb-[15px]">
             <h3 className="font-bold text-[20px] mb-[1.5vh]">
@@ -305,13 +332,31 @@ export default function Page({ params }: { params: { slug: string } }) {
                 </div>
               </div>
             </div>
+            {/* Platform */}
+            <div className="w-[75%] space-y-4">
+              <h3 className="font-bold text-[20px]">Platform</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore.
+              </p>
+              <div className="flex gap-[5vw] items-center">
+                <div className="flex items-center">
+                  <CustomCheckBox name="internship" accentColor="#2A2B2A" />
+                  <label htmlFor="internship">Intership</label>
+                </div>
+                <div className="flex items-center">
+                  <CustomCheckBox name="full-time" accentColor="#2A2B2A" />
+                  <label htmlFor="full-time">Full-Time</label>
+                </div>
+              </div>
+            </div>
             {/* Publish Template Button */}
             <div className="mt-[15px]">
               <CustomBtn
                 btnColor="black"
                 word="Publish Template"
                 width="w-full"
-                href="/hr/hiring/job-openings/start-hiring/job-listing-published"
+                onClick={updateNextStep}
               />
             </div>
           </div>

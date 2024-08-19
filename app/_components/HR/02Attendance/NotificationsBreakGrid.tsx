@@ -80,8 +80,9 @@ export default function NotificationsBreakGrid() {
                 >
                   {notification?.map((noti: INotification) => (
                     <NotificationsCard
-                      bgColor={degreeMap[degree][1]}
+                      bgColor={degreeMap[degree > 5 ? 5 : degree][1]}
                       btnText="Break Time History"
+                      textColour={degree >= 5 ? "#fff" : "#000"}
                       username={
                         noti.employee.firstName + " " + noti.employee.lastName
                       }

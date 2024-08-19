@@ -2,7 +2,7 @@
 import React, { use, useContext, useEffect, useRef, useState } from "react";
 import styles from "./view-template.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import $ from "jquery";
+import $, { post } from "jquery";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { templatesContext } from "../_context/templatesContext";
 import { Box, Modal } from "@mui/material";
@@ -40,6 +40,7 @@ interface Detail {
   description: string;
   _id: string;
 }
+
 interface templateDet {
   _id: string;
   title: string;
@@ -50,35 +51,22 @@ interface templateDet {
   group_id: { _id: string; step: string };
   __v: number;
 }
+
+const templatesWithPositionAndLevel = [
+  "Job_Listings",
+  "Interview_Call_Question",
+];
+
 const defaultTemplateDet: templateDet = {
   _id: "",
   title: "",
   department: "",
   level: "",
-  details: [], // Ensure details is initialized as an empty array
+  details: [],
   role: "",
   group_id: { _id: "", step: "" },
   __v: 0,
 };
-
-const templateContent = [
-  {
-    title: "Responsibilities",
-    description: "kjhklhgkjhgkjhgkjhgkjhkjhg khg kjhg kjhg kjhkjhg kj",
-  },
-  {
-    title: "Qualifications",
-    description: "Collaborate with team members to meet project requirements.",
-  },
-  {
-    title: "Job Description",
-    description: "Stay updated on industry trends and techniques.",
-  },
-  {
-    title: "Benefits",
-    description: "Contribute creative ideas to enhance the overall quality.",
-  },
-];
 
 const positions = {
   Backend: "Backend",
@@ -97,6 +85,98 @@ const levels = {
   EXPERT: "Expert",
 };
 
+const options: { [key: string]: string } = {
+  Job_Listings: "Job Listings",
+  Schedule_Interview_Call: "Schedule Interview Call",
+  Interview_Call_Question: "Interview Call Question",
+  Tasks: "Tasks",
+  Schedule_Face_To_Face_Interview: "Schedule Face To Face Interview",
+  Job_Offer: "Job Offer",
+  Required_Documents: "Required Documents",
+};
+
+type TemplateKey = keyof typeof options;
+
+interface TemplateContent {
+  [key: string]: {
+    title: string;
+    description: string;
+  }[];
+}
+
+const templateContent: TemplateContent = {
+  Job_Listings: [
+    {
+      title: "Responsibilities",
+      description: "kjhklhgkjhgkjhgkjhgkjhkjhg khg kjhg kjhg kjhkjhg kj",
+    },
+    {
+      title: "Qualifications",
+      description:
+        "Collaborate with team members to meet project requirements.",
+    },
+    {
+      title: "Job Description",
+      description: "Stay updated on industry trends and techniques.",
+    },
+    {
+      title: "Benefits",
+      description: "Contribute creative ideas to enhance the overall quality.",
+    },
+  ],
+  Schedule_Interview_Call: [
+    {
+      title: "Interview Call",
+      description: "Schedule an interview call with the candidate.",
+    },
+  ],
+  Interview_Call_Question: [
+    {
+      title: "Questions",
+      description: `
+        <li>What is your greatest strength?</li>
+        <li>What is your greatest weakness?</li>
+        <li>Why should we hire you?</li>
+        <li>What motivates you?</li>
+        <li>What are you passionate about?</li>`,
+    },
+  ],
+  Tasks: [
+    {
+      title: "Tasks",
+      description: `
+        <li>Task 1</li>
+        <li>Task 2</li>
+        <li>Task 3</li>
+        <li>Task 4</li>
+        <li>Task 5</li>`,
+    },
+  ],
+  Schedule_Face_To_Face_Interview: [
+    {
+      title: "Face To Face Interview",
+      description: "Schedule a face-to-face interview with the candidate.",
+    },
+  ],
+  Job_Offer: [
+    {
+      title: "Job Offer",
+      description: "Send a job offer to the candidate.",
+    },
+  ],
+  Required_Documents: [
+    {
+      title: "Documents",
+      description: `
+        <li>Document 1</li>
+        <li>Document 2</li>
+        <li>Document 3</li>
+        <li>Document 4</li>
+        <li>Document 5</li>`,
+    },
+  ],
+};
+
 export default function TemplateDetails({
   params,
 }: {
@@ -112,6 +192,7 @@ export default function TemplateDetails({
     title: "",
     description: "",
   });
+  const [tempKey, setTempKey] = useState("");
 
   // State for controlling the modal open/close state
   const [open, setOpen] = useState(false);
@@ -120,22 +201,6 @@ export default function TemplateDetails({
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
-  // const { templates } = useContext(templatesContext);
-  // console.log(params);
-
-  // const handleEditCard = (e: any) => {
-  //   console.log($(e.target).parents(`.${styles.card}`));
-  //   $(`.${styles.card}`)
-  //     .not($(e.target).parents(`.${styles.card}`))
-  //     .addClass(styles.disabled);
-  //   $(e.target).parents(`.${styles.card}`).addClass(styles.editable);
-  // };
-
-  // const handleSaveCard = (e: any) => {
-  //   console.log($(e.target).parents(`.${styles.card}`));
-  //   $(e.target).parents(`.${styles.card}`).removeClass(styles.editable);
-  //   $(`.${styles.card}`).removeClass(styles.disabled);
-  // };
   const [templateDet, setTemplateDet] =
     useState<templateDet>(defaultTemplateDet);
 
@@ -151,46 +216,36 @@ export default function TemplateDetails({
         },
       }
     );
-    // The return value is *not* serialized
-    // You can return Date, Map, Set, etc.
-
     const data = await res.json();
     setTemplateDet(data);
-    console.log(data);
   }
   useEffect(() => {
     getTemplate();
   }, []);
 
   useEffect(() => {
+    console.log(templateDet);
     const newArr =
       templateDet.details?.map((item: any) => item?.description) || [];
     setTempDetails(newArr);
     setLevel(templateDet.level);
     setPosition(templateDet.role);
     getGroups();
-    console.log("templateDet", templateDet);
-    if (tempDetails.group_id) {
-      setGroupID(templateDet?.group_id?._id);
+    if (templateDet?.group_id) {
+      setGroupID(templateDet.group_id._id);
+      setTempKey(templateDet?.group_id?.step);
+    } else {
+      setTempKey(templateDet.title.replace(" ", "_"));
     }
   }, [templateDet]);
 
   const handleOnChange = (e: any, index: number) => {
-    console.log(
-      "templateContentRef.current[index]",
-      templateContentRef.current[index]
-    );
-    console.log("e.target.innerHTML", e.target.innerHTML);
     templateContentRef.current[index] = e.target.innerHTML;
-    console.log(templateContentRef.current);
   };
 
   const handleBlur = () => {
     const newArr = [...tempDetails];
-    console.log("newArr", newArr);
-    console.log("templateContentRef.current", templateContentRef.current);
     templateContentRef.current.forEach((item, index) => {
-      console.log("item", item);
       newArr[index] = item;
     });
     setTempDetails(newArr);
@@ -198,13 +253,12 @@ export default function TemplateDetails({
 
   async function getGroups() {
     const token = localStorage.getItem("token");
-    console.log("templateDet", templateDet?.group_id?.step);
+    console.log(templateDet);
+    const step =
+      templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
       const res = await fetch(
-        `https://machine-genius.onrender.com/hr/group/groups/${templateDet.title.replace(
-          " ",
-          "_"
-        )}`,
+        `https://machine-genius.onrender.com/hr/group/groups/${step}`,
         {
           method: "get",
           headers: {
@@ -234,13 +288,12 @@ export default function TemplateDetails({
 
             icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
             description: newGroup.description,
-            step: templateDet.title.replace(" ", "_"),
+            step: templateDet.group_id?.step,
           }),
         }
       );
 
       const data = await res.json();
-      console.log(data);
       getGroups();
     } catch (error) {
       console.log(error);
@@ -248,6 +301,7 @@ export default function TemplateDetails({
   }
 
   async function updateTemplate() {
+    console.log(templateDet);
     try {
       const res = await fetch(
         `https://machine-genius.onrender.com/hr/template/${params.templateId}`,
@@ -263,7 +317,7 @@ export default function TemplateDetails({
             level: level,
             role: position,
             details: tempDetails.map((e: any, i: any) => ({
-              title: templateContent[i].title,
+              title: templateContent[tempKey][i].title,
               description: e,
             })),
             group_id: groupID || null,
@@ -271,15 +325,14 @@ export default function TemplateDetails({
         }
       );
       const data = await res.json();
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    console.log("groupID", groupID);
-  }, [groupID]);
+    console.log(tempKey);
+  }, [tempKey]);
 
   return (
     <div className="flex flex-col h-full">
@@ -340,98 +393,168 @@ export default function TemplateDetails({
         </div>
 
         <div className="flex flex-col flex-wrap gap-[1.5vw] w-full h-full overflow-auto">
-          <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
-            <div className={`${styles.card} h-fit`}>
-              <div className={styles.card_header}>
-                <h6 className="text-[--20px] font-bold">Job Position</h6>
-                <span className="text-[--16px] text-[#878787] font-medium">
-                  (Title)
-                </span>
-              </div>
-              <div className={styles.card_body}>
-                {/* <p>{templateDet.role}</p> */}
-                <CustomSelectInput
-                  getValue={(val: string) => setPosition(val)}
-                  options={Object.values(positions)}
-                  label={templateDet.role}
-                />
-              </div>
-            </div>
-            <div className={`${styles.card} h-fit`}>
-              <div className={styles.card_header}>
-                <h6 className="text-[--20px] font-bold">Level of Expertise</h6>
-              </div>
-              <div className={styles.card_body}>
-                {/* <p>{templateDet.level}</p> */}
-                <CustomSelectInput
-                  getValue={(val: string) => setLevel(val)}
-                  options={Object.values(levels)}
-                  label={templateDet.level}
-                />
-              </div>
-            </div>
-          </div>
-          {templateContent.map((e, i) => {
-            return (
-              <div className={`${styles.card} min-h-[--167px] w-[49%]`} key={i}>
+          {/* Job position & Level */}
+          {templatesWithPositionAndLevel.includes(tempKey) && (
+            <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+              <div className={`${styles.card} h-fit`}>
                 <div className={styles.card_header}>
-                  <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                  <h6 className="text-[--20px] font-bold">Job Position</h6>
+                  <span className="text-[--16px] text-[#878787] font-medium">
+                    (Title)
+                  </span>
                 </div>
-                <div
-                  className={`${styles.card_body} text-[--16px] outline-none`}
-                  dangerouslySetInnerHTML={{
-                    __html: tempDetails[i],
-                  }}
-                  contentEditable
-                  // onClick={(e) => {
-                  //   // check if the description is empty
-                  //   const description = e.currentTarget.textContent;
-                  //   if (description === "") {
-                  //     document.execCommand("insertHTML", false, "<li>");
-                  //     return;
-                  //   }
-                  // }}
-                  onKeyDownCapture={(
-                    e: React.KeyboardEvent<HTMLDivElement>
-                  ) => {
-                    // check if the cursor is at the start or in the middle of the line
-
-                    const target = e.target as HTMLDivElement; // Type assertion
-
-                    if (
-                      target.textContent === "" &&
-                      target.nodeName === "DIV" &&
-                      target.childNodes.length === 0
-                    ) {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                      }
-                      document.execCommand("insertHTML", false, "<li>");
-                    }
-
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      // chwck if previous line is empty
-                      const selection = window.getSelection();
-                      console.log(selection);
-                      const range = selection?.getRangeAt(0);
-                      console.log(range);
-                      const start = range?.startContainer;
-                      if (
-                        start?.nodeName === "LI" &&
-                        start?.textContent === ""
-                      ) {
-                      } else {
-                        document.execCommand("insertHTML", false, "<li>");
-                      }
-                    }
-                  }}
-                  onInput={(e) => handleOnChange(e, i)}
-                  onBlur={handleBlur}
-                ></div>
+                <div className={styles.card_body}>
+                  {/* <p>{templateDet.role}</p> */}
+                  <CustomSelectInput
+                    getValue={(val: string) => setPosition(val)}
+                    options={Object.values(positions)}
+                    label={position}
+                  />
+                </div>
               </div>
-            );
-          })}
+              <div className={`${styles.card} h-fit`}>
+                <div className={styles.card_header}>
+                  <h6 className="text-[--20px] font-bold">
+                    Level of Expertise
+                  </h6>
+                </div>
+                <div className={styles.card_body}>
+                  {/* <p>{templateDet.level}</p> */}
+                  <CustomSelectInput
+                    getValue={(val: string) => setLevel(val)}
+                    options={Object.values(levels)}
+                    label={level}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          {"Job_Listings" === tempKey
+            ? templateContent[tempKey]?.map((e, i) => {
+                return (
+                  <div
+                    className={`${styles.card} min-h-[--167px] w-[49%]`}
+                    key={i}
+                  >
+                    <div className={styles.card_header}>
+                      <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                    </div>
+                    <div
+                      className={`${styles.card_body} text-[--16px] outline-none`}
+                      dangerouslySetInnerHTML={{
+                        __html: tempDetails[i],
+                      }}
+                      contentEditable
+                      // onClick={(e) => {
+                      //   // check if the description is empty
+                      //   const description = e.currentTarget.textContent;
+                      //   if (description === "") {
+                      //     document.execCommand("insertHTML", false, "<li>");
+                      //     return;
+                      //   }
+                      // }}
+                      onKeyDownCapture={(
+                        e: React.KeyboardEvent<HTMLDivElement>
+                      ) => {
+                        // check if the cursor is at the start or in the middle of the line
+
+                        const target = e.target as HTMLDivElement; // Type assertion
+
+                        if (
+                          target.textContent === "" &&
+                          target.nodeName === "DIV" &&
+                          target.childNodes.length === 0
+                        ) {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                          }
+                          document.execCommand("insertHTML", false, "<li>");
+                        }
+
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          // chwck if previous line is empty
+                          const selection = window.getSelection();
+                          console.log(selection);
+                          const range = selection?.getRangeAt(0);
+                          console.log(range);
+                          const start = range?.startContainer;
+                          if (
+                            start?.nodeName === "LI" &&
+                            start?.textContent === ""
+                          ) {
+                          } else {
+                            document.execCommand("insertHTML", false, "<li>");
+                          }
+                        }
+                      }}
+                      onInput={(e) => handleOnChange(e, i)}
+                      onBlur={handleBlur}
+                    ></div>
+                  </div>
+                );
+              })
+            : templateContent[tempKey]?.map((e, i) => {
+                return (
+                  <div
+                    className={`${styles.card} min-h-[--167px] w-[49%]`}
+                    key={i}
+                  >
+                    <div className={styles.card_header}>
+                      <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                    </div>
+                    <div
+                      className={`${styles.card_body} text-[--16px] outline-none`}
+                      dangerouslySetInnerHTML={{
+                        __html: tempDetails[i],
+                      }}
+                      contentEditable
+                      // onClick={(e) => {
+                      //   // check if the description is empty
+                      //   const description = e.currentTarget.textContent;
+                      //   if (description === "") {
+                      //     document.execCommand("insertHTML", false, "<li>");
+                      //     return;
+                      //   }
+                      // }}
+                      onKeyDownCapture={(
+                        e: React.KeyboardEvent<HTMLDivElement>
+                      ) => {
+                        // check if the cursor is at the start or in the middle of the line
+                        // const target = e.target as HTMLDivElement; // Type assertion
+                        // if (
+                        //   target.textContent === "" &&
+                        //   target.nodeName === "DIV" &&
+                        //   target.childNodes.length === 0
+                        // ) {
+                        //   if (e.key === "Enter") {
+                        //     e.preventDefault();
+                        //   }
+                        //   document.execCommand("insertHTML", false, "<li>");
+                        // }
+                        // if (e.key === "Enter") {
+                        //   e.preventDefault();
+                        //   // chwck if previous line is empty
+                        //   const selection = window.getSelection();
+                        //   console.log(selection);
+                        //   const range = selection?.getRangeAt(0);
+                        //   console.log(range);
+                        //   const start = range?.startContainer;
+                        //   if (
+                        //     start?.nodeName === "LI" &&
+                        //     start?.textContent === ""
+                        //   ) {
+                        //   } else {
+                        //     document.execCommand("insertHTML", false, "<li>");
+                        //   }
+                        // }
+                      }}
+                      onInput={(e) => handleOnChange(e, i)}
+                      onBlur={handleBlur}
+                    ></div>
+                  </div>
+                );
+              })}
         </div>
       </div>
 
