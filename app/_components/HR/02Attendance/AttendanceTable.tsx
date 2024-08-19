@@ -107,6 +107,12 @@ export default function AttendanceTable({
           <li>
             <span>Role</span>
           </li>
+
+          {activeTab == 2 && (
+            <li>
+              <span>Date</span>
+            </li>
+          )}
           <li>
             <span>Checked In</span>
           </li>
@@ -145,14 +151,19 @@ export default function AttendanceTable({
               <li>
                 <span>{e.department.join(", ")}</span>
               </li>
+              {activeTab == 2 && (
+                <li>
+                  <span>{new Date(e.checkedIn)?.toDateString()}</span>
+                </li>
+              )}
               <li>
-                <span>{new Date(e.checkedIn).toLocaleTimeString()}</span>
+                <span>{new Date(e.checkedIn)?.toLocaleTimeString()}</span>
               </li>
               {activeTab == 2 && (
                 <li>
                   <span>
                     {e.checkedOut
-                      ? new Date(e.checkedOut).toLocaleTimeString()
+                      ? new Date(e.checkedOut)?.toLocaleTimeString()
                       : "-"}
                   </span>
                 </li>

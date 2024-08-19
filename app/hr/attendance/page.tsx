@@ -289,7 +289,18 @@ export default function Page() {
               </div>
 
               {/* Today’s Attendance Table */}
-              <AttendanceTable activeTab={activeTab} filter={fillter} />
+              <AttendanceTable
+                activeTab={activeTab}
+                filter={
+                  activeTab === 2
+                    ? fillter
+                    : {
+                        name: "",
+                        department: "",
+                        date: new Date().getTime().toString(),
+                      }
+                }
+              />
             </div>
           </>
         )}

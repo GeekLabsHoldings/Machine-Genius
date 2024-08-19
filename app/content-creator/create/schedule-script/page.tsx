@@ -7,7 +7,7 @@ import { globalContext } from "@/app/_context/store";
 
 // shows that the script has been scheduled
 const ScheduleScript = () => {
-  const { setEditContentData } = useContext(globalContext);
+  const { selectedContentType, setEditContentData } = useContext(globalContext);
   useEffect(() => {
     setEditContentData(null);
     sessionStorage.removeItem("editContentData");
@@ -28,14 +28,16 @@ const ScheduleScript = () => {
               btnColor="black"
               href={"/content-creator/dashboard"}
             />
-            <CustomBtn
-              word="Convert To Article"
-              btnColor="black"
-              // href={"/content-creator/create/article-generated-titles"}
-              onClick={() => {
-                toast.success("Comming Soon...");
-              }}
-            />
+
+            {selectedContentType === "Script" && (
+              <CustomBtn
+                word="Convert To Article"
+                btnColor="black"
+                onClick={() => {
+                  toast.success("Comming Soon...");
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

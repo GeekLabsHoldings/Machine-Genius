@@ -41,6 +41,13 @@ const initialContextState = {
   setGeneratedTitles: (titles: any) => {},
   lockedGeneratedTitles: [] as any,
   setLockedGeneratedTitles: (titles: any) => {},
+
+  generatedThumbnails: [] as any,
+  setGeneratedThumbnails: (thumbnails: any) => {},
+  generateThumbnails: () => {},
+  selectedContentThumbnail: "",
+  setSelectedContentThumbnail: (thumbnail: any) => {},
+
   selectedContentTitle: "",
   setSelectedContentTitle: (title: any) => {},
   editContentData: null as any,
@@ -111,8 +118,8 @@ export default function GlobalContextProvider({
     }
   }
 
-  const [token, setToken] = useState<any>(tokenInit());
-  const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit());
+  const [token, setToken] = useState<any>(tokenInit);
+  const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit);
 
   async function checkIfUserOnCorrespondingRoute() {
     // if (decodedToken) {
@@ -170,12 +177,12 @@ export default function GlobalContextProvider({
         // setDecodedToken(data.result);
         // toast.success("Token is valid");
       } else if (data.message && data.message.name === "TokenExpiredError") {
-        toast.error("Token expired, redirecting to signin...");
+        toast.error("Session expired, redirecting to signin...");
         // console.log('Token expired, redirecting to signin...');
         signOut();
         router.replace("/");
       } else if (data.message === "USER_TOKEN_IS_INVALID") {
-        toast.error("Token is invalid, Contact Technical Support!");
+        toast.error("Session expired, redirecting to signin...");
         // console.log('Token is invalid, Contact Technical Support!');
         signOut();
         router.replace("/");
@@ -207,6 +214,8 @@ export default function GlobalContextProvider({
   // ===== 00. End Authentication =====
 
   // ===== 01. Start Content Creator =====
+
+  // ===== Start selectedContentType =====
   function selectedContentTypeInit() {
     if (typeof window !== "undefined") {
       const selectedContentTypeInitValue = sessionStorage.getItem(
@@ -218,12 +227,14 @@ export default function GlobalContextProvider({
     }
   }
   const [selectedContentType, setSelectedContentType] = useState<any>(
-    selectedContentTypeInit()
+    selectedContentTypeInit
   );
   useEffect(() => {
     sessionStorage.setItem("selectedContentType", selectedContentType);
   }, [selectedContentType]);
+  // ===== End selectedContentType =====
 
+  // ===== Start selectedBrand =====
   function selectedBrandInit() {
     if (typeof window !== "undefined") {
       const selectedBrandInitValue = sessionStorage.getItem("selectedBrand");
@@ -232,11 +243,13 @@ export default function GlobalContextProvider({
       return "";
     }
   }
-  const [selectedBrand, setSelectedBrand] = useState<any>(selectedBrandInit());
+  const [selectedBrand, setSelectedBrand] = useState<any>(selectedBrandInit);
   useEffect(() => {
     sessionStorage.setItem("selectedBrand", selectedBrand);
   }, [selectedBrand]);
+  // ===== End selectedBrand =====
 
+  // ===== Start collectedData =====
   function collectedDataInit() {
     if (typeof window !== "undefined") {
       const collectedDataInitValue = sessionStorage.getItem("collectedData");
@@ -245,7 +258,7 @@ export default function GlobalContextProvider({
       return null;
     }
   }
-  const [collectedData, setCollectedData] = useState<any>(collectedDataInit());
+  const [collectedData, setCollectedData] = useState<any>(collectedDataInit);
   useEffect(() => {
     sessionStorage.setItem("collectedData", JSON.stringify(collectedData));
   }, [collectedData]);
@@ -258,11 +271,13 @@ export default function GlobalContextProvider({
       return null;
     }
   }
-  const [twitterData, setTwitterData] = useState<any>(twitterDataInit());
+  const [twitterData, setTwitterData] = useState<any>(twitterDataInit);
   useEffect(() => {
     sessionStorage.setItem("twitterData", JSON.stringify(twitterData));
   }, [twitterData]);
+  // ===== End collectedData =====
 
+  // ===== Start choosedArticles =====
   function choosedArticlesInit() {
     if (typeof window !== "undefined") {
       const choosedArticlesInitValue =
@@ -274,13 +289,14 @@ export default function GlobalContextProvider({
       return [];
     }
   }
-  const [choosedArticles, setChoosedArticles] = useState<any>(
-    choosedArticlesInit()
-  );
+  const [choosedArticles, setChoosedArticles] =
+    useState<any>(choosedArticlesInit);
   useEffect(() => {
     sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));
   }, [choosedArticles]);
+  // ===== End choosedArticles =====
 
+  // ===== Start finalArticle =====
   // function finalArticleInit() {
   //   if (typeof window !== "undefined") {
   //     const finalArticleInitValue = sessionStorage.getItem("finalArticle");
@@ -289,14 +305,16 @@ export default function GlobalContextProvider({
   //     return null;
   //   }
   // }
-  // const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit());
+  // const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit);
   const finalArticle = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
   useEffect(() => {
     sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
   }, [finalArticle]);
+  // ===== End finalArticle =====
 
+  // ===== Start Checks =====
   const [checkStatus, setCheckStatus] = useState({
     grammar: "waiting",
     // todo: temp until backend fix it
@@ -304,7 +322,7 @@ export default function GlobalContextProvider({
     ai: "waiting",
   });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
-  //   checkGrammerResultsInit()
+  //   checkGrammerResultsInit
   // );
   const checkGrammerResults = useSelector(
     (state: any) => state.contentCreator.checkGrammerResults
@@ -370,7 +388,6 @@ export default function GlobalContextProvider({
       // router.push("/content-creator/create/choose-brand");
     }
   }
-
   async function checkPlagiarism() {
     const maxRetries = 1; // Define the maximum number of retries
     let attempts = 0;
@@ -422,9 +439,8 @@ export default function GlobalContextProvider({
       // router.push("/content-creator/create/choose-brand");
     }
   }
-
   // const [checkAiResults, setCheckAiResults] = useState<any>(
-  //   checkAiResultsInit()
+  //   checkAiResultsInit
   // );
   const checkAiResults = useSelector(
     (state: any) => state.contentCreator.checkAiResults
@@ -433,15 +449,17 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
   }, [checkAiResults]);
   async function checkAi() {
-    if (!finalArticle.articles[0].content || finalArticle.articles[0].content.length<1){
+    if (
+      !finalArticle.articles[0].content ||
+      finalArticle.articles[0].content.length < 1
+    ) {
       toast.error("No content found!");
       return;
     }
-    if (finalArticle.articles[0].content.length>50000){
+    if (finalArticle.articles[0].content.length > 50000) {
       toast.error("Content length must be between 1 and 50000 characters!");
       return;
     }
-
 
     const maxRetries = 2; // Define the maximum number of retries
     let attempts = 0;
@@ -452,7 +470,7 @@ export default function GlobalContextProvider({
         const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
           method: "POST",
           headers: {
-            'Accept': "application/json",
+            Accept: "application/json",
             "Content-Type": "application/json",
             "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
           },
@@ -501,20 +519,48 @@ export default function GlobalContextProvider({
   }
 
   async function startChecks() {
-    if(checkStatus.grammar !== "pass"){
+    if (checkStatus.grammar !== "pass") {
       await checkGrammer();
     }
     // await checkPlagiarism();
-    if(checkStatus.ai !== "pass"){
+    if (checkStatus.ai !== "pass") {
       await checkAi();
     }
     return Promise.resolve();
   }
+  // ===== End Checks =====
 
+  // ===== Start generateTitles =====
+  function generatedTitlesInit() {
+    if (typeof window !== "undefined") {
+      const generatedTitlesInitValue =
+        sessionStorage.getItem("generatedTitles");
+      return generatedTitlesInitValue
+        ? JSON.parse(generatedTitlesInitValue)
+        : [];
+    } else {
+      return [];
+    }
+  }
+  const [generatedTitles, setGeneratedTitles] =
+    useState<any>(generatedTitlesInit);
+  useEffect(() => {
+    sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
+    console.log("generatedTitles:", generatedTitles);
+  }, [generatedTitles]);
   async function generateTitles() {
     const maxRetries = 2; // Define the maximum number of retries
     let attempts = 0;
     let json = null;
+
+    let brandNamePayload: string = "";
+    if (selectedBrand === "Street Politics Canada") {
+      brandNamePayload = "streetPoliticsCanada";
+    } else if (selectedBrand === "Investorcracy") {
+      brandNamePayload = "investocracy";
+    } else if (selectedBrand === "Movie Myth"){
+      brandNamePayload = "movieMyth";
+    }
 
     while (attempts < maxRetries) {
       try {
@@ -526,6 +572,7 @@ export default function GlobalContextProvider({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              brandName: brandNamePayload,
               content: finalArticle?.articles[0]?.content,
             }),
           }
@@ -549,24 +596,6 @@ export default function GlobalContextProvider({
       setGeneratedTitles(json.generatedTitles);
     }
   }
-  function generatedTitlesInit() {
-    if (typeof window !== "undefined") {
-      const generatedTitlesInitValue =
-        sessionStorage.getItem("generatedTitles");
-      return generatedTitlesInitValue
-        ? JSON.parse(generatedTitlesInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-  const [generatedTitles, setGeneratedTitles] = useState<any>(
-    generatedTitlesInit()
-  );
-  useEffect(() => {
-    sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
-    console.log("generatedTitles:", generatedTitles);
-  }, [generatedTitles]);
 
   function selectedContentTitleInit() {
     if (typeof window !== "undefined") {
@@ -579,7 +608,7 @@ export default function GlobalContextProvider({
     }
   }
   const [selectedContentTitle, setSelectedContentTitle] = useState<any>(
-    selectedContentTitleInit()
+    selectedContentTitleInit
   );
   useEffect(() => {
     sessionStorage.setItem("selectedContentTitle", selectedContentTitle);
@@ -598,7 +627,7 @@ export default function GlobalContextProvider({
     }
   }
   const [lockedGeneratedTitles, setLockedGeneratedTitles] = useState<any>(
-    lockedGeneratedTitlesInit()
+    lockedGeneratedTitlesInit
   );
   useEffect(() => {
     sessionStorage.setItem(
@@ -607,7 +636,115 @@ export default function GlobalContextProvider({
     );
     console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
   }, [generatedTitles, lockedGeneratedTitles]);
+  // ===== End generateTitles =====
 
+  // ===== Start generatedThumbnails =====
+
+  function generatedThumbnailsInit() {
+    if (typeof window !== "undefined") {
+      const generatedThumbnailsInitValue = sessionStorage.getItem(
+        "generatedThumbnails"
+      );
+      return generatedThumbnailsInitValue
+        ? JSON.parse(generatedThumbnailsInitValue)
+        : [];
+    } else {
+      return [];
+    }
+  }
+  const [generatedThumbnails, setGeneratedThumbnails] = useState<any>(
+    generatedThumbnailsInit
+  );
+  useEffect(() => {
+    sessionStorage.setItem(
+      "generatedThumbnails",
+      JSON.stringify(generatedThumbnails)
+    );
+    // console.log("generatedThumbnails:", generatedThumbnails);
+  }, [generatedThumbnails]);
+
+  async function generateThumbnails() {
+    if (!selectedBrand || !finalArticle?.articles[0]?.content) {
+      toast.error("No content or brand name provided");
+      return;
+    }
+    let brandNamePayload: string = "";
+    if (selectedBrand === "Street Politics Canada") {
+      brandNamePayload = "streetPoliticsCanada";
+    } else if (selectedBrand === "Investorcracy") {
+      brandNamePayload = "investocracy";
+    } else if (selectedBrand === "Movie Myth"){
+      brandNamePayload = "movieMyth";
+    }
+    try {
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/generate-thumbnails`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            brandName: brandNamePayload,
+            content: finalArticle?.articles[0]?.content,
+          }),
+        }
+      );
+      const json = await res.json();
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (
+        json &&
+        json.success === false &&
+        json.error === "No content or brand name provided"
+      ) {
+        toast.error("No content or brand name provided");
+        return;
+      } else if (
+        json &&
+        json.success === false &&
+        json.error === "brandName Not correct"
+      ) {
+        toast.error("brandName Not correct");
+        return;
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === true && json.Thumbnail) {
+        setGeneratedThumbnails(json.Thumbnail);
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error generateThumbnails:", error);
+    }
+  }
+
+  function selectedContentThumbnailInit() {
+    if (typeof window !== "undefined") {
+      const selectedContentThumbnailInitValue = sessionStorage.getItem(
+        "selectedContentThumbnail"
+      );
+      return selectedContentThumbnailInitValue
+        ? selectedContentThumbnailInitValue
+        : "";
+    } else {
+      return "";
+    }
+  }
+  const [selectedContentThumbnail, setSelectedContentThumbnail] = useState<any>(
+    selectedContentThumbnailInit
+  );
+  useEffect(() => {
+    sessionStorage.setItem(
+      "selectedContentThumbnail",
+      selectedContentThumbnail
+    );
+  }, [selectedContentThumbnail]);
+
+  // ===== End generatedThumbnails =====
+
+  // ===== Start videoTranscription =====
   const videoTranscription = useSelector(
     (state: any) => state.contentCreator.videoTranscription
   );
@@ -617,7 +754,9 @@ export default function GlobalContextProvider({
       JSON.stringify(videoTranscription)
     );
   }, [videoTranscription]);
+  // ===== End videoTranscription =====
 
+  // ===== Start editContentData =====
   function editContentDataInit() {
     if (typeof window !== "undefined") {
       const editContentDataInitValue =
@@ -629,12 +768,13 @@ export default function GlobalContextProvider({
       return null;
     }
   }
-  const [editContentData, setEditContentData] = useState<any>(
-    editContentDataInit()
-  );
+  const [editContentData, setEditContentData] =
+    useState<any>(editContentDataInit);
   useEffect(() => {
     sessionStorage.setItem("editContentData", JSON.stringify(editContentData));
   }, [editContentData]);
+  // ===== End editContentData =====
+
   // ===== 01. End Content Creator =====
 
   // Create a context value object
@@ -668,6 +808,11 @@ export default function GlobalContextProvider({
     setGeneratedTitles,
     lockedGeneratedTitles,
     setLockedGeneratedTitles,
+    generatedThumbnails,
+    setGeneratedThumbnails,
+    generateThumbnails,
+    selectedContentThumbnail,
+    setSelectedContentThumbnail,
     selectedContentTitle,
     setSelectedContentTitle,
     editContentData,

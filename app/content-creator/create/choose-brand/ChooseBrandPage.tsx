@@ -101,7 +101,7 @@ export default function ChooseBrandPage() {
   // select options
   const options = useMemo(
     () => [
-      "PST Canada",
+      "Street Politics Canada",
       "Street Politics UK",
       "Street Politics Africa",
       "Investorcracy",
@@ -155,10 +155,10 @@ export default function ChooseBrandPage() {
     const { signal } = abortControllerRef.current;
 
     let postBody: any = {};
-    if (selectedBrand === "PST Canada") {
-      postBody.brandName = "STP";
+    if (selectedBrand === "Street Politics Canada") {
+      postBody.brandName = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
-      postBody.brandName = "INV";
+      postBody.brandName = "investocracy";
       postBody.stockName = stockNameValue;
     }
 

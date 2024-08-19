@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./create-article.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
@@ -45,10 +45,17 @@ export default function CreateArticlePage() {
       return [];
     }
   }
-  const [selectedText, setSelectedText] = useState<any>(selectedTextInit());
+  const [selectedText, setSelectedText] = useState<any>(selectedTextInit);
   useEffect(() => {
     sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
   }, [selectedText]);
+
+  const options = useMemo(() => {
+    return choosedArticles.map((item: any) => {
+      // note: href is from twitter data
+      return item.title || item.href;
+    });
+  }, [choosedArticles]);
   // ===== End State =====
 
   // ===== Start Page Guard =====
@@ -93,12 +100,12 @@ export default function CreateArticlePage() {
     let clientX: any, clientY: any;
 
     if (articleContent && button) {
-      articleContent.addEventListener("mousedown", function (event: any) {
+      const handleMouseDown = (event: any) => {
         clientX = event.pageX;
         clientY = event.pageY;
-      });
+      };
 
-      articleContent.addEventListener("mouseup", () => {
+      const handleMouseUp = () => {
         let selectionFromDocument: any = document.getSelection();
         let textValue = selectionFromDocument.toString();
 
@@ -132,6 +139,14 @@ export default function CreateArticlePage() {
           button.style.left = posX + "px";
           button.style.top = posY + "px";
         }
+      };
+
+      // Use passive event listeners
+      articleContent.addEventListener("mousedown", handleMouseDown, {
+        passive: true,
+      });
+      articleContent.addEventListener("mouseup", handleMouseUp, {
+        passive: true,
       });
     }
 
@@ -145,8 +160,10 @@ export default function CreateArticlePage() {
 
   const handleCheckChange = (e: any, index: any) => {
     const newSelectedText = [...selectedText];
-    newSelectedText[index].checked = e.target.checked;
-    setSelectedText(newSelectedText);
+    if (newSelectedText[index].checked !== e.target.checked) {
+      newSelectedText[index].checked = e.target.checked;
+      setSelectedText(newSelectedText);
+    }
   };
 
   const handleCheckAllSelectedText = (
@@ -170,7 +187,9 @@ export default function CreateArticlePage() {
   }
   // function that get role value from select option by send it as a prop
   const getSelectedArticle = (value: string | number) => {
-    setSelectedArticle(value);
+    if (value !== selectedArticle) {
+      setSelectedArticle(value);
+    }
   };
   // ===== End Helpers Functions =====
 
@@ -223,10 +242,10 @@ export default function CreateArticlePage() {
     // console.log(`selectedBrand`, selectedBrand);
     // console.log(`selectedText`, selectedText);
     let brandNamePayload = "";
-    if (selectedBrand === "PST Canada") {
-      brandNamePayload = "StreetPolitics";
+    if (selectedBrand === "Street Politics Canada") {
+      brandNamePayload = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
-      brandNamePayload = "Investocracy";
+      brandNamePayload = "investocracy";
     }
     // console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
 
@@ -358,13 +377,7 @@ export default function CreateArticlePage() {
                   {/* select article to read */}
                   <CustomSelectInput
                     label="Select Article"
-                    options={choosedArticles.map((item: any) => {
-                      if (item.title) {
-                        return item.title;
-                      } else {
-                        return item.href;
-                      }
-                    })}
+                    options={options}
                     getValue={getSelectedArticle}
                   />
                 </div>
@@ -387,7 +400,9 @@ export default function CreateArticlePage() {
                     >
                       Select
                     </button>
-                    <p contentEditable={true}>{previewSelectedArticle()}</p>
+                    <p contentEditable={"plaintext-only"}>
+                      {previewSelectedArticle()}
+                    </p>
                   </div>
                 </div>
               </div>

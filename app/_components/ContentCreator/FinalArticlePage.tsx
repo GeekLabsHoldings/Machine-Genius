@@ -134,7 +134,7 @@ export default function FinalArticlePage() {
         <div className={`${styles.genuisWorking}`}>
           <LogoAndTitle
             needTxt={false}
-            title="Genius is working on your article.."
+            title="Genius is checking your content.."
           />
           <div className={`${styles.allCheckers} w-full`}>
             <SpecificChecker
@@ -182,7 +182,7 @@ export default function FinalArticlePage() {
               <div
                 id="finalArticle"
                 ref={finalArticleRef}
-                contentEditable={true}
+                contentEditable={"plaintext-only"}
                 className={`${styles.articleContent}`}
               >
                 {finalArticle?.articles[0]?.content}

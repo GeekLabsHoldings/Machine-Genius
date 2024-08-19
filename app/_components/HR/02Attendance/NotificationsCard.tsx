@@ -22,7 +22,11 @@ export default function NotificationsCard(props: IProps) {
   return (
     // Main container for the notifications card with dynamic background color and styling
     <div
-      className={`w-full rounded-[11px] border border-[#2A2B2A] py-[15px] px-[25px] ${props.bgColor} ${styles.NotificationsCard}`}
+      className={`w-full rounded-[11px] border border-[#2A2B2A] py-[15px] px-[25px] ${styles.NotificationsCard}`}
+      style={{
+        // Inline style to set the background color based on the props
+        backgroundColor: props.bgColor,
+      }}
     >
       {/* Inner container with vertical layout and spacing between elements */}
       <div className="flex flex-col gap-[10px]">

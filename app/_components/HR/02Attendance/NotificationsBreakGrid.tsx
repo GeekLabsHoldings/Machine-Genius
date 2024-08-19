@@ -11,6 +11,14 @@ interface INotification {
   checkedIn: string;
 }
 
+const degreeMap: { [key: number]: string[] } = {
+  1: ["First", "#FFFFFF"],
+  2: ["Second", "#EFE2A7"],
+  3: ["Third", "#F9B68F"],
+  4: ["Fourth", "#F28389"],
+  5: ["Termination", "#E9313E"],
+};
+
 /**
  * Renders a grid of notifications cards with different background colors and button text.
  *
@@ -45,41 +53,46 @@ export default function NotificationsBreakGrid() {
     getNotifications();
   }, []);
 
-  const degreeMap: { [key: string]: string[] } = {
-    "1": ["First", "#FFFFFF"],
-    "2": ["Second", "#EFE2A7"],
-    "3": ["Third", "#F9B68F"],
-    "4": ["Fourth", "#F28389"],
-  };
+  useEffect(() => {
+    console.log(
+      Object.entries(notifications).map(([degree, notification]) => {
+        console.log(degree);
+        console.log(notification);
+      })
+    );
+  }, [notifications]);
 
   return (
     <>
       {/* Notifications Container */}
       <div className="grid grid-cols-5 gap-[2vw] h-[70vh]">
-        {Object.entries(notifications)?.map(([degree, notification], idx) => (
-          <div className={`flex flex-col`}>
-            <h2 className={`text-center ${styles.colTitle}`}>
-              {degreeMap[degree][0]} Degree
-            </h2>
-            <div className={`relative ${styles.colContent}`}>
-              {/* Notifications Cards */}
-              <div
-                className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw]`}
-              >
-                {notification?.map((noti) => (
-                  <NotificationsCard
-                    bgColor={`bg-[${degreeMap[degree][1]}]`}
-                    btnText="Break Time History"
-                    username={
-                      noti.employee.firstName + " " + noti.employee.lastName
-                    }
-                    timeStamp={noti.checkedIn}
-                  />
-                ))}
+        {Object.entries(notifications)?.map(
+          ([degree, notification]: any, idx) => (
+            <div className={`flex flex-col`}>
+              <h2 className={`text-center ${styles.colTitle}`}>
+                {degreeMap[degree > 5 ? 5 : degree][0]}
+                {degree < 5 ? " Degree" : ""}
+              </h2>
+              <div className={`relative ${styles.colContent}`}>
+                {/* Notifications Cards */}
+                <div
+                  className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw]`}
+                >
+                  {notification?.map((noti: INotification) => (
+                    <NotificationsCard
+                      bgColor={degreeMap[degree][1]}
+                      btnText="Break Time History"
+                      username={
+                        noti.employee.firstName + " " + noti.employee.lastName
+                      }
+                      timeStamp={noti.checkedIn}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        )}
       </div>
     </>
   );

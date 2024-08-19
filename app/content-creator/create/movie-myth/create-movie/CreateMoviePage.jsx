@@ -37,7 +37,7 @@ const CreateMovie = () => {
       return [];
     }
   }
-  const [selectedText, setSelectedText] = useState(selectedTextInit());
+  const [selectedText, setSelectedText] = useState(selectedTextInit);
   useEffect(() => {
     sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
   }, [selectedText]);
@@ -112,16 +112,16 @@ const CreateMovie = () => {
       console.log(`selectedBrand`, selectedBrand);
       console.log(`selectedText`, selectedText);
 
-      if (selectedBrand === "PST Canada") {
-        brandNamePayload = "StreetPolitics";
+      if (selectedBrand === "Street Politics Canada") {
+        brandNamePayload = "streetPoliticsCanada";
       } else if (selectedBrand === "Investorcracy") {
-        brandNamePayload = "Investocracy";
+        brandNamePayload = "investocracy";
       } else if (selectedBrand === "Movie Myth") {
-        brandNamePayload = "Moviemyth";
+        brandNamePayload = "movieMyth";
       }
       console.log(`finalizeContent brandNamePayload:`, brandNamePayload);
       setIsLoading(true);
-      const maxRetries = 2; // Define the maximum number of retries
+      const maxRetries = 1; // Define the maximum number of retries
       let attempts = 0;
       let json = null;
 
@@ -239,7 +239,7 @@ const CreateMovie = () => {
         <LogoAndTitle
           needTxt={true}
           textNeeded="Hold on tight."
-          title="Genius is working on your article.."
+          title="Genius is finalizing your content..."
         />
       </div>
     );
