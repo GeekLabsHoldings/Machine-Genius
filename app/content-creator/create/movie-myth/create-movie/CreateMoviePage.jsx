@@ -37,7 +37,7 @@ const CreateMovie = () => {
       return [];
     }
   }
-  const [selectedText, setSelectedText] = useState(selectedTextInit());
+  const [selectedText, setSelectedText] = useState(selectedTextInit);
   useEffect(() => {
     sessionStorage.setItem("selectedText", JSON.stringify(selectedText));
   }, [selectedText]);
