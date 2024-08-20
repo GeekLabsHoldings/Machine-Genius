@@ -319,33 +319,43 @@ export default function Page({ params }: { params: { slug: string } }) {
               </p>
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
-                  <CustomCheckBox name="wuuzuf" accentColor="#2A2B2A" />
+                  <CustomCheckBox id="wuuzuf" accentColor="#2A2B2A" />
                   <label htmlFor="wuuzuf">Wuuzuf</label>
                 </div>
                 <div className="flex items-center">
-                  <CustomCheckBox name="linked-in" accentColor="#2A2B2A" />
+                  <CustomCheckBox id="linked-in" accentColor="#2A2B2A" />
                   <label htmlFor="linked-in">Linked In</label>
                 </div>
                 <div className="flex items-center">
-                  <CustomCheckBox name="jobs-co" accentColor="#2A2B2A" />
+                  <CustomCheckBox id="jobs-co" accentColor="#2A2B2A" />
                   <label htmlFor="jobs-co">Jobs.co</label>
                 </div>
               </div>
             </div>
-            {/* Platform */}
+            {/* Vacancy type */}
             <div className="w-[75%] space-y-4">
-              <h3 className="font-bold text-[20px]">Platform</h3>
+              <h3 className="font-bold text-[20px]">Vacancy Type</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore.
               </p>
               <div className="flex gap-[5vw] items-center">
                 <div className="flex items-center">
-                  <CustomCheckBox name="internship" accentColor="#2A2B2A" />
+                  <CustomCheckBox
+                    name="vacancy-type"
+                    accentColor="#2A2B2A"
+                    type="radio"
+                    id="internship"
+                  />
                   <label htmlFor="internship">Intership</label>
                 </div>
                 <div className="flex items-center">
-                  <CustomCheckBox name="full-time" accentColor="#2A2B2A" />
+                  <CustomCheckBox
+                    name="vacancy-type"
+                    accentColor="#2A2B2A"
+                    type="radio"
+                    id="full-time"
+                  />
                   <label htmlFor="full-time">Full-Time</label>
                 </div>
               </div>

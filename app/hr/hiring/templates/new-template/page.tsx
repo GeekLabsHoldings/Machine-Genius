@@ -8,6 +8,7 @@ import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import { templatesContext } from "../_context/templatesContext";
 import TemplateDetails from "../[templateId]/page";
 import { title } from "process";
+import { useRouter } from "next/navigation";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -155,6 +156,7 @@ const Page = () => {
     title: "",
     description: "",
   });
+  const router = useRouter();
 
   const handleDelete = (index: any) => {
     setTemplates(Templates.filter((_, i) => i !== index));
@@ -176,6 +178,12 @@ const Page = () => {
     newTemplates[index].isEditable = isFocused;
     setTemplates(newTemplates);
   };
+
+  useEffect(() => {
+    if (templates.key === "") {
+      router.push("/hr/hiring/templates");
+    }
+  }, [templates]);
 
   const addNewTemplate = () => {
     setTemplates([
