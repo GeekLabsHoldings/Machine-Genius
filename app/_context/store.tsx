@@ -31,6 +31,7 @@ const initialContextState = {
     // todo: temp until backend fix it
     plagiarism: "pass",
     ai: "waiting",
+    isGrammerChecked: false,
   },
   setCheckStatus: (status: any) => {},
   checkGrammer: () => {},
@@ -320,6 +321,7 @@ export default function GlobalContextProvider({
     // todo: temp until backend fix it
     plagiarism: "pass",
     ai: "waiting",
+    isGrammerChecked: false,
   });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
   //   checkGrammerResultsInit
@@ -345,6 +347,10 @@ export default function GlobalContextProvider({
   async function checkGrammer() {
     if (!finalArticle?.articles[0]?.content) {
       toast.error("No content found!");
+      return;
+    }
+    if (checkStatus.isGrammerChecked === true) {
+      setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
       return;
     }
     try {
@@ -374,9 +380,17 @@ export default function GlobalContextProvider({
           (item: any) => item.general_error_type === "Grammar"
         );
         if (filteredJson.length > 0) {
-          setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
+          setCheckStatus((prev: any) => ({
+            ...prev,
+            grammar: "fail",
+            isGrammerChecked: true,
+          }));
         } else {
-          setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+          setCheckStatus((prev: any) => ({
+            ...prev,
+            grammar: "pass",
+            isGrammerChecked: true,
+          }));
         }
         dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
       } else {
@@ -519,8 +533,10 @@ export default function GlobalContextProvider({
     if (checkStatus.ai !== "pass") {
       await checkAi();
     }
-    if (checkStatus.grammar !== "pass") {
+    if (checkStatus.grammar !== "pass" && checkStatus.isGrammerChecked === false) {
       await checkGrammer();
+    } else {
+      setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
     }
     // await checkPlagiarism();
     return Promise.resolve();

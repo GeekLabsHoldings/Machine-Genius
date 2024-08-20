@@ -331,7 +331,7 @@ export default function ShowErrorsPage() {
           );
 
           // Add a delay between requests to avoid hitting the rate limit
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 250));
         }
 
         const updatedFinalArticle = {
@@ -583,14 +583,12 @@ export default function ShowErrorsPage() {
             word={"Back"}
             btnColor="black"
             href="/content-creator/create/movie-myth/final-movie"
-            disabled={pageState.isLoadingParaphrase}
           />
         ) : (
           <CustomBtn
             word={"Back"}
             btnColor="white"
             href="/content-creator/create/final-article"
-            disabled={pageState.isLoadingParaphrase}
           />
         )}
         <CustomBtn
