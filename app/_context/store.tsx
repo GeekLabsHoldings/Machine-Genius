@@ -536,8 +536,7 @@ export default function GlobalContextProvider({
     if (typeof window !== "undefined") {
       const generatedTitlesInitValue =
         sessionStorage.getItem("generatedTitles");
-      return generatedTitlesInitValue &&
-        generatedTitlesInitValue !== "undefined"
+      return generatedTitlesInitValue
         ? JSON.parse(generatedTitlesInitValue)
         : [];
     } else {
