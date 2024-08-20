@@ -344,7 +344,17 @@ export default function ShowErrorsPage() {
         <div className={`${styles.genuisWorking} m-auto`}>
           <LogoAndTitle
             needTxt={false}
-            title={`Genius is working on your ${selectedContentType.toLowerCase()}..`}
+            title={
+              checkStatus.grammar === "waiting" ||
+              checkStatus.plagiarism === "waiting" ||
+              checkStatus.ai === "waiting"
+                ? `Genius is checking your content...`
+                : checkStatus.grammar === "pass" &&
+                  checkStatus.plagiarism === "pass" &&
+                  checkStatus.ai === "pass"
+                ? "Hooray! No issues found!"
+                : "Check is finished. View the results"
+            }
           />
           <div className={`${styles.allCheckers} w-full`}>
             <SpecificChecker
