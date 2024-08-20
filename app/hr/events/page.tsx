@@ -60,7 +60,7 @@ export default function Calendar() {
 
     const token = localStorage.getItem("token");
 
-    url = "https://machine-genius.onrender.com/hr/event/create";
+    url = "https://api.machinegenius.io/hr/event/create";
 
     try {
       const data = await fetch(`${url}`, {
@@ -92,7 +92,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        "https://machine-genius.onrender.com/user/task/all",
+        "https://api.machinegenius.io/user/task/all",
         {
           method: "get",
           headers: {
@@ -113,7 +113,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        `https://machine-genius.onrender.com/hr/event/delete/${id}`,
+        `https://api.machinegenius.io/hr/event/delete/${id}`,
         {
           method: "delete",
           headers: {
@@ -140,7 +140,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        `https://machine-genius.onrender.com/hr/event/edit-event/${id}`,
+        `https://api.machinegenius.io/hr/event/edit-event/${id}`,
         {
           method: "put",
           headers: {

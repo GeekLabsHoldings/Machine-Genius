@@ -161,7 +161,7 @@ export default function GlobalContextProvider({
     }
     try {
       const res = await fetch(
-        "https://machine-genius.onrender.com/authentication/check-auth",
+        "https://api.machinegenius.io/authentication/check-auth",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -531,17 +531,20 @@ export default function GlobalContextProvider({
   // ===== End Checks =====
 
   // ===== Start generateTitles =====
+
   function generatedTitlesInit() {
     if (typeof window !== "undefined") {
       const generatedTitlesInitValue =
         sessionStorage.getItem("generatedTitles");
-      return generatedTitlesInitValue
+      return generatedTitlesInitValue &&
+        generatedTitlesInitValue !== "undefined"
         ? JSON.parse(generatedTitlesInitValue)
         : [];
     } else {
       return [];
     }
   }
+
   const [generatedTitles, setGeneratedTitles] =
     useState<any>(generatedTitlesInit);
   useEffect(() => {
@@ -558,7 +561,7 @@ export default function GlobalContextProvider({
       brandNamePayload = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
       brandNamePayload = "investocracy";
-    } else if (selectedBrand === "Movie Myth"){
+    } else if (selectedBrand === "Movie Myth") {
       brandNamePayload = "movieMyth";
     }
 
@@ -593,7 +596,7 @@ export default function GlobalContextProvider({
     }
 
     if (json) {
-      setGeneratedTitles(json.generatedTitles);
+      setGeneratedTitles(json.Titles);
     }
   }
 
@@ -673,7 +676,7 @@ export default function GlobalContextProvider({
       brandNamePayload = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
       brandNamePayload = "investocracy";
-    } else if (selectedBrand === "Movie Myth"){
+    } else if (selectedBrand === "Movie Myth") {
       brandNamePayload = "movieMyth";
     }
     try {

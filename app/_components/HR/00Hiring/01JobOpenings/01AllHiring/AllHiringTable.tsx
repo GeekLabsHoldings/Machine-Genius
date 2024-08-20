@@ -43,7 +43,7 @@ export default function AllHiringTable() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `https://machine-genius.onrender.com/hr/hiring/hiring?limit=10&skip=${skip}&type=All`,
+          `https://api.machinegenius.io/hr/hiring/hiring?limit=10&skip=${skip}&type=All`,
           {
             method: "GET",
             headers: {

@@ -89,7 +89,7 @@ const SignIn = () => {
     setLoader(true);
     try {
       const res = await fetch(
-        `https://machine-genius.onrender.com/authentication`,
+        `https://api.machinegenius.io/authentication`,
         {
           method: "POST",
           headers: {

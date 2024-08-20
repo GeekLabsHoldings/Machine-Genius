@@ -69,7 +69,7 @@ export default function MissingPapersTable() {
     const token = localStorage.getItem("token");
     try {      
       const data = await fetch(
-        "https://machine-genius.onrender.com/hr/employee-paper/get-paper",
+        "https://api.machinegenius.io/hr/employee-paper/get-paper",
         {
           method: "get",
           headers: {

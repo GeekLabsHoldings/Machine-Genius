@@ -440,7 +440,7 @@ export default function ShowErrorsPage() {
                   title="Grammer"
                   onClick={() => {
                     setSelectedIssue(item);
-                    setIssueType("grammer");
+                    setIssueType("Grammar");
                     // console.log("grammer item clicked:", item);
                   }}
                 >
