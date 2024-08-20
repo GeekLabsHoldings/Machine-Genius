@@ -507,13 +507,13 @@ export default function GlobalContextProvider({
   }
 
   async function startChecks() {
+    if (checkStatus.ai !== "pass") {
+      await checkAi();
+    }
     if (checkStatus.grammar !== "pass") {
       await checkGrammer();
     }
     // await checkPlagiarism();
-    if (checkStatus.ai !== "pass") {
-      await checkAi();
-    }
     return Promise.resolve();
   }
   // ===== End Checks =====

@@ -386,15 +386,15 @@ export default function ShowErrorsPage() {
             }
           />
           <div className={`${styles.allCheckers} w-full`}>
-            <SpecificChecker
-              checkStatus={checkStatus.grammar}
-              word="Grammar Checker"
-            />
+            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
             <SpecificChecker
               checkStatus={checkStatus.plagiarism}
               word="Plagiarism Checker"
             />
-            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
+            <SpecificChecker
+              checkStatus={checkStatus.grammar}
+              word="Grammar Checker"
+            />
           </div>
           {(checkStatus.grammar === "fail" ||
             checkStatus.plagiarism === "fail" ||

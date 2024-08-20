@@ -36,10 +36,16 @@ export default function FinalArticlePage() {
   useEffect(() => {
     // console.log("finalArticle", finalArticle);
     // todo: remove after backend is ready
-    if (selectedContentType === "Article"){
-      toast.error("Please note that the prompt for 'Article' is not ready yet!");
-      toast.error("Please note that the prompt for 'Article' is not ready yet!");
-      toast.error("Please note that the prompt for 'Article' is not ready yet!");
+    if (selectedContentType === "Article") {
+      toast.error(
+        "Please note that the prompt for 'Article' is not ready yet!"
+      );
+      toast.error(
+        "Please note that the prompt for 'Article' is not ready yet!"
+      );
+      toast.error(
+        "Please note that the prompt for 'Article' is not ready yet!"
+      );
     }
   }, []);
 
@@ -137,6 +143,7 @@ export default function FinalArticlePage() {
             title="Genius is checking your content.."
           />
           <div className={`${styles.allCheckers} w-full`}>
+            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
             <SpecificChecker
               checkStatus={checkStatus.grammar}
               word="Grammar Checker"
@@ -145,7 +152,6 @@ export default function FinalArticlePage() {
               checkStatus={checkStatus.plagiarism}
               word="Plagiarism Checker"
             />
-            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
           </div>
           {checkStatus.grammar !== "waiting" &&
             checkStatus.plagiarism !== "waiting" &&
