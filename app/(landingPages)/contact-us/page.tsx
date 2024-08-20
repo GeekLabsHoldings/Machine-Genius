@@ -6,11 +6,11 @@ import React from "react";
 const page = () => {
   return (
     <div className="w-full pt-[--sy-251px]">
-      <div className=" w-full px-[--98px]">
+      <div className=" w-full px-[--175px]">
         <div>
             <div className=" w-fit relative"><h2 className=" uppercase font-extrabold text-[--175px] text-[#FFFFFB] mb-[--sy-64px]">Contact <br />Us</h2>
                 <div className="absolute left-1/2 top-1/2 -translate-x-[10%] translate-y-[10%]">
-                <div className=" px-[--115px] py-[--sy-60px] bg-[#FFFFFB33] rounded-[--20px]  w-[clamp(50vw,_calc(69vw_+_0.1rem),_1597px)] mb-[--sy-30px]">
+                <div className=" px-[--115px] py-[--sy-60px] bg-[#FFFFFB33] rounded-[--20px]  w-[clamp(50vw,_calc(62vw_+_0.1rem),_1597px)] mb-[--sy-30px]">
                     <h3 className=" uppercase font-extrabold text-[--40px] leading-[--sy-50px] text-nowrap mb-[--sy-38px] text-[#FFFFFB]">Get in touch</h3>
                     <div>
                         <div className=" flex flex-col gap-[--sy-15px] text-[#FFFFFB] mb-[--sy-30px]">

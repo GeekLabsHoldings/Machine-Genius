@@ -74,10 +74,10 @@ const Navbar = () => {
               <Link href={"/"}>Home</Link>
             </li>
             <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
-              <Link href={"#"}>Modules</Link>
+              <Link href={"/modules"}>Modules</Link>
             </li>
             <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
-              <Link href={"#"}>About Us</Link>
+              <Link href={"/about-us"}>About Us</Link>
             </li>
             <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
               <Link href={"/contact-us"}>Contact Us</Link>

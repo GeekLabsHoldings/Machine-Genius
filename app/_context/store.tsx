@@ -142,12 +142,12 @@ export default function GlobalContextProvider({
 
   function signOut() {
     // toast("signOut ...");
-    localStorage.removeItem("token");
-    localStorage.removeItem("decodedToken");
-    setToken("");
-    setDecodedToken(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("decodedToken");
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("decodedToken");
+    // setToken("");
+    // setDecodedToken(null);
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("decodedToken");
   }
 
   async function checkAuth() {
