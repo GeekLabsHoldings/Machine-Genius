@@ -201,7 +201,11 @@ const GeneratedThumbnailsPage = () => {
             </div>
             <CustomSelectInput
               label={"Select Thumbnail"}
-              options={generatedThumbnails.map((e: any) => e.Thumbnail)}
+              options={
+                generatedThumbnails && generatedThumbnails?.length > 0
+                  ? generatedThumbnails?.map((e: any) => e.Thumbnail)
+                  : ["No Thumbnails Found"]
+              }
               getValue={getValue}
             />
           </div>

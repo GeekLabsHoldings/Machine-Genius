@@ -12,12 +12,13 @@ export default function Page({ params }: { params: { slug: string } }) {
   const textRef = useRef<(HTMLParagraphElement | null)[]>([]);
   const textContent = useRef<string[]>([]);
   const [arrText, setArrText] = useState<string[]>([]);
+  const [vacancyType, setVacancyType] = useState<number>(7);
   const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/hr/hiring/current-step-template/${params.slug}`,
+          `https://machine-genius.onrender.com/hr/hiring/current-step-template/${params.slug}`,
           {
             method: "GET",
             headers: {
@@ -43,6 +44,33 @@ export default function Page({ params }: { params: { slug: string } }) {
     const newArr = data.details?.map((item: any) => item.description) || [];
     setArrText(newArr);
   }, [data]);
+
+  async function publishJobPost() {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/hiring/publish-job/${params.slug}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            contract: vacancyType,
+            template: data.details[1].description,
+            role: data.role,
+            skills: ["css", "html"],
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
+    } catch (error) {
+      console.error("Error updating next step:");
+    }
+  }
 
   const handleOnChange = (e: any, index: number) => {
     // console.log("-----------", index, "-----------");
@@ -84,7 +112,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function updateNextStep() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/hiring/next-step/${data._id}`,
+        `https://machine-genius.onrender.com/hr/hiring/next-step/${data._id}`,
         {
           method: "PUT",
           headers: {
@@ -346,6 +374,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     accentColor="#2A2B2A"
                     type="radio"
                     id="internship"
+                    onChange={() => setVacancyType(7)}
                   />
                   <label htmlFor="internship">Intership</label>
                 </div>
@@ -355,6 +384,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     accentColor="#2A2B2A"
                     type="radio"
                     id="full-time"
+                    onChange={() => setVacancyType(1)}
                   />
                   <label htmlFor="full-time">Full-Time</label>
                 </div>
@@ -366,7 +396,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 btnColor="black"
                 word="Publish Template"
                 width="w-full"
-                onClick={updateNextStep}
+                onClick={publishJobPost}
               />
             </div>
           </div>

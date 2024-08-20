@@ -109,7 +109,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      "https://api.machinegenius.io/hr/group/groups-template",
+      "https://machine-genius.onrender.com/hr/group/groups-template",
       {
         method: "get",
         headers: {
@@ -128,7 +128,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      "https://api.machinegenius.io/hr/template/un-attached",
+      "https://machine-genius.onrender.com/hr/template/un-attached",
       {
         method: "get",
         headers: {
@@ -146,20 +146,23 @@ const Page = () => {
 
   async function createGroup() {
     try {
-      const res = await fetch("https://api.machinegenius.io/hr/group/create", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          title: newGroup.title,
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/group/create",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: newGroup.title,
 
-          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-          description: newGroup.description,
-          step: setp,
-        }),
-      });
+            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+            description: newGroup.description,
+            step: setp,
+          }),
+        }
+      );
 
       const data = await res.json();
       console.log(data);

@@ -50,7 +50,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        "https://api.machinegenius.io/user/task/all",
+        "https://machine-genius.onrender.com/user/task/all",
         {
           method: "get",
           headers: {

@@ -104,7 +104,7 @@ export default function ComplaintsTable() {
       console.log("xzcasdqe");
       
       const data = await fetch(
-        "https://api.machinegenius.io/hr/complaint/get-all?name=&department=&solve=&urgencyLevel=&limit&skip",
+        "https://machine-genius.onrender.com/hr/complaint/get-all?name=&department=&solve=&urgencyLevel=&limit&skip",
         {
           method: "get",
           headers: {

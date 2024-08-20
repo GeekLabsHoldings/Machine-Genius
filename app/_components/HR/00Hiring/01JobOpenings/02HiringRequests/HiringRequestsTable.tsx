@@ -12,7 +12,7 @@ export default function HiringRequestsTable() {
   async function updateNextStep() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/hiring/next-step/${data[0]._id}`,
+        `https://machine-genius.onrender.com/hr/hiring/next-step/${data[0]._id}`,
         {
           method: "PUT",
           headers: {
@@ -34,7 +34,7 @@ export default function HiringRequestsTable() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/hr/hiring/hiring?limit=10&skip=${skip}&type=Request`,
+          `https://machine-genius.onrender.com/hr/hiring/hiring?limit=10&skip=${skip}&type=Request`,
           {
             method: "GET",
             headers: {

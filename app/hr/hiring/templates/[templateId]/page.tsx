@@ -211,7 +211,7 @@ export default function TemplateDetails({
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      `https://api.machinegenius.io/hr/template/one-template/${params.templateId}`,
+      `https://machine-genius.onrender.com/hr/template/one-template/${params.templateId}`,
       {
         method: "get",
         headers: {
@@ -261,7 +261,7 @@ export default function TemplateDetails({
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/group/groups/${step}`,
+        `https://machine-genius.onrender.com/hr/group/groups/${step}`,
         {
           method: "get",
           headers: {
@@ -280,20 +280,23 @@ export default function TemplateDetails({
     const step =
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
-      const res = await fetch("https://api.machinegenius.io/hr/group/create", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          title: newGroup.title,
+      const res = await fetch(
+        "https://machine-genius.onrender.com/hr/group/create",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: newGroup.title,
 
-          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-          description: newGroup.description,
-          step: step,
-        }),
-      });
+            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+            description: newGroup.description,
+            step: step,
+          }),
+        }
+      );
 
       const data = await res.json();
       if (res.ok) {
@@ -316,7 +319,7 @@ export default function TemplateDetails({
     console.log(templateDet);
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/template/${params.templateId}`,
+        `https://machine-genius.onrender.com/hr/template/${params.templateId}`,
         {
           method: "put",
           headers: {

@@ -198,7 +198,7 @@ export default function RequiredPapersTable() {
       console.log("xzcasdqe");
       
       const data = await fetch(
-        "https://api.machinegenius.io/hr/employee-paper/get-paper",
+        "https://machine-genius.onrender.com/hr/employee-paper/get-paper",
         {
           method: "get",
           headers: {

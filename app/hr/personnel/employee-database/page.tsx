@@ -114,7 +114,7 @@ export default function Page() {
       console.log("xzcasdqe");
 
       const data = await fetch(
-        "https://api.machinegenius.io/hr/employee/data?name=&department=&limit&skip",
+        "https://machine-genius.onrender.com/hr/employee/data?name=&department=&limit&skip",
         {
           method: "get",
           headers: {
