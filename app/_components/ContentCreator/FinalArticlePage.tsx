@@ -20,6 +20,7 @@ export default function FinalArticlePage() {
     selectedContentType,
     checkStatus,
     startChecks,
+    setCheckStatus,
     editContentData,
     setEditContentData,
     selectedBrand,
@@ -47,6 +48,13 @@ export default function FinalArticlePage() {
         "Please note that the prompt for 'Article' is not ready yet!"
       );
     }
+    // reset the checkStatus
+    setCheckStatus({
+      grammar: "waiting",
+      plagiarism: "pass",
+      ai: "waiting",
+      isGrammerChecked: false,
+    });
   }, []);
 
   function handleDisplayContentDataToEdit() {
