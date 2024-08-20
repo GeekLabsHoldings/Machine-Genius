@@ -16,9 +16,17 @@ import { globalContext } from "@/app/_context/store";
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [IsLoading, setIsLoading] = useState<boolean>(false);
-  const [IsLoadingParaphrase, setIsLoadingParaphrase] =
-    useState<boolean>(false);
+
+  const [pageState, setPageState] = useState<{
+    isLoading: boolean;
+    isLoadingParaphrase: boolean;
+    triggerStartChecks: boolean;
+  }>({
+    isLoading: false,
+    isLoadingParaphrase: false,
+    triggerStartChecks: false,
+  });
+
   const [selectedIssue, setSelectedIssue] = useState<any>(null);
   const [issueType, setIssueType] = useState<string>("");
   const {
@@ -34,7 +42,7 @@ export default function ShowErrorsPage() {
   const checkAiResults = useSelector(
     (state: any) => state.contentCreator.checkAiResults
   );
-  const [triggerStartChecks, setTriggerStartChecks] = useState<boolean>(false);
+
   const finalArticle = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
@@ -81,14 +89,17 @@ export default function ShowErrorsPage() {
   }, []);
 
   useEffect(() => {
-    if (triggerStartChecks === false) {
+    if (pageState.triggerStartChecks === false) {
       setCheckStatus({
         grammar: checkStatus.grammar !== "pass" ? "waiting" : "pass",
         plagiarism: "pass",
         ai: checkStatus.ai !== "pass" ? "waiting" : "pass",
       });
     } else {
-      setIsLoading(true);
+      setPageState({
+        ...pageState,
+        isLoading: true,
+      });
       console.log("finalArticle right before startChecks()", finalArticle);
       startChecks();
       if (selectedIssue !== null) {
@@ -98,12 +109,15 @@ export default function ShowErrorsPage() {
         setIssueType("");
       }
     }
-  }, [triggerStartChecks]);
+  }, [pageState.triggerStartChecks]);
 
   useEffect(() => {
-    if (IsLoading === false) {
-      if (triggerStartChecks === true) {
-        setTriggerStartChecks(false);
+    if (pageState.isLoading === false) {
+      if (pageState.triggerStartChecks === true) {
+        setPageState({
+          ...pageState,
+          triggerStartChecks: false,
+        });
       }
       setCheckStatus({
         grammar: checkStatus.grammar !== "pass" ? "waiting" : "pass",
@@ -118,7 +132,7 @@ export default function ShowErrorsPage() {
         setIssueType("");
       }
     }
-  }, [IsLoading]);
+  }, [pageState.isLoading]);
 
   useEffect(() => {
     const handleInput = () => {
@@ -254,7 +268,10 @@ export default function ShowErrorsPage() {
   }
 
   async function handleFixAiIssue(item: any) {
-    setIsLoadingParaphrase(true);
+    setPageState({
+      ...pageState,
+      isLoadingParaphrase: true,
+    });
     console.log("item", item);
     const replacedSentence = await paraphraseSentence(item.sentence);
     console.log("replacedSentence", replacedSentence);
@@ -285,11 +302,17 @@ export default function ShowErrorsPage() {
         dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
     }
-    setIsLoadingParaphrase(false);
+    setPageState({
+      ...pageState,
+      isLoadingParaphrase: false,
+    });
   }
 
   async function handleFixAiIssues() {
-    setIsLoadingParaphrase(true);
+    setPageState({
+      ...pageState,
+      isLoadingParaphrase: true,
+    });
     if (typeof window !== undefined) {
       const storedFinalArticle = sessionStorage.getItem("finalArticle");
       if (storedFinalArticle) {
@@ -324,7 +347,10 @@ export default function ShowErrorsPage() {
         dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
     }
-    setIsLoadingParaphrase(false);
+    setPageState({
+      ...pageState,
+      isLoadingParaphrase: false,
+    });
   }
 
   // todo
@@ -335,10 +361,13 @@ export default function ShowErrorsPage() {
     if (checkAiResults.length) {
       await handleFixAiIssues();
     }
-    setTriggerStartChecks(true);
+    setPageState({
+      ...pageState,
+      triggerStartChecks: true,
+    });
   }
 
-  if (IsLoading) {
+  if (pageState.isLoading) {
     return (
       <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.5vw]">
         <div className={`${styles.genuisWorking} m-auto`}>
@@ -376,9 +405,11 @@ export default function ShowErrorsPage() {
             <CustomBtn
               word={"Results"}
               btnColor="black"
-              // href="/content-creator/create/show-errors/"
               onClick={() => {
-                setIsLoading(false);
+                setPageState({
+                  ...pageState,
+                  isLoading: false,
+                });
               }}
             />
           ) : (
@@ -426,7 +457,7 @@ export default function ShowErrorsPage() {
                 // onInput={handleInput}
               >
                 <p>
-                  {IsLoadingParaphrase
+                  {pageState.isLoadingParaphrase
                     ? "Loading..."
                     : finalArticle?.articles[0]?.content}
                 </p>
@@ -522,7 +553,7 @@ export default function ShowErrorsPage() {
                         onClick={() => {
                           handleFixAiIssue(item);
                         }}
-                        disabled={IsLoadingParaphrase}
+                        disabled={pageState.isLoadingParaphrase}
                       ></CustomBtn>
                     </div>
                   </>
@@ -548,14 +579,14 @@ export default function ShowErrorsPage() {
             word={"Back"}
             btnColor="black"
             href="/content-creator/create/movie-myth/final-movie"
-            disabled={IsLoadingParaphrase}
+            disabled={pageState.isLoadingParaphrase}
           />
         ) : (
           <CustomBtn
             word={"Back"}
             btnColor="white"
             href="/content-creator/create/final-article"
-            disabled={IsLoadingParaphrase}
+            disabled={pageState.isLoadingParaphrase}
           />
         )}
         <CustomBtn
@@ -564,7 +595,7 @@ export default function ShowErrorsPage() {
           onClick={() => {
             handleNavigate();
           }}
-          disabled={IsLoadingParaphrase}
+          disabled={pageState.isLoadingParaphrase}
         />
       </div>
     </div>
