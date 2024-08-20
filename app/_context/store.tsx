@@ -198,7 +198,7 @@ export default function GlobalContextProvider({
   useEffect(() => {
     if (token) {
       console.log("=+==+==There is Token=+==+==");
-      checkAuth();
+      // checkAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
       console.log("Redirecting to signin...");
