@@ -169,7 +169,6 @@ export default function GlobalContextProvider({
     //       },
     //     }
     //   );
-
     //   const data = await res.json();
     //   // console.log("checkAuth data:", data);
     //   if (data.result) {
@@ -333,61 +332,50 @@ export default function GlobalContextProvider({
       JSON.stringify(checkGrammerResults)
     );
   }, [checkGrammerResults]);
+
   async function checkGrammer() {
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/grammar-check`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              document: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json.success === true) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error checkGrammer:", error);
-      } finally {
-        attempts++;
-      }
+    if (!finalArticle?.articles[0]?.content) {
+      toast.error("No content found!");
+      return;
     }
+    try {
+      const res = await fetch(`https://api.sapling.ai/api/v1/edits`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
+          session_id: "test session",
+          text: finalArticle?.articles[0]?.content,
+        }),
+      });
 
-    if (json) {
-      if (
-        json?.grammarIssues.filter(
+      const json = await res.json();
+
+      if (json && json.edits) {
+        if (
+          json?.edits.filter((item: any) => item.general_error_type !== "Other")
+            .length > 0
+        ) {
+          setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
+        } else {
+          setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+        }
+
+        let filteredJson = json?.edits.filter(
           (item: any) => item.general_error_type !== "Other"
-        ).length > 0
-      ) {
-        setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
+        );
+        dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
       } else {
-        setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+        setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
       }
-
-      let filteredJson = json?.grammarIssues.filter(
-        (item: any) => item.general_error_type !== "Other"
-      );
-      dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
-    } else {
-      setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error checkGrammer:", error);
     }
   }
+
   async function checkPlagiarism() {
     const maxRetries = 1; // Define the maximum number of retries
     let attempts = 0;
