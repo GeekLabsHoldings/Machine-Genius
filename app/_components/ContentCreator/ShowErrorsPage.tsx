@@ -17,18 +17,6 @@ export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [pageState, setPageState] = useState<{
-    isLoading: boolean;
-    isLoadingParaphrase: boolean;
-    triggerStartChecks: boolean;
-  }>({
-    isLoading: false,
-    isLoadingParaphrase: false,
-    triggerStartChecks: false,
-  });
-
-  const [selectedIssue, setSelectedIssue] = useState<any>(null);
-  const [issueType, setIssueType] = useState<string>("");
   const {
     selectedContentType,
     checkStatus,
@@ -48,6 +36,21 @@ export default function ShowErrorsPage() {
   );
 
   const finalArticleRef = useRef<HTMLDivElement>(null);
+
+  const [pageState, setPageState] = useState<{
+    isLoading: boolean;
+    isLoadingParaphrase: boolean;
+    triggerStartChecks: boolean;
+    progressCounter: number;
+  }>({
+    isLoading: false,
+    isLoadingParaphrase: false,
+    triggerStartChecks: false,
+    progressCounter: checkAiResults ? checkAiResults?.length : 0,
+  });
+
+  const [selectedIssue, setSelectedIssue] = useState<any>(null);
+  const [issueType, setIssueType] = useState<string>("");
 
   function finalArticleContentInit() {
     if (typeof window !== "undefined") {
@@ -330,6 +333,14 @@ export default function ShowErrorsPage() {
             replacedSentence
           );
 
+          // decrease the progressCounter
+          if (pageState.progressCounter > 0) {
+            setPageState((prev: any) => ({
+              ...prev,
+              progressCounter: prev.progressCounter - 1,
+            }));
+          }
+
           // Add a delay between requests to avoid hitting the rate limit
           await new Promise((resolve) => setTimeout(resolve, 250));
         }
@@ -441,6 +452,27 @@ export default function ShowErrorsPage() {
     );
   }
 
+  if (pageState.isLoadingParaphrase) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={false}
+          title="Genius is fixing content issues..."
+        />
+        {checkAiResults &&
+          checkAiResults?.length &&
+          pageState.progressCounter > 0 && (
+            <p className="space-x-[--5px]">
+              <span className="text-[--35px] font-extrabold">
+                {pageState.progressCounter}
+              </span>
+              <span className="text-[--30px]">remaining sentences...</span>
+            </p>
+          )}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full">
       {/* 01. Article Preview & Errors */}
@@ -460,11 +492,7 @@ export default function ShowErrorsPage() {
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >
-                <p>
-                  {pageState.isLoadingParaphrase
-                    ? "Loading..."
-                    : finalArticle?.articles[0]?.content}
-                </p>
+                <p>{finalArticle?.articles[0]?.content}</p>
               </div>
             </div>
           </div>
