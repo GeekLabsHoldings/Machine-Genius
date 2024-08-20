@@ -4,7 +4,7 @@ import React, { use, useEffect, useRef, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Link from "next/link";
-import { text } from "stream/consumers";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const [data, setData] = useState<any>({});
@@ -12,7 +12,8 @@ export default function Page({ params }: { params: { slug: string } }) {
   const textRef = useRef<(HTMLParagraphElement | null)[]>([]);
   const textContent = useRef<string[]>([]);
   const [arrText, setArrText] = useState<string[]>([]);
-
+  const [vacancyType, setVacancyType] = useState<number>(7);
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,6 +28,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         );
         const result = await res.json();
         setData(result);
+        console.log("result", result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -42,6 +44,33 @@ export default function Page({ params }: { params: { slug: string } }) {
     const newArr = data.details?.map((item: any) => item.description) || [];
     setArrText(newArr);
   }, [data]);
+
+  async function publishJobPost() {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/hiring/publish-job/${params.slug}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            contract: vacancyType,
+            template: data.details[1].description,
+            role: data.role,
+            skills: ["css", "html"],
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
+    } catch (error) {
+      console.error("Error updating next step:");
+    }
+  }
 
   const handleOnChange = (e: any, index: number) => {
     // console.log("-----------", index, "-----------");
@@ -79,6 +108,27 @@ export default function Page({ params }: { params: { slug: string } }) {
     });
     setArrText(newArr);
   };
+
+  async function updateNextStep() {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/hiring/next-step/${data._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
 
   return (
     <section>
@@ -132,7 +182,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                   " rotate-90 relative top-[50%] -translate-y-[50%]"
                 }
               />
-              <span>{data.jobTitle}</span>
+              <span>{data.role}</span>
             </div>
             {/* Level */}
             <div className="flex justify-between items-center">
@@ -213,7 +263,12 @@ export default function Page({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Template Preview Container */}
-        <div className={styles.templatePreviewContainer + " w-[60%] "}>
+        <div
+          className={
+            styles.templatePreviewContainer +
+            " w-[60%] h-[75vh] overflow-y-auto"
+          }
+        >
           {/* Template Preview Title */}
           <div className="flex justify-between items-center mb-[15px]">
             <h3 className="font-bold text-[20px] mb-[1.5vh]">
@@ -292,16 +347,46 @@ export default function Page({ params }: { params: { slug: string } }) {
               </p>
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
-                  <CustomCheckBox name="wuuzuf" accentColor="#2A2B2A" />
+                  <CustomCheckBox id="wuuzuf" accentColor="#2A2B2A" />
                   <label htmlFor="wuuzuf">Wuuzuf</label>
                 </div>
                 <div className="flex items-center">
-                  <CustomCheckBox name="linked-in" accentColor="#2A2B2A" />
+                  <CustomCheckBox id="linked-in" accentColor="#2A2B2A" />
                   <label htmlFor="linked-in">Linked In</label>
                 </div>
                 <div className="flex items-center">
-                  <CustomCheckBox name="jobs-co" accentColor="#2A2B2A" />
+                  <CustomCheckBox id="jobs-co" accentColor="#2A2B2A" />
                   <label htmlFor="jobs-co">Jobs.co</label>
+                </div>
+              </div>
+            </div>
+            {/* Vacancy type */}
+            <div className="w-[75%] space-y-4">
+              <h3 className="font-bold text-[20px]">Vacancy Type</h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore.
+              </p>
+              <div className="flex gap-[5vw] items-center">
+                <div className="flex items-center">
+                  <CustomCheckBox
+                    name="vacancy-type"
+                    accentColor="#2A2B2A"
+                    type="radio"
+                    id="internship"
+                    onChange={() => setVacancyType(7)}
+                  />
+                  <label htmlFor="internship">Intership</label>
+                </div>
+                <div className="flex items-center">
+                  <CustomCheckBox
+                    name="vacancy-type"
+                    accentColor="#2A2B2A"
+                    type="radio"
+                    id="full-time"
+                    onChange={() => setVacancyType(1)}
+                  />
+                  <label htmlFor="full-time">Full-Time</label>
                 </div>
               </div>
             </div>
@@ -311,7 +396,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 btnColor="black"
                 word="Publish Template"
                 width="w-full"
-                href="/hr/hiring/job-openings/start-hiring/job-listing-published"
+                onClick={publishJobPost}
               />
             </div>
           </div>

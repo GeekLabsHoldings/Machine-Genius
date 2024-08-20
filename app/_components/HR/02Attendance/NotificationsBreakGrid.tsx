@@ -65,7 +65,7 @@ export default function NotificationsBreakGrid() {
   return (
     <>
       {/* Notifications Container */}
-      <div className="grid grid-cols-5 gap-[2vw] h-[70vh]">
+      <div className="flex gap-[2vw] h-[70vh]">
         {Object.entries(notifications)?.map(
           ([degree, notification]: any, idx) => (
             <div className={`flex flex-col`}>
@@ -80,8 +80,9 @@ export default function NotificationsBreakGrid() {
                 >
                   {notification?.map((noti: INotification) => (
                     <NotificationsCard
-                      bgColor={degreeMap[degree][1]}
+                      bgColor={degreeMap[degree > 5 ? 5 : degree][1]}
                       btnText="Break Time History"
+                      textColour={degree >= 5 ? "#fff" : "#000"}
                       username={
                         noti.employee.firstName + " " + noti.employee.lastName
                       }

@@ -20,10 +20,10 @@ const page = () => {
               </span>
             </div>
           </div>
-          <p className=" text-[--32px] w-2/3 mb-[--sy-90px]">
+          {/* <p className=" text-[--32px] w-2/3 mb-[--sy-90px]">
             Lorem ipsum dolor sit amet consectetur. Dis ac tellus sem felis
             turpis. Tincidunt ornare pellentesque.
-          </p>
+          </p> */}
           <section className=" mb-[--sy-60px]">
             <h2 className=" font-bold text-[--24px] mb-[--sy-50px]">
               Disclaimer

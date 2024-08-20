@@ -19,6 +19,9 @@ const CustomSelectInput = <T,>(props: Iprops<T>) => {
     props.label ? props.label : props.options[0]
   );
   // const [CurrentRole, setCurrentRole] = useState(localStorage.getItem('selected-role'));
+  useEffect(() => {
+    setIsSelected(props.label ? props.label : props.options[0]);
+  }, [props.label]);
 
   const ref = useRef<HTMLDivElement | null>(null);
   const clickableContainer = useRef<HTMLDivElement | null>(null);

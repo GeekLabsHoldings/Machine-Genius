@@ -87,37 +87,47 @@ const GeneratedTitlesPage = () => {
             onClick={() => setIsCreateMyOwnDisabled(true)}
           >
             <div className="h-full overflow-y-auto p-[1vw] space-y-[1vw]">
-              {generatedTitles.map((title: any, index: any) => {
-                if (
-                  lockedGeneratedTitles
-                    .map((item: any) => item.order)
-                    .includes(index)
-                ) {
-                  const lockedTitle = lockedGeneratedTitles.find(
-                    (item: any) => item.order === index
-                  );
-                  return (
-                    <TitleCheckWithLock
-                      title={lockedTitle.title}
-                      checkName="generated-titles"
-                      id={lockedTitle.id}
-                      order={lockedTitle.order}
-                      key={lockedTitle.id}
-                      setAsLocked={true}
-                    />
-                  );
-                } else {
-                  return (
-                    <TitleCheckWithLock
-                      title={title.generalTitle}
-                      checkName="generated-titles"
-                      id={title.id}
-                      order={index}
-                      key={title.id}
-                    />
-                  );
-                }
-              })}
+              {generatedTitles && generatedTitles?.length > 0 ? (
+                generatedTitles?.map((title: any, index: any) => {
+                  if (
+                    lockedGeneratedTitles
+                      .map((item: any) => item.order)
+                      .includes(index)
+                  ) {
+                    const lockedTitle = lockedGeneratedTitles.find(
+                      (item: any) => item.order === index
+                    );
+                    return (
+                      <TitleCheckWithLock
+                        title={lockedTitle.title}
+                        checkName="generated-titles"
+                        id={lockedTitle.id}
+                        order={lockedTitle.order}
+                        key={lockedTitle.id}
+                        setAsLocked={true}
+                      />
+                    );
+                  } else {
+                    return (
+                      <TitleCheckWithLock
+                        title={title.generalTitle}
+                        checkName="generated-titles"
+                        id={title.id}
+                        order={index}
+                        key={title.id}
+                      />
+                    );
+                  }
+                })
+              ) : (
+                <TitleCheckWithLock
+                  title="No titles generated yet"
+                  checkName="generated-titles"
+                  id="no-titles-generated"
+                  order={0}
+                  setAsLocked={false}
+                />
+              )}
               {/* todo: add locked titles that are not in the generated titles (it's order over the generated titles length) */}
               {/* {
                 (Math.max(...lockedGeneratedTitles.map((item:any) => item.order)) > generatedTitles.length-1) && (

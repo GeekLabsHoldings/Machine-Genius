@@ -440,6 +440,7 @@ img {
   -moz-transform: translate(0, 0) !important;
   -ms-transform: translate(0, 0) !important;
   -o-transform: translate(0, 0) !important;
+  z-index: 9999 !important;
 }
 
 .custom_arrows.slick-next {
@@ -476,7 +477,27 @@ img {
 }
 /* End Offline Message */
 
-
-.eventsCalendar.full-calender .fc .fc-event.fc-event-start.fc-event-end.fc-event-past.fc-daygrid-event.fc-daygrid-block-event.fc-h-event {
+.eventsCalendar.full-calender
+  .fc
+  .fc-event.fc-event-start.fc-event-end.fc-event-past.fc-daygrid-event.fc-daygrid-block-event.fc-h-event {
   width: 100% !important;
 }
+
+.templates-container .slick-slider.slick-initialized {
+  width: 100%;
+  position: relative;
+}
+
+.templates-container .slick-list {
+  /* display: flex; */
+  width: 100%;
+}
+
+.templates-container .slick-track {
+  display: flex;
+  /* width: 100%; */
+}
+
+/* .templates-container #unattached-template .slick-track {
+  transform: none !important;
+} */

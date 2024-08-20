@@ -151,54 +151,53 @@ export default function GlobalContextProvider({
   }
 
   async function checkAuth() {
-    // toast("Checking authentication...");
-    const storedToken = localStorage.getItem("token");
-    const authToken = token || storedToken;
-    if (!authToken) {
-      toast.error("No token found, redirecting to signin...");
-      router.replace("/");
-      return;
-    }
-    try {
-      const res = await fetch(
-        "https://machine-genius.onrender.com/authentication/check-auth",
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = await res.json();
-      // console.log("checkAuth data:", data);
-      if (data.result) {
-        // setToken(data.result.token);
-        // setDecodedToken(data.result);
-        // toast.success("Token is valid");
-      } else if (data.message && data.message.name === "TokenExpiredError") {
-        toast.error("Session expired, redirecting to signin...");
-        // console.log('Token expired, redirecting to signin...');
-        signOut();
-        router.replace("/");
-      } else if (data.message === "USER_TOKEN_IS_INVALID") {
-        toast.error("Session expired, redirecting to signin...");
-        // console.log('Token is invalid, Contact Technical Support!');
-        signOut();
-        router.replace("/");
-      }
-    } catch (error) {
-      toast.error("Something went wrong! Contact Technical Support!");
-      // console.error('Error checking auth:', error);
-      signOut();
-      router.replace("/");
-    }
+    // // toast("Checking authentication...");
+    // const storedToken = localStorage.getItem("token");
+    // const authToken = token || storedToken;
+    // if (!authToken) {
+    //   toast.error("No token found, redirecting to signin...");
+    //   router.replace("/");
+    //   return;
+    // }
+    // try {
+    //   const res = await fetch(
+    //     "https://machine-genius.onrender.com/authentication/check-auth",
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${authToken}`,
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
+    //   const data = await res.json();
+    //   // console.log("checkAuth data:", data);
+    //   if (data.result) {
+    //     // setToken(data.result.token);
+    //     // setDecodedToken(data.result);
+    //     // toast.success("Token is valid");
+    //   } else if (data.message && data.message.name === "TokenExpiredError") {
+    //     toast.error("Session expired, redirecting to signin...");
+    //     // console.log('Token expired, redirecting to signin...');
+    //     signOut();
+    //     router.replace("/");
+    //   } else if (data.message === "USER_TOKEN_IS_INVALID") {
+    //     toast.error("Session expired, redirecting to signin...");
+    //     // console.log('Token is invalid, Contact Technical Support!');
+    //     signOut();
+    //     router.replace("/");
+    //   }
+    // } catch (error) {
+    //   toast.error("Something went wrong! Contact Technical Support!");
+    //   // console.error('Error checking auth:', error);
+    //   signOut();
+    //   router.replace("/");
+    // }
   }
 
   useEffect(() => {
     if (token) {
       console.log("=+==+==There is Token=+==+==");
-      checkAuth();
+      // checkAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
       console.log("Redirecting to signin...");
@@ -333,61 +332,50 @@ export default function GlobalContextProvider({
       JSON.stringify(checkGrammerResults)
     );
   }, [checkGrammerResults]);
+
   async function checkGrammer() {
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/grammar-check`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              document: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json.success === true) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error checkGrammer:", error);
-      } finally {
-        attempts++;
-      }
+    if (!finalArticle?.articles[0]?.content) {
+      toast.error("No content found!");
+      return;
     }
+    try {
+      const res = await fetch(`https://api.sapling.ai/api/v1/edits`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
+          session_id: "test session",
+          text: finalArticle?.articles[0]?.content,
+        }),
+      });
 
-    if (json) {
-      if (
-        json?.grammarIssues.filter(
+      const json = await res.json();
+
+      if (json && json.edits) {
+        if (
+          json?.edits.filter((item: any) => item.general_error_type !== "Other")
+            .length > 0
+        ) {
+          setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
+        } else {
+          setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+        }
+
+        let filteredJson = json?.edits.filter(
           (item: any) => item.general_error_type !== "Other"
-        ).length > 0
-      ) {
-        setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
+        );
+        dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
       } else {
-        setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+        setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
       }
-
-      let filteredJson = json?.grammarIssues.filter(
-        (item: any) => item.general_error_type !== "Other"
-      );
-      dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
-    } else {
-      setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error checkGrammer:", error);
     }
   }
+
   async function checkPlagiarism() {
     const maxRetries = 1; // Define the maximum number of retries
     let attempts = 0;
@@ -531,6 +519,7 @@ export default function GlobalContextProvider({
   // ===== End Checks =====
 
   // ===== Start generateTitles =====
+
   function generatedTitlesInit() {
     if (typeof window !== "undefined") {
       const generatedTitlesInitValue =
@@ -542,58 +531,60 @@ export default function GlobalContextProvider({
       return [];
     }
   }
+
   const [generatedTitles, setGeneratedTitles] =
     useState<any>(generatedTitlesInit);
   useEffect(() => {
     sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
     console.log("generatedTitles:", generatedTitles);
   }, [generatedTitles]);
-  async function generateTitles() {
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
 
+  async function generateTitles() {
+    if (!selectedBrand || !finalArticle?.articles[0]?.content) {
+      toast.error("No content or brand name provided");
+      return;
+    }
     let brandNamePayload: string = "";
     if (selectedBrand === "Street Politics Canada") {
       brandNamePayload = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
       brandNamePayload = "investocracy";
-    } else if (selectedBrand === "Movie Myth"){
+    } else if (selectedBrand === "Movie Myth") {
       brandNamePayload = "movieMyth";
     }
 
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/generate-titles`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              brandName: brandNamePayload,
-              content: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
+    try {
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/generate-titles`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            brandName: brandNamePayload,
+            content: finalArticle?.articles[0]?.content,
+          }),
         }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error generateTitles:", error);
-      } finally {
-        attempts++;
-      }
-    }
+      );
 
-    if (json) {
-      setGeneratedTitles(json.generatedTitles);
+      const json = await res.json();
+
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === true && json.Titles) {
+        setGeneratedTitles(json.Titles);
+      } else {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error generateTitles:", error);
     }
   }
 
@@ -673,7 +664,7 @@ export default function GlobalContextProvider({
       brandNamePayload = "streetPoliticsCanada";
     } else if (selectedBrand === "Investorcracy") {
       brandNamePayload = "investocracy";
-    } else if (selectedBrand === "Movie Myth"){
+    } else if (selectedBrand === "Movie Myth") {
       brandNamePayload = "movieMyth";
     }
     try {
@@ -713,6 +704,9 @@ export default function GlobalContextProvider({
         return;
       } else if (json && json.success === true && json.Thumbnail) {
         setGeneratedThumbnails(json.Thumbnail);
+      } else {
+        toast.error("Something went wrong! Contact backend department");
+        return;
       }
     } catch (error) {
       toast.error("Something went wrong! Contact backend department");

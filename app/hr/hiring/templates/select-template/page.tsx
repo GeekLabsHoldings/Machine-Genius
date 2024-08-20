@@ -8,6 +8,7 @@ import { templatesContext } from "../_context/templatesContext";
 const options: { [key: string]: string } = {
   Job_Listings: "Job Listings",
   Schedule_Interview_Call: "Schedule Interview Call",
+  Interview_Call_Question: "Interview Call Question",
   Tasks: "Tasks",
   Schedule_Face_To_Face_Interview: "Schedule Face To Face Interview",
   Job_Offer: "Job Offer",

@@ -7,6 +7,7 @@ import styles from "./NotificationsCard.module.css"; // Import CSS module for co
 // Define the props interface for the NotificationsCard component
 interface IProps {
   bgColor: string; // Background color for the notification card
+  textColour?: string; // Text color for the notification card
   btnText: string; // Text to display on the button
   username: string; // Username of the employee
   timeStamp: string; // Timestamp for the notification
@@ -26,6 +27,8 @@ export default function NotificationsCard(props: IProps) {
       style={{
         // Inline style to set the background color based on the props
         backgroundColor: props.bgColor,
+        // Inline style to set the text color based on the props
+        color: props.textColour,
       }}
     >
       {/* Inner container with vertical layout and spacing between elements */}

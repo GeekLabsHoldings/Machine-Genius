@@ -5,6 +5,8 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { SimplePagination } from "@/app/_components/Pagination/pagination";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import toast from "react-hot-toast";
+import Slider from "react-slick";
 
 const addIcon = (
   <svg
@@ -164,9 +166,17 @@ const Page = () => {
 
       const data = await res.json();
       console.log(data);
-
-      setGroupTemplates([...groupTemplates, { ...data, templates: [] }]);
-      handleClose();
+      if (res.ok) {
+        setGroupTemplates([...groupTemplates, { ...data, templates: [] }]);
+        setNewGroup({
+          title: "",
+          description: "",
+        });
+        handleClose();
+        toast.success("Group Created Successfully");
+      } else {
+        toast.error("Group Creation Failed");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -177,8 +187,55 @@ const Page = () => {
     getUnattachedData();
   }, []);
 
+  function SampleNextArrow(props: any) {
+    const { onClick, className } = props;
+    return (
+      <div onClick={onClick} className={`custom_arrows ${className}`}>
+        <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M17.4941 23.9434C17.0787 23.529 17.0787 22.8565 17.4941 22.441L21.8726 18.0625L10.625 18.0625C10.0406 18.0625 9.5625 17.5865 9.5625 17C9.5625 16.4124 10.0406 15.9375 10.625 15.9375L21.8726 15.9375L17.4941 11.559C17.0787 11.1435 17.0787 10.4699 17.4941 10.0566C17.9074 9.64115 18.581 9.64115 18.9965 10.0566L25.0059 16.066C25.2609 16.321 25.3406 16.6696 25.2822 17C25.3406 17.3304 25.2609 17.679 25.0059 17.934L18.9965 23.9434C18.581 24.3588 17.9074 24.3588 17.4941 23.9434ZM34 29.75L34 4.25C34 1.90294 32.0971 -8.318e-08 29.75 -1.85773e-07L4.25 -1.30041e-06C1.90187 -1.40305e-06 -8.318e-08 1.90294 -1.85773e-07 4.25L-1.30041e-06 29.75C-1.40301e-06 32.0971 1.90187 34 4.25 34L29.75 34C32.0971 34 34 32.0971 34 29.75Z"
+          />
+        </svg>
+      </div>
+    );
+  }
+  function SamplePrevArrow(props: any) {
+    const { onClick, className } = props;
+    return (
+      <div onClick={onClick} className={`custom_arrows ${className}`}>
+        <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M16.5059 23.9434C16.9213 23.529 16.9213 22.8565 16.5059 22.441L12.1274 18.0625L23.375 18.0625C23.9594 18.0625 24.4375 17.5865 24.4375 17C24.4375 16.4124 23.9594 15.9375 23.375 15.9375L12.1274 15.9375L16.5059 11.559C16.9213 11.1435 16.9213 10.4699 16.5059 10.0566C16.0926 9.64115 15.419 9.64115 15.0035 10.0566L8.99409 16.066C8.73909 16.321 8.65939 16.6696 8.71783 17C8.65939 17.3304 8.73909 17.679 8.99409 17.934L15.0035 23.9434C15.419 24.3588 16.0926 24.3588 16.5059 23.9434ZM1.30041e-06 29.75L1.85773e-07 4.25C8.318e-08 1.90294 1.90294 -8.318e-08 4.25 -1.85773e-07L29.75 -1.30041e-06C32.0981 -1.40305e-06 34 1.90294 34 4.25L34 29.75C34 32.0971 32.0981 34 29.75 34L4.25 34C1.90294 34 1.40301e-06 32.0971 1.30041e-06 29.75Z"
+          />
+        </svg>
+      </div>
+    );
+  }
+
+  const settings: any = {
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 3,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+  };
+
+  const settings2: any = {
+    infinite: false,
+    speed: 500,
+    slidesToShow: 5.5,
+    slidesToScroll: 3,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+  };
+
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full templates-container">
       <div
         className={
           "flex flex-col w-full py-[1vw] " + styles.templates_group_wrapper
@@ -191,70 +248,72 @@ const Page = () => {
           }
         >
           <h6>Template Groups</h6>
-          <SimplePagination
+          {/* <SimplePagination
             onclickLeft={() => slideLeft("template-group")}
             onclickRight={() => slideRight("template-group")}
-          />
+          /> */}
         </div>
 
         <div
           className={
             styles.templates_group_slider +
-            " flex flex-nowrap gap-[1vw] mb-3 w-full overflow-x-scroll py-8"
+            " flex gap-[1vw] mb-3 w-full overflow-x-clip py-8 slider-container"
           }
           id="template-group"
         >
-          {groupTemplates?.map((e, i) => {
-            return (
-              <div className={` ${styles.box} !w-[400px] shrink-0`} key={i}>
-                <div className={`${styles.header}`}>
-                  <div className="flex items-center gap-[1vw]">
-                    <img
-                      src={e.icon}
-                      alt=""
-                      className="w-[2.5vw] h-[2.5vw] object-cover"
-                    />
-                    <p>{e?.title}</p>
-                  </div>
-                  <button>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="7"
-                      height="25"
-                      viewBox="0 0 7 25"
-                      fill="none"
-                    >
-                      <path
-                        d="M0 22.1641L0 21.4801C0.0168611 21.4245 0.0443718 21.3747 0.0559083 21.3191C0.29995 19.8803 1.61955 18.744 3.16722 18.6482C4.89769 18.538 6.36194 19.4328 6.83849 20.891C6.89972 21.0825 6.94409 21.2837 6.99911 21.4793V22.1633C6.98225 22.2084 6.95474 22.2486 6.94942 22.2993C6.7107 23.6271 5.65733 24.6379 4.21526 24.9244C4.10433 24.9445 3.99341 24.9751 3.88248 25H3.12817C3.07847 24.9847 3.02789 24.9598 2.97819 24.9549C1.53613 24.7441 0.438388 23.813 0.105604 22.5206C0.0727691 22.3951 0.0337221 22.28 0 22.1641ZM7 2.83107V3.5151C6.98314 3.57062 6.95563 3.62052 6.9503 3.67604C6.70094 5.12457 5.37513 6.25604 3.8106 6.34697C2.08545 6.44756 0.626521 5.54223 0.155299 4.07841C0.0940671 3.89252 0.0496957 3.70099 0 3.5151L0 2.83107C0.0168611 2.786 0.0443718 2.74577 0.0559083 2.7007C0.322135 1.393 1.15986 0.537565 2.55756 0.130368C2.74036 0.0748407 2.93471 0.0450653 3.12284 0L3.87715 0C3.92685 0.01529 3.97743 0.0402369 4.02713 0.0450654C5.47452 0.26154 6.56782 1.18699 6.90061 2.4794C6.93433 2.60011 6.96628 2.71599 7 2.83107ZM6.99911 12.1556V12.8396C6.98225 12.8951 6.95474 12.945 6.9432 13.0005C6.69384 14.4442 5.31833 15.6063 3.76534 15.6666C2.018 15.7367 0.537779 14.7814 0.121577 13.308C0.0772059 13.1518 0.0381592 12.9965 0 12.8404L0 12.1564C0.0168611 12.1008 0.0443718 12.051 0.0559083 11.9954C0.29995 10.5517 1.68078 9.38969 3.23377 9.3245C4.98111 9.24886 6.46133 10.2097 6.87753 11.6832C6.92191 11.8441 6.96095 12.0003 6.99911 12.1564V12.1556Z"
-                        fill="#2A2B2A"
+          <Slider {...settings}>
+            {groupTemplates?.map((e, i) => {
+              return (
+                <div className={` ${styles.box} !w-[400px] shrink-0`} key={i}>
+                  <div className={`${styles.header}`}>
+                    <div className="flex items-center gap-[1vw]">
+                      <img
+                        src={e.icon}
+                        alt=""
+                        className="w-[2.5vw] h-[2.5vw] object-cover"
                       />
-                    </svg>
-                  </button>
-                </div>
-                <div className={styles.body + " space-y-[0.6vw]"}>
-                  {e.templates.map((t, i) => {
-                    return (
-                      <div className={styles.item} key={i}>
-                        <div className={styles.item_header}>
-                          <p>{t.title}</p>
-                          <span>{t.level}</span>
+                      <p>{e?.title}</p>
+                    </div>
+                    <button>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="7"
+                        height="25"
+                        viewBox="0 0 7 25"
+                        fill="none"
+                      >
+                        <path
+                          d="M0 22.1641L0 21.4801C0.0168611 21.4245 0.0443718 21.3747 0.0559083 21.3191C0.29995 19.8803 1.61955 18.744 3.16722 18.6482C4.89769 18.538 6.36194 19.4328 6.83849 20.891C6.89972 21.0825 6.94409 21.2837 6.99911 21.4793V22.1633C6.98225 22.2084 6.95474 22.2486 6.94942 22.2993C6.7107 23.6271 5.65733 24.6379 4.21526 24.9244C4.10433 24.9445 3.99341 24.9751 3.88248 25H3.12817C3.07847 24.9847 3.02789 24.9598 2.97819 24.9549C1.53613 24.7441 0.438388 23.813 0.105604 22.5206C0.0727691 22.3951 0.0337221 22.28 0 22.1641ZM7 2.83107V3.5151C6.98314 3.57062 6.95563 3.62052 6.9503 3.67604C6.70094 5.12457 5.37513 6.25604 3.8106 6.34697C2.08545 6.44756 0.626521 5.54223 0.155299 4.07841C0.0940671 3.89252 0.0496957 3.70099 0 3.5151L0 2.83107C0.0168611 2.786 0.0443718 2.74577 0.0559083 2.7007C0.322135 1.393 1.15986 0.537565 2.55756 0.130368C2.74036 0.0748407 2.93471 0.0450653 3.12284 0L3.87715 0C3.92685 0.01529 3.97743 0.0402369 4.02713 0.0450654C5.47452 0.26154 6.56782 1.18699 6.90061 2.4794C6.93433 2.60011 6.96628 2.71599 7 2.83107ZM6.99911 12.1556V12.8396C6.98225 12.8951 6.95474 12.945 6.9432 13.0005C6.69384 14.4442 5.31833 15.6063 3.76534 15.6666C2.018 15.7367 0.537779 14.7814 0.121577 13.308C0.0772059 13.1518 0.0381592 12.9965 0 12.8404L0 12.1564C0.0168611 12.1008 0.0443718 12.051 0.0559083 11.9954C0.29995 10.5517 1.68078 9.38969 3.23377 9.3245C4.98111 9.24886 6.46133 10.2097 6.87753 11.6832C6.92191 11.8441 6.96095 12.0003 6.99911 12.1564V12.1556Z"
+                          fill="#2A2B2A"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className={styles.body + " space-y-[0.6vw]"}>
+                    {e.templates.map((t, i) => {
+                      return (
+                        <div className={styles.item} key={i}>
+                          <div className={styles.item_header}>
+                            <p>{t.role}</p>
+                            <span>{t.level}</span>
+                          </div>
+                          <div className={styles.item_body}>
+                            <div className={styles.line}></div>
+                            <CustomBtn
+                              btnColor="black"
+                              word="View Template"
+                              width="w-full"
+                              href={`/hr/hiring/templates/${t._id}`}
+                            />
+                          </div>
                         </div>
-                        <div className={styles.item_body}>
-                          <div className={styles.line}></div>
-                          <CustomBtn
-                            btnColor="black"
-                            word="View Template"
-                            width="w-full"
-                            href={`/hr/hiring/templates/${t._id}`}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </Slider>
         </div>
 
         <div className=" w-fit ml-auto">
@@ -277,38 +336,47 @@ const Page = () => {
           }
         >
           <h6>Template Groups</h6>
-          <SimplePagination
+          {/* <SimplePagination
             onclickLeft={() => slideLeft("unattached-template")}
             onclickRight={() => slideRight("unattached-template")}
-          />
+          /> */}
         </div>
 
         <div
           className={
             styles.templates_slider +
-            " grid lg:grid-cols-3 xl:grid-cols-4 gap-[1vw] mb-3"
+            "flex mb-4 overflow-x-clip slider-container"
           }
           id="unattached-template"
         >
-          {unattchedTemplates.map((e, i) => {
-            return (
-              <div className={styles.item} key={i}>
-                <div className={styles.item_header}>
-                  <p>{e.title}</p>
-                  <span>{e.level}</span>
+          <Slider {...settings2}>
+            {unattchedTemplates.map((e, i) => {
+              return (
+                <div>
+                  <div
+                    className={`${styles.item} rounded-[clamp(10px,_calc(0.8vw_+_0.1rem),_1000px)] p-[0.6vw_1vw_0.8vw] border mx-[--5px] border-[--dark]`}
+                    key={i}
+                  >
+                    <div className={styles.item_header}>
+                      <p className="text-[--17px] font-bold">{e.title}</p>
+                      <span className="text-[--14px] block">{e.level}</span>
+                    </div>
+                    <div className={styles.item_body}>
+                      <div
+                        className={`${styles.line} w-full h-[--sy-1px] bg-[--dark] my-[1vw]`}
+                      ></div>
+                      <CustomBtn
+                        btnColor="black"
+                        word="View Template"
+                        width="w-full"
+                        href={`/hr/hiring/templates/${e._id}`}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.item_body}>
-                  <div className={styles.line}></div>
-                  <CustomBtn
-                    btnColor="black"
-                    word="View Template"
-                    width="w-full"
-                    href={`/hr/hiring/templates/${e._id}`}
-                  />
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </Slider>
         </div>
 
         <div className=" w-fit ml-auto">
