@@ -596,7 +596,7 @@ export default function GlobalContextProvider({
     }
 
     if (json) {
-      setGeneratedTitles(json.generatedTitles);
+      setGeneratedTitles(json.Titles);
     }
   }
 
