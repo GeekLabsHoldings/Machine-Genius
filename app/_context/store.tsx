@@ -538,11 +538,12 @@ export default function GlobalContextProvider({
     sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
     console.log("generatedTitles:", generatedTitles);
   }, [generatedTitles]);
-  async function generateTitles() {
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
 
+  async function generateTitles() {
+    if (!selectedBrand || !finalArticle?.articles[0]?.content) {
+      toast.error("No content or brand name provided");
+      return;
+    }
     let brandNamePayload: string = "";
     if (selectedBrand === "Street Politics Canada") {
       brandNamePayload = "streetPoliticsCanada";
@@ -552,38 +553,38 @@ export default function GlobalContextProvider({
       brandNamePayload = "movieMyth";
     }
 
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/generate-titles`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              brandName: brandNamePayload,
-              content: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
+    try {
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/generate-titles`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            brandName: brandNamePayload,
+            content: finalArticle?.articles[0]?.content,
+          }),
         }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error generateTitles:", error);
-      } finally {
-        attempts++;
-      }
-    }
+      );
 
-    if (json) {
-      setGeneratedTitles(json.Titles);
+      const json = await res.json();
+
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === true && json.Titles) {
+        setGeneratedTitles(json.Titles);
+      } else {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error generateTitles:", error);
     }
   }
 
@@ -703,6 +704,9 @@ export default function GlobalContextProvider({
         return;
       } else if (json && json.success === true && json.Thumbnail) {
         setGeneratedThumbnails(json.Thumbnail);
+      } else {
+        toast.error("Something went wrong! Contact backend department");
+        return;
       }
     } catch (error) {
       toast.error("Something went wrong! Contact backend department");

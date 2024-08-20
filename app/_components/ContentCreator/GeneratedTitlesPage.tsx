@@ -87,7 +87,7 @@ const GeneratedTitlesPage = () => {
             onClick={() => setIsCreateMyOwnDisabled(true)}
           >
             <div className="h-full overflow-y-auto p-[1vw] space-y-[1vw]">
-              {generatedTitles?.length > 0 ? (
+              {generatedTitles && generatedTitles?.length > 0 ? (
                 generatedTitles?.map((title: any, index: any) => {
                   if (
                     lockedGeneratedTitles
@@ -125,7 +125,6 @@ const GeneratedTitlesPage = () => {
                   checkName="generated-titles"
                   id="no-titles-generated"
                   order={0}
-                  key="no-titles-generated"
                   setAsLocked={false}
                 />
               )}
