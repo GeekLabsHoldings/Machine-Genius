@@ -17,7 +17,7 @@ export default function Page() {
     const token = localStorage.getItem("token");
     try {      
       const data = await fetch(
-        "https://api.machinegenius.io/hr/employee-paper/get-paper",
+        "https://machine-genius.onrender.com/hr/employee-paper/get-paper",
         {
           method: "get",
           headers: {

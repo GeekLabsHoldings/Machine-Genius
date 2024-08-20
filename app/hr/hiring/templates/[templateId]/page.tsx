@@ -208,7 +208,7 @@ export default function TemplateDetails({
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      `https://api.machinegenius.io/hr/template/one-template/${params.templateId}`,
+      `https://machine-genius.onrender.com/hr/template/one-template/${params.templateId}`,
       {
         method: "get",
         headers: {
@@ -258,7 +258,7 @@ export default function TemplateDetails({
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/group/groups/${step}`,
+        `https://machine-genius.onrender.com/hr/group/groups/${step}`,
         {
           method: "get",
           headers: {
@@ -278,7 +278,7 @@ export default function TemplateDetails({
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
       const res = await fetch(
-        "https://api.machinegenius.io/hr/group/create",
+        "https://machine-genius.onrender.com/hr/group/create",
         {
           method: "post",
           headers: {
@@ -306,7 +306,7 @@ export default function TemplateDetails({
     console.log(templateDet);
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/template/${params.templateId}`,
+        `https://machine-genius.onrender.com/hr/template/${params.templateId}`,
         {
           method: "put",
           headers: {
