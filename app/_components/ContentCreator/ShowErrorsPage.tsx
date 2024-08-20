@@ -355,11 +355,11 @@ export default function ShowErrorsPage() {
 
   // todo
   async function handleNavigate() {
-    if (checkGrammerResults.length) {
-      await handleFixGrammerIssues();
-    }
     if (checkAiResults.length) {
       await handleFixAiIssues();
+    }
+    if (checkGrammerResults.length) {
+      await handleFixGrammerIssues();
     }
     setPageState({
       ...pageState,
