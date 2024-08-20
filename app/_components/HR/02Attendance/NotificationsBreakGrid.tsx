@@ -65,7 +65,7 @@ export default function NotificationsBreakGrid() {
   return (
     <>
       {/* Notifications Container */}
-      <div className="grid grid-cols-5 gap-[2vw] h-[70vh]">
+      <div className="flex gap-[2vw] h-[70vh]">
         {Object.entries(notifications)?.map(
           ([degree, notification]: any, idx) => (
             <div className={`flex flex-col`}>

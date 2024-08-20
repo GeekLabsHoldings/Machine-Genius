@@ -274,6 +274,8 @@ export default function TemplateDetails({
   }
 
   async function createGroup() {
+    const step =
+      templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
       const res = await fetch(
         "https://machine-genius.onrender.com/hr/group/create",
@@ -288,7 +290,7 @@ export default function TemplateDetails({
 
             icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
             description: newGroup.description,
-            step: templateDet.group_id?.step,
+            step: step,
           }),
         }
       );

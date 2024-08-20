@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./AllHiringTable.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { useRouter } from "next/navigation";
 
 interface HiringData {
   _id: string;
@@ -13,8 +14,30 @@ interface HiringData {
 }
 
 export default function AllHiringTable() {
+  const router = useRouter();
   const [data, setData] = useState<HiringData[]>([]);
   const [skip, setSkip] = useState(0);
+
+  async function updateNextStep(hiringStatus: string) {
+    try {
+      const res = await fetch(
+        `https://machine-genius.onrender.com/hr/hiring/next-step/${data[0]._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/start-hiring/${data[0]._id}`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,11 +181,7 @@ export default function AllHiringTable() {
               <CustomBtn
                 btnColor="black"
                 word={ele.hiringStatus}
-                href={
-                  ele.hiringStatus
-                    ? ``
-                    : `/hr/hiring/job-openings/start-hiring/${ele._id}`
-                }
+                onClick={() => updateNextStep(ele.hiringStatus)}
               />
             </li>
           </ul>
