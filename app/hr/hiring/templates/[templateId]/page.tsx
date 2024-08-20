@@ -6,6 +6,8 @@ import $, { post } from "jquery";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { templatesContext } from "../_context/templatesContext";
 import { Box, Modal } from "@mui/material";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const editIcon = (
   <svg
@@ -201,6 +203,7 @@ export default function TemplateDetails({
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
+  const router = useRouter();
   const [templateDet, setTemplateDet] =
     useState<templateDet>(defaultTemplateDet);
 
@@ -277,26 +280,33 @@ export default function TemplateDetails({
     const step =
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
-      const res = await fetch(
-        "https://api.machinegenius.io/hr/group/create",
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            title: newGroup.title,
+      const res = await fetch("https://api.machinegenius.io/hr/group/create", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: newGroup.title,
 
-            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-            description: newGroup.description,
-            step: step,
-          }),
-        }
-      );
+          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+          description: newGroup.description,
+          step: step,
+        }),
+      });
 
       const data = await res.json();
-      getGroups();
+      if (res.ok) {
+        toast.success("Group Created Successfully");
+        setNewGroup({
+          title: "",
+          description: "",
+        });
+        setOpen(false);
+        getGroups();
+      } else {
+        toast.error("Group Creation Failed");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -327,6 +337,12 @@ export default function TemplateDetails({
         }
       );
       const data = await res.json();
+      if (res.ok) {
+        toast.success("Template Updated Successfully");
+        router.push("/hr/hiring/templates");
+      } else {
+        toast.error("Template Update Failed");
+      }
     } catch (error) {
       console.log(error);
     }

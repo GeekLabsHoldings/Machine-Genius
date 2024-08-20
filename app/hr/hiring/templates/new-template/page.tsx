@@ -9,6 +9,7 @@ import { templatesContext } from "../_context/templatesContext";
 import TemplateDetails from "../[templateId]/page";
 import { title } from "process";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -258,27 +259,33 @@ const Page = () => {
   }
   async function createGroup() {
     try {
-      const res = await fetch(
-        "https://api.machinegenius.io/hr/group/create",
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            title: newGroup.title,
+      const res = await fetch("https://api.machinegenius.io/hr/group/create", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: newGroup.title,
 
-            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-            description: newGroup.description,
-            step: templates.key,
-          }),
-        }
-      );
+          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+          description: newGroup.description,
+          step: templates.key,
+        }),
+      });
 
       const data = await res.json();
-      console.log(data);
-      getGroups();
+      if (res.ok) {
+        toast.success("Group Created Successfully");
+        setNewGroup({
+          title: "",
+          description: "",
+        });
+        setOpen(false);
+        getGroups();
+      } else {
+        toast.error("Group Creation Failed");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -310,8 +317,12 @@ const Page = () => {
         }
       );
       const data = await res.json();
-      console.log(templates);
-      console.log(groups);
+      if (res.ok) {
+        toast.success("Template Created Successfully");
+        router.push("/hr/hiring/templates");
+      } else {
+        toast.error("Failed to create template");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -587,7 +598,7 @@ const Page = () => {
           onClick={addNewTemplate}
         /> */}
         <CustomBtn
-          word="Save Template"
+          word="Create Template"
           btnColor="black"
           href=""
           paddingVal="px-[1.5vw] py-[0.5vw]"
