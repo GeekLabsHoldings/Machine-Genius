@@ -151,48 +151,48 @@ export default function GlobalContextProvider({
   }
 
   async function checkAuth() {
-    // toast("Checking authentication...");
-    const storedToken = localStorage.getItem("token");
-    const authToken = token || storedToken;
-    if (!authToken) {
-      toast.error("No token found, redirecting to signin...");
-      router.replace("/");
-      return;
-    }
-    try {
-      const res = await fetch(
-        "https://api.machinegenius.io/authentication/check-auth",
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    // // toast("Checking authentication...");
+    // const storedToken = localStorage.getItem("token");
+    // const authToken = token || storedToken;
+    // if (!authToken) {
+    //   toast.error("No token found, redirecting to signin...");
+    //   router.replace("/");
+    //   return;
+    // }
+    // try {
+    //   const res = await fetch(
+    //     "https://api.machinegenius.io/authentication/check-auth",
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${authToken}`,
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
 
-      const data = await res.json();
-      // console.log("checkAuth data:", data);
-      if (data.result) {
-        // setToken(data.result.token);
-        // setDecodedToken(data.result);
-        // toast.success("Token is valid");
-      } else if (data.message && data.message.name === "TokenExpiredError") {
-        toast.error("Session expired, redirecting to signin...");
-        // console.log('Token expired, redirecting to signin...');
-        signOut();
-        router.replace("/");
-      } else if (data.message === "USER_TOKEN_IS_INVALID") {
-        toast.error("Session expired, redirecting to signin...");
-        // console.log('Token is invalid, Contact Technical Support!');
-        signOut();
-        router.replace("/");
-      }
-    } catch (error) {
-      toast.error("Something went wrong! Contact Technical Support!");
-      // console.error('Error checking auth:', error);
-      signOut();
-      router.replace("/");
-    }
+    //   const data = await res.json();
+    //   // console.log("checkAuth data:", data);
+    //   if (data.result) {
+    //     // setToken(data.result.token);
+    //     // setDecodedToken(data.result);
+    //     // toast.success("Token is valid");
+    //   } else if (data.message && data.message.name === "TokenExpiredError") {
+    //     toast.error("Session expired, redirecting to signin...");
+    //     // console.log('Token expired, redirecting to signin...');
+    //     signOut();
+    //     router.replace("/");
+    //   } else if (data.message === "USER_TOKEN_IS_INVALID") {
+    //     toast.error("Session expired, redirecting to signin...");
+    //     // console.log('Token is invalid, Contact Technical Support!');
+    //     signOut();
+    //     router.replace("/");
+    //   }
+    // } catch (error) {
+    //   toast.error("Something went wrong! Contact Technical Support!");
+    //   // console.error('Error checking auth:', error);
+    //   signOut();
+    //   router.replace("/");
+    // }
   }
 
   useEffect(() => {
