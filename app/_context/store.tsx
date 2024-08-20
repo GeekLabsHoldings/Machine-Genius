@@ -161,7 +161,7 @@ export default function GlobalContextProvider({
     }
     try {
       const res = await fetch(
-        "https://machine-genius.onrender.com/authentication/check-auth",
+        "https://api.machinegenius.io/authentication/check-auth",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
