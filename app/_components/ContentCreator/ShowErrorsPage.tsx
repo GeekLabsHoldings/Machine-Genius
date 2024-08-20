@@ -398,7 +398,10 @@ export default function ShowErrorsPage() {
           </div>
           {(checkStatus.grammar === "fail" ||
             checkStatus.plagiarism === "fail" ||
-            checkStatus.ai === "fail") &&
+            checkStatus.ai === "fail" ||
+            checkStatus.grammar === "fetchError" ||
+            checkStatus.plagiarism === "fetchError" ||
+            checkStatus.ai === "fetchError") &&
           checkStatus.grammar !== "waiting" &&
           checkStatus.plagiarism !== "waiting" &&
           checkStatus.ai !== "waiting" ? (
