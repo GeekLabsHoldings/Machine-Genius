@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
@@ -339,35 +340,39 @@ export default function GlobalContextProvider({
       return;
     }
     try {
-      const res = await fetch(`https://api.sapling.ai/api/v1/edits`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
-          session_id: "test session",
-          text: finalArticle?.articles[0]?.content,
-        }),
-      });
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/grammar-check`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            document: finalArticle?.articles[0]?.content,
+          }),
+        }
+      );
 
       const json = await res.json();
 
-      if (json && json.edits) {
-        if (
-          json?.edits.filter((item: any) => item.general_error_type !== "Other")
-            .length > 0
-        ) {
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === true && json.grammarIssues) {
+        const filteredJson = json?.grammarIssues.filter(
+          (item: any) => item.general_error_type === "Grammar"
+        );
+        if (filteredJson.length > 0) {
           setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
         } else {
           setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
         }
-
-        let filteredJson = json?.edits.filter(
-          (item: any) => item.general_error_type !== "Other"
-        );
         dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
       } else {
+        toast.error("Something went wrong! Contact backend department");
         setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
       }
     } catch (error) {

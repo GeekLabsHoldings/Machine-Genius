@@ -481,10 +481,10 @@ export default function ShowErrorsPage() {
               return (
                 <ErrorCollapse
                   key={index}
-                  title="Grammer"
+                  title="Grammar"
                   onClick={() => {
                     setSelectedIssue(item);
-                    setIssueType("Grammar");
+                    setIssueType("grammer");
                     // console.log("grammer item clicked:", item);
                   }}
                 >
