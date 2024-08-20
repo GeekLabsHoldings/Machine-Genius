@@ -331,7 +331,7 @@ export default function ShowErrorsPage() {
           );
 
           // Add a delay between requests to avoid hitting the rate limit
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 750));
         }
 
         const updatedFinalArticle = {
@@ -388,14 +388,15 @@ export default function ShowErrorsPage() {
           <div className={`${styles.allCheckers} w-full`}>
             <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
             <SpecificChecker
-              checkStatus={checkStatus.plagiarism}
-              word="Plagiarism Checker"
-            />
-            <SpecificChecker
               checkStatus={checkStatus.grammar}
               word="Grammar Checker"
             />
+            <SpecificChecker
+              checkStatus={checkStatus.plagiarism}
+              word="Plagiarism Checker"
+            />
           </div>
+
           {(checkStatus.grammar === "fail" ||
             checkStatus.plagiarism === "fail" ||
             checkStatus.ai === "fail" ||

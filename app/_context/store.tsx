@@ -334,6 +334,14 @@ export default function GlobalContextProvider({
     );
   }, [checkGrammerResults]);
 
+  function handleGrammerFetchError() {
+    setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
+    toast.error("Something went wrong! Contact backend department");
+    // reset checkGrammerResults
+    dispatch(contentCreatorActions.setCheckGrammerResults([]));
+    return;
+  }
+
   async function checkGrammer() {
     if (!finalArticle?.articles[0]?.content) {
       toast.error("No content found!");
@@ -356,10 +364,10 @@ export default function GlobalContextProvider({
       const json = await res.json();
 
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        handleGrammerFetchError();
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        handleGrammerFetchError();
         return;
       } else if (json && json.success === true && json.grammarIssues) {
         const filteredJson = json?.grammarIssues.filter(
@@ -372,11 +380,10 @@ export default function GlobalContextProvider({
         }
         dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
       } else {
-        toast.error("Something went wrong! Contact backend department");
-        setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
+        handleGrammerFetchError();
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      handleGrammerFetchError();
       console.error("Error checkGrammer:", error);
     }
   }
@@ -408,6 +415,7 @@ export default function GlobalContextProvider({
           break;
         }
       } catch (error) {
+        // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fetchError" }));
         toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
@@ -441,6 +449,15 @@ export default function GlobalContextProvider({
   useEffect(() => {
     sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
   }, [checkAiResults]);
+
+  function handleAiFetchError() {
+    setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
+    toast.error("Something went wrong! Contact backend department");
+    // reset checkGrammerResults
+    dispatch(contentCreatorActions.setCheckAiResults([]));
+    return;
+  }
+
   async function checkAi() {
     if (
       !finalArticle.articles[0].content ||
@@ -454,60 +471,46 @@ export default function GlobalContextProvider({
       return;
     }
 
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
+    try {
+      const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
+        },
+        body: JSON.stringify({
+          document: finalArticle?.articles[0]?.content,
+          version: "",
+          multilingual: false,
+        }),
+      });
 
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
-          },
-          body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content,
-            version: "2024-01-09",
-            multilingual: false,
-          }),
-        });
+      const json = await res.json();
 
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Error checking AI");
-        console.error("Error checkAi:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      if (
-        // json.documents[0].class_probabilities.human < 0.8
-        json?.documents[0]?.sentences.some(
+      if (!json) {
+        handleAiFetchError();
+        return;
+      } else if (json && json.documents[0]) {
+        // console.log("checkAiResult", json);
+        const filteredJson = json?.documents[0]?.sentences.filter(
           (sentence: any) => sentence.highlight_sentence_for_ai
-        )
-      ) {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+        );
+        if (
+          // json.documents[0].class_probabilities.human < 0.8
+          filteredJson.length > 0
+        ) {
+          setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+        } else {
+          setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
+        }
+        dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
       } else {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
+        handleAiFetchError();
       }
-      console.log("checkAiResult", json);
-      let filteredJson = json?.documents[0]?.sentences.filter(
-        (sentence: any) => sentence.highlight_sentence_for_ai
-      );
-      dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
-    } else {
-      setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
+    } catch (error) {
+      handleAiFetchError();
+      console.error("Error checkAi:", error);
     }
   }
 

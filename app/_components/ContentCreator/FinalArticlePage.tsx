@@ -140,7 +140,17 @@ export default function FinalArticlePage() {
         <div className={`${styles.genuisWorking}`}>
           <LogoAndTitle
             needTxt={false}
-            title="Genius is checking your content.."
+            title={
+              checkStatus.grammar === "waiting" ||
+              checkStatus.plagiarism === "waiting" ||
+              checkStatus.ai === "waiting"
+                ? `Genius is checking your content...`
+                : checkStatus.grammar === "pass" &&
+                  checkStatus.plagiarism === "pass" &&
+                  checkStatus.ai === "pass"
+                ? "Hooray! No issues found!"
+                : "Check is finished. View the results"
+            }
           />
           <div className={`${styles.allCheckers} w-full`}>
             <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
@@ -153,7 +163,14 @@ export default function FinalArticlePage() {
               word="Plagiarism Checker"
             />
           </div>
-          {checkStatus.grammar !== "waiting" &&
+
+          {(checkStatus.grammar === "fail" ||
+            checkStatus.plagiarism === "fail" ||
+            checkStatus.ai === "fail" ||
+            checkStatus.grammar === "fetchError" ||
+            checkStatus.plagiarism === "fetchError" ||
+            checkStatus.ai === "fetchError") &&
+            checkStatus.grammar !== "waiting" &&
             checkStatus.plagiarism !== "waiting" &&
             checkStatus.ai !== "waiting" &&
             (selectedBrand === "Movie Myth" ? (
@@ -167,6 +184,23 @@ export default function FinalArticlePage() {
                 word={"Results"}
                 btnColor="black"
                 href="/content-creator/create/show-errors/"
+              />
+            ))}
+
+          {checkStatus.grammar === "pass" &&
+            checkStatus.plagiarism === "pass" &&
+            checkStatus.ai === "pass" &&
+            (selectedBrand === "Movie Myth" ? (
+              <CustomBtn
+                word={"Generate Titles"}
+                btnColor="black"
+                href="/content-creator/create/movie-myth/generated-titles"
+              />
+            ) : (
+              <CustomBtn
+                word={"Generate Titles"}
+                btnColor="black"
+                href="/content-creator/create/generated-titles"
               />
             ))}
         </div>
