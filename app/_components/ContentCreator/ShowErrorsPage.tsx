@@ -331,7 +331,7 @@ export default function ShowErrorsPage() {
           );
 
           // Add a delay between requests to avoid hitting the rate limit
-          await new Promise((resolve) => setTimeout(resolve, 750));
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
 
         const updatedFinalArticle = {
