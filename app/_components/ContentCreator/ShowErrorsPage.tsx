@@ -324,7 +324,7 @@ export default function ShowErrorsPage() {
         dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
     }
-    // setIsLoadingParaphrase(false);
+    setIsLoadingParaphrase(false);
   }
 
   // todo
