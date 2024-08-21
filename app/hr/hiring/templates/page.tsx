@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./templates.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import { SimplePagination } from "@/app/_components/Pagination/pagination";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import toast from "react-hot-toast";
@@ -57,36 +56,6 @@ const tempOptions = {
   Job_Offer: "Job Offer",
   Required_Documents: "Required Documents",
 };
-
-/**
- * Scrolls the table to the right by 150 pixels.
- *
- * @return {void} No return value.
- */
-function slideRight(id: string) {
-  const table = document.getElementById(id) as HTMLTableElement | null;
-  console.log(table);
-  if (table) {
-    table.scrollLeft += 150;
-  } else {
-    console.error("Failed to find table with ID 'table'");
-  }
-}
-
-/**
- * Scrolls the table to the left by 150 pixels.
- *
- * @return {void} No return value.
- */
-function slideLeft(id: string) {
-  const table = document.getElementById(id) as HTMLTableElement | null;
-  console.log(table);
-  if (table) {
-    table.scrollLeft -= 150;
-  } else {
-    console.error("Failed to find table with ID 'table'");
-  }
-}
 
 const Page = () => {
   const [groupTemplates, setGroupTemplates] = useState<GroupTemplate[]>([]);
@@ -223,12 +192,38 @@ const Page = () => {
     slidesToScroll: 3,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   const settings2: any = {
     infinite: false,
     speed: 500,
-    slidesToShow: 5.5,
+    slidesToShow: 5,
     slidesToScroll: 3,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -352,9 +347,9 @@ const Page = () => {
           <Slider {...settings2}>
             {unattchedTemplates.map((e, i) => {
               return (
-                <div>
+                <div className="h-full" key={i}>
                   <div
-                    className={`${styles.item} rounded-[clamp(10px,_calc(0.8vw_+_0.1rem),_1000px)] p-[0.6vw_1vw_0.8vw] border mx-[--5px] border-[--dark]`}
+                    className={`${styles.item} flex flex-col justify-between h-full rounded-[clamp(10px,_calc(0.8vw_+_0.1rem),_1000px)] p-[0.6vw_1vw_0.8vw] border mx-[--10px] border-[--dark]`}
                     key={i}
                   >
                     <div className={styles.item_header}>
