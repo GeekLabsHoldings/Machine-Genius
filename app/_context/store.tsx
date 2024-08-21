@@ -351,6 +351,7 @@ export default function GlobalContextProvider({
     }
     if (checkStatus.isGrammerChecked === true) {
       setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+      dispatch(contentCreatorActions.setCheckGrammerResults([]));
       return;
     }
     try {
@@ -537,6 +538,7 @@ export default function GlobalContextProvider({
       await checkGrammer();
     } else {
       setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+      dispatch(contentCreatorActions.setCheckGrammerResults([]));
     }
     // await checkPlagiarism();
     return Promise.resolve();
