@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
@@ -30,6 +31,7 @@ const initialContextState = {
     // todo: temp until backend fix it
     plagiarism: "pass",
     ai: "waiting",
+    isGrammerChecked: false,
   },
   setCheckStatus: (status: any) => {},
   checkGrammer: () => {},
@@ -319,6 +321,7 @@ export default function GlobalContextProvider({
     // todo: temp until backend fix it
     plagiarism: "pass",
     ai: "waiting",
+    isGrammerChecked: false,
   });
   // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
   //   checkGrammerResultsInit
@@ -333,45 +336,69 @@ export default function GlobalContextProvider({
     );
   }, [checkGrammerResults]);
 
+  function handleGrammerFetchError() {
+    setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
+    toast.error("Something went wrong! Contact backend department");
+    // reset checkGrammerResults
+    dispatch(contentCreatorActions.setCheckGrammerResults([]));
+    return;
+  }
+
   async function checkGrammer() {
     if (!finalArticle?.articles[0]?.content) {
       toast.error("No content found!");
       return;
     }
+    if (checkStatus.isGrammerChecked === true) {
+      setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+      dispatch(contentCreatorActions.setCheckGrammerResults([]));
+      return;
+    }
     try {
-      const res = await fetch(`https://api.sapling.ai/api/v1/edits`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
-          session_id: "test session",
-          text: finalArticle?.articles[0]?.content,
-        }),
-      });
+      const res = await fetch(
+        `https://backendmachinegenius.onrender.com/grammar-check`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            document: finalArticle?.articles[0]?.content,
+          }),
+        }
+      );
 
       const json = await res.json();
 
-      if (json && json.edits) {
-        if (
-          json?.edits.filter((item: any) => item.general_error_type !== "Other")
-            .length > 0
-        ) {
-          setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
-        } else {
-          setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
-        }
-
-        let filteredJson = json?.edits.filter(
-          (item: any) => item.general_error_type !== "Other"
+      if (!json) {
+        handleGrammerFetchError();
+        return;
+      } else if (json && json.success === false) {
+        handleGrammerFetchError();
+        return;
+      } else if (json && json.success === true && json.grammarIssues) {
+        const filteredJson = json?.grammarIssues.filter(
+          (item: any) => item.general_error_type === "Grammar"
         );
+        if (filteredJson.length > 0) {
+          setCheckStatus((prev: any) => ({
+            ...prev,
+            grammar: "fail",
+            isGrammerChecked: true,
+          }));
+        } else {
+          setCheckStatus((prev: any) => ({
+            ...prev,
+            grammar: "pass",
+            isGrammerChecked: true,
+          }));
+        }
         dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
       } else {
-        setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
+        handleGrammerFetchError();
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      handleGrammerFetchError();
       console.error("Error checkGrammer:", error);
     }
   }
@@ -403,6 +430,7 @@ export default function GlobalContextProvider({
           break;
         }
       } catch (error) {
+        // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fetchError" }));
         toast.error("Something went wrong! Contact backend department");
         console.error("Error checkPlagiarism:", error);
       } finally {
@@ -436,6 +464,15 @@ export default function GlobalContextProvider({
   useEffect(() => {
     sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
   }, [checkAiResults]);
+
+  function handleAiFetchError() {
+    setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
+    toast.error("Something went wrong! Contact backend department");
+    // reset checkGrammerResults
+    dispatch(contentCreatorActions.setCheckAiResults([]));
+    return;
+  }
+
   async function checkAi() {
     if (
       !finalArticle.articles[0].content ||
@@ -449,71 +486,61 @@ export default function GlobalContextProvider({
       return;
     }
 
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
+    try {
+      const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
+        },
+        body: JSON.stringify({
+          document: finalArticle?.articles[0]?.content,
+          version: "",
+          multilingual: false,
+        }),
+      });
 
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
-          },
-          body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content,
-            version: "2024-01-09",
-            multilingual: false,
-          }),
-        });
+      const json = await res.json();
 
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
+      if (!json) {
+        handleAiFetchError();
+        return;
+      } else if (json && json.documents[0]) {
+        // console.log("checkAiResult", json);
+        const filteredJson = json?.documents[0]?.sentences.filter(
+          (sentence: any) =>
+            sentence.highlight_sentence_for_ai && sentence.generated_prob >= 0.9
+        );
+        if (
+          // json.documents[0].class_probabilities.human < 0.8
+          filteredJson.length > 0
+        ) {
+          setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+        } else {
+          setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
         }
-      } catch (error) {
-        toast.error("Something went wrong! Error checking AI");
-        console.error("Error checkAi:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      if (
-        // json.documents[0].class_probabilities.human < 0.8
-        json?.documents[0]?.sentences.some(
-          (sentence: any) => sentence.highlight_sentence_for_ai
-        )
-      ) {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+        dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
       } else {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
+        handleAiFetchError();
       }
-      console.log("checkAiResult", json);
-      let filteredJson = json?.documents[0]?.sentences.filter(
-        (sentence: any) => sentence.highlight_sentence_for_ai
-      );
-      dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
-    } else {
-      setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
+    } catch (error) {
+      handleAiFetchError();
+      console.error("Error checkAi:", error);
     }
   }
 
   async function startChecks() {
-    if (checkStatus.grammar !== "pass") {
-      await checkGrammer();
-    }
-    // await checkPlagiarism();
     if (checkStatus.ai !== "pass") {
       await checkAi();
     }
+    if (checkStatus.grammar !== "pass" && checkStatus.isGrammerChecked === false) {
+      await checkGrammer();
+    } else {
+      setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
+      dispatch(contentCreatorActions.setCheckGrammerResults([]));
+    }
+    // await checkPlagiarism();
     return Promise.resolve();
   }
   // ===== End Checks =====

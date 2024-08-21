@@ -172,10 +172,10 @@ const BlogDetails = ({ params }: { params: { blogDetails: string } }) => {
                 <Image
                   src={img}
                   alt="flow image"
-                  className=" max-w-[clamp(18vw,_calc(28.13vw_+_0.1rem),_1000px);]"
+                  className=" max-w-[clamp(18vw,_calc(28.13vw_+_0.1rem),_2000px);]"
                 />
                 <div className=" h-[--sy-291px] w-[1px] bg-[#FFFFFB] dark:bg-[#2A2B2A]"></div>
-                <p className=" max-w-[clamp(6vw,_calc(9.06vw_+_0.1rem),_1000px)] self-end font-light text-[--16px]">
+                <p className=" max-w-[clamp(6vw,_calc(9.06vw_+_0.1rem),_2000px)] self-end font-light text-[--16px]">
                   Image 0.1 (MG SEO flow page 1)
                 </p>
               </div>
@@ -206,7 +206,7 @@ const BlogDetails = ({ params }: { params: { blogDetails: string } }) => {
             <h3 className=" text-[--64px] font-extrabold uppercase">
               Phase Two
             </h3>
-            <div className=" max-w-[clamp(30vw,_calc(40.05vw_+_0.1rem),_1000px)]">
+            <div className=" max-w-[clamp(30vw,_calc(40.05vw_+_0.1rem),_2000px)]">
               <p className=" mb-[--sy-64px]">
                 Lorem ipsum dolor sit amet consectetur. Etiam senectus habitant
                 nibh risus augue. Semper sit ipsum parturient accumsan at. At

@@ -36,7 +36,7 @@ const page = () => {
             </button>
           </div>
           <div className=" flex justify-between">
-            <div className=" max-w-[clamp(30vw,_calc(42.71vw_+_0.1rem),_1200px)]">
+            <div className=" max-w-[clamp(30vw,_calc(42.71vw_+_0.1rem),_2200px)]">
               <div className=" flex flex-col gap-[--sy-50px] mb-[--sy-100px]">
                 <h3 className=" text-[--24px] font-bold">Job Description</h3>
                 <p>

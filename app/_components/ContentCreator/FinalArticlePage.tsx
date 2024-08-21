@@ -20,6 +20,7 @@ export default function FinalArticlePage() {
     selectedContentType,
     checkStatus,
     startChecks,
+    setCheckStatus,
     editContentData,
     setEditContentData,
     selectedBrand,
@@ -36,11 +37,24 @@ export default function FinalArticlePage() {
   useEffect(() => {
     // console.log("finalArticle", finalArticle);
     // todo: remove after backend is ready
-    if (selectedContentType === "Article"){
-      toast.error("Please note that the prompt for 'Article' is not ready yet!");
-      toast.error("Please note that the prompt for 'Article' is not ready yet!");
-      toast.error("Please note that the prompt for 'Article' is not ready yet!");
+    if (selectedContentType === "Article") {
+      toast.error(
+        "Please note that the prompt for 'Article' is not ready yet!"
+      );
+      toast.error(
+        "Please note that the prompt for 'Article' is not ready yet!"
+      );
+      toast.error(
+        "Please note that the prompt for 'Article' is not ready yet!"
+      );
     }
+    // reset the checkStatus
+    setCheckStatus({
+      grammar: "waiting",
+      plagiarism: "pass",
+      ai: "waiting",
+      isGrammerChecked: false,
+    });
   }, []);
 
   function handleDisplayContentDataToEdit() {
@@ -134,9 +148,20 @@ export default function FinalArticlePage() {
         <div className={`${styles.genuisWorking}`}>
           <LogoAndTitle
             needTxt={false}
-            title="Genius is checking your content.."
+            title={
+              checkStatus.grammar === "waiting" ||
+              checkStatus.plagiarism === "waiting" ||
+              checkStatus.ai === "waiting"
+                ? `Genius is checking your content...`
+                : checkStatus.grammar === "pass" &&
+                  checkStatus.plagiarism === "pass" &&
+                  checkStatus.ai === "pass"
+                ? "Hooray! No issues found!"
+                : "Check is finished. View the results"
+            }
           />
           <div className={`${styles.allCheckers} w-full`}>
+            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
             <SpecificChecker
               checkStatus={checkStatus.grammar}
               word="Grammar Checker"
@@ -145,9 +170,15 @@ export default function FinalArticlePage() {
               checkStatus={checkStatus.plagiarism}
               word="Plagiarism Checker"
             />
-            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
           </div>
-          {checkStatus.grammar !== "waiting" &&
+
+          {(checkStatus.grammar === "fail" ||
+            checkStatus.plagiarism === "fail" ||
+            checkStatus.ai === "fail" ||
+            checkStatus.grammar === "fetchError" ||
+            checkStatus.plagiarism === "fetchError" ||
+            checkStatus.ai === "fetchError") &&
+            checkStatus.grammar !== "waiting" &&
             checkStatus.plagiarism !== "waiting" &&
             checkStatus.ai !== "waiting" &&
             (selectedBrand === "Movie Myth" ? (
@@ -161,6 +192,23 @@ export default function FinalArticlePage() {
                 word={"Results"}
                 btnColor="black"
                 href="/content-creator/create/show-errors/"
+              />
+            ))}
+
+          {checkStatus.grammar === "pass" &&
+            checkStatus.plagiarism === "pass" &&
+            checkStatus.ai === "pass" &&
+            (selectedBrand === "Movie Myth" ? (
+              <CustomBtn
+                word={"Generate Titles"}
+                btnColor="black"
+                href="/content-creator/create/movie-myth/generated-titles"
+              />
+            ) : (
+              <CustomBtn
+                word={"Generate Titles"}
+                btnColor="black"
+                href="/content-creator/create/generated-titles"
               />
             ))}
         </div>
