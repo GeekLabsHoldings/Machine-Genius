@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./templates.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import { SimplePagination } from "@/app/_components/Pagination/pagination";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import toast from "react-hot-toast";
@@ -57,36 +56,6 @@ const tempOptions = {
   Job_Offer: "Job Offer",
   Required_Documents: "Required Documents",
 };
-
-/**
- * Scrolls the table to the right by 150 pixels.
- *
- * @return {void} No return value.
- */
-function slideRight(id: string) {
-  const table = document.getElementById(id) as HTMLTableElement | null;
-  console.log(table);
-  if (table) {
-    table.scrollLeft += 150;
-  } else {
-    console.error("Failed to find table with ID 'table'");
-  }
-}
-
-/**
- * Scrolls the table to the left by 150 pixels.
- *
- * @return {void} No return value.
- */
-function slideLeft(id: string) {
-  const table = document.getElementById(id) as HTMLTableElement | null;
-  console.log(table);
-  if (table) {
-    table.scrollLeft -= 150;
-  } else {
-    console.error("Failed to find table with ID 'table'");
-  }
-}
 
 const Page = () => {
   const [groupTemplates, setGroupTemplates] = useState<GroupTemplate[]>([]);
