@@ -352,9 +352,9 @@ const Page = () => {
           <Slider {...settings2}>
             {unattchedTemplates.map((e, i) => {
               return (
-                <div>
+                <div className="h-full" key={i}>
                   <div
-                    className={`${styles.item} rounded-[clamp(10px,_calc(0.8vw_+_0.1rem),_1000px)] p-[0.6vw_1vw_0.8vw] border mx-[--5px] border-[--dark]`}
+                    className={`${styles.item} flex flex-col justify-between h-full rounded-[clamp(10px,_calc(0.8vw_+_0.1rem),_1000px)] p-[0.6vw_1vw_0.8vw] border mx-[--5px] border-[--dark]`}
                     key={i}
                   >
                     <div className={styles.item_header}>

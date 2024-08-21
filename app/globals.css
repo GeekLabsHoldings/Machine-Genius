@@ -494,6 +494,6 @@ img {
   /* width: 100%; */
 }
 
-/* .templates-container #unattached-template .slick-track {
-  transform: none !important;
-} */
+.templates-container #unattached-template .slick-slide > div {
+  height: 100%;
+}
