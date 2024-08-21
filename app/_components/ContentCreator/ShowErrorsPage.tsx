@@ -270,47 +270,6 @@ export default function ShowErrorsPage() {
     }
   }
 
-  async function handleFixAiIssue(item: any) {
-    setPageState({
-      ...pageState,
-      isLoadingParaphrase: true,
-    });
-    console.log("item", item);
-    const replacedSentence = await paraphraseSentence(item.sentence);
-    console.log("replacedSentence", replacedSentence);
-
-    if (typeof window !== undefined) {
-      const storedFinalArticle = sessionStorage.getItem("finalArticle");
-
-      if (storedFinalArticle) {
-        let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
-
-        // console.log("storedFinalArticle", parsedStoredFinalArticle.articles[0].content)
-        let updatedFinalArticleContent =
-          parsedStoredFinalArticle.articles[0].content.replace(
-            item.sentence,
-            replacedSentence
-          );
-
-        const updatedFinalArticle = {
-          ...parsedStoredFinalArticle,
-          articles: [
-            {
-              ...parsedStoredFinalArticle.articles[0],
-              content: updatedFinalArticleContent,
-            },
-          ],
-        };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
-      }
-    }
-    setPageState({
-      ...pageState,
-      isLoadingParaphrase: false,
-    });
-  }
-
   async function handleFixAiIssues() {
     setPageState({
       ...pageState,
@@ -577,17 +536,6 @@ export default function ShowErrorsPage() {
                       </span>
                       "<span>{item.sentence}</span>"
                     </p>
-                    <div className="flex justify-end">
-                      <CustomBtn
-                        word={"Fix"}
-                        btnColor="black"
-                        paddingVal={"py-[0.5vw] px-[1vw]"}
-                        onClick={() => {
-                          handleFixAiIssue(item);
-                        }}
-                        disabled={pageState.isLoadingParaphrase}
-                      ></CustomBtn>
-                    </div>
                   </>
                 </ErrorCollapse>
               );
