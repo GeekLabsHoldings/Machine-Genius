@@ -203,6 +203,15 @@ export default function ShowErrorsPage() {
     };
   }, [finalArticle, dispatch, finalArticleContentRef.current]);
 
+  useEffect(() => {
+    if (checkAiResults && checkAiResults?.length) {
+      setPageState({
+        ...pageState,
+        progressCounter: checkAiResults?.length,
+      });
+    }
+  }, [checkAiResults]);
+
   function highlightText(text: any, start: any, end: any) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
   }
@@ -301,7 +310,7 @@ export default function ShowErrorsPage() {
           }
 
           // Add a delay between requests to avoid hitting the rate limit
-          await new Promise((resolve) => setTimeout(resolve, 250));
+          await new Promise((resolve) => setTimeout(resolve, 100));
         }
 
         const updatedFinalArticle = {
