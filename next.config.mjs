@@ -4,14 +4,13 @@
  */
 const nextConfig = {
   images: { unoptimized: true },
-  experimental: {
-    outputFileTracingExcludes: {
-      '*': process.env.NODE_ENV !== 'development' ? ['.next/cache'] : [],
-    },
-  },
   webpack: (config, { dev }) => {
     if (!dev) {
-      config.cache = false; // Disable cache in production
+      // Adjust caching settings for production build
+      config.cache = {
+        type: 'filesystem',
+        // Other cache options can be set here if needed
+      };
     }
     return config;
   },
