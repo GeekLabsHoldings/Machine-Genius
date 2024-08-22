@@ -105,8 +105,8 @@ const GeneratedThumbnailsPage = () => {
 
   async function handleSendContent() {
     let endpoint = editContentData
-      ? `https://backendmachinegenius.onrender.com/content/${editContentData._id}`
-      : "https://backendmachinegenius.onrender.com/content";
+      ? `https://api.machinegenius.io/content-creation/content/${editContentData._id}`
+      : "https://api.machinegenius.io/content-creation/content";
     let method = editContentData ? "PATCH" : "POST";
     setIsSendLoading(true);
     let postBody: any = {

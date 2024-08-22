@@ -56,7 +56,7 @@ export default function CandidateDatabaseTable({
   useEffect(() => {
     // Fetch the candidate data from the server.
     fetch(
-      `https://machine-genius.onrender.com/hr/candidate/all-candidate?role=${filter.role}`,
+      `https://api.machinegenius.io/hr/candidate/all-candidate?role=${filter.role}`,
       {
         method: "GET",
         headers: {

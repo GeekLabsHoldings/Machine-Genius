@@ -15,7 +15,7 @@ export default function Page({params}:any) {
   async function getDetails() {
     const token = localStorage.getItem("token")
     try {
-      const data = await fetch(`https://machine-genius.onrender.com/hr/complaint/get-one/${params.complaintsDetails}`,{
+      const data = await fetch(`https://api.machinegenius.io/hr/complaint/get-one/${params.complaintsDetails}`,{
         headers:{
           Authorization:
             `Bearer ${token}`,

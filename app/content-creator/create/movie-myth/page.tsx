@@ -48,7 +48,7 @@ const MovieMyth = () => {
       const xhr = new XMLHttpRequest();
       xhr.open(
         "POST",
-        "https://backendmachinegenius.onrender.com/transcript-audio",
+        "https://api.machinegenius.io/content-creation/transcript-audio",
         true
       );
 

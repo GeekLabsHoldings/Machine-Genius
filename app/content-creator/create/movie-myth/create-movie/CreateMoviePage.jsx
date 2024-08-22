@@ -128,7 +128,7 @@ const CreateMovie = () => {
       while (attempts < maxRetries) {
         try {
           const res = await fetch(
-            `https://backendmachinegenius.onrender.com/${
+            `https://api.machinegenius.io/content-creation/${
               selectedContentType === "Script" ? "script" : "article"
             }/finalize-content`,
             {

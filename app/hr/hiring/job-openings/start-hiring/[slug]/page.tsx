@@ -18,7 +18,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `https://machine-genius.onrender.com/hr/hiring/current-step-template/${params.slug}`,
+          `https://api.machinegenius.io/hr/hiring/current-step-template/${params.slug}`,
           {
             method: "GET",
             headers: {
@@ -48,7 +48,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function publishJobPost() {
     try {
       const res = await fetch(
-        `https://machine-genius.onrender.com/hr/hiring/publish-job/${params.slug}`,
+        `https://api.machinegenius.io/hr/hiring/publish-job/${params.slug}`,
         {
           method: "PUT",
           body: JSON.stringify({
@@ -112,7 +112,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function updateNextStep() {
     try {
       const res = await fetch(
-        `https://machine-genius.onrender.com/hr/hiring/next-step/${data._id}`,
+        `https://api.machinegenius.io/hr/hiring/next-step/${data._id}`,
         {
           method: "PUT",
           headers: {

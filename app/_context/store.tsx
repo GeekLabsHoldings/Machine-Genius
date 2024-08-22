@@ -163,7 +163,7 @@ export default function GlobalContextProvider({
     // }
     // try {
     //   const res = await fetch(
-    //     "https://machine-genius.onrender.com/authentication/check-auth",
+    //     "https://api.machinegenius.io/authentication/check-auth",
     //     {
     //       headers: {
     //         Authorization: `Bearer ${authToken}`,
@@ -356,7 +356,7 @@ export default function GlobalContextProvider({
     }
     try {
       const res = await fetch(
-        `https://backendmachinegenius.onrender.com/grammar-check`,
+        `https://api.machinegenius.io/content-creation/grammar-check`,
         {
           method: "POST",
           headers: {
@@ -411,7 +411,7 @@ export default function GlobalContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://backendmachinegenius.onrender.com/plagiarism-check`,
+          `https://api.machinegenius.io/content-creation/plagiarism-check`,
           {
             method: "POST",
             headers: {
@@ -582,7 +582,7 @@ export default function GlobalContextProvider({
 
     try {
       const res = await fetch(
-        `https://backendmachinegenius.onrender.com/generate-titles`,
+        `https://api.machinegenius.io/content-creation/generate-titles`,
         {
           method: "POST",
           headers: {
@@ -696,7 +696,7 @@ export default function GlobalContextProvider({
     }
     try {
       const res = await fetch(
-        `https://backendmachinegenius.onrender.com/generate-thumbnails`,
+        `https://api.machinegenius.io/content-creation/generate-thumbnails`,
         {
           method: "POST",
           headers: {

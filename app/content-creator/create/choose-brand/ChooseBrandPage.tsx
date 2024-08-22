@@ -164,7 +164,7 @@ export default function ChooseBrandPage() {
 
     try {
       const res = await fetch(
-        `https://backendmachinegenius.onrender.com/generate-content`,
+        `https://api.machinegenius.io/content-creation/generate-content`,
         {
           method: "POST",
           headers: {
@@ -202,7 +202,7 @@ export default function ChooseBrandPage() {
   // async function getTwitterData() {
   //   try {
   //     const res = await fetch(
-  //       `https://backendmachinegenius.onrender.com/collect/twitter/PLTR`
+  //       `https://api.machinegenius.io/content-creation/collect/twitter/PLTR`
   //     );
 
   //     const json = await res.json();

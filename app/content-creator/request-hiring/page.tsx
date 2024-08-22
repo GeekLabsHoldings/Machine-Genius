@@ -33,7 +33,7 @@ export default function page() {
     }
     try {
       const res = await fetch(
-        `https://machine-genius.onrender.com/admin/hiring-request`,
+        `https://api.machinegenius.io/admin/hiring-request`,
         {
           method: "POST",
           headers: {
