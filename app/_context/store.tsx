@@ -364,7 +364,7 @@ export default function GlobalContextProvider({
           },
           body: JSON.stringify({
             key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
-            session_id: "test session",
+            session_id: uuidv4(),
             text: finalArticle?.articles[0]?.content,
           }),
         }
