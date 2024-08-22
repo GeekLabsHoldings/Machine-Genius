@@ -356,14 +356,16 @@ export default function GlobalContextProvider({
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/grammar-check`,
+        `https://api.sapling.ai/api/v1/edits`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content,
+            key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
+            session_id: "test session",
+            text: finalArticle?.articles[0]?.content,
           }),
         }
       );
@@ -373,11 +375,8 @@ export default function GlobalContextProvider({
       if (!json) {
         handleGrammerFetchError();
         return;
-      } else if (json && json.success === false) {
-        handleGrammerFetchError();
-        return;
-      } else if (json && json.success === true && json.grammarIssues) {
-        const filteredJson = json?.grammarIssues.filter(
+      } else if (json && json.edits) {
+        const filteredJson = json?.edits.filter(
           (item: any) => item.general_error_type === "Grammar"
         );
         if (filteredJson.length > 0) {
