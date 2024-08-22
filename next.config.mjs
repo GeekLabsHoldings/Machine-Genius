@@ -1,5 +1,3 @@
-const isDev = process.env.NODE_ENV === 'development';
-
 /**
  * @type {import('next').NextConfig}
  *
@@ -7,8 +5,9 @@ const isDev = process.env.NODE_ENV === 'development';
 const nextConfig = {
   images: { unoptimized: true },
   experimental: {
-    // Conditionally set cache option based on the environment
-    cache: !isDev ? false : undefined,
+    outputFileTracingExcludes: {
+      '*': process.env.NODE_ENV !== 'development' ? ['.next/cache'] : [],
+    },
   },
   webpack: (config, { dev }) => {
     if (!dev) {
