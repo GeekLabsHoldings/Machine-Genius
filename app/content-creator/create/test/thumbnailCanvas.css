@@ -1,0 +1,34 @@
+.thumbnailCanvas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--25px);
+    margin: 0;
+}
+
+.thumbnailCanvas .canvas-container {
+    /* margin: 20px 0; */
+    /* border: 2px solid #333; */
+}
+
+
+.thumbnailCanvas_actionsBar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sy-50px);
+    /* min-width: 300px; */
+    flex-grow: 1;
+}
+
+
+.thumbnailCanvas_actionsBar button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
