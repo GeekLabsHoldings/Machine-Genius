@@ -1,79 +1,90 @@
-'use client'
-import React from 'react'
-import styles from './dashboard.module.css';
-import { Positions, TasksInDashboard } from '@/app/_data/data';
-import { SimplePagination } from '@/app/_components/Pagination/pagination';
+"use client";
+import React from "react";
+import styles from "./dashboard.module.css";
+import { Positions, TasksInDashboard } from "@/app/_data/data";
+import { SimplePagination } from "@/app/_components/Pagination/pagination";
 // import EmblaCarousel from '@/app/_components/EmploymentCarousel/EmploymentCarousel';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { EmblaOptionsType } from "embla-carousel";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import EmblaCarousel from '@/app/_components/new-carousel/NewCarousel';
+import EmblaCarousel from "@/app/_components/new-carousel/NewCarousel";
 
 // dashboard component for dashboard page which be shown to every content-creator after login
 const Dashboard = () => {
   const OPTIONS: EmblaOptionsType = { axis: "y", loop: true };
-  
-  const renderTasksSec = TasksInDashboard.map((tasks,idx)=>(
-    <div className={`${styles.rightBorder} w-1/3 my-[0.7vw] text-center px-[0.75vw] flex flex-col gap-[0.8vw]`} key={idx}>
-    <h5 className={`${styles.bottomBorder} pb-[0.7vw] `}>{tasks.taskType} </h5>
-    <div className='flex flex-col gap-[0.25vw] items-center'>
-    {
-      tasks.tasks.map((oneTask)=>(
-        <span className={`
-        ${styles.coloredTxt} 
-        ${tasks.taskType === 'Tasks Done' ? 'bg-[#DBDBD7]': oneTask === "PST USA"
-        ? "bg-[#31B2E9B2]"
-        : oneTask === "Canada"
-        ? "bg-[#E9313EB2]"
-        : oneTask === "PST Asia"
-        ? "bg-[#E1C655B2]"
-        : oneTask === "Investocracy"
-        ? "bg-[#5FA85BB5]"
-        : "bg-[#F36F24B2]" }
-      `}>
-          {oneTask}
-        </span>
-      ))
-      }
-    </div>
-    </div>
 
-  ))
+  const renderTasksSec = TasksInDashboard.map((tasks, idx) => (
+    <div
+      className={`${styles.rightBorder} w-1/3 my-[0.7vw] text-center px-[0.75vw] flex flex-col gap-[0.8vw]`}
+      key={idx}
+    >
+      <h5 className={`${styles.bottomBorder} pb-[0.7vw] `}>
+        {tasks.taskType}{" "}
+      </h5>
+      <div className="flex flex-col gap-[0.25vw] items-center">
+        {tasks.tasks.map((oneTask) => (
+          <span
+            className={`
+        ${styles.coloredTxt} 
+        ${
+          tasks.taskType === "Tasks Done"
+            ? "bg-[#DBDBD7]"
+            : oneTask === "PST USA"
+            ? "bg-[#31B2E9B2]"
+            : oneTask === "Canada"
+            ? "bg-[#E9313EB2]"
+            : oneTask === "PST Asia"
+            ? "bg-[#E1C655B2]"
+            : oneTask === "Investocracy"
+            ? "bg-[#5FA85BB5]"
+            : "bg-[#F36F24B2]"
+        }
+      `}
+          >
+            {oneTask}
+          </span>
+        ))}
+      </div>
+    </div>
+  ));
   // get current date and current time in our format
   const date = new Date();
-  const month = date.toLocaleString('default', { month: 'long' });
-  const currentHours = date.getHours() ;
-  const amOrPm = currentHours > 12 ? 'PM' : 'AM';
-  const hours = currentHours % 12 ;
+  const month = date.toLocaleString("default", { month: "long" });
+  const currentHours = date.getHours();
+  const amOrPm = currentHours > 12 ? "PM" : "AM";
+  const hours = currentHours % 12;
   const currentDate = date.getDate() + " " + month + " " + date.getFullYear();
-  const currentTime = hours+ ":" + date.getMinutes() + " " + amOrPm
-
+  const currentTime = hours + ":" + date.getMinutes() + " " + amOrPm;
 
   return (
-    <div className={`${styles.dashboard} flex h-full w-full pt-[0.75vw] gap-[2vw]`}>
+    <div
+      className={`${styles.dashboard} flex h-full w-full pt-[0.75vw] gap-[2vw]`}
+    >
       {/* chat section in the end of page */}
       <div className={`${styles.movedChat} flex justify-end `}>
-          <div
-            className={`${styles.cutBox} w-1/3 h-[5vh] flex items-center gap-[0.3vw] px-[0.5vw] cursor-pointer`}>
-            <svg
-              viewBox="0 0 11 11"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <circle cx="5.5" cy="5.5" r="5.5" fill="#5FA85B" />
-            </svg>
-            <h5>Chat</h5>
-          </div>
+        <div
+          className={`${styles.cutBox} w-1/3 h-[5vh] flex items-center gap-[0.3vw] px-[0.5vw] cursor-pointer`}
+        >
+          <svg
+            viewBox="0 0 11 11"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="5.5" cy="5.5" r="5.5" fill="#5FA85B" />
+          </svg>
+          <h5>Chat</h5>
         </div>
-        
+      </div>
+
       <div className="w-1/2 flex flex-col gap-[0.9vw]">
         <div className={styles.halfHeader}>
-        <h3>Tasks Over View</h3>
+          <h3>Tasks Over View</h3>
         </div>
-{/* his/her tasks over view */}
+        {/* his/her tasks over view */}
         <div className={`${styles.box} flex h-[20vh]`}>{renderTasksSec}</div>
-{/* annoucements section to display any annoucement he/she needs to know */}
+        {/* annoucements section to display any annoucement he/she needs to know */}
         <div className="flex justify-between items-center">
           <h3>Announcements</h3>
           <SimplePagination />
@@ -81,12 +92,15 @@ const Dashboard = () => {
 
         <div className={`${styles.box} flex p-[0.8vw] h-[13vh] bg-[#2A2B2A]`}>
           {/* annoucement owner and his status */}
-          <div className={`w-1/6 flex items-center gap-[0.25vw] ${styles.profileAndStatus}`}>
+          <div
+            className={`w-1/6 flex items-center gap-[0.25vw] ${styles.profileAndStatus}`}
+          >
             <div className={`relative`}>
               <svg
                 viewBox="0 0 41 50"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M0.632812 4.03324C0.632812 2.08188 2.2147 0.5 4.16606 0.5C24.0048 0.5 40.0874 16.5825 40.0874 36.4213V45.6818C40.0874 47.7905 38.3779 49.5 36.2692 49.5H4.45099C2.34226 49.5 0.632812 47.7905 0.632812 45.6818V4.03324Z"
                   fill="#FFFFFB"
@@ -96,12 +110,13 @@ const Dashboard = () => {
                 <svg
                   viewBox="0 0 11 11"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <circle cx="5.5" cy="5.5" r="5.5" fill="#5FA85B" />
                 </svg>
               </div>
             </div>
-            <div className=' w-full' >
+            <div className=" w-full">
               <h5>Ash</h5>
               <p>CEO</p>
             </div>
@@ -114,33 +129,37 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
-{/* calendar and upcoming events in every month */}
-        <div className='flex'>
-              <div className='w-1/2 flex flex-col gap-[1.2vw]'>
-              <h3 >Up Coming Events</h3>
-                <div className={`${styles.events} ps-[1vw] h-[25vh]`}>
-                  <div className='flex flex-col gap-[0.4vw]'>
-                  <h5>This Week</h5>
-                  <p>No Events</p>
-                  </div>
+        {/* calendar and upcoming events in every month */}
+        <div className="flex">
+          <div className="w-1/2 flex flex-col gap-[1.2vw]">
+            <h3>Up Coming Events</h3>
+            <div className={`${styles.events} ps-[1vw] h-[25vh]`}>
+              <div className="flex flex-col gap-[0.4vw]">
+                <h5>This Week</h5>
+                <p>No Events</p>
+              </div>
 
-                  <div className='flex flex-col gap-[0.4vw]'>
-                    <h5>Next Month</h5>
-                    <p>May Day</p>
-                    <p>Thanks Giving</p>
-                    <p>Sham El Neseem</p>
-                  </div>
-                </div>
-             
+              <div className="flex flex-col gap-[0.4vw]">
+                <h5>Next Month</h5>
+                <p>May Day</p>
+                <p>Thanks Giving</p>
+                <p>Sham El Neseem</p>
               </div>
-              {/* calendar */}
-              <div className='w-1/2 flex justify-end items-end pb-[0.2vw] '>
-              <LocalizationProvider dateAdapter={AdapterDayjs}  >
-                    <DateCalendar slots={{rightArrowIcon:ArrowRightIcon,leftArrowIcon:ArrowLeftIcon}} dayOfWeekFormatter={(weekday) => `${weekday.format('ddd')}`} />
-                  </LocalizationProvider>
-              </div>
-  </div>
-        
+            </div>
+          </div>
+          {/* calendar */}
+          <div className="w-1/2 flex justify-end items-end pb-[0.2vw] ">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateCalendar
+                slots={{
+                  rightArrowIcon: ArrowRightIcon,
+                  leftArrowIcon: ArrowLeftIcon,
+                }}
+                dayOfWeekFormatter={(weekday) => `${weekday.format("ddd")}`}
+              />
+            </LocalizationProvider>
+          </div>
+        </div>
       </div>
 
       <div className="w-1/2 flex flex-col gap-[0.9vw] relative ">
@@ -148,17 +167,18 @@ const Dashboard = () => {
           <h3>Leaderboard</h3>
           {/* display current date and time */}
           <div className={`${styles.halfHeader} flex flex-col items-end m-0`}>
-            <p >{currentDate}</p>
+            <p>{currentDate}</p>
             <p>{currentTime}</p>
           </div>
         </div>
-{/* display the employee of the month */}
+        {/* display the employee of the month */}
         <div className={`${styles.box} flex h-[20vh] justify-between`}>
           <div className={`${styles.animated} my-[1vw]`}>
             <svg
               viewBox="0 0 157 159"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <mask
                 id="path-1-outside-1_1195_6093"
                 maskUnits="userSpaceOnUse"
@@ -166,7 +186,8 @@ const Dashboard = () => {
                 y="0"
                 width="157"
                 height="159"
-                fill="black">
+                fill="black"
+              >
                 <rect fill="white" width="157" height="159" />
                 <path d="M20.5305 52.0352L8.09947 45.0398L12.6749 36.8324L14.6106 37.9217L11.3779 43.7204L14.6278 45.5492L17.562 40.2857L19.4266 41.335L16.4924 46.5985L19.9376 48.5372L23.1702 42.7385L25.1059 43.8277L20.5305 52.0352Z" />
                 <path d="M28.1499 39.1075L18.19 28.8709L20.5333 26.5693L29.866 29.9006L26.7338 20.4794L29.0772 18.1778L39.0371 28.4144L37.0722 30.3443L30.3848 23.4712L32.9851 31.5559L31.4277 33.0855L23.4275 30.3044L30.1149 37.1776L28.1499 39.1075Z" />
@@ -402,10 +423,16 @@ const Dashboard = () => {
               />
             </svg>
             <div className={`${styles.movedQuestion}`}>
-              <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"  
-              viewBox="0 0 512 512">
-            <g>
-              <path className="st0" d="M396.138,85.295c-13.172-25.037-33.795-45.898-59.342-61.03C311.26,9.2,280.435,0.001,246.98,0.001
+              <svg
+                version="1.1"
+                id="_x32_"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <g>
+                  <path
+                    className="st0"
+                    d="M396.138,85.295c-13.172-25.037-33.795-45.898-59.342-61.03C311.26,9.2,280.435,0.001,246.98,0.001
                 c-41.238-0.102-75.5,10.642-101.359,25.521c-25.962,14.826-37.156,32.088-37.156,32.088c-4.363,3.786-6.824,9.294-6.721,15.056
                 c0.118,5.77,2.775,11.186,7.273,14.784l35.933,28.78c7.324,5.864,17.806,5.644,24.875-0.518c0,0,4.414-7.978,18.247-15.88
                 c13.91-7.85,31.945-14.173,58.908-14.258c23.517-0.051,44.022,8.725,58.016,20.717c6.952,5.941,12.145,12.594,15.328,18.68
@@ -415,45 +442,48 @@ const Dashboard = () => {
                 c0,10.719,8.69,19.41,19.41,19.41h46.762c10.719,0,19.41-8.691,19.41-19.41c0,0,0-9.336,0-20.708c0-4.107,0.467-6.755,0.917-8.436
                 c0.773-2.512,1.206-3.14,2.47-4.668c1.29-1.452,3.895-3.674,8.698-6.331c7.019-3.946,18.298-9.276,31.07-16.176
                 c19.121-10.456,42.367-24.646,61.972-48.062c9.752-11.686,18.374-25.758,24.323-41.968c6.001-16.21,9.242-34.431,9.226-53.96
-                C410.243,120.761,404.879,101.971,396.138,85.295z"/>
-              <path className="st0" d="M228.809,406.44c-29.152,0-52.788,23.644-52.788,52.788c0,29.136,23.637,52.772,52.788,52.772
-                c29.136,0,52.763-23.636,52.763-52.772C281.572,430.084,257.945,406.44,228.809,406.44z"/>
-            </g>
-            </svg>
+                C410.243,120.761,404.879,101.971,396.138,85.295z"
+                  />
+                  <path
+                    className="st0"
+                    d="M228.809,406.44c-29.152,0-52.788,23.644-52.788,52.788c0,29.136,23.637,52.772,52.788,52.772
+                c29.136,0,52.763-23.636,52.763-52.772C281.572,430.084,257.945,406.44,228.809,406.44z"
+                  />
+                </g>
+              </svg>
             </div>
           </div>
 
           <div className={`${styles.leaderboard} flex  `}>
-            <div className='flex flex-col items-center w-full justify-center gap-[0.8vw] '>
-            <div
-              className={`${styles.smallBox}`}>
-              <h5 className={`${styles.rightBorder} pe-[1vw]`}>2</h5>
-              <h5>John Doe</h5>
-            </div>
-            <div
-              className={`${styles.smallBox}`}>
-              <h5 className={`${styles.rightBorder} pe-[1vw]`}>3</h5>
-              <h5>John Doe</h5>
-            </div>
-            <div
-              className={`${styles.smallBox}`}>
-              <h5 className={`${styles.rightBorder} pe-[1vw]`}>4</h5>
-              <h5>John Doe</h5>
-            </div>
+            <div className="flex flex-col items-center w-full justify-center gap-[0.8vw] ">
+              <div className={`${styles.smallBox}`}>
+                <h5 className={`${styles.rightBorder} pe-[1vw]`}>2</h5>
+                <h5>John Doe</h5>
+              </div>
+              <div className={`${styles.smallBox}`}>
+                <h5 className={`${styles.rightBorder} pe-[1vw]`}>3</h5>
+                <h5>John Doe</h5>
+              </div>
+              <div className={`${styles.smallBox}`}>
+                <h5 className={`${styles.rightBorder} pe-[1vw]`}>4</h5>
+                <h5>John Doe</h5>
+              </div>
             </div>
           </div>
         </div>
-{/* display ways to get points */}
+        {/* display ways to get points */}
         <h3>Bonus Points</h3>
         <div className={`${styles.bonusBox} bg-[#2A2B2A] flex h-[15vh]`}>
           <div
-            className={`${styles.bonusBox} bg-[#FFFFFB] w-1/2 flex flex-col justify-center items-center`}>
+            className={`${styles.bonusBox} bg-[#FFFFFB] w-1/2 flex flex-col justify-center items-center`}
+          >
             <h1>256</h1>
             <h4>Points</h4>
           </div>
 
           <div
-            className={`${styles.bonusBox} text-[#FFFFFB] w-1/2 flex flex-col justify-center items-center`}>
+            className={`${styles.bonusBox} text-[#FFFFFB] w-1/2 flex flex-col justify-center items-center`}
+          >
             <h1>500</h1>
             <h4>EGP</h4>
           </div>
@@ -469,10 +499,14 @@ const Dashboard = () => {
             <p>Written article reached 1000 Views</p>
           </div>
         </div>
-{/* display career progression from internship to senior */}
+        {/* display career progression from internship to senior */}
         <h3>Career Progression</h3>
-        <div className={`${styles.box} h-[8.6vw] p-[2vw] flex items-center bg-[#2A2B2A]`}>
-          <div className={`w-1/2 ${styles.waysToTakeBonus} flex flex-col gap-[1vw] justify-center ${styles.careerSec}`}>
+        <div
+          className={`${styles.box} h-[8.6vw] p-[2vw] flex items-center bg-[#2A2B2A]`}
+        >
+          <div
+            className={`w-1/2 ${styles.waysToTakeBonus} flex flex-col gap-[1vw] justify-center ${styles.careerSec}`}
+          >
             <span>Reached 1 year mark</span>
             <p>100 Articles in 1 Year</p>
             <span>Completed Manager Training</span>
@@ -480,14 +514,12 @@ const Dashboard = () => {
             <p>Articles reached 1000+ Views</p>
           </div>
           <div className="w-1/2 ">
-            <EmblaCarousel slides={Positions} options={OPTIONS}/>
+            <EmblaCarousel slides={Positions} options={OPTIONS} />
           </div>
         </div>
-
-        
       </div>
     </div>
   );
-}
+};
 
-export default Dashboard
+export default Dashboard;
