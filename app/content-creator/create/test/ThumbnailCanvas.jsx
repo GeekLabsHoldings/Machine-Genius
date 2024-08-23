@@ -81,37 +81,55 @@ export default function ThumbnailCanvas() {
     const canvas = new fabric.Canvas(canvasEl.current);
     fabricCanvasRef.current = canvas;
 
-    // Add a background image
-    fabric.Image.fromURL(
-      pageState.selectedBgPath,
-      function (img, error) {
-        if (error) {
-          toast.error("Failed to load background image.");
-          return;
-        }
-        img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
-        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-      },
-      { crossOrigin: "anonymous" }
-    );
+    // ==============================================================
+    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
+    const isBlocked = (url) => blockedUrls.includes(url);
 
-    // Add another image
-    fabric.Image.fromURL(
-      pageState.selectedImgPath
-        ? pageState.selectedImgPath
-        : "/img-placeholder.jpg",
-      function (img, error) {
-        if (error) {
-          toast.error("Failed to load overlay image.");
-          return;
-        }
-        img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
+    const addToBlockedUrls = (url) => {
+      if (!blockedUrls.includes(url)) {
+        blockedUrls.push(url);
+        setPageState((prev) => ({
+          ...prev,
+          searchImgData: prev.searchImgData.filter((img) => img !== url),
+        }));
+        localStorage.setItem("blockedUrls", JSON.stringify(blockedUrls));
+      }
+    };
+
+    // Function to handle image loading
+    const loadImage = (url, onSuccess) => {
+      fabric.Image.fromURL(
+        url,
+        function (img, error) {
+          if (error) {
+            toast.error(`Failed to load image from ${url}.`);
+            addToBlockedUrls(url);
+            return;
+          }
+          img.set({ crossOrigin: "anonymous" });
+          onSuccess(img);
+        },
+        { crossOrigin: "anonymous" }
+      );
+    };
+    // ==============================================================
+
+    // Load background image
+    if (!isBlocked(pageState.selectedBgPath)) {
+      loadImage(pageState.selectedBgPath, (img) => {
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+      });
+    }
+
+    // Load another image
+    const imagePath = pageState.selectedImgPath || "/img-placeholder.jpg";
+    if (!isBlocked(imagePath)) {
+      loadImage(imagePath, (img) => {
         img.left = canvas.width - img.width;
         img.top = canvas.height - img.height;
         canvas.add(img);
-      },
-      { crossOrigin: "anonymous" }
-    );
+      });
+    }
 
     // Add text
     const text = new fabric.Text(selectedContentThumbnail, {
@@ -151,10 +169,6 @@ export default function ThumbnailCanvas() {
       return;
     }
     try {
-      setPageState((prev) => ({
-        ...prev,
-        searchImgLoading: true,
-      }));
       const res = await fetch(
         `https://machine-genius.onrender.com/content-creation/get-images`,
         {
@@ -186,12 +200,59 @@ export default function ThumbnailCanvas() {
     } catch (error) {
       toast.error("Something went wrong! Contact backend department");
       console.error("Error generateThumbnails:", error);
-    } finally {
-      setPageState((prev) => ({
-        ...prev,
-        searchImgLoading: false,
-      }));
     }
+  }
+
+  async function testImageUrl(url) {
+    // toast("Testing image url...");
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = url;
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(url);
+      img.onerror = () => reject(url);
+    });
+  }
+
+  async function handleFilterImages() {
+    const urlsToCheck = pageStateSearchImgDataInit();
+    const validUrls = [];
+    const blocked = [];
+
+    for (const url of urlsToCheck) {
+      try {
+        await testImageUrl(url);
+        validUrls.push(url);
+      } catch {
+        blocked.push(url);
+      }
+    }
+
+    // Update with blocked URLs
+    if (blocked.length > 0) {
+      const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
+      const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
+      localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
+    }
+
+    // Update with valid URLs
+    setPageState((prev) => ({
+      ...prev,
+      searchImgData: validUrls,
+    }));
+  }
+
+  async function handlePreviewSearchedImages() {
+    setPageState((prev) => ({
+      ...prev,
+      searchImgLoading: true,
+    }));
+    await handleSearchImg();
+    await handleFilterImages();
+    setPageState((prev) => ({
+      ...prev,
+      searchImgLoading: false,
+    }));
   }
 
   return (
@@ -256,7 +317,7 @@ export default function ThumbnailCanvas() {
               <button
                 onClick={() => {
                   console.log(`searchImgKeyword`, pageState.searchImgKeyword);
-                  handleSearchImg();
+                  handlePreviewSearchedImages();
                 }}
               >
                 Search

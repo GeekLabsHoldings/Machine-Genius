@@ -747,7 +747,7 @@ export default function GlobalContextProvider({
       );
       return selectedContentThumbnailInitValue
         ? selectedContentThumbnailInitValue
-        : generatedThumbnails[0].Thumbnail || "";
+        : (generatedThumbnails && generatedThumbnails[0]?.Thumbnail) || "";
     } else {
       return "";
     }
