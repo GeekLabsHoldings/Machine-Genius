@@ -82,36 +82,36 @@ export default function ThumbnailCanvas() {
     fabricCanvasRef.current = canvas;
 
     // Add a background image
-    fabric.Image.fromURL(pageState.selectedBgPath, function (img) {
-      // img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
-      // canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-
-      img.setSrc(
-        pageState.selectedBgPath,
-        function () {
-          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-        },
-        { crossOrigin: "anonymous" }
-      ); // Set crossOrigin attribute here
-    });
+    fabric.Image.fromURL(
+      pageState.selectedBgPath,
+      function (img, error) {
+        if (error) {
+          toast.error("Failed to load background image.");
+          return;
+        }
+        img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+      },
+      { crossOrigin: "anonymous" }
+    );
 
     // Add another image
-    fabric.Image.fromURL(pageState.selectedImgPath, function (img) {
-      // img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
-      // img.left = canvas.width - img.width;
-      // img.top = canvas.height - img.height;
-      // canvas.add(img);
-
-      img.setSrc(
-        pageState.selectedImgPath,
-        function () {
-          img.left = canvas.width - img.width;
-          img.top = canvas.height - img.height;
-          canvas.add(img);
-        },
-        { crossOrigin: "anonymous" }
-      ); // Set crossOrigin attribute here
-    });
+    fabric.Image.fromURL(
+      pageState.selectedImgPath
+        ? pageState.selectedImgPath
+        : "/img-placeholder.jpg",
+      function (img, error) {
+        if (error) {
+          toast.error("Failed to load overlay image.");
+          return;
+        }
+        img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
+        img.left = canvas.width - img.width;
+        img.top = canvas.height - img.height;
+        canvas.add(img);
+      },
+      { crossOrigin: "anonymous" }
+    );
 
     // Add text
     const text = new fabric.Text(selectedContentThumbnail, {
@@ -199,8 +199,8 @@ export default function ThumbnailCanvas() {
       <div className="thumbnailCanvas">
         <div className="thumbnailCanvas_actionsBar">
           {/* 01 Select Thumbnail */}
-          <div className="flex flex-col gap-[--10px] w-full">
-            <h3>Select Thumbnail</h3>
+          <div className="flex flex-col gap-[--10px] w-full mt-[--sy-20px]">
+            <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
             <CustomSelectInput
               label={"Select Thumbnail"}
               options={
@@ -214,7 +214,7 @@ export default function ThumbnailCanvas() {
 
           {/* 02 Select Background */}
           <div className="flex flex-col gap-[--10px] w-full">
-            <h3>Select Background</h3>
+            <h3 className="font-bold text-[--17px]">Select Background</h3>
 
             <div className="flex gap-[--20px] overflow-scroll p-[--5px]">
               {Array.from({ length: 10 }, (_, i) => (
@@ -237,7 +237,7 @@ export default function ThumbnailCanvas() {
 
           {/* 03 Select Image */}
           <div className="flex flex-col gap-[--10px] w-full">
-            <h3>Select Image</h3>
+            <h3 className="font-bold text-[--17px]">Select Image</h3>
             <div className="flex gap-[--10px]">
               <input
                 className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
@@ -265,7 +265,11 @@ export default function ThumbnailCanvas() {
 
             <div className="flex gap-[--20px] overflow-scroll p-[--5px] w-full">
               {!pageState.searchImgData ? (
-                <p>No images found</p>
+                <img
+                  src="/img-placeholder.jpg"
+                  alt="img-placeholder"
+                  className="w-[70%] h-auto aspect-square object-cover"
+                />
               ) : (
                 pageState.searchImgData.map((img) => (
                   <img
@@ -286,7 +290,11 @@ export default function ThumbnailCanvas() {
             </div>
           </div>
 
-          <button onClick={handleDownload} id="downloadBtn">
+          <button
+            onClick={handleDownload}
+            id="downloadBtn"
+            className="mb-[--sy-20px]"
+          >
             Download Thumbnail
           </button>
         </div>
