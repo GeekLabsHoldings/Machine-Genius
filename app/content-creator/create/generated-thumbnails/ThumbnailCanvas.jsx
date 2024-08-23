@@ -18,16 +18,37 @@ export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
   const fabricCanvasRef = useRef(null);
   const {
-    selectedContentType,
-    selectedBrand,
-    selectedContentTitle,
+    // selectedContentType,
+    // selectedBrand,
+    // selectedContentTitle,
     generatedThumbnails,
     generateThumbnails,
     selectedContentThumbnail,
     setSelectedContentThumbnail,
-    editContentData,
+    // editContentData,
     setEditContentData,
   } = useContext(globalContext);
+
+  async function handleGenerateThumbnails() {
+    setPageState((prev) => ({
+      ...prev,
+      generateThumbnailsLoading: true,
+    }));
+    await generateThumbnails();
+    setPageState((prev) => ({
+      ...prev,
+      generateThumbnailsLoading: false,
+    }));
+  }
+
+  useEffect(() => {
+    handleGenerateThumbnails();
+    // Cleanup
+    return () => {
+      setEditContentData(null);
+      sessionStorage.removeItem("editContentData");
+    };
+  }, []);
 
   function pageStateSearchImgDataInit() {
     if (typeof window !== "undefined") {
@@ -44,6 +65,7 @@ export default function ThumbnailCanvas() {
 
   function pageStateInit() {
     return {
+      generateThumbnailsLoading: false,
       selectedBgPath: "/bg-inv/bg-0.jpg",
       searchImgKeyword: "",
       searchImgLoading: false,
@@ -69,9 +91,9 @@ export default function ThumbnailCanvas() {
   //   console.log(`selectedBgPath`, selectedBgPath);
   // }, [selectedBgPath]);
 
-  useEffect(() => {
-    console.log(`selectedImgPath`, pageState.selectedImgPath);
-  }, [pageState.selectedImgPath]);
+  // useEffect(() => {
+  //   console.log(`selectedImgPath`, pageState.selectedImgPath);
+  // }, [pageState.selectedImgPath]);
 
   useEffect(() => {
     if (!canvasEl.current) {
@@ -285,6 +307,14 @@ export default function ThumbnailCanvas() {
     }));
   }
 
+  if (pageState.generateThumbnailsLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle needTxt={false} title="Generating Thumbnails..." />
+      </div>
+    );
+  }
+
   if (pageState.searchImgLoading) {
     return (
       <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
@@ -413,13 +443,7 @@ export default function ThumbnailCanvas() {
           btnColor="white"
           href={"/content-creator/create/generated-titles"}
         />
-        <CustomBtn
-          word={"Send"}
-          btnColor="black"
-          onClick={() => {
-            // handleSelectThumbnail();
-          }}
-        />
+        <CustomBtn word={"Send"} btnColor="black" onClick={() => {}} />
       </div>
     </section>
   );
