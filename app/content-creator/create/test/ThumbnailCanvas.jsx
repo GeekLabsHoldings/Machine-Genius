@@ -12,6 +12,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
@@ -112,6 +113,16 @@ export default function ThumbnailCanvas() {
         { crossOrigin: "anonymous" }
       );
     };
+
+    function splitSentenceIntoWords() {
+      if (selectedContentThumbnail) {
+        return selectedContentThumbnail.split(" ");
+      } else {
+        return [];
+      }
+    }
+    // Get the words from the sentence
+    const words = splitSentenceIntoWords();
     // ==============================================================
 
     // Load background image
@@ -125,20 +136,31 @@ export default function ThumbnailCanvas() {
     const imagePath = pageState.selectedImgPath || "/img-placeholder.jpg";
     if (!isBlocked(imagePath)) {
       loadImage(imagePath, (img) => {
-        img.left = canvas.width - img.width;
-        img.top = canvas.height - img.height;
+        img.scaleToWidth(500); // Optional: scale the image if needed
+        img.left = canvas.width - img.width * img.scaleX - 40; // Position on the right edge
+        img.top = canvas.height - img.height * img.scaleY - 40; // Position on the bottom edge
+
         canvas.add(img);
       });
     }
 
     // Add text
-    const text = new fabric.Text(selectedContentThumbnail, {
-      left: 150,
-      top: 200,
-      fontSize: 30,
-      fill: "white",
-    });
-    canvas.add(text);
+    // Set the starting position (bottom-left corner)
+    let left = 40;
+    let top = canvas.height - 100; // Start near the bottom of the canvas
+
+    // Add each word as a separate text object
+    for (let i = words.length - 1; i >= 0; i--) {
+      const text = new fabric.Text(words[i], {
+        left: left,
+        top: top,
+        fontSize: 60,
+        fill: i === 0 ? "red" : "#ffffff",
+        fontWeight: "600",
+      });
+      canvas.add(text);
+      top -= text.height; // Move the next word up by the height of the text
+    }
 
     // Cleanup
     return () => {
@@ -203,44 +225,45 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function testImageUrl(url) {
-    // toast("Testing image url...");
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = url;
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(url);
-      img.onerror = () => reject(url);
-    });
-  }
+  // async function testImageUrl(url) {
+  //   // toast("Testing image url...");
+  //   return new Promise((resolve, reject) => {
+  //     const img = new Image();
+  //     img.src = url;
+  //     img.crossOrigin = "anonymous";
+  //     img.onload = () => resolve(url);
+  //     img.onerror = () => reject(url);
+  //   });
+  // }
 
-  async function handleFilterImages() {
-    const urlsToCheck = pageStateSearchImgDataInit();
-    const validUrls = [];
-    const blocked = [];
+  // async function handleFilterImages() {
+  //   const urlsToCheck = pageStateSearchImgDataInit();
+  //   const validUrls = [];
+  //   const blocked = [];
 
-    for (const url of urlsToCheck) {
-      try {
-        await testImageUrl(url);
-        validUrls.push(url);
-      } catch {
-        blocked.push(url);
-      }
-    }
+  //   for (const url of urlsToCheck) {
+  //     try {
+  //       await testImageUrl(url);
+  //       validUrls.push(url);
+  //     } catch {
+  //       blocked.push(url);
+  //     }
+  //   }
 
-    // Update with blocked URLs
-    if (blocked.length > 0) {
-      const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
-      const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
-      localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
-    }
+  //   // Update with blocked URLs
+  //   if (blocked.length > 0) {
+  //     const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
+  //     const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
+  //     localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
+  //   }
 
-    // Update with valid URLs
-    setPageState((prev) => ({
-      ...prev,
-      searchImgData: validUrls,
-    }));
-  }
+  //   // Update with valid URLs
+  //   setPageState((prev) => ({
+  //     ...prev,
+  //     searchImgLoading: false,
+  //     searchImgData: validUrls,
+  //   }));
+  // }
 
   async function handlePreviewSearchedImages() {
     setPageState((prev) => ({
@@ -248,11 +271,23 @@ export default function ThumbnailCanvas() {
       searchImgLoading: true,
     }));
     await handleSearchImg();
-    await handleFilterImages();
+    // await handleFilterImages();
     setPageState((prev) => ({
       ...prev,
       searchImgLoading: false,
     }));
+  }
+
+  if (pageState.searchImgLoading) {
+    return (
+      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={true}
+          textNeeded="Hold on tight."
+          title="Genius is searching for images..."
+        />
+      </div>
+    );
   }
 
   return (
@@ -325,7 +360,7 @@ export default function ThumbnailCanvas() {
             </div>
 
             <div className="flex gap-[--20px] overflow-scroll p-[--5px] w-full">
-              {!pageState.searchImgData ? (
+              {!pageState.searchImgData.length ? (
                 <img
                   src="/img-placeholder.jpg"
                   alt="img-placeholder"
