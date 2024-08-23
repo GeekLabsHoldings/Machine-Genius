@@ -355,20 +355,17 @@ export default function GlobalContextProvider({
       return;
     }
     try {
-      const res = await fetch(
-        `https://api.sapling.ai/api/v1/edits`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
-            session_id: uuidv4(),
-            text: finalArticle?.articles[0]?.content,
-          }),
-        }
-      );
+      const res = await fetch(`https://api.sapling.ai/api/v1/edits`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
+          session_id: uuidv4(),
+          text: finalArticle?.articles[0]?.content,
+        }),
+      });
 
       const json = await res.json();
 
@@ -533,7 +530,10 @@ export default function GlobalContextProvider({
     if (checkStatus.ai !== "pass") {
       await checkAi();
     }
-    if (checkStatus.grammar !== "pass" && checkStatus.isGrammerChecked === false) {
+    if (
+      checkStatus.grammar !== "pass" &&
+      checkStatus.isGrammerChecked === false
+    ) {
       await checkGrammer();
     } else {
       setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
@@ -747,7 +747,7 @@ export default function GlobalContextProvider({
       );
       return selectedContentThumbnailInitValue
         ? selectedContentThumbnailInitValue
-        : "";
+        : generatedThumbnails[0].Thumbnail || "";
     } else {
       return "";
     }

@@ -12,8 +12,6 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
-// import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
-// import dynamic from "next/dynamic";
 
 export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
@@ -30,10 +28,37 @@ export default function ThumbnailCanvas() {
     setEditContentData,
   } = useContext(globalContext);
 
-  const [pageState, setPageState] = useState({
-    selectedBgPath: "/bg-inv/bg-0.jpg",
-    searchImgKeyword: "",
-  });
+  function pageStateSearchImgDataInit() {
+    if (typeof window !== "undefined") {
+      const searchImgDataValue = sessionStorage.getItem(
+        "ThumbnailCanvasPageState"
+      );
+      return searchImgDataValue
+        ? JSON.parse(searchImgDataValue).searchImgData
+        : [];
+    } else {
+      return [];
+    }
+  }
+
+  function pageStateInit() {
+    return {
+      selectedBgPath: "/bg-inv/bg-0.jpg",
+      searchImgKeyword: "",
+      searchImgLoading: false,
+      searchImgData: pageStateSearchImgDataInit(),
+      selectedImgPath: "",
+    };
+  }
+
+  const [pageState, setPageState] = useState(pageStateInit);
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      "ThumbnailCanvasPageState",
+      JSON.stringify(pageState)
+    );
+  }, [pageState.searchImgData]);
 
   const getSelectedContentThumbnailValue = useCallback((value) => {
     setSelectedContentThumbnail(value);
@@ -42,6 +67,10 @@ export default function ThumbnailCanvas() {
   // useEffect(() => {
   //   console.log(`selectedBgPath`, selectedBgPath);
   // }, [selectedBgPath]);
+
+  useEffect(() => {
+    console.log(`selectedImgPath`, pageState.selectedImgPath);
+  }, [pageState.selectedImgPath]);
 
   useEffect(() => {
     if (!canvasEl.current) {
@@ -54,14 +83,34 @@ export default function ThumbnailCanvas() {
 
     // Add a background image
     fabric.Image.fromURL(pageState.selectedBgPath, function (img) {
-      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+      // img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
+      // canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+
+      img.setSrc(
+        pageState.selectedBgPath,
+        function () {
+          canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+        },
+        { crossOrigin: "anonymous" }
+      ); // Set crossOrigin attribute here
     });
 
     // Add another image
-    fabric.Image.fromURL("/2.png", function (img) {
-      img.left = canvas.width - img.width;
-      img.top = canvas.height - img.height;
-      canvas.add(img);
+    fabric.Image.fromURL(pageState.selectedImgPath, function (img) {
+      // img.set({ crossOrigin: "anonymous" }); // Set crossOrigin attribute
+      // img.left = canvas.width - img.width;
+      // img.top = canvas.height - img.height;
+      // canvas.add(img);
+
+      img.setSrc(
+        pageState.selectedImgPath,
+        function () {
+          img.left = canvas.width - img.width;
+          img.top = canvas.height - img.height;
+          canvas.add(img);
+        },
+        { crossOrigin: "anonymous" }
+      ); // Set crossOrigin attribute here
     });
 
     // Add text
@@ -78,7 +127,12 @@ export default function ThumbnailCanvas() {
       canvas.dispose();
       fabricCanvasRef.current = null;
     };
-  }, [pageState.selectedBgPath, selectedContentThumbnail, canvasEl]);
+  }, [
+    pageState.selectedBgPath,
+    selectedContentThumbnail,
+    pageState.selectedImgPath,
+    canvasEl,
+  ]);
 
   const handleDownload = () => {
     const canvas = fabricCanvasRef.current;
@@ -92,24 +146,51 @@ export default function ThumbnailCanvas() {
   };
 
   async function handleSearchImg() {
-    console.log(`searchImgKeyword`, pageState.searchImgKeyword);
+    if (!pageState.searchImgKeyword) {
+      toast.error("Please provide a keyword to search for an image!");
+      return;
+    }
     try {
+      setPageState((prev) => ({
+        ...prev,
+        searchImgLoading: true,
+      }));
       const res = await fetch(
-        `https://serpapi.com/search.json?q=${pageState.searchImgKeyword}&engine=google_images&ijn=0&api_key=1af5ce540feb70a718d1bc3038d05229fc3439667054d2e9ed4c272256468f2d`
+        `https://machine-genius.onrender.com/content-creation/get-images`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            searchImgKeyword: pageState.searchImgKeyword,
+          }),
+        }
       );
-
       const json = await res.json();
-
-      if (json) {
-        //   setGeneratedTitles(json.Titles);
-        console.log(`json`, json);
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === true && json.images) {
+        setPageState((prev) => ({
+          ...prev,
+          searchImgData: json.images.map((img) => img.original),
+        }));
       } else {
-        toast.error("Something went wrong!");
+        toast.error("Something went wrong! Contact backend department");
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error handleSearchImg:", error);
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error generateThumbnails:", error);
+    } finally {
+      setPageState((prev) => ({
+        ...prev,
+        searchImgLoading: false,
+      }));
     }
   }
 
@@ -139,9 +220,10 @@ export default function ThumbnailCanvas() {
               {Array.from({ length: 10 }, (_, i) => (
                 <img
                   key={uuidv4()}
+                  loading="lazy"
                   src={`/bg-inv/bg-${i}.jpg`}
                   alt="bg-inv"
-                  className="w-[70%] hover:opacity-80 cursor-pointer"
+                  className="w-[70%] hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
                   onClick={() =>
                     setPageState((prev) => ({
                       ...prev,
@@ -181,15 +263,26 @@ export default function ThumbnailCanvas() {
               </button>
             </div>
 
-            <div className="flex gap-[--20px] overflow-scroll p-[--5px]">
-              {/* {Array.from({ length: 10 }, (_, i) => (
-                <img
-                  src={`/bg-inv/bg-${i}.jpg`}
-                  alt="bg-inv"
-                  className="w-[70%] hover:opacity-80 cursor-pointer"
-                  onClick={() => setSelectedBgPath(`/bg-inv/bg-${i}.jpg`)}
-                />
-              ))} */}
+            <div className="flex gap-[--20px] overflow-scroll p-[--5px] w-full">
+              {!pageState.searchImgData ? (
+                <p>No images found</p>
+              ) : (
+                pageState.searchImgData.map((img) => (
+                  <img
+                    key={uuidv4()}
+                    loading="lazy"
+                    src={img}
+                    alt="searchImg"
+                    className="w-[70%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
+                    onClick={() =>
+                      setPageState((prev) => ({
+                        ...prev,
+                        selectedImgPath: img,
+                      }))
+                    }
+                  />
+                ))
+              )}
             </div>
           </div>
 
