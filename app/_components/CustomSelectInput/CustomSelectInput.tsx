@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./CustomSelectInput.module.css";
+import { v4 as uuidv4 } from "uuid";
 
 interface Iprops<T> {
   label?: string | number;
@@ -110,7 +111,7 @@ const CustomSelectInput = <T,>(props: Iprops<T>) => {
                 setIsActive(!isActive);
               }}
               className={styles.item}
-              key={idx}
+              key={uuidv4()}
             >
               {ele}
             </div>
