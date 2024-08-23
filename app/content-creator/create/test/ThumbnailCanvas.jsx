@@ -156,7 +156,14 @@ export default function ThumbnailCanvas() {
         top: top,
         fontSize: 60,
         fill: i === 0 ? "red" : "#ffffff",
+        fontFamily: "Hellix-Black",
         fontWeight: "600",
+        shadow: {
+          color: "rgba(0, 0, 0, 0.5)", // Shadow color with opacity
+          blur: 5, // Blur level of the shadow
+          offsetX: 3, // Horizontal shadow offset
+          offsetY: 3, // Vertical shadow offset
+        },
       });
       canvas.add(text);
       top -= text.height; // Move the next word up by the height of the text

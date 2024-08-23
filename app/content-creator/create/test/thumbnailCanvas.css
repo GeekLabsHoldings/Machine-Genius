@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'Hellix-Black';
+    src: url('/fonts/Hellix-Black.woff2') format('woff2'),
+  }
+
+
 .thumbnailCanvas {
     display: flex;
     justify-content: space-between;
