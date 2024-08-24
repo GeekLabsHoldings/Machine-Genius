@@ -66,6 +66,7 @@ export default function ThumbnailCanvas() {
   function pageStateInit() {
     return {
       generateThumbnailsLoading: false,
+      thumbnailFontSize: 90,
       selectedBgPath: "/bg-inv/bg-0.jpg",
       searchImgKeyword: "",
       searchImgLoading: false,
@@ -86,6 +87,13 @@ export default function ThumbnailCanvas() {
 
   const getSelectedContentThumbnailValue = useCallback((value) => {
     setSelectedContentThumbnail(value);
+  }, []);
+
+  const getThumbnailFontSizeValue = useCallback((value) => {
+    setPageState((prev) => ({
+      ...prev,
+      thumbnailFontSize: Number(value),
+    }));
   }, []);
 
   // useEffect(() => {
@@ -170,14 +178,14 @@ export default function ThumbnailCanvas() {
     // Add text
     // Set the starting position (bottom-left corner)
     let left = 40;
-    let top = canvas.height - 100; // Start near the bottom of the canvas
+    let top = canvas.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
 
     // Add each word as a separate text object
     for (let i = words.length - 1; i >= 0; i--) {
       const text = new fabric.Text(words[i], {
         left: left,
         top: top,
-        fontSize: 60,
+        fontSize: pageState.thumbnailFontSize,
         fill: i === 0 ? "red" : "#ffffff",
         fontFamily: "Hellix-Black",
         fontWeight: "600",
@@ -201,6 +209,7 @@ export default function ThumbnailCanvas() {
     pageState.selectedBgPath,
     selectedContentThumbnail,
     pageState.selectedImgPath,
+    pageState.thumbnailFontSize,
     canvasEl,
   ]);
 
@@ -384,6 +393,14 @@ export default function ThumbnailCanvas() {
               }
               getValue={getSelectedContentThumbnailValue}
             />
+
+            <div className="w-1/2">
+              <CustomSelectInput
+                label={"Font Size"}
+                options={Array.from({ length: 71 }, (_, i) => i + 60)}
+                getValue={getThumbnailFontSizeValue}
+              />
+            </div>
           </div>
 
           {/* 02 Select Background */}
@@ -473,14 +490,6 @@ export default function ThumbnailCanvas() {
               <input type="file" accept="image/*" onChange={handleUploadImg} />
             </div>
           </div>
-
-          <button
-            onClick={handleDownload}
-            id="downloadBtn"
-            className="mb-[--sy-20px]"
-          >
-            Download Thumbnail
-          </button>
         </div>
 
         <div className="canvas-container relative">
@@ -488,12 +497,15 @@ export default function ThumbnailCanvas() {
         </div>
       </div>
 
-      <div className="flex justify-between items-center mt-[--sy-10px]">
+      <div className="flex justify-between items-center mt-[--sy-20px]">
         <CustomBtn
           word={"Back"}
           btnColor="white"
           href={"/content-creator/create/generated-titles"}
         />
+        <button onClick={handleDownload} id="downloadBtn">
+          Download Thumbnail
+        </button>
         <CustomBtn word={"Send"} btnColor="black" onClick={() => {}} />
       </div>
     </section>
