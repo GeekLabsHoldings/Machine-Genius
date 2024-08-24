@@ -71,6 +71,7 @@ export default function ThumbnailCanvas() {
       searchImgLoading: false,
       searchImgData: pageStateSearchImgDataInit(),
       selectedImgPath: "",
+      triggerFilterImages: false,
     };
   }
 
@@ -220,6 +221,10 @@ export default function ThumbnailCanvas() {
       return;
     }
     try {
+      setPageState((prev) => ({
+        ...prev,
+        searchImgLoading: true,
+      }));
       const res = await fetch(
         `https://machine-genius.onrender.com/content-creation/get-images`,
         {
@@ -243,6 +248,7 @@ export default function ThumbnailCanvas() {
         setPageState((prev) => ({
           ...prev,
           searchImgData: json.images.map((img) => img.original),
+          triggerFilterImages: true,
         }));
       } else {
         toast.error("Something went wrong! Contact backend department");
@@ -254,58 +260,70 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  // async function testImageUrl(url) {
-  //   // toast("Testing image url...");
-  //   return new Promise((resolve, reject) => {
-  //     const img = new Image();
-  //     img.src = url;
-  //     img.crossOrigin = "anonymous";
-  //     img.onload = () => resolve(url);
-  //     img.onerror = () => reject(url);
-  //   });
-  // }
+  async function testImageUrl(url) {
+    // toast("Testing image url...");
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = url;
 
-  // async function handleFilterImages() {
-  //   const urlsToCheck = pageStateSearchImgDataInit();
-  //   const validUrls = [];
-  //   const blocked = [];
+      img.onload = () => {
+        // Create a canvas to attempt to draw the image
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
-  //   for (const url of urlsToCheck) {
-  //     try {
-  //       await testImageUrl(url);
-  //       validUrls.push(url);
-  //     } catch {
-  //       blocked.push(url);
-  //     }
-  //   }
+        // Draw the image onto the canvas
+        ctx.drawImage(img, 0, 0);
 
-  //   // Update with blocked URLs
-  //   if (blocked.length > 0) {
-  //     const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
-  //     const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
-  //     localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
-  //   }
+        try {
+          // Attempt to read pixel data from the canvas
+          ctx.getImageData(0, 0, 1, 1);
+          resolve(url); // Image loaded and CORS is okay
+        } catch (e) {
+          reject("CORS issue or image data blocked: " + url);
+        }
+      };
 
-  //   // Update with valid URLs
-  //   setPageState((prev) => ({
-  //     ...prev,
-  //     searchImgLoading: false,
-  //     searchImgData: validUrls,
-  //   }));
-  // }
+      img.onerror = () => reject("Image load error: " + url);
+    });
+  }
 
-  async function handlePreviewSearchedImages() {
-    setPageState((prev) => ({
-      ...prev,
-      searchImgLoading: true,
-    }));
-    await handleSearchImg();
-    // await handleFilterImages();
+  async function handleFilterImages() {
+    const urlsToCheck = pageState.searchImgData;
+    if (!urlsToCheck.length) {
+      toast.error("No images to check!");
+      return;
+    }
+    const validUrls = [];
+    const blocked = [];
+
+    for (const url of urlsToCheck) {
+      try {
+        await testImageUrl(url);
+        validUrls.push(url);
+      } catch {
+        blocked.push(url);
+      }
+    }
+
+    // Update with blocked URLs
+    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
+    const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
+    localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
+
+    // Update with valid URLs
     setPageState((prev) => ({
       ...prev,
       searchImgLoading: false,
+      searchImgData: validUrls,
     }));
   }
+
+  useEffect(() => {
+    if (pageState.triggerFilterImages) {
+      handleFilterImages();
+    }
+  }, [pageState.triggerFilterImages]);
 
   if (pageState.generateThumbnailsLoading) {
     return (
@@ -321,7 +339,11 @@ export default function ThumbnailCanvas() {
         <LogoAndTitle
           needTxt={true}
           textNeeded="Hold on tight."
-          title="Genius is searching for images..."
+          title={
+            !pageState.triggerFilterImages
+              ? "Genius is searching for images..."
+              : "Genius is filtering images..."
+          }
         />
       </div>
     );
@@ -389,7 +411,7 @@ export default function ThumbnailCanvas() {
               <button
                 onClick={() => {
                   console.log(`searchImgKeyword`, pageState.searchImgKeyword);
-                  handlePreviewSearchedImages();
+                  handleSearchImg();
                 }}
               >
                 Search
