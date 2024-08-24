@@ -390,7 +390,7 @@ export default function ThumbnailCanvas() {
 
         setPageState((prev) => ({
           ...prev,
-          selectedImgPath: removedBgImgUrl,
+          selectedImgPath: removedBgImgUrl || dataUrl,
         }));
       };
 
@@ -402,7 +402,7 @@ export default function ThumbnailCanvas() {
     const removedBgImg = await handleRemoveBg(img, "select");
     setPageState((prev) => ({
       ...prev,
-      selectedImgPath: removedBgImg,
+      selectedImgPath: removedBgImg || img,
     }));
   }
 
