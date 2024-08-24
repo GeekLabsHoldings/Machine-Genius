@@ -126,40 +126,6 @@ export default function GlobalContextProvider({
     [router]
   );
 
-  // const checkAuth = useCallback(async () => {
-  //   toast("Checking authentication...");
-  //   const authToken = authState.token || localStorage.getItem("token");
-  //   if (!authToken) {
-  //     handleSignOut("No token found, redirecting to signin...");
-  //     return;
-  //   }
-  //   try {
-  //     const res = await fetch(
-  //       "https://api.machinegenius.io/authentication/check-auth",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${authToken}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     const data = await res.json();
-  //     // console.log("checkAuth data:", data);
-  //     if (data.result) {
-  //       toast.success("Token is valid");
-  //       return;
-  //     } else if (data.message && data.message.name === "TokenExpiredError") {
-  //       handleSignOut();
-  //     } else if (data.message === "USER_TOKEN_IS_INVALID") {
-  //       handleSignOut();
-  //     }
-  //   } catch (error) {
-  //     // toast.error("Something went wrong! Contact Technical Support!");
-  //     console.error("Error checking auth:", error);
-  //     return;
-  //   }
-  // }, [authState.token, handleSignOut]);
-
   const debouncedCheckAuth = useCallback(() => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -195,22 +161,25 @@ export default function GlobalContextProvider({
     }, 300); // Debounce delay in milliseconds
   }, [authState.token, handleSignOut]);
 
+  // Clear timeout on component unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (authState.token) {
       console.log("=+==+==There is Token=+==+==");
-      // checkAuth();
       debouncedCheckAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
       console.log("Redirecting to signin...");
       router.replace("/");
     }
-  }, [
-    authState.token,
-    debouncedCheckAuth,
-    // checkAuth,
-    router,
-  ]);
+  }, [authState.token, debouncedCheckAuth, router]);
 
   useEffect(() => {
     console.log("---currentPath:", path);
