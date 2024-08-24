@@ -2,7 +2,7 @@
 import CustomSelectInput from "../../_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "../../_components/Button/CustomBtn";
 import styles from "./Create.module.css";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -25,7 +25,7 @@ export default function CreatePage() {
     setLockedGeneratedTitles,
     setSelectedContentTitle,
     setEditContentData,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
 
   // reset all the data
   useEffect(() => {

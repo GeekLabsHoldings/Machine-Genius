@@ -4,6 +4,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { useSelector } from "react-redux";
 import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useCallback, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
@@ -11,8 +12,8 @@ import { useRouter } from "next/navigation";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 
 const GeneratedThumbnailsPage = () => {
+  const { token } = useContext(globalContext);
   const {
-    token,
     selectedContentType,
     selectedBrand,
     selectedContentTitle,
@@ -22,7 +23,7 @@ const GeneratedThumbnailsPage = () => {
     setSelectedContentThumbnail,
     editContentData,
     setEditContentData,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
   const finalArticle: any = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );

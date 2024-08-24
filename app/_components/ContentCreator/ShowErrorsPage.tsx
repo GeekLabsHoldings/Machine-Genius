@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export default function ShowErrorsPage() {
     setCheckStatus,
     startChecks,
     selectedBrand,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
   const checkGrammerResults = useSelector(
     (state: any) => state.contentCreator.checkGrammerResults
   );

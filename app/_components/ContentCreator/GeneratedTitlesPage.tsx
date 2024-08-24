@@ -3,7 +3,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./generated-titles.module.css";
 import TitleCheckWithLock from "@/app/_components/TitleCheckWithLock/TitleCheckWithLock";
 import { useEffect, useState } from "react";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import toast from "react-hot-toast";
@@ -26,7 +26,7 @@ const GeneratedTitlesPage = () => {
     lockedGeneratedTitles,
     selectedContentTitle,
     setSelectedContentTitle,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
   const router = useRouter();
   const [IsLoading, setIsLoading] = useState(false);
   // state that make create my title disabled or enabled

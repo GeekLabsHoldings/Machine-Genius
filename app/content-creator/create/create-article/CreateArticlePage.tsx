@@ -4,7 +4,7 @@ import styles from "./create-article.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
@@ -22,8 +22,9 @@ export default function CreateArticlePage() {
   // ===== End Hooks =====
 
   // ===== Start State =====
-  const { selectedContentType, selectedBrand, choosedArticles } =
-    useContext(globalContext);
+  const { selectedContentType, selectedBrand, choosedArticles } = useContext(
+    contentCreatorContext
+  );
   const [pageState, setPageState] = useState<{
     isLoading: boolean;
     isRetry: boolean;

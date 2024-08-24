@@ -11,7 +11,7 @@ import {
   useRef,
 } from "react";
 import { useRouter } from "next/navigation";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -37,7 +37,7 @@ export default function ChooseBrandPage() {
     setGeneratedTitles,
     setLockedGeneratedTitles,
     setEditContentData,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
 
   // reset all the data
   useEffect(() => {

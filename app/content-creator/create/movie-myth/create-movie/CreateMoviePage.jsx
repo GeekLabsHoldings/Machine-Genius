@@ -4,7 +4,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useSelector } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
@@ -26,7 +26,7 @@ const CreateMovie = () => {
     (state) => state.contentCreator.videoTranscription
   );
 
-  const { selectedContentType ,selectedBrand } = useContext(globalContext);
+  const { selectedContentType ,selectedBrand } = useContext(contentCreatorContext);
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {

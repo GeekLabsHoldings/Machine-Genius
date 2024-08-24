@@ -6,7 +6,7 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import "./thumbnailCanvas.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
@@ -27,7 +27,7 @@ export default function ThumbnailCanvas() {
     setSelectedContentThumbnail,
     // editContentData,
     setEditContentData,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
 
   async function handleGenerateThumbnails() {
     setPageState((prev) => ({
