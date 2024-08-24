@@ -1,5 +1,5 @@
 "use client"; // Indicate that this component is intended for client-side rendering
-import { useEffect, useState, useContext, useRef } from "react"; // Importing useEffect and useState hooks from React
+import { useEffect, useState, useContext, useMemo } from "react"; // Importing useEffect and useState hooks from React
 import CustomBtn from "../_components/Button/CustomBtn"; // Custom button component
 import styles from "./signin.module.css"; // Stylesheet for SignIn component
 import logoTextImg from "@/public/assets/welcome logo.svg"; // Image asset for welcome logo text
@@ -43,29 +43,61 @@ const SignIn = () => {
     if (logInLogo) {
       logInLogo.style.transform = "scale(150)";
     }
-    setPageState({
-      ...pageState,
+    setPageState((prevState) => ({
+      ...prevState,
       showWelcomeMessage: true,
-    });
+    }));
   }
 
   // useEffect hook to trigger animation
   useEffect(() => {
-    setPageState({
-      ...pageState,
+    setPageState((prevState) => ({
+      ...prevState,
       startAnimation: true,
-    });
+    }));
   }, []);
+
+  const routeToDirect = useMemo(() => {
+    if (!authState.decodedToken) return "/";
+    if (
+      authState.decodedToken.department.includes("ContentCreator") ||
+      authState.decodedToken.department.includes("CEO")
+    ) {
+      return "/content-creator/dashboard";
+    } else if (authState.decodedToken.department.includes("Video Editing")) {
+      return "/video-editor/dashboard";
+    } else if (authState.decodedToken.department.includes("Social Media")) {
+      return "/social-media/dashboard";
+    } else if (authState.decodedToken.department.includes("Administrative")) {
+      return "/administrative/dashboard";
+    } else if (authState.decodedToken.department.includes("Customer Service")) {
+      return "/customer-service/dashboard";
+    } else if (authState.decodedToken.department.includes("Creative")) {
+      return "/creative/dashboard";
+    } else if (authState.decodedToken.department.includes("HR")) {
+      return "/hr/dashboard";
+    } else if (authState.decodedToken.department.includes("Accounting")) {
+      return "/accounting/dashboard";
+    } else if (authState.decodedToken.department.includes("Newsletter")) {
+      return "/newsletter/dashboard";
+    } else if (authState.decodedToken.department.includes("Out Reach")) {
+      return "/outreach/dashboard";
+    } else if (authState.decodedToken.department.includes("SEO")) {
+      return "/seo/dashboard";
+    } else if (authState.decodedToken.department.includes("OP")) {
+      return "/op/dashboard";
+    }
+    return "/"; // Default return value
+  }, [authState.decodedToken]); // Dependency on decodedToken
 
   useEffect(() => {
     if (authState.token) {
-      const route = handleSetRouteToDirect();
       let timeout = setTimeout(() => {
-        router.replace(route);
+        router.replace(routeToDirect);
       }, 1);
       return () => clearTimeout(timeout);
     }
-  }, []);
+  }, [authState.token, router, routeToDirect]);
 
   useEffect(() => {
     if (authState.token && typeof window !== "undefined") {
@@ -82,10 +114,10 @@ const SignIn = () => {
   }, [authState.token, authState.decodedToken]);
 
   async function loginToAccount(values: any) {
-    setPageState({
-      ...pageState,
+    setPageState((prevState) => ({
+      ...prevState,
       loader: true,
-    });
+    }));
     try {
       const res = await fetch(`https://api.machinegenius.io/authentication`, {
         method: "POST",
@@ -109,10 +141,10 @@ const SignIn = () => {
       toast.error("Something went wrong! Contact backend department");
       console.error("Error loginToAccount:", e);
     } finally {
-      setPageState({
-        ...pageState,
+      setPageState((prevState) => ({
+        ...prevState,
         loader: false,
-      });
+      }));
     }
   }
 
@@ -135,54 +167,19 @@ const SignIn = () => {
     // },
   });
 
-  function handleSetRouteToDirect() {
-    if (
-      authState.decodedToken?.department.includes("ContentCreator") ||
-      authState.decodedToken?.department.includes("CEO")
-    ) {
-      return "/content-creator/dashboard";
-    } else if (authState.decodedToken?.department.includes("Video Editing")) {
-      return "/video-editor/dashboard";
-    } else if (authState.decodedToken?.department.includes("Social Media")) {
-      return "/social-media/dashboard";
-    } else if (authState.decodedToken?.department.includes("Administrative")) {
-      return "/administrative/dashboard";
-    } else if (
-      authState.decodedToken?.department.includes("Customer Service")
-    ) {
-      return "/customer-service/dashboard";
-    } else if (authState.decodedToken?.department.includes("Creative")) {
-      return "/creative/dashboard";
-    } else if (authState.decodedToken?.department.includes("HR")) {
-      return "/hr/dashboard";
-    } else if (authState.decodedToken?.department.includes("Accounting")) {
-      return "/accounting/dashboard";
-    } else if (authState.decodedToken?.department.includes("Newsletter")) {
-      return "/newsletter/dashboard";
-    } else if (authState.decodedToken?.department.includes("Out Reach")) {
-      return "/outreach/dashboard";
-    } else if (authState.decodedToken?.department.includes("SEO")) {
-      return "/seo/dashboard";
-    } else if (authState.decodedToken?.department.includes("OP")) {
-      return "/op/dashboard";
-    }
-    return "/"; // Default return value
-  }
-
   useEffect(() => {
     if (pageState.showWelcomeMessage) {
-      const route = handleSetRouteToDirect();
       let timeout = setTimeout(() => {
-        router.replace(route);
+        router.replace(routeToDirect);
       }, 1550);
       return () => clearTimeout(timeout);
     }
-  }, [pageState.showWelcomeMessage]);
+  }, [pageState.showWelcomeMessage, router, routeToDirect]);
 
   return (
     <div
       className="flex items-center justify-center w-[100vw] h-[100vh] fixed top-0 left-0 overflow-hidden"
-      style={{ zIndex: 99999999999999, background: "var(--dark)" }}
+      style={{ zIndex: 999, background: "var(--dark)" }}
     >
       {/* Welcome section */}
       <div
@@ -196,10 +193,10 @@ const SignIn = () => {
           word="Enter"
           btnColor="white"
           onClick={() =>
-            setPageState({
-              ...pageState,
+            setPageState((prevState) => ({
+              ...prevState,
               showSignInForm: true,
-            })
+            }))
           }
         />
       </div>

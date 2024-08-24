@@ -44,7 +44,7 @@ export default function RootLayout({
         <Toaster
           position="top-center"
           containerStyle={{
-            zIndex: 91474836471,
+            zIndex: 9999,
           }}
         />
 
