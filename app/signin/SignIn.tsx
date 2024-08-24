@@ -14,10 +14,12 @@ import toast from "react-hot-toast";
 // SignIn component
 const SignIn = () => {
   const { authState, setAuthState } = useContext(globalContext);
-  const [StartAnimation, setStartAnimation] = useState(false);
-  const [ShowSignInForm, setShowSignInForm] = useState(false);
-  const [ShowWelcomeMesage, setShowWelcomeMesage] = useState(false);
-  const [loader, setLoader] = useState(false);
+  const [pageState, setPageState] = useState({
+    loader: false,
+    showWelcomeMessage: false,
+    showSignInForm: false,
+    startAnimation: false,
+  });
   const router = useRouter();
 
   let user = {
@@ -41,12 +43,18 @@ const SignIn = () => {
     if (logInLogo) {
       logInLogo.style.transform = "scale(150)";
     }
-    setShowWelcomeMesage(true);
+    setPageState({
+      ...pageState,
+      showWelcomeMessage: true,
+    });
   }
 
   // useEffect hook to trigger animation
   useEffect(() => {
-    setStartAnimation(true);
+    setPageState({
+      ...pageState,
+      startAnimation: true,
+    });
   }, []);
 
   useEffect(() => {
@@ -74,7 +82,10 @@ const SignIn = () => {
   }, [authState.token, authState.decodedToken]);
 
   async function loginToAccount(values: any) {
-    setLoader(true);
+    setPageState({
+      ...pageState,
+      loader: true,
+    });
     try {
       const res = await fetch(`https://api.machinegenius.io/authentication`, {
         method: "POST",
@@ -98,7 +109,10 @@ const SignIn = () => {
       toast.error("Something went wrong! Contact backend department");
       console.error("Error loginToAccount:", e);
     } finally {
-      setLoader(false);
+      setPageState({
+        ...pageState,
+        loader: false,
+      });
     }
   }
 
@@ -156,14 +170,14 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-    if (ShowWelcomeMesage) {
+    if (pageState.showWelcomeMessage) {
       const route = handleSetRouteToDirect();
       let timeout = setTimeout(() => {
         router.replace(route);
       }, 1550);
       return () => clearTimeout(timeout);
     }
-  }, [ShowWelcomeMesage]);
+  }, [pageState.showWelcomeMessage]);
 
   return (
     <div
@@ -173,22 +187,27 @@ const SignIn = () => {
       {/* Welcome section */}
       <div
         className={`${styles.welcomePart} welcom-wrapper ${
-          StartAnimation ? styles.startAnimation : ""
-        } ${ShowSignInForm ? styles.hide : ""}`}
+          pageState.startAnimation ? styles.startAnimation : ""
+        } ${pageState.showSignInForm ? styles.hide : ""}`}
       >
         <h1>Welcome To </h1>
         <Image src={logoTextImg} height={100} alt="" />
         <CustomBtn
           word="Enter"
           btnColor="white"
-          onClick={() => setShowSignInForm(true)}
+          onClick={() =>
+            setPageState({
+              ...pageState,
+              showSignInForm: true,
+            })
+          }
         />
       </div>
 
       {/* Sign-in form */}
       <div
         className={`${styles.signin_wrapper} signin-wrapper  ${
-          ShowSignInForm ? styles.show : ""
+          pageState.showSignInForm ? styles.show : ""
         } `}
       >
         <div className={styles.logo_title}>
@@ -226,9 +245,9 @@ const SignIn = () => {
 
           <CustomBtn
             type="submit"
-            word={loader ? "Loading..." : "Sign In"}
+            word={pageState.loader ? "Loading..." : "Sign In"}
             btnColor="black"
-            disabled={formikObj.dirty === false || loader}
+            disabled={formikObj.dirty === false || pageState.loader}
           />
         </form>
       </div>
@@ -236,7 +255,7 @@ const SignIn = () => {
       {/* Welcome message */}
       <div
         className={`${styles.hi_message} ${
-          ShowWelcomeMesage ? styles.show : ""
+          pageState.showWelcomeMessage ? styles.show : ""
         }`}
       >
         <h2>
