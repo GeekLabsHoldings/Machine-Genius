@@ -13,16 +13,12 @@ import toast from "react-hot-toast";
 
 // SignIn component
 const SignIn = () => {
-  const { token, setToken, decodedToken, setDecodedToken } =
-    useContext(globalContext);
-  // State to manage animation
+  const { authState, setAuthState } = useContext(globalContext);
   const [StartAnimation, setStartAnimation] = useState(false);
-  // State to manage showing sign-in form
   const [ShowSignInForm, setShowSignInForm] = useState(false);
-  // State to manage showing welcome message
   const [ShowWelcomeMesage, setShowWelcomeMesage] = useState(false);
-  const router = useRouter();
   const [loader, setLoader] = useState(false);
+  const router = useRouter();
 
   let user = {
     email: "",
@@ -30,22 +26,12 @@ const SignIn = () => {
   };
 
   function setTokenAsync(json: any) {
-    setToken(json.logged_in_token);
-    console.log("01. setTokenAsync");
-  }
-
-  function setDecodedTokenAsync() {
-    const decoded = jwtDecode<JwtPayload>(token);
-    setDecodedToken(decoded);
-    console.log("02. setDecodedTokenAsync");
-  }
-
-  function setTokenInLocalStorageAsync() {
-    if (typeof window !== "undefined") {
-      console.log("03. Set Tokens in localStorage");
-      localStorage.setItem("token", token);
-      localStorage.setItem("decodedToken", JSON.stringify(decodedToken));
-    }
+    const decoded = jwtDecode<JwtPayload>(json.logged_in_token);
+    setAuthState({
+      token: json.logged_in_token,
+      decodedToken: decoded,
+    });
+    console.log("01. setTokenAsync, 02. setDecodedTokenAsync");
   }
 
   // Function to handle login action
@@ -64,7 +50,7 @@ const SignIn = () => {
   }, []);
 
   useEffect(() => {
-    if (token) {
+    if (authState.token) {
       const route = handleSetRouteToDirect();
       let timeout = setTimeout(() => {
         router.replace(route);
@@ -74,30 +60,29 @@ const SignIn = () => {
   }, []);
 
   useEffect(() => {
-    if (token) {
-      setDecodedTokenAsync();
+    if (authState.token && typeof window !== "undefined") {
+      localStorage.setItem("token", authState.token);
+      console.log("03. Set Tokens in localStorage");
     }
-  }, [token]);
-
-  useEffect(() => {
-    if (decodedToken) {
-      setTokenInLocalStorageAsync();
+    if (authState.decodedToken && typeof window !== "undefined") {
+      localStorage.setItem(
+        "decodedToken",
+        JSON.stringify(authState.decodedToken)
+      );
+      console.log("03. Set Tokens in localStorage");
     }
-  }, [decodedToken]);
+  }, [authState.token, authState.decodedToken]);
 
   async function loginToAccount(values: any) {
     setLoader(true);
     try {
-      const res = await fetch(
-        `https://api.machinegenius.io/authentication`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
+      const res = await fetch(`https://api.machinegenius.io/authentication`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
       const json = await res.json();
       // console.log(`json`, json.message);
       if (json.message === "invalid credentials") {
@@ -112,8 +97,9 @@ const SignIn = () => {
     } catch (e) {
       toast.error("Something went wrong! Contact backend department");
       console.error("Error loginToAccount:", e);
+    } finally {
+      setLoader(false);
     }
-    setLoader(false);
   }
 
   const formikObj = useFormik({
@@ -137,31 +123,33 @@ const SignIn = () => {
 
   function handleSetRouteToDirect() {
     if (
-      decodedToken?.department.includes("ContentCreator") ||
-      decodedToken?.department.includes("CEO")
+      authState.decodedToken?.department.includes("ContentCreator") ||
+      authState.decodedToken?.department.includes("CEO")
     ) {
       return "/content-creator/dashboard";
-    } else if (decodedToken?.department.includes("Video Editing")) {
+    } else if (authState.decodedToken?.department.includes("Video Editing")) {
       return "/video-editor/dashboard";
-    } else if (decodedToken?.department.includes("Social Media")) {
+    } else if (authState.decodedToken?.department.includes("Social Media")) {
       return "/social-media/dashboard";
-    } else if (decodedToken?.department.includes("Administrative")) {
+    } else if (authState.decodedToken?.department.includes("Administrative")) {
       return "/administrative/dashboard";
-    } else if (decodedToken?.department.includes("Customer Service")) {
+    } else if (
+      authState.decodedToken?.department.includes("Customer Service")
+    ) {
       return "/customer-service/dashboard";
-    } else if (decodedToken?.department.includes("Creative")) {
+    } else if (authState.decodedToken?.department.includes("Creative")) {
       return "/creative/dashboard";
-    } else if (decodedToken?.department.includes("HR")) {
+    } else if (authState.decodedToken?.department.includes("HR")) {
       return "/hr/dashboard";
-    } else if (decodedToken?.department.includes("Accounting")) {
+    } else if (authState.decodedToken?.department.includes("Accounting")) {
       return "/accounting/dashboard";
-    } else if (decodedToken?.department.includes("Newsletter")) {
+    } else if (authState.decodedToken?.department.includes("Newsletter")) {
       return "/newsletter/dashboard";
-    } else if (decodedToken?.department.includes("Out Reach")) {
+    } else if (authState.decodedToken?.department.includes("Out Reach")) {
       return "/outreach/dashboard";
-    } else if (decodedToken?.department.includes("SEO")) {
+    } else if (authState.decodedToken?.department.includes("SEO")) {
       return "/seo/dashboard";
-    } else if (decodedToken?.department.includes("OP")) {
+    } else if (authState.decodedToken?.department.includes("OP")) {
       return "/op/dashboard";
     }
     return "/"; // Default return value
@@ -252,7 +240,7 @@ const SignIn = () => {
         }`}
       >
         <h2>
-          Hi {decodedToken?.email.split("@")[0]}, <br />
+          Hi {authState.decodedToken?.email.split("@")[0]}, <br />
           Let’s have a productive day!
         </h2>
       </div>

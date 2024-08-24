@@ -1,14 +1,28 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
+import { useRouter, usePathname } from "next/navigation";
+import toast from "react-hot-toast";
+
+// Define type for AuthState for better type safety
+type AuthStateType = {
+  token: string;
+  decodedToken: any;
+};
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
-  token: "" as any,
-  setToken: (token: any) => {},
-  decodedToken: null as any,
-  setDecodedToken: (token: any) => {},
+  authState: {
+    token: "" as string,
+    decodedToken: null as any,
+  },
+  setAuthState: (authState: AuthStateType) => {},
   // ===== 00. End Authentication =====
 };
 
@@ -23,9 +37,10 @@ export default function GlobalContextProvider({
 }) {
   const router = useRouter();
   const path = usePathname();
+  const debounceTimer = useRef<any>(null);
 
   // ===== 00. Start Authentication =====
-  function handleSetRouteToDirect(role: string) {
+  const handleSetRouteToDirect = useCallback((role: string) => {
     switch (role) {
       case "ContentCreator":
         return "/content-creator/dashboard";
@@ -54,7 +69,7 @@ export default function GlobalContextProvider({
       default:
         return "/";
     }
-  }
+  }, []);
 
   function tokenInit() {
     if (typeof window !== "undefined") {
@@ -74,109 +89,146 @@ export default function GlobalContextProvider({
     }
   }
 
-  const [token, setToken] = useState<any>(tokenInit);
-  const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit);
+  const [authState, setAuthState] = useState<AuthStateType>(() => ({
+    token: tokenInit(),
+    decodedToken: decodedTokenInit(),
+  }));
 
-  async function checkIfUserOnCorrespondingRoute() {
-    // if (decodedToken) {
-    const role = decodedToken?.department[0];
-    const correspondingRoutePath = handleSetRouteToDirect(role).split("/")[1];
-    console.log(`correspondingRoutePath:`, correspondingRoutePath);
-    console.log(`currentpath:`, path);
+  const checkIfUserOnCorrespondingRoute = useCallback(() => {
+    // if (!decodedToken) return;
+    const role = authState.decodedToken?.department[0];
+    const route = handleSetRouteToDirect(role);
+    const correspondingRoutePath = route.split("/")[1];
+    // console.log(`correspondingRoutePath:`, correspondingRoutePath);
+    // console.log(`currentpath:`, path);
     if (
       !path.includes(correspondingRoutePath) &&
-      !decodedToken?.department.includes("CEO")
+      !authState.decodedToken?.department.includes("CEO")
     ) {
-      const correspondingRoute = handleSetRouteToDirect(role);
-      router.replace(correspondingRoute);
+      router.replace(route);
       console.log("~~~---***INvalid path***---~~~", path);
     } else {
       console.log("~~~---valid path---~~~");
     }
-    // }
-  }
+  }, [path, authState.decodedToken, router]);
 
-  function signOut() {
-    // toast("signOut ...");
-    // localStorage.removeItem("token");
-    // localStorage.removeItem("decodedToken");
-    // setToken("");
-    // setDecodedToken(null);
-    // localStorage.removeItem("token");
-    // localStorage.removeItem("decodedToken");
-  }
+  const handleSignOut = useCallback(
+    (message = "Session expired, redirecting to signin...") => {
+      setAuthState({
+        token: "",
+        decodedToken: null,
+      });
+      localStorage.removeItem("token");
+      localStorage.removeItem("decodedToken");
+      toast.error(message);
+      router.replace("/");
+    },
+    [router]
+  );
 
-  async function checkAuth() {
-    // // toast("Checking authentication...");
-    // const storedToken = localStorage.getItem("token");
-    // const authToken = token || storedToken;
-    // if (!authToken) {
-    //   toast.error("No token found, redirecting to signin...");
-    //   router.replace("/");
-    //   return;
-    // }
-    // try {
-    //   const res = await fetch(
-    //     "https://api.machinegenius.io/authentication/check-auth",
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${authToken}`,
-    //         "Content-Type": "application/json",
-    //       },
-    //     }
-    //   );
-    //   const data = await res.json();
-    //   // console.log("checkAuth data:", data);
-    //   if (data.result) {
-    //     // setToken(data.result.token);
-    //     // setDecodedToken(data.result);
-    //     // toast.success("Token is valid");
-    //   } else if (data.message && data.message.name === "TokenExpiredError") {
-    //     toast.error("Session expired, redirecting to signin...");
-    //     // console.log('Token expired, redirecting to signin...');
-    //     signOut();
-    //     router.replace("/");
-    //   } else if (data.message === "USER_TOKEN_IS_INVALID") {
-    //     toast.error("Session expired, redirecting to signin...");
-    //     // console.log('Token is invalid, Contact Technical Support!');
-    //     signOut();
-    //     router.replace("/");
-    //   }
-    // } catch (error) {
-    //   toast.error("Something went wrong! Contact Technical Support!");
-    //   // console.error('Error checking auth:', error);
-    //   signOut();
-    //   router.replace("/");
-    // }
-  }
+  // const checkAuth = useCallback(async () => {
+  //   toast("Checking authentication...");
+  //   const authToken = authState.token || localStorage.getItem("token");
+  //   if (!authToken) {
+  //     handleSignOut("No token found, redirecting to signin...");
+  //     return;
+  //   }
+  //   try {
+  //     const res = await fetch(
+  //       "https://api.machinegenius.io/authentication/check-auth",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     const data = await res.json();
+  //     // console.log("checkAuth data:", data);
+  //     if (data.result) {
+  //       toast.success("Token is valid");
+  //       return;
+  //     } else if (data.message && data.message.name === "TokenExpiredError") {
+  //       handleSignOut();
+  //     } else if (data.message === "USER_TOKEN_IS_INVALID") {
+  //       handleSignOut();
+  //     }
+  //   } catch (error) {
+  //     // toast.error("Something went wrong! Contact Technical Support!");
+  //     console.error("Error checking auth:", error);
+  //     return;
+  //   }
+  // }, [authState.token, handleSignOut]);
+
+  const debouncedCheckAuth = useCallback(() => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    debounceTimer.current = setTimeout(async () => {
+      toast("Checking authentication...");
+      const authToken = authState.token || localStorage.getItem("token");
+      if (!authToken) {
+        handleSignOut("No token found, redirecting to signin...");
+        return;
+      }
+      try {
+        const res = await fetch(
+          "https://api.machinegenius.io/authentication/check-auth",
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        if (data.result) {
+          toast.success("Token is valid");
+        } else if (data.message && data.message.name === "TokenExpiredError") {
+          handleSignOut();
+        } else if (data.message === "USER_TOKEN_IS_INVALID") {
+          handleSignOut();
+        }
+      } catch (error) {
+        console.error("Error checking auth:", error);
+      }
+    }, 300); // Debounce delay in milliseconds
+  }, [authState.token, handleSignOut]);
 
   useEffect(() => {
-    if (token) {
+    if (authState.token) {
       console.log("=+==+==There is Token=+==+==");
       // checkAuth();
+      debouncedCheckAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
       console.log("Redirecting to signin...");
       router.replace("/");
     }
-  }, [token]);
+  }, [
+    authState.token,
+    debouncedCheckAuth,
+    // checkAuth,
+    router,
+  ]);
 
   useEffect(() => {
     console.log("---currentPath:", path);
     checkIfUserOnCorrespondingRoute();
-  }, [path]);
+  }, [path, checkIfUserOnCorrespondingRoute]);
 
   // ===== 00. End Authentication =====
 
   // Create a context value object
-  const contextValue = {
-    // ===== 00. Start Authentication =====
-    token,
-    setToken,
-    decodedToken,
-    setDecodedToken,
-    // ===== 00. End Authentication =====
-  };
+  const contextValue = useMemo(
+    () => ({
+      // ===== 00. Start Authentication =====
+      authState,
+      setAuthState,
+      // ===== 00. End Authentication =====
+    }),
+    [authState]
+  );
 
   return (
     // to provide what i created

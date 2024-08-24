@@ -128,7 +128,7 @@ export default function AttendanceTable({
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {attendance?.map((e, idx) => (
+          {attendance.length && attendance?.map((e, idx) => (
             <ul key={idx} className="relative">
               <div
                 className="absolute"

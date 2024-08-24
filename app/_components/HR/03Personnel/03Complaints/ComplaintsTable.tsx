@@ -148,7 +148,7 @@ export default function ComplaintsTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {complaints.map((e:any,i) => (
+          {Array.isArray(complaints) && complaints.length && complaints.map((e:any,i) => (
             <ul className="w-[100%] relative" key={e._id}>
               <div className="absolute">{e.newStatus && newRibbon}</div>
               <li className="w-[20%]">{e.complaintIssue}</li>

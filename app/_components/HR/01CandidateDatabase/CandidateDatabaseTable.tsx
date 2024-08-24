@@ -105,46 +105,50 @@ export default function CandidateDatabaseTable({
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {candidates.map((e, idx) => (
-            <ul key={idx} className={`space-x-2`}>
-              <li className="w-[10%]">
-                <span>{e.firstName}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>{e.lastName}</span>
-              </li>
-              <li className="w-[12%]">
-                <span>{e.phoneNumber}</span>
-              </li>
-              <li className="w-[17%]">
-                <span>{e.email}</span>
-              </li>
-              <li className="w-[17%]">
-                <Link
-                  href={e.linkedIn}
-                  target="_blank"
-                  className="whitespace-nowrap overflow-hidden overflow-ellipsis"
-                >
-                  {truncateText(e.linkedIn, 100)}
-                </Link>
-              </li>
-              <li className="w-[12%]">
-                <span>{e.role}</span>
-              </li>
-              <li className="w-[17%]">
-                <Link
-                  href={e.cvLink}
-                  target="_blank"
-                  className="whitespace-nowrap overflow-hidden overflow-ellipsis"
-                >
-                  {truncateText(e.cvLink, 100)}
-                </Link>
-              </li>
-              <li className="w-[7%]">
-                <span>{e.portfolio || "-"}</span>
-              </li>
-            </ul>
-          ))}
+          {Array.isArray(candidates) && candidates.length ? (
+            candidates?.map((e, idx) => (
+              <ul key={idx} className={`space-x-2`}>
+                <li className="w-[10%]">
+                  <span>{e.firstName}</span>
+                </li>
+                <li className="w-[10%]">
+                  <span>{e.lastName}</span>
+                </li>
+                <li className="w-[12%]">
+                  <span>{e.phoneNumber}</span>
+                </li>
+                <li className="w-[17%]">
+                  <span>{e.email}</span>
+                </li>
+                <li className="w-[17%]">
+                  <Link
+                    href={e.linkedIn}
+                    target="_blank"
+                    className="whitespace-nowrap overflow-hidden overflow-ellipsis"
+                  >
+                    {truncateText(e.linkedIn, 100)}
+                  </Link>
+                </li>
+                <li className="w-[12%]">
+                  <span>{e.role}</span>
+                </li>
+                <li className="w-[17%]">
+                  <Link
+                    href={e.cvLink}
+                    target="_blank"
+                    className="whitespace-nowrap overflow-hidden overflow-ellipsis"
+                  >
+                    {truncateText(e.cvLink, 100)}
+                  </Link>
+                </li>
+                <li className="w-[7%]">
+                  <span>{e.portfolio || "-"}</span>
+                </li>
+              </ul>
+            ))
+          ) : (
+            <div>No candidates</div>
+          )}
         </div>
       </div>
       {/* End Table */}

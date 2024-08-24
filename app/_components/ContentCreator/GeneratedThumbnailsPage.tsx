@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 
 const GeneratedThumbnailsPage = () => {
-  const { token } = useContext(globalContext);
+  const { authState } = useContext(globalContext);
   const {
     selectedContentType,
     selectedBrand,
@@ -131,7 +131,7 @@ const GeneratedThumbnailsPage = () => {
             Authorization: `barrer ${
               typeof window !== "undefined"
                 ? localStorage.getItem("token")
-                : token
+                : authState.token
             }`,
           },
           body: JSON.stringify(postBody),

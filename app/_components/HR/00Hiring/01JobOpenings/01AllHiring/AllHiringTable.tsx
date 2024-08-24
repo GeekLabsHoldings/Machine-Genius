@@ -155,37 +155,39 @@ export default function AllHiringTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {data?.map((ele, idx) => (
-          <ul className="w-[100%]" key={ele._id}>
-            <li className="w-[20%]">{ele.title}</li>
-            <li className="w-[20%]">{ele.level}</li>
-            <li className="w-[20%]">{ele.department}</li>
-            <li className="w-[20%]">
-              <span
-                style={{
-                  background: ele.createdBy.theme,
-                }}
+        {Array.isArray(data) &&
+          data.length &&
+          data?.map((ele, idx) => (
+            <ul className="w-[100%]" key={ele._id}>
+              <li className="w-[20%]">{ele.title}</li>
+              <li className="w-[20%]">{ele.level}</li>
+              <li className="w-[20%]">{ele.department}</li>
+              <li className="w-[20%]">
+                <span
+                  style={{
+                    background: ele.createdBy.theme,
+                  }}
+                >
+                  {ele?.createdBy.firstName}
+                </span>
+              </li>
+              <li
+                className={`w-[20%] ${
+                  ele.hiringStatus === "In Process"
+                    ? "In Process"
+                    : ele.hiringStatus === "Completed"
+                    ? "opacity-50"
+                    : ""
+                }`}
               >
-                {ele?.createdBy.firstName}
-              </span>
-            </li>
-            <li
-              className={`w-[20%] ${
-                ele.hiringStatus === "In Process"
-                  ? "In Process"
-                  : ele.hiringStatus === "Completed"
-                  ? "opacity-50"
-                  : ""
-              }`}
-            >
-              <CustomBtn
-                btnColor="black"
-                word={ele.hiringStatus}
-                onClick={() => updateNextStep(ele.hiringStatus)}
-              />
-            </li>
-          </ul>
-        ))}
+                <CustomBtn
+                  btnColor="black"
+                  word={ele.hiringStatus}
+                  onClick={() => updateNextStep(ele.hiringStatus)}
+                />
+              </li>
+            </ul>
+          ))}
       </div>
     </div>
   );
