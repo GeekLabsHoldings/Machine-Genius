@@ -42,7 +42,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);
@@ -325,6 +325,25 @@ export default function ThumbnailCanvas() {
     }
   }, [pageState.triggerFilterImages]);
 
+  function handleUploadImg(e) {
+    // console.log(`e`, e);
+    const file = e.target.files[0];
+    // console.log(`file`, file);
+    if (file) {
+      const reader = new FileReader();
+      // moved after reader.onload
+      // reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        // console.log(`event`, event);
+        setPageState((prev) => ({
+          ...prev,
+          selectedImgPath: event.target.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   if (pageState.generateThumbnailsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
@@ -369,7 +388,9 @@ export default function ThumbnailCanvas() {
 
           {/* 02 Select Background */}
           <div className="flex flex-col gap-[--10px] w-full">
-            <h3 className="font-bold text-[--17px]">Select Background</h3>
+            <h3 className="font-bold text-[--17px] border-t-[--2px] border-[--gray-300] pt-[--7px]">
+              Select Background
+            </h3>
 
             <div className="flex gap-[--20px] overflow-scroll p-[--5px]">
               {Array.from({ length: 10 }, (_, i) => (
@@ -392,7 +413,9 @@ export default function ThumbnailCanvas() {
 
           {/* 03 Select Image */}
           <div className="flex flex-col gap-[--10px] w-full">
-            <h3 className="font-bold text-[--17px]">Select Image</h3>
+            <h3 className="font-bold text-[--17px] border-t-[--2px] border-[--gray-300] pt-[--7px]">
+              Select Image
+            </h3>
             <div className="flex gap-[--10px]">
               <input
                 className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
@@ -442,6 +465,12 @@ export default function ThumbnailCanvas() {
                   />
                 ))
               )}
+            </div>
+
+            {/* UploadImg */}
+            <h3 className="font-bold text-[--17px]">or: Upload Image</h3>
+            <div className={"w-full flex thumbnailCanvas_actionsBar_uploadImg"}>
+              <input type="file" accept="image/*" onChange={handleUploadImg} />
             </div>
           </div>
 
