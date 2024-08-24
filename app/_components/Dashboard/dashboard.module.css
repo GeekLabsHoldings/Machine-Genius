@@ -1,205 +1,182 @@
-.box{
-    box-shadow: 2px 2px 4px 2px #DFDFDF ;
-    border: 1px solid transparent;
-    border-radius: clamp(10px, calc(0.8vw + 0.1rem), 60px);
-    overflow: hidden;
+.box {
+  box-shadow: 2px 2px 4px 2px #dfdfdf;
+  border: 1px solid transparent;
+  border-radius: clamp(10px, calc(0.8vw + 0.1rem), 60px);
+  overflow: hidden;
 }
-.dashboard h3{
-    font-size: clamp(16px, calc(1.3vw + 0.1rem), 80px);
-    font-weight: 700;
+.dashboard h3 {
+  font-size: clamp(16px, calc(1.3vw + 0.1rem), 80px);
+  font-weight: 700;
 }
-.smallBox{
-    width: clamp(14px, calc(20vw + 0.1rem), 800px);
-    display: flex;
-    align-items: center;
-    border-radius: clamp(10px, calc(0.3vw + 0.1rem), 60px); 
-    box-shadow:  2px 2px 4px 2px #DFDFDF ;
-    border: 1px solid transparent;
-    gap: clamp(14px, calc(1vw + 0.1rem), 80px);
-    height: clamp(14px, calc(2vw + 0.1rem), 80px);
-    padding: clamp(14px, calc(1vw + 0.1rem), 80px);
+.smallBox {
+  width: clamp(14px, calc(20vw + 0.1rem), 800px);
+  display: flex;
+  align-items: center;
+  border-radius: clamp(10px, calc(0.3vw + 0.1rem), 60px);
+  box-shadow: 2px 2px 4px 2px #dfdfdf;
+  border: 1px solid transparent;
+  gap: clamp(14px, calc(1vw + 0.1rem), 80px);
+  height: clamp(14px, calc(2vw + 0.1rem), 80px);
+  padding: clamp(14px, calc(1vw + 0.1rem), 80px);
 }
-.rightBorder:not(:last-child){
-    border-right: 1px solid #DBDBD7;
+.rightBorder:not(:last-child) {
+  border-right: 1px solid #dbdbd7;
 }
-.rightBorder:hover h5{
-    font-weight: 700;
+.rightBorder:hover h5 {
+  font-weight: 700;
 }
-.bottomBorder{
-    border-bottom: 1px solid #DBDBD7;
+.bottomBorder {
+  border-bottom: 1px solid #dbdbd7;
 }
-.leaderboard{
-    width: clamp(160px, calc(27vw + 0.1rem), 900px) ;
+.leaderboard {
+  width: clamp(160px, calc(27vw + 0.1rem), 900px);
 }
-.rightBorder h5, .leaderboard h5{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
-    font-weight: 600;
+.rightBorder h5,
+.leaderboard h5 {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 600;
 }
-.coloredTxt{
-    width: max-content;
-    padding: clamp(2px, calc(0.1vw + 0.1rem), 20px) clamp(5px, calc(0.35vw + 0.1rem), 20px);
-    border-radius: clamp(5px, calc(0.2vw + 0.1rem), 60px);
-    font-weight: 500;
-    font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+.coloredTxt {
+  width: max-content;
+  padding: clamp(2px, calc(0.1vw + 0.1rem), 20px)
+    clamp(5px, calc(0.35vw + 0.1rem), 20px);
+  border-radius: clamp(5px, calc(0.2vw + 0.1rem), 60px);
+  font-weight: 500;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
 }
-.events{
-    display: flex;
-    flex-direction: column;
-    gap: 1vw;
-    border-left: 2px solid #828282;
-    padding-top: 0.5vw;
+.events {
+  display: flex;
+  flex-direction: column;
+  gap: 1vw;
+  border-left: 2px solid #828282;
+  padding-top: 0.5vw;
 }
-.events h5, .events p{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+.events h5,
+.events p {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
 }
-.events h5{
-    font-weight: 700;
+.events h5 {
+  font-weight: 700;
 }
 
-.events p{
-    font-weight: 400;
+.events p {
+  font-weight: 400;
 }
-.profileAndStatus{
-    border-right: 1px solid #DBDBD7;
-    padding-right: clamp(10px, calc(1vw + 0.1rem), 60px);
+.profileAndStatus {
+  border-right: 1px solid #dbdbd7;
+  padding-right: clamp(10px, calc(1vw + 0.1rem), 60px);
 }
-.profileAndStatus svg{
-    width: clamp(24px, calc(2.6vw + 0.1rem),140px);
-    height: clamp(24px, calc(2.5vw + 0.1rem),140px);
+.profileAndStatus svg {
+  width: clamp(24px, calc(2.6vw + 0.1rem), 140px);
+  height: clamp(24px, calc(2.5vw + 0.1rem), 140px);
 }
-.profileAndStatus h5{
-    color: var(--white);
-    font-size:  clamp(10px, calc(0.8vw + 0.1rem), 60px);
-    font-weight: 700;
+.profileAndStatus h5 {
+  color: var(--white);
+  font-size: clamp(10px, calc(0.8vw + 0.1rem), 60px);
+  font-weight: 700;
 }
-.profileAndStatus p{
-    color: #828282;
-    font-weight: 400;
-    font-size:  clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+.profileAndStatus p {
+  color: #828282;
+  font-weight: 400;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
 }
-.movedStatus svg, .cutBox svg{
-    width: clamp(10px, calc( 0.5vw + 0.1rem), 60px);
-    height: clamp(10px, calc( 0.5vw + 0.1rem), 60px);
+.movedStatus svg,
+.cutBox svg {
+  width: clamp(10px, calc(0.5vw + 0.1rem), 60px);
+  height: clamp(10px, calc(0.5vw + 0.1rem), 60px);
 }
-.movedStatus{
-    position: absolute;
-    top: 25%;
-    right: 70%;
-    transform: translate(-50%);
+.movedStatus {
+  position: absolute;
+  top: 25%;
+  right: 70%;
+  transform: translate(-50%);
 }
-.annoucementBody{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: clamp(10px, calc(1vw + 0.1rem), 60px);
+.annoucementBody {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: clamp(10px, calc(1vw + 0.1rem), 60px);
 }
-.annoucementBody p{
-    text-align: justify;
-    font-size:  clamp(10px, calc(0.9vw + 0.1rem), 60px);
-    font-weight: 400;
-    color: var(--white);
+.annoucementBody p {
+  text-align: justify;
+  font-size: clamp(10px, calc(0.9vw + 0.1rem), 60px);
+  font-weight: 400;
+  color: var(--white);
 }
 .movedQuestion {
-    width: clamp(56px, calc(4.92vw + 0.1rem),140px);
-    height: clamp(56px, calc(4.7vw + 0.1rem),140px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    border: 1px solid var(--dark);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    overflow: hidden;
+  width: clamp(56px, calc(4.92vw + 0.1rem), 140px);
+  height: clamp(56px, calc(4.7vw + 0.1rem), 140px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--dark);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
 }
-.movedQuestion svg{
-    width: clamp(20px, calc(2.5vw + 0.1rem),140px) !important;
-    height: clamp(20px, calc(2.2vw + 0.1rem),140px) !important;
-    animation: none !important;
-
+.movedQuestion svg {
+  width: clamp(20px, calc(2.5vw + 0.1rem), 140px) !important;
+  height: clamp(20px, calc(2.2vw + 0.1rem), 140px) !important;
+  animation: none !important;
 }
-.movedQuestion svg path{
-    fill: var(--dark) !important;
-
-
+.movedQuestion svg path {
+  fill: var(--dark) !important;
 }
-.halfHeader{
-    height: clamp(24px, calc(2vw + 0.1rem),140px);
+.halfHeader {
+  height: clamp(24px, calc(2vw + 0.1rem), 140px);
 }
-.halfHeader p{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
+.halfHeader p {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
 }
-.animated{
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-right: 1px solid #DBDBD7;
-    box-sizing: border-box;
-    width: clamp(160px, calc(15vw + 0.1rem), 800px);
+.bonusBox {
+  box-shadow: 0px 0px 7px 0px rgba(42, 43, 42, 0.25);
+  border-radius: clamp(10px, calc(1vw + 0.1rem), 60px);
 }
-.animated svg{
-    width: clamp(56px, calc(7vw + 0.1rem), 1400px);
-    height: clamp(56px, calc(7vw + 0.1rem), 1400px);
-    animation-name: spin;
-    animation-duration: 5000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear; 
+.bonusBox h1 {
+  font-size: clamp(24px, calc(3vw + 0.1rem), 140px);
+  font-weight: 700;
 }
-.bonusBox{
-    box-shadow: 0px 0px 7px 0px rgba(42, 43, 42, 0.25) ;
-    border-radius: clamp(10px, calc(1vw + 0.1rem), 60px); 
+.bonusBox h4 {
+  font-size: clamp(14px, calc(1.1vw + 0.1rem), 70px);
+  font-weight: 500;
 }
-.bonusBox h1{
-    font-size: clamp(24px, calc(3vw + 0.1rem),140px);
-    font-weight: 700;
+.waysToTakeBonus {
+  border-left: 2px solid #dbdbd7;
+  padding-left: 0.8vw;
 }
-.bonusBox h4{
-    font-size:clamp(14px, calc( 1.1vw + 0.1rem ) , 70px);
-    font-weight: 500;
+.careerSec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3vw;
 }
-.waysToTakeBonus{
-    border-left: 2px solid #DBDBD7;
-    padding-left: 0.8vw;
+.careerSec p {
+  color: var(--white);
 }
-.careerSec{
-    display: flex;
-    flex-direction: column;
-    gap: 0.3vw;
+.waysToTakeBonus p,
+.waysToTakeBonus span {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 400;
 }
-.careerSec p{
-    color: var(--white);
+.waysToTakeBonus span {
+  color: #828282;
+  text-decoration: line-through;
 }
-.waysToTakeBonus p, .waysToTakeBonus span{
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 100px);
-    font-weight: 400;
+.cutBox {
+  border-top-left-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  border-top-right-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  box-shadow: 0px 3px 7px 3px rgba(42, 43, 42, 0.25);
+  border: 1px solid transparent;
 }
-.waysToTakeBonus span{
-    color: #828282 ;
-    text-decoration: line-through;
+.cutBox h5 {
+  font-weight: 700;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 60px);
 }
-.cutBox{
-    border-top-left-radius:  clamp(10px, calc(0.7vw + 0.1rem), 60px);
-    border-top-right-radius:  clamp(10px, calc(0.7vw + 0.1rem), 60px) ;
-    box-shadow: 0px 3px 7px 3px rgba(42, 43, 42, 0.25) ;
-    border: 1px solid transparent;
-}
-.cutBox h5{
-    font-weight: 700;
-    font-size: clamp(10px, calc(0.7vw + 0.1rem), 60px);
-}
-.movedChat{
-    position: absolute;
-    bottom: 0;
-    right: clamp(20px, calc(3.5vw + 0.1rem), 1400px);
-    width: clamp(56px, calc(50vw + 0.1rem),3000px);
-}
-@keyframes spin {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(360deg);
-    }
+.movedChat {
+  position: absolute;
+  bottom: 0;
+  right: clamp(20px, calc(3.5vw + 0.1rem), 1400px);
+  width: clamp(56px, calc(50vw + 0.1rem), 3000px);
 }

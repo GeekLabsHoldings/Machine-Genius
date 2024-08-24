@@ -42,7 +42,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    // handleGenerateThumbnails();
+    handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);

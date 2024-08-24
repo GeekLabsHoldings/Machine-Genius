@@ -1,0 +1,82 @@
+.box {
+  box-shadow: 2px 2px 4px 2px #dfdfdf;
+  border: 1px solid transparent;
+  border-radius: clamp(10px, calc(0.8vw + 0.1rem), 60px);
+  overflow: hidden;
+}
+.smallBox {
+  width: clamp(14px, calc(20vw + 0.1rem), 800px);
+  display: flex;
+  align-items: center;
+  border-radius: clamp(10px, calc(0.3vw + 0.1rem), 60px);
+  box-shadow: 2px 2px 4px 2px #dfdfdf;
+  border: 1px solid transparent;
+  gap: clamp(14px, calc(1vw + 0.1rem), 80px);
+  height: clamp(14px, calc(2vw + 0.1rem), 80px);
+  padding: clamp(14px, calc(1vw + 0.1rem), 80px);
+}
+.rightBorder:not(:last-child) {
+  border-right: 1px solid #dbdbd7;
+}
+.rightBorder:hover h5 {
+  font-weight: 700;
+}
+.bottomBorder {
+  border-bottom: 1px solid #dbdbd7;
+}
+.leaderboard {
+  width: clamp(160px, calc(27vw + 0.1rem), 900px);
+}
+.rightBorder h5,
+.leaderboard h5 {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 600;
+}
+.animated {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid #dbdbd7;
+  box-sizing: border-box;
+  width: clamp(160px, calc(15vw + 0.1rem), 800px);
+}
+.animated svg {
+  width: clamp(56px, calc(7vw + 0.1rem), 1400px);
+  height: clamp(56px, calc(7vw + 0.1rem), 1400px);
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.movedQuestion {
+  width: clamp(56px, calc(4.92vw + 0.1rem), 140px);
+  height: clamp(56px, calc(4.7vw + 0.1rem), 140px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--dark);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+.movedQuestion svg {
+  width: clamp(20px, calc(2.5vw + 0.1rem), 140px) !important;
+  height: clamp(20px, calc(2.2vw + 0.1rem), 140px) !important;
+  animation: none !important;
+}
+.movedQuestion svg path {
+  fill: var(--dark) !important;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
