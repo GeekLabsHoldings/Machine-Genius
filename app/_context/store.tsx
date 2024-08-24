@@ -37,7 +37,7 @@ export default function GlobalContextProvider({
 }) {
   const router = useRouter();
   const path = usePathname();
-  const debounceTimer = useRef<any>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ===== 00. Start Authentication =====
   const handleSetRouteToDirect = useCallback((role: string) => {
@@ -96,15 +96,16 @@ export default function GlobalContextProvider({
 
   const checkIfUserOnCorrespondingRoute = useCallback(() => {
     // if (!decodedToken) return;
+    if (authState.decodedToken?.department.includes("CEO")) {
+      // console.log("CEO has access to all routes");
+      return;
+    }
     const role = authState.decodedToken?.department[0];
     const route = handleSetRouteToDirect(role);
     const correspondingRoutePath = route.split("/")[1];
     // console.log(`correspondingRoutePath:`, correspondingRoutePath);
     // console.log(`currentpath:`, path);
-    if (
-      !path.includes(correspondingRoutePath) &&
-      !authState.decodedToken?.department.includes("CEO")
-    ) {
+    if (!path.includes(correspondingRoutePath)) {
       router.replace(route);
       console.log("~~~---***INvalid path***---~~~", path);
     } else {
