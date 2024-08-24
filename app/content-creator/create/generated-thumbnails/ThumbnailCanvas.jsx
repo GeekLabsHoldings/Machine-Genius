@@ -73,6 +73,7 @@ export default function ThumbnailCanvas() {
       searchImgData: pageStateSearchImgDataInit(),
       selectedImgPath: "",
       triggerFilterImages: false,
+      removeBgLoading: false,
     };
   }
 
@@ -334,23 +335,75 @@ export default function ThumbnailCanvas() {
     }
   }, [pageState.triggerFilterImages]);
 
+  async function handleRemoveBg(img, type) {
+    try {
+      setPageState((prev) => ({
+        ...prev,
+        removeBgLoading: true,
+      }));
+      const res = await fetch(`https://api.remove.bg/v1.0/removebg`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": process.env.NEXT_PUBLIC_REMOVEBG_API_KEY,
+        },
+        body: JSON.stringify({
+          ...(type === "select" ? { image_url: img } : { image_file_b64: img }),
+          size: "auto",
+        }),
+      });
+
+      if (!res.ok) {
+        toast.error("Something went wrong! Contact backend department");
+        console.error("Error handleRemoveBg:", error);
+        return;
+      }
+
+      // Convert the response to a Blob
+      const blob = await res.blob();
+      // Create a URL for the Blob
+      const imageUrl = URL.createObjectURL(blob);
+      // Use the imageUrl in your application
+      return imageUrl; // You can set this as the src of an img tag
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error handleRemoveBg:", error);
+    } finally {
+      setPageState((prev) => ({
+        ...prev,
+        removeBgLoading: false,
+      }));
+    }
+  }
+
   function handleUploadImg(e) {
     // console.log(`e`, e);
     const file = e.target.files[0];
     // console.log(`file`, file);
     if (file) {
       const reader = new FileReader();
-      // moved after reader.onload
-      // reader.readAsDataURL(file);
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         // console.log(`event`, event);
+        const dataUrl = event.target.result; // Data URL of the uploaded image
+        // Call handleRemoveBg with the uploaded image's Data URL
+        const removedBgImgUrl = await handleRemoveBg(dataUrl, "upload");
+
         setPageState((prev) => ({
           ...prev,
-          selectedImgPath: event.target.result,
+          selectedImgPath: removedBgImgUrl,
         }));
       };
+
       reader.readAsDataURL(file);
     }
+  }
+
+  async function handleSelectImg(img) {
+    const removedBgImg = await handleRemoveBg(img, "select");
+    setPageState((prev) => ({
+      ...prev,
+      selectedImgPath: removedBgImg,
+    }));
   }
 
   if (pageState.generateThumbnailsLoading) {
@@ -372,6 +425,18 @@ export default function ThumbnailCanvas() {
               ? "Genius is searching for images..."
               : "Genius is filtering images..."
           }
+        />
+      </div>
+    );
+  }
+
+  if (pageState.removeBgLoading) {
+    return (
+      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={true}
+          textNeeded="Hold on tight."
+          title={"Genius is removing image background..."}
         />
       </div>
     );
@@ -473,12 +538,7 @@ export default function ThumbnailCanvas() {
                     src={img}
                     alt="searchImg"
                     className="w-[70%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
-                    onClick={() =>
-                      setPageState((prev) => ({
-                        ...prev,
-                        selectedImgPath: img,
-                      }))
-                    }
+                    onClick={() => handleSelectImg(img)}
                   />
                 ))
               )}
