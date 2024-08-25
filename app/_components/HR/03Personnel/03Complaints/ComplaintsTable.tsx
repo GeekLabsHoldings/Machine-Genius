@@ -104,7 +104,7 @@ export default function ComplaintsTable() {
       console.log("xzcasdqe");
       
       const data = await fetch(
-        "https://machine-genius.onrender.com/hr/complaint/get-all?name=&department=&solve=&urgencyLevel=&limit&skip",
+        "https://api.machinegenius.io/hr/complaint/get-all?name=&department=&solve=&urgencyLevel=&limit&skip",
         {
           method: "get",
           headers: {
@@ -148,7 +148,7 @@ export default function ComplaintsTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {complaints.map((e:any,i) => (
+          {Array.isArray(complaints) && complaints.length && complaints.map((e:any,i) => (
             <ul className="w-[100%] relative" key={e._id}>
               <div className="absolute">{e.newStatus && newRibbon}</div>
               <li className="w-[20%]">{e.complaintIssue}</li>

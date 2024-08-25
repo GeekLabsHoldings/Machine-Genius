@@ -11,35 +11,46 @@ import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [IsLoading, setIsLoading] = useState<boolean>(false);
-  const [IsLoadingParaphrase, setIsLoadingParaphrase] =
-    useState<boolean>(false);
-  const [selectedIssue, setSelectedIssue] = useState<any>(null);
-  const [issueType, setIssueType] = useState<string>("");
+
   const {
     selectedContentType,
     checkStatus,
     setCheckStatus,
     startChecks,
     selectedBrand,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
   const checkGrammerResults = useSelector(
     (state: any) => state.contentCreator.checkGrammerResults
   );
   const checkAiResults = useSelector(
     (state: any) => state.contentCreator.checkAiResults
   );
-  const [triggerStartChecks, setTriggerStartChecks] = useState<boolean>(false);
+
   const finalArticle = useSelector(
     (state: any) => state.contentCreator.finalArticle
   );
 
   const finalArticleRef = useRef<HTMLDivElement>(null);
+
+  const [pageState, setPageState] = useState<{
+    isLoading: boolean;
+    isLoadingParaphrase: boolean;
+    triggerStartChecks: boolean;
+    progressCounter: number;
+  }>({
+    isLoading: false,
+    isLoadingParaphrase: false,
+    triggerStartChecks: false,
+    progressCounter: checkAiResults ? checkAiResults?.length : 0,
+  });
+
+  const [selectedIssue, setSelectedIssue] = useState<any>(null);
+  const [issueType, setIssueType] = useState<string>("");
 
   function finalArticleContentInit() {
     if (typeof window !== "undefined") {
@@ -81,14 +92,17 @@ export default function ShowErrorsPage() {
   }, []);
 
   useEffect(() => {
-    if (triggerStartChecks === false) {
+    if (pageState.triggerStartChecks === false) {
       setCheckStatus({
         grammar: checkStatus.grammar !== "pass" ? "waiting" : "pass",
         plagiarism: "pass",
         ai: checkStatus.ai !== "pass" ? "waiting" : "pass",
       });
     } else {
-      setIsLoading(true);
+      setPageState({
+        ...pageState,
+        isLoading: true,
+      });
       console.log("finalArticle right before startChecks()", finalArticle);
       startChecks();
       if (selectedIssue !== null) {
@@ -98,12 +112,15 @@ export default function ShowErrorsPage() {
         setIssueType("");
       }
     }
-  }, [triggerStartChecks]);
+  }, [pageState.triggerStartChecks]);
 
   useEffect(() => {
-    if (IsLoading === false) {
-      if (triggerStartChecks === true) {
-        setTriggerStartChecks(false);
+    if (pageState.isLoading === false) {
+      if (pageState.triggerStartChecks === true) {
+        setPageState({
+          ...pageState,
+          triggerStartChecks: false,
+        });
       }
       setCheckStatus({
         grammar: checkStatus.grammar !== "pass" ? "waiting" : "pass",
@@ -118,7 +135,7 @@ export default function ShowErrorsPage() {
         setIssueType("");
       }
     }
-  }, [IsLoading]);
+  }, [pageState.isLoading]);
 
   useEffect(() => {
     const handleInput = () => {
@@ -185,6 +202,15 @@ export default function ShowErrorsPage() {
       }
     };
   }, [finalArticle, dispatch, finalArticleContentRef.current]);
+
+  useEffect(() => {
+    if (checkAiResults && checkAiResults?.length) {
+      setPageState({
+        ...pageState,
+        progressCounter: checkAiResults?.length,
+      });
+    }
+  }, [checkAiResults]);
 
   function highlightText(text: any, start: any, end: any) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
@@ -253,43 +279,11 @@ export default function ShowErrorsPage() {
     }
   }
 
-  async function handleFixAiIssue(item: any) {
-    setIsLoadingParaphrase(true);
-    console.log("item", item);
-    const replacedSentence = await paraphraseSentence(item.sentence);
-    console.log("replacedSentence", replacedSentence);
-
-    if (typeof window !== undefined) {
-      const storedFinalArticle = sessionStorage.getItem("finalArticle");
-
-      if (storedFinalArticle) {
-        let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
-
-        // console.log("storedFinalArticle", parsedStoredFinalArticle.articles[0].content)
-        let updatedFinalArticleContent =
-          parsedStoredFinalArticle.articles[0].content.replace(
-            item.sentence,
-            replacedSentence
-          );
-
-        const updatedFinalArticle = {
-          ...parsedStoredFinalArticle,
-          articles: [
-            {
-              ...parsedStoredFinalArticle.articles[0],
-              content: updatedFinalArticleContent,
-            },
-          ],
-        };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
-      }
-    }
-    setIsLoadingParaphrase(false);
-  }
-
   async function handleFixAiIssues() {
-    setIsLoadingParaphrase(true);
+    setPageState({
+      ...pageState,
+      isLoadingParaphrase: true,
+    });
     if (typeof window !== undefined) {
       const storedFinalArticle = sessionStorage.getItem("finalArticle");
       if (storedFinalArticle) {
@@ -307,8 +301,16 @@ export default function ShowErrorsPage() {
             replacedSentence
           );
 
+          // decrease the progressCounter
+          if (pageState.progressCounter > 0) {
+            setPageState((prev: any) => ({
+              ...prev,
+              progressCounter: prev.progressCounter - 1,
+            }));
+          }
+
           // Add a delay between requests to avoid hitting the rate limit
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 100));
         }
 
         const updatedFinalArticle = {
@@ -324,21 +326,27 @@ export default function ShowErrorsPage() {
         dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
       }
     }
-    // setIsLoadingParaphrase(false);
+    setPageState({
+      ...pageState,
+      isLoadingParaphrase: false,
+    });
   }
 
   // todo
   async function handleNavigate() {
-    if (checkGrammerResults.length) {
-      await handleFixGrammerIssues();
-    }
     if (checkAiResults.length) {
       await handleFixAiIssues();
     }
-    setTriggerStartChecks(true);
+    if (checkGrammerResults.length) {
+      await handleFixGrammerIssues();
+    }
+    setPageState({
+      ...pageState,
+      triggerStartChecks: true,
+    });
   }
 
-  if (IsLoading) {
+  if (pageState.isLoading) {
     return (
       <div className="flex flex-col justify-center items-center m-auto h-[75vh] py-[1.5vw]">
         <div className={`${styles.genuisWorking} m-auto`}>
@@ -357,6 +365,7 @@ export default function ShowErrorsPage() {
             }
           />
           <div className={`${styles.allCheckers} w-full`}>
+            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
             <SpecificChecker
               checkStatus={checkStatus.grammar}
               word="Grammar Checker"
@@ -365,20 +374,25 @@ export default function ShowErrorsPage() {
               checkStatus={checkStatus.plagiarism}
               word="Plagiarism Checker"
             />
-            <SpecificChecker checkStatus={checkStatus.ai} word="AI Checker" />
           </div>
+
           {(checkStatus.grammar === "fail" ||
             checkStatus.plagiarism === "fail" ||
-            checkStatus.ai === "fail") &&
+            checkStatus.ai === "fail" ||
+            checkStatus.grammar === "fetchError" ||
+            checkStatus.plagiarism === "fetchError" ||
+            checkStatus.ai === "fetchError") &&
           checkStatus.grammar !== "waiting" &&
           checkStatus.plagiarism !== "waiting" &&
           checkStatus.ai !== "waiting" ? (
             <CustomBtn
               word={"Results"}
               btnColor="black"
-              // href="/content-creator/create/show-errors/"
               onClick={() => {
-                setIsLoading(false);
+                setPageState({
+                  ...pageState,
+                  isLoading: false,
+                });
               }}
             />
           ) : (
@@ -406,6 +420,27 @@ export default function ShowErrorsPage() {
     );
   }
 
+  if (pageState.isLoadingParaphrase) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={false}
+          title="Genius is fixing content issues..."
+        />
+        {checkAiResults &&
+          checkAiResults?.length &&
+          pageState.progressCounter > 0 && (
+            <p className="space-x-[--5px]">
+              <span className="text-[--35px] font-extrabold">
+                {pageState.progressCounter}
+              </span>
+              <span className="text-[--30px]">remaining sentences...</span>
+            </p>
+          )}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full">
       {/* 01. Article Preview & Errors */}
@@ -425,11 +460,7 @@ export default function ShowErrorsPage() {
                 className={`${styles.articleContent}`}
                 // onInput={handleInput}
               >
-                <p>
-                  {IsLoadingParaphrase
-                    ? "Loading..."
-                    : finalArticle?.articles[0]?.content}
-                </p>
+                <p>{finalArticle?.articles[0]?.content}</p>
               </div>
             </div>
           </div>
@@ -447,10 +478,10 @@ export default function ShowErrorsPage() {
               return (
                 <ErrorCollapse
                   key={index}
-                  title="Grammer"
+                  title="Grammar"
                   onClick={() => {
                     setSelectedIssue(item);
-                    setIssueType("Grammar");
+                    setIssueType("grammer");
                     // console.log("grammer item clicked:", item);
                   }}
                 >
@@ -514,17 +545,6 @@ export default function ShowErrorsPage() {
                       </span>
                       "<span>{item.sentence}</span>"
                     </p>
-                    <div className="flex justify-end">
-                      <CustomBtn
-                        word={"Fix"}
-                        btnColor="black"
-                        paddingVal={"py-[0.5vw] px-[1vw]"}
-                        onClick={() => {
-                          handleFixAiIssue(item);
-                        }}
-                        disabled={IsLoadingParaphrase}
-                      ></CustomBtn>
-                    </div>
                   </>
                 </ErrorCollapse>
               );
@@ -548,14 +568,12 @@ export default function ShowErrorsPage() {
             word={"Back"}
             btnColor="black"
             href="/content-creator/create/movie-myth/final-movie"
-            disabled={IsLoadingParaphrase}
           />
         ) : (
           <CustomBtn
             word={"Back"}
             btnColor="white"
             href="/content-creator/create/final-article"
-            disabled={IsLoadingParaphrase}
           />
         )}
         <CustomBtn
@@ -564,7 +582,7 @@ export default function ShowErrorsPage() {
           onClick={() => {
             handleNavigate();
           }}
-          disabled={IsLoadingParaphrase}
+          disabled={pageState.isLoadingParaphrase}
         />
       </div>
     </div>

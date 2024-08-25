@@ -73,7 +73,7 @@ const SideNav = ({
   setIsSideNavOpen: any;
   setCurrentPage: any;
 }) => {
-  const { decodedToken } = useContext(globalContext);
+  const { authState } = useContext(globalContext);
 
   // current role
   const [SelectedRole, setSelectedRole] = useState<string | number>("");
@@ -155,12 +155,12 @@ const SideNav = ({
           >
             <div className={styles.avatar + " " + styles.active}></div>
             <div className="flex flex-col">
-              <h6>{decodedToken?.email.split("@")[0]}</h6>
+              <h6>{authState.decodedToken?.email.split("@")[0]}</h6>
               <p>
                 {typeof window !== "undefined"
                   ? localStorage.getItem("selected-role") ??
-                    decodedToken?.department[0]
-                  : decodedToken?.department[0]}
+                    authState.decodedToken?.department[0]
+                  : authState.decodedToken?.department[0]}
               </p>
             </div>
           </div>
@@ -186,9 +186,9 @@ const SideNav = ({
 
         <CustomSelectInput
           options={
-            decodedToken?.department.includes("CEO")
+            authState.decodedToken?.department.includes("CEO")
               ? rols
-              : rols.filter((role: any) => role === decodedToken?.department[0])
+              : rols.filter((role: any) => role === authState.decodedToken?.department[0])
           }
           icon={rolsIcon}
           theme="dark"
@@ -197,8 +197,8 @@ const SideNav = ({
           label={
             typeof window !== "undefined"
               ? localStorage.getItem("selected-role") ??
-                decodedToken?.department[0]
-              : decodedToken?.department[0]
+                authState.decodedToken?.department[0]
+              : authState.decodedToken?.department[0]
           }
         />
 

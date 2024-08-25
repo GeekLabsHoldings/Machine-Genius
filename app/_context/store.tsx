@@ -1,58 +1,29 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
-import { useSelector, useDispatch } from "react-redux";
-import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
+import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
+
+// Define type for AuthState for better type safety
+type AuthStateType = {
+  token: string;
+  decodedToken: any;
+};
 
 const initialContextState = {
   // ===== 00. Start Authentication =====
-  token: "" as any,
-  setToken: (token: any) => {},
-  decodedToken: null as any,
-  setDecodedToken: (token: any) => {},
-  // ===== 00. End Authentication =====
-
-  // ===== 01. Start Content Creator =====
-  selectedContentType: "" as any,
-  setSelectedContentType: (contentType: any) => {},
-  selectedBrand: "" as any,
-  setSelectedBrand: (brand: any) => {},
-  collectedData: null as any,
-  setCollectedData: (data: any) => {},
-  twitterData: null as any,
-  setTwitterData: (data: any) => {},
-  choosedArticles: [] as any,
-  setChoosedArticles: (articles: any) => {},
-  checkStatus: {
-    grammar: "waiting",
-    // todo: temp until backend fix it
-    plagiarism: "pass",
-    ai: "waiting",
+  authState: {
+    token: "" as string,
+    decodedToken: null as any,
   },
-  setCheckStatus: (status: any) => {},
-  checkGrammer: () => {},
-  checkPlagiarism: () => {},
-  checkAi: () => {},
-  startChecks: () => {},
-  generateTitles: () => {},
-  generatedTitles: [] as any,
-  setGeneratedTitles: (titles: any) => {},
-  lockedGeneratedTitles: [] as any,
-  setLockedGeneratedTitles: (titles: any) => {},
-
-  generatedThumbnails: [] as any,
-  setGeneratedThumbnails: (thumbnails: any) => {},
-  generateThumbnails: () => {},
-  selectedContentThumbnail: "",
-  setSelectedContentThumbnail: (thumbnail: any) => {},
-
-  selectedContentTitle: "",
-  setSelectedContentTitle: (title: any) => {},
-  editContentData: null as any,
-  setEditContentData: (id: any) => {},
-  // ===== 01. End Content Creator =====
+  setAuthState: (authState: AuthStateType) => {},
+  // ===== 00. End Authentication =====
 };
 
 // 1- create context, export it
@@ -66,10 +37,10 @@ export default function GlobalContextProvider({
 }) {
   const router = useRouter();
   const path = usePathname();
-  const dispatch = useDispatch();
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ===== 00. Start Authentication =====
-  function handleSetRouteToDirect(role: string) {
+  const handleSetRouteToDirect = useCallback((role: string) => {
     switch (role) {
       case "ContentCreator":
         return "/content-creator/dashboard";
@@ -98,7 +69,7 @@ export default function GlobalContextProvider({
       default:
         return "/";
     }
-  }
+  }, []);
 
   function tokenInit() {
     if (typeof window !== "undefined") {
@@ -118,701 +89,116 @@ export default function GlobalContextProvider({
     }
   }
 
-  const [token, setToken] = useState<any>(tokenInit);
-  const [decodedToken, setDecodedToken] = useState<any>(decodedTokenInit);
+  const [authState, setAuthState] = useState<AuthStateType>(() => ({
+    token: tokenInit(),
+    decodedToken: decodedTokenInit(),
+  }));
 
-  async function checkIfUserOnCorrespondingRoute() {
-    // if (decodedToken) {
-    const role = decodedToken?.department[0];
-    const correspondingRoutePath = handleSetRouteToDirect(role).split("/")[1];
-    console.log(`correspondingRoutePath:`, correspondingRoutePath);
-    console.log(`currentpath:`, path);
-    if (
-      !path.includes(correspondingRoutePath) &&
-      !decodedToken?.department.includes("CEO")
-    ) {
-      const correspondingRoute = handleSetRouteToDirect(role);
-      router.replace(correspondingRoute);
+  const checkIfUserOnCorrespondingRoute = useCallback(() => {
+    // if (!decodedToken) return;
+    if (authState.decodedToken?.department.includes("CEO")) {
+      // console.log("CEO has access to all routes");
+      return;
+    }
+    const role = authState.decodedToken?.department[0];
+    const route = handleSetRouteToDirect(role);
+    const correspondingRoutePath = route.split("/")[1];
+    // console.log(`correspondingRoutePath:`, correspondingRoutePath);
+    // console.log(`currentpath:`, path);
+    if (!path.includes(correspondingRoutePath)) {
+      router.replace(route);
       console.log("~~~---***INvalid path***---~~~", path);
     } else {
       console.log("~~~---valid path---~~~");
     }
-    // }
-  }
+  }, [path, authState.decodedToken, router]);
 
-  function signOut() {
-    // toast("signOut ...");
-    // localStorage.removeItem("token");
-    // localStorage.removeItem("decodedToken");
-    // setToken("");
-    // setDecodedToken(null);
-    // localStorage.removeItem("token");
-    // localStorage.removeItem("decodedToken");
-  }
+  const handleSignOut = useCallback(
+    (message = "Session expired, redirecting to signin...") => {
+      setAuthState({
+        token: "",
+        decodedToken: null,
+      });
+      localStorage.removeItem("token");
+      localStorage.removeItem("decodedToken");
+      toast.error(message);
+      router.replace("/");
+    },
+    [router]
+  );
 
-  async function checkAuth() {
-    // // toast("Checking authentication...");
-    // const storedToken = localStorage.getItem("token");
-    // const authToken = token || storedToken;
-    // if (!authToken) {
-    //   toast.error("No token found, redirecting to signin...");
-    //   router.replace("/");
-    //   return;
-    // }
-    // try {
-    //   const res = await fetch(
-    //     "https://machine-genius.onrender.com/authentication/check-auth",
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${authToken}`,
-    //         "Content-Type": "application/json",
-    //       },
-    //     }
-    //   );
-    //   const data = await res.json();
-    //   // console.log("checkAuth data:", data);
-    //   if (data.result) {
-    //     // setToken(data.result.token);
-    //     // setDecodedToken(data.result);
-    //     // toast.success("Token is valid");
-    //   } else if (data.message && data.message.name === "TokenExpiredError") {
-    //     toast.error("Session expired, redirecting to signin...");
-    //     // console.log('Token expired, redirecting to signin...');
-    //     signOut();
-    //     router.replace("/");
-    //   } else if (data.message === "USER_TOKEN_IS_INVALID") {
-    //     toast.error("Session expired, redirecting to signin...");
-    //     // console.log('Token is invalid, Contact Technical Support!');
-    //     signOut();
-    //     router.replace("/");
-    //   }
-    // } catch (error) {
-    //   toast.error("Something went wrong! Contact Technical Support!");
-    //   // console.error('Error checking auth:', error);
-    //   signOut();
-    //   router.replace("/");
-    // }
-  }
+  const debouncedCheckAuth = useCallback(() => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    debounceTimer.current = setTimeout(async () => {
+      toast("Checking authentication...");
+      const authToken = authState.token || localStorage.getItem("token");
+      if (!authToken) {
+        handleSignOut("No token found, redirecting to signin...");
+        return;
+      }
+      try {
+        const res = await fetch(
+          "https://api.machinegenius.io/authentication/check-auth",
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        if (data.result) {
+          toast.success("Token is valid");
+        } else if (data.message && data.message.name === "TokenExpiredError") {
+          handleSignOut();
+        } else if (data.message === "USER_TOKEN_IS_INVALID") {
+          handleSignOut();
+        }
+      } catch (error) {
+        console.error("Error checking auth:", error);
+      }
+    }, 300); // Debounce delay in milliseconds
+  }, [authState.token, handleSignOut]);
+
+  // Clear timeout on component unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    if (token) {
+    if (authState.token) {
       console.log("=+==+==There is Token=+==+==");
-      // checkAuth();
+      debouncedCheckAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
       console.log("Redirecting to signin...");
       router.replace("/");
     }
-  }, [token]);
+  }, [authState.token, debouncedCheckAuth, router]);
 
   useEffect(() => {
     console.log("---currentPath:", path);
     checkIfUserOnCorrespondingRoute();
-  }, [path]);
+  }, [path, checkIfUserOnCorrespondingRoute]);
 
   // ===== 00. End Authentication =====
 
-  // ===== 01. Start Content Creator =====
-
-  // ===== Start selectedContentType =====
-  function selectedContentTypeInit() {
-    if (typeof window !== "undefined") {
-      const selectedContentTypeInitValue = sessionStorage.getItem(
-        "selectedContentType"
-      );
-      return selectedContentTypeInitValue ? selectedContentTypeInitValue : "";
-    } else {
-      return "";
-    }
-  }
-  const [selectedContentType, setSelectedContentType] = useState<any>(
-    selectedContentTypeInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem("selectedContentType", selectedContentType);
-  }, [selectedContentType]);
-  // ===== End selectedContentType =====
-
-  // ===== Start selectedBrand =====
-  function selectedBrandInit() {
-    if (typeof window !== "undefined") {
-      const selectedBrandInitValue = sessionStorage.getItem("selectedBrand");
-      return selectedBrandInitValue ? selectedBrandInitValue : "";
-    } else {
-      return "";
-    }
-  }
-  const [selectedBrand, setSelectedBrand] = useState<any>(selectedBrandInit);
-  useEffect(() => {
-    sessionStorage.setItem("selectedBrand", selectedBrand);
-  }, [selectedBrand]);
-  // ===== End selectedBrand =====
-
-  // ===== Start collectedData =====
-  function collectedDataInit() {
-    if (typeof window !== "undefined") {
-      const collectedDataInitValue = sessionStorage.getItem("collectedData");
-      return collectedDataInitValue ? JSON.parse(collectedDataInitValue) : null;
-    } else {
-      return null;
-    }
-  }
-  const [collectedData, setCollectedData] = useState<any>(collectedDataInit);
-  useEffect(() => {
-    sessionStorage.setItem("collectedData", JSON.stringify(collectedData));
-  }, [collectedData]);
-
-  function twitterDataInit() {
-    if (typeof window !== "undefined") {
-      const twitterDataInitValue = sessionStorage.getItem("twitterData");
-      return twitterDataInitValue ? JSON.parse(twitterDataInitValue) : null;
-    } else {
-      return null;
-    }
-  }
-  const [twitterData, setTwitterData] = useState<any>(twitterDataInit);
-  useEffect(() => {
-    sessionStorage.setItem("twitterData", JSON.stringify(twitterData));
-  }, [twitterData]);
-  // ===== End collectedData =====
-
-  // ===== Start choosedArticles =====
-  function choosedArticlesInit() {
-    if (typeof window !== "undefined") {
-      const choosedArticlesInitValue =
-        sessionStorage.getItem("choosedArticles");
-      return choosedArticlesInitValue
-        ? JSON.parse(choosedArticlesInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-  const [choosedArticles, setChoosedArticles] =
-    useState<any>(choosedArticlesInit);
-  useEffect(() => {
-    sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));
-  }, [choosedArticles]);
-  // ===== End choosedArticles =====
-
-  // ===== Start finalArticle =====
-  // function finalArticleInit() {
-  //   if (typeof window !== "undefined") {
-  //     const finalArticleInitValue = sessionStorage.getItem("finalArticle");
-  //     return finalArticleInitValue ? JSON.parse(finalArticleInitValue) : null;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  // const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit);
-  const finalArticle = useSelector(
-    (state: any) => state.contentCreator.finalArticle
-  );
-  useEffect(() => {
-    sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
-  }, [finalArticle]);
-  // ===== End finalArticle =====
-
-  // ===== Start Checks =====
-  const [checkStatus, setCheckStatus] = useState({
-    grammar: "waiting",
-    // todo: temp until backend fix it
-    plagiarism: "pass",
-    ai: "waiting",
-  });
-  // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
-  //   checkGrammerResultsInit
-  // );
-  const checkGrammerResults = useSelector(
-    (state: any) => state.contentCreator.checkGrammerResults
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "checkGrammerResults",
-      JSON.stringify(checkGrammerResults)
-    );
-  }, [checkGrammerResults]);
-
-  async function checkGrammer() {
-    if (!finalArticle?.articles[0]?.content) {
-      toast.error("No content found!");
-      return;
-    }
-    try {
-      const res = await fetch(`https://api.sapling.ai/api/v1/edits`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
-          session_id: "test session",
-          text: finalArticle?.articles[0]?.content,
-        }),
-      });
-
-      const json = await res.json();
-
-      if (json && json.edits) {
-        if (
-          json?.edits.filter((item: any) => item.general_error_type !== "Other")
-            .length > 0
-        ) {
-          setCheckStatus((prev: any) => ({ ...prev, grammar: "fail" }));
-        } else {
-          setCheckStatus((prev: any) => ({ ...prev, grammar: "pass" }));
-        }
-
-        let filteredJson = json?.edits.filter(
-          (item: any) => item.general_error_type !== "Other"
-        );
-        dispatch(contentCreatorActions.setCheckGrammerResults(filteredJson));
-      } else {
-        setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
-      }
-    } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
-      console.error("Error checkGrammer:", error);
-    }
-  }
-
-  async function checkPlagiarism() {
-    const maxRetries = 1; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://backendmachinegenius.onrender.com/plagiarism-check`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              text: finalArticle?.articles[0]?.content,
-            }),
-          }
-        );
-
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error checkPlagiarism:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      // todo
-      if (json) {
-        // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fail" }));
-        // todo: temp until backend fix it
-        setCheckStatus((prev: any) => ({ ...prev, plagiarism: "pass" }));
-      } else {
-        setCheckStatus((prev: any) => ({ ...prev, plagiarism: "pass" }));
-      }
-      console.log("checkPlagiarismResult", json);
-    } else {
-      // todo: uncomment after backend fix it
-      // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
-    }
-  }
-  // const [checkAiResults, setCheckAiResults] = useState<any>(
-  //   checkAiResultsInit
-  // );
-  const checkAiResults = useSelector(
-    (state: any) => state.contentCreator.checkAiResults
-  );
-  useEffect(() => {
-    sessionStorage.setItem("checkAiResults", JSON.stringify(checkAiResults));
-  }, [checkAiResults]);
-  async function checkAi() {
-    if (
-      !finalArticle.articles[0].content ||
-      finalArticle.articles[0].content.length < 1
-    ) {
-      toast.error("No content found!");
-      return;
-    }
-    if (finalArticle.articles[0].content.length > 50000) {
-      toast.error("Content length must be between 1 and 50000 characters!");
-      return;
-    }
-
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
-          },
-          body: JSON.stringify({
-            document: finalArticle?.articles[0]?.content,
-            version: "2024-01-09",
-            multilingual: false,
-          }),
-        });
-
-        json = await res.json();
-
-        if (json) {
-          // If content is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Error checking AI");
-        console.error("Error checkAi:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      if (
-        // json.documents[0].class_probabilities.human < 0.8
-        json?.documents[0]?.sentences.some(
-          (sentence: any) => sentence.highlight_sentence_for_ai
-        )
-      ) {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
-      } else {
-        setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
-      }
-      console.log("checkAiResult", json);
-      let filteredJson = json?.documents[0]?.sentences.filter(
-        (sentence: any) => sentence.highlight_sentence_for_ai
-      );
-      dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
-    } else {
-      setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.push("/content-creator/create/choose-brand");
-    }
-  }
-
-  async function startChecks() {
-    if (checkStatus.grammar !== "pass") {
-      await checkGrammer();
-    }
-    // await checkPlagiarism();
-    if (checkStatus.ai !== "pass") {
-      await checkAi();
-    }
-    return Promise.resolve();
-  }
-  // ===== End Checks =====
-
-  // ===== Start generateTitles =====
-
-  function generatedTitlesInit() {
-    if (typeof window !== "undefined") {
-      const generatedTitlesInitValue =
-        sessionStorage.getItem("generatedTitles");
-      return generatedTitlesInitValue
-        ? JSON.parse(generatedTitlesInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-
-  const [generatedTitles, setGeneratedTitles] =
-    useState<any>(generatedTitlesInit);
-  useEffect(() => {
-    sessionStorage.setItem("generatedTitles", JSON.stringify(generatedTitles));
-    console.log("generatedTitles:", generatedTitles);
-  }, [generatedTitles]);
-
-  async function generateTitles() {
-    if (!selectedBrand || !finalArticle?.articles[0]?.content) {
-      toast.error("No content or brand name provided");
-      return;
-    }
-    let brandNamePayload: string = "";
-    if (selectedBrand === "Street Politics Canada") {
-      brandNamePayload = "streetPoliticsCanada";
-    } else if (selectedBrand === "Investorcracy") {
-      brandNamePayload = "investocracy";
-    } else if (selectedBrand === "Movie Myth") {
-      brandNamePayload = "movieMyth";
-    }
-
-    try {
-      const res = await fetch(
-        `https://backendmachinegenius.onrender.com/generate-titles`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            brandName: brandNamePayload,
-            content: finalArticle?.articles[0]?.content,
-          }),
-        }
-      );
-
-      const json = await res.json();
-
-      if (!json) {
-        toast.error("Something went wrong! Contact backend department");
-        return;
-      } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
-        return;
-      } else if (json && json.success === true && json.Titles) {
-        setGeneratedTitles(json.Titles);
-      } else {
-        toast.error("Something went wrong! Contact backend department");
-        return;
-      }
-    } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
-      console.error("Error generateTitles:", error);
-    }
-  }
-
-  function selectedContentTitleInit() {
-    if (typeof window !== "undefined") {
-      const selectedContentTitleInitValue = sessionStorage.getItem(
-        "selectedContentTitle"
-      );
-      return selectedContentTitleInitValue ? selectedContentTitleInitValue : "";
-    } else {
-      return "";
-    }
-  }
-  const [selectedContentTitle, setSelectedContentTitle] = useState<any>(
-    selectedContentTitleInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem("selectedContentTitle", selectedContentTitle);
-  }, [selectedContentTitle]);
-
-  function lockedGeneratedTitlesInit() {
-    if (typeof window !== "undefined") {
-      const lockedGeneratedTitlesInitValue = sessionStorage.getItem(
-        "lockedGeneratedTitles"
-      );
-      return lockedGeneratedTitlesInitValue
-        ? JSON.parse(lockedGeneratedTitlesInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-  const [lockedGeneratedTitles, setLockedGeneratedTitles] = useState<any>(
-    lockedGeneratedTitlesInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "lockedGeneratedTitles",
-      JSON.stringify(lockedGeneratedTitles)
-    );
-    console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
-  }, [generatedTitles, lockedGeneratedTitles]);
-  // ===== End generateTitles =====
-
-  // ===== Start generatedThumbnails =====
-
-  function generatedThumbnailsInit() {
-    if (typeof window !== "undefined") {
-      const generatedThumbnailsInitValue = sessionStorage.getItem(
-        "generatedThumbnails"
-      );
-      return generatedThumbnailsInitValue
-        ? JSON.parse(generatedThumbnailsInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-  const [generatedThumbnails, setGeneratedThumbnails] = useState<any>(
-    generatedThumbnailsInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "generatedThumbnails",
-      JSON.stringify(generatedThumbnails)
-    );
-    // console.log("generatedThumbnails:", generatedThumbnails);
-  }, [generatedThumbnails]);
-
-  async function generateThumbnails() {
-    if (!selectedBrand || !finalArticle?.articles[0]?.content) {
-      toast.error("No content or brand name provided");
-      return;
-    }
-    let brandNamePayload: string = "";
-    if (selectedBrand === "Street Politics Canada") {
-      brandNamePayload = "streetPoliticsCanada";
-    } else if (selectedBrand === "Investorcracy") {
-      brandNamePayload = "investocracy";
-    } else if (selectedBrand === "Movie Myth") {
-      brandNamePayload = "movieMyth";
-    }
-    try {
-      const res = await fetch(
-        `https://backendmachinegenius.onrender.com/generate-thumbnails`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            brandName: brandNamePayload,
-            content: finalArticle?.articles[0]?.content,
-          }),
-        }
-      );
-      const json = await res.json();
-      if (!json) {
-        toast.error("Something went wrong! Contact backend department");
-        return;
-      } else if (
-        json &&
-        json.success === false &&
-        json.error === "No content or brand name provided"
-      ) {
-        toast.error("No content or brand name provided");
-        return;
-      } else if (
-        json &&
-        json.success === false &&
-        json.error === "brandName Not correct"
-      ) {
-        toast.error("brandName Not correct");
-        return;
-      } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
-        return;
-      } else if (json && json.success === true && json.Thumbnail) {
-        setGeneratedThumbnails(json.Thumbnail);
-      } else {
-        toast.error("Something went wrong! Contact backend department");
-        return;
-      }
-    } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
-      console.error("Error generateThumbnails:", error);
-    }
-  }
-
-  function selectedContentThumbnailInit() {
-    if (typeof window !== "undefined") {
-      const selectedContentThumbnailInitValue = sessionStorage.getItem(
-        "selectedContentThumbnail"
-      );
-      return selectedContentThumbnailInitValue
-        ? selectedContentThumbnailInitValue
-        : "";
-    } else {
-      return "";
-    }
-  }
-  const [selectedContentThumbnail, setSelectedContentThumbnail] = useState<any>(
-    selectedContentThumbnailInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "selectedContentThumbnail",
-      selectedContentThumbnail
-    );
-  }, [selectedContentThumbnail]);
-
-  // ===== End generatedThumbnails =====
-
-  // ===== Start videoTranscription =====
-  const videoTranscription = useSelector(
-    (state: any) => state.contentCreator.videoTranscription
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "videoTranscription",
-      JSON.stringify(videoTranscription)
-    );
-  }, [videoTranscription]);
-  // ===== End videoTranscription =====
-
-  // ===== Start editContentData =====
-  function editContentDataInit() {
-    if (typeof window !== "undefined") {
-      const editContentDataInitValue =
-        sessionStorage.getItem("editContentData");
-      return editContentDataInitValue
-        ? JSON.parse(editContentDataInitValue)
-        : null;
-    } else {
-      return null;
-    }
-  }
-  const [editContentData, setEditContentData] =
-    useState<any>(editContentDataInit);
-  useEffect(() => {
-    sessionStorage.setItem("editContentData", JSON.stringify(editContentData));
-  }, [editContentData]);
-  // ===== End editContentData =====
-
-  // ===== 01. End Content Creator =====
-
   // Create a context value object
-  const contextValue = {
-    // ===== 00. Start Authentication =====
-    token,
-    setToken,
-    decodedToken,
-    setDecodedToken,
-    // ===== 00. End Authentication =====
-
-    // ===== 01. Start Content Creator =====
-    selectedContentType,
-    setSelectedContentType,
-    selectedBrand,
-    setSelectedBrand,
-    collectedData,
-    setCollectedData,
-    twitterData,
-    setTwitterData,
-    choosedArticles,
-    setChoosedArticles,
-    checkStatus,
-    setCheckStatus,
-    checkGrammer,
-    checkPlagiarism,
-    checkAi,
-    startChecks,
-    generateTitles,
-    generatedTitles,
-    setGeneratedTitles,
-    lockedGeneratedTitles,
-    setLockedGeneratedTitles,
-    generatedThumbnails,
-    setGeneratedThumbnails,
-    generateThumbnails,
-    selectedContentThumbnail,
-    setSelectedContentThumbnail,
-    selectedContentTitle,
-    setSelectedContentTitle,
-    editContentData,
-    setEditContentData,
-    // ===== 01. End Content Creator =====
-  };
+  const contextValue = useMemo(
+    () => ({
+      // ===== 00. Start Authentication =====
+      authState,
+      setAuthState,
+      // ===== 00. End Authentication =====
+    }),
+    [authState]
+  );
 
   return (
     // to provide what i created

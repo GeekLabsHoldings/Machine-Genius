@@ -43,7 +43,7 @@ export default function AttendanceTable({
     // Fetch the attendance data from the server.
     try {
       fetch(
-        `https://machine-genius.onrender.com/hr/attendance/today-attendance?name=${filter.name}&day=${filter.date}&department=${filter.department}`,
+        `https://api.machinegenius.io/hr/attendance/today-attendance?name=${filter.name}&day=${filter.date}&department=${filter.department}`,
         {
           method: "GET",
           headers: {
@@ -128,7 +128,7 @@ export default function AttendanceTable({
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {attendance?.map((e, idx) => (
+          {attendance.length && attendance?.map((e, idx) => (
             <ul key={idx} className="relative">
               <div
                 className="absolute"

@@ -4,7 +4,7 @@ import styles from "./article-database.module.css";
 // import { ArticleNames, Brands, ContentTypeFilter } from "@/app/_data/data";
 import { useEffect, useState, useContext, useRef } from "react";
 import toast from "react-hot-toast";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useRouter } from "next/navigation";
 
 const ContentDatabase = () => {
@@ -23,7 +23,7 @@ const ContentDatabase = () => {
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://backendmachinegenius.onrender.com/content`
+          `https://api.machinegenius.io/content-creation/content`
         );
         json = await res.json();
         if (json) {
@@ -47,7 +47,7 @@ const ContentDatabase = () => {
     }
   }
 
-  const { editContentData, setEditContentData } = useContext(globalContext);
+  const { editContentData, setEditContentData } = useContext(contentCreatorContext);
 
   const [filterBy, setFilterBy] = useState({
     brand: "",

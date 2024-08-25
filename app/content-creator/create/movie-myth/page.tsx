@@ -7,7 +7,7 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 const MovieMyth = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const MovieMyth = () => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { setEditContentData } = useContext(globalContext);
+  const { setEditContentData } = useContext(contentCreatorContext);
   // reset all the data
   useEffect(() => {
     dispatch(contentCreatorActions.setVideoTranscription(null));
@@ -48,7 +48,7 @@ const MovieMyth = () => {
       const xhr = new XMLHttpRequest();
       xhr.open(
         "POST",
-        "https://backendmachinegenius.onrender.com/transcript-audio",
+        "https://api.machinegenius.io/content-creation/transcript-audio",
         true
       );
 

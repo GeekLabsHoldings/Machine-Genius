@@ -53,7 +53,7 @@ export default function EmployeeDatabaseTable({employees}:any) {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {employees.map((e:any, idx:any) => (
+          {Array.isArray(employees) && employees.length && employees.map((e:any, idx:any) => (
             <ul key={idx} className={`space-x-2`}>
               <li className="w-[10%]">
                 <span>{e.firstName}</span>

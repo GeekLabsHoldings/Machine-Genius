@@ -10,7 +10,7 @@ export default function page() {
     title: "",
     level: "",
   });
-  const { token } = useContext(globalContext);
+  const { authState } = useContext(globalContext);
 
   function getTitleValue(value: string) {
     setRequestHiringData({
@@ -33,7 +33,7 @@ export default function page() {
     }
     try {
       const res = await fetch(
-        `https://machine-genius.onrender.com/admin/hiring-request`,
+        `https://api.machinegenius.io/admin/hiring-request`,
         {
           method: "POST",
           headers: {
@@ -41,7 +41,7 @@ export default function page() {
             Authorization: `barrer ${
               typeof window !== "undefined"
                 ? localStorage.getItem("token")
-                : token
+                : authState.token
             }`,
           },
           body: JSON.stringify({

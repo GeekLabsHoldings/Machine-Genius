@@ -3,7 +3,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./chooseArticles.module.css";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 // import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useCallback, useContext, useEffect, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import toast from "react-hot-toast";
@@ -67,7 +67,7 @@ export default function ChooseArticlesPage() {
     setCollectedData,
     // twitterData,
     // setTwitterData,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
 
   useEffect(() => {
     // console.log("collectedData:", collectedData);

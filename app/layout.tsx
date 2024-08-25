@@ -7,8 +7,6 @@ import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
 // import { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import LogoAndTitle from "./_components/LogoAndTitle/LogoAndTitle";
 import dynamic from "next/dynamic";
 
 // Initializing Inter font with Latin subset
@@ -33,29 +31,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isHydrated, setIsHydrated] = useState(false);
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  if (!isHydrated) {
-    return (
-      <html lang="en">
-        <body>
-          <Provider store={store}>
-            <GlobalContextProvider>
-              <div className="bg-white min-h-screen w-full overflow-hidden flex flex-col justify-center items-center mx-auto py-[1.5vw]">
-                <div className={`flex flex-col justify-center items-center`}>
-                  <LogoAndTitle needTxt={false} title="Genius is Loading..." />
-                </div>
-              </div>
-            </GlobalContextProvider>
-          </Provider>
-        </body>
-      </html>
-    );
-  }
-
   return (
     <html lang="en">
       <body>
@@ -69,9 +44,14 @@ export default function RootLayout({
         <Toaster
           position="top-center"
           containerStyle={{
-            zIndex: 91474836471,
+            zIndex: 9999,
           }}
         />
+
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"
+          defer
+        ></script>
       </body>
     </html>
   );

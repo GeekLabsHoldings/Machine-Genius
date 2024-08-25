@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, use, useRef } from "react";
 import styles from "./TitleCheckWithLock.module.css";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 
 interface IProps {
@@ -24,7 +24,7 @@ const TitleCheckWithLock = ({
     setLockedGeneratedTitles,
     selectedContentTitle,
     setSelectedContentTitle,
-  } = useContext(globalContext);
+  } = useContext(contentCreatorContext);
   const [isLocked, setIsLocked] = useState<boolean>();
 
   useEffect(() => {

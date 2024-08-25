@@ -218,7 +218,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `https://machine-genius.onrender.com/hr/group/groups/${templates.key}`,
+        `https://api.machinegenius.io/hr/group/groups/${templates.key}`,
         {
           method: "get",
           headers: {
@@ -242,7 +242,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        "https://machine-genius.onrender.com/hr/template/un-attached",
+        "https://api.machinegenius.io/hr/template/un-attached",
         {
           method: "get",
           headers: {
@@ -260,7 +260,7 @@ const Page = () => {
   async function createGroup() {
     try {
       const res = await fetch(
-        "https://machine-genius.onrender.com/hr/group/create",
+        "https://api.machinegenius.io/hr/group/create",
         {
           method: "post",
           headers: {
@@ -309,7 +309,7 @@ const Page = () => {
 
     try {
       const res = await fetch(
-        "https://machine-genius.onrender.com/hr/template/create",
+        "https://api.machinegenius.io/hr/template/create",
         {
           method: "post",
           headers: {

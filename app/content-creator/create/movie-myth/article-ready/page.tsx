@@ -3,11 +3,11 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useEffect, useContext } from "react";
 import toast from "react-hot-toast";
-import { globalContext } from "@/app/_context/store";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 // page appears when genuis finished checking
 const ArticleReady = () => {
-  const { setEditContentData } = useContext(globalContext);
+  const { setEditContentData } = useContext(contentCreatorContext);
   useEffect(() => {
     setEditContentData(null);
     sessionStorage.removeItem("editContentData");

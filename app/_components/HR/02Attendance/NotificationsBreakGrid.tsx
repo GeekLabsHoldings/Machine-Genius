@@ -33,7 +33,7 @@ export default function NotificationsBreakGrid() {
     const getNotifications = async () => {
       try {
         const response = await fetch(
-          "https://machine-genius.onrender.com/hr/attendance/warning-notification",
+          "https://api.machinegenius.io/hr/attendance/warning-notification",
           {
             method: "GET",
             headers: {
@@ -70,7 +70,13 @@ export default function NotificationsBreakGrid() {
           ([degree, notification]: any, idx) => (
             <div className={`flex flex-col`}>
               <h2 className={`text-center ${styles.colTitle}`}>
-                {degreeMap[degree > 5 ? 5 : degree][0]}
+                {
+                  // Check if degreeMap is defined and has the required key
+                  degreeMap && degreeMap[degree > 5 ? 5 : degree]
+                    ? degreeMap[degree > 5 ? 5 : degree][0]
+                    : null // or provide a default value
+                }
+
                 {degree < 5 ? " Degree" : ""}
               </h2>
               <div className={`relative ${styles.colContent}`}>
@@ -78,17 +84,21 @@ export default function NotificationsBreakGrid() {
                 <div
                   className={`space-y-[0.7vw] h-[60vh] overflow-y-auto ${styles.cardContainer} pb-[0.7vw]`}
                 >
-                  {notification?.map((noti: INotification) => (
-                    <NotificationsCard
-                      bgColor={degreeMap[degree > 5 ? 5 : degree][1]}
-                      btnText="Break Time History"
-                      textColour={degree >= 5 ? "#fff" : "#000"}
-                      username={
-                        noti.employee.firstName + " " + noti.employee.lastName
-                      }
-                      timeStamp={noti.checkedIn}
-                    />
-                  ))}
+                  {Array.isArray(notification) && notification.length ? (
+                    notification?.map((noti: INotification) => (
+                      <NotificationsCard
+                        bgColor={degreeMap[degree > 5 ? 5 : degree][1]}
+                        btnText="Break Time History"
+                        textColour={degree >= 5 ? "#fff" : "#000"}
+                        username={
+                          noti.employee.firstName + " " + noti.employee.lastName
+                        }
+                        timeStamp={noti.checkedIn}
+                      />
+                    ))
+                  ) : (
+                    <div>No notifications</div>
+                  )}
                 </div>
               </div>
             </div>
