@@ -6,6 +6,8 @@ import React, {
   useState,
   useRef,
 } from "react";
+import { useSelector } from "react-redux";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import "./thumbnailCanvas.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
@@ -13,21 +15,29 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import { useRouter } from "next/navigation";
 
 export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
   const fabricCanvasRef = useRef(null);
+  const { authState } = useContext(globalContext);
   const {
-    // selectedContentType,
-    // selectedBrand,
-    // selectedContentTitle,
+    selectedContentType,
+    selectedBrand,
+    selectedContentTitle,
     generatedThumbnails,
     generateThumbnails,
     selectedContentThumbnail,
     setSelectedContentThumbnail,
-    // editContentData,
+    editContentData,
     setEditContentData,
   } = useContext(contentCreatorContext);
+
+  const finalArticle = useSelector(
+    (state) => state.contentCreator.finalArticle
+  );
+
+  const router = useRouter();
 
   async function handleGenerateThumbnails() {
     setPageState((prev) => ({
@@ -42,7 +52,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);
@@ -75,6 +85,8 @@ export default function ThumbnailCanvas() {
       selectedImgPath: "",
       selectedImgPath2: "",
       removeBgLoading: false,
+      isSendLoading: false,
+      triggerSendContent: false,
     };
   }
 
@@ -164,8 +176,37 @@ export default function ThumbnailCanvas() {
       });
     }
 
+    // Add another image
+    fabric.Image.fromURL(
+      "/assest.png",
+      function (img, error) {
+        if (error) {
+          toast.error("Failed to load overlay image.");
+          return;
+        }
+
+        img.set({
+          crossOrigin: "anonymous", // Set crossOrigin attribute
+          left: -1,
+          top: 0,
+          selectable: false, // Make the image non-selectable (non-movable, non-resizable)
+          evented: false, // Disable interaction events (prevents drag, resize)
+          lockMovementX: true, // Prevent horizontal movement
+          lockMovementY: true, // Prevent vertical movement
+          lockScalingX: true, // Prevent horizontal scaling
+          lockScalingY: true, // Prevent vertical scaling
+          lockRotation: true, // Prevent rotation
+        });
+
+        canvas.add(img);
+        // Send the image to the back
+        img.sendToBack();
+      },
+      { crossOrigin: "anonymous" }
+    );
+
     // Load another image
-    const imagePath = pageState.selectedImgPath || "/img-placeholder.jpg";
+    const imagePath = pageState.selectedImgPath;
     if (!isBlocked(imagePath)) {
       loadImage(imagePath, (img) => {
         img.scaleToWidth(500); // Optional: scale the image if needed
@@ -177,7 +218,7 @@ export default function ThumbnailCanvas() {
     }
 
     // Load another image
-    const imagePath2 = pageState.selectedImgPath2 || "/img-placeholder.jpg";
+    const imagePath2 = pageState.selectedImgPath2;
     if (!isBlocked(imagePath2)) {
       loadImage(imagePath2, (img) => {
         img.scaleToWidth(500); // Optional: scale the image if needed
@@ -368,10 +409,136 @@ export default function ThumbnailCanvas() {
     }));
   }
 
+  // =======================================================================
+  function handleSelectThumbnail() {
+    if (selectedContentThumbnail) {
+      setPageState((prev) => ({
+        ...prev,
+        triggerSendContent: true,
+      }));
+    } else {
+      toast.error("Please select a thumbnail!");
+    }
+    // todo: delete this condition after backend add Movie Myth brand
+    if (selectedBrand === "Movie Myth") {
+      setPageState((prev) => ({
+        ...prev,
+        triggerSendContent: true,
+      }));
+    }
+  }
+
+  useEffect(() => {
+    if (pageState.triggerSendContent) {
+      handleSendContent();
+    }
+  }, [pageState.triggerSendContent]);
+
+  function generateData() {
+    const options = {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    };
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString("en-GB", options);
+
+    // toLocaleDateString returns month abbreviation, convert to full month name
+    const monthAbbreviations = {
+      Jan: "January",
+      Feb: "February",
+      Mar: "March",
+      Apr: "April",
+      May: "May",
+      Jun: "June",
+      Jul: "July",
+      Aug: "August",
+      Sep: "September",
+      Oct: "October",
+      Nov: "November",
+      Dec: "December",
+    };
+    const [day, monthAbbrev, year] = formattedDate.split(" ");
+    const month = monthAbbreviations[monthAbbrev];
+
+    return `${day} ${month} ${year}`;
+  }
+
+  async function handleSendContent() {
+    let endpoint = editContentData
+      ? `https://api.machinegenius.io/content-creation/content/${editContentData._id}`
+      : "https://api.machinegenius.io/content-creation/content";
+    let method = editContentData ? "PATCH" : "POST";
+    setPageState((prev) => ({
+      ...prev,
+      isSendLoading: true,
+    }));
+    let postBody = {
+      content_title: selectedContentTitle,
+      content: finalArticle?.articles[0]?.content,
+      brand: selectedBrand,
+      content_type: selectedContentType,
+      ...(method === "POST" && { date: generateData() }),
+    };
+
+    const maxRetries = 1; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(endpoint, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+          body: JSON.stringify(postBody),
+        });
+        json = await res.json();
+        if (json) {
+          // If valid data is found, break the loop
+          break;
+        }
+      } catch (error) {
+        toast.error("Something went wrong! Contact backend department");
+        console.error("Error handleSendContent:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json) {
+      // toast.success("Content sent successfully");
+      if (selectedBrand === "Movie Myth") {
+        router.replace("/content-creator/create/movie-myth/article-ready");
+      } else {
+        router.replace("/content-creator/create/schedule-script");
+      }
+    } else {
+      // setIsRetry(true);
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.push("/content-creator/create/choose-brand");
+    }
+  }
+  // =======================================================================
+
   if (pageState.generateThumbnailsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
         <LogoAndTitle needTxt={false} title="Generating Thumbnails..." />
+      </div>
+    );
+  }
+
+  if (pageState.isSendLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle needTxt={false} title="Sending Content..." />
       </div>
     );
   }
@@ -548,7 +715,13 @@ export default function ThumbnailCanvas() {
         <button onClick={handleDownload} id="downloadBtn">
           Download Thumbnail
         </button>
-        <CustomBtn word={"Send"} btnColor="black" onClick={() => {}} />
+        <CustomBtn
+          word={"Send"}
+          btnColor="black"
+          onClick={() => {
+            handleSelectThumbnail();
+          }}
+        />
       </div>
     </section>
   );
