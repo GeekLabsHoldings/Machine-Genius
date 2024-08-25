@@ -146,31 +146,29 @@ export default function HiringRequestsTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {Array.isArray(data) &&
-          data.length &&
-          data?.map((ele: any) => (
-            <ul className="w-[100%]" key={ele._id}>
-              <li className="w-[20%]">{ele.title}</li>
-              <li className="w-[20%]">{ele.level}</li>
-              <li className="w-[20%]">{ele.department}</li>
-              <li className="w-[20%]">
-                <span
-                  style={{
-                    background: ele.createdBy.theme,
-                  }}
-                >
-                  {ele?.createdBy.firstName}
-                </span>
-              </li>
-              <li className={`w-[20%]`}>
-                <CustomBtn
-                  btnColor="black"
-                  word="Start Hiring"
-                  onClick={updateNextStep}
-                />
-              </li>
-            </ul>
-          ))}
+        {data.length > 0 && data?.map((ele: any) => (
+          <ul className="w-[100%]" key={ele._id}>
+            <li className="w-[20%]">{ele.title}</li>
+            <li className="w-[20%]">{ele.level}</li>
+            <li className="w-[20%]">{ele.department}</li>
+            <li className="w-[20%]">
+              <span
+                style={{
+                  background: ele.createdBy.theme,
+                }}
+              >
+                {ele?.createdBy.firstName}
+              </span>
+            </li>
+            <li className={`w-[20%]`}>
+              <CustomBtn
+                btnColor="black"
+                word="Start Hiring"
+                onClick={updateNextStep}
+              />
+            </li>
+          </ul>
+        ))}
       </div>
     </div>
   );

@@ -147,39 +147,37 @@ export default function InProcessHiringTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {Array.isArray(data) &&
-          data.length &&
-          data?.map((ele: any, idx: any) => (
-            <ul className="w-[100%]" key={ele._id}>
-              <li className="w-[20%]">{ele.title}</li>
-              <li className="w-[20%]">{ele.level}</li>
-              <li className="w-[20%]">{ele.department}</li>
-              <li className="w-[20%]">
-                <span
-                  style={{
-                    background: ele.createdBy.theme,
-                  }}
-                >
-                  {ele?.createdBy.firstName}
-                </span>
-              </li>
-              <li
-                className={`w-[20%] ${
-                  ele.hiringStatus === "In Process"
-                    ? "In Process"
-                    : ele.hiringStatus === "Completed"
-                    ? "opacity-50"
-                    : ""
-                }`}
+        {data.length > 0 && data?.map((ele:any, idx:any) => (
+          <ul className="w-[100%]" key={ele._id}>
+            <li className="w-[20%]">{ele.title}</li>
+            <li className="w-[20%]">{ele.level}</li>
+            <li className="w-[20%]">{ele.department}</li>
+            <li className="w-[20%]">
+              <span
+                style={{
+                  background: ele.createdBy.theme,
+                }}
               >
-                <CustomBtn
-                  btnColor="black"
-                  word={ele.hiringStatus}
-                  href={`/hr/hiring/job-openings/start-hiring/${ele._id}`}
-                />
-              </li>
-            </ul>
-          ))}
+                {ele?.createdBy.firstName}
+              </span>
+            </li>
+            <li
+              className={`w-[20%] ${
+                ele.hiringStatus === "In Process"
+                  ? "In Process"
+                  : ele.hiringStatus === "Completed"
+                  ? "opacity-50"
+                  : ""
+              }`}
+            >
+              <CustomBtn
+                btnColor="black"
+                word={ele.hiringStatus}
+                href={`/hr/hiring/job-openings/start-hiring/${ele._id}`}
+              />
+            </li>
+          </ul>
+        ))}
       </div>
     </div>
   );
