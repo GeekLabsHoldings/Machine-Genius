@@ -42,7 +42,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    // handleGenerateThumbnails();
+    handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);
@@ -71,8 +71,9 @@ export default function ThumbnailCanvas() {
       searchImgKeyword: "",
       searchImgLoading: false,
       searchImgData: pageStateSearchImgDataInit(),
+      selectedImageNumber: "image-1",
       selectedImgPath: "",
-      triggerFilterImages: false,
+      selectedImgPath2: "",
       removeBgLoading: false,
     };
   }
@@ -97,13 +98,12 @@ export default function ThumbnailCanvas() {
     }));
   }, []);
 
-  // useEffect(() => {
-  //   console.log(`selectedBgPath`, selectedBgPath);
-  // }, [selectedBgPath]);
-
-  // useEffect(() => {
-  //   console.log(`selectedImgPath`, pageState.selectedImgPath);
-  // }, [pageState.selectedImgPath]);
+  const getSelectedImageNumberValue = useCallback((value) => {
+    setPageState((prev) => ({
+      ...prev,
+      selectedImageNumber: value,
+    }));
+  }, []);
 
   useEffect(() => {
     if (!canvasEl.current) {
@@ -176,6 +176,18 @@ export default function ThumbnailCanvas() {
       });
     }
 
+    // Load another image
+    const imagePath2 = pageState.selectedImgPath2 || "/img-placeholder.jpg";
+    if (!isBlocked(imagePath2)) {
+      loadImage(imagePath2, (img) => {
+        img.scaleToWidth(500); // Optional: scale the image if needed
+        img.left = canvas.width - img.width * img.scaleX - 80; // Position on the right edge
+        img.top = canvas.height - img.height * img.scaleY - 80; // Position on the bottom edge
+
+        canvas.add(img);
+      });
+    }
+
     // Add text
     // Set the starting position (bottom-left corner)
     let left = 40;
@@ -210,6 +222,7 @@ export default function ThumbnailCanvas() {
     pageState.selectedBgPath,
     selectedContentThumbnail,
     pageState.selectedImgPath,
+    pageState.selectedImgPath2,
     pageState.thumbnailFontSize,
     canvasEl,
   ]);
@@ -258,7 +271,6 @@ export default function ThumbnailCanvas() {
         setPageState((prev) => ({
           ...prev,
           searchImgData: json.images.map((img) => img.original),
-          triggerFilterImages: true,
         }));
       } else {
         toast.error("Something went wrong! Contact backend department");
@@ -267,73 +279,13 @@ export default function ThumbnailCanvas() {
     } catch (error) {
       toast.error("Something went wrong! Contact backend department");
       console.error("Error generateThumbnails:", error);
+    } finally {
+      setPageState((prev) => ({
+        ...prev,
+        searchImgLoading: false,
+      }));
     }
   }
-
-  async function testImageUrl(url) {
-    // toast("Testing image url...");
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = url;
-
-      img.onload = () => {
-        // Create a canvas to attempt to draw the image
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        // Draw the image onto the canvas
-        ctx.drawImage(img, 0, 0);
-
-        try {
-          // Attempt to read pixel data from the canvas
-          ctx.getImageData(0, 0, 1, 1);
-          resolve(url); // Image loaded and CORS is okay
-        } catch (e) {
-          reject("CORS issue or image data blocked: " + url);
-        }
-      };
-
-      img.onerror = () => reject("Image load error: " + url);
-    });
-  }
-
-  async function handleFilterImages() {
-    const urlsToCheck = pageState.searchImgData;
-    if (!urlsToCheck.length) {
-      toast.error("No images to check!");
-      return;
-    }
-    const validUrls = [];
-    const blocked = [];
-
-    for (const url of urlsToCheck) {
-      try {
-        await testImageUrl(url);
-        validUrls.push(url);
-      } catch {
-        blocked.push(url);
-      }
-    }
-
-    // Update with blocked URLs
-    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
-    const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
-    localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
-
-    // Update with valid URLs
-    setPageState((prev) => ({
-      ...prev,
-      searchImgLoading: false,
-      searchImgData: validUrls,
-    }));
-  }
-
-  useEffect(() => {
-    if (pageState.triggerFilterImages) {
-      handleFilterImages();
-    }
-  }, [pageState.triggerFilterImages]);
 
   async function handleRemoveBg(img, type) {
     try {
@@ -388,21 +340,31 @@ export default function ThumbnailCanvas() {
         // Call handleRemoveBg with the uploaded image's Data URL
         const removedBgImgUrl = await handleRemoveBg(dataUrl, "upload");
 
+        const imgPath =
+          pageState.selectedImageNumber === "image-1"
+            ? "selectedImgPath"
+            : "selectedImgPath2";
+
         setPageState((prev) => ({
           ...prev,
-          selectedImgPath: removedBgImgUrl || dataUrl,
+          [imgPath]: removedBgImgUrl || dataUrl,
         }));
       };
-
       reader.readAsDataURL(file);
     }
   }
 
   async function handleSelectImg(img) {
     const removedBgImg = await handleRemoveBg(img, "select");
+
+    const imgPath =
+      pageState.selectedImageNumber === "image-1"
+        ? "selectedImgPath"
+        : "selectedImgPath2";
+
     setPageState((prev) => ({
       ...prev,
-      selectedImgPath: removedBgImg || img,
+      [imgPath]: removedBgImg || img,
     }));
   }
 
@@ -420,11 +382,7 @@ export default function ThumbnailCanvas() {
         <LogoAndTitle
           needTxt={true}
           textNeeded="Hold on tight."
-          title={
-            !pageState.triggerFilterImages
-              ? "Genius is searching for images..."
-              : "Genius is filtering images..."
-          }
+          title={"Genius is searching for images..."}
         />
       </div>
     );
@@ -498,6 +456,7 @@ export default function ThumbnailCanvas() {
 
           {/* 03 Select Image */}
           <div className="flex flex-col gap-[--12px] w-full">
+            {/* 03-01 Select Image */}
             <div className="flex justify-between items-center pt-[--10px] border-t-[--2px] border-[--gray-300]">
               <h3 className="font-bold text-[--17px]">Select Image</h3>
 
@@ -505,11 +464,12 @@ export default function ThumbnailCanvas() {
                 <CustomSelectInput
                   label={"Image No."}
                   options={["image-1", "image-2"]}
-                  // getValue={getThumbnailFontSizeValue}
+                  getValue={getSelectedImageNumberValue}
                 />
               </div>
             </div>
 
+            {/* 03-02 Search Image */}
             <div className="flex gap-[--10px]">
               <input
                 className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
@@ -535,6 +495,7 @@ export default function ThumbnailCanvas() {
               </button>
             </div>
 
+            {/* 03-03 Preview Images */}
             <div className="flex gap-[--20px] overflow-scroll p-[--5px] w-full">
               {!pageState.searchImgData.length ? (
                 <img
@@ -556,7 +517,7 @@ export default function ThumbnailCanvas() {
               )}
             </div>
 
-            {/* UploadImg */}
+            {/* 03-04 UploadImg */}
             <div>
               <h3 className="font-bold text-[--17px]">or: Upload Image</h3>
               <div
@@ -564,7 +525,8 @@ export default function ThumbnailCanvas() {
               >
                 <input
                   type="file"
-                  accept="image/*"
+                  // accept="image/*"
+                  accept=".png, .jpeg, .jpg"
                   onChange={handleUploadImg}
                 />
               </div>
