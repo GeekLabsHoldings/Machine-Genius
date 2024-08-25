@@ -52,7 +52,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    // handleGenerateThumbnails();
+    handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);
@@ -76,8 +76,9 @@ export default function ThumbnailCanvas() {
   function pageStateInit() {
     return {
       generateThumbnailsLoading: false,
-      thumbnailFontSize: 90,
+      thumbnailFontSize: 84,
       selectedBgPath: "/bg-inv/bg-0.jpg",
+      selectedIconPath: "/icons/illustration-0.png",
       searchImgKeyword: "",
       searchImgLoading: false,
       searchImgData: pageStateSearchImgDataInit(),
@@ -91,6 +92,7 @@ export default function ThumbnailCanvas() {
   }
 
   const [pageState, setPageState] = useState(pageStateInit);
+
 
   useEffect(() => {
     sessionStorage.setItem(
@@ -205,6 +207,24 @@ export default function ThumbnailCanvas() {
       { crossOrigin: "anonymous" }
     );
 
+    // Add icon image
+    fabric.Image.fromURL(
+      pageState.selectedIconPath,
+      function (img, error) {
+        if (error) {
+          toast.error("Failed to load overlay image.");
+          return;
+        }
+        img.set({
+          crossOrigin: "anonymous", // Set crossOrigin attribute
+        });
+        img.left = 75;
+        img.top = 75;
+        canvas.add(img);
+      },
+      { crossOrigin: "anonymous" }
+    );
+
     // Load another image
     const imagePath = pageState.selectedImgPath;
     if (!isBlocked(imagePath)) {
@@ -251,7 +271,7 @@ export default function ThumbnailCanvas() {
         },
       });
       canvas.add(text);
-      top -= text.height; // Move the next word up by the height of the text
+      top -= text.height * 0.7; // Move the next word up by the height of the text
     }
 
     // Cleanup
@@ -265,6 +285,7 @@ export default function ThumbnailCanvas() {
     pageState.selectedImgPath,
     pageState.selectedImgPath2,
     pageState.thumbnailFontSize,
+    pageState.selectedIconPath,
     canvasEl,
   ]);
 
@@ -614,6 +635,22 @@ export default function ThumbnailCanvas() {
                     setPageState((prev) => ({
                       ...prev,
                       selectedBgPath: `/bg-inv/bg-${i}.jpg`,
+                    }))
+                  }
+                />
+              ))}
+
+              {Array.from({ length: 7 }, (_, i) => (
+                <img
+                  key={uuidv4()}
+                  loading="lazy"
+                  src={`/icons/illustration-${i}.png`}
+                  alt="icons"
+                  className="w-[50%] hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
+                  onClick={() =>
+                    setPageState((prev) => ({
+                      ...prev,
+                      selectedIconPath: `/icons/illustration-${i}.png`,
                     }))
                   }
                 />
