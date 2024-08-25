@@ -94,7 +94,7 @@ const SignIn = () => {
     if (authState.token) {
       let timeout = setTimeout(() => {
         router.replace(routeToDirect);
-      }, 1);
+      }, 1550);
       return () => clearTimeout(timeout);
     }
   }, [authState.token, router, routeToDirect]);
@@ -167,14 +167,14 @@ const SignIn = () => {
     // },
   });
 
-  useEffect(() => {
-    if (pageState.showWelcomeMessage) {
-      let timeout = setTimeout(() => {
-        router.replace(routeToDirect);
-      }, 1550);
-      return () => clearTimeout(timeout);
-    }
-  }, [pageState.showWelcomeMessage, router, routeToDirect]);
+  // useEffect(() => {
+  //   if (pageState.showWelcomeMessage) {
+  //     let timeout = setTimeout(() => {
+  //       router.replace(routeToDirect);
+  //     }, 1550);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [pageState.showWelcomeMessage, router, routeToDirect]);
 
   return (
     <div
