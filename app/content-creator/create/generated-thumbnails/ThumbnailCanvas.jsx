@@ -42,7 +42,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);
@@ -447,8 +447,19 @@ export default function ThumbnailCanvas() {
       <div className="thumbnailCanvas">
         <div className="thumbnailCanvas_actionsBar">
           {/* 01 Select Thumbnail */}
-          <div className="flex flex-col gap-[--10px] w-full mt-[--sy-20px]">
-            <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
+          <div className="flex flex-col gap-[--10px] w-full">
+            <div className="flex justify-between items-center pt-[--10px]">
+              <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
+
+              <div className="w-1/2">
+                <CustomSelectInput
+                  label={"Font Size"}
+                  options={Array.from({ length: 71 }, (_, i) => i + 60)}
+                  getValue={getThumbnailFontSizeValue}
+                />
+              </div>
+            </div>
+
             <CustomSelectInput
               label={"Select Thumbnail"}
               options={
@@ -458,18 +469,10 @@ export default function ThumbnailCanvas() {
               }
               getValue={getSelectedContentThumbnailValue}
             />
-
-            <div className="w-1/2">
-              <CustomSelectInput
-                label={"Font Size"}
-                options={Array.from({ length: 71 }, (_, i) => i + 60)}
-                getValue={getThumbnailFontSizeValue}
-              />
-            </div>
           </div>
 
           {/* 02 Select Background */}
-          <div className="flex flex-col gap-[--10px] w-full">
+          <div className="flex flex-col gap-[--5px] w-full">
             <h3 className="font-bold text-[--17px] border-t-[--2px] border-[--gray-300] pt-[--7px]">
               Select Background
             </h3>
@@ -494,10 +497,19 @@ export default function ThumbnailCanvas() {
           </div>
 
           {/* 03 Select Image */}
-          <div className="flex flex-col gap-[--10px] w-full">
-            <h3 className="font-bold text-[--17px] border-t-[--2px] border-[--gray-300] pt-[--7px]">
-              Select Image
-            </h3>
+          <div className="flex flex-col gap-[--12px] w-full">
+            <div className="flex justify-between items-center pt-[--10px] border-t-[--2px] border-[--gray-300]">
+              <h3 className="font-bold text-[--17px]">Select Image</h3>
+
+              <div className="w-1/2">
+                <CustomSelectInput
+                  label={"Image No."}
+                  options={["image-1", "image-2"]}
+                  // getValue={getThumbnailFontSizeValue}
+                />
+              </div>
+            </div>
+
             <div className="flex gap-[--10px]">
               <input
                 className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
@@ -528,7 +540,7 @@ export default function ThumbnailCanvas() {
                 <img
                   src="/img-placeholder.jpg"
                   alt="img-placeholder"
-                  className="w-[70%] h-auto aspect-square object-cover"
+                  className="w-[55%] h-auto aspect-square object-cover"
                 />
               ) : (
                 pageState.searchImgData.map((img) => (
@@ -537,7 +549,7 @@ export default function ThumbnailCanvas() {
                     loading="lazy"
                     src={img}
                     alt="searchImg"
-                    className="w-[70%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
+                    className="w-[55%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
                     onClick={() => handleSelectImg(img)}
                   />
                 ))
@@ -545,9 +557,17 @@ export default function ThumbnailCanvas() {
             </div>
 
             {/* UploadImg */}
-            <h3 className="font-bold text-[--17px]">or: Upload Image</h3>
-            <div className={"w-full flex thumbnailCanvas_actionsBar_uploadImg"}>
-              <input type="file" accept="image/*" onChange={handleUploadImg} />
+            <div>
+              <h3 className="font-bold text-[--17px]">or: Upload Image</h3>
+              <div
+                className={"w-full flex thumbnailCanvas_actionsBar_uploadImg"}
+              >
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUploadImg}
+                />
+              </div>
             </div>
           </div>
         </div>
