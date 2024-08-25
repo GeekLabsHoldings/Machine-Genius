@@ -147,7 +147,7 @@ export default function InProcessHiringTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {data?.map((ele:any, idx:any) => (
+        {data.length > 0 && data?.map((ele:any, idx:any) => (
           <ul className="w-[100%]" key={ele._id}>
             <li className="w-[20%]">{ele.title}</li>
             <li className="w-[20%]">{ele.level}</li>

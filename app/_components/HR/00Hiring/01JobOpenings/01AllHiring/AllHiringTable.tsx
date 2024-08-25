@@ -155,7 +155,7 @@ export default function AllHiringTable() {
 
       {/* Table Body */}
       <div className={styles.table_body}>
-        {data?.map((ele, idx) => (
+        {data.length > 0 && data?.map((ele, idx) => (
           <ul className="w-[100%]" key={ele._id}>
             <li className="w-[20%]">{ele.title}</li>
             <li className="w-[20%]">{ele.level}</li>
