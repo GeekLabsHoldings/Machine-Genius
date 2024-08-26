@@ -15,7 +15,17 @@ const MovieMyth = () => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { setEditContentData } = useContext(contentCreatorContext);
+  const { setEditContentData, presignedURLData, setPresignedURLData } =
+    useContext(contentCreatorContext);
+
+  const [pageState, setPageState] = useState<{
+    triggerUploadVideo: boolean;
+    triggerTranscriptAudio: boolean;
+  }>({
+    triggerUploadVideo: false,
+    triggerTranscriptAudio: false,
+  });
+
   // reset all the data
   useEffect(() => {
     dispatch(contentCreatorActions.setVideoTranscription(null));
@@ -26,72 +36,106 @@ const MovieMyth = () => {
     }
   }, []);
 
+  // ===== 01. get Presigned URL =====
+  async function getPresignedURL() {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/content-creation/get-presignedURL`
+      );
+      const json = await res.json();
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else {
+        setPresignedURLData(json);
+        return json;
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error getPresignedURL:", error);
+    }
+  }
+
+  // ===== 02. upload video =====
   async function uploadVideo(file: File) {
+    const baseURL = await getPresignedURL();
     setIsLoading(true);
     setError(null);
-    setUploadPercentage(0);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/octet-stream");
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: file,
+      redirect: "follow" as RequestRedirect,
+    };
+
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const videoElement = document.createElement("video");
-      videoElement.src = URL.createObjectURL(file);
-      await new Promise((resolve) => {
-        videoElement.onloadedmetadata = () => {
-          resolve(videoElement.duration);
-        };
-      });
-      const duration = videoElement.duration;
-      formData.append("duration", duration.toString());
-
-      console.log("duration", duration.toString());
-
-      const xhr = new XMLHttpRequest();
-      xhr.open(
-        "POST",
-        "https://api.machinegenius.io/content-creation/transcript-audio",
-        true
-      );
-
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const percentComplete = (event.loaded / event.total) * 100;
-          setUploadPercentage(percentComplete);
-        }
-      };
-
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const response = JSON.parse(xhr.responseText);
-          dispatch(contentCreatorActions.setVideoTranscription(response));
-          router.replace("/content-creator/create/movie-myth/create-movie");
-        } else {
-          toast.error(`Upload failed with status: ${xhr.status}`);
-          setError(`Upload failed with status: ${xhr.status}`);
-          setIsLoading(false);
-        }
-      };
-
-      xhr.onerror = () => {
-        toast.error("Something went wrong! Contact backend department");
-        setError("Upload failed due to an error.");
-        setIsLoading(false);
-      };
-
-      xhr.send(formData);
+      const response = await fetch(baseURL.preSignedURL, requestOptions);
+      if (response.ok) {
+        console.log("Upload successful");
+        setPageState((prev) => ({ ...prev, triggerTranscriptAudio: true }));
+      } else {
+        const errorText = await response.text();
+        toast.error(
+          `Upload failed with status: ${response.status} - ${errorText}`
+        );
+        setError(`Upload failed with status: ${response.status}`);
+      }
     } catch (error: any) {
       toast.error("Something went wrong! Contact backend department");
       setError(error?.message);
       console.error("Error in uploadVideo:", error);
+    } finally {
       setIsLoading(false);
     }
   }
 
+  // ===== 03. transcript-audio =====
+  async function transcriptAudio() {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/content-creation/transcript-audio`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            s3BucketURL: presignedURLData.s3BucketURL,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          redirect: "follow" as RequestRedirect,
+        }
+      );
+
+      const json = await res.json();
+
+      if (json && json?.transcriptionResults) {
+        dispatch(contentCreatorActions.setVideoTranscription(json));
+        router.replace("/content-creator/create/movie-myth/create-movie");
+      } else {
+        toast.error("Something went wrong! Error transcriptAudio");
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Error transcriptAudio");
+      console.error("Error transcriptAudio:", error);
+    }
+  }
+
+  // ===== 00. handleFileChange =====
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files[0]) {
       uploadVideo(files[0]);
     }
   };
+
+  useEffect(() => {
+    if (pageState.triggerTranscriptAudio) {
+      transcriptAudio();
+    }
+  }, [pageState.triggerTranscriptAudio]);
 
   return (
     <div className="flex flex-col h-full">
@@ -111,7 +155,7 @@ const MovieMyth = () => {
           <div className="flex flex-col justify-center items-center w-[40vw] min-w-[30rem] mx-auto h-[75vh] py-[1.5vw]">
             <label className={styles.select_label}>Upload Movie</label>
             <div className={"w-full flex " + styles.uploud_movie}>
-              <input type="file" onChange={handleFileChange} />
+              <input type="file" accept="video/*" onChange={handleFileChange} />
             </div>
             {error && <div className="text-red-500 mt-2">{error}</div>}
           </div>
