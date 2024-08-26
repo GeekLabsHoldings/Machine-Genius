@@ -141,7 +141,7 @@ const MovieMyth = () => {
   async function uploadVideo() {
     setIsLoading(true);
     setError(null);
-    setUploadPercentage(0);
+    // setUploadPercentage(0);
     try {
       const formData = new FormData();
       if (pageState.file) {
