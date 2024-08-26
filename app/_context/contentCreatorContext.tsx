@@ -635,18 +635,18 @@ export default function ContentCreatorContextProvider({
 
 
 
-  function presignedURLDataInit() {
-    if (typeof window !== "undefined") {
-      const presignedURLDataInitValue = sessionStorage.getItem("presignedURLData");
-      return presignedURLDataInitValue ? JSON.parse(presignedURLDataInitValue) : null;
-    } else {
-      return null;
-    }
-  }
-  const [presignedURLData, setPresignedURLData] = useState<any>(presignedURLDataInit);
-  useEffect(() => {
-    sessionStorage.setItem("presignedURLData", JSON.stringify(presignedURLData));
-  }, [presignedURLData]);
+  // function presignedURLDataInit() {
+  //   if (typeof window !== "undefined") {
+  //     const presignedURLDataInitValue = sessionStorage.getItem("presignedURLData");
+  //     return presignedURLDataInitValue ? JSON.parse(presignedURLDataInitValue) : null;
+  //   } else {
+  //     return null;
+  //   }
+  // }
+  const [presignedURLData, setPresignedURLData] = useState<any>(null);
+  // useEffect(() => {
+  //   sessionStorage.setItem("presignedURLData", JSON.stringify(presignedURLData));
+  // }, [presignedURLData]);
 
 
 
