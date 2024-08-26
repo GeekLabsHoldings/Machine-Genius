@@ -47,7 +47,9 @@ const ContentDatabase = () => {
     }
   }
 
-  const { editContentData, setEditContentData } = useContext(contentCreatorContext);
+  const { editContentData, setEditContentData } = useContext(
+    contentCreatorContext
+  );
 
   const [filterBy, setFilterBy] = useState({
     brand: "",
@@ -56,7 +58,8 @@ const ContentDatabase = () => {
   });
 
   useEffect(() => {
-    const filteredData = contentDatabase.filter((item: any) => {
+    const reversedContentDatabase = [...contentDatabase].reverse();
+    const filteredData = reversedContentDatabase.filter((item: any) => {
       const matchesBrand = filterBy.brand
         ? item.brand === filterBy.brand
         : true;
@@ -91,9 +94,8 @@ const ContentDatabase = () => {
     return formattedDate;
   }
 
-  const renderYourArticles = filteredContentDatabase
-    .reverse()
-    .map((oneArticle: any, idx: any) => (
+  const renderYourArticles = filteredContentDatabase.map(
+    (oneArticle: any, idx: any) => (
       <ul
         key={idx}
         className={`${styles.tableBody} borderBottom articleRow `}
@@ -135,7 +137,8 @@ const ContentDatabase = () => {
           </button>
         </li>
       </ul>
-    ));
+    )
+  );
 
   function handleNavigateToEditPage() {
     if (editContentData) {
