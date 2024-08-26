@@ -11,7 +11,9 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 // import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
+
 const VideoPlayer = dynamic(
   () => import("@/app/_components/VideoPlayer/VideoPlayer"),
   {
@@ -22,11 +24,14 @@ const VideoPlayer = dynamic(
 const CreateMovie = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+
   const videoTranscription = useSelector(
     (state) => state.contentCreator.videoTranscription
   );
 
-  const { selectedContentType ,selectedBrand } = useContext(contentCreatorContext);
+  const { selectedContentType, selectedBrand, presignedURLData } = useContext(
+    contentCreatorContext
+  );
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {
@@ -255,7 +260,7 @@ const CreateMovie = () => {
         >
           <h3>Transcribe</h3>
           <div
-            className={`${styles.box} flex flex-col px-[1.5vw] pt-[4vw] pb-[1.5vw] gap-[1vw]`}
+            className={`${styles.box} flex flex-col px-[1.5vw] pt-[4vw] pb-[1.5vw] gap-[1vw] relative`}
           >
             {videoTranscription &&
               [...videoTranscription?.transcriptionResults]
@@ -300,8 +305,7 @@ const CreateMovie = () => {
             className={`${styles.box} flex justify-center items-center ${styles.movieWrapper}`}
           >
             <VideoPlayer
-              // src={videoTranscription?.movie_url}
-              src={`http://34.206.30.166:443/uploads/movie.mp4`}
+              src={presignedURLData?.movieUrl}
               highlightTime={highlightTime}
               videoRef={videoRef}
             />
