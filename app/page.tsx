@@ -3,33 +3,292 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import img from "../public/seoModule.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AOS from "aos";
+import "aos/dist/aos.css"; // You can also use <link> for styles
 
 export default function Home() {
   const [selectedWheel, setSelectedWheel] = useState("hr");
+  const [wheelColor, setWheelColor] = useState("#E1C655");
   const [selectedNum, setSelectedNum] = useState<number>(0);
 
-  const [leftArrowHovered ,setLeftArrowHovered] = useState(false)
-  const [rightArrowHovered ,setRightArrowHovered] = useState(false)
+  const [leftArrowHovered, setLeftArrowHovered] = useState(false);
+  const [rightArrowHovered, setRightArrowHovered] = useState(false);
 
-useEffect(()=>{
-if (selectedNum == 0) {
-  setSelectedWheel("hr")
-} else if (selectedNum == 1) {
-  setSelectedWheel("video")
-} else if (selectedNum == -1) {
-  setSelectedWheel("seo")
-} else if (selectedNum == -2) {
-  setSelectedWheel("social")
-} else if (selectedNum == -3) {
-  setSelectedWheel("content")
-}
-},[selectedNum])
+  // Register the ScrollTrigger plugin
+  if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger, useGSAP);
+  }
+
+  const staffRef = useRef(null);
+  const logoRef = useRef(null);
+  const paragraphRef = useRef(null);
+  const hiddenParagraphRef = useRef(null);
+  const movedParagraphRef1 = useRef(null);
+  const movedParagraphRef2 = useRef(null);
+  const movedParagraphRef3 = useRef(null);
+  const seoSectionRef = useRef(null);
+  const movedParagraphRef12 = useRef(null);
+  const movedParagraphRef22 = useRef(null);
+  const movedParagraphRef32 = useRef(null);
+  const seoSectionRef2 = useRef(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const slideRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    AOS.init();
+    console.log(seoSectionRef.current);
+
+    if (!seoSectionRef.current) {
+      return;
+    }
+    const scaleAndMoving1 = gsap.to(movedParagraphRef1.current, {
+      translateX: "0",
+      translateY: "0",
+      opacity: "1",
+      scrollTrigger: {
+        trigger: seoSectionRef.current,
+        start: "top 30%",
+        end: "bottom 90%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+    const scaleAndMoving2 = gsap.to(movedParagraphRef2.current, {
+      translateX: "0",
+      translateY: "0",
+      opacity: "1",
+      scrollTrigger: {
+        trigger: seoSectionRef.current,
+        start: "top 30%",
+        end: "bottom 90%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+    const scaleAndMoving3 = gsap.to(movedParagraphRef3.current, {
+      translateX: "0",
+      translateY: "0",
+      opacity: "1",
+      scrollTrigger: {
+        trigger: seoSectionRef.current,
+        start: "top 30%",
+        end: "bottom 90%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+    const seoSectionscaled = gsap.to(seoSectionRef.current, {
+      scale: 1.3,
+      scrollTrigger: {
+        trigger: seoSectionRef.current,
+        start: "top 65%",
+        end: "bottom 65%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+  }, []);
+  useEffect(() => {
+    console.log(seoSectionRef2.current);
+
+    if (!seoSectionRef2.current) {
+      return;
+    }
+    const scaleAndMoving12 = gsap.to(movedParagraphRef12.current, {
+      translateX: "0",
+      translateY: "0",
+      opacity: "1",
+      scrollTrigger: {
+        trigger: seoSectionRef2.current,
+        start: "top 30%",
+        end: "bottom 90%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+    const scaleAndMoving22 = gsap.to(movedParagraphRef22.current, {
+      translateX: "0",
+      translateY: "0",
+      opacity: "1",
+      scrollTrigger: {
+        trigger: seoSectionRef2.current,
+        start: "top 30%",
+        end: "bottom 90%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+    const scaleAndMoving32 = gsap.to(movedParagraphRef32.current, {
+      translateX: "0",
+      translateY: "0",
+      opacity: "1",
+      scrollTrigger: {
+        trigger: seoSectionRef2.current,
+        start: "top 30%",
+        end: "bottom 90%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+    const seoSectionscaled2 = gsap.to(seoSectionRef2.current, {
+      scale: 1.3,
+      scrollTrigger: {
+        trigger: seoSectionRef2.current,
+        start: "top 65%",
+        end: "bottom 65%",
+        // markers: true,
+        scrub: 0.1,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(staffRef.current, logoRef.current, paragraphRef.current);
+
+    if (!staffRef.current) return;
+    const logoMove = gsap.to(logoRef.current, {
+      translateY: "-255px",
+      translateX: "-375px",
+      scale: "1",
+      ease: "none",
+      // duration: 1,
+      scrollTrigger: {
+        trigger: staffRef.current,
+        start: "top 99%",
+        end: "top bottom",
+        // markers: true,
+        scrub: 0.1,
+        pin: true,
+      },
+    });
+  }, []);
+  useEffect(() => {
+    if (!paragraphRef.current) return;
+    const paragraphMove = gsap.to(paragraphRef.current, {
+      gap: "clamp(18vh, 20vh, 30vh)",
+      ease: "none",
+      duration: 1,
+      scrollTrigger: {
+        trigger: paragraphRef.current,
+        start: "top 80%",
+        end: "top 20%",
+        // markers: true,
+        scrub: true,
+        // pin: true,
+      },
+    });
+    const hiddenParagraphMove = gsap.to(hiddenParagraphRef.current, {
+      opacity: "1",
+      ease: "none",
+      duration: 1,
+      delay: 1,
+      scrollTrigger: {
+        trigger: paragraphRef.current,
+        start: "top 60%",
+        end: "top 20%",
+        // markers: true,
+        scrub: true,
+        // pin: true,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedNum == 0) {
+      setSelectedWheel("hr");
+      setWheelColor("#E1C655");
+    } else if (selectedNum == 1) {
+      setSelectedWheel("video");
+      setWheelColor("#E9313E");
+    } else if (selectedNum == -1) {
+      setSelectedWheel("seo");
+      setWheelColor("#5EA95B");
+    } else if (selectedNum == -2) {
+      setSelectedWheel("social");
+      setWheelColor("#E1C655");
+    } else if (selectedNum == -3) {
+      setSelectedWheel("content");
+      setWheelColor("#E9313E");
+    }
+  }, [selectedNum]);
   return (
     <>
-      <div className=" w-full relative overflow-x-clip text-[#FFFFFB]">
-        <div className="px-[--98px] flex justify-between items-center left-0 right-0 absolute top-[56px] z-50">
-          <Link href={"/"}>
+      <div className=" w-full relative overflow-x-clip text-[#FFFFFB] bg-[linear-gradient(180deg,_#2A2B2A_35%,_#5ea95bbd_100%)]">
+        <Link
+          href={"/"}
+          className=" fixed top-1/3 translate-y-1/4 left-1/4 -translate-x-2/3 scale-[3] cursor-pointer z-[999]"
+          ref={logoRef}
+        >
+          <svg
+            className=" w-[--128px]"
+            viewBox="0 0 129 59"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.11719 23.6576V14.0262C1.11719 12.7537 1.42652 11.5867 2.04518 10.5321C2.66384 9.47056 3.55669 8.62693 4.72371 8.00827C5.89073 7.38257 7.29679 7.07324 8.9489 7.07324C9.74332 7.07324 10.4745 7.16464 11.1494 7.34039C11.8243 7.52318 12.45 7.7833 13.0264 8.12075C13.6029 8.4582 14.1091 8.86596 14.538 9.32996H14.5731C15.023 8.86596 15.5363 8.4582 16.1127 8.12075C16.6892 7.7833 17.3219 7.52318 18.0109 7.34039C18.6928 7.15761 19.431 7.07324 20.2254 7.07324C21.8705 7.07324 23.2836 7.38257 24.4506 8.00827C25.6176 8.63396 26.5105 9.47759 27.1292 10.5321C27.7478 11.5867 28.0571 12.7607 28.0571 14.0262V23.6576H23.6562V14.0262C23.6562 13.4356 23.5015 12.8943 23.1922 12.4022C22.8829 11.9101 22.4681 11.5234 21.9549 11.2281C21.4417 10.9329 20.8652 10.7852 20.2184 10.7852C19.5716 10.7852 19.0233 10.9329 18.503 11.2281C17.9758 11.5234 17.561 11.9171 17.2516 12.4022C16.9423 12.8873 16.7876 13.4286 16.7876 14.0262V23.6576H12.3867V14.0262C12.3867 13.4356 12.232 12.8943 11.9227 12.4022C11.6134 11.9171 11.1986 11.5234 10.6854 11.2281C10.1722 10.9329 9.59568 10.7852 8.9489 10.7852C8.30211 10.7852 7.75375 10.9329 7.23351 11.2281C6.70624 11.5234 6.29146 11.9171 5.98213 12.4022C5.6728 12.8873 5.51813 13.4286 5.51813 14.0262V23.6576H1.11719Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M38.456 24.0375C36.9585 24.0375 35.6509 23.6578 34.5401 22.8915C33.4294 22.1323 32.5646 21.1058 31.953 19.8263C31.3414 18.5468 31.0391 17.1267 31.0391 15.5801C31.0391 14.0334 31.3835 12.55 32.0795 11.2564C32.7755 9.96287 33.7738 8.94349 35.0815 8.19125C36.3891 7.43901 37.9498 7.06641 39.7706 7.06641C41.5915 7.06641 43.1663 7.44604 44.4247 8.21234C45.6901 8.97161 46.6533 10.0051 47.3141 11.2986C47.975 12.5922 48.3124 14.0193 48.3124 15.5871V23.6649H43.9115V20.9652H43.8482C43.5248 21.5347 43.1241 22.0549 42.646 22.526C42.1609 22.9899 41.5774 23.3626 40.8955 23.6367C40.2136 23.9109 39.398 24.0515 38.456 24.0515V24.0375ZM39.7074 20.3184C40.5651 20.3184 41.3032 20.1075 41.9219 19.6857C42.5406 19.2639 43.0186 18.6874 43.349 17.9563C43.6795 17.2251 43.8482 16.4167 43.8482 15.5238C43.8482 14.631 43.6795 13.8365 43.349 13.1265C43.0186 12.4164 42.5406 11.847 41.9219 11.4252C41.3032 11.0034 40.5651 10.7924 39.7074 10.7924C38.8497 10.7924 38.0764 11.0034 37.4436 11.4252C36.8109 11.847 36.3328 12.4164 35.9954 13.1265C35.665 13.8365 35.4962 14.638 35.4962 15.5238C35.4962 16.4096 35.665 17.2251 35.9954 17.9563C36.3258 18.6874 36.8109 19.2639 37.4436 19.6857C38.0764 20.1075 38.8286 20.3184 39.7074 20.3184Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M60.1308 23.6585C58.4365 23.6585 56.932 23.2999 55.6033 22.5758C54.2746 21.8587 53.2271 20.8885 52.4537 19.6653C51.6804 18.449 51.3008 17.0711 51.3008 15.5455C51.3008 14.02 51.6874 12.6491 52.4537 11.4258C53.2271 10.2096 54.2746 9.23939 55.6033 8.51528C56.932 7.79116 58.4365 7.43262 60.1308 7.43262H62.1836V11.1516H60.1308C59.2309 11.1516 58.4576 11.3414 57.8038 11.7211C57.15 12.1007 56.6508 12.628 56.2923 13.2959C55.9408 13.9637 55.765 14.7089 55.765 15.5385C55.765 16.3681 55.9408 17.1133 56.2923 17.7812C56.6438 18.449 57.15 18.9763 57.8038 19.3559C58.4576 19.7356 59.2309 19.9254 60.1308 19.9254H62.1836V23.6444H60.1308V23.6585Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M65.0078 23.6581V0.451172H69.4088V8.59221C70.0907 8.04385 70.8289 7.65016 71.6233 7.41816C72.4177 7.18616 73.1981 7.06665 73.9644 7.06665C75.5462 7.06665 76.8608 7.39707 77.8943 8.05088C78.9348 8.7047 79.7081 9.59051 80.2213 10.6872C80.7345 11.791 80.9946 13.0072 80.9946 14.343V23.6581H76.5937V14.343C76.5937 13.6892 76.432 13.0846 76.1156 12.5503C75.7922 12.0089 75.3634 11.5801 74.815 11.2637C74.2667 10.9474 73.6621 10.7857 73.0012 10.7857C72.3404 10.7857 71.7639 10.9403 71.2226 11.2497C70.6742 11.559 70.2383 11.9738 69.9079 12.487C69.5775 13.0072 69.4088 13.5837 69.4088 14.2164V23.6581H65.0078Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M87.1621 5.50568C86.4099 5.50568 85.7631 5.23853 85.2218 4.6972C84.6804 4.15587 84.4062 3.51611 84.4062 2.7709C84.4062 2.0257 84.6804 1.38594 85.2218 0.844613C85.7701 0.303283 86.4169 0.0361328 87.1621 0.0361328C87.9073 0.0361328 88.5611 0.303283 89.1025 0.844613C89.6508 1.38594 89.918 2.0257 89.918 2.7709C89.918 3.51611 89.6438 4.15587 89.1025 4.6972C88.5611 5.23853 87.9073 5.50568 87.1621 5.50568ZM84.9476 23.6578V7.44603H89.3766V23.6578H84.9476Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M93.3008 23.6578V14.3427C93.3008 13.007 93.6171 11.7907 94.2499 10.687C94.8826 9.58324 95.7965 8.70446 96.9987 8.05064C98.2009 7.39683 99.6351 7.06641 101.301 7.06641C102.967 7.06641 104.43 7.39683 105.618 8.05064C106.806 8.70446 107.713 9.59027 108.346 10.687C108.978 11.7907 109.295 13.007 109.295 14.3427V23.6578H104.894V14.3427C104.894 13.6889 104.732 13.0843 104.416 12.55C104.092 12.0087 103.663 11.5798 103.115 11.2635C102.567 10.9471 101.962 10.7854 101.301 10.7854C100.64 10.7854 100.036 10.9471 99.4874 11.2635C98.9391 11.5798 98.5102 12.0087 98.1868 12.55C97.8634 13.0913 97.7088 13.6889 97.7088 14.3427V23.6578H93.3078H93.3008Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M121.49 23.657C119.627 23.657 118.003 23.3055 116.625 22.5955C115.247 21.8854 114.172 20.9152 113.412 19.6849C112.653 18.4546 112.273 17.0767 112.273 15.5511C112.273 13.8358 112.625 12.3383 113.335 11.0658C114.045 9.79337 115.008 8.80913 116.224 8.1061C117.448 7.40308 118.826 7.05859 120.365 7.05859C122.207 7.05859 123.698 7.43823 124.844 8.20453C125.989 8.96379 126.826 9.99021 127.36 11.2697C127.895 12.5492 128.162 13.9764 128.162 15.5441C128.162 15.755 128.148 16.0081 128.127 16.2893C128.106 16.5776 128.07 16.7955 128.028 16.9431H116.949C117.117 17.597 117.413 18.1523 117.834 18.5953C118.249 19.0382 118.776 19.3756 119.409 19.5935C120.042 19.8185 120.752 19.924 121.546 19.924H126.109V23.643H121.483L121.49 23.657ZM116.927 14.0256H123.768C123.726 13.6249 123.648 13.2452 123.543 12.8937C123.437 12.5422 123.283 12.2329 123.093 11.9587C122.903 11.6845 122.678 11.4525 122.418 11.2627C122.158 11.0729 121.863 10.9252 121.518 10.8198C121.174 10.7143 120.801 10.6581 120.393 10.6581C119.859 10.6581 119.381 10.7565 118.966 10.9463C118.551 11.1361 118.2 11.3892 117.926 11.7056C117.645 12.022 117.427 12.3805 117.265 12.7883C117.103 13.189 116.991 13.6038 116.927 14.0256Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M17.2663 58.9568C16.022 58.9568 14.9604 58.7388 14.0746 58.303C13.1888 57.8671 12.5139 57.2414 12.0499 56.4118C11.5859 55.5823 11.3609 54.6121 11.3609 53.4872C11.3609 53.2131 11.3679 52.9318 11.3961 52.6436C11.4171 52.3554 11.4523 52.0671 11.4945 51.7719C9.73691 51.7719 8.1551 51.4836 6.74202 50.9001C5.32894 50.3166 4.11973 49.5151 3.11441 48.4817C2.10908 47.4553 1.33575 46.2601 0.80145 44.9033C0.26715 43.5464 0 42.1052 0 40.5797C0 39.0541 0.26715 37.5848 0.80145 36.242C1.33575 34.8992 2.10908 33.7111 3.11441 32.6847C4.11973 31.6583 5.32894 30.8498 6.74202 30.2663C8.1551 29.6828 9.72988 29.3945 11.4593 29.3945C13.1888 29.3945 14.7635 29.6757 16.1766 30.2382C17.5897 30.8006 18.7989 31.5809 19.8042 32.5933C20.8096 33.5986 21.5829 34.7586 22.1172 36.0592C22.6515 37.3598 22.9187 38.7659 22.9187 40.2703V52.9248C22.9187 54.0286 22.7148 55.0409 22.307 55.9619C21.8993 56.8829 21.2806 57.614 20.444 58.1553C19.6074 58.6967 18.5529 58.9638 17.2663 58.9638V58.9568ZM11.4523 47.7646C11.7546 47.7646 12.0428 47.7505 12.317 47.7154C12.5982 47.6873 12.8724 47.6381 13.1536 47.5748C13.5192 47.0264 13.948 46.471 14.4402 45.9227C14.9323 45.3743 15.5017 44.833 16.1415 44.2987C16.7812 43.7714 17.5124 43.2582 18.3279 42.7731V40.2633C18.3279 39.2861 18.1592 38.3862 17.8147 37.5426C17.4702 36.706 16.9921 35.9819 16.3735 35.3632C15.7548 34.7516 15.0237 34.2665 14.1871 33.915C13.3505 33.5635 12.4436 33.3877 11.4593 33.3877C10.4751 33.3877 9.56818 33.5705 8.73158 33.9291C7.89498 34.2876 7.17087 34.7938 6.54517 35.4406C5.92651 36.0873 5.44142 36.8536 5.10397 37.7324C4.75949 38.6112 4.59076 39.5603 4.59076 40.5797C4.59076 41.5991 4.75949 42.5482 5.10397 43.4269C5.44845 44.3057 5.92651 45.072 6.54517 45.7188C7.16384 46.3656 7.89498 46.8718 8.73158 47.2303C9.56818 47.5888 10.4751 47.7716 11.4593 47.7716L11.4523 47.7646ZM16.9781 54.8863C17.428 54.8863 17.7655 54.7105 17.9904 54.359C18.2154 54.0075 18.3279 53.5505 18.3279 52.974V47.3779C17.8569 47.7787 17.4491 48.1864 17.1046 48.6012C16.7601 49.016 16.486 49.4519 16.268 49.9018C16.0571 50.3588 15.8954 50.8368 15.79 51.35C15.6845 51.8562 15.6283 52.3975 15.6283 52.974C15.6283 53.3748 15.6845 53.7192 15.804 54.0075C15.9235 54.2957 16.0852 54.5137 16.3032 54.6613C16.5141 54.8089 16.739 54.8863 16.9781 54.8863Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M37.0409 52.0242C35.1779 52.0242 33.5539 51.6727 32.1759 50.9627C30.798 50.2526 29.7224 49.2824 28.9631 48.0521C28.2039 46.8218 27.8242 45.4439 27.8242 43.9183C27.8242 42.203 28.1757 40.7055 28.8858 39.433C29.5958 38.1606 30.559 37.1763 31.7752 36.4733C32.9915 35.7703 34.3764 35.4258 35.916 35.4258C37.758 35.4258 39.2484 35.8054 40.3943 36.5717C41.5403 37.331 42.3769 38.3574 42.9112 39.6369C43.4455 40.9164 43.7126 42.3436 43.7126 43.9113C43.7126 44.1222 43.6985 44.3753 43.6775 44.6565C43.6564 44.9377 43.6212 45.1627 43.579 45.3103H32.4993C32.6681 45.9712 32.9633 46.5195 33.3852 46.9624C33.807 47.4053 34.3272 47.7428 34.9599 47.9607C35.5927 48.1857 36.3027 48.2912 37.0971 48.2912H41.6598V52.0102H37.0339L37.0409 52.0242ZM32.4783 42.3928H39.3187C39.2765 41.992 39.1992 41.6124 39.0937 41.2679C38.9883 40.9164 38.8336 40.6071 38.6438 40.3329C38.454 40.0587 38.229 39.8267 37.9689 39.6299C37.7088 39.433 37.4135 39.2924 37.069 39.187C36.7245 39.0815 36.3519 39.0253 35.9442 39.0253C35.4099 39.0253 34.9318 39.1237 34.517 39.3135C34.1022 39.5033 33.7507 39.7564 33.4765 40.0728C33.1953 40.3891 32.9774 40.7547 32.8157 41.1554C32.654 41.5562 32.5415 41.971 32.4783 42.3928Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M49.0234 52.025V42.7099C49.0234 41.3742 49.3398 40.1579 49.9725 39.0542C50.6052 37.9504 51.5192 37.0716 52.7214 36.4178C53.9235 35.764 55.3577 35.4336 57.0239 35.4336C58.6901 35.4336 60.1523 35.764 61.3405 36.4178C62.5286 37.0716 63.4355 37.9575 64.0682 39.0542C64.7009 40.1579 65.0173 41.3742 65.0173 42.7099V52.025H60.6163V42.7099C60.6163 42.0561 60.4546 41.4515 60.1383 40.9102C59.8149 40.3688 59.386 39.94 58.8377 39.6236C58.2893 39.3073 57.6847 39.1456 57.0239 39.1456C56.363 39.1456 55.7584 39.3073 55.2101 39.6236C54.6617 39.94 54.2329 40.3688 53.9095 40.9102C53.5861 41.4515 53.4314 42.0491 53.4314 42.7099V52.025H49.0305H49.0234Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M73.584 33.8729C72.8317 33.8729 72.185 33.6057 71.6436 33.0644C71.0953 32.5231 70.8281 31.8833 70.8281 31.1381C70.8281 30.3929 71.1023 29.7531 71.6436 29.2118C72.185 28.6705 72.8388 28.4033 73.584 28.4033C74.3292 28.4033 74.983 28.6705 75.5243 29.2118C76.0657 29.7531 76.3398 30.3929 76.3398 31.1381C76.3398 31.8833 76.0657 32.5231 75.5243 33.0644C74.976 33.6057 74.3292 33.8729 73.584 33.8729ZM71.3695 52.025V35.8132H75.7985V52.025H71.3695Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M90.1137 52.4117C88.4476 52.4117 87.0134 52.0813 85.8112 51.4275C84.609 50.7737 83.6951 49.8949 83.0624 48.7911C82.4296 47.6874 82.1133 46.4712 82.1133 45.1354V35.8203H86.5142V45.1354C86.5142 45.7892 86.6759 46.3938 86.9923 46.9281C87.3157 47.4695 87.7445 47.8983 88.2929 48.2147C88.8412 48.531 89.4458 48.6927 90.1067 48.6927C90.7675 48.6927 91.3721 48.531 91.9205 48.2147C92.4689 47.8983 92.8977 47.4695 93.2211 46.9281C93.5445 46.3868 93.6992 45.7892 93.6992 45.1354V35.8203H98.1001V45.1354C98.1001 46.4712 97.7837 47.6874 97.151 48.7911C96.5183 49.8949 95.6114 50.7737 94.4233 51.4275C93.2352 52.0813 91.7939 52.4117 90.1067 52.4117H90.1137Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M104.531 52.0253V48.3063H112.525C112.785 48.3063 113.01 48.25 113.214 48.1446C113.417 48.0391 113.579 47.8915 113.699 47.7017C113.818 47.5118 113.874 47.3009 113.874 47.0689C113.874 46.8158 113.818 46.5909 113.699 46.401C113.579 46.2112 113.417 46.0566 113.214 45.9371C113.01 45.8175 112.778 45.7613 112.525 45.7613H109.445C108.398 45.7613 107.449 45.5996 106.605 45.2692C105.761 44.9388 105.087 44.4115 104.58 43.6803C104.081 42.9492 103.828 41.9931 103.828 40.805C103.828 39.891 104.06 39.0615 104.517 38.3092C104.974 37.557 105.6 36.9524 106.38 36.4954C107.16 36.0384 108.025 35.8135 108.967 35.8135H116.644V39.5325H109.389C109.066 39.5325 108.784 39.6379 108.538 39.8488C108.292 40.0598 108.166 40.3339 108.166 40.6784C108.166 41.0229 108.285 41.2971 108.517 41.522C108.749 41.747 109.045 41.8525 109.382 41.8525H112.461C113.635 41.8525 114.655 42.0282 115.512 42.3797C116.37 42.7313 117.031 43.2726 117.502 44.0178C117.973 44.763 118.205 45.7332 118.205 46.9424C118.205 47.8774 117.966 48.7281 117.502 49.5014C117.031 50.2747 116.398 50.8864 115.611 51.3433C114.816 51.8003 113.931 52.0253 112.946 52.0253H104.531Z"
+              fill="#FFFFFB"
+            />
+            <path
+              d="M126.011 52.4123C125.196 52.4123 124.5 52.117 123.909 51.5405C123.319 50.957 123.023 50.261 123.023 49.4595C123.023 48.6581 123.319 47.9621 123.909 47.3786C124.5 46.7951 125.196 46.5068 126.011 46.5068C126.827 46.5068 127.523 46.7951 128.113 47.3786C128.704 47.9621 128.999 48.6581 128.999 49.4595C128.999 49.9868 128.866 50.4789 128.598 50.9359C128.331 51.3929 127.973 51.7514 127.523 52.0186C127.073 52.2857 126.567 52.4193 126.011 52.4193V52.4123Z"
+              fill="#FFFFFB"
+            />
+          </svg>
+        </Link>
+        <div className="px-[--98px] flex justify-between items-center left-0 right-0 fixed top-[56px] z-50">
+          <Link href={"/"} className=" invisible">
             <svg
               className=" w-[--128px]"
               viewBox="0 0 129 59"
@@ -94,24 +353,24 @@ if (selectedNum == 0) {
               />
             </svg>
           </Link>
-          <ul className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] bg-opacity-60 flex">
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
+          <ul className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] flex">
+            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
               <Link href={"/"}>Home</Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
+            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
               <Link href={"/modules"}>Modules</Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
+            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
               <Link href={"/about-us"}>About Us</Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
+            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
               <Link href={"/contact-us"}>Contact Us</Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#2A2B2A] transition-colors duration-200 cursor-pointer">
+            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
               <Link href={"/blog"}>Blog</Link>
             </li>
           </ul>
-          <div className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] bg-opacity-60 flex">
+          <div className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] flex">
             <Link
               href={"signin"}
               className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] bg-[#2A2B2A] rounded-[--30px] border-[1px] border-[#fffffb]"
@@ -126,9 +385,9 @@ if (selectedNum == 0) {
             </Link>
           </div>
         </div>
-        <div className=" absolute  -right-1/4 -top-[550px]">
+        <div className=" absolute  -right-1/4 -top-[clamp(45vh,_50.93vh,_60vh)]">
           <svg
-            className=" w-[clamp(10px,_calc(78.333vw_+_0.1rem),_3000px)] h-[clamp(100vh,_131.26vh,_140vh)] animate-rotateRight"
+            className=" w-[clamp(30vw,_calc(68.333vw_+_0.1rem),_140vw)] h-[clamp(30vw,_calc(68.333vw_+_0.1rem),_140vw)] animate-rotateRight"
             viewBox="0 0 1128 1114"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -141,7 +400,7 @@ if (selectedNum == 0) {
             />
           </svg>
           <svg
-            className=" w-[70%] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-rotateLeftTransform"
+            className=" w-[82%] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-rotateLeftTransform"
             viewBox="0 0 941 946"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -154,7 +413,7 @@ if (selectedNum == 0) {
             />
           </svg>
           <svg
-            className=" w-[55%] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-rotateRightTransform"
+            className=" w-[65%] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-rotateRightTransform"
             viewBox="0 0 833 835"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -166,54 +425,118 @@ if (selectedNum == 0) {
               fill="#E9313E"
             />
           </svg>
-          <span className="text-[--58px] font-bold absolute left-1/2 -translate-x-1/2 top-1/2 translate-y-full">Lorem Epsum</span>
+          <span className="text-[--58px] font-bold absolute left-1/2 -translate-x-2/3 top-1/2 translate-y-full">
+            Lorem Epsum
+          </span>
         </div>
         <div className=" h-[100vh] w-full flex items-center">
-          <p className=" text-[--32px] font-bold w-fit text-[#FFFFFB] ml-[--187px]">
+          <p className=" text-[--32px] font-bold w-fit text-[#FFFFFB] ml-[--187px] mt-[--sy-64px]">
             The Last Software You Will Ever Buy..
           </p>
         </div>
-        <div className=" pt-[--sy-136px]">
-          <div className="relative w-fit mx-auto text-white mb-[--sy-50px]">
-            <div className=" flex flex-col place-items-center">
+        <div>
+          <div
+            className="relative w-fit mx-auto text-white mb-[--sy-50px] pt-[--sy-136px] "
+            ref={staffRef}
+          >
+            <div
+              className=" flex flex-col place-items-center gap-y-0 relative"
+              ref={paragraphRef}
+            >
               <p className=" uppercase text-center text-[--128px] font-bold">
                 From Staff
               </p>
               <p className=" uppercase text-center text-[--128px] font-bold ">
                 To Software
               </p>
+              <p
+                ref={hiddenParagraphRef}
+                className="opacity-0 text-[--23px] bg-[radial-gradient(closest-side,_rgba(94,_169,_91,_.4)_0%,_rgba(94,_169,_91,_0)_100%)] p-[3rem] w-full text-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 opacity-1"
+              >
+                By shifting from traditional staffing to advanced software
+                solutions, <br /> businesses can reduce costs, enhance
+                efficiency, and focus resources <br /> on growth and innovation.
+              </p>
             </div>
-            <p className="text-[--23px] bg-[radial-gradient(closest-side,_rgba(94,_169,_91,_.4)_0%,_rgba(94,_169,_91,_0)_100%)] p-[3rem] w-full text-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 opacity-1">
-              By shifting from traditional staffing to advanced software
-              solutions, <br /> businesses can reduce costs, enhance efficiency,
-              and focus resources <br /> on growth and innovation.
-            </p>
           </div>
-          <div className=" h-[--sy-227px] w-[1px] bg-white mx-auto mb-[--sy-50px]"></div>
+          <div className=" h-[--sy-227px] w-[1px] bg-white mx-auto mb-[--sy-50px] mt-[--sy-170px]"></div>
           <span className=" text-[--24px] block w-full mx-auto text-center mb-[--sy-50px]">
             Imagine this
           </span>
-          <p className=" font-semibold text-[--36px] text-center mb-[--sy-50px]">
+          <p
+            className=" font-semibold text-[--36px] text-center mb-[--sy-50px]"
+            data-aos="zoom-in"
+          >
             You run a Marketing Agency and have done well for <br /> yourself.
             You have 10 clients that pay a recurring <br /> monthly income of
             $40,000.
           </p>
           <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-80px]"></div>
           <div>
-            <h2 className=" text-center text-[--102px] w-fit mx-auto font-bold uppercase mb-[--sy-40px]">
-              How many employees <br /> do you need?
-            </h2>
-            <span className=" text-[--24px] block w-full mx-auto text-center mb-[--sy-100px]">
-              Keep Scrolling
-            </span>
+            <div className=" mx-auto !w-[clamp(50vw,_67.98vw,_70vw)] !max-w-[clamp(50vw,_67.98vw,_70vw)] overflow-x-scroll mb-[--sy-60px]">
+              <div className=" mx-auto w-fit flex" ref={sliderRef}>
+                <div
+                  className=" w-[clamp(50vw,_67.98vw,_70vw)] shrink-0"
+                  ref={slideRef}
+                >
+                  <h2 className=" text-center text-[--102px] mx-auto font-bold uppercase mb-[--sy-10px]">
+                    How many employees <br /> do you need?
+                  </h2>
+                  <span className=" text-[--24px] block w-full mx-auto text-center mb-[--sy-10px]">
+                    Keep Scrolling
+                  </span>
+                </div>
+                <div className=" mx-auto w-[clamp(50vw,_67.98vw,_70vw)] p-[--10px] shrink-0">
+                  <span className=" rounded-[--8px] px-[--45px] py-[--sy-24px] bg-[#5EA95B] text-[--38px] mb-[--sy-50px] block w-fit">
+                    SEO Specialist
+                  </span>
+                  <p className=" font-bold text-[--38px] mb-[--sy-40px]">
+                    You will need at least 3 SEO specialists:
+                  </p>
+                  <p className="text-[--29px]">
+                    2 for link building and outreach, and another for keyword
+                    research, SEO planning, and all the other stuff.
+                  </p>
+                </div>
+                <div className=" mx-auto w-[clamp(50vw,_67.98vw,_70vw)] p-[--10px] shrink-0">
+                  <span className=" rounded-[--8px] px-[--45px] py-[--sy-24px] bg-[#5EA95B] text-[--38px] mb-[--sy-50px] block w-fit">
+                     Social Media Specialists
+                  </span>
+                  <p className=" font-bold text-[--38px] mb-[--sy-40px]">
+                    You will need at least 3 social media specialists
+                  </p>
+                  <p className="text-[--29px]">
+                    To create a content calendar, write posts, schedule them,
+                    and come up with creative ideas to grow the accounts.
+                  </p>
+                </div>
+                <div className=" mx-auto w-[clamp(50vw,_67.98vw,_70vw)] p-[--10px] shrink-0">
+                  <span className=" rounded-[--8px] px-[--45px] py-[--sy-24px] bg-[#5EA95B] text-[--38px] mb-[--sy-50px] block w-fit">
+                    Graphic Designer
+                  </span>
+                  <p className=" font-bold text-[--38px] mb-[--sy-40px]">
+                    You will need at least 1 graphic designer
+                  </p>
+                  <p className="text-[--29px]">
+                    To create images for your posts and articles for SEO.
+                  </p>
+                </div>
+              </div>
+            </div>
             <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-44px]"></div>
           </div>
           <div>
-            <h2 className=" text-center text-[--102px] w-fit mx-auto font-bold uppercase mb-[--sy-100px]">
+            <h2
+              className=" text-center text-[--102px] w-fit mx-auto font-bold uppercase mb-[--sy-100px]"
+              data-aos="zoom-in"
+            >
               There’s more
             </h2>
-            <div className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[1200px] mb-[--18px]">
-              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] flex-grow-[2]">
+            <div
+              className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[clamp(50vw,_66.5vw,_80vw)] mb-[--18px]"
+              data-aos="zoom-in"
+            >
+              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] w-[clamp(15vw,_19vw,_25vw)]">
                 <div className=" group-hover:px-[--21px] group-hover:border-l-[1px] group-hover:border-l-[#FFFFFB] invisible group-hover:visible h-[--sy-243px] overflow-hidden">
                   <div className=" flex flex-col w-0 group-hover:w-auto overflow-hidden">
                     <span className=" px-[--12px] py-[--sy-50px] border-b-[1px] border-b-[#FFFFFB] ">
@@ -230,7 +553,7 @@ if (selectedNum == 0) {
                   SPECIALIST
                 </div>
               </div>
-              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] flex-grow-[2]">
+              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] w-[clamp(15vw,_19vw,_25vw)]">
                 <div className="text-[--36px] py-[--96px]   bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
                   SOCIAL MEDIA <br />
                   SPECIALIST
@@ -246,7 +569,7 @@ if (selectedNum == 0) {
                   </div>
                 </div>
               </div>
-              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] flex-grow-[2]">
+              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] w-[clamp(15vw,_19vw,_25vw)]">
                 <div className="text-[--36px] py-[--96px]   bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
                   GRAPHIC <br />
                   DESIGNER
@@ -263,7 +586,10 @@ if (selectedNum == 0) {
                 </div>
               </div>
             </div>
-            <div className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[1200px] mb-[--sy-80px]">
+            <div
+              className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[clamp(50vw,_62.5vw,_80vw)] mb-[--sy-80px]"
+              data-aos="zoom-in"
+            >
               <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] flex-grow-[2]">
                 <div className=" group-hover:px-[--21px] group-hover:border-l-[1px] group-hover:border-l-[#FFFFFB] invisible group-hover:visible h-[--sy-243px] overflow-hidden">
                   <div className=" flex flex-col w-0 group-hover:w-auto overflow-hidden">
@@ -316,7 +642,10 @@ if (selectedNum == 0) {
               </div>
             </div>
             <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
-            <div className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] bg-opacity-60 flex mx-auto w-fit mb-[--sy-95px]">
+            <div
+              className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] bg-opacity-60 flex mx-auto w-fit mb-[--sy-95px]"
+              data-aos="zoom-in"
+            >
               <button className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] bg-[#5EA95B6E] rounded-[--30px]">
                 Staff
               </button>
@@ -324,17 +653,26 @@ if (selectedNum == 0) {
                 Teams
               </button>
             </div>
-            <p className=" text-[--128px] w-fit text-center mx-auto">
+            <p
+              className=" text-[--128px] w-fit text-center mx-auto"
+              data-aos="zoom-in"
+            >
               That’s a total of
             </p>
-            <span className=" font-bold text-[--175px] mb-[--sy-118px] block w-fit text-center mx-auto">
+            <span
+              className=" font-bold text-[--175px] mb-[--sy-118px] block w-fit text-center mx-auto"
+              data-aos="zoom-in"
+            >
               $36,000
             </span>
             <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
             <span className=" text-[--24px] mb-[--sy-38px] block w-fit text-center mx-auto">
               That’s not all
             </span>
-            <p className=" text-[--51px] font-bold mb-[--sy-64px] w-fit mx-auto">
+            <p
+              className=" text-[--51px] font-bold mb-[--sy-64px] w-fit mx-auto"
+              data-aos="zoom-in"
+            >
               Pick your Struggle
             </p>
             <div className=" relative mx-auto max-w-[clamp(50vw,_calc(68.5vw_+_0.1rem),_100vw)] mb-[--sy-170px]">
@@ -363,20 +701,34 @@ if (selectedNum == 0) {
               </div>
             </div>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
-            <h2 className=" text-[--102px] uppercase w-fit mx-auto mb-[--sy-100px] font-bold">
+            <div className="mb-[--sy-100px]">
+              <p className=" uppercase w-fit mx-auto text-[--24px]" data-aos="fade-up">About Your Business</p>
+            <h2
+              className=" text-[--102px] uppercase w-fit mx-auto font-bold"
+              data-aos="zoom-in"
+            >
               {" "}
               no one cares
             </h2>
+            <p className=" uppercase w-fit mx-auto text-[--24px]" data-aos="fade-down">As Much As you Do</p>
+
+            </div>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
-            <p className="mb-[--sy-64px] text-[--36px] font-bold w-fit mx-auto text-center">
+            <p
+              className="mb-[--sy-64px] text-[--36px] font-bold w-fit mx-auto text-center"
+              data-aos="zoom-in"
+            >
               You can replace all this with just yourself and <br /> genius, get
               higher quality work in less time than <br /> it would take the 12
               employees combined
             </p>
             <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-80px] "></div>
-            <div className=" w-full mb-[--sy-196px]">
+            <div
+              className=" w-full mb-[--sy-227px] relative"
+              ref={seoSectionRef}
+            >
               <h3 className=" text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
-                SEO module
+                SEO modulesd
               </h3>
               <p className=" text-[--17px] mx-auto w-fit mb-[--sy-40px]">
                 Lorem ipsum dolor sit amet consectetur. Habitant quis turpis.
@@ -384,10 +736,48 @@ if (selectedNum == 0) {
               <Image
                 src={img}
                 alt="SEO Module"
-                className="w-[clamp(30vw,_36.25vw,_40vw)]  mx-auto"
+                className="w-[clamp(30vw,_36.25vw,_40vw)] mx-auto mb-[--sy-40px]"
               />
+              <div className=" flex w-fit mx-auto">
+                <div
+                  className=" flex flex-col gap-y--[--sy-30px] w-[--187px] -translate-y-[50px] opacity-0"
+                  ref={movedParagraphRef1}
+                >
+                  <span className=" font-medium text-[--24px]">How ?</span>
+                  <p className=" text-[--14px]">
+                    Lorem ipsum dolor sit, amet. Odio dolor officiis blanditiis
+                    eveniet perspiciatis dolorum amet odit saepe, placeat
+                    voluptatem, impedit tempora
+                  </p>
+                </div>
+                <div
+                  className=" flex flex-col gap-y--[--sy-30px] w-[--187px] mx-[--29px] -translate-x-[200px] -translate-y-[50px] opacity-0"
+                  ref={movedParagraphRef2}
+                >
+                  <span className=" font-medium text-[--24px]">How ?</span>
+                  <p className=" text-[--14px]">
+                    Lorem ipsum dolor sit, amet. Odio dolor officiis blanditiis
+                    eveniet perspiciatis dolorum amet odit saepe, placeat
+                    voluptatem, impedit tempora
+                  </p>
+                </div>
+                <div
+                  className=" flex flex-col gap-y--[--sy-30px] w-[--187px] -translate-x-[300px] -translate-y-[50px] opacity-0"
+                  ref={movedParagraphRef3}
+                >
+                  <span className=" font-medium text-[--24px]">How ?</span>
+                  <p className=" text-[--14px]">
+                    Lorem ipsum dolor sit, amet. Odio dolor officiis blanditiis
+                    eveniet perspiciatis dolorum amet odit saepe, placeat
+                    voluptatem, impedit tempora
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className=" w-full mb-[--sy-196px]">
+            <div
+              className=" w-full mb-[--sy-196px] relative"
+              ref={seoSectionRef2}
+            >
               <h3 className=" text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
                 SEO module
               </h3>
@@ -397,22 +787,60 @@ if (selectedNum == 0) {
               <Image
                 src={img}
                 alt="SEO Module"
-                className="w-[clamp(30vw,_36.25vw,_40vw)]  mx-auto"
+                className="w-[clamp(30vw,_36.25vw,_40vw)] mx-auto mb-[--sy-40px]"
               />
+              <div className=" flex w-fit mx-auto">
+                <div
+                  className=" flex flex-col gap-y--[--sy-30px] w-[--187px] -translate-y-[50px] opacity-0"
+                  ref={movedParagraphRef12}
+                >
+                  <span className=" font-medium text-[--24px]">How ?</span>
+                  <p className=" text-[--14px]">
+                    Lorem ipsum dolor sit, amet. Odio dolor officiis blanditiis
+                    eveniet perspiciatis dolorum amet odit saepe, placeat
+                    voluptatem, impedit tempora
+                  </p>
+                </div>
+                <div
+                  className=" flex flex-col gap-y--[--sy-30px] w-[--187px] mx-[--29px] -translate-x-[200px] -translate-y-[50px] opacity-0"
+                  ref={movedParagraphRef22}
+                >
+                  <span className=" font-medium text-[--24px]">How ?</span>
+                  <p className=" text-[--14px]">
+                    Lorem ipsum dolor sit, amet. Odio dolor officiis blanditiis
+                    eveniet perspiciatis dolorum amet odit saepe, placeat
+                    voluptatem, impedit tempora
+                  </p>
+                </div>
+                <div
+                  className=" flex flex-col gap-y--[--sy-30px] w-[--187px] -translate-x-[300px] -translate-y-[50px] opacity-0"
+                  ref={movedParagraphRef32}
+                >
+                  <span className=" font-medium text-[--24px]">How ?</span>
+                  <p className=" text-[--14px]">
+                    Lorem ipsum dolor sit, amet. Odio dolor officiis blanditiis
+                    eveniet perspiciatis dolorum amet odit saepe, placeat
+                    voluptatem, impedit tempora
+                  </p>
+                </div>
+              </div>
             </div>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-64px]"></div>
-            <p className="mb-[--sy-64px] text-[--36px] font-extrabold w-fit mx-auto text-center">
+            <p
+              className="mb-[--sy-64px] text-[--36px] font-extrabold w-fit mx-auto text-center"
+              data-aos="zoom-in"
+            >
               Genius doesn't just work for a <br /> marketing agency; it works
               for any <br /> business in the world.
             </p>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-64px]"></div>
-            <div className="py-[--sy-50px] px-[--54px] rounded-[--28px] bg-[#2A2B2A61] max-w-[clamp(50vw,_58.39vw,_65vw)] mx-auto mb-[--sy-251px]">
+            <div className="py-[--sy-50px] px-[--55px] rounded-[--28px] bg-[#2A2B2A61] max-w-[clamp(50vw,_58.39vw,_65vw)] mx-auto mb-[--sy-251px]">
               <div className=" flex justify-between items-center mb-[--sy-64px]">
                 <p className=" text-[--32px] font-extrabold uppercase">
                   Master every department of your <br /> business with Machine
                   genius bundles!
                 </p>
-                <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--22px] font-bold">
+                <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--22px] py-[--sy-22px] px-[--31px] font-bold">
                   Shuffle Business
                 </button>
               </div>
@@ -475,7 +903,10 @@ if (selectedNum == 0) {
             </div>
             <div>
               <div className=" w-fit mx-auto ">
-                <h2 className=" uppercase text-[--60px] font-extrabold mx-auto w-fit text-center mb-[--sy-18px]">
+                <h2
+                  className=" uppercase text-[--60px] font-extrabold mx-auto w-fit text-center mb-[--sy-18px]"
+                  data-aos="zoom-in"
+                >
                   Meet Your New <br /> Business Powerhouse
                 </h2>
                 <div className="relative mb-[--sy-40px]">
@@ -483,17 +914,17 @@ if (selectedNum == 0) {
                     {selectedWheel}
                   </span>
                   <svg
-                  onMouseOver={()=>setLeftArrowHovered(true)}
-                  onMouseLeave={()=>setLeftArrowHovered(false)}
-                    onClick={()=>{
-                      setSelectedNum(prev => {
+                    onMouseOver={() => setLeftArrowHovered(true)}
+                    onMouseLeave={() => setLeftArrowHovered(false)}
+                    onClick={() => {
+                      setSelectedNum((prev) => {
                         if (prev > -3) {
-                          return prev - 1
+                          return prev - 1;
                         } else {
-                        return prev }
-                      })
+                          return prev;
+                        }
+                      });
                       console.log(selectedNum);
-                      
                     }}
                     className=" absolute left-0 top-1/2 -translate-y-1/2 translate-x-full w-[--14px] cursor-pointer"
                     viewBox="0 0 14 27"
@@ -507,14 +938,17 @@ if (selectedNum == 0) {
                     />
                   </svg>
                   <svg
-                  onMouseOver={()=>setRightArrowHovered(true)}
-                  onMouseLeave={()=>setRightArrowHovered(false)}
-                    onClick={()=>setSelectedNum((prev) => {
-                      if (prev < 1) {
-                        return prev + 1
-                      } else {
-                      return prev}
-                    })}
+                    onMouseOver={() => setRightArrowHovered(true)}
+                    onMouseLeave={() => setRightArrowHovered(false)}
+                    onClick={() =>
+                      setSelectedNum((prev) => {
+                        if (prev < 1) {
+                          return prev + 1;
+                        } else {
+                          return prev;
+                        }
+                      })
+                    }
                     className=" absolute right-0 top-1/2 -translate-y-1/2 -translate-x-full w-[--14px] cursor-pointer"
                     viewBox="0 0 14 27"
                     fill="none"
@@ -534,8 +968,14 @@ if (selectedNum == 0) {
                   sociis.
                 </p>
               </div>
-              <div className=" w-full  overflow-hidden pt-40">
-                <div className=" w-full relative">
+              <div className=" w-full  overflow-hidden pt-40 h-[clamp(44vh,_65vh,_70vh)] relative">
+                <div
+                  className=" absolute inset-0 z-10"
+                  style={{
+                    backgroundImage: `linear-gradient(0deg, ${wheelColor} 0%, rgba(42, 43, 42, 0) 90%)`,
+                  }}
+                ></div>
+                <div className=" w-full relative z-20">
                   <svg
                     className=" w-full"
                     viewBox="0 0 2087 2086"
@@ -610,7 +1050,7 @@ if (selectedNum == 0) {
                     </defs>
                   </svg>
                   <div
-                    className=" absolute w-[clamp(90vw,_110.625vw,_3000px)] h-[clamp(90vw,_110.625vw,_3000px)] rounded-full border-[2px] border-[#FFFFFB] top-0 left-1/2"
+                    className=" absolute w-[clamp(90vw,_116.625vw,_5000px)] h-[clamp(90vw,_116.625vw,_5000px)] rounded-full border-[2px] border-[#FFFFFB] -top-[--sy-35px] left-1/2"
                     style={{
                       transform: `translateX(-50%) ${
                         selectedWheel == "hr"
