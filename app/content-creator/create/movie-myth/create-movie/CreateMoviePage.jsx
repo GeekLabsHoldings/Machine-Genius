@@ -102,7 +102,7 @@ const CreateMovie = () => {
 
     return () => {
       if (video) {
-        // video.removeEventListener("timeupdate", handleTimeUpdate);
+        video.removeEventListener("timeupdate", handleTimeUpdate);
       }
     };
   }, [videoRef]);
@@ -246,9 +246,9 @@ const CreateMovie = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(selectedText);
-  }, [selectedText]);
+  // useEffect(() => {
+  //   console.log(selectedText);
+  // }, [selectedText]);
 
   if (IsLoading) {
     return (
