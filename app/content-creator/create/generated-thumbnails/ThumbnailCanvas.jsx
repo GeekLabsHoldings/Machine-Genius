@@ -311,7 +311,7 @@ export default function ThumbnailCanvas() {
         searchImgLoading: true,
       }));
       const res = await fetch(
-        `https://machine-genius.onrender.com/content-creation/get-images`,
+        `https://api.machinegenius.io/content-creation/get-images`,
         {
           method: "POST",
           headers: {

@@ -11,20 +11,22 @@ import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 const MovieMyth = () => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [uploadPercentage, setUploadPercentage] = useState(0);
   const { setEditContentData, presignedURLData, setPresignedURLData } =
     useContext(contentCreatorContext);
 
   const [pageState, setPageState] = useState<{
-    triggerUploadVideo: boolean;
+    uploadVideoLoading: boolean;
+    transcriptAudioLoading: boolean;
     triggerTranscriptAudio: boolean;
   }>({
-    triggerUploadVideo: false,
+    uploadVideoLoading: false,
+    transcriptAudioLoading: false,
     triggerTranscriptAudio: false,
   });
+
+  const [error, setError] = useState<string | null>(null);
 
   // reset all the data
   useEffect(() => {
@@ -58,9 +60,9 @@ const MovieMyth = () => {
 
   // ===== 02. upload video =====
   async function uploadVideo(file: File) {
-    const baseURL = await getPresignedURL();
-    setIsLoading(true);
-    setError(null);
+    const getPresignedURLData = await getPresignedURL();
+    setPageState((prev) => ({ ...prev, uploadVideoLoading: true }));
+    // setError(null);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/octet-stream");
 
@@ -72,7 +74,10 @@ const MovieMyth = () => {
     };
 
     try {
-      const response = await fetch(baseURL.preSignedURL, requestOptions);
+      const response = await fetch(
+        getPresignedURLData.preSignedURL,
+        requestOptions
+      );
       if (response.ok) {
         console.log("Upload successful");
         setPageState((prev) => ({ ...prev, triggerTranscriptAudio: true }));
@@ -88,12 +93,13 @@ const MovieMyth = () => {
       setError(error?.message);
       console.error("Error in uploadVideo:", error);
     } finally {
-      setIsLoading(false);
+      setPageState((prev) => ({ ...prev, uploadVideoLoading: false }));
     }
   }
 
   // ===== 03. transcript-audio =====
   async function transcriptAudio() {
+    setPageState((prev) => ({ ...prev, transcriptAudioLoading: true }));
     try {
       const res = await fetch(
         `https://api.machinegenius.io/content-creation/transcript-audio`,
@@ -115,11 +121,13 @@ const MovieMyth = () => {
         dispatch(contentCreatorActions.setVideoTranscription(json));
         router.replace("/content-creator/create/movie-myth/create-movie");
       } else {
-        toast.error("Something went wrong! Error transcriptAudio");
+        toast.error("Something went wrong! Contact backend department");
+        setPageState((prev) => ({ ...prev, transcriptAudioLoading: false }));
       }
     } catch (error) {
-      toast.error("Something went wrong! Error transcriptAudio");
+      toast.error("Something went wrong! Contact backend department");
       console.error("Error transcriptAudio:", error);
+      setPageState((prev) => ({ ...prev, transcriptAudioLoading: false }));
     }
   }
 
@@ -137,30 +145,35 @@ const MovieMyth = () => {
     }
   }, [pageState.triggerTranscriptAudio]);
 
+  if (pageState.uploadVideoLoading || pageState.transcriptAudioLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={true}
+          textNeeded="Hold on tight."
+          title={
+            pageState.uploadVideoLoading
+              ? "Genius is uploading your video..."
+              : "Genius is transcribing your video..."
+          }
+        />
+        {/* <div className="mt-4"> */}
+        {/* Upload Progress: {uploadPercentage.toFixed(2)}% */}
+        {/* </div> */}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full">
-      {isLoading ? (
-        <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={true}
-            textNeeded="Hold on tight."
-            title="Genius is uploading your video..."
-          />
-          <div className="mt-4">
-            Upload Progress: {uploadPercentage.toFixed(2)}%
-          </div>
+      <div className="flex flex-col justify-center items-center w-[40vw] min-w-[30rem] mx-auto h-[75vh] py-[1.5vw]">
+        <label className={styles.select_label}>Upload Movie</label>
+        <div className={"w-full flex " + styles.uploud_movie}>
+          <input type="file" accept="video/*" onChange={handleFileChange} />
         </div>
-      ) : (
-        <>
-          <div className="flex flex-col justify-center items-center w-[40vw] min-w-[30rem] mx-auto h-[75vh] py-[1.5vw]">
-            <label className={styles.select_label}>Upload Movie</label>
-            <div className={"w-full flex " + styles.uploud_movie}>
-              <input type="file" accept="video/*" onChange={handleFileChange} />
-            </div>
-            {error && <div className="text-red-500 mt-2">{error}</div>}
-          </div>
-        </>
-      )}
+        {error && <div className="text-red-500 mt-2">{error}</div>}
+      </div>
+
       <div className="flex justify-start items-center">
         <CustomBtn
           word="Back"
