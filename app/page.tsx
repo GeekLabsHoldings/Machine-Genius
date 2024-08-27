@@ -17,43 +17,208 @@ export default function Home() {
 
   const [leftArrowHovered, setLeftArrowHovered] = useState(false);
   const [rightArrowHovered, setRightArrowHovered] = useState(false);
+  const [trick, setTrick] = useState(false);
+  const [counter, setCounter] = useState(0);
 
   // Register the ScrollTrigger plugin
   if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, useGSAP);
   }
 
+  const infoCard = useRef(null);
+  const infoCard2 = useRef(null);
+  const cardsss = useRef(null);
+  const sectionRef = useRef(null);
+  const triggerRef = useRef(null);
+  const staffMoveRight = useRef(null);
+  const staffMoveLeft = useRef(null);
+  const counterWrapperRef = useRef(null);
+  const seoSectionRef = useRef(null);
+  const movedParagraphRef1 = useRef(null);
+  const movedParagraphRef2 = useRef(null);
+  const movedParagraphRef3 = useRef(null);
+  const seoSectionRef2 = useRef(null);
+  const movedParagraphRef12 = useRef(null);
+  const movedParagraphRef22 = useRef(null);
+  const movedParagraphRef32 = useRef(null);
   const staffRef = useRef(null);
   const logoRef = useRef(null);
   const paragraphRef = useRef(null);
   const hiddenParagraphRef = useRef(null);
-  const movedParagraphRef1 = useRef(null);
-  const movedParagraphRef2 = useRef(null);
-  const movedParagraphRef3 = useRef(null);
-  const seoSectionRef = useRef(null);
-  const movedParagraphRef12 = useRef(null);
-  const movedParagraphRef22 = useRef(null);
-  const movedParagraphRef32 = useRef(null);
-  const seoSectionRef2 = useRef(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const slideRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    AOS.init();
-    console.log(seoSectionRef.current);
+  // useGSAP(() => {
+  //   if (!infoCard.current) return;
 
-    if (!seoSectionRef.current) {
-      return;
-    }
+  //   const movingBesideCard1 = gsap.to(infoCard.current, {
+  //     left: "-45%",
+  //     duration: 1,
+  //     scrollTrigger: {
+  //       trigger: cardsss.current,
+  //       start: "top+=1500px 50%",
+  //       end: "top+=1500px 20%",
+  //     },
+  //   });
+
+  //   return () => {
+  //     movingBesideCard1.kill();
+  //     movingBesideCard1.scrollTrigger?.kill();
+  //   };
+  // }, []);
+
+  useGSAP(() => {
+    if (!sectionRef.current || !triggerRef.current) return;
+
+    const pinning = gsap.fromTo(
+      sectionRef.current,
+      { translateX: "-14vw" },
+      {
+        translateX: "-300vw",
+        ease: "none",
+        duration: 50,
+        scrollTrigger: {
+          trigger: triggerRef.current,
+          start: "top top",
+          end: "2000 center",
+          scrub: 10,
+          pin: true,
+          onLeave: () => {
+            AOS.init();
+            // if (infoCard2.current) {
+            //   const movingBesideCard2 = gsap.to(infoCard2.current, {
+            //     left: "150%",
+            //     duration: 1,
+            //     scrollTrigger: {
+            //       trigger: cardsss.current,
+            //       start: "top 30%",
+            //       end: "top 20%",
+            //       markers: true,
+            //     },
+            //   });
+
+            //   return () => {
+            //     movingBesideCard2.kill();
+            //     movingBesideCard2.scrollTrigger?.kill();
+            //   };
+            // }
+            if (infoCard.current && infoCard2.current) {
+              const movingBesideCard1 = gsap.to(infoCard.current, {
+                left: "-45%",
+                duration: 1,
+                scrollTrigger: {
+                  trigger: cardsss.current,
+                  start: "top 30%",
+                  end: "top 20%",
+                  markers:true
+                },
+              });
+              const movingBesideCard2 = gsap.to(infoCard2.current, {
+                left: "150%",
+                duration: 1,
+                scrollTrigger: {
+                  trigger: cardsss.current,
+                  start: "top 30%",
+                  end: "top 20%",
+                  markers: true,
+                },
+              });
+
+              return () => {
+                movingBesideCard1.kill();
+                movingBesideCard1.scrollTrigger?.kill();
+                movingBesideCard2.kill();
+                movingBesideCard2.scrollTrigger?.kill();
+              };
+            }
+          },
+        },
+      }
+    );
+
+    return () => {
+      pinning.kill();
+      pinning.scrollTrigger?.kill();
+    };
+  }, []);
+
+  useGSAP(() => {
+    if (!staffMoveRight.current) return;
+
+    const staffRight = gsap.to(staffMoveRight.current, {
+      left: "145%",
+      opacity: 1,
+      scrollTrigger: {
+        trigger: staffMoveRight.current,
+        scrub: true,
+        start: "10px center",
+        end: "10px 40%",
+      },
+    });
+
+    return () => {
+      staffRight.kill();
+      staffRight.scrollTrigger?.kill();
+    };
+  }, []);
+
+  useGSAP(() => {
+    if (!staffMoveLeft.current) return;
+
+    const staffLeft = gsap.to(staffMoveLeft.current, {
+      left: "-45%",
+      opacity: 1,
+      scrollTrigger: {
+        trigger: staffMoveRight.current,
+        scrub: true,
+        start: "10px center",
+        end: "10px 40%",
+      },
+    });
+
+    return () => {
+      staffLeft.kill();
+      staffLeft.scrollTrigger?.kill();
+    };
+  }, []);
+
+  useGSAP(() => {
+    if (!counterWrapperRef.current) return;
+
+    const increaseCounter = gsap.to(counterWrapperRef.current, {
+      scrollTrigger: {
+        trigger: counterWrapperRef.current,
+        start: "1600 80%",
+        markers: true,
+        onUpdate: () => {
+          const increase = setInterval(() => {
+            setCounter((prev) => {
+              if (prev >= 3600) {
+                clearInterval(increase);
+                return prev;
+              }
+              return prev + 10;
+            });
+          }, 3);
+        },
+      },
+    });
+
+    return () => {
+      increaseCounter.kill();
+      increaseCounter.scrollTrigger?.kill();
+    };
+  }, []);
+
+  useGSAP(() => {
+    if (!seoSectionRef.current) return;
+
     const scaleAndMoving1 = gsap.to(movedParagraphRef1.current, {
       translateX: "0",
       translateY: "0",
       opacity: "1",
       scrollTrigger: {
         trigger: seoSectionRef.current,
-        start: "top 30%",
-        end: "bottom 90%",
-        // markers: true,
+        start: "top+=1400 75%",
+        end: "top+=1400 15%",
         scrub: 0.1,
       },
     });
@@ -63,9 +228,8 @@ export default function Home() {
       opacity: "1",
       scrollTrigger: {
         trigger: seoSectionRef.current,
-        start: "top 30%",
-        end: "bottom 90%",
-        // markers: true,
+        start: "top+=1400 75%",
+        end: "top+=1400 15%",
         scrub: 0.1,
       },
     });
@@ -75,9 +239,8 @@ export default function Home() {
       opacity: "1",
       scrollTrigger: {
         trigger: seoSectionRef.current,
-        start: "top 30%",
-        end: "bottom 90%",
-        // markers: true,
+        start: "top+=1400 75%",
+        end: "top+=1400 15%",
         scrub: 0.1,
       },
     });
@@ -85,28 +248,35 @@ export default function Home() {
       scale: 1.3,
       scrollTrigger: {
         trigger: seoSectionRef.current,
-        start: "top 65%",
-        end: "bottom 65%",
-        // markers: true,
+        start: "top+=1400 90%",
+        end: "top+=1400 10%",
         scrub: 0.1,
       },
     });
-  }, []);
-  useEffect(() => {
-    console.log(seoSectionRef2.current);
 
-    if (!seoSectionRef2.current) {
-      return;
-    }
+    return () => {
+      seoSectionscaled.kill();
+      scaleAndMoving3.kill();
+      scaleAndMoving2.kill();
+      scaleAndMoving1.kill();
+      seoSectionscaled.scrollTrigger?.kill();
+      scaleAndMoving3.scrollTrigger?.kill();
+      scaleAndMoving2.scrollTrigger?.kill();
+      scaleAndMoving1.scrollTrigger?.kill();
+    };
+  }, []);
+
+  useGSAP(() => {
+    if (!seoSectionRef2.current) return;
+
     const scaleAndMoving12 = gsap.to(movedParagraphRef12.current, {
       translateX: "0",
       translateY: "0",
       opacity: "1",
       scrollTrigger: {
         trigger: seoSectionRef2.current,
-        start: "top 30%",
-        end: "bottom 90%",
-        // markers: true,
+        start: "top+=1400 75%",
+        end: "top+=1400 15%",
         scrub: 0.1,
       },
     });
@@ -116,9 +286,8 @@ export default function Home() {
       opacity: "1",
       scrollTrigger: {
         trigger: seoSectionRef2.current,
-        start: "top 30%",
-        end: "bottom 90%",
-        // markers: true,
+        start: "top+=1400 75%",
+        end: "top+=1400 15%",
         scrub: 0.1,
       },
     });
@@ -128,9 +297,8 @@ export default function Home() {
       opacity: "1",
       scrollTrigger: {
         trigger: seoSectionRef2.current,
-        start: "top 30%",
-        end: "bottom 90%",
-        // markers: true,
+        start: "top+=1400 75%",
+        end: "top+=1400 15%",
         scrub: 0.1,
       },
     });
@@ -138,36 +306,51 @@ export default function Home() {
       scale: 1.3,
       scrollTrigger: {
         trigger: seoSectionRef2.current,
-        start: "top 65%",
-        end: "bottom 65%",
-        // markers: true,
+        start: "top+=1400 90%",
+        end: "top+=1400 10%",
         scrub: 0.1,
+        // markers:true
       },
     });
+
+    return () => {
+      seoSectionscaled2.kill();
+      scaleAndMoving32.kill();
+      scaleAndMoving22.kill();
+      scaleAndMoving12.kill();
+      seoSectionscaled2.scrollTrigger?.kill();
+      scaleAndMoving32.scrollTrigger?.kill();
+      scaleAndMoving22.scrollTrigger?.kill();
+      scaleAndMoving12.scrollTrigger?.kill();
+    };
   }, []);
 
-  useEffect(() => {
-    console.log(staffRef.current, logoRef.current, paragraphRef.current);
+  useGSAP(() => {
+    if (!staffRef.current || !logoRef.current || !paragraphRef.current) return;
 
-    if (!staffRef.current) return;
     const logoMove = gsap.to(logoRef.current, {
-      translateY: "-255px",
-      translateX: "-375px",
+      top: "3.5%",
+      left: "12%",
       scale: "1",
       ease: "none",
-      // duration: 1,
       scrollTrigger: {
         trigger: staffRef.current,
         start: "top 99%",
         end: "top bottom",
-        // markers: true,
         scrub: 0.1,
         pin: true,
       },
     });
+
+    return () => {
+      logoMove.kill();
+      logoMove.scrollTrigger?.kill();
+    };
   }, []);
-  useEffect(() => {
+
+  useGSAP(() => {
     if (!paragraphRef.current) return;
+
     const paragraphMove = gsap.to(paragraphRef.current, {
       gap: "clamp(18vh, 20vh, 30vh)",
       ease: "none",
@@ -176,9 +359,7 @@ export default function Home() {
         trigger: paragraphRef.current,
         start: "top 80%",
         end: "top 20%",
-        // markers: true,
         scrub: true,
-        // pin: true,
       },
     });
     const hiddenParagraphMove = gsap.to(hiddenParagraphRef.current, {
@@ -190,12 +371,39 @@ export default function Home() {
         trigger: paragraphRef.current,
         start: "top 60%",
         end: "top 20%",
-        // markers: true,
         scrub: true,
-        // pin: true,
       },
     });
+
+    return () => {
+      paragraphMove.kill();
+      hiddenParagraphMove.kill();
+      paragraphMove.scrollTrigger?.kill();
+      hiddenParagraphMove.scrollTrigger?.kill();
+    };
   }, []);
+
+  // useGSAP(() => {
+  //   if (!infoCard2.current) {
+  //     return;
+  //   }
+  //   const movingBesideCard2 = gsap.to(infoCard2.current, {
+  //     left: "150%",
+  //     duration: 1,
+  //     scrollTrigger: {
+  //       trigger: infoCard2.current,
+  //       start: "top+=1200px 50%",
+  //       end: "top+=1200px 20%",
+  //       markers: true,
+  //     },
+  //   });
+  //   return () => {
+  //     {
+  //       /* A return function for killing the animation on component unmount */
+  //     }
+  //     movingBesideCard2.kill();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (selectedNum == 0) {
@@ -217,7 +425,7 @@ export default function Home() {
   }, [selectedNum]);
   return (
     <>
-      <div className=" w-full relative overflow-x-clip text-[#FFFFFB] bg-[linear-gradient(180deg,_#2A2B2A_35%,_#5ea95bbd_100%)]">
+      <div className=" w-full relative overflow-x-hidden text-[#FFFFFB] bg-[linear-gradient(180deg,_#2A2B2A_35%,_#5ea95bbd_100%)]">
         <Link
           href={"/"}
           className=" fixed top-1/3 translate-y-1/4 left-1/4 -translate-x-2/3 scale-[3] cursor-pointer z-[999]"
@@ -287,7 +495,7 @@ export default function Home() {
             />
           </svg>
         </Link>
-        <div className="px-[--98px] flex justify-between items-center left-0 right-0 fixed top-[56px] z-50">
+        <div className="px-[--98px] flex justify-between items-center left-0 right-0 fixed top-[4%] z-[50000]">
           <Link href={"/"} className=" invisible">
             <svg
               className=" w-[--128px]"
@@ -353,7 +561,7 @@ export default function Home() {
               />
             </svg>
           </Link>
-          <ul className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] flex">
+          <ul className=" rounded-[--58px] p-[--6px] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 bg-[#272727] border border-gray-200 border-opacity-40 flex ">
             <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
               <Link href={"/"}>Home</Link>
             </li>
@@ -370,7 +578,7 @@ export default function Home() {
               <Link href={"/blog"}>Blog</Link>
             </li>
           </ul>
-          <div className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] flex">
+          <div className=" rounded-[--58px] p-[--6px] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 border bg-[#272727] border-gray-200 border-opacity-40 flex">
             <Link
               href={"signin"}
               className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] bg-[#2A2B2A] rounded-[--30px] border-[1px] border-[#fffffb]"
@@ -385,9 +593,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className=" absolute  -right-1/4 -top-[clamp(45vh,_50.93vh,_60vh)]">
+        <div className=" absolute  -right-1/4 -top-[clamp(45vh,_70.93vh,_100vh)]">
           <svg
-            className=" w-[clamp(30vw,_calc(68.333vw_+_0.1rem),_140vw)] h-[clamp(30vw,_calc(68.333vw_+_0.1rem),_140vw)] animate-rotateRight"
+            className=" w-[clamp(30vw,_calc(78.333vw_+_0.1rem),_140vw)] h-[clamp(30vw,_calc(78.333vw_+_0.1rem),_140vw)] animate-rotateRight"
             viewBox="0 0 1128 1114"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -425,7 +633,7 @@ export default function Home() {
               fill="#E9313E"
             />
           </svg>
-          <span className="text-[--58px] font-bold absolute left-1/2 -translate-x-2/3 top-1/2 translate-y-full">
+          <span className="text-[--58px] font-bold absolute left-1/2 -translate-x-[55%] top-1/2 translate-y-full">
             Lorem Epsum
           </span>
         </div>
@@ -451,75 +659,88 @@ export default function Home() {
               </p>
               <p
                 ref={hiddenParagraphRef}
-                className="opacity-0 text-[--23px] bg-[radial-gradient(closest-side,_rgba(94,_169,_91,_.4)_0%,_rgba(94,_169,_91,_0)_100%)] p-[3rem] w-full text-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 opacity-1"
+                className="opacity-0 text-[--23px] bg-[radial-gradient(closest-side,_rgba(94,_169,_91,_.4)_0%,_rgba(94,_169,_91,_0)_100%)] p-[3rem] w-full text-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 "
               >
                 By shifting from traditional staffing to advanced software
                 solutions, <br /> businesses can reduce costs, enhance
                 efficiency, and focus resources <br /> on growth and innovation.
               </p>
+              <div
+                className=" font-bold text-[--60px] uppercase text-center w-fit absolute top-1/2 left-[89%] -translate-y-1/2 -translate-x-1/2 opacity-0"
+                ref={staffMoveRight}
+              >
+                <p className="text-[--60px] text-nowrap">Start your</p>
+                <p className="text-[--60px] text-nowrap">new business</p>
+              </div>
+              <div
+                className=" font-bold  uppercase text-center w-fit absolute top-1/2 left-[11%] -translate-y-1/2 -translate-x-1/2 opacity-0 "
+                ref={staffMoveLeft}
+              >
+                <p className="text-[--60px] text-nowrap">Start your</p>
+                <p className="text-[--60px] text-nowrap">new business</p>
+              </div>
             </div>
           </div>
           <div className=" h-[--sy-227px] w-[1px] bg-white mx-auto mb-[--sy-50px] mt-[--sy-170px]"></div>
           <span className=" text-[--24px] block w-full mx-auto text-center mb-[--sy-50px]">
             Imagine this
           </span>
-          <p
-            className=" font-semibold text-[--36px] text-center mb-[--sy-50px]"
-            data-aos="zoom-in"
-          >
+          <p className=" font-semibold text-[--36px] text-center mb-[--sy-50px]">
             You run a Marketing Agency and have done well for <br /> yourself.
             You have 10 clients that pay a recurring <br /> monthly income of
             $40,000.
           </p>
-          <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-80px]"></div>
+          <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-10px]"></div>
           <div>
-            <div className=" mx-auto !w-[clamp(50vw,_67.98vw,_70vw)] !max-w-[clamp(50vw,_67.98vw,_70vw)] overflow-x-scroll mb-[--sy-60px]">
-              <div className=" mx-auto w-fit flex" ref={sliderRef}>
+            <div className="scroll-section-outer !duration-0 mx-[--291px] overflow-hidden">
+              <div ref={triggerRef} className="!duration-0 overflow-hidden">
                 <div
-                  className=" w-[clamp(50vw,_67.98vw,_70vw)] shrink-0"
-                  ref={slideRef}
+                  ref={sectionRef}
+                  className="scroll-section-inner !duration-0 overflow-hidden"
                 >
-                  <h2 className=" text-center text-[--102px] mx-auto font-bold uppercase mb-[--sy-10px]">
-                    How many employees <br /> do you need?
-                  </h2>
-                  <span className=" text-[--24px] block w-full mx-auto text-center mb-[--sy-10px]">
-                    Keep Scrolling
-                  </span>
-                </div>
-                <div className=" mx-auto w-[clamp(50vw,_67.98vw,_70vw)] p-[--10px] shrink-0">
-                  <span className=" rounded-[--8px] px-[--45px] py-[--sy-24px] bg-[#5EA95B] text-[--38px] mb-[--sy-50px] block w-fit">
-                    SEO Specialist
-                  </span>
-                  <p className=" font-bold text-[--38px] mb-[--sy-40px]">
-                    You will need at least 3 SEO specialists:
-                  </p>
-                  <p className="text-[--29px]">
-                    2 for link building and outreach, and another for keyword
-                    research, SEO planning, and all the other stuff.
-                  </p>
-                </div>
-                <div className=" mx-auto w-[clamp(50vw,_67.98vw,_70vw)] p-[--10px] shrink-0">
-                  <span className=" rounded-[--8px] px-[--45px] py-[--sy-24px] bg-[#5EA95B] text-[--38px] mb-[--sy-50px] block w-fit">
-                     Social Media Specialists
-                  </span>
-                  <p className=" font-bold text-[--38px] mb-[--sy-40px]">
-                    You will need at least 3 social media specialists
-                  </p>
-                  <p className="text-[--29px]">
-                    To create a content calendar, write posts, schedule them,
-                    and come up with creative ideas to grow the accounts.
-                  </p>
-                </div>
-                <div className=" mx-auto w-[clamp(50vw,_67.98vw,_70vw)] p-[--10px] shrink-0">
-                  <span className=" rounded-[--8px] px-[--45px] py-[--sy-24px] bg-[#5EA95B] text-[--38px] mb-[--sy-50px] block w-fit">
-                    Graphic Designer
-                  </span>
-                  <p className=" font-bold text-[--38px] mb-[--sy-40px]">
-                    You will need at least 1 graphic designer
-                  </p>
-                  <p className="text-[--29px]">
-                    To create images for your posts and articles for SEO.
-                  </p>
+                  <div className="scroll-section !h-[--sy-380px] !duration-0 flex-col">
+                    <h3 className=" text-[--90px] font-bold text-center uppercase">
+                      How many employees <br /> do you need?
+                    </h3>
+                    <p className=" text-[--24px] w-fit mx-auto">
+                      Keep Scrolling
+                    </p>
+                  </div>
+                  <div className="scroll-section !h-[--sy-380px] !duration-0">
+                    <span className=" text-[--39px] font-bold px-[--45px] py-[--sy-24px] bg-[#5EA95B] rounded-[--7px] mb-[--sy-50px] w-fit">
+                      SEO Specialists
+                    </span>
+                    <p className=" text-[--39px] font-bold mb-[--sy-40px]">
+                      You will need at least 3 SEO specialists:
+                    </p>
+                    <p className=" text-[--29px]  mb-[--sy-40px]">
+                      2 for link building and outreach, and another for keyword
+                      research, SEO planning, and all the other stuff.
+                    </p>
+                  </div>
+                  <div className="scroll-section !h-[--sy-380px] !duration-0">
+                    <span className=" text-[--39px] font-bold px-[--45px] py-[--sy-24px] bg-[#5EA95B] rounded-[--7px] mb-[--sy-50px] w-fit">
+                      Social Media Specialists
+                    </span>
+                    <p className=" text-[--39px] font-bold mb-[--sy-40px]">
+                      You will need at least 3 social media specialists
+                    </p>
+                    <p className=" text-[--29px]  mb-[--sy-40px]">
+                      To create a content calendar, write posts, schedule them,
+                      and come up with creative ideas to grow the accounts.
+                    </p>
+                  </div>
+                  <div className="scroll-section !h-[--sy-380px] !duration-0">
+                    <span className=" text-[--39px] font-bold px-[--45px] py-[--sy-24px] bg-[#5EA95B] rounded-[--7px] mb-[--sy-50px] w-fit">
+                      Graphic Designer
+                    </span>
+                    <p className=" text-[--39px] font-bold mb-[--sy-40px]">
+                      You will need at least 1 graphic designer
+                    </p>
+                    <p className=" text-[--29px]  mb-[--sy-40px]">
+                      To create images for your posts and articles for SEO.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -533,10 +754,16 @@ export default function Home() {
               There’s more
             </h2>
             <div
-              className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[clamp(50vw,_66.5vw,_80vw)] mb-[--18px]"
+              className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[clamp(50vw,_62.5vw,_80vw)] mb-[--18px]"
               data-aos="zoom-in"
             >
-              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] w-[clamp(15vw,_19vw,_25vw)]">
+              <div
+                onMouseOver={() => setTrick(true)}
+                onMouseLeave={() => setTrick(false)}
+                className={`" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] ${
+                  trick ? "flex-grow-[2]" : "w-[calc(33.333%_-_var(--18px))]"
+                }`}
+              >
                 <div className=" group-hover:px-[--21px] group-hover:border-l-[1px] group-hover:border-l-[#FFFFFB] invisible group-hover:visible h-[--sy-243px] overflow-hidden">
                   <div className=" flex flex-col w-0 group-hover:w-auto overflow-hidden">
                     <span className=" px-[--12px] py-[--sy-50px] border-b-[1px] border-b-[#FFFFFB] ">
@@ -547,14 +774,20 @@ export default function Home() {
                     </span>
                   </div>
                 </div>
-                <div className="text-[--36px] py-[--96px]   bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
+                <div className="text-[--36px] h-[clamp(20vh,_28vh,_35vh)] flex justify-center items-center bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
                   SEO
                   <br />
                   SPECIALIST
                 </div>
               </div>
-              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] w-[clamp(15vw,_19vw,_25vw)]">
-                <div className="text-[--36px] py-[--96px]   bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
+              <div
+                onMouseOver={() => setTrick(true)}
+                onMouseLeave={() => setTrick(false)}
+                className={` flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] ${
+                  trick ? "flex-grow-[2]" : "w-[calc(33.333%_-_var(--18px))]"
+                }`}
+              >
+                <div className="text-[--36px] h-[clamp(20vh,_28vh,_35vh)] flex justify-center items-center bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
                   SOCIAL MEDIA <br />
                   SPECIALIST
                 </div>
@@ -569,8 +802,14 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] w-[clamp(15vw,_19vw,_25vw)]">
-                <div className="text-[--36px] py-[--96px]   bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
+              <div
+                onMouseOver={() => setTrick(true)}
+                onMouseLeave={() => setTrick(false)}
+                className={` flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] flex-grow-[2] ${
+                  trick ? "flex-grow-[2]" : "w-[calc(33.333%_-_var(--18px))]"
+                }`}
+              >
+                <div className="text-[--36px] h-[clamp(20vh,_28vh,_35vh)] flex justify-center items-center bg-[#FFFFFB38] rounded-[--18px] text-center group-hover:bg-[#5EA95B] flex-grow-[2]">
                   GRAPHIC <br />
                   DESIGNER
                 </div>
@@ -662,8 +901,9 @@ export default function Home() {
             <span
               className=" font-bold text-[--175px] mb-[--sy-118px] block w-fit text-center mx-auto"
               data-aos="zoom-in"
+              ref={counterWrapperRef}
             >
-              $36,000
+              ${counter}
             </span>
             <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
             <span className=" text-[--24px] mb-[--sy-38px] block w-fit text-center mx-auto">
@@ -675,8 +915,11 @@ export default function Home() {
             >
               Pick your Struggle
             </p>
-            <div className=" relative mx-auto max-w-[clamp(50vw,_calc(68.5vw_+_0.1rem),_100vw)] mb-[--sy-170px]">
-              <div className="py-[--sy-29px]  px-[--50px] shadow-[0px_-16.72px_29.48px_0px_#00000047] bg-[#FFFFFB38] group relative hover:z-10 hover:bg-[#5EA95B] h-[clamp(40vh,_calc(52.37vh_+_0.1rem),_70vh)] hover:-translate-y-[--sy-40px] rounded-[--27px]">
+            <div
+              className=" relative mx-auto w-[clamp(150px,_calc(38.278vw_+_0.1rem),_4000px)] mb-[--sy-170px] z-[80]"
+              ref={cardsss}
+            >
+              <div className="py-[--sy-29px]  px-[--50px] shadow-[0px_-16.72px_29.48px_0px_#00000047] z-[80] bg-[#666664] group relative hover:z-10 hover:bg-[#5EA95B] h-[clamp(40vh,_calc(52.37vh_+_0.1rem),_70vh)] hover:-translate-y-[--sy-40px] rounded-[--27px]">
                 <p className=" text-[--36px] font-extrabold text-[#2A2B2A7D] ml-auto w-fit group-hover:text-white mb-20">
                   NON-US BASED <br /> FREELANCERS
                 </p>
@@ -687,7 +930,7 @@ export default function Home() {
                   earum numquam quibusdam, nobis voluptate hic.
                 </p>
               </div>
-              <div className="absolute top-[clamp(10vh,_calc(14vh_+_0.1rem),_40vh)] py-[--sy-29px] px-[--50px] inset-0 bg-[#92AF8E] group hover:bg-[#5EA95B] shadow-[0px_-16.72px_29.48px_0px_#00000047] h-[clamp(40vh,_calc(52.37vh_+_0.1rem),_70vh)] hover:-translate-y-[--sy-40px] rounded-[--27px]">
+              <div className="absolute top-[clamp(10vh,_calc(14vh_+_0.1rem),_40vh)] z-[80] py-[--sy-29px] px-[--50px] inset-0 bg-[#92AF8E] group hover:bg-[#5EA95B] shadow-[0px_-16.72px_29.48px_0px_#00000047] h-[clamp(40vh,_calc(52.37vh_+_0.1rem),_70vh)] hover:-translate-y-[--sy-40px] rounded-[--27px]">
                 <p className=" text-[--36px] font-extrabold text-white ml-auto w-fit group-hover:text-white mb-20">
                   IN HOUSE <br />
                   DESIGNERS
@@ -699,19 +942,40 @@ export default function Home() {
                   earum numquam quibusdam, nobis voluptate hic.
                 </p>
               </div>
+              <span
+                className=" top-1/3 left-1/2 -translate-x-1/2 translate-y-1/2  z-[5] absolute text-[--220px] font-bold text-nowrap text-[#7e7e7e]"
+                ref={infoCard}
+              >
+                $1800
+              </span>
+              <span
+                className=" top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[5] absolute text-[--220px] font-bold text-nowrap text-[#7e7e7e]"
+                ref={infoCard2}
+              >
+                $1800
+              </span>
             </div>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
             <div className="mb-[--sy-100px]">
-              <p className=" uppercase w-fit mx-auto text-[--24px]" data-aos="fade-up">About Your Business</p>
-            <h2
-              className=" text-[--102px] uppercase w-fit mx-auto font-bold"
-              data-aos="zoom-in"
-            >
-              {" "}
-              no one cares
-            </h2>
-            <p className=" uppercase w-fit mx-auto text-[--24px]" data-aos="fade-down">As Much As you Do</p>
-
+              <p
+                className=" uppercase w-fit mx-auto text-[--24px]"
+                data-aos="fade-up"
+              >
+                About Your Business
+              </p>
+              <h2
+                className=" text-[--102px] uppercase w-fit mx-auto font-bold"
+                data-aos="zoom-in"
+              >
+                {" "}
+                no one cares
+              </h2>
+              <p
+                className=" uppercase w-fit mx-auto text-[--24px]"
+                data-aos="fade-down"
+              >
+                As Much As you Do
+              </p>
             </div>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
             <p
@@ -727,8 +991,8 @@ export default function Home() {
               className=" w-full mb-[--sy-227px] relative"
               ref={seoSectionRef}
             >
-              <h3 className=" text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
-                SEO modulesd
+              <h3 className="uppercase text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
+                SEO module
               </h3>
               <p className=" text-[--17px] mx-auto w-fit mb-[--sy-40px]">
                 Lorem ipsum dolor sit amet consectetur. Habitant quis turpis.
@@ -778,7 +1042,7 @@ export default function Home() {
               className=" w-full mb-[--sy-196px] relative"
               ref={seoSectionRef2}
             >
-              <h3 className=" text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
+              <h3 className="uppercase text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
                 SEO module
               </h3>
               <p className=" text-[--17px] mx-auto w-fit mb-[--sy-40px]">
@@ -840,7 +1104,7 @@ export default function Home() {
                   Master every department of your <br /> business with Machine
                   genius bundles!
                 </p>
-                <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--22px] py-[--sy-22px] px-[--31px] font-bold">
+                <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--22px] py-[--sy-22px] px-[--31px] font-bold rotate-[0.57deg]">
                   Shuffle Business
                 </button>
               </div>
@@ -851,7 +1115,7 @@ export default function Home() {
                       SEO <br />
                       MODULE
                     </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block">
+                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
                       Check Module
                     </button>
                   </div>
@@ -860,16 +1124,7 @@ export default function Home() {
                       SEO <br />
                       MODULE
                     </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block">
-                      Check Module
-                    </button>
-                  </div>
-                  <div className="rounded-[--32px] bg-[#FFFFFB] text-[#2a2b2a] py-[--sy-48px] px-[--48px] hover:bg-[#5EA95B] w-[calc(50%_-_var(--32px))]">
-                    <h4 className="text-[--32px] font-bold mb-[--sy-35px] text-center">
-                      SEO <br />
-                      MODULEsadwqe
-                    </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block">
+                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
                       Check Module
                     </button>
                   </div>
@@ -878,7 +1133,16 @@ export default function Home() {
                       SEO <br />
                       MODULE
                     </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block">
+                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
+                      Check Module
+                    </button>
+                  </div>
+                  <div className="rounded-[--32px] bg-[#FFFFFB] text-[#2a2b2a] py-[--sy-48px] px-[--48px] hover:bg-[#5EA95B] w-[calc(50%_-_var(--32px))]">
+                    <h4 className="text-[--32px] font-bold mb-[--sy-35px] text-center">
+                      SEO <br />
+                      MODULE
+                    </h4>
+                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
                       Check Module
                     </button>
                   </div>
@@ -895,7 +1159,7 @@ export default function Home() {
                       tristique.
                     </p>
                   </div>
-                  <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block">
+                  <button className=" rounded-[--9px] !text-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !bg-white mx-auto w-fit block rotate-[0.57deg]">
                     Check Module
                   </button>
                 </div>
@@ -904,7 +1168,7 @@ export default function Home() {
             <div>
               <div className=" w-fit mx-auto ">
                 <h2
-                  className=" uppercase text-[--60px] font-extrabold mx-auto w-fit text-center mb-[--sy-18px]"
+                  className=" uppercase text-[--60px] font-extrabold mx-auto w-fit text-center mb-[--sy-28px]"
                   data-aos="zoom-in"
                 >
                   Meet Your New <br /> Business Powerhouse
@@ -961,7 +1225,7 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <p className=" text-[--20px] font-medium mx-auto w-fit text-center mb-[--sy-136px]">
+                <p className=" text-[--20px] font-medium mx-auto w-fit text-center mb-[--sy-90px]">
                   Lorem ipsum dolor sit amet consectetur. Nec id sit velit quis
                   purus. <br /> Cras cursus aliquet quam morbi tristique odio
                   platea non netus. Turpis <br /> nisi et at tempus duis in
@@ -970,9 +1234,43 @@ export default function Home() {
               </div>
               <div className=" w-full  overflow-hidden pt-40 h-[clamp(44vh,_65vh,_70vh)] relative">
                 <div
-                  className=" absolute inset-0 z-10"
+                  className={`${
+                    selectedNum == 0 ? "opacity-100" : "opacity-0"
+                  } absolute inset-0 z-10 duration-1000 transition-all`}
                   style={{
-                    backgroundImage: `linear-gradient(0deg, ${wheelColor} 0%, rgba(42, 43, 42, 0) 90%)`,
+                    backgroundImage: `linear-gradient(0deg, #E1C655 0%, rgba(42, 43, 42, 0) 90%)`,
+                  }}
+                ></div>
+                <div
+                  className={`${
+                    selectedNum == 1 ? "opacity-100" : "opacity-0"
+                  } absolute inset-0 z-10 duration-1000 transition-all`}
+                  style={{
+                    backgroundImage: `linear-gradient(0deg, #E9313E 0%, rgba(42, 43, 42, 0) 90%)`,
+                  }}
+                ></div>
+                <div
+                  className={`${
+                    selectedNum == -1 ? "opacity-100" : "opacity-0"
+                  } absolute inset-0 z-10 duration-1000 transition-all`}
+                  style={{
+                    backgroundImage: `linear-gradient(0deg, #5EA95B 0%, rgba(42, 43, 42, 0) 90%)`,
+                  }}
+                ></div>
+                <div
+                  className={`${
+                    selectedNum == -2 ? "opacity-100" : "opacity-0"
+                  } absolute inset-0 z-10 duration-1000 transition-all`}
+                  style={{
+                    backgroundImage: `linear-gradient(0deg, #E1C655 0%, rgba(42, 43, 42, 0) 90%)`,
+                  }}
+                ></div>
+                <div
+                  className={`${
+                    selectedNum == -3 ? "opacity-100" : "opacity-0"
+                  } absolute inset-0 z-10 duration-1000 transition-all`}
+                  style={{
+                    backgroundImage: `linear-gradient(0deg, #E9313E 0%, rgba(42, 43, 42, 0) 90%)`,
                   }}
                 ></div>
                 <div className=" w-full relative z-20">
