@@ -154,7 +154,7 @@ const CreateMovie = () => {
 
           json = await res.json();
 
-          if (json.articles[0]?.content) {
+          if (json && json?.articles[0]?.content) {
             // If content is found, break the loop
             break;
           }
@@ -166,9 +166,22 @@ const CreateMovie = () => {
         }
       }
 
-      if (json?.articles[0]?.content) {
+      if (json && json?.articles[0]?.content) {
         // await setFinalArticleAsync(json);
-        dispatch(contentCreatorActions.setFinalArticle(json));
+
+        const updatedArticle = {
+          ...json,
+          articles: [
+            {
+              ...json.articles[0],
+              content: json.articles[0].content.replace(/<\/?[^>]+(>|$)/g, ""),
+            },
+          ],
+        };
+
+        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+
+        // dispatch(contentCreatorActions.setFinalArticle(json));
         router.replace("/content-creator/create/movie-myth/final-movie");
       } else {
         // setIsRetry(true);
