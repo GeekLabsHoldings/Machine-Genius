@@ -539,7 +539,7 @@ img {
 }
 
 .scroll-section-inner {
-  height: 100vh;
+  height: 60vh;
   width: clamp(400vw , 400vw , 500vw)  ;
   display: flex;
   flex-direction: row;
@@ -549,7 +549,6 @@ img {
 }
 
 .scroll-section {
-  height: 100vh;
   width: clamp(100vw , 100vw, 200vw);
   display: flex;
   justify-content: center;

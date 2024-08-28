@@ -4,7 +4,7 @@ import styles from "./footer.module.css"
 const Footer = () => {
   return (
     <div
-        className={`${styles.footer} rounded-t-[--30px] border-[1px] w-full pt-[--sy-100px] pb-[--sy-64px] px-[--187px]`}
+        className={`${styles.footer} rounded-t-[--30px] border-[1px] w-full pt-[--sy-100px] pb-[--sy-64px] px-[--187px] bg-[#2A2B2A]`}
       >
         <div className=" flex justify-between items-center mb-[--sy-100px]">
           <div>

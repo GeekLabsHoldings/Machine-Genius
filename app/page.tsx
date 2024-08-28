@@ -9,6 +9,42 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AOS from "aos";
 import "aos/dist/aos.css"; // You can also use <link> for styles
+import Aos from "aos";
+import Footer from "./_components/Footer/Footer";
+import styles from "../app/_components/Footer/footer.module.css"
+
+let shuffleNum = 1;
+const businessDataMock = [
+  {
+    title: "SEO MODULE",
+  },
+  {
+    title: "SEO MODULE",
+  },
+  {
+    title: "SEO MODULE",
+  },
+  {
+    title: "SEO MODULE",
+  },
+];
+const businessDataMock2 = [
+  {
+    title: "HR MODULE",
+  },
+  {
+    title: "HR MODULE",
+  },
+  {
+    title: "HR MODULE",
+  },
+  {
+    title: "HR MODULE",
+  },
+];
+
+const businessTitleMock = "SEO";
+const businessTitleMock2 = "HR";
 
 export default function Home() {
   const [selectedWheel, setSelectedWheel] = useState("hr");
@@ -19,6 +55,13 @@ export default function Home() {
   const [rightArrowHovered, setRightArrowHovered] = useState(false);
   const [trick, setTrick] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [subCounter, setSubCounter] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
+  const [hasRun, setHasRun] = useState(false);
+  const [businessData, SetBusinessData] = useState(businessDataMock);
+  const [businessTitle, SetBusinessTitle] = useState(businessTitleMock);
+  const [disabledTab1, setDisabledTab1] = useState(false);
+  const [disabledTab2, setDisabledTab2] = useState(false);
 
   // Register the ScrollTrigger plugin
   if (typeof window !== "undefined") {
@@ -65,74 +108,180 @@ export default function Home() {
   //   };
   // }, []);
 
+  useEffect(() => {
+    setCounter(0);
+    const increase = setInterval(() => {
+      setCounter((prev) => {
+        if (prev >= subCounter || hasRun) {
+          setDisabledTab1(false);
+          setDisabledTab2(false);
+          clearInterval(increase);
+          setCounter(subCounter);
+          return prev;
+        }
+        setDisabledTab1(true);
+        setDisabledTab2(true);
+        setHasRun(true);
+        return prev + 100;
+      });
+    }, 1);
+  }, [subCounter]);
+
   useGSAP(() => {
     if (!sectionRef.current || !triggerRef.current) return;
 
-    const pinning = gsap.fromTo(
-      sectionRef.current,
-      { translateX: "-14vw" },
-      {
-        translateX: "-300vw",
-        ease: "none",
-        duration: 50,
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: "top top",
-          end: "2000 center",
-          scrub: 10,
-          pin: true,
-          onLeave: () => {
-            AOS.init();
-            // if (infoCard2.current) {
-            //   const movingBesideCard2 = gsap.to(infoCard2.current, {
-            //     left: "150%",
-            //     duration: 1,
-            //     scrollTrigger: {
-            //       trigger: cardsss.current,
-            //       start: "top 30%",
-            //       end: "top 20%",
-            //       markers: true,
-            //     },
-            //   });
+    let sections = gsap.utils.toArray(".scroll-section");
 
-            //   return () => {
-            //     movingBesideCard2.kill();
-            //     movingBesideCard2.scrollTrigger?.kill();
-            //   };
-            // }
-            if (infoCard.current && infoCard2.current) {
-              const movingBesideCard1 = gsap.to(infoCard.current, {
-                left: "-45%",
-                duration: 1,
-                scrollTrigger: {
-                  trigger: cardsss.current,
-                  start: "top 30%",
-                  end: "top 20%",
-                  markers:true
-                },
-              });
-              const movingBesideCard2 = gsap.to(infoCard2.current, {
-                left: "150%",
-                duration: 1,
-                scrollTrigger: {
-                  trigger: cardsss.current,
-                  start: "top 30%",
-                  end: "top 20%",
-                  markers: true,
-                },
-              });
+    // gsap.fromTo(sections,{ xPercent: "-20%" }, {
+    //   xPercent: -100 * (sections.length - 1),
+    //   ease: "none",
+    //   scrollTrigger: {
+    //     trigger: triggerRef.current,
+    //     pin: true,
+    //     scrub: true,
+    //     snap: 1 / (sections.length - 1),
+    //     end: "2000 center",
+    //     onLeave: () => {
+    //       Aos.init();}
 
-              return () => {
-                movingBesideCard1.kill();
-                movingBesideCard1.scrollTrigger?.kill();
-                movingBesideCard2.kill();
-                movingBesideCard2.scrollTrigger?.kill();
-              };
-            }
-          },
+    //   }
+    // });
+
+    const pinning = gsap.to(sections, {
+      xPercent: -100 * (sections.length - 1),
+      ease: "none",
+      // duration: 50,
+      scrollTrigger: {
+        trigger: triggerRef.current,
+        start: "top 20%",
+        end: "2000 center",
+        scrub: true,
+        pin: true,
+        snap: 1 / (sections.length - 1),
+        onLeave: () => {
+          AOS.init();
+          if (
+            infoCard.current &&
+            infoCard2.current &&
+            movedParagraphRef1.current &&
+            movedParagraphRef2.current &&
+            movedParagraphRef3.current &&
+            movedParagraphRef12.current &&
+            movedParagraphRef22.current &&
+            movedParagraphRef32.current
+          ) {
+            const movingBesideCard1 = gsap.to(infoCard.current, {
+              left: "-45%",
+              duration: 1,
+              scrollTrigger: {
+                trigger: cardsss.current,
+                start: "top 45%",
+                end: "top 20%",
+                // markers: true,
+              },
+            });
+            const movingBesideCard2 = gsap.to(infoCard2.current, {
+              left: "150%",
+              duration: 1,
+              scrollTrigger: {
+                trigger: cardsss.current,
+                start: "top 45%",
+                end: "top 20%",
+                // markers: true,
+              },
+            });
+            const scaleAndMoving1 = gsap.to(movedParagraphRef1.current, {
+              translateX: "0",
+              translateY: "0",
+              opacity: "1",
+              scrollTrigger: {
+                trigger: seoSectionRef.current,
+                start: "50% 70%",
+                end: "50% 50%",
+                scrub: 0.1,
+                // markers: true,
+              },
+            });
+            const scaleAndMoving2 = gsap.to(movedParagraphRef2.current, {
+              translateX: "0",
+              translateY: "0",
+              opacity: "1",
+              scrollTrigger: {
+                trigger: seoSectionRef.current,
+                start: "50% 70%",
+                end: "50% 50%",
+                scrub: 0.1,
+                // markers: true,
+              },
+            });
+            const scaleAndMoving3 = gsap.to(movedParagraphRef3.current, {
+              translateX: "0",
+              translateY: "0",
+              opacity: "1",
+              scrollTrigger: {
+                trigger: seoSectionRef.current,
+                start: "50% 70%",
+                end: "50% 50%",
+                scrub: 0.1,
+                // markers: true,
+              },
+            });
+            const scaleAndMoving12 = gsap.to(movedParagraphRef12.current, {
+              translateX: "0",
+              translateY: "0",
+              opacity: "1",
+              scrollTrigger: {
+                trigger: seoSectionRef2.current,
+                start: "50% 70%",
+                end: "50% 50%",
+                scrub: 0.1,
+              },
+            });
+            const scaleAndMoving22 = gsap.to(movedParagraphRef22.current, {
+              translateX: "0",
+              translateY: "0",
+              opacity: "1",
+              scrollTrigger: {
+                trigger: seoSectionRef2.current,
+                start: "50% 70%",
+                end: "50% 50%",
+                scrub: 0.1,
+              },
+            });
+            const scaleAndMoving32 = gsap.to(movedParagraphRef32.current, {
+              translateX: "0",
+              translateY: "0",
+              opacity: "1",
+              scrollTrigger: {
+                trigger: seoSectionRef2.current,
+                start: "50% 70%",
+                end: "50% 50%",
+                scrub: 0.1,
+              },
+            });
+
+            return () => {
+              movingBesideCard1.kill();
+              movingBesideCard1.scrollTrigger?.kill();
+              movingBesideCard2.kill();
+              movingBesideCard2.scrollTrigger?.kill();
+              scaleAndMoving1.kill();
+              scaleAndMoving1.scrollTrigger?.kill();
+              scaleAndMoving2.kill();
+              scaleAndMoving2.scrollTrigger?.kill();
+              scaleAndMoving3.kill();
+              scaleAndMoving3.scrollTrigger?.kill();
+              scaleAndMoving12.kill();
+              scaleAndMoving12.scrollTrigger?.kill();
+              scaleAndMoving22.kill();
+              scaleAndMoving22.scrollTrigger?.kill();
+              scaleAndMoving32.kill();
+              scaleAndMoving32.scrollTrigger?.kill();
+            };
+          }
         },
-      }
-    );
+      },
+    });
 
     return () => {
       pinning.kill();
@@ -187,17 +336,17 @@ export default function Home() {
       scrollTrigger: {
         trigger: counterWrapperRef.current,
         start: "1600 80%",
-        markers: true,
+        // markers: true,
         onUpdate: () => {
           const increase = setInterval(() => {
             setCounter((prev) => {
-              if (prev >= 3600) {
+              if (prev >= 36000) {
                 clearInterval(increase);
                 return prev;
               }
-              return prev + 10;
+              return prev + 100;
             });
-          }, 3);
+          }, 1);
         },
       },
     });
@@ -211,39 +360,44 @@ export default function Home() {
   useGSAP(() => {
     if (!seoSectionRef.current) return;
 
-    const scaleAndMoving1 = gsap.to(movedParagraphRef1.current, {
-      translateX: "0",
-      translateY: "0",
-      opacity: "1",
-      scrollTrigger: {
-        trigger: seoSectionRef.current,
-        start: "top+=1400 75%",
-        end: "top+=1400 15%",
-        scrub: 0.1,
-      },
-    });
-    const scaleAndMoving2 = gsap.to(movedParagraphRef2.current, {
-      translateX: "0",
-      translateY: "0",
-      opacity: "1",
-      scrollTrigger: {
-        trigger: seoSectionRef.current,
-        start: "top+=1400 75%",
-        end: "top+=1400 15%",
-        scrub: 0.1,
-      },
-    });
-    const scaleAndMoving3 = gsap.to(movedParagraphRef3.current, {
-      translateX: "0",
-      translateY: "0",
-      opacity: "1",
-      scrollTrigger: {
-        trigger: seoSectionRef.current,
-        start: "top+=1400 75%",
-        end: "top+=1400 15%",
-        scrub: 0.1,
-      },
-    });
+    // const scaleAndMoving1 = gsap.to(movedParagraphRef1.current, {
+    //   translateX: "0",
+    //   translateY: "0",
+    //   opacity: "1",
+    //   scrollTrigger: {
+    //     trigger: seoSectionRef.current,
+    //     start: "top+=1400 75%",
+    //     end: "top+=1400 15%",
+    //     scrub: 0.1,
+    //     markers:true
+    //   },
+    // });
+    // const scaleAndMoving2 = gsap.to(movedParagraphRef2.current, {
+    //   translateX: "0",
+    //   translateY: "0",
+    //   opacity: "1",
+    //   scrollTrigger: {
+    //     trigger: seoSectionRef.current,
+    //     start: "top+=1400 75%",
+    //     end: "top+=1400 15%",
+    //     scrub: 0.1,
+    //     markers:true
+
+    //   },
+    // });
+    // const scaleAndMoving3 = gsap.to(movedParagraphRef3.current, {
+    //   translateX: "0",
+    //   translateY: "0",
+    //   opacity: "1",
+    //   scrollTrigger: {
+    //     trigger: seoSectionRef.current,
+    //     start: "top+=1400 75%",
+    //     end: "top+=1400 15%",
+    //     scrub: 0.1,
+    //     markers:true
+
+    //   },
+    // });
     const seoSectionscaled = gsap.to(seoSectionRef.current, {
       scale: 1.3,
       scrollTrigger: {
@@ -256,52 +410,52 @@ export default function Home() {
 
     return () => {
       seoSectionscaled.kill();
-      scaleAndMoving3.kill();
-      scaleAndMoving2.kill();
-      scaleAndMoving1.kill();
+      // scaleAndMoving3.kill();
+      // scaleAndMoving2.kill();
+      // scaleAndMoving1.kill();
       seoSectionscaled.scrollTrigger?.kill();
-      scaleAndMoving3.scrollTrigger?.kill();
-      scaleAndMoving2.scrollTrigger?.kill();
-      scaleAndMoving1.scrollTrigger?.kill();
+      // scaleAndMoving3.scrollTrigger?.kill();
+      // scaleAndMoving2.scrollTrigger?.kill();
+      // scaleAndMoving1.scrollTrigger?.kill();
     };
   }, []);
 
   useGSAP(() => {
     if (!seoSectionRef2.current) return;
 
-    const scaleAndMoving12 = gsap.to(movedParagraphRef12.current, {
-      translateX: "0",
-      translateY: "0",
-      opacity: "1",
-      scrollTrigger: {
-        trigger: seoSectionRef2.current,
-        start: "top+=1400 75%",
-        end: "top+=1400 15%",
-        scrub: 0.1,
-      },
-    });
-    const scaleAndMoving22 = gsap.to(movedParagraphRef22.current, {
-      translateX: "0",
-      translateY: "0",
-      opacity: "1",
-      scrollTrigger: {
-        trigger: seoSectionRef2.current,
-        start: "top+=1400 75%",
-        end: "top+=1400 15%",
-        scrub: 0.1,
-      },
-    });
-    const scaleAndMoving32 = gsap.to(movedParagraphRef32.current, {
-      translateX: "0",
-      translateY: "0",
-      opacity: "1",
-      scrollTrigger: {
-        trigger: seoSectionRef2.current,
-        start: "top+=1400 75%",
-        end: "top+=1400 15%",
-        scrub: 0.1,
-      },
-    });
+    // const scaleAndMoving12 = gsap.to(movedParagraphRef12.current, {
+    //   translateX: "0",
+    //   translateY: "0",
+    //   opacity: "1",
+    //   scrollTrigger: {
+    //     trigger: seoSectionRef2.current,
+    //     start: "top+=1400 75%",
+    //     end: "top+=1400 15%",
+    //     scrub: 0.1,
+    //   },
+    // });
+    // const scaleAndMoving22 = gsap.to(movedParagraphRef22.current, {
+    //   translateX: "0",
+    //   translateY: "0",
+    //   opacity: "1",
+    //   scrollTrigger: {
+    //     trigger: seoSectionRef2.current,
+    //     start: "top+=1400 75%",
+    //     end: "top+=1400 15%",
+    //     scrub: 0.1,
+    //   },
+    // });
+    // const scaleAndMoving32 = gsap.to(movedParagraphRef32.current, {
+    //   translateX: "0",
+    //   translateY: "0",
+    //   opacity: "1",
+    //   scrollTrigger: {
+    //     trigger: seoSectionRef2.current,
+    //     start: "top+=1400 75%",
+    //     end: "top+=1400 15%",
+    //     scrub: 0.1,
+    //   },
+    // });
     const seoSectionscaled2 = gsap.to(seoSectionRef2.current, {
       scale: 1.3,
       scrollTrigger: {
@@ -315,13 +469,13 @@ export default function Home() {
 
     return () => {
       seoSectionscaled2.kill();
-      scaleAndMoving32.kill();
-      scaleAndMoving22.kill();
-      scaleAndMoving12.kill();
+      // scaleAndMoving32.kill();
+      // scaleAndMoving22.kill();
+      // scaleAndMoving12.kill();
       seoSectionscaled2.scrollTrigger?.kill();
-      scaleAndMoving32.scrollTrigger?.kill();
-      scaleAndMoving22.scrollTrigger?.kill();
-      scaleAndMoving12.scrollTrigger?.kill();
+      // scaleAndMoving32.scrollTrigger?.kill();
+      // scaleAndMoving22.scrollTrigger?.kill();
+      // scaleAndMoving12.scrollTrigger?.kill();
     };
   }, []);
 
@@ -428,7 +582,7 @@ export default function Home() {
       <div className=" w-full relative overflow-x-hidden text-[#FFFFFB] bg-[linear-gradient(180deg,_#2A2B2A_35%,_#5ea95bbd_100%)]">
         <Link
           href={"/"}
-          className=" fixed top-1/3 translate-y-1/4 left-1/4 -translate-x-2/3 scale-[3] cursor-pointer z-[999]"
+          className=" fixed top-1/3 translate-y-1/4 left-1/4 -translate-x-2/3 scale-[3] cursor-pointer z-[99999999]"
           ref={logoRef}
         >
           <svg
@@ -561,33 +715,58 @@ export default function Home() {
               />
             </svg>
           </Link>
-          <ul className=" rounded-[--58px] p-[--6px] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 bg-[#272727] border border-gray-200 border-opacity-40 flex ">
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
-              <Link href={"/"}>Home</Link>
+          <ul className=" rounded-[--58px] p-[--6px] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 bg-[#272727] border border-gray-200 border-opacity-40 flex">
+            <li>
+              <Link
+                className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer block"
+                href={"/"}
+              >
+                Home
+              </Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
-              <Link href={"/modules"}>Modules</Link>
+            <li>
+              <Link
+                className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer block"
+                href={"/modules"}
+              >
+                Modules
+              </Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
-              <Link href={"/about-us"}>About Us</Link>
+            <li>
+              <Link
+                className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer block"
+                href={"/about-us"}
+              >
+                About Us
+              </Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
-              <Link href={"/contact-us"}>Contact Us</Link>
+            <li>
+              <Link
+                className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer block"
+                href={"/contact-us"}
+              >
+                Contact Us
+              </Link>
             </li>
-            <li className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer">
-              <Link href={"/blog"}>Blog</Link>
+            <li>
+              <Link
+                className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--31px] hover:bg-[#5EA95B] transition-colors duration-200 cursor-pointer block"
+                href={"/blog"}
+              >
+                Blog
+              </Link>
             </li>
           </ul>
           <div className=" rounded-[--58px] p-[--6px] bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 border bg-[#272727] border-gray-200 border-opacity-40 flex">
             <Link
               href={"signin"}
-              className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] bg-[#2A2B2A] rounded-[--30px] border-[1px] border-[#fffffb]"
+              className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] bg-[#2A2B2A] hover:bg-[#5EA95B] rounded-[--30px] border-[1px] border-[#fffffb]"
             >
               Log In
             </Link>
             <Link
               href={"#"}
-              className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--30px]"
+              className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--30px] hover:text-[#5EA95B]"
             >
               Sign Up
             </Link>
@@ -654,7 +833,7 @@ export default function Home() {
               <p className=" uppercase text-center text-[--128px] font-bold">
                 From Staff
               </p>
-              <p className=" uppercase text-center text-[--128px] font-bold ">
+              <p className=" uppercase text-center text-[--128px] font-bold text-nowrap">
                 To Software
               </p>
               <p
@@ -692,21 +871,21 @@ export default function Home() {
           </p>
           <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-10px]"></div>
           <div>
-            <div className="scroll-section-outer !duration-0 mx-[--291px] overflow-hidden">
+            <div className="scroll-section-outer !duration-0 mx-[clamp(18vw,_calc(18.222vw_+_0.1rem),_3000px)] overflow-hidden">
               <div ref={triggerRef} className="!duration-0 overflow-hidden">
                 <div
                   ref={sectionRef}
-                  className="scroll-section-inner !duration-0 overflow-hidden"
+                  className="scroll-section-inner !duration-0 "
                 >
-                  <div className="scroll-section !h-[--sy-380px] !duration-0 flex-col">
-                    <h3 className=" text-[--90px] font-bold text-center uppercase">
+                  <div className="scroll-section !h-[--sy-380px] !duration-0 flex-col items-start">
+                    <h3 className=" text-[--90px] font-bold text-center uppercase px-[clamp(4vw,_calc(5vw_+_0.1rem),_2000px)]">
                       How many employees <br /> do you need?
                     </h3>
-                    <p className=" text-[--24px] w-fit mx-auto">
+                    <p className=" text-[--24px] w-fit px-[clamp(25vw,_calc(26vw_+_0.1rem),_2000px)]">
                       Keep Scrolling
                     </p>
                   </div>
-                  <div className="scroll-section !h-[--sy-380px] !duration-0">
+                  <div className="scroll-section !h-[--sy-380px] !duration-0 ">
                     <span className=" text-[--39px] font-bold px-[--45px] py-[--sy-24px] bg-[#5EA95B] rounded-[--7px] mb-[--sy-50px] w-fit">
                       SEO Specialists
                     </span>
@@ -715,7 +894,8 @@ export default function Home() {
                     </p>
                     <p className=" text-[--29px]  mb-[--sy-40px]">
                       2 for link building and outreach, and another for keyword
-                      research, SEO planning, and all the other stuff.
+                      research,
+                      <br /> SEO planning, and all the other stuff.
                     </p>
                   </div>
                   <div className="scroll-section !h-[--sy-380px] !duration-0">
@@ -727,7 +907,8 @@ export default function Home() {
                     </p>
                     <p className=" text-[--29px]  mb-[--sy-40px]">
                       To create a content calendar, write posts, schedule them,
-                      and come up with creative ideas to grow the accounts.
+                      and <br /> come up with creative ideas to grow the
+                      accounts.
                     </p>
                   </div>
                   <div className="scroll-section !h-[--sy-380px] !duration-0">
@@ -882,15 +1063,39 @@ export default function Home() {
             </div>
             <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
             <div
-              className=" rounded-[--58px] p-[--6px] bg-[#3D3E3D] bg-opacity-60 flex mx-auto w-fit mb-[--sy-95px]"
+              className=" relative rounded-[--58px] p-[--6px] bg-[#3D3E3D] bg-opacity-60 flex mx-auto w-fit mb-[--sy-95px]"
               data-aos="zoom-in"
             >
-              <button className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] bg-[#5EA95B6E] rounded-[--30px]">
+              <button
+                disabled={disabledTab1}
+                onClick={() => {
+                  setActiveTab(0);
+                  setSubCounter(36000);
+                }}
+                className={`relative z-50 px-[--33px] py-[--sy-16px] w-1/2 font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--30px]`}
+              >
                 Staff
               </button>
-              <button className=" px-[--33px] py-[--sy-16px] font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--30px]">
+              <button
+                disabled={disabledTab2}
+                onClick={() => {
+                  setActiveTab(1);
+                  setSubCounter(50000);
+                  // document.querySelector(".movedTab")?.style.left =
+                }}
+                className={`relative z-50 px-[--33px] py-[--sy-16px] w-1/2 font-semibold text-[--16px] leading-[19.36px] text-[#FFFFFB] rounded-[--30px]`}
+              >
                 Teams
               </button>
+              <span
+                className={` absolute h-[92%] top-1/2 -translate-y-1/2 !w-1/2 ${
+                  activeTab == 0 ? "left-0" : "left-1/2"
+                } z-30 bg-[#5EA95B] rounded-[--30px] movedTab`}
+                style={{
+                  transitionTimingFunction:
+                    "cubic-bezier(0.88,-0.35,0.565,1.35)",
+                }}
+              ></span>
             </div>
             <p
               className=" text-[--128px] w-fit text-center mx-auto"
@@ -919,7 +1124,7 @@ export default function Home() {
               className=" relative mx-auto w-[clamp(150px,_calc(38.278vw_+_0.1rem),_4000px)] mb-[--sy-170px] z-[80]"
               ref={cardsss}
             >
-              <div className="py-[--sy-29px]  px-[--50px] shadow-[0px_-16.72px_29.48px_0px_#00000047] z-[80] bg-[#666664] group relative hover:z-10 hover:bg-[#5EA95B] h-[clamp(40vh,_calc(52.37vh_+_0.1rem),_70vh)] hover:-translate-y-[--sy-40px] rounded-[--27px]">
+              <div className="py-[--sy-29px]  px-[--50px] shadow-[0px_-16.72px_29.48px_0px_#00000047] z-[80] bg-[#666664] group relative hover:z-[81] hover:bg-[#5EA95B] h-[clamp(40vh,_calc(52.37vh_+_0.1rem),_70vh)] hover:-translate-y-[--sy-40px] rounded-[--27px]">
                 <p className=" text-[--36px] font-extrabold text-[#2A2B2A7D] ml-auto w-fit group-hover:text-white mb-20">
                   NON-US BASED <br /> FREELANCERS
                 </p>
@@ -986,9 +1191,9 @@ export default function Home() {
               higher quality work in less time than <br /> it would take the 12
               employees combined
             </p>
-            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-80px] "></div>
+            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-118px] "></div>
             <div
-              className=" w-full mb-[--sy-227px] relative"
+              className=" w-full mb-[--sy-243px] relative"
               ref={seoSectionRef}
             >
               <h3 className="uppercase text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
@@ -1104,54 +1309,42 @@ export default function Home() {
                   Master every department of your <br /> business with Machine
                   genius bundles!
                 </p>
-                <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--22px] py-[--sy-22px] px-[--31px] font-bold rotate-[0.57deg]">
+                <button
+                  onClick={() => {
+                    if (shuffleNum % 2 !== 0) {
+                      SetBusinessData(businessDataMock2);
+                      SetBusinessTitle(businessTitleMock2);
+                    } else {
+                      SetBusinessData(businessDataMock);
+                      SetBusinessTitle(businessTitleMock);
+                    }
+
+                    ++shuffleNum;
+                  }}
+                  className=" rounded-[--9px] bg-[#2a2b2a] text-[--22px] py-[--sy-22px] px-[--31px] font-bold rotate-[0.57deg]"
+                >
                   Shuffle Business
                 </button>
               </div>
               <div className=" flex justify-between items-center w-full">
                 <div className="flex gap-[--32px] w-full flex-wrap">
-                  <div className="rounded-[--32px] bg-[#FFFFFB] text-[#2a2b2a] py-[--sy-48px] px-[--48px] hover:bg-[#5EA95B] w-[calc(50%_-_var(--32px))]">
-                    <h4 className="text-[--32px] font-bold mb-[--sy-35px] text-center">
-                      SEO <br />
-                      MODULE
-                    </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
-                      Check Module
-                    </button>
-                  </div>
-                  <div className="rounded-[--32px] bg-[#FFFFFB] text-[#2a2b2a] py-[--sy-48px] px-[--48px] hover:bg-[#5EA95B] w-[calc(50%_-_var(--32px))]">
-                    <h4 className="text-[--32px] font-bold mb-[--sy-35px] text-center">
-                      SEO <br />
-                      MODULE
-                    </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
-                      Check Module
-                    </button>
-                  </div>
-                  <div className="rounded-[--32px] bg-[#FFFFFB] text-[#2a2b2a] py-[--sy-48px] px-[--48px] hover:bg-[#5EA95B] w-[calc(50%_-_var(--32px))]">
-                    <h4 className="text-[--32px] font-bold mb-[--sy-35px] text-center">
-                      SEO <br />
-                      MODULE
-                    </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
-                      Check Module
-                    </button>
-                  </div>
-                  <div className="rounded-[--32px] bg-[#FFFFFB] text-[#2a2b2a] py-[--sy-48px] px-[--48px] hover:bg-[#5EA95B] w-[calc(50%_-_var(--32px))]">
-                    <h4 className="text-[--32px] font-bold mb-[--sy-35px] text-center">
-                      SEO <br />
-                      MODULE
-                    </h4>
-                    <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
-                      Check Module
-                    </button>
-                  </div>
+                  {businessData?.map((e, i) => {
+                    return (
+                      <div className="rounded-[--32px] bg-[#FFFFFB] text-[#2a2b2a] py-[--sy-48px] px-[--48px] hover:bg-[#5EA95B] w-[calc(50%_-_var(--32px))]">
+                        <h4 className="text-[--32px] font-bold mb-[--sy-35px] text-center">
+                          {e.title}
+                        </h4>
+                        <button className=" rounded-[--9px] bg-[#2a2b2a] text-[--15] font-bold px-[--19px] py-[--sy-15px] !text-white mx-auto w-fit block rotate-[0.57deg]">
+                          Check Module
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className=" px-[--60px] rounded-[--23px] bg-[#2a2b2a] flex flex-col justify-evenly self-stretch">
                   <div>
                     <h3 className=" font-extrabold text-[--46px] mb-[--sy-35px] text-center mx-auto w-fit">
-                      SEO <br />
-                      Business
+                      {businessTitle}
                     </h3>
                     <p className=" font-medium text-[--15px] text-center w-fit mx-auto">
                       Lorem ipsum dolor sit amet consectetur. Nec <br /> id sit
@@ -1225,7 +1418,7 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <p className=" text-[--20px] font-medium mx-auto w-fit text-center mb-[--sy-90px]">
+                <p className=" text-[--20px] font-medium mx-auto w-fit text-center mb-[--sy-64px]">
                   Lorem ipsum dolor sit amet consectetur. Nec id sit velit quis
                   purus. <br /> Cras cursus aliquet quam morbi tristique odio
                   platea non netus. Turpis <br /> nisi et at tempus duis in
@@ -1354,11 +1547,11 @@ export default function Home() {
                         selectedWheel == "hr"
                           ? "rotate(0)"
                           : selectedWheel == "video"
-                          ? "rotate(-31deg)"
+                          ? "rotate(-30deg)"
                           : selectedWheel == "seo"
                           ? "rotate(31deg)"
                           : selectedWheel == "social"
-                          ? "rotate(57deg)"
+                          ? "rotate(55deg)"
                           : "rotate(90deg)"
                       }`,
                     }}
@@ -1377,7 +1570,7 @@ export default function Home() {
                       <span className=" w-[--36px] h-[--36px] rounded-full bg-white"></span>
                       <span className=" text-[--32px] font-medium">seo</span>
                     </div>
-                    <div className=" flex flex-col gap-y-[--sy-12px] absolute place-items-center top-[20%] right-[85.1%] z-[20] uppercase -rotate-[57deg]">
+                    <div className=" flex flex-col gap-y-[--sy-12px] absolute place-items-center top-[20%] right-[85.1%] z-[20] uppercase -rotate-[55deg]">
                       <span className=" w-[--36px] h-[--36px] rounded-full bg-white"></span>
                       <span className=" text-[--32px] font-medium">
                         social media
@@ -1391,6 +1584,226 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div
+              className={`${styles.footer} border-[1px] w-full pt-[--sy-100px] pb-[--sy-64px] px-[--187px] bg-[#2A2B2A]`}
+            >
+              <div className=" flex justify-between items-center mb-[--sy-100px]">
+                <div>
+                  <svg
+                    className=" mb-[--sy-26px]"
+                    width="414"
+                    height="190"
+                    viewBox="0 0 414 190"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3.58984 75.8086V44.8982C3.58984 40.8144 4.58259 37.069 6.56808 33.6847C8.55356 30.2777 11.419 27.5703 15.1643 25.5848C18.9097 23.5767 23.4222 22.584 28.7243 22.584C31.2739 22.584 33.6203 22.8773 35.7863 23.4414C37.9523 24.028 39.9604 24.8628 41.8105 25.9458C43.6606 27.0288 45.2851 28.3374 46.6614 29.8265H46.7742C48.2182 28.3374 49.8652 27.0288 51.7154 25.9458C53.5655 24.8628 55.5961 24.028 57.8072 23.4414C59.9957 22.8547 62.3648 22.584 64.9143 22.584C70.1939 22.584 74.729 23.5767 78.4743 25.5848C82.2197 27.5928 85.0851 30.3003 87.0706 33.6847C89.0561 37.069 90.0488 40.8369 90.0488 44.8982V75.8086H75.9248V44.8982C75.9248 43.0029 75.4284 41.2656 74.4357 39.6863C73.4429 38.1069 72.1117 36.866 70.4647 35.9183C68.8176 34.9707 66.9675 34.4969 64.8918 34.4969C62.816 34.4969 61.0562 34.9707 59.3866 35.9183C57.6944 36.866 56.3632 38.1295 55.3705 39.6863C54.3777 41.2431 53.8813 42.9804 53.8813 44.8982V75.8086H39.7573V44.8982C39.7573 43.0029 39.2609 41.2656 38.2682 39.6863C37.2754 38.1295 35.9443 36.866 34.2972 35.9183C32.6502 34.9707 30.8 34.4969 28.7243 34.4969C26.6486 34.4969 24.8887 34.9707 23.2191 35.9183C21.5269 36.866 20.1957 38.1295 19.203 39.6863C18.2103 41.2431 17.7139 42.9804 17.7139 44.8982V75.8086H3.58984Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M123.417 77.028C118.611 77.028 114.414 75.8097 110.849 73.3504C107.284 70.9136 104.509 67.6195 102.546 63.5132C100.583 59.4068 99.6133 54.8492 99.6133 49.8855C99.6133 44.9218 100.719 40.1611 102.953 36.0097C105.186 31.8582 108.39 28.5867 112.587 26.1725C116.783 23.7583 121.792 22.5625 127.636 22.5625C133.479 22.5625 138.533 23.7809 142.572 26.2402C146.633 28.6769 149.724 31.9936 151.845 36.145C153.966 40.2965 155.049 44.8767 155.049 49.9081V75.8322H140.925V67.1683H140.722C139.684 68.9958 138.398 70.6655 136.864 72.1771C135.307 73.6662 133.434 74.8621 131.246 75.742C129.057 76.6219 126.44 77.0732 123.417 77.0732V77.028ZM127.433 65.0926C130.185 65.0926 132.554 64.4157 134.54 63.0619C136.525 61.7082 138.06 59.8581 139.12 57.5116C140.18 55.1651 140.722 52.5704 140.722 49.705C140.722 46.8396 140.18 44.2901 139.12 42.0113C138.06 39.7325 136.525 37.9049 134.54 36.5512C132.554 35.1974 130.185 34.5206 127.433 34.5206C124.68 34.5206 122.198 35.1974 120.168 36.5512C118.137 37.9049 116.603 39.7325 115.52 42.0113C114.459 44.2901 113.918 46.8622 113.918 49.705C113.918 52.5479 114.459 55.1651 115.52 57.5116C116.58 59.8581 118.137 61.7082 120.168 63.0619C122.198 64.4157 124.612 65.0926 127.433 65.0926Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M192.979 75.8112C187.541 75.8112 182.713 74.6606 178.449 72.3366C174.184 70.0353 170.823 66.9217 168.341 62.9958C165.859 59.0925 164.641 54.6703 164.641 49.7743C164.641 44.8782 165.882 40.4786 168.341 36.5527C170.823 32.6494 174.184 29.5358 178.449 27.2119C182.713 24.888 187.541 23.7373 192.979 23.7373H199.567V35.6728H192.979C190.091 35.6728 187.609 36.282 185.511 37.5003C183.413 38.7187 181.811 40.4109 180.66 42.5543C179.532 44.6977 178.968 47.0893 178.968 49.7517C178.968 52.4141 179.532 54.8057 180.66 56.9491C181.788 59.0925 183.413 60.7847 185.511 62.0031C187.609 63.2214 190.091 63.8306 192.979 63.8306H199.567V75.7661H192.979V75.8112Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M208.633 75.8104V1.33203H222.757V27.4592C224.945 25.6994 227.314 24.4359 229.864 23.6913C232.414 22.9468 234.918 22.5632 237.377 22.5632C242.454 22.5632 246.673 23.6236 249.99 25.7219C253.329 27.8202 255.811 30.6631 257.458 34.1828C259.105 37.7251 259.94 41.6284 259.94 45.9153V75.8104H245.816V45.9153C245.816 43.817 245.297 41.8766 244.281 40.1619C243.243 38.4246 241.867 37.0483 240.107 36.0329C238.347 35.0176 236.407 34.4987 234.286 34.4987C232.165 34.4987 230.315 34.9951 228.578 35.9878C226.818 36.9806 225.419 38.3117 224.359 39.9588C223.298 41.6284 222.757 43.4785 222.757 45.5091V75.8104H208.633Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M279.731 17.5535C277.317 17.5535 275.241 16.6961 273.504 14.9588C271.767 13.2215 270.887 11.1684 270.887 8.77676C270.887 6.38515 271.767 4.33197 273.504 2.59467C275.264 0.85737 277.34 0 279.731 0C282.123 0 284.221 0.85737 285.958 2.59467C287.718 4.33197 288.576 6.38515 288.576 8.77676C288.576 11.1684 287.696 13.2215 285.958 14.9588C284.221 16.6961 282.123 17.5535 279.731 17.5535ZM272.624 75.8095V23.7807H286.838V75.8095H272.624Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M299.426 75.8097V45.9145C299.426 41.6277 300.441 37.7244 302.472 34.1821C304.502 30.6398 307.435 27.8195 311.294 25.7212C315.152 23.6229 319.754 22.5625 325.102 22.5625C330.449 22.5625 335.142 23.6229 338.955 25.7212C342.768 27.8195 345.679 30.6624 347.709 34.1821C349.74 37.7244 350.755 41.6277 350.755 45.9145V75.8097H336.631V45.9145C336.631 43.8162 336.112 41.8759 335.097 40.1611C334.059 38.4238 332.683 37.0475 330.923 36.0322C329.163 35.0169 327.223 34.498 325.102 34.498C322.981 34.498 321.041 35.0169 319.281 36.0322C317.521 37.0475 316.144 38.4238 315.107 40.1611C314.069 41.8984 313.572 43.8162 313.572 45.9145V75.8097H299.448H299.426Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M389.9 75.8068C383.921 75.8068 378.709 74.6787 374.286 72.3999C369.864 70.1211 366.412 67.0075 363.975 63.0591C361.539 59.1107 360.32 54.6885 360.32 49.7924C360.32 44.2872 361.448 39.4814 363.727 35.3977C366.006 31.3139 369.097 28.1551 373 25.8989C376.926 23.6427 381.348 22.5371 386.29 22.5371C392.201 22.5371 396.984 23.7555 400.662 26.2148C404.339 28.6515 407.024 31.9456 408.739 36.052C410.454 40.1583 411.311 44.7385 411.311 49.7699C411.311 50.4467 411.266 51.259 411.198 52.1615C411.131 53.0865 411.018 53.786 410.883 54.2598H375.324C375.866 56.3581 376.813 58.1405 378.167 59.5619C379.498 60.9834 381.19 62.0664 383.221 62.7658C385.252 63.4878 387.53 63.8262 390.08 63.8262H404.723V75.7617H389.877L389.9 75.8068ZM375.257 44.8964H397.21C397.074 43.6104 396.826 42.392 396.488 41.2639C396.149 40.1358 395.653 39.143 395.044 38.2631C394.435 37.3831 393.713 36.6386 392.878 36.0294C392.043 35.4202 391.095 34.9464 389.99 34.608C388.884 34.2695 387.688 34.089 386.38 34.089C384.665 34.089 383.131 34.4049 381.8 35.0141C380.468 35.6233 379.34 36.4355 378.46 37.4508C377.558 38.4661 376.858 39.6168 376.34 40.9254C375.821 42.2115 375.46 43.5427 375.257 44.8964Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M55.4132 189.095C51.4196 189.095 48.0127 188.396 45.1698 186.997C42.327 185.598 40.161 183.59 38.6719 180.928C37.1828 178.266 36.4608 175.152 36.4608 171.542C36.4608 170.662 36.4833 169.76 36.5736 168.834C36.6413 167.909 36.7541 166.984 36.8895 166.037C31.2489 166.037 26.1723 165.112 21.6373 163.239C17.1023 161.366 13.2215 158.794 9.99513 155.478C6.76871 152.183 4.28685 148.348 2.57211 143.993C0.85737 139.639 0 135.013 0 130.117C0 125.221 0.85737 120.506 2.57211 116.196C4.28685 111.887 6.76871 108.074 9.99513 104.78C13.2215 101.486 17.1023 98.8911 21.6373 97.0184C26.1723 95.1458 31.2263 94.2207 36.7766 94.2207C42.327 94.2207 47.381 95.1232 51.916 96.9282C56.451 98.7332 60.3318 101.238 63.5582 104.487C66.7846 107.713 69.2664 111.436 70.9812 115.61C72.6959 119.784 73.5533 124.296 73.5533 129.125V169.737C73.5533 173.279 72.899 176.528 71.5904 179.484C70.2818 182.44 68.2963 184.786 65.6113 186.523C62.9264 188.261 59.5421 189.118 55.4132 189.118V189.095ZM36.7541 153.176C37.7243 153.176 38.6493 153.131 39.5293 153.018C40.4318 152.928 41.3117 152.77 42.2142 152.567C43.3874 150.807 44.7637 149.025 46.3431 147.265C47.9225 145.505 49.75 143.768 51.8032 142.053C53.8564 140.361 56.2028 138.714 58.8201 137.157V129.102C58.8201 125.966 58.2786 123.078 57.173 120.37C56.0675 117.686 54.5332 115.362 52.5477 113.376C50.5622 111.413 48.2158 109.856 45.5308 108.728C42.8459 107.6 39.9354 107.036 36.7766 107.036C33.6179 107.036 30.7074 107.623 28.0225 108.773C25.3375 109.924 23.0136 111.549 21.0056 113.624C19.0201 115.7 17.4633 118.159 16.3803 120.98C15.2747 123.8 14.7332 126.846 14.7332 130.117C14.7332 133.389 15.2747 136.435 16.3803 139.255C17.4858 142.075 19.0201 144.535 21.0056 146.611C22.991 148.686 25.3375 150.311 28.0225 151.461C30.7074 152.612 33.6179 153.199 36.7766 153.199L36.7541 153.176ZM54.4881 176.032C55.9321 176.032 57.0151 175.468 57.7371 174.34C58.4591 173.212 58.8201 171.745 58.8201 169.895V151.935C57.3084 153.221 55.9998 154.53 54.8942 155.861C53.7887 157.192 52.9087 158.591 52.2093 160.035C51.5324 161.502 51.0135 163.036 50.6751 164.683C50.3366 166.307 50.1561 168.045 50.1561 169.895C50.1561 171.181 50.3366 172.286 50.7202 173.212C51.1037 174.137 51.6227 174.836 52.3221 175.31C52.999 175.784 53.721 176.032 54.4881 176.032Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M118.884 166.847C112.905 166.847 107.693 165.719 103.271 163.44C98.8486 161.161 95.3965 158.048 92.9598 154.099C90.5231 150.151 89.3047 145.729 89.3047 140.832C89.3047 135.327 90.4328 130.521 92.7116 126.438C94.9904 122.354 98.0814 119.195 101.985 116.939C105.888 114.683 110.333 113.577 115.274 113.577C121.185 113.577 125.969 114.796 129.646 117.255C133.324 119.692 136.009 122.986 137.724 127.092C139.438 131.198 140.296 135.779 140.296 140.81C140.296 141.487 140.251 142.299 140.183 143.202C140.115 144.104 140.002 144.826 139.867 145.3H104.309C104.85 147.421 105.798 149.181 107.152 150.602C108.505 152.023 110.175 153.106 112.205 153.806C114.236 154.528 116.515 154.866 119.064 154.866H133.707V166.802H118.861L118.884 166.847ZM104.241 135.936H126.194C126.059 134.65 125.811 133.432 125.472 132.326C125.134 131.198 124.637 130.206 124.028 129.326C123.419 128.446 122.697 127.701 121.862 127.069C121.027 126.438 120.08 125.986 118.974 125.648C117.869 125.31 116.673 125.129 115.364 125.129C113.649 125.129 112.115 125.445 110.784 126.054C109.453 126.663 108.325 127.476 107.445 128.491C106.542 129.506 105.843 130.679 105.324 131.965C104.805 133.252 104.444 134.583 104.241 135.936Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M157.34 166.849V136.954C157.34 132.667 158.355 128.763 160.386 125.221C162.416 121.679 165.349 118.859 169.208 116.76C173.066 114.662 177.669 113.602 183.016 113.602C188.363 113.602 193.056 114.662 196.869 116.76C200.682 118.859 203.593 121.701 205.623 125.221C207.654 128.763 208.669 132.667 208.669 136.954V166.849H194.545V136.954C194.545 134.855 194.026 132.915 193.011 131.178C191.973 129.44 190.597 128.064 188.837 127.049C187.077 126.033 185.137 125.514 183.016 125.514C180.895 125.514 178.955 126.033 177.195 127.049C175.435 128.064 174.059 129.44 173.021 131.178C171.983 132.915 171.486 134.833 171.486 136.954V166.849H157.362H157.34Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M236.153 108.593C233.739 108.593 231.663 107.735 229.926 105.998C228.166 104.261 227.309 102.207 227.309 99.8158C227.309 97.4242 228.189 95.371 229.926 93.6337C231.663 91.8964 233.761 91.0391 236.153 91.0391C238.545 91.0391 240.643 91.8964 242.38 93.6337C244.118 95.371 244.997 97.4242 244.997 99.8158C244.997 102.207 244.118 104.261 242.38 105.998C240.62 107.735 238.545 108.593 236.153 108.593ZM229.046 166.849V114.82H243.26V166.849H229.046Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M289.203 168.09C283.856 168.09 279.253 167.03 275.395 164.931C271.537 162.833 268.604 160.013 266.573 156.47C264.543 152.928 263.527 149.025 263.527 144.738V114.843H277.651V144.738C277.651 146.836 278.17 148.777 279.186 150.491C280.223 152.229 281.6 153.605 283.36 154.62C285.12 155.636 287.06 156.154 289.181 156.154C291.302 156.154 293.242 155.636 295.002 154.62C296.762 153.605 298.138 152.229 299.176 150.491C300.214 148.754 300.71 146.836 300.71 144.738V114.843H314.834V144.738C314.834 149.025 313.819 152.928 311.788 156.47C309.758 160.013 306.847 162.833 303.034 164.931C299.221 167.03 294.596 168.09 289.181 168.09H289.203Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M335.479 166.85V154.915H361.132C361.967 154.915 362.689 154.734 363.343 154.396C363.998 154.057 364.517 153.583 364.9 152.974C365.284 152.365 365.464 151.688 365.464 150.944C365.464 150.131 365.284 149.409 364.9 148.8C364.517 148.191 363.998 147.695 363.343 147.311C362.689 146.928 361.945 146.747 361.132 146.747H351.25C347.888 146.747 344.842 146.228 342.135 145.168C339.427 144.107 337.261 142.415 335.637 140.069C334.035 137.722 333.223 134.654 333.223 130.841C333.223 127.907 333.967 125.245 335.434 122.831C336.9 120.417 338.908 118.476 341.413 117.01C343.917 115.543 346.692 114.821 349.716 114.821H374.354V126.757H351.069C350.032 126.757 349.129 127.095 348.339 127.772C347.55 128.449 347.144 129.329 347.144 130.434C347.144 131.54 347.527 132.42 348.272 133.142C349.016 133.864 349.964 134.202 351.047 134.202H360.929C364.697 134.202 367.969 134.766 370.721 135.895C373.474 137.023 375.595 138.76 377.106 141.152C378.618 143.543 379.363 146.657 379.363 150.538C379.363 153.538 378.596 156.268 377.106 158.75C375.595 161.232 373.564 163.195 371.037 164.662C368.488 166.128 365.645 166.85 362.486 166.85H335.479Z"
+                      fill="#FFFFFB"
+                    />
+                    <path
+                      d="M404.409 168.092C401.792 168.092 399.558 167.144 397.663 165.294C395.768 163.422 394.82 161.188 394.82 158.616C394.82 156.044 395.768 153.81 397.663 151.937C399.558 150.065 401.792 149.14 404.409 149.14C407.027 149.14 409.26 150.065 411.155 151.937C413.051 153.81 413.998 156.044 413.998 158.616C413.998 160.308 413.57 161.887 412.712 163.354C411.855 164.82 410.704 165.971 409.26 166.829C407.816 167.686 406.192 168.115 404.409 168.115V168.092Z"
+                      fill="#FFFFFB"
+                    />
+                  </svg>
+                  <h4 className="text-[#FFFFFB] mb-[--sy-95px] font-bold text-[--32px] leading-[--sy-40px] after:content-[''] relative after:absolute after:-bottom-[46px] after:left-0 after:w-3/4 after:h-[1px] after:bg-[#FFFFFB]">
+                    The Last Software You Will Ever Buy..
+                  </h4>
+                  <div className=" flex flex-col gap-[--sy-18px]">
+                    <h5 className=" font-bold text-[--19px] leading-[--sy-28px] text-[#FFFFFB]">
+                      Geek Labs Holding
+                    </h5>
+                    <p className="text-[--19px] leading-[--sy-28px] text-[#FFFFFB] font-normal">
+                      Lorem ipsum dolor sit amet, consectetur
+                    </p>
+                  </div>
+                </div>
+                <div className=" h-[--sy-380px] w-[1px] bg-[#FFFFFB]"></div>
+                <div className=" flex gap-[--151px]">
+                  <div className=" flex flex-col gap-y-[--sy-64px] text-[#FFFFFB]">
+                    <div>
+                      <h6 className=" mb-[--sy-40px] text-[--18px] leading-[--sy-28px] font-bold">
+                        Site Map
+                      </h6>
+                      <ul>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Home
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/modules"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Modules
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Pricing
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/blog"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Blog
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h6 className=" mb-[--sy-40px] text-[--18px] leading-[--sy-28px] font-bold">
+                        Quick Links
+                      </h6>
+                      <ul>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Privacy
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Terms & Conditions
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className=" flex flex-col gap-y-[--sy-64px] text-[#FFFFFB]">
+                    <div>
+                      <h6 className=" mb-[--sy-40px] text-[--18px] leading-[--sy-28px] font-bold">
+                        Support
+                      </h6>
+                      <ul>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Knowledge base
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Live Chat
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            Phone Support
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            E-mail
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h6 className=" mb-[--sy-40px] text-[--18px] leading-[--sy-28px] font-bold">
+                        Social Media
+                      </h6>
+                      <ul>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            @Twitter
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href={"/"}
+                            className=" text-[--18px] leading-[--sy-28px]"
+                          >
+                            @Instagram
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p className="text-[--18px] leading-[--sy-28px] mx-auto w-fit text-[#FFFFFB]">
+                  Copyright © 2024 Geek Labs Holdings. All Rights Reserved
+                </p>
               </div>
             </div>
           </div>
