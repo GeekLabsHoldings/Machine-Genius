@@ -9,6 +9,9 @@
 
 .box img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
 }
 
 .box input {
@@ -20,18 +23,30 @@
   height: var(--23px);
   min-width: var(--23px);
   min-height: var(--23px);
+  cursor: pointer;
+}
+.box input[type="checkbox"] {
+  position: absolute;
+  top: 8%;
+  right: 5%;
+  margin: 0;
+  width: var(--23px);
+  height: var(--23px);
+  min-width: var(--23px);
+  min-height: var(--23px);
+}
+.box input[type="radio"] {
+  width: var(--18px);
+  height: var(--18px);
+  min-width: var(--18px);
+  min-height: var(--18px);
 }
 
-/* .box input::before,
-.box input::after {
-  border: clamp(1.5px, calc(0.06vw + 0.05rem), 1000px) solid var(--dark);
-} */
-
-.box input:checked::after {
+.box input[type="checkbox"]:checked::after {
   background-color: #f36f24;
 }
 
-input[type="checkbox"]:checked + .selectedOverlay::after {
+input:checked + .selectedOverlay::after {
   content: "Selected";
   color: var(--white);
   font-weight: 700;
@@ -50,3 +65,5 @@ input[type="checkbox"]:checked + .selectedOverlay::after {
 .selectedOverlay::after {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* ======================== */

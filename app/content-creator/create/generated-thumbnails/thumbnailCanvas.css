@@ -19,14 +19,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sy-10px);
+  gap: var(--sy-20px);
   min-width: 300px;
   /* flex-grow: 1; */
 }
 
+.thumbnailCanvas_actionsBar div::-webkit-scrollbar{
+  width: 0;
+  display: none;
+  background: transparent; /* WebKit-based browsers */
+}
+
 .thumbnailCanvas_actionsBar button,
 #downloadBtn {
-  padding: 7px;
+  padding: var(--6px);
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;

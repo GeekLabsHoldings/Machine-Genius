@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useRouter } from "next/navigation";
+import ImageCard from "./ImageCard";
 
 export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
@@ -82,17 +83,16 @@ export default function ThumbnailCanvas() {
       searchImgKeyword: "",
       searchImgLoading: false,
       searchImgData: pageStateSearchImgDataInit(),
-      selectedImageNumber: "image-1",
-      selectedImgPath: "",
-      selectedImgPath2: "",
+      selectedImgsPath: [],
+      selectedImgsPathWithoutBg: [],
       removeBgLoading: false,
       isSendLoading: false,
       triggerSendContent: false,
+      triggerSearchImg: false,
     };
   }
 
   const [pageState, setPageState] = useState(pageStateInit);
-
 
   useEffect(() => {
     sessionStorage.setItem(
@@ -103,19 +103,23 @@ export default function ThumbnailCanvas() {
 
   const getSelectedContentThumbnailValue = useCallback((value) => {
     setSelectedContentThumbnail(value);
+    setPageState((prev) => ({
+      ...prev,
+      searchImgKeyword: value,
+      triggerSearchImg: true,
+    }));
   }, []);
+
+  useEffect(() => {
+    if (pageState.triggerSearchImg && pageState.searchImgKeyword) {
+      handleSearchImg();
+    }
+  }, [pageState.triggerSearchImg, pageState.searchImgKeyword]);
 
   const getThumbnailFontSizeValue = useCallback((value) => {
     setPageState((prev) => ({
       ...prev,
       thumbnailFontSize: Number(value),
-    }));
-  }, []);
-
-  const getSelectedImageNumberValue = useCallback((value) => {
-    setPageState((prev) => ({
-      ...prev,
-      selectedImageNumber: value,
     }));
   }, []);
 
@@ -171,14 +175,14 @@ export default function ThumbnailCanvas() {
     const words = splitSentenceIntoWords();
     // ==============================================================
 
-    // Load background image
+    // ===== Load background image =====
     if (!isBlocked(pageState.selectedBgPath)) {
       loadImage(pageState.selectedBgPath, (img) => {
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
       });
     }
 
-    // Add another image
+    // ===== Add overlay image =====
     fabric.Image.fromURL(
       "/assest.png",
       function (img, error) {
@@ -207,7 +211,7 @@ export default function ThumbnailCanvas() {
       { crossOrigin: "anonymous" }
     );
 
-    // Add icon image
+    // ===== Add icon image =====
     fabric.Image.fromURL(
       pageState.selectedIconPath,
       function (img, error) {
@@ -225,31 +229,19 @@ export default function ThumbnailCanvas() {
       { crossOrigin: "anonymous" }
     );
 
-    // Load another image
-    const imagePath = pageState.selectedImgPath;
-    if (!isBlocked(imagePath)) {
-      loadImage(imagePath, (img) => {
-        img.scaleToWidth(500); // Optional: scale the image if needed
-        img.left = canvas.width - img.width * img.scaleX - 40; // Position on the right edge
-        img.top = canvas.height - img.height * img.scaleY - 40; // Position on the bottom edge
+    // Load images
+    pageState.selectedImgsPathWithoutBg.forEach(({ img }, index) => {
+      if (!isBlocked(img)) {
+        loadImage(img, (img) => {
+          img.scaleToWidth(500); // Optional: scale the image if needed
+          img.left = canvas.width - img.width * img.scaleX - 40 * (index + 1); // Position on the right edge
+          img.top = canvas.height - img.height * img.scaleY - 40 * (index + 1); // Position on the bottom edge
+          canvas.add(img);
+        });
+      }
+    });
 
-        canvas.add(img);
-      });
-    }
-
-    // Load another image
-    const imagePath2 = pageState.selectedImgPath2;
-    if (!isBlocked(imagePath2)) {
-      loadImage(imagePath2, (img) => {
-        img.scaleToWidth(500); // Optional: scale the image if needed
-        img.left = canvas.width - img.width * img.scaleX - 80; // Position on the right edge
-        img.top = canvas.height - img.height * img.scaleY - 80; // Position on the bottom edge
-
-        canvas.add(img);
-      });
-    }
-
-    // Add text
+    // ===== Add text =====
     // Set the starting position (bottom-left corner)
     let left = 40;
     let top = canvas.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
@@ -282,8 +274,8 @@ export default function ThumbnailCanvas() {
   }, [
     pageState.selectedBgPath,
     selectedContentThumbnail,
-    pageState.selectedImgPath,
-    pageState.selectedImgPath2,
+    pageState.selectedImgsPath,
+    pageState.selectedImgsPathWithoutBg,
     pageState.thumbnailFontSize,
     pageState.selectedIconPath,
     canvasEl,
@@ -349,7 +341,7 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function handleRemoveBg(img, type) {
+  async function handleRemoveBg(img) {
     try {
       setPageState((prev) => ({
         ...prev,
@@ -362,7 +354,7 @@ export default function ThumbnailCanvas() {
           "X-Api-Key": process.env.NEXT_PUBLIC_REMOVEBG_API_KEY,
         },
         body: JSON.stringify({
-          ...(type === "select" ? { image_url: img } : { image_file_b64: img }),
+          image_url: img,
           size: "auto",
         }),
       });
@@ -390,43 +382,68 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  function handleUploadImg(e) {
-    // console.log(`e`, e);
-    const file = e.target.files[0];
-    // console.log(`file`, file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        // console.log(`event`, event);
-        const dataUrl = event.target.result; // Data URL of the uploaded image
-        // Call handleRemoveBg with the uploaded image's Data URL
-        const removedBgImgUrl = await handleRemoveBg(dataUrl, "upload");
+  // async function handleSelectImg(e) {
+  //   // const removedBgImg = await handleRemoveBg(img);
 
-        const imgPath =
-          pageState.selectedImageNumber === "image-1"
-            ? "selectedImgPath"
-            : "selectedImgPath2";
+  //   // setPageState((prev) => ({
+  //   //   ...prev,
+  //   //   [imgPath]: removedBgImg || img,
+  //   // }));
 
-        setPageState((prev) => ({
-          ...prev,
-          [imgPath]: removedBgImgUrl || dataUrl,
-        }));
-      };
-      reader.readAsDataURL(file);
+  //   const updatedSelectedImgsPath = [...pageState.selectedImgsPath];
+  //   // if the image is already selected, remove it
+  //   if (updatedSelectedImgsPath.includes(e.target.value)) {
+  //     updatedSelectedImgsPath.splice(
+  //       updatedSelectedImgsPath.indexOf(e.target.value),
+  //       1
+  //     );
+  //     // if the image is not selected, add it
+  //   } else {
+  //     updatedSelectedImgsPath.push(e.target.value);
+  //   }
+
+  //   setPageState((prev) => ({
+  //     ...prev,
+  //     selectedImgsPath: updatedSelectedImgsPath,
+  //   }));
+  // }
+
+  async function handleSelectImg(e) {
+    const img = e.target.value;
+    const updatedSelectedImgsPath = [...pageState.selectedImgsPath];
+    const updatedSelectedImgsPathWithoutBg = [
+      ...pageState.selectedImgsPathWithoutBg,
+    ];
+
+    // if the image is already selected, remove it
+    if (updatedSelectedImgsPath.includes(img)) {
+      updatedSelectedImgsPath.splice(updatedSelectedImgsPath.indexOf(img), 1);
+      const indexWithoutBg = updatedSelectedImgsPathWithoutBg.findIndex(
+        (item) => item.source === img
+      );
+      if (indexWithoutBg !== -1) {
+        updatedSelectedImgsPathWithoutBg.splice(indexWithoutBg, 1);
+      }
+    } else {
+      // if the image is not selected, add it
+      updatedSelectedImgsPath.push(img);
+
+      // Check if the image is already in the list of images without background
+      if (
+        !updatedSelectedImgsPathWithoutBg.some((item) => item.source === img)
+      ) {
+        const removedBgImg = await handleRemoveBg(img);
+        updatedSelectedImgsPathWithoutBg.push({
+          img: removedBgImg || img,
+          source: img,
+        });
+      }
     }
-  }
-
-  async function handleSelectImg(img) {
-    const removedBgImg = await handleRemoveBg(img, "select");
-
-    const imgPath =
-      pageState.selectedImageNumber === "image-1"
-        ? "selectedImgPath"
-        : "selectedImgPath2";
 
     setPageState((prev) => ({
       ...prev,
-      [imgPath]: removedBgImg || img,
+      selectedImgsPath: updatedSelectedImgsPath,
+      selectedImgsPathWithoutBg: updatedSelectedImgsPathWithoutBg,
     }));
   }
 
@@ -619,58 +636,62 @@ export default function ThumbnailCanvas() {
 
           {/* 02 Select Background */}
           <div className="flex flex-col gap-[--5px] w-full">
-            <h3 className="font-bold text-[--17px] border-t-[--2px] border-[--gray-300] pt-[--7px]">
-              Select Background
-            </h3>
+            <h3 className="font-bold text-[--17px]">Select Background</h3>
 
-            <div className="flex gap-[--20px] overflow-scroll p-[--5px]">
+            <div className="flex gap-[--50px] overflow-x-auto p-[--5px]">
               {Array.from({ length: 10 }, (_, i) => (
-                <img
-                  key={uuidv4()}
-                  loading="lazy"
-                  src={`/bg-inv/bg-${i}.jpg`}
-                  alt="bg-inv"
-                  className="w-[70%] hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
-                  onClick={() =>
-                    setPageState((prev) => ({
-                      ...prev,
-                      selectedBgPath: `/bg-inv/bg-${i}.jpg`,
-                    }))
-                  }
-                />
-              ))}
-
-              {Array.from({ length: 7 }, (_, i) => (
-                <img
-                  key={uuidv4()}
-                  loading="lazy"
-                  src={`/icons/illustration-${i}.png`}
-                  alt="icons"
-                  className="w-[50%] hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
-                  onClick={() =>
-                    setPageState((prev) => ({
-                      ...prev,
-                      selectedIconPath: `/icons/illustration-${i}.png`,
-                    }))
-                  }
-                />
+                <div className="!w-1/2">
+                  <ImageCard
+                    key={uuidv4()}
+                    inputType="radio"
+                    inputName="select-bg"
+                    imgSrc={`/bg-inv/bg-${i}.jpg`}
+                    checked={pageState.selectedBgPath === `/bg-inv/bg-${i}.jpg`}
+                    onChange={(e) => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        selectedBgPath: e.target.value,
+                      }));
+                    }}
+                  />
+                </div>
               ))}
             </div>
           </div>
 
-          {/* 03 Select Image */}
-          <div className="flex flex-col gap-[--12px] w-full">
-            {/* 03-01 Select Image */}
-            <div className="flex justify-between items-center pt-[--10px] border-t-[--2px] border-[--gray-300]">
-              <h3 className="font-bold text-[--17px]">Select Image</h3>
+          {/* 03 Select Icon */}
+          <div className="flex flex-col gap-[--5px] w-full">
+            <h3 className="font-bold text-[--17px]">Select Icon</h3>
 
-              <div className="w-1/2">
-                <CustomSelectInput
-                  label={"Image No."}
-                  options={["image-1", "image-2"]}
-                  getValue={getSelectedImageNumberValue}
-                />
-              </div>
+            <div className="flex gap-[--50px] overflow-x-auto p-[--5px]">
+              {Array.from({ length: 7 }, (_, i) => (
+                <div className="!w-1/2">
+                  <ImageCard
+                    key={uuidv4()}
+                    inputType="radio"
+                    inputName="select-icon"
+                    imgSrc={`/icons/illustration-${i}.png`}
+                    checked={
+                      pageState.selectedIconPath ===
+                      `/icons/illustration-${i}.png`
+                    }
+                    onChange={(e) => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        selectedIconPath: e.target.value,
+                      }));
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 04 Select Image */}
+          <div className="flex flex-col gap-[--5px] w-full">
+            {/* 03-01 Select Image */}
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-[--17px]">Select Image</h3>
             </div>
 
             {/* 03-02 Search Image */}
@@ -700,40 +721,28 @@ export default function ThumbnailCanvas() {
             </div>
 
             {/* 03-03 Preview Images */}
-            <div className="flex gap-[--20px] overflow-scroll p-[--5px] w-full">
+            <div className="flex gap-[--50px] overflow-x-auto p-[--5px] w-full">
               {!pageState.searchImgData.length ? (
-                <img
-                  src="/img-placeholder.jpg"
-                  alt="img-placeholder"
-                  className="w-[55%] h-auto aspect-square object-cover"
+                <ImageCard
+                  imgSrc="/img-placeholder.jpg"
+                  inputType={"checkbox"}
+                  inputName={"select-img"}
+                  disabled
                 />
               ) : (
                 pageState.searchImgData.map((img) => (
-                  <img
-                    key={uuidv4()}
-                    loading="lazy"
-                    src={img}
-                    alt="searchImg"
-                    className="w-[55%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
-                    onClick={() => handleSelectImg(img)}
-                  />
+                  <div className="!w-1/2">
+                    <ImageCard
+                      key={uuidv4()}
+                      imgSrc={img}
+                      inputType={"checkbox"}
+                      inputName={"select-img"}
+                      checked={pageState.selectedImgsPath.includes(img)}
+                      onChange={handleSelectImg}
+                    />
+                  </div>
                 ))
               )}
-            </div>
-
-            {/* 03-04 UploadImg */}
-            <div>
-              <h3 className="font-bold text-[--17px]">or: Upload Image</h3>
-              <div
-                className={"w-full flex thumbnailCanvas_actionsBar_uploadImg"}
-              >
-                <input
-                  type="file"
-                  // accept="image/*"
-                  accept=".png, .jpeg, .jpg"
-                  onChange={handleUploadImg}
-                />
-              </div>
             </div>
           </div>
         </div>
