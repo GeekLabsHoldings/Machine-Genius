@@ -7,7 +7,7 @@
   position: relative;
 }
 
-.box img{
+.box img {
   width: 100%;
 }
 
@@ -16,6 +16,10 @@
   top: 8%;
   right: 5%;
   margin: 0;
+  width: var(--23px);
+  height: var(--23px);
+  min-width: var(--23px);
+  min-height: var(--23px);
 }
 
 /* .box input::before,
