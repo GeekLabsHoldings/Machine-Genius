@@ -1,0 +1,48 @@
+.box {
+  width: var(--194px);
+  height: var(--102px);
+  border-radius: var(--10px);
+  border: var(--1px) solid var(--dark);
+  overflow: hidden;
+  position: relative;
+}
+
+.box img{
+  width: 100%;
+}
+
+.box input {
+  position: absolute;
+  top: 8%;
+  right: 5%;
+  margin: 0;
+}
+
+/* .box input::before,
+.box input::after {
+  border: clamp(1.5px, calc(0.06vw + 0.05rem), 1000px) solid var(--dark);
+} */
+
+.box input:checked::after {
+  background-color: #f36f24;
+}
+
+input[type="checkbox"]:checked + .selectedOverlay::after {
+  content: "Selected";
+  color: var(--white);
+  font-weight: 700;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.selectedOverlay::after {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
