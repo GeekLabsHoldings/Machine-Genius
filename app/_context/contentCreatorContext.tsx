@@ -46,11 +46,8 @@ const initialContextState = {
   selectedContentTitle: "",
   setSelectedContentTitle: (title: any) => {},
 
-
   presignedURLData: null as any,
   setPresignedURLData: (data: any) => {},
-
-
 
   editContentData: null as any,
   setEditContentData: (id: any) => {},
@@ -429,6 +426,10 @@ export default function ContentCreatorContextProvider({
     let brandNamePayload: string = "";
     if (selectedBrand === "Street Politics Canada") {
       brandNamePayload = "streetPoliticsCanada";
+    } else if (selectedBrand === "Street Politics UK") {
+      brandNamePayload = "streetPoliticsUK";
+    } else if (selectedBrand === "Street Politics Africa") {
+      brandNamePayload = "streetPoliticsAfrica";
     } else if (selectedBrand === "Investorcracy") {
       brandNamePayload = "investocracy";
     } else if (selectedBrand === "Movie Myth") {
@@ -544,6 +545,10 @@ export default function ContentCreatorContextProvider({
     let brandNamePayload: string = "";
     if (selectedBrand === "Street Politics Canada") {
       brandNamePayload = "streetPoliticsCanada";
+    } else if (selectedBrand === "Street Politics UK") {
+      brandNamePayload = "streetPoliticsUK";
+    } else if (selectedBrand === "Street Politics Africa") {
+      brandNamePayload = "streetPoliticsAfrica";
     } else if (selectedBrand === "Investorcracy") {
       brandNamePayload = "investocracy";
     } else if (selectedBrand === "Movie Myth") {
@@ -630,10 +635,7 @@ export default function ContentCreatorContextProvider({
       JSON.stringify(videoTranscription)
     );
   }, [videoTranscription]);
-// ===============================================================
-
-
-
+  // ===============================================================
 
   // function presignedURLDataInit() {
   //   if (typeof window !== "undefined") {
@@ -647,10 +649,6 @@ export default function ContentCreatorContextProvider({
   // useEffect(() => {
   //   sessionStorage.setItem("presignedURLData", JSON.stringify(presignedURLData));
   // }, [presignedURLData]);
-
-
-
-
 
   // ===== End videoTranscription =====
 
@@ -707,10 +705,8 @@ export default function ContentCreatorContextProvider({
     selectedContentTitle,
     setSelectedContentTitle,
 
-
-presignedURLData,
-setPresignedURLData,
-
+    presignedURLData,
+    setPresignedURLData,
 
     editContentData,
     setEditContentData,
