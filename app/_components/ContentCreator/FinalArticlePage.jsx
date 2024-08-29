@@ -495,7 +495,7 @@ export default function FinalArticlePage() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col mx-auto !h-[75vh] py-[1.5vw] w-11/12">
+      <div className="flex flex-col mx-auto !h-[75vh] py-[1vw] w-11/12">
         {/* section to display article */}
         <div className="w-4/5 mx-auto !h-[70vh] ">
           <div>
