@@ -279,19 +279,19 @@ export default function CreateArticlePage() {
         handleFinalizeContentFailure();
         return;
       } else if (json && json?.articles[0]?.content) {
-        const updatedArticle = {
-          ...json,
-          articles: [
-            {
-              ...json.articles[0],
-              content: json.articles[0].content.replace(/<\/?[^>]+(>|$)/g, ""),
-            },
-          ],
-        };
+        // const updatedArticle = {
+        //   ...json,
+        //   articles: [
+        //     {
+        //       ...json.articles[0],
+        //       content: json.articles[0].content.replace(/<\/?[^>]+(>|$)/g, ""),
+        //     },
+        //   ],
+        // };
 
-        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+        // dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
 
-        // dispatch(contentCreatorActions.setFinalArticle(json));
+        dispatch(contentCreatorActions.setFinalArticle(json));
         setPageState((prevState) => ({
           ...prevState,
           triggerNav: true,
