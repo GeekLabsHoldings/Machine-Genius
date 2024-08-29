@@ -157,6 +157,10 @@ export default function ChooseBrandPage() {
     let postBody: any = {};
     if (selectedBrand === "Street Politics Canada") {
       postBody.brandName = "streetPoliticsCanada";
+    } else if (selectedBrand === "Street Politics UK") {
+      postBody.brandName = "streetPoliticsUK";
+    } else if (selectedBrand === "Street Politics Africa") {
+      postBody.brandName = "streetPoliticsAfrica";
     } else if (selectedBrand === "Investorcracy") {
       postBody.brandName = "investocracy";
       postBody.stockName = stockNameValue;
@@ -317,11 +321,6 @@ export default function ChooseBrandPage() {
               return;
             } else if (selectedBrand === "Movie Myth") {
               router.replace("/content-creator/create/movie-myth");
-            } else if (
-              selectedBrand === "Street Politics UK" ||
-              selectedBrand === "Street Politics Africa"
-            ) {
-              toast.success("Coming Soon...");
             } else {
               generateContent();
             }

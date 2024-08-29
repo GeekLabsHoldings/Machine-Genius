@@ -245,6 +245,10 @@ export default function CreateArticlePage() {
     let brandNamePayload = "";
     if (selectedBrand === "Street Politics Canada") {
       brandNamePayload = "streetPoliticsCanada";
+    } else if (selectedBrand === "Street Politics UK") {
+      brandNamePayload = "streetPoliticsUK";
+    } else if (selectedBrand === "Street Politics Africa") {
+      brandNamePayload = "streetPoliticsAfrica";
     } else if (selectedBrand === "Investorcracy") {
       brandNamePayload = "investocracy";
     }
