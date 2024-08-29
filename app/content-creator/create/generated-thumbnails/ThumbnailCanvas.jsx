@@ -78,8 +78,8 @@ export default function ThumbnailCanvas() {
     return {
       generateThumbnailsLoading: false,
       thumbnailFontSize: 84,
-      selectedBgPath: "/bg-inv/bg-0.jpg",
-      selectedIconPath: "/icons/illustration-0.png",
+      selectedBgPath: "/generated-thumbnails/inv/bg/bg-0.jpg",
+      selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
       searchImgKeyword: "",
       searchImgLoading: false,
       searchImgData: pageStateSearchImgDataInit(),
@@ -184,7 +184,7 @@ export default function ThumbnailCanvas() {
 
     // ===== Add overlay image =====
     fabric.Image.fromURL(
-      "/assest.png",
+      "/generated-thumbnails/sp/blackOverlay.png",
       function (img, error) {
         if (error) {
           toast.error("Failed to load overlay image.");
@@ -620,9 +620,13 @@ export default function ThumbnailCanvas() {
                     key={uuidv4()}
                     inputType="radio"
                     inputName="select-bg"
-                    imgSrc={`/bg-inv/bg-${i}.jpg`}
-                    checked={pageState.selectedBgPath === `/bg-inv/bg-${i}.jpg`}
+                    imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
+                    checked={
+                      pageState.selectedBgPath ===
+                      `/generated-thumbnails/inv/bg/bg-${i}.jpg`
+                    }
                     onChange={(e) => {
+                      // console.log(`e.target.value`, e.target.value);
                       setPageState((prev) => ({
                         ...prev,
                         selectedBgPath: e.target.value,
@@ -645,10 +649,10 @@ export default function ThumbnailCanvas() {
                     key={uuidv4()}
                     inputType="radio"
                     inputName="select-icon"
-                    imgSrc={`/icons/illustration-${i}.png`}
+                    imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
                     checked={
                       pageState.selectedIconPath ===
-                      `/icons/illustration-${i}.png`
+                      `/generated-thumbnails/sp/icons/illustration-${i}.png`
                     }
                     onChange={(e) => {
                       setPageState((prev) => ({
@@ -699,7 +703,7 @@ export default function ThumbnailCanvas() {
             <div className="flex gap-[--60px] overflow-x-auto p-[--5px] w-full">
               {!pageState.searchImgData.length ? (
                 <ImageCard
-                  imgSrc="/img-placeholder.jpg"
+                  imgSrc="/generated-thumbnails/img-placeholder.jpg"
                   inputType={"checkbox"}
                   inputName={"select-img"}
                   disabled

@@ -33,6 +33,7 @@ export default function ImageCard({
       ) : (
         <input
           type="radio"
+          className={`${styles.custom_checkbox} `}
           name={inputName}
           value={imgSrc}
           onChange={onChange}
