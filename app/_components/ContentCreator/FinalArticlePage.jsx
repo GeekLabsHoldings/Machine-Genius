@@ -14,14 +14,11 @@ const DynamicCKEditor = dynamic(
   () => import("@ckeditor/ckeditor5-react").then((mod) => mod.CKEditor),
   {
     ssr: false,
-
     loading: () => (
-      <div className="flex flex-col justify-center items-center w-full mx-auto h-[75vh] py-[1vw]">
-        <LogoAndTitle
-          needTxt={true}
-          textNeeded="Hold on tight."
-          title={"Document is loading..."}
-        />
+      <div className="flex flex-col justify-center items-center w-[50vw] mx-auto h-[75vh]">
+        <p className="font-bold text-[--24px] p-[--20px]">
+          Document is loading...
+        </p>
       </div>
     ),
   }
