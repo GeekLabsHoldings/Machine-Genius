@@ -16,7 +16,7 @@ const DynamicCKEditor = dynamic(
     ssr: false,
 
     loading: () => (
-      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
+      <div className="flex flex-col justify-center items-center w-full mx-auto h-[75vh] py-[1vw]">
         <LogoAndTitle
           needTxt={true}
           textNeeded="Hold on tight."
