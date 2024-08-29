@@ -193,6 +193,7 @@
   --sy-227px: clamp(20px, calc(20.9vh + 0.1rem), 1000px);
   --sy-243px: clamp(20px, calc(24.3vh + 0.1rem), 1000px);
   --sy-251px: clamp(20px, calc(25vh + 0.1rem), 1000px);
+  --sy-271px: clamp(20px, calc(26vh + 0.1rem), 1500px);
   --sy-320px: clamp(30px, calc(32vh + 0.1rem), 1000px);
   --sy-380px: clamp(20px, calc(37.037vh + 0.1rem), 380px);
   --sy-680px: clamp(20px, calc(69vh + 0.1rem), 1200px);
