@@ -301,6 +301,7 @@ export default function ThumbnailCanvas() {
       setPageState((prev) => ({
         ...prev,
         searchImgLoading: true,
+        triggerSearchImg: false,
       }));
       const res = await fetch(
         `https://api.machinegenius.io/content-creation/get-images`,
@@ -381,32 +382,6 @@ export default function ThumbnailCanvas() {
       }));
     }
   }
-
-  // async function handleSelectImg(e) {
-  //   // const removedBgImg = await handleRemoveBg(img);
-
-  //   // setPageState((prev) => ({
-  //   //   ...prev,
-  //   //   [imgPath]: removedBgImg || img,
-  //   // }));
-
-  //   const updatedSelectedImgsPath = [...pageState.selectedImgsPath];
-  //   // if the image is already selected, remove it
-  //   if (updatedSelectedImgsPath.includes(e.target.value)) {
-  //     updatedSelectedImgsPath.splice(
-  //       updatedSelectedImgsPath.indexOf(e.target.value),
-  //       1
-  //     );
-  //     // if the image is not selected, add it
-  //   } else {
-  //     updatedSelectedImgsPath.push(e.target.value);
-  //   }
-
-  //   setPageState((prev) => ({
-  //     ...prev,
-  //     selectedImgsPath: updatedSelectedImgsPath,
-  //   }));
-  // }
 
   async function handleSelectImg(e) {
     const img = e.target.value;
