@@ -53,7 +53,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);
@@ -613,7 +613,7 @@ export default function ThumbnailCanvas() {
           <div className="flex flex-col gap-[--5px] w-full">
             <h3 className="font-bold text-[--17px]">Select Background</h3>
 
-            <div className="flex gap-[--50px] overflow-x-auto p-[--5px]">
+            <div className="flex gap-[--60px] overflow-x-auto p-[--5px]">
               {Array.from({ length: 10 }, (_, i) => (
                 <div className="!w-1/2">
                   <ImageCard
@@ -638,7 +638,7 @@ export default function ThumbnailCanvas() {
           <div className="flex flex-col gap-[--5px] w-full">
             <h3 className="font-bold text-[--17px]">Select Icon</h3>
 
-            <div className="flex gap-[--50px] overflow-x-auto p-[--5px]">
+            <div className="flex gap-[--60px] overflow-x-auto p-[--5px]">
               {Array.from({ length: 7 }, (_, i) => (
                 <div className="!w-1/2">
                   <ImageCard
@@ -696,7 +696,7 @@ export default function ThumbnailCanvas() {
             </div>
 
             {/* 03-03 Preview Images */}
-            <div className="flex gap-[--50px] overflow-x-auto p-[--5px] w-full">
+            <div className="flex gap-[--60px] overflow-x-auto p-[--5px] w-full">
               {!pageState.searchImgData.length ? (
                 <ImageCard
                   imgSrc="/img-placeholder.jpg"
