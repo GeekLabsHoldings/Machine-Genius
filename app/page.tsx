@@ -128,7 +128,7 @@ export default function Home() {
   }, [subCounter]);
 
   useGSAP(() => {
-    if (!sectionRef.current || !triggerRef.current) return;
+    if (!sectionRef.current || !triggerRef.current || window.scrollY > 0) return;
 
     let sections = gsap.utils.toArray(".scroll-section");
 
@@ -823,7 +823,7 @@ export default function Home() {
         </div>
         <div>
           <div
-            className="relative w-fit mx-auto text-white mb-[--sy-50px] pt-[--sy-136px] "
+            className="relative w-fit mx-auto text-white mb-[--sy-243px] pt-[--sy-136px] "
             ref={staffRef}
           >
             <div
@@ -1007,7 +1007,7 @@ export default function Home() {
               </div>
             </div>
             <div
-              className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[clamp(50vw,_62.5vw,_80vw)] mb-[--sy-80px]"
+              className=" flex  font-extrabold mx-auto justify-between gap-[--18px] w-[clamp(50vw,_62.5vw,_80vw)] mb-[--sy-64px]"
               data-aos="zoom-in"
             >
               <div className=" flex items-center hover:gap-[--18px] group overflow-x-hidden hover:flex-grow-[3] flex-grow-[2]">
@@ -1061,7 +1061,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
+            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-64px]"></div>
             <div
               className=" relative rounded-[--58px] p-[--6px] bg-[#3D3E3D] bg-opacity-60 flex mx-auto w-fit mb-[--sy-95px]"
               data-aos="zoom-in"
@@ -1104,13 +1104,13 @@ export default function Home() {
               That’s a total of
             </p>
             <span
-              className=" font-bold text-[--175px] mb-[--sy-118px] block w-fit text-center mx-auto"
+              className=" font-bold text-[--175px] mb-[--sy-30px] block w-fit text-center mx-auto"
               data-aos="zoom-in"
               ref={counterWrapperRef}
             >
               ${counter}
             </span>
-            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
+            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-64px]"></div>
             <span className=" text-[--24px] mb-[--sy-38px] block w-fit text-center mx-auto">
               That’s not all
             </span>
@@ -1121,7 +1121,7 @@ export default function Home() {
               Pick your Struggle
             </p>
             <div
-              className=" relative mx-auto w-[clamp(150px,_calc(38.278vw_+_0.1rem),_4000px)] mb-[--sy-170px] z-[80]"
+              className=" relative mx-auto w-[clamp(150px,_calc(38.278vw_+_0.1rem),_4000px)] mb-[--sy-227px] z-[80]"
               ref={cardsss}
             >
               <div className="py-[--sy-29px]  px-[--50px] shadow-[0px_-16.72px_29.48px_0px_#00000047] z-[80] bg-[#666664] group relative hover:z-[81] hover:bg-[#5EA95B] h-[clamp(40vh,_calc(52.37vh_+_0.1rem),_70vh)] hover:-translate-y-[--sy-40px] rounded-[--27px]">
@@ -1161,7 +1161,7 @@ export default function Home() {
               </span>
             </div>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
-            <div className="mb-[--sy-100px]">
+            <div className="mb-[--sy-60px]">
               <p
                 className=" uppercase w-fit mx-auto text-[--24px]"
                 data-aos="fade-up"
@@ -1191,9 +1191,9 @@ export default function Home() {
               higher quality work in less time than <br /> it would take the 12
               employees combined
             </p>
-            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-118px] "></div>
+            <div className=" h-[--sy-136px] w-[1px] bg-white mx-auto mb-[--sy-136px] "></div>
             <div
-              className=" w-full mb-[--sy-243px] relative"
+              className=" w-full mb-[--sy-271px] relative"
               ref={seoSectionRef}
             >
               <h3 className="uppercase text-[--34px] mx-auto w-fit mb-[--sy-20px] font-bold">
@@ -1294,16 +1294,16 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-64px]"></div>
+            <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-60px]"></div>
             <p
-              className="mb-[--sy-64px] text-[--36px] font-extrabold w-fit mx-auto text-center"
+              className="mb-[--sy-60px] text-[--36px] font-extrabold w-fit mx-auto text-center"
               data-aos="zoom-in"
             >
               Genius doesn't just work for a <br /> marketing agency; it works
               for any <br /> business in the world.
             </p>
             <div className=" h-[--sy-118px] w-[1px] bg-white mx-auto mb-[--sy-64px]"></div>
-            <div className="py-[--sy-50px] px-[--55px] rounded-[--28px] bg-[#2A2B2A61] max-w-[clamp(50vw,_58.39vw,_65vw)] mx-auto mb-[--sy-251px]">
+            <div className="py-[--sy-50px] px-[--55px] rounded-[--28px] bg-[#2A2B2A61] max-w-[clamp(50vw,_58.39vw,_65vw)] mx-auto mb-[--sy-196px]">
               <div className=" flex justify-between items-center mb-[--sy-64px]">
                 <p className=" text-[--32px] font-extrabold uppercase">
                   Master every department of your <br /> business with Machine
@@ -1570,7 +1570,7 @@ export default function Home() {
                       <span className=" w-[--36px] h-[--36px] rounded-full bg-white"></span>
                       <span className=" text-[--32px] font-medium">seo</span>
                     </div>
-                    <div className=" flex flex-col gap-y-[--sy-12px] absolute place-items-center top-[20%] right-[85.1%] z-[20] uppercase -rotate-[55deg]">
+                    <div className=" flex flex-col gap-y-[--sy-12px] absolute place-items-center top-[19.6%] right-[85.1%] z-[20] uppercase -rotate-[55deg]">
                       <span className=" w-[--36px] h-[--36px] rounded-full bg-white"></span>
                       <span className=" text-[--32px] font-medium">
                         social media
