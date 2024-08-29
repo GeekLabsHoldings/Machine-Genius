@@ -53,7 +53,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
     // Cleanup
     return () => {
       setEditContentData(null);
@@ -74,6 +74,19 @@ export default function ThumbnailCanvas() {
     }
   }
 
+  function pageStateSearchBgDataInit() {
+    if (typeof window !== "undefined") {
+      const searchBgDataValue = sessionStorage.getItem(
+        "ThumbnailCanvasPageState"
+      );
+      return searchBgDataValue
+        ? JSON.parse(searchBgDataValue).searchBgData
+        : [];
+    } else {
+      return [];
+    }
+  }
+
   function pageStateInit() {
     return {
       generateThumbnailsLoading: false,
@@ -81,14 +94,18 @@ export default function ThumbnailCanvas() {
       selectedBgPath: "/generated-thumbnails/inv/bg/bg-0.jpg",
       selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
       searchImgKeyword: "",
+      searchBgKeyword: "",
       searchImgLoading: false,
+      searchBgLoading: false,
       searchImgData: pageStateSearchImgDataInit(),
+      searchBgData: pageStateSearchBgDataInit(),
       selectedImgsPath: [],
       selectedImgsPathWithoutBg: [],
       removeBgLoading: false,
       isSendLoading: false,
       triggerSendContent: false,
       triggerSearchImg: false,
+      triggerFilterImages: false,
     };
   }
 
@@ -99,7 +116,7 @@ export default function ThumbnailCanvas() {
       "ThumbnailCanvasPageState",
       JSON.stringify(pageState)
     );
-  }, [pageState.searchImgData]);
+  }, [pageState.searchImgData, pageState.searchBgData]);
 
   const getSelectedContentThumbnailValue = useCallback((value) => {
     setSelectedContentThumbnail(value);
@@ -141,7 +158,8 @@ export default function ThumbnailCanvas() {
         blockedUrls.push(url);
         setPageState((prev) => ({
           ...prev,
-          searchImgData: prev.searchImgData.filter((img) => img !== url),
+          // searchImgData: prev.searchImgData.filter((img) => img !== url),
+          searchBgData: prev.searchBgData.filter((img) => img !== url),
         }));
         localStorage.setItem("blockedUrls", JSON.stringify(blockedUrls));
       }
@@ -422,7 +440,7 @@ export default function ThumbnailCanvas() {
     }));
   }
 
-  // =======================================================================
+  // ============= Start Send Content =================
   function handleSelectThumbnail() {
     if (selectedContentThumbnail) {
       setPageState((prev) => ({
@@ -538,8 +556,121 @@ export default function ThumbnailCanvas() {
       // router.push("/content-creator/create/choose-brand");
     }
   }
-  // =======================================================================
+  // ============= End Send Content ==================
 
+  // ==============================================
+  async function handleSearchBg() {
+    if (!pageState.searchBgKeyword) {
+      toast.error("Please provide a keyword to search for an image!");
+      return;
+    }
+    try {
+      setPageState((prev) => ({
+        ...prev,
+        searchBgLoading: true,
+      }));
+      const res = await fetch(
+        `https://machine-genius.onrender.com/content-creation/get-images`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            searchImgKeyword: pageState.searchBgKeyword,
+          }),
+        }
+      );
+      const json = await res.json();
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      } else if (json && json.success === true && json.images) {
+        setPageState((prev) => ({
+          ...prev,
+          searchBgData: json.images.map((img) => img.original),
+          triggerFilterImages: true,
+        }));
+      } else {
+        toast.error("Something went wrong! Contact backend department");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error generateThumbnails:", error);
+    }
+  }
+
+  async function testImageUrl(url) {
+    toast("Testing image url...");
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = url;
+
+      img.onload = () => {
+        // Create a canvas to attempt to draw the image
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Draw the image onto the canvas
+        ctx.drawImage(img, 0, 0);
+
+        try {
+          // Attempt to read pixel data from the canvas
+          ctx.getImageData(0, 0, 1, 1);
+          resolve(url); // Image loaded and CORS is okay
+        } catch (e) {
+          reject("CORS issue or image data blocked: " + url);
+        }
+      };
+
+      img.onerror = () => reject("Image load error: " + url);
+    });
+  }
+
+  async function handleFilterImages() {
+    const urlsToCheck = pageState.searchBgData;
+    if (!urlsToCheck.length) {
+      toast.error("No images to check!");
+      return;
+    }
+    const validUrls = [];
+    const blocked = [];
+
+    for (const url of urlsToCheck) {
+      try {
+        await testImageUrl(url);
+        validUrls.push(url);
+      } catch {
+        blocked.push(url);
+      }
+    }
+
+    // Update with blocked URLs
+    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
+    const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
+    localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
+
+    // Update with valid URLs
+    setPageState((prev) => ({
+      ...prev,
+      searchBgLoading: false,
+      searchBgData: validUrls,
+    }));
+  }
+
+  useEffect(() => {
+    if (pageState.triggerFilterImages) {
+      handleFilterImages();
+    }
+  }, [pageState.triggerFilterImages]);
+  // =============================================
+
+  // ============= Start Loading =================
   if (pageState.generateThumbnailsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
@@ -568,6 +699,22 @@ export default function ThumbnailCanvas() {
     );
   }
 
+  if (pageState.searchBgLoading) {
+    return (
+      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={true}
+          textNeeded="Hold on tight."
+          title={
+            !pageState.triggerFilterImages
+              ? "Genius is searching for backgrounds..."
+              : "Genius is filtering backgrounds..."
+          }
+        />
+      </div>
+    );
+  }
+
   if (pageState.removeBgLoading) {
     return (
       <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
@@ -579,13 +726,14 @@ export default function ThumbnailCanvas() {
       </div>
     );
   }
+  // ============= End Loading =================
 
   return (
     <section>
       <div className="thumbnailCanvas">
         <div className="thumbnailCanvas_actionsBar">
           {/* 01 Select Thumbnail */}
-          <div className="flex flex-col gap-[--10px] w-full">
+          <div className="flex flex-col gap-[--5px] w-full">
             <div className="flex justify-between items-center pt-[--10px]">
               <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
 
@@ -611,8 +759,36 @@ export default function ThumbnailCanvas() {
 
           {/* 02 Select Background */}
           <div className="flex flex-col gap-[--5px] w-full">
+            {/* 02-01 Select Background */}
             <h3 className="font-bold text-[--17px]">Select Background</h3>
 
+            {/* 02-02 Search Background */}
+            <div className="flex gap-[--10px]">
+              <input
+                className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                type="text"
+                name="bg-search"
+                id="bg-search"
+                placeholder="Search for a background ..."
+                value={pageState.searchBgKeyword}
+                onChange={(e) =>
+                  setPageState((prev) => ({
+                    ...prev,
+                    searchBgKeyword: e.target.value,
+                  }))
+                }
+              />
+              <button
+                onClick={() => {
+                  console.log(`searchBgKeyword`, pageState.searchBgKeyword);
+                  handleSearchBg();
+                }}
+              >
+                Search
+              </button>
+            </div>
+
+            {/* 02-03 Preview Backgrounds */}
             <div className="flex gap-[--60px] overflow-x-auto p-[--5px]">
               {Array.from({ length: 10 }, (_, i) => (
                 <div className="!w-1/2">
@@ -635,6 +811,27 @@ export default function ThumbnailCanvas() {
                   />
                 </div>
               ))}
+
+              {Array.isArray(pageState.searchBgData) &&
+                pageState.searchBgData.length &&
+                pageState.searchBgData.map((img) => (
+                  <div className="!w-1/2">
+                    <ImageCard
+                      key={uuidv4()}
+                      imgSrc={img}
+                      inputType={"checkbox"}
+                      inputName={"select-bg"}
+                      checked={pageState.selectedBgPath === img}
+                      onChange={(e) => {
+                        // console.log(`e.target.value`, e.target.value);
+                        setPageState((prev) => ({
+                          ...prev,
+                          selectedBgPath: e.target.value,
+                        }));
+                      }}
+                    />
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -669,9 +866,9 @@ export default function ThumbnailCanvas() {
           {/* 04 Select Image */}
           <div className="flex flex-col gap-[--5px] w-full">
             {/* 03-01 Select Image */}
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-[--17px]">Select Image</h3>
-            </div>
+            {/* <div className="flex justify-between items-center"> */}
+            <h3 className="font-bold text-[--17px]">Select Image</h3>
+            {/* </div> */}
 
             {/* 03-02 Search Image */}
             <div className="flex gap-[--10px]">
