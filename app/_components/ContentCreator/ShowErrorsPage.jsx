@@ -91,8 +91,6 @@ import {
 import "ckeditor5/ckeditor5.css";
 import "./CKEDITOR.css";
 
-
-
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -103,6 +101,7 @@ export default function ShowErrorsPage() {
     setCheckStatus,
     startChecks,
     selectedBrand,
+    formatToHtml,
   } = useContext(contentCreatorContext);
   const checkGrammerResults = useSelector(
     (state) => state.contentCreator.checkGrammerResults
@@ -118,8 +117,10 @@ export default function ShowErrorsPage() {
   const finalArticleRef = useRef(null);
 
   const [pageState, setPageState] = useState({
+    isLayoutReady: false,
     isLoading: false,
     isLoadingParaphrase: false,
+    isLoadingFormatToHtml: false,
     triggerStartChecks: false,
     progressCounter: checkAiResults ? checkAiResults?.length : 0,
   });
@@ -407,220 +408,241 @@ export default function ShowErrorsPage() {
     });
   }
 
-    // ========================
-    const editorContainerRef = useRef(null);
-    const editorMenuBarRef = useRef(null);
-    const editorToolbarRef = useRef(null);
-    const editorRef = useRef(null);
-    const [isLayoutReady, setIsLayoutReady] = useState(false);
-  
-    useEffect(() => {
-      setIsLayoutReady(true);
-  
-      return () => setIsLayoutReady(false);
-    }, []);
-  
-    const editorConfig = {
-      toolbar: {
-        items: [
-          "undo",
-          "redo",
-          "|",
-          "heading",
-          "|",
-          "fontSize",
-          "fontFamily",
-          "fontColor",
-          "fontBackgroundColor",
-          "|",
-          "bold",
-          "italic",
-          "underline",
-          "|",
-          "link",
-          "insertTable",
-          "highlight",
-          "|",
-          "alignment",
-          "|",
-          "bulletedList",
-          "numberedList",
-          "todoList",
-          "outdent",
-          "indent",
-        ],
-        shouldNotGroupWhenFull: false,
-      },
-      plugins: [
-        AccessibilityHelp,
-        Alignment,
-        Autoformat,
-        AutoImage,
-        AutoLink,
-        Autosave,
-        BalloonToolbar,
-        Bold,
-        CloudServices,
-        Code,
-        Essentials,
-        FindAndReplace,
-        FontBackgroundColor,
-        FontColor,
-        FontFamily,
-        FontSize,
-        Heading,
-        Highlight,
-        HorizontalLine,
-        ImageBlock,
-        ImageCaption,
-        ImageInline,
-        ImageInsertViaUrl,
-        ImageResize,
-        ImageStyle,
-        ImageToolbar,
-        ImageUpload,
-        Indent,
-        IndentBlock,
-        Italic,
-        Link,
-        LinkImage,
-        List,
-        ListProperties,
-        PageBreak,
-        Paragraph,
-        PasteFromOffice,
-        RemoveFormat,
-        SelectAll,
-        SpecialCharacters,
-        SpecialCharactersArrows,
-        SpecialCharactersCurrency,
-        SpecialCharactersEssentials,
-        SpecialCharactersLatin,
-        SpecialCharactersMathematical,
-        SpecialCharactersText,
-        Strikethrough,
-        Subscript,
-        Superscript,
-        Table,
-        TableCaption,
-        TableCellProperties,
-        TableColumnResize,
-        TableProperties,
-        TableToolbar,
-        TextTransformation,
-        TodoList,
-        Underline,
-        Undo,
-      ],
-      balloonToolbar: [
+  // ========================
+  async function handleFormatToHtml(content) {
+    setPageState((prev) => ({
+      ...prev,
+      isLayoutReady: false,
+      isLoadingFormatToHtml: true,
+    }));
+    const data = await formatToHtml(content);
+    setPageState((prev) => ({
+      ...prev,
+      isLayoutReady: true,
+      isLoadingFormatToHtml: false,
+    }));
+    return data;
+  }
+
+  const editorContainerRef = useRef(null);
+  const editorMenuBarRef = useRef(null);
+  const editorToolbarRef = useRef(null);
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    setPageState((prev) => ({
+      ...prev,
+      isLayoutReady: true,
+    }));
+
+    return () =>
+      setPageState((prev) => ({
+        ...prev,
+        isLayoutReady: false,
+      }));
+  }, []);
+
+  const editorConfig = {
+    toolbar: {
+      items: [
+        "undo",
+        "redo",
+        "|",
+        "heading",
+        "|",
+        "fontSize",
+        "fontFamily",
+        "fontColor",
+        "fontBackgroundColor",
+        "|",
         "bold",
         "italic",
+        "underline",
         "|",
         "link",
+        "insertTable",
+        "highlight",
+        "|",
+        "alignment",
         "|",
         "bulletedList",
         "numberedList",
+        "todoList",
+        "outdent",
+        "indent",
       ],
-      fontFamily: {
-        supportAllValues: true,
-      },
-      fontSize: {
-        options: [10, 12, 14, "default", 18, 20, 22],
-        supportAllValues: true,
-      },
-      heading: {
-        options: [
-          {
-            model: "paragraph",
-            title: "Paragraph",
-            class: "ck-heading_paragraph",
-          },
-          {
-            model: "heading1",
-            view: "h1",
-            title: "Heading 1",
-            class: "ck-heading_heading1",
-          },
-          {
-            model: "heading2",
-            view: "h2",
-            title: "Heading 2",
-            class: "ck-heading_heading2",
-          },
-          {
-            model: "heading3",
-            view: "h3",
-            title: "Heading 3",
-            class: "ck-heading_heading3",
-          },
-          {
-            model: "heading4",
-            view: "h4",
-            title: "Heading 4",
-            class: "ck-heading_heading4",
-          },
-          {
-            model: "heading5",
-            view: "h5",
-            title: "Heading 5",
-            class: "ck-heading_heading5",
-          },
-          {
-            model: "heading6",
-            view: "h6",
-            title: "Heading 6",
-            class: "ck-heading_heading6",
-          },
-        ],
-      },
-      image: {
-        toolbar: [
-          "toggleImageCaption",
-          "imageTextAlternative",
-          "|",
-          "imageStyle:inline",
-          "imageStyle:wrapText",
-          "imageStyle:breakText",
-          "|",
-          "resizeImage",
-        ],
-      },
-      initialData: `${finalArticle?.articles[0]?.content || ""}`,
-      link: {
-        addTargetToExternalLinks: true,
-        defaultProtocol: "https://",
-        decorators: {
-          toggleDownloadable: {
-            mode: "manual",
-            label: "Downloadable",
-            attributes: {
-              download: "file",
-            },
+      shouldNotGroupWhenFull: false,
+    },
+    plugins: [
+      AccessibilityHelp,
+      Alignment,
+      Autoformat,
+      AutoImage,
+      AutoLink,
+      Autosave,
+      BalloonToolbar,
+      Bold,
+      CloudServices,
+      Code,
+      Essentials,
+      FindAndReplace,
+      FontBackgroundColor,
+      FontColor,
+      FontFamily,
+      FontSize,
+      Heading,
+      Highlight,
+      HorizontalLine,
+      ImageBlock,
+      ImageCaption,
+      ImageInline,
+      ImageInsertViaUrl,
+      ImageResize,
+      ImageStyle,
+      ImageToolbar,
+      ImageUpload,
+      Indent,
+      IndentBlock,
+      Italic,
+      Link,
+      LinkImage,
+      List,
+      ListProperties,
+      PageBreak,
+      Paragraph,
+      PasteFromOffice,
+      RemoveFormat,
+      SelectAll,
+      SpecialCharacters,
+      SpecialCharactersArrows,
+      SpecialCharactersCurrency,
+      SpecialCharactersEssentials,
+      SpecialCharactersLatin,
+      SpecialCharactersMathematical,
+      SpecialCharactersText,
+      Strikethrough,
+      Subscript,
+      Superscript,
+      Table,
+      TableCaption,
+      TableCellProperties,
+      TableColumnResize,
+      TableProperties,
+      TableToolbar,
+      TextTransformation,
+      TodoList,
+      Underline,
+      Undo,
+    ],
+    balloonToolbar: [
+      "bold",
+      "italic",
+      "|",
+      "link",
+      "|",
+      "bulletedList",
+      "numberedList",
+    ],
+    fontFamily: {
+      supportAllValues: true,
+    },
+    fontSize: {
+      options: [10, 12, 14, "default", 18, 20, 22],
+      supportAllValues: true,
+    },
+    heading: {
+      options: [
+        {
+          model: "paragraph",
+          title: "Paragraph",
+          class: "ck-heading_paragraph",
+        },
+        {
+          model: "heading1",
+          view: "h1",
+          title: "Heading 1",
+          class: "ck-heading_heading1",
+        },
+        {
+          model: "heading2",
+          view: "h2",
+          title: "Heading 2",
+          class: "ck-heading_heading2",
+        },
+        {
+          model: "heading3",
+          view: "h3",
+          title: "Heading 3",
+          class: "ck-heading_heading3",
+        },
+        {
+          model: "heading4",
+          view: "h4",
+          title: "Heading 4",
+          class: "ck-heading_heading4",
+        },
+        {
+          model: "heading5",
+          view: "h5",
+          title: "Heading 5",
+          class: "ck-heading_heading5",
+        },
+        {
+          model: "heading6",
+          view: "h6",
+          title: "Heading 6",
+          class: "ck-heading_heading6",
+        },
+      ],
+    },
+    image: {
+      toolbar: [
+        "toggleImageCaption",
+        "imageTextAlternative",
+        "|",
+        "imageStyle:inline",
+        "imageStyle:wrapText",
+        "imageStyle:breakText",
+        "|",
+        "resizeImage",
+      ],
+    },
+    initialData: `${finalArticle?.articles[0]?.content || ""}`,
+    link: {
+      addTargetToExternalLinks: true,
+      defaultProtocol: "https://",
+      decorators: {
+        toggleDownloadable: {
+          mode: "manual",
+          label: "Downloadable",
+          attributes: {
+            download: "file",
           },
         },
       },
-      list: {
-        properties: {
-          styles: true,
-          startIndex: true,
-          reversed: true,
-        },
+    },
+    list: {
+      properties: {
+        styles: true,
+        startIndex: true,
+        reversed: true,
       },
-      menuBar: {
-        isVisible: true,
-      },
-      placeholder: "Type or paste your content here!",
-      table: {
-        contentToolbar: [
-          "tableColumn",
-          "tableRow",
-          "mergeTableCells",
-          "tableProperties",
-          "tableCellProperties",
-        ],
-      },
-    };
-    // ========================
+    },
+    menuBar: {
+      isVisible: true,
+    },
+    placeholder: "Type or paste your content here!",
+    table: {
+      contentToolbar: [
+        "tableColumn",
+        "tableRow",
+        "mergeTableCells",
+        "tableProperties",
+        "tableCellProperties",
+      ],
+    },
+  };
+  // ========================
 
   // todo
   async function handleNavigate() {
@@ -731,25 +753,24 @@ export default function ShowErrorsPage() {
     );
   }
 
+  if (pageState.isLoadingFormatToHtml) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={false}
+          title="Genius is formatting your content..."
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full">
       {/* 01. Article Preview & Errors */}
       <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
-
-
-
-
-
-
-
-
-
         {/* 01-1. Article Preview */}
         <div className={"w-3/5 h-full"}>
-
-
-
-        <div>
+          <div>
             <div className="main-container">
               <div
                 className="editor-container editor-container_document-editor"
@@ -766,7 +787,7 @@ export default function ShowErrorsPage() {
                 <div className="editor-container__editor-wrapper">
                   <div className="editor-container__editor">
                     <div ref={editorRef}>
-                      {isLayoutReady && (
+                      {pageState.isLayoutReady && (
                         <DynamicCKEditor
                           onReady={(editor) => {
                             editorToolbarRef.current.appendChild(
@@ -813,33 +834,7 @@ export default function ShowErrorsPage() {
               </div>
             </div>
           </div>
-
-
-
-
-
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         {/* 01-2. Preview Errors */}
         <div className={styles.scripts_wrapper + " w-2/5"}>
@@ -934,38 +929,7 @@ export default function ShowErrorsPage() {
               </ErrorCollapse> */}
           </div>
         </div>
-
-
-
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       {/* 02. Buttons lead you to last or next page */}
       <div className="flex justify-between w-full">

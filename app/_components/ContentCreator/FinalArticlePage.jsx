@@ -381,29 +381,20 @@ export default function FinalArticlePage() {
   // ========================
 
   function handleNavigate() {
-    const finalArticleContent = finalArticle?.articles[0]?.content
-      .replace(/[*#]/g, "") // Remove asterisks and hash symbols
-      .replace(/[’]/g, "'") // Replace right single quotes with regular single quotes
-      .replace(/[‘]/g, "'") // Replace left single quotes with regular single quotes
-      .replace(/[“]/g, '"') // Replace left double quotes with regular double quotes
-      .replace(/[”]/g, '"') // Replace right double quotes with regular double quotes
-      .replace(/\s+/g, " ") // Normalize whitespace to a single space
-      .trim() // Trim leading and trailing whitespace
-      .replace(/<\/?[^>]+(>|$)/g, "") // Remove all HTML tags
-      .replace(/[`]/g, "'");
+    // const finalArticleContent = finalArticle?.articles[0]?.content;
 
-    const updatedArticle = {
-      ...finalArticle,
-      articles: [
-        {
-          ...finalArticle.articles[0],
-          content: finalArticleContent,
-        },
-      ],
-    };
+    // const updatedArticle = {
+    //   ...finalArticle,
+    //   articles: [
+    //     {
+    //       ...finalArticle.articles[0],
+    //       content: finalArticleContent,
+    //     },
+    //   ],
+    // };
 
-    dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-    console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
+    // dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+    // console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
 
     setStartNav(true);
   }
