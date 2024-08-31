@@ -12,6 +12,86 @@ import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreato
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
+import dynamic from "next/dynamic";
+const DynamicCKEditor = dynamic(
+  () => import("@ckeditor/ckeditor5-react").then((mod) => mod.CKEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex flex-col justify-center items-center w-[50vw] mx-auto h-[75vh]">
+        <p className="font-bold text-[--24px] p-[--20px]">
+          Document is loading...
+        </p>
+      </div>
+    ),
+  }
+);
+import {
+  DecoupledEditor,
+  AccessibilityHelp,
+  Alignment,
+  Autoformat,
+  AutoImage,
+  AutoLink,
+  Autosave,
+  BalloonToolbar,
+  Bold,
+  CloudServices,
+  Code,
+  Essentials,
+  FindAndReplace,
+  FontBackgroundColor,
+  FontColor,
+  FontFamily,
+  FontSize,
+  Heading,
+  Highlight,
+  HorizontalLine,
+  ImageBlock,
+  ImageCaption,
+  ImageInline,
+  ImageInsertViaUrl,
+  ImageResize,
+  ImageStyle,
+  ImageToolbar,
+  ImageUpload,
+  Indent,
+  IndentBlock,
+  Italic,
+  Link,
+  LinkImage,
+  List,
+  ListProperties,
+  PageBreak,
+  Paragraph,
+  PasteFromOffice,
+  RemoveFormat,
+  SelectAll,
+  SpecialCharacters,
+  SpecialCharactersArrows,
+  SpecialCharactersCurrency,
+  SpecialCharactersEssentials,
+  SpecialCharactersLatin,
+  SpecialCharactersMathematical,
+  SpecialCharactersText,
+  Strikethrough,
+  Subscript,
+  Superscript,
+  Table,
+  TableCaption,
+  TableCellProperties,
+  TableColumnResize,
+  TableProperties,
+  TableToolbar,
+  TextTransformation,
+  TodoList,
+  Underline,
+  Undo,
+} from "ckeditor5";
+import "ckeditor5/ckeditor5.css";
+import "./CKEDITOR.css";
+
+
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
@@ -25,32 +105,27 @@ export default function ShowErrorsPage() {
     selectedBrand,
   } = useContext(contentCreatorContext);
   const checkGrammerResults = useSelector(
-    (state: any) => state.contentCreator.checkGrammerResults
+    (state) => state.contentCreator.checkGrammerResults
   );
   const checkAiResults = useSelector(
-    (state: any) => state.contentCreator.checkAiResults
+    (state) => state.contentCreator.checkAiResults
   );
 
   const finalArticle = useSelector(
-    (state: any) => state.contentCreator.finalArticle
+    (state) => state.contentCreator.finalArticle
   );
 
-  const finalArticleRef = useRef<HTMLDivElement>(null);
+  const finalArticleRef = useRef(null);
 
-  const [pageState, setPageState] = useState<{
-    isLoading: boolean;
-    isLoadingParaphrase: boolean;
-    triggerStartChecks: boolean;
-    progressCounter: number;
-  }>({
+  const [pageState, setPageState] = useState({
     isLoading: false,
     isLoadingParaphrase: false,
     triggerStartChecks: false,
     progressCounter: checkAiResults ? checkAiResults?.length : 0,
   });
 
-  const [selectedIssue, setSelectedIssue] = useState<any>(null);
-  const [issueType, setIssueType] = useState<string>("");
+  const [selectedIssue, setSelectedIssue] = useState(null);
+  const [issueType, setIssueType] = useState("");
 
   function finalArticleContentInit() {
     if (typeof window !== "undefined") {
@@ -212,7 +287,7 @@ export default function ShowErrorsPage() {
     }
   }, [checkAiResults]);
 
-  function highlightText(text: any, start: any, end: any) {
+  function highlightText(text, start, end) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
   }
 
@@ -253,7 +328,7 @@ export default function ShowErrorsPage() {
     }
   }
 
-  async function paraphraseSentence(sentence: string) {
+  async function paraphraseSentence(sentence) {
     try {
       const res = await fetch(`https://api.ai21.com/studio/v1/paraphrase`, {
         method: "POST",
@@ -303,7 +378,7 @@ export default function ShowErrorsPage() {
 
           // decrease the progressCounter
           if (pageState.progressCounter > 0) {
-            setPageState((prev: any) => ({
+            setPageState((prev) => ({
               ...prev,
               progressCounter: prev.progressCounter - 1,
             }));
@@ -331,6 +406,221 @@ export default function ShowErrorsPage() {
       isLoadingParaphrase: false,
     });
   }
+
+    // ========================
+    const editorContainerRef = useRef(null);
+    const editorMenuBarRef = useRef(null);
+    const editorToolbarRef = useRef(null);
+    const editorRef = useRef(null);
+    const [isLayoutReady, setIsLayoutReady] = useState(false);
+  
+    useEffect(() => {
+      setIsLayoutReady(true);
+  
+      return () => setIsLayoutReady(false);
+    }, []);
+  
+    const editorConfig = {
+      toolbar: {
+        items: [
+          "undo",
+          "redo",
+          "|",
+          "heading",
+          "|",
+          "fontSize",
+          "fontFamily",
+          "fontColor",
+          "fontBackgroundColor",
+          "|",
+          "bold",
+          "italic",
+          "underline",
+          "|",
+          "link",
+          "insertTable",
+          "highlight",
+          "|",
+          "alignment",
+          "|",
+          "bulletedList",
+          "numberedList",
+          "todoList",
+          "outdent",
+          "indent",
+        ],
+        shouldNotGroupWhenFull: false,
+      },
+      plugins: [
+        AccessibilityHelp,
+        Alignment,
+        Autoformat,
+        AutoImage,
+        AutoLink,
+        Autosave,
+        BalloonToolbar,
+        Bold,
+        CloudServices,
+        Code,
+        Essentials,
+        FindAndReplace,
+        FontBackgroundColor,
+        FontColor,
+        FontFamily,
+        FontSize,
+        Heading,
+        Highlight,
+        HorizontalLine,
+        ImageBlock,
+        ImageCaption,
+        ImageInline,
+        ImageInsertViaUrl,
+        ImageResize,
+        ImageStyle,
+        ImageToolbar,
+        ImageUpload,
+        Indent,
+        IndentBlock,
+        Italic,
+        Link,
+        LinkImage,
+        List,
+        ListProperties,
+        PageBreak,
+        Paragraph,
+        PasteFromOffice,
+        RemoveFormat,
+        SelectAll,
+        SpecialCharacters,
+        SpecialCharactersArrows,
+        SpecialCharactersCurrency,
+        SpecialCharactersEssentials,
+        SpecialCharactersLatin,
+        SpecialCharactersMathematical,
+        SpecialCharactersText,
+        Strikethrough,
+        Subscript,
+        Superscript,
+        Table,
+        TableCaption,
+        TableCellProperties,
+        TableColumnResize,
+        TableProperties,
+        TableToolbar,
+        TextTransformation,
+        TodoList,
+        Underline,
+        Undo,
+      ],
+      balloonToolbar: [
+        "bold",
+        "italic",
+        "|",
+        "link",
+        "|",
+        "bulletedList",
+        "numberedList",
+      ],
+      fontFamily: {
+        supportAllValues: true,
+      },
+      fontSize: {
+        options: [10, 12, 14, "default", 18, 20, 22],
+        supportAllValues: true,
+      },
+      heading: {
+        options: [
+          {
+            model: "paragraph",
+            title: "Paragraph",
+            class: "ck-heading_paragraph",
+          },
+          {
+            model: "heading1",
+            view: "h1",
+            title: "Heading 1",
+            class: "ck-heading_heading1",
+          },
+          {
+            model: "heading2",
+            view: "h2",
+            title: "Heading 2",
+            class: "ck-heading_heading2",
+          },
+          {
+            model: "heading3",
+            view: "h3",
+            title: "Heading 3",
+            class: "ck-heading_heading3",
+          },
+          {
+            model: "heading4",
+            view: "h4",
+            title: "Heading 4",
+            class: "ck-heading_heading4",
+          },
+          {
+            model: "heading5",
+            view: "h5",
+            title: "Heading 5",
+            class: "ck-heading_heading5",
+          },
+          {
+            model: "heading6",
+            view: "h6",
+            title: "Heading 6",
+            class: "ck-heading_heading6",
+          },
+        ],
+      },
+      image: {
+        toolbar: [
+          "toggleImageCaption",
+          "imageTextAlternative",
+          "|",
+          "imageStyle:inline",
+          "imageStyle:wrapText",
+          "imageStyle:breakText",
+          "|",
+          "resizeImage",
+        ],
+      },
+      initialData: `${finalArticle?.articles[0]?.content || ""}`,
+      link: {
+        addTargetToExternalLinks: true,
+        defaultProtocol: "https://",
+        decorators: {
+          toggleDownloadable: {
+            mode: "manual",
+            label: "Downloadable",
+            attributes: {
+              download: "file",
+            },
+          },
+        },
+      },
+      list: {
+        properties: {
+          styles: true,
+          startIndex: true,
+          reversed: true,
+        },
+      },
+      menuBar: {
+        isVisible: true,
+      },
+      placeholder: "Type or paste your content here!",
+      table: {
+        contentToolbar: [
+          "tableColumn",
+          "tableRow",
+          "mergeTableCells",
+          "tableProperties",
+          "tableCellProperties",
+        ],
+      },
+    };
+    // ========================
 
   // todo
   async function handleNavigate() {
@@ -445,26 +735,111 @@ export default function ShowErrorsPage() {
     <div className="flex flex-col h-full">
       {/* 01. Article Preview & Errors */}
       <div className="flex justify-center items-start h-[75vh] py-[1.5vw] gap-[2rem]">
+
+
+
+
+
+
+
+
+
         {/* 01-1. Article Preview */}
         <div className={"w-3/5 h-full"}>
-          <div className={` ${styles.articlePreview} h-full`}>
-            <div className={`${styles.articlePreviewData} `}>
-              <h1 className="mx-auto font-bold text-2xl">
-                {finalArticle?.articles[0]?.title}
-              </h1>
 
+
+
+        <div>
+            <div className="main-container">
               <div
-                id="finalArticle"
-                ref={finalArticleRef}
-                contentEditable={"plaintext-only"}
-                className={`${styles.articleContent}`}
-                // onInput={handleInput}
+                className="editor-container editor-container_document-editor"
+                ref={editorContainerRef}
               >
-                <p>{finalArticle?.articles[0]?.content}</p>
+                <div
+                  className="editor-container__menu-bar"
+                  ref={editorMenuBarRef}
+                ></div>
+                <div
+                  className="editor-container__toolbar"
+                  ref={editorToolbarRef}
+                ></div>
+                <div className="editor-container__editor-wrapper">
+                  <div className="editor-container__editor">
+                    <div ref={editorRef}>
+                      {isLayoutReady && (
+                        <DynamicCKEditor
+                          onReady={(editor) => {
+                            editorToolbarRef.current.appendChild(
+                              editor.ui.view.toolbar.element
+                            );
+                            editorMenuBarRef.current.appendChild(
+                              editor.ui.view.menuBarView.element
+                            );
+                          }}
+                          onAfterDestroy={() => {
+                            Array.from(
+                              editorToolbarRef.current?.children || []
+                            ).forEach((child) => child.remove());
+                            Array.from(
+                              editorMenuBarRef.current?.children || []
+                            ).forEach((child) => child.remove());
+                          }}
+                          onChange={(event, editor) => {
+                            const data = editor.getData();
+
+                            const updatedArticle = {
+                              ...finalArticle,
+                              articles: [
+                                {
+                                  ...finalArticle.articles[0],
+                                  content: data,
+                                },
+                              ],
+                            };
+
+                            dispatch(
+                              contentCreatorActions.setFinalArticle(
+                                updatedArticle
+                              )
+                            );
+                          }}
+                          editor={DecoupledEditor}
+                          config={editorConfig}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+
+
+
+
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         {/* 01-2. Preview Errors */}
         <div className={styles.scripts_wrapper + " w-2/5"}>
@@ -474,7 +849,7 @@ export default function ShowErrorsPage() {
           </div>
 
           <div className={styles.errors_container}>
-            {checkGrammerResults.map((item: any, index: number) => {
+            {checkGrammerResults.map((item, index) => {
               return (
                 <ErrorCollapse
                   key={index}
@@ -527,7 +902,7 @@ export default function ShowErrorsPage() {
               );
             })}
 
-            {checkAiResults.map((item: any, index: number) => {
+            {checkAiResults.map((item, index) => {
               return (
                 <ErrorCollapse
                   key={index}
@@ -559,7 +934,38 @@ export default function ShowErrorsPage() {
               </ErrorCollapse> */}
           </div>
         </div>
+
+
+
       </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       {/* 02. Buttons lead you to last or next page */}
       <div className="flex justify-between w-full">
