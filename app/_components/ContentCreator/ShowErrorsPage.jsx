@@ -257,7 +257,7 @@ export default function ShowErrorsPage() {
         return json?.suggestions[0].text;
       }
     } catch (error) {
-      toast.error("Something went wrong! Error Paraphrase AI");
+      // toast.error("Something went wrong! Error Paraphrase AI");
       console.error("Error paraphraseSentence:", error);
     }
   }

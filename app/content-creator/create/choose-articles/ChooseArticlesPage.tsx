@@ -262,7 +262,10 @@ export default function ChooseArticlesPage() {
           <div className={styles.header}>
             <h6>Preview</h6>
           </div>
-          <div className={styles.selected_article_container}>{previewText}</div>
+          <div
+            className={styles.selected_article_container}
+            dangerouslySetInnerHTML={{ __html: previewText }}
+          />
         </div>
       </div>
 
