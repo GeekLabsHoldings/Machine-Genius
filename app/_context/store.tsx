@@ -150,7 +150,7 @@ export default function GlobalContextProvider({
         );
         const data = await res.json();
         if (data.result) {
-          toast.success("Token is valid");
+          toast.success("Session is valid");
         } else if (data.message && data.message.name === "TokenExpiredError") {
           handleSignOut();
         } else if (data.message === "USER_TOKEN_IS_INVALID") {
