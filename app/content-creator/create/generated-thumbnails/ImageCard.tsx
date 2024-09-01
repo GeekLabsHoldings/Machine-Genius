@@ -38,6 +38,7 @@ export default function ImageCard({
           value={imgSrc}
           onChange={onChange}
           checked={checked}
+          disabled={disabled}
         />
       )}
       <div className={`${styles.selectedOverlay}`}></div>

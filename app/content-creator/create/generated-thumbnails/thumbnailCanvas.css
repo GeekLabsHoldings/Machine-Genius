@@ -3,6 +3,16 @@
   src: url("/fonts/Hellix-Black.woff2") format("woff2");
 }
 
+@font-face {
+  font-family: "Acumin-BdItPro";
+  src: url("/fonts/Acumin-BdItPro.otf") format("otf");
+}
+
+@font-face {
+  font-family: "Acumin-BdItPro1";
+  src: url("/fonts/Acumin-BdPro.otf") format("otf");
+}
+
 .thumbnailCanvas {
   display: flex;
   justify-content: space-between;

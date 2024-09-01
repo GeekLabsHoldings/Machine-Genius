@@ -64,6 +64,7 @@
   --48px: clamp(10px, calc(2.27vw + 0.1rem), 1000px);
   --49px: clamp(10px, calc(2.325vw + 0.1rem), 1000px);
   --50px: clamp(10px, calc(2.375vw + 0.1rem), 1000px);
+  --50px-1: clamp(40px, calc(2.375vw + 0.1rem), 1000px);
   --51px: clamp(10px, calc(2.425vw + 0.1rem), 1000px);
   --55px: clamp(10px, calc(2.944vw + 0.1rem), 1000px);
   --58px: clamp(10px, calc(3.111vw + 0.1rem), 1000px);
@@ -539,7 +540,7 @@ img {
 
 .scroll-section-inner {
   height: 60vh;
-  width: clamp(400vw , 400vw , 500vw)  ;
+  width: clamp(400vw, 400vw, 500vw);
   display: flex;
   flex-direction: row;
   position: relative;
@@ -548,7 +549,7 @@ img {
 }
 
 .scroll-section {
-  width: clamp(100vw , 100vw, 200vw);
+  width: clamp(100vw, 100vw, 200vw);
   display: flex;
   justify-content: center;
   flex-direction: column;

@@ -91,7 +91,9 @@ export default function ThumbnailCanvas() {
     return {
       generateThumbnailsLoading: false,
       thumbnailFontSize: 84,
-      selectedBgPath: "/generated-thumbnails/inv/bg/bg-0.jpg",
+      selectedBgPath: selectedBrand.includes("Street Politics")
+        ? "/generated-thumbnails/sp/bg/bg-0.jpg"
+        : "/generated-thumbnails/inv/bg/bg-0.jpg",
       selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
       searchImgKeyword: "",
       searchBgKeyword: "",
@@ -196,56 +198,68 @@ export default function ThumbnailCanvas() {
     // ===== Load background image =====
     if (!isBlocked(pageState.selectedBgPath)) {
       loadImage(pageState.selectedBgPath, (img) => {
+        // Set the image to fit the canvas dimensions
+        img.set({
+          left: 0, // Position the image at the left edge
+          top: 0, // Position the image at the top edge
+        });
+        // Set the image to fit the canvas dimensions
+        img.scaleToWidth(1280);
+        img.scaleToHeight(720);
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
       });
     }
 
     // ===== Add overlay image =====
-    fabric.Image.fromURL(
-      "/generated-thumbnails/sp/blackOverlay.png",
-      function (img, error) {
-        if (error) {
-          toast.error("Failed to load overlay image.");
-          return;
-        }
+    if (selectedBrand.includes("Street Politics")) {
+      fabric.Image.fromURL(
+        "/generated-thumbnails/sp/blackOverlay.png",
+        function (img, error) {
+          if (error) {
+            toast.error("Failed to load overlay image.");
+            return;
+          }
 
-        img.set({
-          crossOrigin: "anonymous", // Set crossOrigin attribute
-          left: -1,
-          top: 0,
-          selectable: false, // Make the image non-selectable (non-movable, non-resizable)
-          evented: false, // Disable interaction events (prevents drag, resize)
-          lockMovementX: true, // Prevent horizontal movement
-          lockMovementY: true, // Prevent vertical movement
-          lockScalingX: true, // Prevent horizontal scaling
-          lockScalingY: true, // Prevent vertical scaling
-          lockRotation: true, // Prevent rotation
-        });
+          img.set({
+            crossOrigin: "anonymous", // Set crossOrigin attribute
+            left: -1,
+            top: 0,
+            selectable: false, // Make the image non-selectable (non-movable, non-resizable)
+            evented: false, // Disable interaction events (prevents drag, resize)
+            lockMovementX: true, // Prevent horizontal movement
+            lockMovementY: true, // Prevent vertical movement
+            lockScalingX: true, // Prevent horizontal scaling
+            lockScalingY: true, // Prevent vertical scaling
+            lockRotation: true, // Prevent rotation
+          });
 
-        canvas.add(img);
-        // Send the image to the back
-        img.sendToBack();
-      },
-      { crossOrigin: "anonymous" }
-    );
+          canvas.add(img);
+          // Send the image to the back
+          img.sendToBack();
+        },
+        { crossOrigin: "anonymous" }
+      );
+    }
 
     // ===== Add icon image =====
-    fabric.Image.fromURL(
-      pageState.selectedIconPath,
-      function (img, error) {
-        if (error) {
-          toast.error("Failed to load overlay image.");
-          return;
-        }
-        img.set({
-          crossOrigin: "anonymous", // Set crossOrigin attribute
-        });
-        img.left = 75;
-        img.top = 75;
-        canvas.add(img);
-      },
-      { crossOrigin: "anonymous" }
-    );
+    if (selectedBrand.includes("Street Politics")) {
+      fabric.Image.fromURL(
+        pageState.selectedIconPath,
+        function (img, error) {
+          if (error) {
+            toast.error("Failed to load overlay image.");
+            return;
+          }
+          img.set({
+            crossOrigin: "anonymous", // Set crossOrigin attribute
+          });
+          img.left = 75;
+          img.top = 75;
+          canvas.add(img);
+        },
+        { crossOrigin: "anonymous" }
+      );
+    }
 
     // Load images
     pageState.selectedImgsPathWithoutBg.forEach(({ img }, index) => {
@@ -260,28 +274,53 @@ export default function ThumbnailCanvas() {
     });
 
     // ===== Add text =====
-    // Set the starting position (bottom-left corner)
-    let left = 40;
-    let top = canvas.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
+    if (selectedBrand.includes("Street Politics")) {
+      // Set the starting position (bottom-left corner)
+      let left = 40;
+      let top = canvas.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
 
-    // Add each word as a separate text object
-    for (let i = words.length - 1; i >= 0; i--) {
-      const text = new fabric.Text(words[i], {
-        left: left,
-        top: top,
-        fontSize: pageState.thumbnailFontSize,
-        fill: i === 0 ? "red" : "#ffffff",
-        fontFamily: "Hellix-Black",
-        fontWeight: "600",
-        shadow: {
-          color: "rgba(0, 0, 0, 0.5)", // Shadow color with opacity
-          blur: 5, // Blur level of the shadow
-          offsetX: 3, // Horizontal shadow offset
-          offsetY: 3, // Vertical shadow offset
-        },
-      });
-      canvas.add(text);
-      top -= text.height * 0.7; // Move the next word up by the height of the text
+      // Add each word as a separate text object
+      for (let i = words.length - 1; i >= 0; i--) {
+        const text = new fabric.Text(words[i], {
+          left: left,
+          top: top,
+          fontSize: pageState.thumbnailFontSize,
+          fill: i === 0 ? "red" : "#ffffff",
+          fontFamily: "Hellix-Black",
+          fontWeight: "600",
+          stroke: "black", // Set the stroke color to black
+          strokeWidth: 3, // Set the stroke width to 3px
+          shadow: {
+            color: "rgba(0, 0, 0, 0.5)", // Shadow color with opacity
+            blur: 5, // Blur level of the shadow
+            offsetX: 3, // Horizontal shadow offset
+            offsetY: 3, // Vertical shadow offset
+          },
+        });
+        canvas.add(text);
+        top -= text.height * 0.7; // Move the next word up by the height of the text
+      }
+    } else {
+      // Set the starting position (bottom-left corner)
+      let left = 40;
+      let top = canvas.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
+
+      // Add each word as a separate text object
+      for (let i = words.length - 1; i >= 0; i--) {
+        const text = new fabric.Text(words[i].toUpperCase(), {
+          left: left,
+          top: top,
+          fontSize: pageState.thumbnailFontSize,
+          fill: i === 0 ? "#C0FE15" : "#ffffff",
+          // fontFamily: "Acumin-BdItPro",
+          fontFamily: "Acumin-BdItPro1",
+          fontWeight: "800",
+          fontStyle: "italic",
+          textBackgroundColor: "#1E2329",
+        });
+        canvas.add(text);
+        top -= text.height * 1.2; // Move the next word up by the height of the text
+      }
     }
 
     // Cleanup
@@ -570,7 +609,7 @@ export default function ThumbnailCanvas() {
         searchBgLoading: true,
       }));
       const res = await fetch(
-        `https://machine-genius.onrender.com/content-creation/get-images`,
+        `https://api.machinegenius.io/content-creation/get-images`,
         {
           method: "POST",
           headers: {
@@ -601,6 +640,11 @@ export default function ThumbnailCanvas() {
     } catch (error) {
       toast.error("Something went wrong! Contact backend department");
       console.error("Error generateThumbnails:", error);
+    } finally {
+      setPageState((prev) => ({
+        ...prev,
+        searchBgLoading: false,
+      }));
     }
   }
 
@@ -789,17 +833,38 @@ export default function ThumbnailCanvas() {
             </div>
 
             {/* 02-03 Preview Backgrounds */}
-            <div className="flex gap-[--60px] overflow-x-auto p-[--5px]">
-              {Array.from({ length: 10 }, (_, i) => (
+            <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
+              {selectedBrand === "Investorcracy" &&
+                Array.from({ length: 10 }, (_, i) => (
+                  <div className="!w-1/2" key={uuidv4()}>
+                    <ImageCard
+                      inputType="radio"
+                      inputName="select-bg"
+                      imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
+                      checked={
+                        pageState.selectedBgPath ===
+                        `/generated-thumbnails/inv/bg/bg-${i}.jpg`
+                      }
+                      onChange={(e) => {
+                        // console.log(`e.target.value`, e.target.value);
+                        setPageState((prev) => ({
+                          ...prev,
+                          selectedBgPath: e.target.value,
+                        }));
+                      }}
+                    />
+                  </div>
+                ))}
+
+              {selectedBrand.includes("Street Politics") && (
                 <div className="!w-1/2">
                   <ImageCard
-                    key={uuidv4()}
                     inputType="radio"
                     inputName="select-bg"
-                    imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
+                    imgSrc={`/generated-thumbnails/sp/bg/bg-0.jpg`}
                     checked={
                       pageState.selectedBgPath ===
-                      `/generated-thumbnails/inv/bg/bg-${i}.jpg`
+                      `/generated-thumbnails/sp/bg/bg-0.jpg`
                     }
                     onChange={(e) => {
                       // console.log(`e.target.value`, e.target.value);
@@ -810,16 +875,25 @@ export default function ThumbnailCanvas() {
                     }}
                   />
                 </div>
-              ))}
+              )}
 
-              {Array.isArray(pageState.searchBgData) &&
+              {!pageState.searchBgData.length ? (
+                <div className="!w-1/2">
+                  <ImageCard
+                    imgSrc="/generated-thumbnails/img-placeholder.jpg"
+                    inputType="radio"
+                    inputName={"select-bg"}
+                    disabled
+                  />
+                </div>
+              ) : (
+                Array.isArray(pageState.searchBgData) &&
                 pageState.searchBgData.length &&
                 pageState.searchBgData.map((img) => (
-                  <div className="!w-1/2">
+                  <div className="!w-1/2" key={uuidv4()}>
                     <ImageCard
-                      key={uuidv4()}
                       imgSrc={img}
-                      inputType={"checkbox"}
+                      inputType="radio"
                       inputName={"select-bg"}
                       checked={pageState.selectedBgPath === img}
                       onChange={(e) => {
@@ -831,37 +905,39 @@ export default function ThumbnailCanvas() {
                       }}
                     />
                   </div>
-                ))}
+                ))
+              )}
             </div>
           </div>
 
           {/* 03 Select Icon */}
-          <div className="flex flex-col gap-[--5px] w-full">
-            <h3 className="font-bold text-[--17px]">Select Icon</h3>
+          {selectedBrand.includes("Street Politics") && (
+            <div className="flex flex-col gap-[--5px] w-full">
+              <h3 className="font-bold text-[--17px]">Select Icon</h3>
 
-            <div className="flex gap-[--60px] overflow-x-auto p-[--5px]">
-              {Array.from({ length: 7 }, (_, i) => (
-                <div className="!w-1/2">
-                  <ImageCard
-                    key={uuidv4()}
-                    inputType="radio"
-                    inputName="select-icon"
-                    imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
-                    checked={
-                      pageState.selectedIconPath ===
-                      `/generated-thumbnails/sp/icons/illustration-${i}.png`
-                    }
-                    onChange={(e) => {
-                      setPageState((prev) => ({
-                        ...prev,
-                        selectedIconPath: e.target.value,
-                      }));
-                    }}
-                  />
-                </div>
-              ))}
+              <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
+                {Array.from({ length: 7 }, (_, i) => (
+                  <div className="!w-1/2" key={uuidv4()}>
+                    <ImageCard
+                      inputType="radio"
+                      inputName="select-icon"
+                      imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
+                      checked={
+                        pageState.selectedIconPath ===
+                        `/generated-thumbnails/sp/icons/illustration-${i}.png`
+                      }
+                      onChange={(e) => {
+                        setPageState((prev) => ({
+                          ...prev,
+                          selectedIconPath: e.target.value,
+                        }));
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* 04 Select Image */}
           <div className="flex flex-col gap-[--5px] w-full">
@@ -897,7 +973,7 @@ export default function ThumbnailCanvas() {
             </div>
 
             {/* 03-03 Preview Images */}
-            <div className="flex gap-[--60px] overflow-x-auto p-[--5px] w-full">
+            <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px] w-full">
               {!pageState.searchImgData.length ? (
                 <ImageCard
                   imgSrc="/generated-thumbnails/img-placeholder.jpg"
@@ -907,9 +983,8 @@ export default function ThumbnailCanvas() {
                 />
               ) : (
                 pageState.searchImgData.map((img) => (
-                  <div className="!w-1/2">
+                  <div className="!w-1/2" key={uuidv4()}>
                     <ImageCard
-                      key={uuidv4()}
                       imgSrc={img}
                       inputType={"checkbox"}
                       inputName={"select-img"}
