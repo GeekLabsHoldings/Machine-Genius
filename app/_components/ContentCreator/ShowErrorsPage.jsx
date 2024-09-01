@@ -347,7 +347,9 @@ export default function ShowErrorsPage() {
         toast.error("Something went wrong! Contact backend department");
         return finalArticle?.articles[0]?.content || "";
       } else if (json && json.success === true && json?.articles[0]?.content) {
-        const data = json?.articles[0]?.content.replace(/\n/g, "");
+        const data = json?.articles[0]?.content
+          .replace(/\n/g, "")
+          .replace(/[`]/g, "");
         const updatedArticle = {
           ...finalArticle,
           articles: [
