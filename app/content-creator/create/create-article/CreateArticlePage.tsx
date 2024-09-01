@@ -11,6 +11,7 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { formatToText } from "@/app/_utils/contentFormatter";
 // import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 // import { SelectArticleData } from "@/app/_data/data";
@@ -265,9 +266,9 @@ export default function CreateArticlePage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            selectedContent: selectedText
-              .map((item: any) => item.text)
-              .join(" "),
+            selectedContent: formatToText(
+              selectedText.map((item: any) => item.text).join(" ")
+            ),
             ...(selectedContentType === "Script" && {
               brandName: brandNamePayload,
             }),
@@ -417,9 +418,16 @@ export default function CreateArticlePage() {
                     >
                       Select
                     </button>
-                    <p contentEditable={"plaintext-only"}>
-                      {previewSelectedArticle()}
-                    </p>
+                    <div
+                      // contentEditable={"plaintext-only"}
+                      contentEditable={true}
+                      dangerouslySetInnerHTML={{
+                        __html: previewSelectedArticle(),
+                      }}
+                      className="outline-none"
+                    >
+                      {/* {previewSelectedArticle()} */}
+                    </div>
                   </div>
                 </div>
               </div>
