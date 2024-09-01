@@ -361,7 +361,7 @@ export default function ContentCreatorContextProvider({
         // console.log("checkAiResult", json);
         const filteredJson = json?.documents[0]?.sentences.filter(
           (sentence: any) =>
-            sentence.highlight_sentence_for_ai && sentence.generated_prob >= 0.9
+            sentence.highlight_sentence_for_ai && sentence.generated_prob >= 0.95
         );
         if (
           // json.documents[0].class_probabilities.human < 0.8
