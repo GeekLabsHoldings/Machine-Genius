@@ -381,21 +381,6 @@ export default function FinalArticlePage() {
   // ========================
 
   function handleNavigate() {
-    // const finalArticleContent = finalArticle?.articles[0]?.content;
-
-    // const updatedArticle = {
-    //   ...finalArticle,
-    //   articles: [
-    //     {
-    //       ...finalArticle.articles[0],
-    //       content: finalArticleContent,
-    //     },
-    //   ],
-    // };
-
-    // dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-    // console.log("+++++++++++++++++-finalArticle is updated-+++++++++++++++");
-
     setStartNav(true);
   }
 

@@ -5,15 +5,21 @@ export function formatToText(content) {
     toast.error("No content provided");
     return "";
   }
+
   return content
-    .replace(/[*#]/g, "") // Remove asterisks and hash symbols
-    .replace(/[’]/g, "'") // Replace right single quotes with regular single quotes
-    .replace(/[‘]/g, "'") // Replace left single quotes with regular single quotes
-    .replace(/[“]/g, '"') // Replace left double quotes with regular double quotes
-    .replace(/[”]/g, '"') // Replace right double quotes with regular double quotes
+    .replace(/<\/?[^>]+(>|$)|[*#]|[`]|[’‘]|[“”]/g, (match) => {
+      switch (match) {
+        case "’":
+        case "‘":
+        case "`":
+          return "'";
+        case "“":
+        case "”":
+          return '"';
+        default:
+          return " ";
+      }
+    })
     .replace(/\s+/g, " ") // Normalize whitespace to a single space
-    .replace(/<\/?[^>]+(>|$)/g, "") // Remove all HTML tags
-    .replace(/[`]/g, "'")
-    .replace(/\n/g, "")
-    .trim(); // Trim leading and trailing whitespace;
+    .trim(); // Trim leading and trailing whitespace
 }

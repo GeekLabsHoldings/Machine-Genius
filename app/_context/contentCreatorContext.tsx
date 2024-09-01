@@ -21,8 +21,6 @@ const initialContextState = {
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
 
-  formatToHtml: (content: string) => {},
-
   checkStatus: {
     grammar: "waiting",
     // todo: temp until backend fix it
@@ -170,57 +168,6 @@ export default function ContentCreatorContextProvider({
   useEffect(() => {
     sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
   }, [finalArticle]);
-
-  async function formatToHtml(content: string) {
-    if (!content) {
-      toast.error("No content provided");
-      return finalArticle?.articles[0]?.content || "";
-    }
-    try {
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/format-to-html`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contentBody: content,
-          }),
-        }
-      );
-
-      const json = await res.json();
-
-      if (!json) {
-        toast.error("Something went wrong! Contact backend department");
-        return finalArticle?.articles[0]?.content || "";
-      } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
-        return finalArticle?.articles[0]?.content || "";
-      } else if (json && json.success === true && json?.articles[0]?.content) {
-        const data = json?.articles[0]?.content.replace(/\n/g, "");
-        const updatedArticle = {
-          ...finalArticle,
-          articles: [
-            {
-              ...finalArticle.articles[0],
-              content: data,
-            },
-          ],
-        };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-      } else {
-        toast.error("Something went wrong! Contact backend department");
-        return finalArticle?.articles[0]?.content || "";
-      }
-    } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
-      console.error("Error formatToHtml:", error);
-      return finalArticle?.articles[0]?.content || ""
-    }
-  }
   // ===== End finalArticle =====
 
   // ===== Start Checks =====
@@ -741,7 +688,6 @@ export default function ContentCreatorContextProvider({
     setTwitterData,
     choosedArticles,
     setChoosedArticles,
-    formatToHtml,
     checkStatus,
     setCheckStatus,
     checkGrammer,

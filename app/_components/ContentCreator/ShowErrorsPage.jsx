@@ -90,6 +90,7 @@ import {
 } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
 import "./CKEDITOR.css";
+import { formatToText } from "@/app/_utils/contentFormatter";
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
@@ -100,7 +101,6 @@ export default function ShowErrorsPage() {
     setCheckStatus,
     startChecks,
     selectedBrand,
-    formatToHtml,
   } = useContext(contentCreatorContext);
   const checkGrammerResults = useSelector(
     (state) => state.contentCreator.checkGrammerResults
@@ -177,44 +177,62 @@ export default function ShowErrorsPage() {
     }
   }, [checkAiResults]);
 
+  // =======================================
+  async function handleFixAndCheck() {
+    if (checkAiResults.length) {
+      await handleFixAiIssues();
+    }
+    if (checkGrammerResults.length) {
+      await handleFixGrammerIssues();
+    }
+    setPageState({
+      ...pageState,
+      triggerStartChecks: true,
+    });
+  }
+  // =======================================
+
   function highlightText(text, start, end) {
     return [text.slice(0, start), text.slice(start, end), text.slice(end)];
   }
 
   async function handleFixGrammerIssues() {
-    if (typeof window !== undefined) {
-      const storedFinalArticle = sessionStorage.getItem("finalArticle");
-      if (storedFinalArticle) {
-        let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
-        let storedFinalArticleContent =
-          parsedStoredFinalArticle.articles[0].content;
+    // const storedFinalArticle = sessionStorage.getItem("finalArticle");
+    const storedFinalArticle = JSON.parse(JSON.stringify(finalArticle));
+    if (storedFinalArticle) {
+      // let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
+      // let storedFinalArticleContent = formatToText(
+      //   parsedStoredFinalArticle.articles[0].content
+      // );
+      let storedFinalArticleContent = formatToText(
+        storedFinalArticle.articles[0].content
+      );
 
-        for (let i = 0; i < checkGrammerResults.length; i++) {
-          let item = checkGrammerResults[i];
+      for (let i = 0; i < checkGrammerResults.length; i++) {
+        let item = checkGrammerResults[i];
 
-          let replacedSentence =
-            item.sentence.slice(0, item.start) +
-            item.replacement +
-            item.sentence.slice(item.end);
+        let replacedSentence =
+          item.sentence.slice(0, item.start) +
+          item.replacement +
+          item.sentence.slice(item.end);
 
-          storedFinalArticleContent = storedFinalArticleContent.replace(
-            item.sentence,
-            replacedSentence
-          );
-        }
-
-        const updatedFinalArticle = {
-          ...parsedStoredFinalArticle,
-          articles: [
-            {
-              ...parsedStoredFinalArticle.articles[0],
-              content: storedFinalArticleContent,
-            },
-          ],
-        };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
+        storedFinalArticleContent = storedFinalArticleContent.replace(
+          item.sentence,
+          replacedSentence
+        );
       }
+
+      const updatedFinalArticle = {
+        ...storedFinalArticle,
+        articles: [
+          {
+            ...storedFinalArticle.articles[0],
+            content: storedFinalArticleContent,
+          },
+        ],
+      };
+
+      dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
     }
   }
 
@@ -249,47 +267,49 @@ export default function ShowErrorsPage() {
       ...pageState,
       isLoadingParaphrase: true,
     });
-    if (typeof window !== undefined) {
-      const storedFinalArticle = sessionStorage.getItem("finalArticle");
-      if (storedFinalArticle) {
-        let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
-        let storedFinalArticleContent =
-          parsedStoredFinalArticle.articles[0].content;
+    // const storedFinalArticle = sessionStorage.getItem("finalArticle");
+    const storedFinalArticle = JSON.parse(JSON.stringify(finalArticle));
+    if (storedFinalArticle) {
+      // let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
+      // let storedFinalArticleContent = formatToText(
+      //   parsedStoredFinalArticle.articles[0].content
+      // );
+      let storedFinalArticleContent = formatToText(
+        storedFinalArticle.articles[0].content
+      );
+      for (let i = 0; i < checkAiResults.length; i++) {
+        let item = checkAiResults[i];
 
-        for (let i = 0; i < checkAiResults.length; i++) {
-          let item = checkAiResults[i];
+        let replacedSentence = await paraphraseSentence(item.sentence);
 
-          let replacedSentence = await paraphraseSentence(item.sentence);
+        storedFinalArticleContent = storedFinalArticleContent.replace(
+          item.sentence,
+          replacedSentence
+        );
 
-          storedFinalArticleContent = storedFinalArticleContent.replace(
-            item.sentence,
-            replacedSentence
-          );
-
-          // decrease the progressCounter
-          if (pageState.progressCounter > 0) {
-            setPageState((prev) => ({
-              ...prev,
-              progressCounter: prev.progressCounter - 1,
-            }));
-          }
-
-          // Add a delay between requests to avoid hitting the rate limit
-          await new Promise((resolve) => setTimeout(resolve, 100));
+        // decrease the progressCounter
+        if (pageState.progressCounter > 0) {
+          setPageState((prev) => ({
+            ...prev,
+            progressCounter: prev.progressCounter - 1,
+          }));
         }
 
-        const updatedFinalArticle = {
-          ...parsedStoredFinalArticle,
-          articles: [
-            {
-              ...parsedStoredFinalArticle.articles[0],
-              content: storedFinalArticleContent,
-            },
-          ],
-        };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
+        // Add a delay between requests to avoid hitting the rate limit
+        await new Promise((resolve) => setTimeout(resolve, 100));
       }
+
+      const updatedFinalArticle = {
+        ...storedFinalArticle,
+        articles: [
+          {
+            ...storedFinalArticle.articles[0],
+            content: storedFinalArticleContent,
+          },
+        ],
+      };
+
+      dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
     }
     setPageState({
       ...pageState,
@@ -298,19 +318,63 @@ export default function ShowErrorsPage() {
   }
 
   // ========================
-  async function handleFormatToHtml(content) {
-    setPageState((prev) => ({
-      ...prev,
-      isLayoutReady: false,
-      isLoadingFormatToHtml: true,
-    }));
-    const data = await formatToHtml(content);
-    setPageState((prev) => ({
-      ...prev,
-      isLayoutReady: true,
-      isLoadingFormatToHtml: false,
-    }));
-    return data;
+  async function formatToHtml() {
+    try {
+      setPageState((prev) => ({
+        ...prev,
+        // isLayoutReady: false,
+        isLoadingFormatToHtml: true,
+      }));
+      const res = await fetch(
+        `https://api.machinegenius.io/content-creation/format-to-html`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contentBody: finalArticle?.articles[0]?.content,
+          }),
+        }
+      );
+
+      const json = await res.json();
+
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return finalArticle?.articles[0]?.content || "";
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return finalArticle?.articles[0]?.content || "";
+      } else if (json && json.success === true && json?.articles[0]?.content) {
+        const data = json?.articles[0]?.content.replace(/\n/g, "");
+        const updatedArticle = {
+          ...finalArticle,
+          articles: [
+            {
+              ...finalArticle.articles[0],
+              content: data,
+            },
+          ],
+        };
+
+        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+      } else {
+        toast.error("Something went wrong! Contact backend department");
+        return finalArticle?.articles[0]?.content || "";
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error formatToHtml:", error);
+      return finalArticle?.articles[0]?.content || "";
+    } finally {
+      setPageState((prev) => ({
+        ...prev,
+        // isLayoutReady: true,
+        isLoadingFormatToHtml: false,
+        isLoading: false,
+      }));
+    }
   }
 
   const editorContainerRef = useRef(null);
@@ -534,17 +598,15 @@ export default function ShowErrorsPage() {
   // ========================
 
   // todo
-  async function handleNavigate() {
-    if (checkAiResults.length) {
-      await handleFixAiIssues();
-    }
-    if (checkGrammerResults.length) {
-      await handleFixGrammerIssues();
-    }
-    setPageState({
-      ...pageState,
-      triggerStartChecks: true,
-    });
+  if (pageState.isLoadingFormatToHtml) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={false}
+          title="Genius is formatting your content..."
+        />
+      </div>
+    );
   }
 
   if (pageState.isLoading) {
@@ -590,6 +652,7 @@ export default function ShowErrorsPage() {
               word={"Results"}
               btnColor="black"
               onClick={() => {
+                // formatToHtml();
                 setPageState({
                   ...pageState,
                   isLoading: false,
@@ -638,17 +701,6 @@ export default function ShowErrorsPage() {
               <span className="text-[--30px]">remaining sentences...</span>
             </p>
           )}
-      </div>
-    );
-  }
-
-  if (pageState.isLoadingFormatToHtml) {
-    return (
-      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle
-          needTxt={false}
-          title="Genius is formatting your content..."
-        />
       </div>
     );
   }
@@ -823,7 +875,7 @@ export default function ShowErrorsPage() {
           word={"Fix & Check"}
           btnColor="black"
           onClick={() => {
-            handleNavigate();
+            handleFixAndCheck();
           }}
           disabled={pageState.isLoadingParaphrase}
         />
