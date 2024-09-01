@@ -349,6 +349,7 @@ export default function ShowErrorsPage() {
       } else if (json && json.success === true && json?.articles[0]?.content) {
         const data = json?.articles[0]?.content
           .replace(/\n/g, "")
+          .replace(/\bhtml\b/gi, "")
           .replace(/[`]/g, "");
         const updatedArticle = {
           ...finalArticle,
