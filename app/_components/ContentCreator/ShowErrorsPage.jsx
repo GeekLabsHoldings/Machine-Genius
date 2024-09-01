@@ -296,7 +296,7 @@ export default function ShowErrorsPage() {
         }
 
         // Add a delay between requests to avoid hitting the rate limit
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
 
       const updatedFinalArticle = {
@@ -652,11 +652,11 @@ export default function ShowErrorsPage() {
               word={"Results"}
               btnColor="black"
               onClick={() => {
-                // formatToHtml();
-                setPageState({
-                  ...pageState,
-                  isLoading: false,
-                });
+                formatToHtml();
+                // setPageState({
+                //   ...pageState,
+                //   isLoading: false,
+                // });
               }}
             />
           ) : (
