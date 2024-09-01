@@ -94,7 +94,6 @@ import "./CKEDITOR.css";
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-
   const {
     selectedContentType,
     checkStatus,
@@ -109,12 +108,9 @@ export default function ShowErrorsPage() {
   const checkAiResults = useSelector(
     (state) => state.contentCreator.checkAiResults
   );
-
   const finalArticle = useSelector(
     (state) => state.contentCreator.finalArticle
   );
-
-  const finalArticleRef = useRef(null);
 
   const [pageState, setPageState] = useState({
     isLayoutReady: false,
@@ -124,34 +120,6 @@ export default function ShowErrorsPage() {
     triggerStartChecks: false,
     progressCounter: checkAiResults ? checkAiResults?.length : 0,
   });
-
-  const [selectedIssue, setSelectedIssue] = useState(null);
-  const [issueType, setIssueType] = useState("");
-
-  function finalArticleContentInit() {
-    if (typeof window !== "undefined") {
-      const finalArticleInitValue = sessionStorage.getItem("finalArticle");
-      return finalArticleInitValue
-        ? JSON.parse(finalArticleInitValue)?.articles[0]?.content
-        : finalArticleRef.current?.innerText;
-    } else {
-      return finalArticleRef.current?.innerText;
-    }
-  }
-  const finalArticleContentRef = useRef(finalArticleContentInit());
-  useEffect(() => {
-    const updatedArticle = {
-      ...finalArticle,
-      articles: [
-        {
-          ...finalArticle?.articles[0],
-          content: finalArticleContentRef.current,
-        },
-      ],
-    };
-
-    sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
-  }, [finalArticle, finalArticleContentRef.current]);
 
   useEffect(() => {
     // ===== log data =====
@@ -181,12 +149,6 @@ export default function ShowErrorsPage() {
       });
       console.log("finalArticle right before startChecks()", finalArticle);
       startChecks();
-      if (selectedIssue !== null) {
-        setSelectedIssue(null);
-      }
-      if (issueType !== "") {
-        setIssueType("");
-      }
     }
   }, [pageState.triggerStartChecks]);
 
@@ -203,81 +165,8 @@ export default function ShowErrorsPage() {
         plagiarism: "pass",
         ai: checkStatus.ai !== "pass" ? "waiting" : "pass",
       });
-    } else {
-      if (selectedIssue !== null) {
-        setSelectedIssue(null);
-      }
-      if (issueType !== "") {
-        setIssueType("");
-      }
     }
   }, [pageState.isLoading]);
-
-  useEffect(() => {
-    const handleInput = () => {
-      console.log("handleInput");
-      if (finalArticleRef.current) {
-        finalArticleContentRef.current = finalArticleRef.current.innerText;
-        const updatedArticle = {
-          ...finalArticle,
-          articles: [
-            {
-              ...finalArticle.articles[0],
-              content: finalArticleContentRef.current,
-            },
-          ],
-        };
-        sessionStorage.setItem("finalArticle", JSON.stringify(updatedArticle));
-      }
-    };
-
-    if (finalArticleRef.current) {
-      finalArticleRef.current.addEventListener("input", handleInput);
-    }
-
-    return () => {
-      if (finalArticleRef.current) {
-        finalArticleRef.current.removeEventListener("input", handleInput);
-      }
-    };
-  }, [finalArticle, finalArticleContentRef.current]);
-
-  useEffect(() => {
-    const handleBlur = () => {
-      console.log("handleBlur");
-      // window.alert("handleBlur");
-      if (typeof window !== undefined) {
-        const updatedFinalArticle = sessionStorage.getItem("finalArticle");
-        if (updatedFinalArticle) {
-          dispatch(
-            contentCreatorActions.setFinalArticle(
-              JSON.parse(updatedFinalArticle)
-            )
-          );
-        }
-      } else {
-        const updatedFinalArticle = {
-          ...finalArticle,
-          articles: [
-            {
-              ...finalArticle.articles[0],
-              content: finalArticleContentRef.current,
-            },
-          ],
-        };
-        dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
-      }
-    };
-
-    if (finalArticleRef.current) {
-      finalArticleRef.current.addEventListener("blur", handleBlur);
-    }
-    return () => {
-      if (finalArticleRef.current) {
-        finalArticleRef.current.removeEventListener("blur", handleBlur);
-      }
-    };
-  }, [finalArticle, dispatch, finalArticleContentRef.current]);
 
   useEffect(() => {
     if (checkAiResults && checkAiResults?.length) {
@@ -846,15 +735,7 @@ export default function ShowErrorsPage() {
           <div className={styles.errors_container}>
             {checkGrammerResults.map((item, index) => {
               return (
-                <ErrorCollapse
-                  key={index}
-                  title="Grammar"
-                  onClick={() => {
-                    setSelectedIssue(item);
-                    setIssueType("grammer");
-                    // console.log("grammer item clicked:", item);
-                  }}
-                >
+                <ErrorCollapse key={index} title="Grammar">
                   <>
                     <p>
                       <span className="font-bold">Grammar Issue:</span>{" "}
@@ -899,15 +780,7 @@ export default function ShowErrorsPage() {
 
             {checkAiResults.map((item, index) => {
               return (
-                <ErrorCollapse
-                  key={index}
-                  title="AI"
-                  onClick={() => {
-                    setSelectedIssue(item);
-                    setIssueType("ai");
-                    // console.log("ai item clicked:", item);
-                  }}
-                >
+                <ErrorCollapse key={index} title="AI">
                   <>
                     <p>
                       <span className="font-bold">
