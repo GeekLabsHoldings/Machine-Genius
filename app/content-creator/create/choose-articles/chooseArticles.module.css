@@ -43,11 +43,21 @@
 
 .preview_wrapper .selected_article_container p {
   text-align: justify;
-  margin-bottom: clamp(10px, calc(1.4vw + 0.1rem), 300px);
+  /* margin-top: var(--12px); */
+  margin-bottom: var(--12px);
 }
 
 .preview_wrapper .selected_article_container p:last-child {
   margin-bottom: 0;
+}
+
+.preview_wrapper .selected_article_container img {
+  width: 65% !important;
+  text-align: center;
+  margin: 0 auto;
+  border-radius: var(--20px);
+  display: block;
+  margin-bottom: var(--5px);
 }
 /* ===== Start ArticleWithCheck ===== */
 .article_with_check {
