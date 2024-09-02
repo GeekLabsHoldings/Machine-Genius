@@ -58,7 +58,11 @@ const ContentDatabase = () => {
   });
 
   useEffect(() => {
-    const reversedContentDatabase = [...contentDatabase].reverse();
+    const reversedContentDatabase =
+      Array.isArray(contentDatabase) && contentDatabase.length > 0
+        ? [...contentDatabase].reverse()
+        : [];
+
     const filteredData = reversedContentDatabase.filter((item: any) => {
       const matchesBrand = filterBy.brand
         ? item.brand === filterBy.brand
@@ -167,12 +171,14 @@ const ContentDatabase = () => {
             <CustomSelectInput
               options={[
                 "All",
-                ...contentDatabase
-                  .map((item: any) => item.brand)
-                  .filter(
-                    (item: any, index: any, self: any) =>
-                      self.indexOf(item) === index
-                  ),
+                ...(Array.isArray(contentDatabase) && contentDatabase.length > 0
+                  ? contentDatabase
+                      .map((item: any) => item.brand)
+                      .filter(
+                        (item: any, index: any, self: any) =>
+                          self.indexOf(item) === index
+                      )
+                  : []),
               ]}
               getValue={(value: string) =>
                 setFilterBy({
@@ -188,12 +194,14 @@ const ContentDatabase = () => {
             <CustomSelectInput
               options={[
                 "All",
-                ...contentDatabase
-                  .map((item: any) => item.content_type)
-                  .filter(
-                    (item: any, index: any, self: any) =>
-                      self.indexOf(item) === index
-                  ),
+                ...(Array.isArray(contentDatabase) && contentDatabase.length > 0
+                  ? contentDatabase
+                      .map((item: any) => item.content_type)
+                      .filter(
+                        (item: any, index: any, self: any) =>
+                          self.indexOf(item) === index
+                      )
+                  : []),
               ]}
               getValue={(value: string) =>
                 setFilterBy({
@@ -209,12 +217,14 @@ const ContentDatabase = () => {
             <CustomSelectInput
               options={[
                 "All",
-                ...contentDatabase
-                  .map((item: any) => formatDate(item.date))
-                  .filter(
-                    (item: any, index: any, self: any) =>
-                      self.indexOf(item) === index
-                  ),
+                ...(Array.isArray(contentDatabase) && contentDatabase.length > 0
+                  ? contentDatabase
+                      .map((item: any) => item.date)
+                      .filter(
+                        (item: any, index: any, self: any) =>
+                          self.indexOf(item) === index
+                      )
+                  : []),
               ]}
               getValue={(value: string) =>
                 setFilterBy({
