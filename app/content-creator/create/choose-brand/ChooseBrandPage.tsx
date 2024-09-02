@@ -20,12 +20,13 @@ import FormControl from "@mui/material/FormControl";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 export default function ChooseBrandPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const abortControllerRef = useRef<AbortController | null>(null); // Store the AbortController in a ref
-
+  const { authState } = useContext(globalContext);
   const {
     setSelectedBrand,
     collectedData,
@@ -173,6 +174,11 @@ export default function ChooseBrandPage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify(postBody),
           signal, // Pass the signal to the fetch request

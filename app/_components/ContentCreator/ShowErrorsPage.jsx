@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import dynamic from "next/dynamic";
 const DynamicCKEditor = dynamic(
@@ -95,6 +96,7 @@ import { formatToText } from "@/app/_utils/contentFormatter";
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { authState } = useContext(globalContext);
   const {
     selectedContentType,
     checkStatus,
@@ -331,6 +333,11 @@ export default function ShowErrorsPage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             contentBody: finalArticle?.articles[0]?.content,

@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,6 +7,7 @@ import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreato
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { formatToText } from "@/app/_utils/contentFormatter";
+import { globalContext } from "./store";
 
 const initialContextState = {
   // ===== 01. Start Content Creator =====
@@ -65,6 +66,7 @@ export default function ContentCreatorContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { authState } = useContext(globalContext);
   const router = useRouter();
   const path = usePathname();
   const dispatch = useDispatch();
@@ -361,7 +363,8 @@ export default function ContentCreatorContextProvider({
         // console.log("checkAiResult", json);
         const filteredJson = json?.documents[0]?.sentences.filter(
           (sentence: any) =>
-            sentence.highlight_sentence_for_ai && sentence.generated_prob >= 0.95
+            sentence.highlight_sentence_for_ai &&
+            sentence.generated_prob >= 0.95
         );
         if (
           // json.documents[0].class_probabilities.human < 0.8
@@ -445,6 +448,11 @@ export default function ContentCreatorContextProvider({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             brandName: brandNamePayload,
@@ -563,6 +571,11 @@ export default function ContentCreatorContextProvider({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             brandName: brandNamePayload,

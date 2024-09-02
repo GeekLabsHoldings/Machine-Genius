@@ -4,6 +4,7 @@ import styles from "./create-article.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
@@ -23,6 +24,7 @@ export default function CreateArticlePage() {
   // ===== End Hooks =====
 
   // ===== Start State =====
+  const { authState } = useContext(globalContext);
   const { selectedContentType, selectedBrand, choosedArticles } = useContext(
     contentCreatorContext
   );
@@ -264,6 +266,11 @@ export default function CreateArticlePage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             selectedContent: formatToText(
@@ -289,7 +296,9 @@ export default function CreateArticlePage() {
           articles: [
             {
               ...json.articles[0],
-              content: json.articles[0].content.replace(/[`]/g, "").replace(/\bhtml\b/gi, ""),
+              content: json.articles[0].content
+                .replace(/[`]/g, "")
+                .replace(/\bhtml\b/gi, ""),
             },
           ],
         };

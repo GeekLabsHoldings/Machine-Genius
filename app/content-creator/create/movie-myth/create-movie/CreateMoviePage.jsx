@@ -139,6 +139,11 @@ const CreateMovie = () => {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `barrer ${
+                  typeof window !== "undefined"
+                    ? localStorage.getItem("token")
+                    : authState.token
+                }`,
               },
               // body: JSON.stringify(postBody),
               body: JSON.stringify({

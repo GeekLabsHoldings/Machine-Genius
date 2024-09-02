@@ -364,6 +364,11 @@ export default function ThumbnailCanvas() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             searchImgKeyword: pageState.searchImgKeyword,
@@ -508,6 +513,11 @@ export default function ThumbnailCanvas() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             contentBody: finalArticle?.articles[0]?.content,
@@ -660,6 +670,11 @@ export default function ThumbnailCanvas() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             searchImgKeyword: pageState.searchBgKeyword,

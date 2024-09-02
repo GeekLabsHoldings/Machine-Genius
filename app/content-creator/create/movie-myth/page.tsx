@@ -7,9 +7,11 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 const MovieMyth = () => {
+  const { authState } = useContext(globalContext);
   const dispatch = useDispatch();
   const router = useRouter();
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -42,7 +44,16 @@ const MovieMyth = () => {
   async function getPresignedURL() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-presignedURL`
+        `https://api.machinegenius.io/content-creation/get-presignedURL`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
       );
       const json = await res.json();
       if (!json) {
@@ -110,6 +121,11 @@ const MovieMyth = () => {
           }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           redirect: "follow" as RequestRedirect,
         }
