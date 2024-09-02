@@ -505,33 +505,12 @@ export default function ThumbnailCanvas() {
   }, [pageState.triggerSendContent]);
 
   function generateData() {
-    const options = {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    };
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString("en-GB", options);
-
-    // toLocaleDateString returns month abbreviation, convert to full month name
-    const monthAbbreviations = {
-      Jan: "January",
-      Feb: "February",
-      Mar: "March",
-      Apr: "April",
-      May: "May",
-      Jun: "June",
-      Jul: "July",
-      Aug: "August",
-      Sep: "September",
-      Oct: "October",
-      Nov: "November",
-      Dec: "December",
-    };
-    const [day, monthAbbrev, year] = formattedDate.split(" ");
-    const month = monthAbbreviations[monthAbbrev];
-
-    return `${day} ${month} ${year}`;
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+    today = mm + "/" + dd + "/" + yyyy;
+    return today;
   }
 
   async function handleSendContent() {
