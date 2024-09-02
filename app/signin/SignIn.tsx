@@ -60,7 +60,7 @@ const SignIn = () => {
   const routeToDirect = useMemo(() => {
     if (!authState.decodedToken) return "/";
     if (
-      authState.decodedToken.department.includes("ContentCreator") ||
+      authState.decodedToken.department.includes("content-creation") ||
       authState.decodedToken.department.includes("CEO")
     ) {
       return "/content-creator/dashboard";
@@ -74,7 +74,7 @@ const SignIn = () => {
       return "/customer-service/dashboard";
     } else if (authState.decodedToken.department.includes("Creative")) {
       return "/creative/dashboard";
-    } else if (authState.decodedToken.department.includes("HR")) {
+    } else if (authState.decodedToken.department.includes("hr")) {
       return "/hr/dashboard";
     } else if (authState.decodedToken.department.includes("Accounting")) {
       return "/accounting/dashboard";
