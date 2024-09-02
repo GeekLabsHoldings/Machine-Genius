@@ -6,7 +6,8 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import "./thumbnailCanvas.css";
@@ -19,6 +20,7 @@ import { useRouter } from "next/navigation";
 import ImageCard from "./ImageCard";
 
 export default function ThumbnailCanvas() {
+  const dispatch = useDispatch();
   const canvasEl = useRef(null);
   const fabricCanvasRef = useRef(null);
   const { authState } = useContext(globalContext);
@@ -54,11 +56,6 @@ export default function ThumbnailCanvas() {
 
   useEffect(() => {
     handleGenerateThumbnails();
-    // Cleanup
-    return () => {
-      setEditContentData(null);
-      sessionStorage.removeItem("editContentData");
-    };
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -108,6 +105,7 @@ export default function ThumbnailCanvas() {
       triggerSendContent: false,
       triggerSearchImg: false,
       triggerFilterImages: false,
+      triggerFormatToHtml: false,
     };
   }
 
@@ -479,12 +477,12 @@ export default function ThumbnailCanvas() {
     }));
   }
 
-  // ============= Start Send Content =================
+  // ============= Start Format Content =================
   function handleSelectThumbnail() {
     if (selectedContentThumbnail) {
       setPageState((prev) => ({
         ...prev,
-        triggerSendContent: true,
+        triggerFormatToHtml: true,
       }));
     } else {
       toast.error("Please select a thumbnail!");
@@ -498,6 +496,75 @@ export default function ThumbnailCanvas() {
     }
   }
 
+  async function formatToHtml() {
+    try {
+      setPageState((prev) => ({
+        ...prev,
+        isLoadingFormatToHtml: true,
+      }));
+      const res = await fetch(
+        `https://api.machinegenius.io/content-creation/format-to-html`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contentBody: finalArticle?.articles[0]?.content,
+          }),
+        }
+      );
+
+      const json = await res.json();
+
+      if (!json) {
+        toast.error("Something went wrong! Contact backend department");
+        return finalArticle?.articles[0]?.content || "";
+      } else if (json && json.success === false) {
+        toast.error("Something went wrong! Contact backend department");
+        return finalArticle?.articles[0]?.content || "";
+      } else if (json && json.success === true && json?.articles[0]?.content) {
+        const data = json?.articles[0]?.content
+          .replace(/\n/g, "")
+          .replace(/\bhtml\b/gi, "")
+          .replace(/[`]/g, "");
+        const updatedArticle = {
+          ...finalArticle,
+          articles: [
+            {
+              ...finalArticle.articles[0],
+              content: data,
+            },
+          ],
+        };
+
+        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+      } else {
+        toast.error("Something went wrong! Contact backend department");
+        return finalArticle?.articles[0]?.content || "";
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Contact backend department");
+      console.error("Error formatToHtml:", error);
+      return finalArticle?.articles[0]?.content || "";
+    } finally {
+      setPageState((prev) => ({
+        ...prev,
+        isLoadingFormatToHtml: false,
+        triggerSendContent: true,
+      }));
+    }
+  }
+
+  useEffect(() => {
+    if (pageState.triggerFormatToHtml) {
+      formatToHtml();
+    }
+  }, [pageState.triggerFormatToHtml]);
+
+  // ============= End Format Content ==================
+
+  // ============= Start Send Content =================
   useEffect(() => {
     if (pageState.triggerSendContent) {
       handleSendContent();
@@ -628,7 +695,7 @@ export default function ThumbnailCanvas() {
   }
 
   async function testImageUrl(url) {
-    toast("Testing image url...");
+    // toast("Testing image url...");
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -694,6 +761,17 @@ export default function ThumbnailCanvas() {
   // =============================================
 
   // ============= Start Loading =================
+  if (pageState.isLoadingFormatToHtml) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle
+          needTxt={false}
+          title="Genius is formatting your content..."
+        />
+      </div>
+    );
+  }
+
   if (pageState.generateThumbnailsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
