@@ -139,7 +139,7 @@ export default function ChooseBrandPage() {
   // }, [selectedBrand]);
 
   function handleGetCollectedDataFailure() {
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     setPageState((prevState) => ({
       ...prevState,
       triggerNav: false,
@@ -218,7 +218,7 @@ export default function ChooseBrandPage() {
   //     const json = await res.json();
   //     await setTwitterDataAsync(json.allArticles);
   //   } catch (error) {
-  //     toast.error("Something went wrong! Contact backend department");
+  //     toast.error("Something went wrong!");
   //     console.error("Error getCollectedData:", error);
   //   }
   // }
@@ -238,7 +238,7 @@ export default function ChooseBrandPage() {
     if (pageState.triggerNav === true) {
       router.replace("/content-creator/create/choose-articles");
     } else if (pageState.triggerNav === false) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
     }
 
     return () => {

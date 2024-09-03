@@ -138,7 +138,7 @@ const SignIn = () => {
         }, 1);
       }
     } catch (e) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error loginToAccount:", e);
     } finally {
       setPageState((prevState) => ({

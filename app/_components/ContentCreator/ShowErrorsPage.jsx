@@ -327,10 +327,10 @@ export default function ShowErrorsPage() {
       const json = await res.json();
 
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       } else if (json && json.success === true && json?.articles[0]?.content) {
         const data = json?.articles[0]?.content
@@ -349,11 +349,11 @@ export default function ShowErrorsPage() {
 
         dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error formatToHtml:", error);
       return finalArticle?.articles[0]?.content || "";
     } finally {

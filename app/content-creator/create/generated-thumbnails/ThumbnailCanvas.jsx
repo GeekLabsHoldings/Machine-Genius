@@ -377,10 +377,10 @@ export default function ThumbnailCanvas() {
       );
       const json = await res.json();
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
@@ -388,11 +388,11 @@ export default function ThumbnailCanvas() {
           searchImgData: json.images.map((img) => img.original),
         }));
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error generateThumbnails:", error);
     } finally {
       setPageState((prev) => ({
@@ -421,7 +421,7 @@ export default function ThumbnailCanvas() {
       });
 
       if (!res.ok) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         console.error("Error handleRemoveBg:", error);
         return;
       }
@@ -433,7 +433,7 @@ export default function ThumbnailCanvas() {
       // Use the imageUrl in your application
       return imageUrl; // You can set this as the src of an img tag
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error handleRemoveBg:", error);
     } finally {
       setPageState((prev) => ({
@@ -528,10 +528,10 @@ export default function ThumbnailCanvas() {
       const json = await res.json();
 
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       } else if (json && json.success === true && json?.articles[0]?.content) {
         const data = json?.articles[0]?.content
@@ -550,11 +550,11 @@ export default function ThumbnailCanvas() {
 
         dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error formatToHtml:", error);
       return finalArticle?.articles[0]?.content || "";
     } finally {
@@ -631,7 +631,7 @@ export default function ThumbnailCanvas() {
           break;
         }
       } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         console.error("Error handleSendContent:", error);
       } finally {
         attempts++;
@@ -655,7 +655,7 @@ export default function ThumbnailCanvas() {
 
   // ==============================================
   function handleSearchBgError() {
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     setPageState((prev) => ({
       ...prev,
       searchBgLoading: false,

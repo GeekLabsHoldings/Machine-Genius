@@ -57,14 +57,14 @@ const MovieMyth = () => {
       );
       const json = await res.json();
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else {
         setPresignedURLData(json);
         return json;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error getPresignedURL:", error);
     }
   }
@@ -100,7 +100,7 @@ const MovieMyth = () => {
         setError(`Upload failed with status: ${response.status}`);
       }
     } catch (error: any) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       setError(error?.message);
       console.error("Error in uploadVideo:", error);
     } finally {
@@ -137,11 +137,11 @@ const MovieMyth = () => {
         dispatch(contentCreatorActions.setVideoTranscription(json));
         router.replace("/content-creator/create/movie-myth/create-movie");
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         setPageState((prev) => ({ ...prev, transcriptAudioLoading: false }));
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error transcriptAudio:", error);
       setPageState((prev) => ({ ...prev, transcriptAudioLoading: false }));
     }

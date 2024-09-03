@@ -229,7 +229,7 @@ export default function CreateArticlePage() {
   }, [choosedArticles]);
 
   function handleFinalizeContentFailure() {
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     setPageState((prevState) => ({
       ...prevState,
       triggerNav: false,
@@ -321,7 +321,7 @@ export default function CreateArticlePage() {
     if (pageState.triggerNav === true) {
       router.replace("/content-creator/create/final-article");
     } else if (pageState.triggerNav === false) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
     }
   }, [pageState.triggerNav]);
 

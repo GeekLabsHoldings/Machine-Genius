@@ -164,7 +164,7 @@ const CreateMovie = () => {
             break;
           }
         } catch (error) {
-          toast.error("Something went wrong! Contact backend department");
+          toast.error("Something went wrong!");
           console.error("Error finalizeContent:", error);
         } finally {
           attempts++;

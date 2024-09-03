@@ -195,7 +195,7 @@ export default function ContentCreatorContextProvider({
 
   function handleGrammerFetchError() {
     setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     // reset checkGrammerResults
     dispatch(contentCreatorActions.setCheckGrammerResults([]));
     return;
@@ -284,7 +284,7 @@ export default function ContentCreatorContextProvider({
         }
       } catch (error) {
         // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fetchError" }));
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -320,7 +320,7 @@ export default function ContentCreatorContextProvider({
 
   function handleAiFetchError() {
     setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     // reset checkGrammerResults
     dispatch(contentCreatorActions.setCheckAiResults([]));
     return;
@@ -473,19 +473,19 @@ export default function ContentCreatorContextProvider({
       const json = await res.json();
 
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === true && json.Titles) {
         setGeneratedTitles(json.Titles);
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error generateTitles:", error);
     }
   }
@@ -594,7 +594,7 @@ export default function ContentCreatorContextProvider({
       );
       const json = await res.json();
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (
         json &&
@@ -611,16 +611,16 @@ export default function ContentCreatorContextProvider({
         toast.error("brandName Not correct");
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === true && json.Thumbnail) {
         setGeneratedThumbnails(json.Thumbnail);
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error generateThumbnails:", error);
     }
   }

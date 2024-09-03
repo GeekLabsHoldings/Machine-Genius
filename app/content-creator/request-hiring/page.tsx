@@ -57,7 +57,7 @@ export default function page() {
         toast.success("Hiring Request Sent");
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact Backend Department");
+      toast.error("Something went wrong!");
       console.error("Error handlePostHiringRequest:", error);
     }
   }
