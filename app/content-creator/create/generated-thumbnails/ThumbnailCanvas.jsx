@@ -654,6 +654,14 @@ export default function ThumbnailCanvas() {
   // ============= End Send Content ==================
 
   // ==============================================
+  function handleSearchBgError() {
+    toast.error("Something went wrong! Contact backend department");
+    setPageState((prev) => ({
+      ...prev,
+      searchBgLoading: false,
+    }));
+  }
+
   async function handleSearchBg() {
     if (!pageState.searchBgKeyword) {
       toast.error("Please provide a keyword to search for an image!");
@@ -683,10 +691,10 @@ export default function ThumbnailCanvas() {
       );
       const json = await res.json();
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        handleSearchBgError();
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        handleSearchBgError();
         return;
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
@@ -695,17 +703,12 @@ export default function ThumbnailCanvas() {
           triggerFilterImages: true,
         }));
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        handleSearchBgError();
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      handleSearchBgError();
       console.error("Error generateThumbnails:", error);
-    } finally {
-      setPageState((prev) => ({
-        ...prev,
-        searchBgLoading: false,
-      }));
     }
   }
 
