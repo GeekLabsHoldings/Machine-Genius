@@ -120,7 +120,6 @@ export default function ShowErrorsPage() {
     isLoadingParaphrase: false,
     isLoadingFormatToHtml: false,
     triggerStartChecks: false,
-    progressCounter: checkAiResults ? checkAiResults?.length : 0,
   });
 
   useEffect(() => {
@@ -170,22 +169,13 @@ export default function ShowErrorsPage() {
     }
   }, [pageState.isLoading]);
 
-  useEffect(() => {
-    if (checkAiResults && checkAiResults?.length) {
-      setPageState({
-        ...pageState,
-        progressCounter: checkAiResults?.length,
-      });
-    }
-  }, [checkAiResults]);
-
   // =======================================
   async function handleFixAndCheck() {
-    if (checkAiResults.length) {
-      await handleFixAiIssues();
-    }
     if (checkGrammerResults.length) {
       await handleFixGrammerIssues();
+    }
+    if (checkAiResults.length) {
+      await handleFixAiIssues();
     }
     setPageState({
       ...pageState,
@@ -240,26 +230,36 @@ export default function ShowErrorsPage() {
 
   async function paraphraseSentence(sentence) {
     try {
-      const res = await fetch(`https://api.ai21.com/studio/v1/paraphrase`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_AIPARAPHRASE_API_KEY}`,
-        },
-        body: JSON.stringify({
-          text: sentence,
-          style: "casual",
-          startIndex: 0,
-        }),
-      });
+      const res = await fetch(
+        `https://the-ghost-ai-backend-005c5dcbf4a6.herokuapp.com/transformations/humanize/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Api-Key ${process.env.NEXT_PUBLIC_GHOST_API_KEY}`,
+          },
+          body: JSON.stringify({
+            text: sentence,
+            humanizerIntensity: "MEDIUM",
+            purpose: "GENERAL",
+            literacyLevel: "COLLEGE",
+          }),
+        }
+      );
 
       const json = await res.json();
 
-      if (json) {
-        return json?.suggestions[0].text;
+      if (!json || (json && json.error)) {
+        toast.error("Something went wrong! Error Paraphrase AI");
+        return;
+      } else if (json && json.humanizedText) {
+        return json.humanizedText;
+      } else {
+        toast.error("Something went wrong! Error Paraphrase AI");
+        return;
       }
     } catch (error) {
-      // toast.error("Something went wrong! Error Paraphrase AI");
+      toast.error("Something went wrong! Error Paraphrase AI");
       console.error("Error paraphraseSentence:", error);
     }
   }
@@ -269,50 +269,29 @@ export default function ShowErrorsPage() {
       ...pageState,
       isLoadingParaphrase: true,
     });
-    // const storedFinalArticle = sessionStorage.getItem("finalArticle");
+
     const storedFinalArticle = JSON.parse(JSON.stringify(finalArticle));
+
     if (storedFinalArticle) {
-      // let parsedStoredFinalArticle = JSON.parse(storedFinalArticle);
-      // let storedFinalArticleContent = formatToText(
-      //   parsedStoredFinalArticle.articles[0].content
-      // );
       let storedFinalArticleContent = formatToText(
         storedFinalArticle.articles[0].content
       );
-      for (let i = 0; i < checkAiResults.length; i++) {
-        let item = checkAiResults[i];
 
-        let replacedSentence = await paraphraseSentence(item.sentence);
-
-        storedFinalArticleContent = storedFinalArticleContent.replace(
-          item.sentence,
-          replacedSentence
-        );
-
-        // decrease the progressCounter
-        if (pageState.progressCounter > 0) {
-          setPageState((prev) => ({
-            ...prev,
-            progressCounter: prev.progressCounter - 1,
-          }));
-        }
-
-        // Add a delay between requests to avoid hitting the rate limit
-        await new Promise((resolve) => setTimeout(resolve, 200));
-      }
+      let replacedContent = await paraphraseSentence(storedFinalArticleContent);
 
       const updatedFinalArticle = {
         ...storedFinalArticle,
         articles: [
           {
             ...storedFinalArticle.articles[0],
-            content: storedFinalArticleContent,
+            content: replacedContent,
           },
         ],
       };
 
       dispatch(contentCreatorActions.setFinalArticle(updatedFinalArticle));
     }
+
     setPageState({
       ...pageState,
       isLoadingParaphrase: false,
@@ -701,16 +680,6 @@ export default function ShowErrorsPage() {
           needTxt={false}
           title="Genius is fixing content issues..."
         />
-        {checkAiResults &&
-          checkAiResults?.length &&
-          pageState.progressCounter > 0 && (
-            <p className="space-x-[--5px]">
-              <span className="text-[--35px] font-extrabold">
-                {pageState.progressCounter}
-              </span>
-              <span className="text-[--30px]">remaining sentences...</span>
-            </p>
-          )}
       </div>
     );
   }
@@ -843,14 +812,9 @@ export default function ShowErrorsPage() {
             {checkAiResults.map((item, index) => {
               return (
                 <ErrorCollapse key={index} title="AI">
-                  <>
-                    <p>
-                      <span className="font-bold">
-                        In the following sentence:{" "}
-                      </span>
-                      "<span>{item.sentence}</span>"
-                    </p>
-                  </>
+                  <p>
+                    <span>{item.sentence}</span>
+                  </p>
                 </ErrorCollapse>
               );
             })}

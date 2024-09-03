@@ -334,46 +334,55 @@ export default function ContentCreatorContextProvider({
       toast.error("No content found!");
       return;
     }
-    if (finalArticle.articles[0].content.length > 50000) {
-      toast.error("Content length must be between 1 and 50000 characters!");
-      return;
-    }
-
     try {
-      const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
-        },
-        body: JSON.stringify({
-          document: formatToText(finalArticle?.articles[0]?.content),
-          version: "",
-          multilingual: false,
-        }),
-      });
+      const res = await fetch(
+        `https://the-ghost-ai-backend-005c5dcbf4a6.herokuapp.com/detection/ai/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Api-Key ${
+              process.env.NEXT_PUBLIC_GHOST_API_KEY as string
+            }`,
+          },
+          body: JSON.stringify({
+            text: formatToText(finalArticle?.articles[0]?.content),
+            useAdditionalDetectors: true,
+          }),
+        }
+      );
 
       const json = await res.json();
 
-      if (!json) {
+      if (!json || (json && json.error)) {
         handleAiFetchError();
         return;
-      } else if (json && json.documents[0]) {
-        // console.log("checkAiResult", json);
-        const filteredJson = json?.documents[0]?.sentences.filter(
-          (sentence: any) =>
-            sentence.highlight_sentence_for_ai &&
-            sentence.generated_prob >= 0.95
-        );
-        if (
-          // json.documents[0].class_probabilities.human < 0.8
-          filteredJson.length > 0
-        ) {
+      } else if (json) {
+        let totalAi = 0;
+        let count = 0;
+        for (const key in json) {
+          if (key !== "human") {
+            totalAi += json[key].ai;
+            count++;
+          }
+        }
+        const averageAi = totalAi / count;
+
+        const filteredJson =
+          averageAi >= 0.3
+            ? [
+                {
+                  sentence: `averageAi: ${averageAi}`,
+                },
+              ]
+            : [];
+
+        if (averageAi >= 0.3) {
           setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
         } else {
           setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
         }
+
         dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
       } else {
         handleAiFetchError();
