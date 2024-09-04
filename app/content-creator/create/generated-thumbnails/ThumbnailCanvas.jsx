@@ -874,6 +874,16 @@ export default function ThumbnailCanvas() {
               }
               getValue={getSelectedContentThumbnailValue}
             />
+
+            <input
+              className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+              type="text"
+              name="thumbnail-title"
+              id="thumbnail-title"
+              placeholder="Edit thumbnail title ..."
+              value={selectedContentThumbnail}
+              onChange={(e) => setSelectedContentThumbnail(e.target.value)}
+            />
           </div>
 
           {/* 02 Select Background */}
