@@ -1,16 +1,36 @@
 @font-face {
+  font-family: "Acumin Pro";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Acumin Pro"), url("/fonts/Acumin-RPro.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Acumin Pro Italic";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Acumin Pro Italic"),
+    url("/fonts/Acumin-ItPro.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Acumin Pro Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Acumin Pro Bold"), url("/fonts/Acumin-BdPro.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Acumin Pro Bold Italic";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Acumin Pro Bold Italic"),
+    url("/fonts/Acumin-BdItPro.woff") format("woff");
+}
+
+@font-face {
   font-family: "Hellix-Black";
   src: url("/fonts/Hellix-Black.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Acumin-BdItPro";
-  src: url("/fonts/Acumin-BdItPro.otf") format("otf");
-}
-
-@font-face {
-  font-family: "Acumin-BdItPro1";
-  src: url("/fonts/Acumin-BdPro.otf") format("otf");
 }
 
 .thumbnailCanvas {
@@ -19,6 +39,8 @@
   gap: var(--25px);
   margin: 0;
 }
+
+
 
 .thumbnailCanvas .canvas-container {
   /* margin: 20px 0; */
@@ -34,7 +56,7 @@
   /* flex-grow: 1; */
 }
 
-.thumbnailCanvas_actionsBar div::-webkit-scrollbar{
+.thumbnailCanvas_actionsBar div::-webkit-scrollbar {
   width: 0;
   display: none;
   background: transparent; /* WebKit-based browsers */

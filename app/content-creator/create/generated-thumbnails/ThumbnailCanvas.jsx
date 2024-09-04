@@ -122,7 +122,7 @@ export default function ThumbnailCanvas() {
     setSelectedContentThumbnail(value);
     setPageState((prev) => ({
       ...prev,
-      searchImgKeyword: value.replace(/[^a-zA-Z0-9\s]/g, ''),
+      searchImgKeyword: value.replace(/[^a-zA-Z0-9\s]/g, ""),
       triggerSearchImg: true,
     }));
   }, []);
@@ -310,14 +310,13 @@ export default function ThumbnailCanvas() {
           top: top,
           fontSize: pageState.thumbnailFontSize,
           fill: i === words.length - 1 ? "#C0FE15" : "#ffffff",
-          // fontFamily: "Acumin-BdItPro",
-          fontFamily: "Acumin-BdItPro1",
-          fontWeight: "800",
-          fontStyle: "italic",
+          fontFamily: "Acumin Pro Bold Italic",
+          // fontWeight: "800",
+          // fontStyle: "italic",
           textBackgroundColor: "#1E2329",
         });
         canvas.add(text);
-        top -= text.height * 1.2; // Move the next word up by the height of the text
+        top -= text.height * 1.05; // Move the next word up by the height of the text
       }
     }
 
