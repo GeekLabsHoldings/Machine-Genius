@@ -371,6 +371,7 @@ export default function ThumbnailCanvas() {
           },
           body: JSON.stringify({
             searchImgKeyword: pageState.searchImgKeyword,
+            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
           }),
         }
       );
@@ -685,6 +686,7 @@ export default function ThumbnailCanvas() {
           },
           body: JSON.stringify({
             searchImgKeyword: pageState.searchBgKeyword,
+            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
           }),
         }
       );
