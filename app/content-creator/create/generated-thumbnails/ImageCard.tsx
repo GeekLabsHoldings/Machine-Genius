@@ -20,7 +20,7 @@ export default function ImageCard({
   disabled,
 }: IProps) {
   return (
-    <div className={`${styles.box}`}>
+    <label className={`${styles.box}`}>
       {inputType === "checkbox" ? (
         <CustomCheckBox
           type="checkbox"
@@ -43,6 +43,6 @@ export default function ImageCard({
       )}
       <div className={`${styles.selectedOverlay}`}></div>
       <img loading="lazy" src={imgSrc} alt="image" />
-    </div>
+    </label>
   );
 }

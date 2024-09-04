@@ -35,6 +35,7 @@
   border: var(--1px) solid var(--dark);
   overflow: hidden;
   position: relative;
+  display: block;
 }
 
 .box img {
