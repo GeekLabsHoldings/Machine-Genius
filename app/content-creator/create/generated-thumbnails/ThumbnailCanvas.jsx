@@ -309,7 +309,7 @@ export default function ThumbnailCanvas() {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
-          fill: i === 0 ? "#C0FE15" : "#ffffff",
+          fill: i === words.length - 1 ? "#C0FE15" : "#ffffff",
           // fontFamily: "Acumin-BdItPro",
           fontFamily: "Acumin-BdItPro1",
           fontWeight: "800",
