@@ -1,12 +1,11 @@
 "use client";
-import Dropdown from "@/app/_components/Dropdown/Dropdown";
+import CheckBox from "@/app/_components/CheckBox/CheckBox";
+import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/customer-service/chat/chat.module.css";
-import { textarea } from "@material-tailwind/react";
 import { TextareaAutosize } from "@mui/material";
-import { use, useEffect, useRef, useState } from "react";
-import { text } from "stream/consumers";
+import { useEffect, useRef, useState } from "react";
 
 const files = (
   <svg
@@ -30,13 +29,13 @@ interface ProfileImageFrameProps {
 function ProfileImageFrame({ reversed }: ProfileImageFrameProps) {
   return reversed ? (
     <div
-      className={`[background-color:var(--dark)] flex items-center justify-center ${styles.chat__chat__aside__menu__profile} group-hover:[background-color:var(--white)]`}
+      className={`[background-color:var(--dark)] flex items-center justify-center ${styles.chat__chat__aside__menu__profile} group-hover:[background-color:var(--white)] shrink-0`}
     >
       {/* <img src="/images/profile.png" alt="profile" /> */}
     </div>
   ) : (
     <div
-      className={`[background-color:var(--dark)] flex items-center justify-center ${styles.chat__chat__aside__menu__profile_reversed} group-hover:[background-color:var(--white)]`}
+      className={`[background-color:var(--dark)] flex items-center justify-center ${styles.chat__chat__aside__menu__profile_reversed} group-hover:[background-color:var(--white)] shrink-0`}
     >
       {/* <img src="/images/profile.png" alt="profile" /> */}
     </div>
@@ -92,6 +91,7 @@ function Page() {
   const [scrolled, setScrolled] = useState(false);
   const [messages, setMessages] = useState(messagesApi);
   const [message, setMessage] = useState("");
+  const [toggleCreateGroup, setToggleCreateGroup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const AddMessage = (message: string) => {
@@ -140,33 +140,92 @@ function Page() {
     };
   }, []);
 
+  useEffect(() => {
+    const uncheckOnGroupChange = () => {
+      document.querySelectorAll("#chat-list input").forEach((checkbox) => {
+        (checkbox as HTMLInputElement).checked = false;
+      });
+    };
+    if (toggleCreateGroup) {
+      uncheckOnGroupChange();
+    }
+  }, [toggleCreateGroup]);
+
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
       {/* 
         chat aside menu 
       */}
-      <div className={`flex flex-col h-full ${styles.chat__chat__aside}`}>
-        <div>
+      <div
+        className={`flex flex-col h-full ${styles.chat__chat__aside} ${
+          toggleCreateGroup ? styles.chat__chat__aside__create_group : ""
+        }`}
+      >
+        {/* <div>
           <h2 className="mb-5 text-2xl font-semibold">Chats</h2>
           <Dropdown title="Brand" items={["All", "Unread", "Read"]} />
-        </div>
+        </div> */}
         <div
-          className={`flex flex-col border-2 [border-color:#DBDBD7] rounded-[20px] h-[50vh] overflow-hidden mt-6 shrink-0 grow py-5 ${styles.chat__chat__aside__menu}`}
+          className={`flex flex-col border-2 [border-color:#DBDBD7] rounded-[20px] h-[50vh] overflow-hidden shrink-0 grow py-[--21px] ${styles.chat__chat__aside__menu}`}
         >
-          <input
-            type="text"
-            placeholder="Search"
-            className="h-min border mx-5 [border-color:var(--dark)] rounded-[5px] text-sm placeholder:[color:var(--dark)] py-2 px-4 "
-          />
+          <div className="flex justify-between items-center mx-5">
+            <h2 className="text-[--24px] font-semibold">Chats</h2>
+            <button
+              className="flex flex-col gap-1 items-center"
+              onClick={() => setToggleCreateGroup(!toggleCreateGroup)}
+            >
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 26 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M9.97848 4.5221C12.9149 4.5221 15.3063 6.912 15.3063 9.8499V11.3721C15.3063 13.0131 14.5452 14.4638 13.3746 15.4426C14.6411 15.6298 15.8954 15.9129 17.1193 16.3118C18.7663 16.8476 19.873 18.4064 19.873 20.1889V22.8848L19.5122 23.1085C17.5151 24.3507 14.2377 25.8333 9.97848 25.8333C7.62664 25.8333 4.06158 25.3599 0.443229 23.1085L0.0839844 22.8848V20.3366C0.0839844 18.4444 1.28502 16.7974 3.0706 16.2357C4.21989 15.8764 5.392 15.61 6.57326 15.435C5.40874 14.4562 4.65068 13.0085 4.65068 11.3721V9.8499C4.65068 6.912 7.04058 4.5221 9.97848 4.5221ZM16.0065 0C18.9429 0 21.3343 2.3899 21.3343 5.32781V6.85004C21.3343 8.491 20.5732 9.94322 19.4026 10.9205C20.6691 11.1077 21.9219 11.3924 23.1473 11.7897C24.7944 12.3285 25.901 13.8858 25.901 15.6683V18.3642L25.5418 18.588C24.4975 19.238 23.0956 19.9473 21.3952 20.4816V20.1893C21.3952 17.7447 19.8669 15.6044 17.5912 14.8646C17.0959 14.7031 16.5953 14.5584 16.0902 14.4307C16.5713 13.4915 16.8285 12.4473 16.8285 11.3726V9.85035C16.8285 6.48014 14.3793 3.68837 11.1719 3.12057C12.0152 1.28476 13.8571 0 16.0065 0Z"
+                  fill="#2A2B2A"
+                />
+              </svg>
+              <span className="text-[#2A2B2A] font-semibold text-[--9px]">
+                New Group
+              </span>
+            </button>
+          </div>
+          <div className="h-min flex items-center justify-between border mx-5 my-[--17px] [border-color:var(--dark)] rounded-[--7px] text-sm placeholder:[color:var(--dark)] py-[--8px] px-[--15px]">
+            <input
+              type="text"
+              placeholder="Search"
+              className="outline-none grow"
+            />
+            <svg
+              viewBox="0 0 20 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-[--20px] h-[--20px] ml-[--5px]"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M0.246094 10.377C0.246094 4.92206 4.66815 0.5 10.123 0.5C15.5779 0.5 20 4.92206 20 10.377C20 15.8318 15.5779 20.2539 10.123 20.2539C4.66815 20.2539 0.246094 15.8318 0.246094 10.377ZM7.15996 9.88311C7.15996 8.51939 8.26549 7.41387 9.6292 7.41387C10.9929 7.41387 12.0984 8.51939 12.0984 9.88311C12.0984 11.2468 10.9929 12.3523 9.6292 12.3523C8.26549 12.3523 7.15996 11.2468 7.15996 9.88311ZM9.6292 5.43848C7.1745 5.43848 5.18457 7.42841 5.18457 9.88311C5.18457 12.3378 7.1745 14.3277 9.6292 14.3277C10.4989 14.3277 11.3103 14.0779 11.9954 13.6462L13.3754 15.0261C13.7611 15.4118 14.3865 15.4118 14.7722 15.0261C15.1579 14.6404 15.1579 14.015 14.7722 13.6293L13.3923 12.2493C13.824 11.5642 14.0738 10.7528 14.0738 9.88311C14.0738 7.42841 12.0839 5.43848 9.6292 5.43848Z"
+                fill="#323232"
+              />
+            </svg>
+          </div>
 
-          <div className="h-[1px] bg-[#DBDBD7] mt-5 mx-5"></div>
-          <ul className="flex flex-col relative max-h-[90%] overflow-y-auto [border-color:#DBDBD7] w-full">
+          <div className="h-[1px] bg-[#DBDBD7] mx-5"></div>
+          <ul
+            className="flex flex-col relative max-h-[90%] overflow-y-auto [border-color:#DBDBD7] w-full"
+            id="chat-list"
+          >
             {messages.map((message, index) => (
               <li
                 className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
                 key={index}
               >
-                <div className="flex relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
+                <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
+                  <CustomCheckBox />
                   <ProfileImageFrame />
                   <div className="flex flex-col justify-center gap-1 w-[80%]">
                     <h3 className="font-bold text-xl transition-colors duration-100">
