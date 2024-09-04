@@ -122,7 +122,7 @@ export default function ThumbnailCanvas() {
     setSelectedContentThumbnail(value);
     setPageState((prev) => ({
       ...prev,
-      searchImgKeyword: value,
+      searchImgKeyword: value.replace(/[^a-zA-Z0-9\s]/g, ''),
       triggerSearchImg: true,
     }));
   }, []);
