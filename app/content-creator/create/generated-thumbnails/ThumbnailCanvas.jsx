@@ -448,7 +448,12 @@ export default function ThumbnailCanvas() {
         canvasState.off("after:render", bringAllTextToFront);
       };
     }
-  }, [canvasState, selectedContentThumbnail, pageState.thumbnailFontSize, pageState.highlightedWords]);
+  }, [
+    canvasState,
+    selectedContentThumbnail,
+    pageState.thumbnailFontSize,
+    pageState.highlightedWords,
+  ]);
 
   const handleDownload = () => {
     const canvas = fabricCanvasRef.current;
@@ -534,13 +539,11 @@ export default function ThumbnailCanvas() {
           size: "auto",
         }),
       });
-
       if (!res.ok) {
         toast.error("Something went wrong!");
         console.error("Error handleRemoveBg:", error);
         return;
       }
-
       // Convert the response to a Blob
       const blob = await res.blob();
       // Create a URL for the Blob
@@ -973,6 +976,16 @@ export default function ThumbnailCanvas() {
     }
   }
 
+  function flipLayer() {
+    if (selectedLayer) {
+      // Flip the selected layer vertically
+      selectedLayer.flipX = !selectedLayer.flipX; // Toggles flip state
+      setSelectedLayer(null);
+      canvasState.discardActiveObject();
+      canvasState.renderAll(); // Re-render the canvas
+    }
+  }
+
   const handleLayerClick = (obj) => {
     const objImageId = obj.imageId;
     function findObjectIndex(objImageId) {
@@ -1363,7 +1376,13 @@ export default function ThumbnailCanvas() {
                     </div>
                   ))}
 
-                <div className="flex justify-center items-center w-[80%] m-auto gap-[--15px] bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]">
+                <div className="flex justify-between items-center w-[100%] m-auto bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px] px-[--15px]">
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => flipLayer()}
+                  >
+                    Flip
+                  </span>
                   <span
                     className="cursor-pointer hover:font-bold"
                     onClick={() => moveLayerUp()}
