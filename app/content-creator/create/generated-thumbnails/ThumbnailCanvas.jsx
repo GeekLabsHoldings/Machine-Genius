@@ -54,7 +54,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    // handleGenerateThumbnails();
+    handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -333,6 +333,7 @@ export default function ThumbnailCanvas() {
           img.top =
             canvasState.height - img.height * img.scaleY - 40 * (index + 1); // Position on the bottom edge
           img.isImage = true;
+          img.imageId = uuidv4();
           canvasState.add(img);
         });
       }
@@ -849,7 +850,27 @@ export default function ThumbnailCanvas() {
   }, [pageState.triggerFilterImages]);
   // =============================================
 
-  const [selectedLayerIndex, setSelectedLayerIndex] = useState(null);
+  const [layerList, setLayerList] = useState([]);
+
+  useEffect(() => {
+    if (canvasState) {
+      // Update layer controls when objects change
+      const handleCanvasChange = () => {
+        setLayerList([...canvasState.getObjects()]); // Update layer list
+      };
+
+      canvasState.on("object:added", handleCanvasChange);
+      canvasState.on("object:removed", handleCanvasChange);
+
+      // Clean up listeners on unmount
+      return () => {
+        canvasState.off("object:added", handleCanvasChange);
+        canvasState.off("object:removed", handleCanvasChange);
+      };
+    }
+  }, [canvasState]);
+
+  const [selectedLayer, setSelectedLayer] = useState(null);
 
   useEffect(() => {
     if (canvasState) {
@@ -857,9 +878,9 @@ export default function ThumbnailCanvas() {
       const handleObjectSelected = (event) => {
         const selectedObject = event.target; // Get the selected object
         if (selectedObject) {
-          const objects = canvasState.getObjects();
-          const index = objects.indexOf(selectedObject); // Get the index of the selected object
-          setSelectedLayerIndex(index); // Update the selected layer index
+          // const objects = canvasState.getObjects();
+          // const index = objects.indexOf(selectedObject); // Get the index of the selected object
+          setSelectedLayer(selectedObject); // Update the selected layer index
         }
       };
 
@@ -869,41 +890,90 @@ export default function ThumbnailCanvas() {
 
       // Clear selection when objects are deselected
       canvasState.on("selection:cleared", () => {
-        setSelectedLayerIndex(null); // Reset selected layer index when selection is cleared
+        setSelectedLayer(null); // Reset selected layer index when selection is cleared
       });
 
       // Cleanup event listeners on component unmount
       return () => {
         canvasState.off("selection:created", handleObjectSelected);
         canvasState.off("selection:updated", handleObjectSelected);
-        canvasState.off("selection:cleared", () => setSelectedLayerIndex(null));
+        canvasState.off("selection:cleared", () => setSelectedLayer(null));
       };
     }
   }, [canvasState]);
 
-  function moveLayerUp(index) {
-    const object = canvasState.getObjects()[index];
-    if (object) {
-      canvasState.bringForward(object); // Move the object one level up
+  function moveLayerUp() {
+    // const object = canvasState.getObjects()[index];
+    if (selectedLayer) {
+      canvasState.bringForward(selectedLayer); // Move the object one level up
+      setSelectedLayer(null);
+      canvasState.discardActiveObject();
       canvasState.renderAll();
     }
   }
 
-  function moveLayerDown(index) {
-    const object = canvasState.getObjects()[index];
-    if (object) {
-      canvasState.sendBackwards(object); // Move the object one level down
+  function moveLayerDown() {
+    // const object = canvasState.getObjects()[index];
+    if (selectedLayer) {
+      canvasState.sendBackwards(selectedLayer); // Move the object one level down
+      setSelectedLayer(null);
+      canvasState.discardActiveObject();
       canvasState.renderAll();
     }
   }
 
-  function deleteLayer(index) {
-    const object = canvasState.getObjects()[index];
-    if (object) {
-      canvasState.remove(object); // Remove the object from the canvas
+  function deleteLayer() {
+    // const object = canvasState.getObjects()[index];
+    if (selectedLayer) {
+      canvasState.remove(selectedLayer); // Remove the object from the canvas
+      setSelectedLayer(null);
+      canvasState.discardActiveObject();
       canvasState.renderAll();
     }
   }
+
+  const handleLayerClick = (obj) => {
+    const objImageId = obj.imageId;
+    function findObjectIndex(objImageId) {
+      return canvasState
+        .getObjects()
+        .findIndex((obj) => obj.imageId === objImageId);
+    }
+    const objIndex = findObjectIndex(objImageId);
+
+    console.log(objIndex, `objIndex`);
+
+    setSelectedLayer(obj); // Update the selected layer index state
+
+    canvasState.setActiveObject(obj); // Set the clicked layer as the active object on the canvas
+    canvasState.renderAll(); // Re-render the canvas
+
+    console.log(`obj---1`, obj);
+  };
+
+  useEffect(() => {
+    const handleObjectSelection = () => {
+      const activeObject = canvasState.getActiveObject();
+      if (activeObject) {
+        const index = canvasState.getObjects().indexOf(activeObject); // Get the index of the selected object
+        setSelectedLayer(activeObject); // Highlight the corresponding layer in the list
+      }
+    };
+
+    if (canvasState) {
+      // Listen to selection events on the canvas
+      canvasState.on("selection:created", handleObjectSelection);
+      canvasState.on("selection:updated", handleObjectSelection);
+    }
+
+    return () => {
+      if (canvasState) {
+        // Clean up event listeners
+        canvasState.off("selection:created", handleObjectSelection);
+        canvasState.off("selection:updated", handleObjectSelection);
+      }
+    };
+  }, [canvasState]);
 
   // ==========================
 
@@ -1207,91 +1277,66 @@ export default function ThumbnailCanvas() {
               </div>
             </div>
 
-            {/* 05 Control Layers */}
-            <div className="flex flex-col gap-[--5px] w-full">
-              {/* 05-01 Header */}
-              <div className="flex justify-between items-center">
-                <h3 className="font-bold text-[--17px]">Layers</h3>
-                <div className="flex gap-[--10px]">
-                  <span>up</span>
-                  <span>down</span>
-                </div>
-              </div>
-
-              {/* 05-02 Layers */}
-
-              <div className="flex flex-col gap-[--5px]">
-                <div className="flex justify-between items-center">
-                  <span>01</span> <span>delete</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>02</span> <span>delete</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>03</span> <span>delete</span>
-                </div>
-              </div>
-            </div>
-
             {/* ========================== */}
             <div className="flex flex-col gap-[--5px] w-full">
-              {/* Header */}
-              <div className="flex justify-between items-center">
-                <h3 className="font-bold text-[--17px]">Layers</h3>
-                <div className="flex gap-[--10px]"></div>
-              </div>
+              {/* 05-01 Header */}
 
-              {/* Layers */}
+              <h3 className="font-bold text-[--17px]">Layers</h3>
+
+              {/* 05-02 Layers */}
               <div className="flex flex-col gap-[--5px]">
-                {canvasState?.getObjects()?.map((obj, index) => (
-                  <div
-                    key={index}
-                    className={`flex justify-between items-center ${
-                      index === selectedLayerIndex ? "bg-red-500" : ""
-                    }`} // Highlight selected layer
-                  >
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => setSelectedLayerIndex(index)}
+                {layerList
+                  ?.filter((obj) => obj.isImage)
+                  .map((obj, index) => (
+                    <div
+                      key={index}
+                      className={`flex justify-between items-center cursor-pointer ${
+                        selectedLayer && obj.imageId === selectedLayer?.imageId
+                          ? "bg-gray-300"
+                          : ""
+                      }`} // Highlight selected layer
+                      onClick={() => handleLayerClick(obj)} // Handle layer click
                     >
-                      {/* {`${index + 1}. ${obj.type} ${obj.text} ${obj.text}`} */}
+                      <span className="flex justify-between items-center gap-[--20px]">
+                        {/* {`${index + 1}. ${obj.type} ${obj.text} ${obj.text}`} */}
 
-                      {`${index + 1}. ${obj.type} `}
-                      {obj.type === "text" ? (
-                        // Display the text content
-                        <span>{obj.text}</span>
-                      ) : obj.type === "image" ? (
-                        // Display the image
-                        <img
-                          src={obj.toDataURL ? obj.toDataURL() : obj.src}
-                          alt={`Layer ${index + 1}`}
-                          style={{ width: 50, height: 50 }} // Adjust size for preview
-                          crossOrigin={obj.crossOrigin || "anonymous"}
-                        />
-                      ) : null}
-                    </span>
-                    <div className="flex gap-[--10px]">
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => moveLayerUp(index)}
-                      >
-                        up
-                      </span>
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => moveLayerDown(index)}
-                      >
-                        down
-                      </span>
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => deleteLayer(index)}
-                      >
-                        delete
+                        {`${index + 1}. ${obj.type} `}
+                        {obj.type === "text" ? (
+                          // Display the text content
+                          <span>{obj.text}</span>
+                        ) : obj.type === "image" ? (
+                          // Display the image
+                          <img
+                            src={obj.toDataURL() || obj.src}
+                            alt={`Layer ${index + 1}`}
+                            style={{ width: 50, height: 50 }} // Adjust size for preview
+                            // crossOrigin={"anonymous"}
+                          />
+                        ) : null}
                       </span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+
+                <div className="flex justify-center items-center w-[80%] m-auto gap-[--15px] bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]">
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => moveLayerUp()}
+                  >
+                    Forwards
+                  </span>
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => moveLayerDown()}
+                  >
+                    Backwards
+                  </span>
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => deleteLayer()}
+                  >
+                    Delete
+                  </span>
+                </div>
               </div>
             </div>
             {/* ========================== */}
