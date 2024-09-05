@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useRouter } from "next/navigation";
 import ImageCard from "./ImageCard";
+import MultipleSelectCheckmarks from "./MultipleSelectCheckmarks";
 
 export default function ThumbnailCanvas() {
   const dispatch = useDispatch();
@@ -105,6 +106,7 @@ export default function ThumbnailCanvas() {
       triggerFilterImages: false,
       isLoadingFormatToHtml: false,
       triggerFormatToHtml: false,
+      highlightedWords: [],
     };
   }
 
@@ -136,6 +138,13 @@ export default function ThumbnailCanvas() {
     setPageState((prev) => ({
       ...prev,
       thumbnailFontSize: Number(value),
+    }));
+  }, []);
+
+  const getHighlightedWordsValue = useCallback((value) => {
+    setPageState((prev) => ({
+      ...prev,
+      highlightedWords: value,
     }));
   }, []);
 
@@ -369,7 +378,9 @@ export default function ThumbnailCanvas() {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
-          fill: i === 0 ? "red" : "#ffffff",
+          fill: pageState.highlightedWords.includes(words[i])
+            ? "red"
+            : "#ffffff",
           fontFamily: "Hellix-Black",
           fontWeight: "600",
           stroke: "black", // Set the stroke color to black
@@ -398,7 +409,9 @@ export default function ThumbnailCanvas() {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
-          fill: i === words.length - 1 ? "#C0FE15" : "#ffffff",
+          fill: pageState.highlightedWords.includes(words[i])
+            ? "#C0FE15"
+            : "#ffffff",
           fontFamily: "Acumin Pro Bold Italic",
           // fontWeight: "800",
           // fontStyle: "italic",
@@ -435,7 +448,7 @@ export default function ThumbnailCanvas() {
         canvasState.off("after:render", bringAllTextToFront);
       };
     }
-  }, [canvasState, selectedContentThumbnail, pageState.thumbnailFontSize]);
+  }, [canvasState, selectedContentThumbnail, pageState.thumbnailFontSize, pageState.highlightedWords]);
 
   const handleDownload = () => {
     const canvas = fabricCanvasRef.current;
@@ -1076,7 +1089,7 @@ export default function ThumbnailCanvas() {
         <div className="thumbnailCanvas">
           <div className="thumbnailCanvas_actionsBar max-h-[720px] overflow-y-auto pr-[--10px] pb-[--8px]">
             {/* 01 Select Thumbnail */}
-            <div className="flex flex-col gap-[--5px] w-full">
+            <div className="flex flex-col gap-[--10px] w-full">
               <div className="flex justify-between items-center pt-[--10px]">
                 <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
 
@@ -1107,6 +1120,11 @@ export default function ThumbnailCanvas() {
                 placeholder="Edit thumbnail title ..."
                 value={selectedContentThumbnail}
                 onChange={(e) => setSelectedContentThumbnail(e.target.value)}
+              />
+
+              <MultipleSelectCheckmarks
+                words={words}
+                getHighlightedWordsValue={getHighlightedWordsValue}
               />
             </div>
 
