@@ -118,6 +118,7 @@ export default function ChooseBrandPage() {
       { value: "AMZN", label: "Amazon" },
       { value: "PLTR", label: "Palantir" },
       { value: "TSLA", label: "Tesla" },
+      { value: "ALPHA", label: "Alpha" },
     ],
     []
   );
