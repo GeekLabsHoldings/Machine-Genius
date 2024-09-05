@@ -1,0 +1,55 @@
+.SliderRoot {
+    position: relative;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    touch-action: none;
+    min-width: 124px;
+    height: 24px;
+    &.fluid {
+        width: 100%;
+    }
+    &[aria-disabled="true"] {
+        .SliderTrack {
+            background-color: var(--background-neutral-disabled);
+        }
+        .SliderRange {
+            background-color: var(--foreground-neutral-subtle-disabled);
+        }
+        .SliderThumb {
+            background-color: var(--background-neutral-disabled);
+            box-shadow: none;
+        }
+    }
+}
+
+.SliderTrack {
+    background-color: var(--background-neutral-hover);
+    position: relative;
+    flex-grow: 1;
+    border-radius: 9999px;
+    height: 4px;
+}
+
+.SliderRange {
+    position: absolute;
+    background-color: var(--foreground-neutral-subtle);
+    border-radius: 9999px;
+    height: 100%;
+}
+
+.SliderThumb {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-color: var(--background-neutral-container);
+    box-shadow: var(--shadow-level-1);
+    border-radius: 50%;
+}
+.SliderThumb:hover {
+    background-color: var(--background-neutral-hover);
+}
+.SliderThumb:focus {
+    outline: none;
+    box-shadow: var(--focus);
+}

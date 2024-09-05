@@ -49,7 +49,7 @@ export default function RootLayout({
         />
 
         <script
-          src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"
+          src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"
           defer
         ></script>
       </body>

@@ -1,0 +1,135 @@
+/* reset */
+button {
+    all: unset;
+}
+.PopoverRoot {
+    position: relative;
+}
+
+.PopoverContent {
+    font-size: 16px;
+    line-height: 1;
+    z-index: 6;
+    border-radius: var(--size-100);
+    color: var(--foreground-neutral-inverted);
+    background-color: var(--background-neutral-inverted);
+    user-select: none;
+    animation-duration: 200ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
+    border: 1px solid var(--black-200);
+    max-width: 500px;
+    .PopoverContentInner {
+        overflow: hidden;
+        border-radius: var(--size-100);
+    }
+    &:after {
+        position: absolute;
+        content: "";
+        display: block;
+        width: 1px;
+        height: var(--size-150);
+        background-color: var(--foreground-neutral);
+        top: -12px;
+        z-index: 1;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    &:before {
+        position: absolute;
+        content: "";
+        display: block;
+        width: 5px;
+        height: 5px;
+        border-radius: 5px;
+        background-color: var(--foreground-neutral);
+        top: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    * {
+        color: var(--foreground-neutral-inverted);
+    }
+    .leftSide,
+    .rightSide {
+        flex: 1;
+        box-sizing: border-box;
+        max-width: 50%;
+        overflow: hidden;
+    }
+    .rightSide {
+        padding: var(--size-150) var(--size-200);
+    }
+}
+
+// .TooltipContent[data-state='delayed-open'][data-side='top'] {
+//   animation-name: slideDownAndFade;
+// }
+// .TooltipContent[data-state='delayed-open'][data-side='right'] {
+//   animation-name: slideLeftAndFade;
+// }
+// .TooltipContent[data-state='delayed-open'][data-side='bottom'] {
+//   animation-name: slideUpAndFade;
+// }
+// .TooltipContent[data-state='delayed-open'][data-side='left'] {
+//   animation-name: slideRightAndFade;
+// }
+
+.PopoverAnchor {
+    background-color: var(--foreground-neutral);
+    width: 2px;
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 16px;
+    top: -16px;
+}
+
+.PopoverClose {
+    position: absolute;
+}
+
+// @keyframes slideUpAndFade {
+//   from {
+//     opacity: 0;
+//     transform: translateY(2px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
+
+// @keyframes slideRightAndFade {
+//   from {
+//     opacity: 0;
+//     transform: translateX(-2px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateX(0);
+//   }
+// }
+
+// @keyframes slideDownAndFade {
+//   from {
+//     opacity: 0;
+//     transform: translateY(-2px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
+
+// @keyframes slideLeftAndFade {
+//   from {
+//     opacity: 0;
+//     transform: translateX(2px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateX(0);
+//   }
+// }

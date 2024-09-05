@@ -1,0 +1,29 @@
+var map = {
+	"./cards/Thumbnail-1.png": 1041,
+	"./instagram/Thumbnail-1.svg": 2171,
+	"./instagram/Thumbnail-2.png": 6702,
+	"./linkedin/Thumbnail-1.png": 7006,
+	"./presentations/Thumbnail-1.png": 7939,
+	"./presentations/Thumbnail-2.png": 84,
+	"./presentations/Thumbnail-3.png": 8790
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	if(!__webpack_require__.o(map, req)) {
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return map[req];
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 592;

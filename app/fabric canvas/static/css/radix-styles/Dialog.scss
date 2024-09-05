@@ -1,0 +1,96 @@
+/* reset */
+button,
+fieldset,
+input {
+    all: unset;
+}
+.DialogRoot {
+    z-index: 10;
+    position: relative;
+}
+.DialogOverlay {
+    background-color: var(--black-alpha);
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.DialogContent {
+    z-index: 6;
+    background-color: var(--background-neutral-container);
+    border-radius: var(--size-100);
+    box-shadow: var(--shadow-level-2);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 500px;
+    max-height: 85vh;
+    padding: var(--size-700) var(--size-600) var(--size-400) var(--size-600);
+    animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid var(--border-neutral-subtle);
+    transform: scale(0.92);
+    transform-origin: 0;
+    animation: openDialog 250ms ease forwards 0s;
+
+    @keyframes openDialog {
+        0% {
+            transform: scale(0.92) translate(-50%, -50%);
+        }
+        100% {
+            transform: scale(1) translate(-50%, -50%);
+        }
+    }
+    .inputfield {
+        width: 100%;
+    }
+    .closeButton {
+        position: absolute;
+        top: var(--size-50);
+        right: var(--size-50);
+    }
+    p.Error {
+        margin-top: var(--size-200);
+    }
+}
+.DialogContent:focus {
+    outline: none;
+}
+
+.DialogTitle {
+    margin: 0;
+    color: var(--foreground-neutral-subtle);
+}
+
+.DialogDescription {
+    margin: var(--size-50) 0 var(--size-400);
+}
+
+@keyframes overlayShow {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes contentShow {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.DialogFeedback {
+    max-width: 700px;
+    .iframeComponent {
+        height: 400px;
+    }
+}

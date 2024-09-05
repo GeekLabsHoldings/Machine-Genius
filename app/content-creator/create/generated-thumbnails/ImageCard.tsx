@@ -20,7 +20,7 @@ export default function ImageCard({
   disabled,
 }: IProps) {
   return (
-    <label className={`${styles.box}`}>
+    <label className={`${styles.box} cursor-pointer`}>
       {inputType === "checkbox" ? (
         <CustomCheckBox
           type="checkbox"

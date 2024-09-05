@@ -1,0 +1,62 @@
+var _path, _path2, _path3, _path4, _path5, _path6, _path7, _path8, _path9, _path10, _path11;
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+import * as React from "react";
+function SvgSpaceKey(_ref, svgRef) {
+  let {
+    title,
+    titleId,
+    ...props
+  } = _ref;
+  return /*#__PURE__*/React.createElement("svg", _extends({
+    width: 316,
+    height: 84,
+    viewBox: "0 0 316 84",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    ref: svgRef,
+    "aria-labelledby": titleId
+  }, props), title ? /*#__PURE__*/React.createElement("title", {
+    id: titleId
+  }, title) : null, _path || (_path = /*#__PURE__*/React.createElement("path", {
+    d: "M1 29.1245V75C1 79.4183 4.58172 83 9 83H307C311.418 83 315 79.4183 315 75V29.1245C315 27.7323 314.633 26.3739 314.005 25.1311C309.957 17.1159 303.789 1 295.5 1H20.5C12.2112 1 6.04285 17.1159 1.99505 25.1311C1.36745 26.3739 1 27.7323 1 29.1245Z",
+    fill: "#393D4C"
+  })), _path2 || (_path2 = /*#__PURE__*/React.createElement("path", {
+    d: "M18 64.5L13 83",
+    stroke: "white",
+    strokeWidth: 2
+  })), _path3 || (_path3 = /*#__PURE__*/React.createElement("path", {
+    d: "M13.5 59L1 75.5",
+    stroke: "white",
+    strokeWidth: 2
+  })), _path4 || (_path4 = /*#__PURE__*/React.createElement("path", {
+    d: "M20.5 1C12.2112 1 6.04285 17.1159 1.99505 25.1311C1.36745 26.3739 1 27.7323 1 29.1245V75C1 79.4183 4.58172 83 9 83H307C311.418 83 315 79.4183 315 75V29.1245C315 27.7323 314.633 26.3739 314.005 25.1311C309.957 17.1159 303.789 1 295.5 1M13 57V9C13 4.58172 16.5817 1 21 1H295C299.418 1 303 4.58172 303 9V57C303 61.4183 299.418 65 295 65H21C16.5817 65 13 61.4183 13 57Z",
+    stroke: "white",
+    strokeWidth: 2
+  })), _path5 || (_path5 = /*#__PURE__*/React.createElement("path", {
+    d: "M298 64.5L303 83",
+    stroke: "white",
+    strokeWidth: 2
+  })), _path6 || (_path6 = /*#__PURE__*/React.createElement("path", {
+    d: "M302.5 59L315 75.5",
+    stroke: "white",
+    strokeWidth: 2
+  })), _path7 || (_path7 = /*#__PURE__*/React.createElement("path", {
+    d: "M116.584 25.5596C119.848 25.5596 122.32 27.3356 122.944 30.1916L119.68 30.8636C119.44 29.3516 118.12 28.3676 116.512 28.3676C114.88 28.3676 113.896 29.2796 113.896 30.3596C113.896 31.1756 114.256 31.7516 115.504 31.9916L118.96 32.6876C121.576 33.2396 123.184 34.7996 123.184 37.2956C123.184 40.4156 120.616 42.3596 116.8 42.3596C113.44 42.3596 110.488 40.7996 110.08 37.5836L113.512 36.8876C113.944 38.7116 115.288 39.5036 117.112 39.5036C118.984 39.5036 119.968 38.6156 119.968 37.4636C119.968 36.5516 119.536 35.9996 118.096 35.7116L114.688 35.0636C112.768 34.6556 110.464 33.5996 110.464 30.4556C110.464 27.5756 112.816 25.5596 116.584 25.5596Z",
+    fill: "white"
+  })), _path8 || (_path8 = /*#__PURE__*/React.createElement("path", {
+    d: "M130.855 25.9196H138.343C142.039 25.9196 144.295 28.1036 144.295 31.3196C144.295 34.5836 142.039 36.7436 138.343 36.7436H134.119V41.9996H130.855V25.9196ZM134.119 33.7916H138.343C140.095 33.7916 141.055 32.8076 141.055 31.3196C141.055 29.8796 140.095 28.8716 138.343 28.8716H134.119V33.7916Z",
+    fill: "white"
+  })), _path9 || (_path9 = /*#__PURE__*/React.createElement("path", {
+    d: "M164.982 41.9996H161.454L160.062 38.5676H152.958L151.542 41.9996H148.014L154.974 25.9196H158.022L164.982 41.9996ZM158.838 35.6156L156.51 29.8796L154.158 35.6156H158.838Z",
+    fill: "white"
+  })), _path10 || (_path10 = /*#__PURE__*/React.createElement("path", {
+    d: "M178.722 39.3116C180.954 39.3116 182.874 38.0876 183.474 35.2796L186.642 35.9276C185.85 40.0556 182.586 42.3596 178.722 42.3596C173.994 42.3596 170.274 38.6876 170.274 33.9596C170.274 29.2556 173.994 25.5596 178.722 25.5596C182.586 25.5596 185.826 27.8876 186.642 31.7516L183.474 32.6396C182.874 29.8556 180.954 28.6316 178.722 28.6316C175.842 28.6316 173.562 30.9116 173.562 33.9596C173.562 37.0076 175.842 39.3116 178.722 39.3116Z",
+    fill: "white"
+  })), _path11 || (_path11 = /*#__PURE__*/React.createElement("path", {
+    d: "M206.291 39.0476V41.9996H194.075V25.9196H206.243V28.8716H197.339V32.4956H205.547V35.3996H197.339V39.0476H206.291Z",
+    fill: "white"
+  })));
+}
+const ForwardRef = /*#__PURE__*/React.forwardRef(SvgSpaceKey);
+export default __webpack_public_path__ + "static/media/space-key.06b57443feabcbc761aa761113b9b743.svg";
+export { ForwardRef as ReactComponent };

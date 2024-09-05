@@ -1,0 +1,249 @@
+// @import "./radix-styles/Accordion.scss";
+@import "./fonts/fonts";
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+label {
+    color: var(--foreground-neutral);
+    font-size: 14px;
+    line-height: 1;
+}
+.pattern {
+    background-attachment: fixed;
+    background-position: center;
+    background-size: 16px 16px;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='8' height='8' fill='white' fill-opacity='0.1'/%3E%3Crect x='8' y='8' width='8' height='8' fill='white' fill-opacity='0.1'/%3E%3C/svg%3E%0A");
+}
+.Tutorial.Card {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: none;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: var(--size-200);
+    box-shadow: none;
+    border-radius: var(--size-200);
+    border: 1px solid var(--border-neutral-subtle);
+    img {
+        height: 56px;
+        width: auto;
+        display: block;
+    }
+    &.hide {
+        opacity: 0;
+        transition: 290ms ease 0s;
+        transform: translateX(-60%) scale(0.6);
+    }
+}
+.darkmode {
+    .Tutorial.Card {
+        background-color: hsla(248, 22%, 10%, 0.9) !important;
+    }
+}
+.page-color {
+    &-1 {
+        background-color: var(--gray-100);
+        &.pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='8' height='8' fill='white' fill-opacity='0.4'/%3E%3Crect x='8' y='8' width='8' height='8' fill='white' fill-opacity='0.4'/%3E%3C/svg%3E%0A");
+        }
+    }
+    &-2 {
+        background-color: var(--gray-200);
+    }
+    &-3 {
+        background-color: var(--black-100);
+    }
+    &-4 {
+        background-color: var(--black-400);
+    }
+}
+html {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard syntax */
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-neutral-page-back);
+}
+* ::-webkit-scrollbar-track {
+    background: transparent;
+}
+* ::-webkit-scrollbar-thumb {
+    background: var(--background-neutral-active);
+    border-radius: 4px;
+    &:hover {
+        background: var(--brand-2);
+    }
+}
+* ::-webkit-scrollbar {
+    width: 4px;
+}
+#AppBody {
+    height: 100%;
+    min-height: 100vh;
+    font-family: var(--font-body);
+    font-weight: normal;
+    position: relative;
+}
+:root {
+    --brand-1: #db4d42 !important;
+    --brand-2: #00ebff !important;
+    --brand-2-200: #00d8eb !important;
+    --brand-2-300: #00c5d6 !important;
+}
+.App {
+    .TabsTrigger[data-state="active"]:after {
+        bottom: 3px;
+        left: 8px;
+        right: 8px;
+        height: 3px;
+        border-radius: 4px;
+        width: auto;
+    }
+    // padding: var(--size-400) var(--size-200);
+    min-height: 100vh;
+    .banner {
+        max-width: 800px;
+        width: 100%;
+        background-color: var(--background-neutral-container);
+        box-shadow: var(--shadow-level-2);
+        padding: var(--size-400);
+        border-radius: var(--size-100);
+        margin-top: var(--size-400);
+        text-align: center;
+        h3 {
+            line-height: 110%;
+            max-width: 40ch;
+            & + p {
+                margin-top: var(--size-100);
+                & + button {
+                    margin-top: var(--size-200);
+                }
+            }
+        }
+    }
+    .SelectTrigger,
+    .inputfield {
+        max-width: 300px !important;
+    }
+
+    // .button {
+    //     min-width: 124px;
+    // }
+    .inputfield {
+        width: 100%;
+        max-width: 100%;
+        flex: 1;
+        input[type="number"] {
+            -moz-appearance: textfield;
+            padding: 0 var(--size-150);
+            width: 100%;
+            min-width: auto;
+        }
+    }
+    .SelectContent {
+        margin-top: 4px;
+        width: 100% !important;
+        max-width: 100%;
+    }
+    .AppHeader {
+        margin-bottom: var(--size-200);
+        padding-bottom: var(--size-100);
+        border-bottom: 1px solid var(--border-neutral-subtle);
+        .button {
+            min-width: auto;
+        }
+    }
+}
+
+:focus-visible {
+    box-shadow:
+        0px 0px 0px 2px var(--focus-inner),
+        0px 0px 0px 6px var(--focus-outer),
+        0px 0px 0px 8px var(--focus-inner);
+    outline: none;
+    border: none;
+    animation: none;
+}
+
+p {
+    font-size: 16px;
+    color: var(--foreground-neutral);
+    line-height: 160%;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    font-weight: normal;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-accent);
+    font-weight: normal;
+    color: var(--foreground-neutral);
+    line-height: 120% !important;
+
+    @media only screen and (max-width: 490px) {
+        line-height: 100%;
+        max-width: 19ch;
+    }
+}
+@media only screen and (max-width: 490px) {
+    h1 {
+        font-size: var(--size-600) !important;
+    }
+
+    h2 {
+        font-size: var(--size-500) !important;
+    }
+
+    h3 {
+        font-size: var(--size-400) !important;
+    }
+
+    h4 {
+        font-size: 18px !important;
+    }
+}
+
+.nullHeight {
+    height: 0;
+}
+
+//
+
+.TemplatesDesigner {
+    // border-radius: var(--size-100);
+    // margin-top: var(--size-1000);
+    // overflow: hidden;
+    // max-width: 838px;
+    width: 100%;
+    align-items: center;
+    // box-shadow: var(--shadow-level-2);
+    // border: 1px solid var(--border-neutral-subtle);
+    // padding: var(--size-400) var(--size-500);
+    // background-color: var(--background-neutral-container);
+    .backgroundImage {
+        width: 100%;
+        height: 100%;
+    }
+    @media only screen and (max-width: 490px) {
+        padding: var(--size-300) var(--size-200);
+    }
+}
+
+.DialogOverlay {
+    z-index: 99998 !important;
+}
+.DialogContent {
+    z-index: 99999 !important;
+}

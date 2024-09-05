@@ -1,0 +1,13 @@
+.CodeHighlight {
+    background-color: var(--gray-200);
+    padding: 0 var(--size-50);
+    height: 24px;
+    line-height: 24px;
+    border-radius: 2px;
+    width: fit-content;
+    margin: var(--size-100) 0;
+
+    code {
+        color: var(--black-100);
+    }
+}

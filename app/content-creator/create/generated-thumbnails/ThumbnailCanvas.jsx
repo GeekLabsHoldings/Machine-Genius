@@ -33,7 +33,6 @@ export default function ThumbnailCanvas() {
     selectedContentThumbnail,
     setSelectedContentThumbnail,
     editContentData,
-    setEditContentData,
   } = useContext(contentCreatorContext);
 
   const finalArticle = useSelector(
@@ -55,7 +54,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -99,7 +98,6 @@ export default function ThumbnailCanvas() {
       searchImgData: pageStateSearchImgDataInit(),
       searchBgData: pageStateSearchBgDataInit(),
       selectedImgsPath: [],
-      selectedImgsPathWithoutBg: [],
       removeBgLoading: false,
       isSendLoading: false,
       triggerSendContent: false,
@@ -140,6 +138,52 @@ export default function ThumbnailCanvas() {
     }));
   }, []);
 
+  const [canvasState, setCanvasState] = useState(null);
+
+  // ==============================================================
+  const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
+  const isBlocked = (url) => blockedUrls.includes(url);
+
+  const addToBlockedUrls = (url) => {
+    if (!blockedUrls.includes(url)) {
+      blockedUrls.push(url);
+      setPageState((prev) => ({
+        ...prev,
+        // searchImgData: prev.searchImgData.filter((img) => img !== url),
+        searchBgData: prev.searchBgData.filter((img) => img !== url),
+      }));
+      localStorage.setItem("blockedUrls", JSON.stringify(blockedUrls));
+    }
+  };
+
+  // Function to handle image loading
+  const loadImage = (url, onSuccess) => {
+    fabric.Image.fromURL(
+      url,
+      function (img, error) {
+        if (error) {
+          toast.error(`Failed to load image from ${url}.`);
+          addToBlockedUrls(url);
+          return;
+        }
+        img.set({ crossOrigin: "anonymous" });
+        onSuccess(img);
+      },
+      { crossOrigin: "anonymous" }
+    );
+  };
+
+  function splitSentenceIntoWords() {
+    if (selectedContentThumbnail) {
+      return selectedContentThumbnail.split(" ");
+    } else {
+      return [];
+    }
+  }
+  // Get the words from the sentence
+  const words = splitSentenceIntoWords();
+  // ==============================================================
+
   useEffect(() => {
     if (!canvasEl.current) {
       toast.error("Canvas not found!");
@@ -149,65 +193,49 @@ export default function ThumbnailCanvas() {
     const canvas = new fabric.Canvas(canvasEl.current);
     fabricCanvasRef.current = canvas;
 
-    // ==============================================================
-    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
-    const isBlocked = (url) => blockedUrls.includes(url);
+    canvas.renderAll();
+    setCanvasState(canvas);
 
-    const addToBlockedUrls = (url) => {
-      if (!blockedUrls.includes(url)) {
-        blockedUrls.push(url);
-        setPageState((prev) => ({
-          ...prev,
-          // searchImgData: prev.searchImgData.filter((img) => img !== url),
-          searchBgData: prev.searchBgData.filter((img) => img !== url),
-        }));
-        localStorage.setItem("blockedUrls", JSON.stringify(blockedUrls));
-      }
+    // Cleanup
+    return () => {
+      canvas.dispose();
+      setCanvasState(null);
+      fabricCanvasRef.current = null;
     };
+  }, []);
 
-    // Function to handle image loading
-    const loadImage = (url, onSuccess) => {
-      fabric.Image.fromURL(
-        url,
-        function (img, error) {
-          if (error) {
-            toast.error(`Failed to load image from ${url}.`);
-            addToBlockedUrls(url);
-            return;
-          }
-          img.set({ crossOrigin: "anonymous" });
-          onSuccess(img);
-        },
-        { crossOrigin: "anonymous" }
-      );
-    };
-
-    function splitSentenceIntoWords() {
-      if (selectedContentThumbnail) {
-        return selectedContentThumbnail.split(" ");
-      } else {
-        return [];
-      }
-    }
-    // Get the words from the sentence
-    const words = splitSentenceIntoWords();
-    // ==============================================================
-
+  function loadBackgroundImage() {
+    const objects = canvasState.getObjects();
+    console.log("objects", objects);
     // ===== Load background image =====
     if (!isBlocked(pageState.selectedBgPath)) {
       loadImage(pageState.selectedBgPath, (img) => {
         // Set the image to fit the canvas dimensions
         img.set({
+          scaleX: 1280 / img.width,
+          scaleY: 720 / img.height,
           left: 0, // Position the image at the left edge
           top: 0, // Position the image at the top edge
+          isBackground: true,
         });
-        // Set the image to fit the canvas dimensions
-        img.scaleToWidth(1280);
-        img.scaleToHeight(720);
-        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+
+        canvasState.setBackgroundImage(
+          img,
+          canvasState.renderAll.bind(canvasState)
+        );
       });
     }
+  }
 
+  useEffect(() => {
+    if (canvasState) {
+      loadBackgroundImage();
+    }
+  }, [canvasState, pageState.selectedBgPath]);
+
+  function loadOverlayImage() {
+    const objects = canvasState.getObjects();
+    console.log("objects", objects);
     // ===== Add overlay image =====
     if (selectedBrand.includes("Street Politics")) {
       fabric.Image.fromURL(
@@ -231,13 +259,30 @@ export default function ThumbnailCanvas() {
             lockRotation: true, // Prevent rotation
           });
 
-          canvas.add(img);
+          canvasState.add(img);
           // Send the image to the back
           img.sendToBack();
         },
         { crossOrigin: "anonymous" }
       );
     }
+  }
+
+  useEffect(() => {
+    if (canvasState && selectedBrand.includes("Street Politics")) {
+      loadOverlayImage();
+    }
+  }, [canvasState, selectedBrand]);
+
+  function loadIconImages() {
+    // Remove existing icons before adding a new one
+    const objects = canvasState.getObjects();
+    console.log("objects", objects);
+    objects.forEach((obj) => {
+      if (obj.isIcon) {
+        canvasState.remove(obj);
+      }
+    });
 
     // ===== Add icon image =====
     if (selectedBrand.includes("Street Politics")) {
@@ -250,24 +295,63 @@ export default function ThumbnailCanvas() {
           }
           img.set({
             crossOrigin: "anonymous", // Set crossOrigin attribute
+            left: 75,
+            top: 75,
+            isIcon: true, // Mark this object as an icon
           });
-          img.left = 75;
-          img.top = 75;
-          canvas.add(img);
+
+          canvasState.add(img);
         },
         { crossOrigin: "anonymous" }
       );
     }
+  }
+
+  useEffect(() => {
+    if (canvasState) {
+      loadIconImages();
+    }
+  }, [canvasState, pageState.selectedIconPath]);
+
+  function loadImages() {
+    // Remove existing images before adding a new one
+    const objects = canvasState.getObjects();
+    console.log("objects", objects);
+    objects.forEach((obj) => {
+      if (obj.isImage) {
+        canvasState.remove(obj);
+      }
+    });
 
     // Load images
-    pageState.selectedImgsPathWithoutBg.forEach(({ img }, index) => {
+    pageState.selectedImgsPath.forEach((img, index) => {
       if (!isBlocked(img)) {
         loadImage(img, (img) => {
           img.scaleToWidth(500); // Optional: scale the image if needed
-          img.left = canvas.width - img.width * img.scaleX - 40 * (index + 1); // Position on the right edge
-          img.top = canvas.height - img.height * img.scaleY - 40 * (index + 1); // Position on the bottom edge
-          canvas.add(img);
+          img.left =
+            canvasState.width - img.width * img.scaleX - 40 * (index + 1); // Position on the right edge
+          img.top =
+            canvasState.height - img.height * img.scaleY - 40 * (index + 1); // Position on the bottom edge
+          img.isImage = true;
+          canvasState.add(img);
         });
+      }
+    });
+  }
+
+  useEffect(() => {
+    if (canvasState) {
+      loadImages();
+    }
+  }, [canvasState, pageState.selectedImgsPath]);
+
+  function loadText() {
+    // Remove existing text before adding a new one
+    const objects = canvasState.getObjects();
+    console.log("objects", objects);
+    objects.forEach((obj) => {
+      if (obj.isText) {
+        canvasState.remove(obj);
       }
     });
 
@@ -275,7 +359,7 @@ export default function ThumbnailCanvas() {
     if (selectedBrand.includes("Street Politics")) {
       // Set the starting position (bottom-left corner)
       let left = 40;
-      let top = canvas.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
+      let top = canvasState.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
@@ -294,14 +378,17 @@ export default function ThumbnailCanvas() {
             offsetX: 3, // Horizontal shadow offset
             offsetY: 3, // Vertical shadow offset
           },
+          isText: true,
         });
-        canvas.add(text);
+
+        canvasState.add(text);
+        text.bringToFront();
         top -= text.height * 0.7; // Move the next word up by the height of the text
       }
     } else {
       // Set the starting position (bottom-left corner)
       let left = 40;
-      let top = canvas.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
+      let top = canvasState.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
@@ -314,26 +401,39 @@ export default function ThumbnailCanvas() {
           // fontWeight: "800",
           // fontStyle: "italic",
           textBackgroundColor: "#1E2329",
+          isText: true,
         });
-        canvas.add(text);
+
+        canvasState.add(text);
+        text.bringToFront();
         top -= text.height * 1.05; // Move the next word up by the height of the text
       }
     }
+  }
 
-    // Cleanup
-    return () => {
-      canvas.dispose();
-      fabricCanvasRef.current = null;
-    };
-  }, [
-    pageState.selectedBgPath,
-    selectedContentThumbnail,
-    pageState.selectedImgsPath,
-    pageState.selectedImgsPathWithoutBg,
-    pageState.thumbnailFontSize,
-    pageState.selectedIconPath,
-    canvasEl,
-  ]);
+  useEffect(() => {
+    function bringAllTextToFront() {
+      const objects = canvasState.getObjects();
+      objects.forEach((obj) => {
+        if (obj.isText) {
+          obj.bringToFront();
+        }
+      });
+    }
+
+    if (canvasState) {
+      // Add the listener after the canvas is rendered
+      canvasState.on("after:render", bringAllTextToFront);
+
+      // Initial text load
+      loadText();
+
+      // Clean up the event listener on unmount
+      return () => {
+        canvasState.off("after:render", bringAllTextToFront);
+      };
+    }
+  }, [canvasState, selectedContentThumbnail, pageState.thumbnailFontSize]);
 
   const handleDownload = () => {
     const canvas = fabricCanvasRef.current;
@@ -443,42 +543,12 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function handleSelectImg(e) {
-    const img = e.target.value;
-    const updatedSelectedImgsPath = [...pageState.selectedImgsPath];
-    const updatedSelectedImgsPathWithoutBg = [
-      ...pageState.selectedImgsPathWithoutBg,
-    ];
-
-    // if the image is already selected, remove it
-    if (updatedSelectedImgsPath.includes(img)) {
-      updatedSelectedImgsPath.splice(updatedSelectedImgsPath.indexOf(img), 1);
-      const indexWithoutBg = updatedSelectedImgsPathWithoutBg.findIndex(
-        (item) => item.source === img
-      );
-      if (indexWithoutBg !== -1) {
-        updatedSelectedImgsPathWithoutBg.splice(indexWithoutBg, 1);
-      }
-    } else {
-      // if the image is not selected, add it
-      updatedSelectedImgsPath.push(img);
-
-      // Check if the image is already in the list of images without background
-      if (
-        !updatedSelectedImgsPathWithoutBg.some((item) => item.source === img)
-      ) {
-        const removedBgImg = await handleRemoveBg(img);
-        updatedSelectedImgsPathWithoutBg.push({
-          img: removedBgImg || img,
-          source: img,
-        });
-      }
-    }
+  async function handleSelectImg(img) {
+    const removedBgImg = await handleRemoveBg(img);
 
     setPageState((prev) => ({
       ...prev,
-      selectedImgsPath: updatedSelectedImgsPath,
-      selectedImgsPathWithoutBg: updatedSelectedImgsPathWithoutBg,
+      selectedImgsPath: [...(prev.selectedImgsPath || []), removedBgImg || img],
     }));
   }
 
@@ -779,157 +849,233 @@ export default function ThumbnailCanvas() {
   }, [pageState.triggerFilterImages]);
   // =============================================
 
-  // ============= Start Loading =================
-  if (pageState.isLoadingFormatToHtml) {
-    return (
-      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle
-          needTxt={false}
-          title="Genius is formatting your content..."
-        />
-      </div>
-    );
+  const [selectedLayerIndex, setSelectedLayerIndex] = useState(null);
+
+useEffect(() => {
+  if (canvasState) {
+    // Handler for object selection
+    const handleObjectSelected = (event) => {
+      const selectedObject = event.target; // Get the selected object
+      if (selectedObject) {
+        const objects = canvasState.getObjects();
+        const index = objects.indexOf(selectedObject); // Get the index of the selected object
+        setSelectedLayerIndex(index); // Update the selected layer index
+      }
+    };
+
+    // Add event listeners for object selection
+    canvasState.on('selection:created', handleObjectSelected);
+    canvasState.on('selection:updated', handleObjectSelected);
+
+    // Clear selection when objects are deselected
+    canvasState.on('selection:cleared', () => {
+      setSelectedLayerIndex(null); // Reset selected layer index when selection is cleared
+    });
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      canvasState.off('selection:created', handleObjectSelected);
+      canvasState.off('selection:updated', handleObjectSelected);
+      canvasState.off('selection:cleared', () => setSelectedLayerIndex(null));
+    };
+  }
+}, [canvasState]);
+
+  function moveLayerUp(index) {
+    const object = canvasState.getObjects()[index];
+    if (object) {
+      canvasState.bringForward(object); // Move the object one level up
+      canvasState.renderAll();
+    }
   }
 
-  if (pageState.generateThumbnailsLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle needTxt={false} title="Generating Thumbnails..." />
-      </div>
-    );
+  function moveLayerDown(index) {
+    const object = canvasState.getObjects()[index];
+    if (object) {
+      canvasState.sendBackwards(object); // Move the object one level down
+      canvasState.renderAll();
+    }
   }
 
-  if (pageState.isSendLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle needTxt={false} title="Sending Content..." />
-      </div>
-    );
+  function deleteLayer(index) {
+    const object = canvasState.getObjects()[index];
+    if (object) {
+      canvasState.remove(object); // Remove the object from the canvas
+      canvasState.renderAll();
+    }
   }
 
-  if (pageState.searchImgLoading) {
-    return (
-      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
-        <LogoAndTitle
-          needTxt={true}
-          textNeeded="Hold on tight."
-          title={"Genius is searching for images..."}
-        />
-      </div>
-    );
-  }
-
-  if (pageState.searchBgLoading) {
-    return (
-      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
-        <LogoAndTitle
-          needTxt={true}
-          textNeeded="Hold on tight."
-          title={
-            !pageState.triggerFilterImages
-              ? "Genius is searching for backgrounds..."
-              : "Genius is filtering backgrounds..."
-          }
-        />
-      </div>
-    );
-  }
-
-  if (pageState.removeBgLoading) {
-    return (
-      <div className="flex flex-col gap-8 justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
-        <LogoAndTitle
-          needTxt={true}
-          textNeeded="Hold on tight."
-          title={"Genius is removing image background..."}
-        />
-      </div>
-    );
-  }
-  // ============= End Loading =================
+  // ==========================
 
   return (
-    <section>
-      <div className="thumbnailCanvas">
-        <div className="thumbnailCanvas_actionsBar">
-          {/* 01 Select Thumbnail */}
-          <div className="flex flex-col gap-[--5px] w-full">
-            <div className="flex justify-between items-center pt-[--10px]">
-              <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
+    <main className="relative">
+      {pageState.generateThumbnailsLoading && (
+        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] py-[1.5vw] ">
+          <LogoAndTitle needTxt={false} title="Generating Thumbnails..." />
+        </div>
+      )}
 
-              <div className="w-1/2">
-                <CustomSelectInput
-                  label={"Font Size"}
-                  options={Array.from({ length: 71 }, (_, i) => i + 60)}
-                  getValue={getThumbnailFontSizeValue}
-                />
+      {pageState.isSendLoading && (
+        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] py-[1.5vw]">
+          <LogoAndTitle needTxt={false} title="Sending Content..." />
+        </div>
+      )}
+
+      {pageState.searchImgLoading && (
+        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
+          <LogoAndTitle
+            needTxt={true}
+            textNeeded="Hold on tight."
+            title={"Genius is searching for images..."}
+          />
+        </div>
+      )}
+
+      {pageState.searchBgLoading && (
+        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
+          <LogoAndTitle
+            needTxt={true}
+            textNeeded="Hold on tight."
+            title={
+              !pageState.triggerFilterImages
+                ? "Genius is searching for backgrounds..."
+                : "Genius is filtering backgrounds..."
+            }
+          />
+        </div>
+      )}
+
+      {pageState.removeBgLoading && (
+        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
+          <LogoAndTitle
+            needTxt={true}
+            textNeeded="Hold on tight."
+            title={"Genius is removing image background..."}
+          />
+        </div>
+      )}
+
+      {pageState.isLoadingFormatToHtml && (
+        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] py-[1.5vw]">
+          <LogoAndTitle
+            needTxt={false}
+            title="Genius is formatting your content..."
+          />
+        </div>
+      )}
+
+      <section
+        className={`${
+          (pageState.generateThumbnailsLoading ||
+            pageState.isSendLoading ||
+            pageState.searchImgLoading ||
+            pageState.searchBgLoading ||
+            pageState.removeBgLoading ||
+            pageState.isLoadingFormatToHtml) &&
+          "!hidden"
+        }`}
+      >
+        <div className="thumbnailCanvas">
+          <div className="thumbnailCanvas_actionsBar max-h-[720px] overflow-y-auto pr-[--10px]">
+            {/* 01 Select Thumbnail */}
+            <div className="flex flex-col gap-[--5px] w-full">
+              <div className="flex justify-between items-center pt-[--10px]">
+                <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
+
+                <div className="w-1/2">
+                  <CustomSelectInput
+                    label={"Font Size"}
+                    options={Array.from({ length: 71 }, (_, i) => i + 60)}
+                    getValue={getThumbnailFontSizeValue}
+                  />
+                </div>
               </div>
-            </div>
 
-            <CustomSelectInput
-              label={"Select Thumbnail"}
-              options={
-                generatedThumbnails && generatedThumbnails?.length > 0
-                  ? generatedThumbnails?.map((e) => e.Thumbnail)
-                  : ["No Thumbnails Found"]
-              }
-              getValue={getSelectedContentThumbnailValue}
-            />
+              <CustomSelectInput
+                label={"Select Thumbnail"}
+                options={
+                  generatedThumbnails && generatedThumbnails?.length > 0
+                    ? generatedThumbnails?.map((e) => e.Thumbnail)
+                    : ["No Thumbnails Found"]
+                }
+                getValue={getSelectedContentThumbnailValue}
+              />
 
-            <input
-              className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
-              type="text"
-              name="thumbnail-title"
-              id="thumbnail-title"
-              placeholder="Edit thumbnail title ..."
-              value={selectedContentThumbnail}
-              onChange={(e) => setSelectedContentThumbnail(e.target.value)}
-            />
-          </div>
-
-          {/* 02 Select Background */}
-          <div className="flex flex-col gap-[--5px] w-full">
-            {/* 02-01 Select Background */}
-            <h3 className="font-bold text-[--17px]">Select Background</h3>
-
-            {/* 02-02 Search Background */}
-            <div className="flex gap-[--10px]">
               <input
                 className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
                 type="text"
-                name="bg-search"
-                id="bg-search"
-                placeholder="Search for a background ..."
-                value={pageState.searchBgKeyword}
-                onChange={(e) =>
-                  setPageState((prev) => ({
-                    ...prev,
-                    searchBgKeyword: e.target.value,
-                  }))
-                }
+                name="thumbnail-title"
+                id="thumbnail-title"
+                placeholder="Edit thumbnail title ..."
+                value={selectedContentThumbnail}
+                onChange={(e) => setSelectedContentThumbnail(e.target.value)}
               />
-              <button
-                onClick={() => {
-                  console.log(`searchBgKeyword`, pageState.searchBgKeyword);
-                  handleSearchBg();
-                }}
-              >
-                Search
-              </button>
             </div>
 
-            {/* 02-03 Preview Backgrounds */}
-            <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
-              {selectedBrand === "Investorcracy" &&
-                Array.from({ length: 10 }, (_, i) => (
-                  <div className="!w-1/2" key={uuidv4()}>
+            {/* 02 Select Background */}
+            <div className="flex flex-col gap-[--5px] w-full">
+              {/* 02-01 Select Background */}
+              <h3 className="font-bold text-[--17px]">Select Background</h3>
+
+              {/* 02-02 Search Background */}
+              <div className="flex gap-[--10px]">
+                <input
+                  className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                  type="text"
+                  name="bg-search"
+                  id="bg-search"
+                  placeholder="Search for a background ..."
+                  value={pageState.searchBgKeyword}
+                  onChange={(e) =>
+                    setPageState((prev) => ({
+                      ...prev,
+                      searchBgKeyword: e.target.value,
+                    }))
+                  }
+                />
+                <button
+                  onClick={() => {
+                    console.log(`searchBgKeyword`, pageState.searchBgKeyword);
+                    handleSearchBg();
+                  }}
+                >
+                  Search
+                </button>
+              </div>
+
+              {/* 02-03 Preview Backgrounds */}
+              <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
+                {selectedBrand === "Investorcracy" &&
+                  Array.from({ length: 10 }, (_, i) => (
+                    <div className="!w-1/2" key={uuidv4()}>
+                      <ImageCard
+                        inputType="radio"
+                        inputName="select-bg"
+                        imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
+                        checked={
+                          pageState.selectedBgPath ===
+                          `/generated-thumbnails/inv/bg/bg-${i}.jpg`
+                        }
+                        onChange={(e) => {
+                          // console.log(`e.target.value`, e.target.value);
+                          setPageState((prev) => ({
+                            ...prev,
+                            selectedBgPath: e.target.value,
+                          }));
+                        }}
+                      />
+                    </div>
+                  ))}
+
+                {selectedBrand.includes("Street Politics") && (
+                  <div className="!w-1/2">
                     <ImageCard
                       inputType="radio"
                       inputName="select-bg"
-                      imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
+                      imgSrc={`/generated-thumbnails/sp/bg/bg-0.jpg`}
                       checked={
                         pageState.selectedBgPath ===
-                        `/generated-thumbnails/inv/bg/bg-${i}.jpg`
+                        `/generated-thumbnails/sp/bg/bg-0.jpg`
                       }
                       onChange={(e) => {
                         // console.log(`e.target.value`, e.target.value);
@@ -940,172 +1086,213 @@ export default function ThumbnailCanvas() {
                       }}
                     />
                   </div>
-                ))}
+                )}
 
-              {selectedBrand.includes("Street Politics") && (
-                <div className="!w-1/2">
-                  <ImageCard
-                    inputType="radio"
-                    inputName="select-bg"
-                    imgSrc={`/generated-thumbnails/sp/bg/bg-0.jpg`}
-                    checked={
-                      pageState.selectedBgPath ===
-                      `/generated-thumbnails/sp/bg/bg-0.jpg`
-                    }
-                    onChange={(e) => {
-                      // console.log(`e.target.value`, e.target.value);
-                      setPageState((prev) => ({
-                        ...prev,
-                        selectedBgPath: e.target.value,
-                      }));
-                    }}
-                  />
-                </div>
-              )}
-
-              {!pageState.searchBgData.length ? (
-                <div className="!w-1/2">
-                  <ImageCard
-                    imgSrc="/generated-thumbnails/img-placeholder.jpg"
-                    inputType="radio"
-                    inputName={"select-bg"}
-                    disabled
-                  />
-                </div>
-              ) : (
-                Array.isArray(pageState.searchBgData) &&
-                pageState.searchBgData.length &&
-                pageState.searchBgData.map((img) => (
-                  <div className="!w-1/2" key={uuidv4()}>
+                {!pageState.searchBgData.length ? (
+                  <div className="!w-1/2">
                     <ImageCard
-                      imgSrc={img}
+                      imgSrc="/generated-thumbnails/img-placeholder.jpg"
                       inputType="radio"
                       inputName={"select-bg"}
-                      checked={pageState.selectedBgPath === img}
-                      onChange={(e) => {
-                        // console.log(`e.target.value`, e.target.value);
-                        setPageState((prev) => ({
-                          ...prev,
-                          selectedBgPath: e.target.value,
-                        }));
-                      }}
+                      disabled
                     />
                   </div>
-                ))
-              )}
+                ) : (
+                  Array.isArray(pageState.searchBgData) &&
+                  pageState.searchBgData.length &&
+                  pageState.searchBgData.map((img) => (
+                    <div className="!w-1/2" key={uuidv4()}>
+                      <ImageCard
+                        imgSrc={img}
+                        inputType="radio"
+                        inputName={"select-bg"}
+                        checked={pageState.selectedBgPath === img}
+                        onChange={(e) => {
+                          // console.log(`e.target.value`, e.target.value);
+                          setPageState((prev) => ({
+                            ...prev,
+                            selectedBgPath: e.target.value,
+                          }));
+                        }}
+                      />
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* 03 Select Icon */}
-          {selectedBrand.includes("Street Politics") && (
+            {/* 03 Select Icon */}
+            {selectedBrand.includes("Street Politics") && (
+              <div className="flex flex-col gap-[--5px] w-full">
+                <h3 className="font-bold text-[--17px]">Select Icon</h3>
+
+                <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
+                  {Array.from({ length: 7 }, (_, i) => (
+                    <div className="!w-1/2" key={uuidv4()}>
+                      <ImageCard
+                        inputType="radio"
+                        inputName="select-icon"
+                        imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
+                        checked={
+                          pageState.selectedIconPath ===
+                          `/generated-thumbnails/sp/icons/illustration-${i}.png`
+                        }
+                        onChange={(e) => {
+                          setPageState((prev) => ({
+                            ...prev,
+                            selectedIconPath: e.target.value,
+                          }));
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 04 Select Image */}
             <div className="flex flex-col gap-[--5px] w-full">
-              <h3 className="font-bold text-[--17px]">Select Icon</h3>
+              {/* 03-01 Select Image */}
+              {/* <div className="flex justify-between items-center"> */}
+              <h3 className="font-bold text-[--17px]">Select Image</h3>
+              {/* </div> */}
 
-              <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
-                {Array.from({ length: 7 }, (_, i) => (
-                  <div className="!w-1/2" key={uuidv4()}>
-                    <ImageCard
-                      inputType="radio"
-                      inputName="select-icon"
-                      imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
-                      checked={
-                        pageState.selectedIconPath ===
-                        `/generated-thumbnails/sp/icons/illustration-${i}.png`
-                      }
-                      onChange={(e) => {
-                        setPageState((prev) => ({
-                          ...prev,
-                          selectedIconPath: e.target.value,
-                        }));
-                      }}
+              {/* 03-02 Search Image */}
+              <div className="flex gap-[--10px]">
+                <input
+                  className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                  type="text"
+                  name="img-search"
+                  id="img-search"
+                  placeholder="Search for an image ..."
+                  value={pageState.searchImgKeyword}
+                  onChange={(e) =>
+                    setPageState((prev) => ({
+                      ...prev,
+                      searchImgKeyword: e.target.value,
+                    }))
+                  }
+                />
+                <button
+                  onClick={() => {
+                    console.log(`searchImgKeyword`, pageState.searchImgKeyword);
+                    handleSearchImg();
+                  }}
+                >
+                  Search
+                </button>
+              </div>
+
+              {/* 03-03 Preview Images */}
+              <div className="flex gap-[--25px] overflow-x-auto p-[--5px] w-full">
+                {!pageState.searchImgData.length ? (
+                  <ImageCard
+                    imgSrc="/generated-thumbnails/img-placeholder.jpg"
+                    inputType={"checkbox"}
+                    inputName={"select-img"}
+                    disabled
+                  />
+                ) : (
+                  pageState.searchImgData.map((img) => (
+                    <img
+                      key={uuidv4()}
+                      loading="lazy"
+                      src={img}
+                      alt="searchImg"
+                      className="w-[50%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
+                      onClick={() => handleSelectImg(img)}
                     />
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* 05 Control Layers */}
+            <div className="flex flex-col gap-[--5px] w-full">
+              {/* 05-01 Header */}
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-[--17px]">Layers</h3>
+                <div className="flex gap-[--10px]">
+                  <span>up</span>
+                  <span>down</span>
+                </div>
+              </div>
+
+              {/* 05-02 Layers */}
+
+              <div className="flex flex-col gap-[--5px]">
+                <div className="flex justify-between items-center">
+                  <span>01</span> <span>delete</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>02</span> <span>delete</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>03</span> <span>delete</span>
+                </div>
+              </div>
+            </div>
+
+            {/* ========================== */}
+            <div className="flex flex-col gap-[--5px] w-full">
+              {/* Header */}
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-[--17px]">Layers</h3>
+                <div className="flex gap-[--10px]">
+                  <span onClick={() => moveLayerUp(selectedLayerIndex)}>
+                    up
+                  </span>
+                  <span onClick={() => moveLayerDown(selectedLayerIndex)}>
+                    down
+                  </span>
+                </div>
+              </div>
+
+              {/* Layers */}
+              <div className="flex flex-col gap-[--5px]">
+                {canvasState?.getObjects()?.map((obj, index) => (
+                  <div
+                    key={index}
+                    className={`flex justify-between items-center ${
+                      index === selectedLayerIndex ? "bg-gray-300" : ""
+                    }`} // Highlight selected layer
+                  >
+                    <span>{index + 1}</span>
+                    <div className="flex gap-[--10px]">
+                      <span onClick={() => moveLayerUp(index)}>up</span>
+                      <span onClick={() => moveLayerDown(index)}>down</span>
+                      <span onClick={() => deleteLayer(index)}>delete</span>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          )}
+            {/* ========================== */}
+          </div>
 
-          {/* 04 Select Image */}
-          <div className="flex flex-col gap-[--5px] w-full">
-            {/* 03-01 Select Image */}
-            {/* <div className="flex justify-between items-center"> */}
-            <h3 className="font-bold text-[--17px]">Select Image</h3>
-            {/* </div> */}
-
-            {/* 03-02 Search Image */}
-            <div className="flex gap-[--10px]">
-              <input
-                className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
-                type="text"
-                name="img-search"
-                id="img-search"
-                placeholder="Search for an image ..."
-                value={pageState.searchImgKeyword}
-                onChange={(e) =>
-                  setPageState((prev) => ({
-                    ...prev,
-                    searchImgKeyword: e.target.value,
-                  }))
-                }
-              />
-              <button
-                onClick={() => {
-                  console.log(`searchImgKeyword`, pageState.searchImgKeyword);
-                  handleSearchImg();
-                }}
-              >
-                Search
-              </button>
-            </div>
-
-            {/* 03-03 Preview Images */}
-            <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px] w-full">
-              {!pageState.searchImgData.length ? (
-                <ImageCard
-                  imgSrc="/generated-thumbnails/img-placeholder.jpg"
-                  inputType={"checkbox"}
-                  inputName={"select-img"}
-                  disabled
-                />
-              ) : (
-                pageState.searchImgData.map((img) => (
-                  <div className="!w-1/2" key={uuidv4()}>
-                    <ImageCard
-                      imgSrc={img}
-                      inputType={"checkbox"}
-                      inputName={"select-img"}
-                      checked={pageState.selectedImgsPath.includes(img)}
-                      onChange={handleSelectImg}
-                    />
-                  </div>
-                ))
-              )}
-            </div>
+          <div className="canvas-container relative">
+            <canvas id="c" width="1280" height="720" ref={canvasEl}></canvas>
           </div>
         </div>
 
-        <div className="canvas-container relative">
-          <canvas id="c" width="1280" height="720" ref={canvasEl}></canvas>
+        <div className="flex justify-between items-center mt-[--sy-20px]">
+          <CustomBtn
+            word={"Back"}
+            btnColor="white"
+            href={"/content-creator/create/generated-titles"}
+          />
+          <button onClick={handleDownload} id="downloadBtn">
+            Download Thumbnail
+          </button>
+          <CustomBtn
+            word={"Send"}
+            btnColor="black"
+            onClick={() => {
+              handleSelectThumbnail();
+            }}
+          />
         </div>
-      </div>
-
-      <div className="flex justify-between items-center mt-[--sy-20px]">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          href={"/content-creator/create/generated-titles"}
-        />
-        <button onClick={handleDownload} id="downloadBtn">
-          Download Thumbnail
-        </button>
-        <CustomBtn
-          word={"Send"}
-          btnColor="black"
-          onClick={() => {
-            handleSelectThumbnail();
-          }}
-        />
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }

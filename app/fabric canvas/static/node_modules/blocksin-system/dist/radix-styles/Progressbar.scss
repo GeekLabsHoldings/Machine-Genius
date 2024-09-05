@@ -1,0 +1,16 @@
+
+.ProgressRoot {
+  position: relative;
+  overflow: hidden;
+  background: var(--background-neutral-inverted);
+//   border-radius: 99999px;
+  width: 100%;
+  height: 8px;
+  transform: translateZ(0);
+}
+
+.ProgressIndicator {
+  background-color: var(--black-200);
+  width: 100%;
+  height: 100%;
+}

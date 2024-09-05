@@ -1,0 +1,32 @@
+p {
+    a {
+        color: currentColor !important;
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+    }
+}
+.text {
+    &-small {
+        font-size: 12px;
+    }
+    &-medium {
+        font-size: 14px;
+    }
+    &-large {
+        font-size: 16px;
+    }
+    &-bold {
+        font-weight: 600;
+    }
+    &-regular {
+        font-weight: normal;
+    }
+}
+
+p.Error {
+    color: var(--foreground-danger);
+    padding: var(--size-50) var(--size-100);
+    background-color: var(--background-danger-subtle);
+    border-radius: 4px;
+    line-height: 120%;
+}

@@ -36,11 +36,9 @@
 .thumbnailCanvas {
   display: flex;
   justify-content: space-between;
-  gap: var(--25px);
+  gap: var(--20px);
   margin: 0;
 }
-
-
 
 .thumbnailCanvas .canvas-container {
   /* margin: 20px 0; */

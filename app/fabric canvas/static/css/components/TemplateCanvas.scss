@@ -1,0 +1,1392 @@
+// label + p {
+//   display: none !important;
+// }
+.button-medium svg {
+  min-width: 20px;
+}
+.SplitButton {
+  gap: 2px;
+  overflow: hidden;
+  border-radius: var(--size-50);
+  button {
+    border-radius: 0 !important;
+  }
+  .button-solid[aria-expanded="true"] {
+    color: var(--foreground-neutral);
+  }
+}
+.paletteItem {
+  .LabelSlot {
+    width: 100%;
+    padding-right: var(--size-50);
+  }
+  .LeftSlot {
+    display: none;
+  }
+  .paletteBox {
+    overflow: hidden;
+    border-radius: var(--size-50);
+    & + .icon-button {
+      margin-left: auto;
+    }
+  }
+}
+// .Toggle,
+// .ToggleGroup,
+// .icon-button,
+// .button,
+// .LeftSlot,
+// .RightSlot {
+//   svg {
+//     * {
+//       stroke-width: 1.25px;
+//     }
+//   }
+//   &-mini {
+//     svg {
+//       * {
+//         stroke-width: 1.5625px;
+//       }
+//     }
+//   }
+// }
+.constraints {
+  position: relative;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  margin: 0 48px;
+  .constraintsView {
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--border-neutral);
+    box-sizing: border-box;
+    position: relative;
+    pointer-events: none;
+    .constraintsBorderBox {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+      box-sizing: border-box;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        width: 24px;
+        height: 24px;
+        background-color: var(--background-neutral-hover);
+        border: 1px solid var(--border-neutral);
+        z-index: 2;
+      }
+      div {
+        width: 26px;
+        height: 26px;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        border-bottom: 1px dashed var(--brand-2);
+        border-right: 1px dashed var(--brand-2);
+
+        z-index: 0;
+      }
+      &.topleft {
+        border-top: 1px solid var(--brand-2);
+        border-left: 1px solid var(--brand-2);
+        div {
+          transform: none;
+        }
+      }
+      &.topright {
+        border-top: 1px solid var(--brand-2);
+        border-right: 1px solid var(--brand-2);
+        div {
+          transform: rotate(90deg);
+          right: 1px;
+          left: auto;
+        }
+      }
+      &.bottomleft {
+        border-bottom: 1px solid var(--brand-2);
+        border-left: 1px solid var(--brand-2);
+        div {
+          transform: rotate(-90deg);
+          bottom: 1px;
+          top: auto;
+        }
+      }
+      &.bottomright {
+        border-bottom: 1px solid var(--brand-2);
+        border-right: 1px solid var(--brand-2);
+        div {
+          transform: rotate(180deg);
+          right: 1px;
+          left: auto;
+          bottom: 1px;
+          top: auto;
+        }
+      }
+    }
+  }
+  .ToggleGroup {
+    &.LeftRight {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+      right: 0;
+      width: 100%;
+      justify-content: space-between;
+    }
+    &.TopBottom {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      transform: translateX(-50%);
+      left: 50%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+}
+.SliderRoot.hue {
+  .SliderTrack {
+    background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+    .SliderRange {
+      opacity: 0;
+    }
+  }
+}
+#ToolbarBottomRight {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 12;
+}
+.Resizer {
+  width: var(--size-200);
+  background-color: transparent;
+  cursor: col-resize;
+  position: absolute;
+  top: 8px;
+  right: -8px;
+  height: calc(100% - var(--size-200));
+  z-index: 99;
+  // transform: translateX(-8px);
+  &:after {
+    display: block;
+    content: "";
+    width: 4px;
+    height: 100%;
+    opacity: 0;
+    background-color: var(--blue-2-2);
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border-radius: 4px;
+  }
+  &:hover,
+  &:active {
+    background-color: rgba(33, 26, 41, 0.26);
+    transition: 250ms ease 0;
+    &:after {
+      opacity: 1;
+    }
+  }
+}
+.DropdownMenuContent.noPadding {
+  border-radius: var(--size-100);
+}
+.UnsplashImages {
+  overflow: hidden;
+  height: auto;
+  padding: 0 var(--size-300);
+  padding-top: var(--size-400);
+
+  .UnsplashImage {
+    & > div {
+      position: relative;
+      border-radius: var(--size-100);
+      box-sizing: border-box;
+      border: 1px solid transparent;
+      overflow: hidden;
+      margin-bottom: var(--size-150);
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      &:after {
+        pointer-events: none;
+        content: "";
+        display: block;
+        position: absolute;
+        z-index: 1;
+        background-color: transparent;
+        inset: 0;
+      }
+      &:hover {
+        border: 1px solid var(--border-neutral);
+        cursor: pointer;
+        &:after {
+          background-color: rgba(33, 26, 41, 0.6);
+        }
+        .AddImageIcon {
+          opacity: 1;
+          width: 44px;
+          height: 44px;
+          color: var(--white);
+          pointer-events: none;
+        }
+      }
+      .AddImageIcon {
+        opacity: 0;
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        z-index: 2;
+      }
+    }
+  }
+}
+.shortcuts {
+  & > .flex {
+    padding: var(--size-50);
+    border-radius: var(--size-50);
+    &:hover {
+      background-color: var(--background-neutral-hover);
+    }
+  }
+}
+.fillPicker {
+  padding: var(--size-200) 0 !important;
+  border: 1px solid var(--border-neutral-subtle);
+  min-width: 232px;
+  box-sizing: border-box;
+}
+
+.GradientButton {
+  border-radius: var(--size-50);
+  height: 40px;
+  padding-right: var(--size-100);
+  .gradient-preview {
+    width: 20px;
+    height: 20px;
+    border-radius: var(--size-50);
+    border: 1px solid var(--border-neutral-subtle);
+  }
+  p {
+    color: var(--foreground-neutral) !important;
+    opacity: 1 !important;
+    width: auto !important;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: var(--background-neutral-hover);
+  }
+}
+.Toolbar {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  // transform: translateY(-50%);
+  // top: 50%;
+  background-color: var(--background-neutral-container);
+  padding: var(--size-50);
+  border-radius: var(--size-50);
+  border: 1px solid var(--border-neutral-subtle);
+  z-index: 9;
+  gap: var(--size-50);
+  .logo {
+    max-width: 116px;
+  }
+}
+.logoLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground-neutral);
+}
+.ToolbarRoot {
+  min-height: 52px;
+  min-width: 52px;
+}
+#ToolbarTopLeft {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  z-index: 9;
+  gap: var(--size-50);
+  .logo {
+    max-width: 116px;
+  }
+}
+#ToolbarTopRight {
+  position: fixed;
+  right: 16px;
+  top: 16px;
+  z-index: 9;
+  gap: var(--size-50);
+}
+
+div[data-radix-popper-content-wrapper] {
+  z-index: 99 !important;
+}
+
+.LeftSidePanel {
+  position: fixed;
+  left: 16px;
+  top: 50%;
+  z-index: 11;
+  transform: translateY(-50%);
+  transition: 250ms ease 0s;
+  pointer-events: none;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    line-height: 100%;
+  }
+  #LeftSidePanel {
+    width: 300px;
+    overflow: visible;
+    transition: 250ms ease 0s;
+    pointer-events: all;
+    max-height: 70vh;
+  }
+  &.visible {
+    left: 16px;
+    #LeftSidePanel {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  &.hidden {
+    left: -300px;
+    #LeftSidePanel {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.7);
+    }
+  }
+}
+.layersPanel {
+  border: 1px solid var(--border-neutral-subtle);
+  border-radius: var(--size-100);
+  width: 240px;
+  background-color: var(--background-neutral-container);
+  pointer-events: all;
+  overflow: hidden;
+  .ScrollAreaViewport {
+    max-height: 60vh;
+  }
+}
+.layerList {
+  flex-direction: column-reverse;
+  padding: 0 var(--size-100) var(--size-100);
+  max-width: 238px;
+}
+.layerItem {
+  display: flex;
+  flex-direction: row;
+  gap: var(--size-100);
+  align-items: center;
+  flex: 1;
+  border-radius: var(--size-50);
+  padding: 2px var(--size-50);
+  justify-content: space-between;
+  color: var(--foreground-neutral);
+  line-height: 40px;
+  font-size: var(--size-200);
+  min-height: 40px;
+  &.disabled {
+    opacity: 0.3;
+  }
+  .iconContainer {
+    min-width: 20px;
+    min-height: 20px;
+    svg {
+      // width: 20px;
+      // height: 20px;
+      width: 16px;
+      height: 16px;
+      * {
+        stroke-width: 1.5625px;
+      }
+    }
+  }
+
+  span {
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    overflow: hidden;
+    width: 100%;
+  }
+  &:hover {
+    background-color: var(--background-neutral-hover);
+    cursor: pointer;
+  }
+  &.active {
+    background-color: var(--background-neutral-hover);
+  }
+  .btnGroup {
+    margin-left: auto;
+    gap: var(--size-50);
+  }
+  input {
+    color: var(--foreground-neutral);
+    line-height: 1;
+    font-size: var(--size-200);
+    height: 40px;
+    width: 100%;
+    border-radius: 4px;
+  }
+}
+.fabric-canvas-container {
+  position: relative;
+  &.active {
+    box-shadow: 0px 0px 0px 16px var(--brand-2);
+  }
+  .canvas-label {
+    background-color: var(--background-neutral-container);
+    position: absolute;
+    top: 0;
+    right: calc(100% + var(--size-100));
+    width: auto;
+    text-wrap: nowrap;
+    color: var(--foreground-neutral);
+    padding: 0 var(--size-50);
+    border-radius: 2px;
+  }
+  .Toggle {
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+    right: -56px;
+  }
+}
+.TemplateCanvas {
+  // width: 540px;
+  box-sizing: border-box;
+  position: relative;
+  min-width: 100%;
+  height: auto;
+  padding-top: var(--size-1400);
+
+  canvas {
+    border: 1px solid var(--border-neutral);
+    z-index: 4;
+    position: relative;
+  }
+
+  @media only screen and (max-width: 490px) {
+    width: 100%;
+    canvas,
+    .canvas-container {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .canvas-container {
+      height: 0 !important;
+      padding-bottom: 100%;
+      overflow: hidden;
+    }
+    .Separator + .flex {
+      display: none;
+    }
+  }
+}
+.TooltipContent {
+  max-width: 256px;
+}
+.SplitViewOn {
+  .LeftSidePanel {
+    opacity: 0;
+  }
+}
+.TableEditor {
+  margin-left: -100%;
+  width: auto;
+  flex: none;
+  transition: 300ms ease 0s;
+  min-height: calc(100vh - var(--size-400));
+  height: calc(100vh - var(--size-400));
+  top: var(--size-200);
+  border-radius: var(--size-150);
+  box-sizing: border-box;
+  opacity: 0.5;
+  position: relative;
+  background-color: var(--background-neutral-container);
+  // border-right: 1px solid var(--border-neutral);
+  border: 1px solid var(--border-neutral-subtle);
+  p {
+    padding-left: 28px;
+    position: relative;
+    svg {
+      position: absolute;
+      left: 0;
+      top: 2px;
+    }
+  }
+  &.SplitViewOn {
+    // margin-left: 0;
+    margin-left: var(--size-200);
+    opacity: 1;
+  }
+  .inputfield {
+    max-width: 100% !important;
+    flex: 1;
+    min-width: 1px;
+    input {
+      min-width: 1px;
+    }
+  }
+  .TableSearch {
+    padding: 0 var(--size-200);
+  }
+  .TableComponent {
+    // margin-bottom: var(--size-200);
+    // margin-top: var(--size-400);
+    // padding-top: var(--size-400);
+    thead tr th {
+      padding: var(--size-200);
+    }
+    tbody {
+      tr td {
+        padding: var(--size-200);
+      }
+      tr:hover {
+        background-color: var(--background-neutral-hover);
+      }
+    }
+  }
+}
+.CanvasWrapper {
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+  flex: 1;
+  transition: 300ms ease 0s;
+}
+.TemplateCreator {
+  // padding: var(--size-400) var(--size-200);
+
+  // padding-top: var(--size-1400);
+  flex: 1;
+  align-self: center;
+
+  @media only screen and (max-width: 490px) {
+    width: 100%;
+  }
+  .TemplateCreatorHeading {
+    @media only screen and (max-width: 490px) {
+      flex-direction: column;
+      gap: var(--size-200);
+    }
+  }
+  .TemplateCreatorCanvas {
+    @media only screen and (max-width: 490px) {
+      flex-direction: column-reverse;
+      gap: var(--size-200);
+    }
+  }
+  .AccordionItem {
+    border: 1px solid var(--border-neutral-subtle);
+    border-radius: var(--size-50);
+    > .button {
+      border-radius: 0;
+    }
+    .AccordionContent {
+      min-width: 200px;
+      margin-left: 0;
+    }
+  }
+
+  .card {
+    padding: var(--size-100) var(--size-150);
+    box-sizing: border-box;
+    flex: 1;
+    @media only screen and (max-width: 490px) {
+      max-width: 100%;
+      .Separator,
+      p {
+        display: none;
+      }
+      button[role="combobox"] {
+        max-width: 100% !important;
+      }
+      & > .flex {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--size-200);
+      }
+    }
+  }
+  // button.ToggleGroupItem {
+  //   width: 100%;
+  // }
+  // .placeholder {
+  //   visibility: hidden;
+  // }
+  .colorStyleItem {
+    display: flex;
+    align-items: center;
+    gap: var(--size-100);
+    justify-content: space-between;
+    padding: var(--size-50) var(--size-100);
+    border-radius: var(--size-50);
+    width: 100%;
+    flex: 1;
+    color: var(--foreground-neutral);
+    & > .flex {
+      overflow: hidden;
+      .colorBox {
+        min-width: 20px;
+        min-height: 20px;
+        width: 20px;
+        height: 20px;
+        border-radius: var(--size-50);
+        border: 1px solid var(--border-neutral-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        overflow: hidden;
+        svg {
+          width: 20px;
+          height: 20px;
+          display: block;
+          position: absolute;
+          color: var(--white);
+          opacity: 0;
+          transition: 250ms ease 0s;
+          z-index: 2;
+        }
+      }
+    }
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      text-wrap: nowrap;
+    }
+    &:hover {
+      background-color: var(--background-neutral-hover);
+      .colorBox {
+        position: relative;
+        &:after {
+          position: absolute;
+          z-index: 0;
+          background-color: rgba(0, 0, 0, 0.4);
+          inset: 0;
+          content: "";
+          display: block;
+        }
+        svg {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .configurator {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px;
+    padding: 0;
+    width: 256px;
+    border-radius: var(--size-100);
+    border: 1px solid var(--border-neutral-subtle);
+    background-color: var(--background-neutral-container);
+    z-index: 9;
+    max-height: 70vh;
+    // overflow: hidden;
+    .ScrollAreaViewport {
+      // max-height: 30vh;
+      & > div {
+        display: flex !important;
+        width: 100%;
+      }
+    }
+    .TabsRoot {
+      border-radius: var(--size-100);
+      overflow: hidden;
+      .TabsContent {
+        padding: 0;
+        &[id*="tab2"] {
+          .ScrollAreaRoot .ScrollAreaViewport {
+            padding: var(--size-50) 0 var(--size-200);
+            .ScrollAreaRoot .ScrollAreaViewport {
+              padding: 0;
+            }
+          }
+        }
+        &[id*="tab1"] {
+          .ScrollAreaRoot .ScrollAreaViewport {
+            padding: var(--size-100) 0 var(--size-200);
+          }
+        }
+      }
+    }
+
+    .PhotoMode {
+      .TabsRoot {
+        overflow: hidden;
+        border-radius: 0;
+        .TabsContent {
+          display: flex;
+          overflow: hidden;
+          padding: 0;
+        }
+      }
+
+      .histogram {
+        padding-bottom: 0 !important;
+        border-bottom: 1px solid var(--border-neutral-subtle);
+        overflow: hidden;
+        canvas {
+          width: 100% !important;
+          margin-bottom: -1px;
+          height: 148px !important;
+        }
+      }
+    }
+
+    .inputfield {
+      input {
+        min-width: 1px;
+      }
+    }
+
+    .button {
+      min-width: auto;
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        // width: 100%;
+      }
+    }
+    .SelectRoot {
+      width: 100%;
+      max-width: 100%;
+    }
+    button[role="combobox"] {
+      min-width: auto;
+    }
+  }
+}
+.inputGroup {
+  flex: 1;
+  align-items: center;
+  gap: var(--size-100);
+  .colorBox {
+    min-width: 20px;
+    min-height: 20px;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid var(--border-neutral-subtle);
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  p {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: var(--foreground-neutral-subtle);
+    opacity: 0.6;
+  }
+  & > {
+    svg {
+      width: 20px;
+      height: 20px;
+      color: var(--foreground-neutral-subtle);
+      opacity: 0.6;
+    }
+  }
+
+  .inputfield {
+    input {
+      border: 0;
+      // max-width: 56px;
+      padding: 0 var(--size-100);
+      height: 40px;
+    }
+    label {
+      display: none;
+    }
+  }
+}
+
+.configurationButtons {
+  .button {
+    max-width: 300px;
+    span {
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+      overflow: hidden;
+    }
+  }
+}
+.loadData {
+  width: 100%;
+  margin-top: var(--size-400);
+  .inputfield {
+    width: 100%;
+    max-width: 100% !important;
+  }
+  @media only screen and (max-width: 490px) {
+    flex-direction: column;
+    gap: var(--size-200);
+    .button {
+      width: 100%;
+    }
+  }
+}
+.Generate {
+  width: 100%;
+  margin-top: var(--size-400);
+  canvas {
+    // position: relative !important;
+    &.lower-canvas {
+      border: 1px solid var(--border-neutral-subtle);
+    }
+  }
+  .canvas-container {
+    overflow: hidden;
+  }
+  .render {
+    width: 100%;
+  }
+  @media only screen and (max-width: 490px) {
+    width: 100%;
+    canvas,
+    .canvas-container {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .canvas-container {
+      height: 0 !important;
+      padding-bottom: 100%;
+      overflow: hidden;
+    }
+    .render {
+      width: 100%;
+      #canvas-container {
+        width: 100%;
+        canvas {
+          position: absolute !important;
+        }
+      }
+    }
+  }
+}
+.downloadTemplate {
+  margin-top: var(--size-400);
+  .inputfield {
+    width: 100%;
+    max-width: 100% !important;
+  }
+  @media only screen and (max-width: 490px) {
+    flex-direction: column;
+    gap: var(--size-200);
+    .button {
+      width: 100%;
+    }
+    & + .Separator {
+      display: none;
+    }
+  }
+}
+.DialogTemplate.DialogContent,
+.DialogShortcuts.DialogContent,
+.DialogContent.DialogContentUpdateCell {
+  padding-bottom: var(--size-700);
+}
+.DialogContent.Inverted {
+  background-color: var(--black);
+  border: none;
+  width: 70vw;
+  padding: 0;
+  max-width: 800px;
+  overflow: hidden;
+  min-height: 464px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  .navigation {
+    position: absolute;
+    bottom: var(--size-400);
+    right: var(--size-500);
+    z-index: 4;
+  }
+  .closeButton {
+    z-index: 5;
+    background-color: var(--black);
+    border-radius: var(--size-50);
+  }
+
+  .swiper {
+    width: 100%;
+    min-height: 464px;
+    max-height: 486px;
+
+    .sideLeft {
+      padding: var(--size-400) var(--size-300) var(--size-1000);
+      flex: 1;
+      box-sizing: border-box;
+      width: calc(50% - var(--size-600));
+    }
+    .sideRight {
+      background-color: var(--black-300);
+      flex: 1;
+      min-width: 50%;
+      // pointer-events: none;
+      overflow: hidden;
+    }
+  }
+  .swiper-wrapper {
+    width: 100%;
+    align-items: stretch;
+  }
+  .swiper-slide {
+    background-color: transparent;
+    height: auto;
+    box-sizing: border-box;
+    align-self: stretch;
+    align-items: flex-start;
+    > .flex {
+      width: auto;
+      height: 100%;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p {
+    color: var(--gray-200);
+  }
+
+  @media only screen and (max-width: 735px) {
+    max-height: 90vh;
+    width: 90%;
+    padding: 0;
+    .swiper {
+      max-height: 90vh;
+    }
+    .swiper-slide > div {
+      flex-direction: column;
+      .sideLeft,
+      .sideRight {
+        width: 100%;
+        height: 50%;
+        min-height: 50%;
+      }
+      .sideLeft {
+        padding: var(--size-400) var(--size-200) var(--size-500);
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 490px) {
+  .DialogContent {
+    // padding: var(--size-700) var(--size-200) var(--size-400) var(--size-200) !important;
+    overflow: hidden;
+  }
+}
+
+//
+
+.tablet,
+.mobile {
+  display: none !important;
+}
+
+@media only screen and (max-width: 1080px) {
+  .tablet {
+    display: flex !important;
+  }
+  .nontablet {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  .nonmobile {
+    display: none !important;
+  }
+  .mobile {
+    display: flex !important;
+  }
+}
+
+//
+
+.Keyboard {
+  position: fixed;
+  z-index: 999;
+  left: 32px;
+  bottom: 32px;
+  pointer-events: none;
+  .KeysCombination {
+    animation: fadeOut 5s forwards;
+
+    .Key {
+      position: relative;
+      height: 72px;
+      min-width: 72px !important;
+      padding: 0 var(--size-300);
+      & + h3 {
+        margin-bottom: 24px;
+      }
+      .heading-regular {
+        z-index: 2;
+        margin-bottom: 24px;
+      }
+      svg {
+        * {
+          stroke-width: 3px;
+        }
+      }
+      .KeyFiller {
+        position: absolute;
+        top: 0;
+        left: var(--size-300);
+        right: var(--size-300);
+        min-width: 16px;
+        bottom: 0;
+        display: block;
+        height: 72px;
+        width: auto;
+        z-index: 1;
+        background-size: contain;
+      }
+      .KeyHalf {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        height: 100%;
+        width: auto;
+
+        &.reversed {
+          transform: scale(-1, 1);
+          right: 0;
+          left: auto;
+        }
+      }
+    }
+  }
+  @keyframes fadeOut {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    70% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-24px);
+      opacity: 0;
+    }
+  }
+}
+
+.htmlRender {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.9);
+  .btnGroup {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9;
+  }
+}
+.icon-results {
+  padding-bottom: var(--size-400);
+}
+.sebikoicons-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-neutral-subtle);
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: 4px;
+  background-color: var(--white);
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid var(--brand-2);
+    background-color: var(--gray-200);
+  }
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.Spotlight {
+  position: fixed;
+  top: 50%;
+  z-index: 999;
+  left: 50%;
+  width: 80vw;
+  max-width: 700px;
+  transform: translateX(-50%) translateY(-50%);
+  transition: 250ms ease 0s;
+  &.submitted {
+    bottom: auto;
+    top: 72px;
+    transform: translateY(0) translateX(-50%);
+    transition: 250ms ease 0s;
+    max-width: 590px;
+    .ToggleGroup {
+      .ToggleGroupItem {
+        border-width: 2px !important;
+        gap: 0;
+        font-size: 12px;
+        padding: var(--size-150) var(--size-100);
+        span {
+          height: 0;
+          overflow: hidden;
+        }
+        p {
+          height: auto;
+          overflow: visible;
+          display: block;
+        }
+        svg {
+          height: 0;
+        }
+      }
+    }
+  }
+  &:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 120%;
+    position: absolute;
+    inset: 0;
+    background-color: var(--black);
+    z-index: -1;
+    border-radius: 24px;
+    filter: blur(32px);
+    opacity: 0.6;
+  }
+  .ToggleGroup {
+    height: 100%;
+    transition: 250ms ease 0s;
+    .ToggleGroupItem {
+      transition: 250ms ease 0s;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--size-100);
+      height: auto;
+      max-height: auto;
+      padding: var(--size-300) var(--size-200);
+      align-items: flex-start;
+      justify-content: flex-start;
+      line-height: 24px;
+      font-size: 14px;
+      font-family: var(--font-body-bold);
+      border: 3px solid transparent;
+      box-sizing: border-box;
+      border-radius: var(--size-200);
+      cursor: pointer;
+      svg {
+        color: var(--brand-2);
+      }
+      &[aria-checked="true"] {
+        background-color: var(--background-neutral-container);
+        color: var(--foreground-neutral);
+        border: 3px solid var(--brand-2);
+      }
+      span {
+        transition: 250ms ease 0s;
+        font-size: 14px;
+        line-height: 24px;
+        font-family: var(--font-body);
+      }
+      p {
+        height: 0;
+        overflow: hidden;
+        display: none;
+      }
+    }
+  }
+  form {
+    width: 100%;
+    padding: 0;
+    transition: 250ms ease 0s;
+    position: relative;
+    &.mainInput {
+      .SpinnerWrapper {
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        z-index: 99;
+        svg * {
+          fill: var(--foreground-neutral);
+        }
+      }
+      .icon-button-solid,
+      .SpinnerWrapper {
+        position: absolute;
+        right: var(--size-100);
+        bottom: 10px;
+        & + svg {
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          left: var(--size-100);
+          bottom: 18px;
+          color: var(--foreground-neutral);
+        }
+      }
+      .inputfield {
+        max-width: 100% !important;
+        transition: 250ms ease 0s;
+        input {
+          height: 64px;
+          border-radius: var(--size-150);
+          font-size: 18px;
+          padding: 0px var(--size-600) 0px var(--size-600);
+          &:not(:placeholder-shown) ~ label,
+          &:focus ~ label {
+            display: none !important;
+          }
+        }
+        label {
+          top: 24px;
+          left: var(--size-600);
+          font-size: 18px;
+        }
+      }
+    }
+  }
+  .cardFields {
+    // max-width: calc(100% - var(--size-600));
+    // margin-top: var(--size-200);
+    .inputfield {
+      max-width: 100% !important;
+      flex: 1;
+      width: auto;
+      input {
+        min-width: 124px;
+      }
+    }
+  }
+  .formWrapper {
+    border-radius: var(--size-300);
+    max-width: calc(100% - var(--size-600));
+    background-color: var(--background-neutral-container);
+    &.collapsed {
+      padding: var(--size-200);
+      transition: 250ms ease 0s;
+      padding-bottom: var(--size-200);
+    }
+  }
+}
+.darkmode {
+  .Spotlight {
+    .inputfield {
+      input {
+        background-color: var(--black-100);
+      }
+      label {
+        background-color: var(--black-100);
+      }
+    }
+  }
+}
+
+.DialogContent.DialogContentTemplates {
+  max-width: 80vw;
+  @media only screen and (max-width: 900px) {
+    max-width: 90vw;
+    padding: var(--size-300) var(--size-300) 0;
+  }
+  padding-bottom: 0;
+  overflow: hidden;
+  .TemplatesNav {
+    min-width: 160px;
+    button {
+      justify-content: flex-start;
+    }
+  }
+  h3 {
+    margin-bottom: var(--size-300);
+  }
+  .Templates {
+    .ScrollAreaScrollbar {
+      margin-bottom: var(--size-500);
+    }
+    .ScrollAreaViewport {
+      max-height: 60vh;
+      padding-right: var(--size-100);
+      padding-bottom: var(--size-500);
+    }
+    .tempCard {
+      background-color: var(--background-neutral-container);
+      min-width: calc(50% - var(--size-100));
+      position: relative;
+      box-sizing: border-box;
+      cursor: pointer;
+      max-width: 252px;
+      @media only screen and (max-width: 900px) {
+        max-width: 100%;
+        min-width: 100%;
+        flex: 1;
+      }
+      & + .tempCard {
+        margin-bottom: 24px;
+      }
+      & > div {
+        border-radius: var(--size-100);
+        border: 3px solid var(--border-neutral-subtle);
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+      &:hover {
+        & > div {
+          border: 3px solid var(--brand-2);
+          box-shadow: var(--shadow-brand);
+        }
+      }
+      img {
+        width: calc(100% + 2px);
+        height: auto;
+        display: block;
+      }
+    }
+  }
+}
+.hoveredCell {
+  .button-outline {
+    position: relative;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+  }
+}
