@@ -103,6 +103,7 @@ export default function ThumbnailCanvas() {
       triggerSendContent: false,
       triggerSearchImg: false,
       triggerFilterImages: false,
+      isLoadingFormatToHtml: false,
       triggerFormatToHtml: false,
     };
   }
@@ -700,19 +701,34 @@ export default function ThumbnailCanvas() {
           body: JSON.stringify(postBody),
         });
         json = await res.json();
-        if (json) {
+        if (json && json.message === "successfully") {
           // If valid data is found, break the loop
           break;
+        } else {
+          setPageState((prev) => ({
+            ...prev,
+            isSendLoading: false,
+            triggerSendContent: false,
+            triggerFormatToHtml: false,
+          }));
+          toast.error("Something went wrong!");
+          return;
         }
       } catch (error) {
         toast.error("Something went wrong!");
+        setPageState((prev) => ({
+          ...prev,
+          isSendLoading: false,
+          triggerSendContent: false,
+          triggerFormatToHtml: false,
+        }));
         console.error("Error handleSendContent:", error);
       } finally {
         attempts++;
       }
     }
 
-    if (json) {
+    if (json && json.message === "successfully") {
       // toast.success("Content sent successfully");
       if (selectedBrand === "Movie Myth") {
         router.replace("/content-creator/create/movie-myth/article-ready");
