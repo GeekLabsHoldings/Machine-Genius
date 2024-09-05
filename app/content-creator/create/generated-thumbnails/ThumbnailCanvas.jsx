@@ -1058,7 +1058,7 @@ export default function ThumbnailCanvas() {
         }`}
       >
         <div className="thumbnailCanvas">
-          <div className="thumbnailCanvas_actionsBar max-h-[720px] overflow-y-auto pr-[--10px]">
+          <div className="thumbnailCanvas_actionsBar max-h-[720px] overflow-y-auto pr-[--10px] pb-[--8px]">
             {/* 01 Select Thumbnail */}
             <div className="flex flex-col gap-[--5px] w-full">
               <div className="flex justify-between items-center pt-[--10px]">
