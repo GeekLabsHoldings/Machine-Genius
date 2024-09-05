@@ -324,7 +324,7 @@ export default function ThumbnailCanvas() {
     });
 
     // Load images
-    pageState.selectedImgsPath.forEach((img, index) => {
+    pageState.selectedImgsPath.forEach(({ img, imgId }, index) => {
       if (!isBlocked(img)) {
         loadImage(img, (img) => {
           img.scaleToWidth(500); // Optional: scale the image if needed
@@ -333,7 +333,7 @@ export default function ThumbnailCanvas() {
           img.top =
             canvasState.height - img.height * img.scaleY - 40 * (index + 1); // Position on the bottom edge
           img.isImage = true;
-          img.imageId = uuidv4();
+          img.imageId = imgId;
           canvasState.add(img);
         });
       }
@@ -549,7 +549,10 @@ export default function ThumbnailCanvas() {
 
     setPageState((prev) => ({
       ...prev,
-      selectedImgsPath: [...(prev.selectedImgsPath || []), removedBgImg || img],
+      selectedImgsPath: [
+        ...(prev.selectedImgsPath || []),
+        { img: removedBgImg, imgId: uuidv4() } || { img: img, imgId: uuidv4() },
+      ],
     }));
   }
 
@@ -927,6 +930,15 @@ export default function ThumbnailCanvas() {
     if (selectedLayer) {
       canvasState.remove(selectedLayer); // Remove the object from the canvas
       setSelectedLayer(null);
+
+      const filteredImgs = pageState.selectedImgsPath.filter(
+        ({ imgId }) => imgId !== selectedLayer.imageId
+      );
+      setPageState((prev) => ({
+        ...prev,
+        selectedImgsPath: filteredImgs,
+      }));
+
       canvasState.discardActiveObject();
       canvasState.renderAll();
     }
