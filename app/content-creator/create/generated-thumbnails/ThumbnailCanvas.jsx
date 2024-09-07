@@ -783,13 +783,19 @@ export default function ThumbnailCanvas() {
     }
   }, [canvasState]);
 
+  function handleDiscardActiveObject() {
+    setSelectedLayer(null);
+    canvasState.discardActiveObject();
+  }
+
   function moveLayerUp() {
     // const object = canvasState.getObjects()[index];
     if (selectedLayer) {
       canvasState.bringForward(selectedLayer); // Move the object one level up
-      setSelectedLayer(null);
-      canvasState.discardActiveObject();
+      handleDiscardActiveObject();
       canvasState.renderAll();
+    } else {
+      toast("Please select a layer!");
     }
   }
 
@@ -797,9 +803,11 @@ export default function ThumbnailCanvas() {
     // const object = canvasState.getObjects()[index];
     if (selectedLayer) {
       canvasState.sendBackwards(selectedLayer); // Move the object one level down
-      setSelectedLayer(null);
-      canvasState.discardActiveObject();
+      handleDiscardActiveObject();
+
       canvasState.renderAll();
+    } else {
+      toast("Please select a layer!");
     }
   }
 
@@ -807,9 +815,11 @@ export default function ThumbnailCanvas() {
     // const object = canvasState.getObjects()[index];
     if (selectedLayer) {
       canvasState.remove(selectedLayer); // Remove the object from the canvas
-      setSelectedLayer(null);
-      canvasState.discardActiveObject();
+      handleDiscardActiveObject();
+
       canvasState.renderAll();
+    } else {
+      toast("Please select a layer!");
     }
   }
 
@@ -817,9 +827,11 @@ export default function ThumbnailCanvas() {
     if (selectedLayer) {
       // Flip the selected layer vertically
       selectedLayer.flipX = !selectedLayer.flipX; // Toggles flip state
-      setSelectedLayer(null);
-      canvasState.discardActiveObject();
+      handleDiscardActiveObject();
+
       canvasState.renderAll(); // Re-render the canvas
+    } else {
+      toast("Please select a layer!");
     }
   }
 
@@ -1070,6 +1082,16 @@ export default function ThumbnailCanvas() {
       />
     </svg>
   );
+
+  const buttonClass = `
+  px-3 py-2 rounded
+  ${
+    selectedLayer
+      ? "bg-[#2a2b2a] text-white hover:bg-blue-600 cursor-pointer"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }
+  transition-colors duration-200 ease-in-out
+`;
   // =========== End Assets ===============
 
   return (
@@ -1125,8 +1147,50 @@ export default function ThumbnailCanvas() {
         </div>
       )}
 
-      <nav className="mb-[--sy-40px] bg-red-500 w-[70%] m-auto">
-        <h1>Thumbnail Canvas</h1>
+      <nav className="my-[--sy-20px] w-4/5 max-w-3xl mx-auto">
+        <div className="flex justify-between items-center w-full bg-gray-100 border border-gray-300 rounded-lg p-2">
+          <button
+            className={buttonClass}
+            onClick={flipLayer}
+            disabled={!selectedLayer}
+          >
+            Flip
+          </button>
+          <button
+            className={buttonClass}
+            onClick={moveLayerUp}
+            disabled={!selectedLayer}
+          >
+            Forwards
+          </button>
+          <button
+            className={buttonClass}
+            onClick={moveLayerDown}
+            disabled={!selectedLayer}
+          >
+            Backwards
+          </button>
+
+          <button
+            className={buttonClass}
+            onClick={handleDiscardActiveObject}
+            disabled={!selectedLayer}
+          >
+            Deselect
+          </button>
+
+          <button
+            className={` ${
+              selectedLayer
+                ? "bg-red-500 active:bg-red-700 hover:bg-red-600"
+                : ""
+            } ${buttonClass}`}
+            onClick={deleteLayer}
+            disabled={!selectedLayer}
+          >
+            Delete
+          </button>
+        </div>
       </nav>
 
       <section
@@ -1502,32 +1566,6 @@ export default function ThumbnailCanvas() {
                 </div>
 
                 {/* 05-03 Layers Actions */}
-                <div className="flex justify-between items-center w-[100%] m-auto bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px] px-[--15px]">
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => flipLayer()}
-                  >
-                    Flip
-                  </span>
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => moveLayerUp()}
-                  >
-                    Forwards
-                  </span>
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => moveLayerDown()}
-                  >
-                    Backwards
-                  </span>
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => deleteLayer()}
-                  >
-                    Delete
-                  </span>
-                </div>
               </div>
             </div>
           </div>
