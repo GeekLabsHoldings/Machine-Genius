@@ -56,7 +56,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -1290,7 +1290,7 @@ export default function ThumbnailCanvas() {
                 </div>
 
                 {/* 02-03 Preview Backgrounds */}
-                <div className="flex gap-[--50px-1] overflow-x-auto pb-[--sy-7px] pr-[--5px]">
+                <div className="flex gap-[--50px-1] overflow-x-auto custom-scrollbar pb-[--sy-7px] pr-[--5px]">
                   <div className="!w-1/2">
                     <div
                       className="w-[--194px] h-[--102px] rounded-[--10px] border-[--1px] border-[--dark] overflow-hidden relative flex flex-col justify-center items-center bg-gray-50 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
@@ -1386,7 +1386,7 @@ export default function ThumbnailCanvas() {
                 <div className="flex flex-col gap-[--5px] w-full">
                   <h3 className="font-bold text-[--17px]">Select Icon</h3>
 
-                  <div className="flex gap-[--50px-1] overflow-x-auto pb-[--sy-7px] pr-[--5px]">
+                  <div className="flex gap-[--50px-1] overflow-x-auto custom-scrollbar pb-[--sy-7px] pr-[--5px]">
                     <div className="!w-1/2">
                       <div
                         className="w-[--194px] h-[--102px] rounded-[--10px] border-[--1px] border-[--dark] overflow-hidden relative flex flex-col justify-center items-center bg-gray-50 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
@@ -1477,7 +1477,7 @@ export default function ThumbnailCanvas() {
                 </div>
 
                 {/* 03-03 Preview Images */}
-                <div className="flex gap-[--15px] overflow-x-auto w-full py-[--sy-7px] pr-[--5px]">
+                <div className="flex gap-[--15px] overflow-x-auto custom-scrollbar w-full py-[--sy-7px] pr-[--5px]">
                   <div>
                     <div
                       className="w-[--102px] h-full rounded-[--10px] border-[--1px] border-[--dark] overflow-hidden relative flex flex-col justify-center items-center bg-gray-50 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"

@@ -24,6 +24,10 @@
   background: transparent; /* WebKit-based browsers */
 }
 
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  cursor: pointer;
+}
+
 .thumbnailCanvas_actionsBar button,
 #downloadBtn {
   padding: var(--6px);
