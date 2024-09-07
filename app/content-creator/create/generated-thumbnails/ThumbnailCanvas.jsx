@@ -1345,7 +1345,9 @@ export default function ThumbnailCanvas() {
                 </div>
               )}
 
-              <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
+              {selectedBrand.includes("Street Politics") && (
+                <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
+              )}
 
               {/* 04 Select Image */}
               <div className="flex flex-col gap-[--5px] w-full">
