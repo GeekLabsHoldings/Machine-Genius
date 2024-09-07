@@ -56,7 +56,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    // handleGenerateThumbnails();
+    handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -306,6 +306,7 @@ export default function ThumbnailCanvas() {
             // toast.error("Failed to load icon image.");
             return;
           }
+          img.scaleToWidth(150); // Optional: scale the image if needed
           img.set({
             crossOrigin: "anonymous", // Set crossOrigin attribute
             left: 75,
@@ -457,6 +458,10 @@ export default function ThumbnailCanvas() {
   // ============= End Canvas =================
 
   // ============= Start Search Background & Search Image =================
+  const uploadBackgroundRef = useRef(null);
+  const uploadIconRef = useRef(null);
+  const uploadImageRef = useRef(null);
+
   function handleSearchBgError() {
     toast.error("Something went wrong!");
     setPageState((prev) => ({
@@ -543,7 +548,7 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function handleRemoveBg(img) {
+  async function handleRemoveBg(img, type) {
     try {
       setPageState((prev) => ({
         ...prev,
@@ -556,13 +561,13 @@ export default function ThumbnailCanvas() {
           "X-Api-Key": process.env.NEXT_PUBLIC_REMOVEBG_API_KEY,
         },
         body: JSON.stringify({
-          image_url: img,
+          ...(type === "select" ? { image_url: img } : { image_file_b64: img }),
           size: "auto",
         }),
       });
       if (!res.ok) {
         toast.error("Something went wrong!");
-        console.error("Error handleRemoveBg:", error);
+        console.error("Error handleRemoveBg:", res.status);
         return;
       }
       // Convert the response to a Blob
@@ -638,34 +643,89 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  const handleSelectImg = useCallback(
-    async (img) => {
-      const removedBgImg = await handleRemoveBg(img);
-      // const proxiedImg = await getProxiedImageUrl(img);
-      // const imgToAdd = removedBgImg || proxiedImg;
-      const imgToAdd = removedBgImg;
+  function handleLoadImage(img) {
+    loadImage(img, (fabricImg) => {
+      fabricImg.scaleToWidth(500); // Optional: scale the image if needed
 
-      loadImage(imgToAdd, (fabricImg) => {
-        fabricImg.scaleToWidth(500); // Optional: scale the image if needed
+      // Position the new image
+      const canvasWidth = canvasState.getWidth();
+      const canvasHeight = canvasState.getHeight();
 
-        // Position the new image
-        const canvasWidth = canvasState.getWidth();
-        const canvasHeight = canvasState.getHeight();
-
-        fabricImg.set({
-          left: canvasWidth - fabricImg.getScaledWidth() - 40,
-          top: canvasHeight - fabricImg.getScaledHeight() - 40,
-          isImage: true,
-          imageId: uuidv4(),
-        });
-
-        canvasState.add(fabricImg);
-        // canvasState.setActiveObject(fabricImg);
-        canvasState.renderAll();
+      fabricImg.set({
+        left: canvasWidth - fabricImg.getScaledWidth() - 40,
+        top: canvasHeight - fabricImg.getScaledHeight() - 40,
+        isImage: true,
+        imageId: uuidv4(),
       });
-    },
-    [canvasState]
-  );
+
+      canvasState.add(fabricImg);
+      // canvasState.setActiveObject(fabricImg);
+      canvasState.renderAll();
+    });
+  }
+
+  async function handleSelectImg(img) {
+    const removedBgImg = await handleRemoveBg(img, "select");
+    // const proxiedImg = await getProxiedImageUrl(img);
+    // const imgToAdd = removedBgImg || proxiedImg;
+    const imgToAdd = removedBgImg;
+    handleLoadImage(imgToAdd);
+  }
+
+  function handleUploadBackground(e) {
+    // console.log(`e`, e);
+    const file = e.target.files[0];
+    // console.log(`file`, file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        // console.log(`event`, event);
+        const dataUrl = event.target.result; // Data URL of the uploaded image
+        setPageState((prev) => ({
+          ...prev,
+          selectedBgPath: dataUrl,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function handleUploadIcon(e) {
+    // console.log(`e`, e);
+    const file = e.target.files[0];
+    // console.log(`file`, file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        // console.log(`event`, event);
+        const dataUrl = event.target.result; // Data URL of the uploaded image
+        setPageState((prev) => ({
+          ...prev,
+          selectedIconPath: dataUrl,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function handleUploadImage(e) {
+    // console.log(`e`, e);
+    const file = e.target.files[0];
+    // console.log(`file`, file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        // console.log(`event`, event);
+        const dataUrl = event.target.result; // Data URL of the uploaded image
+        // Call handleRemoveBg with the uploaded image's Data URL
+        const removedBgImgUrl = await handleRemoveBg(dataUrl, "upload");
+
+        handleLoadImage(removedBgImgUrl);
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
 
   // ============= End Search Background & Search Image =================
 
@@ -1167,6 +1227,25 @@ export default function ThumbnailCanvas() {
 
                 {/* 02-03 Preview Backgrounds */}
                 <div className="flex gap-[--50px-1] overflow-x-auto pb-[--sy-7px] pr-[--5px]">
+                  <div className="!w-1/2">
+                    <div
+                      className="w-[--194px] h-[--102px] rounded-[--10px] border-[--1px] border-[--dark] overflow-hidden relative flex flex-col justify-center items-center bg-gray-50 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+                      onClick={() => uploadBackgroundRef.current.click()}
+                    >
+                      <span className="text-lg font-medium text-gray-600">
+                        Upload
+                      </span>
+                      <span className="text-2xl text-gray-400">+</span>
+                    </div>
+                    <input
+                      type="file"
+                      ref={uploadBackgroundRef}
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleUploadBackground}
+                    />
+                  </div>
+
                   {selectedBrand === "Investorcracy" &&
                     Array.from({ length: 10 }, (_, i) => (
                       <div className="!w-1/2" key={uuidv4()}>
@@ -1210,18 +1289,8 @@ export default function ThumbnailCanvas() {
                     </div>
                   )}
 
-                  {!pageState.searchBgData.length ? (
-                    <div className="!w-1/2">
-                      <ImageCard
-                        imgSrc="/generated-thumbnails/img-placeholder.jpg"
-                        inputType="radio"
-                        inputName={"select-bg"}
-                        disabled
-                      />
-                    </div>
-                  ) : (
-                    Array.isArray(pageState.searchBgData) &&
-                    pageState.searchBgData.length &&
+                  {Array.isArray(pageState.searchBgData) &&
+                    pageState.searchBgData.length > 0 &&
                     pageState.searchBgData.map((img) => (
                       <div className="!w-1/2" key={uuidv4()}>
                         <ImageCard
@@ -1242,8 +1311,7 @@ export default function ThumbnailCanvas() {
                           }}
                         />
                       </div>
-                    ))
-                  )}
+                    ))}
                 </div>
               </div>
 
@@ -1255,6 +1323,25 @@ export default function ThumbnailCanvas() {
                   <h3 className="font-bold text-[--17px]">Select Icon</h3>
 
                   <div className="flex gap-[--50px-1] overflow-x-auto pb-[--sy-7px] pr-[--5px]">
+                    <div className="!w-1/2">
+                      <div
+                        className="w-[--194px] h-[--102px] rounded-[--10px] border-[--1px] border-[--dark] overflow-hidden relative flex flex-col justify-center items-center bg-gray-50 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+                        onClick={() => uploadIconRef.current.click()}
+                      >
+                        <span className="text-lg font-medium text-gray-600">
+                          Upload
+                        </span>
+                        <span className="text-2xl text-gray-400">+</span>
+                      </div>
+                      <input
+                        type="file"
+                        ref={uploadIconRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleUploadIcon}
+                      />
+                    </div>
+
                     {Array.from({ length: 7 }, (_, i) => (
                       <div className="!w-1/2" key={uuidv4()}>
                         <ImageCard
@@ -1327,14 +1414,27 @@ export default function ThumbnailCanvas() {
 
                 {/* 03-03 Preview Images */}
                 <div className="flex gap-[--15px] overflow-x-auto w-full py-[--sy-7px] pr-[--5px]">
-                  {!pageState.searchImgData.length ? (
-                    <ImageCard
-                      imgSrc="/generated-thumbnails/img-placeholder.jpg"
-                      // inputType={"checkbox"}
-                      inputName={"select-img"}
-                      disabled
+                  <div>
+                    <div
+                      className="w-[--102px] h-full rounded-[--10px] border-[--1px] border-[--dark] overflow-hidden relative flex flex-col justify-center items-center bg-gray-50 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+                      onClick={() => uploadImageRef.current.click()}
+                    >
+                      <span className="text-lg font-medium text-gray-600">
+                        Upload
+                      </span>
+                      <span className="text-2xl text-gray-400">+</span>
+                    </div>
+                    <input
+                      type="file"
+                      ref={uploadImageRef}
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleUploadImage}
                     />
-                  ) : (
+                  </div>
+
+                  {Array.isArray(pageState.searchImgData) &&
+                    pageState.searchImgData.length > 0 &&
                     pageState.searchImgData.map((img) => (
                       <img
                         key={uuidv4()}
@@ -1344,8 +1444,7 @@ export default function ThumbnailCanvas() {
                         className="w-[60%] h-auto aspect-square object-cover hover:opacity-80 transition-none cursor-pointer"
                         onClick={() => handleSelectImg(img)}
                       />
-                    ))
-                  )}
+                    ))}
                 </div>
               </div>
 
