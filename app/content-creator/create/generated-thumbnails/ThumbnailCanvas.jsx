@@ -24,6 +24,7 @@ export default function ThumbnailCanvas() {
   const dispatch = useDispatch();
   const canvasEl = useRef(null);
   const fabricCanvasRef = useRef(null);
+  const [canvasState, setCanvasState] = useState(null);
   const { authState } = useContext(globalContext);
   const {
     selectedContentType,
@@ -151,8 +152,7 @@ export default function ThumbnailCanvas() {
     }));
   }, []);
 
-  const [canvasState, setCanvasState] = useState(null);
-
+  // ============= Start Canvas =================
   // ==============================================================
   const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
   const isBlocked = (url) => blockedUrls.includes(url);
@@ -175,7 +175,9 @@ export default function ThumbnailCanvas() {
       url,
       function (img, error) {
         if (error) {
-          toast.error(`Failed to load image from ${url}.`);
+          toast.error(
+            `Failed to load image from ${url}. Please select another image.`
+          );
           addToBlockedUrls(url);
           return;
         }
@@ -303,7 +305,7 @@ export default function ThumbnailCanvas() {
         pageState.selectedIconPath,
         function (img, error) {
           if (error) {
-            toast.error("Failed to load overlay image.");
+            // toast.error("Failed to load icon image.");
             return;
           }
           img.set({
@@ -487,6 +489,175 @@ export default function ThumbnailCanvas() {
     }
   };
 
+  // ============= End Canvas =================
+
+  // ============= Start Search Background & Search Image =================
+  function handleSearchBgError() {
+    toast.error("Something went wrong!");
+    setPageState((prev) => ({
+      ...prev,
+      searchBgLoading: false,
+    }));
+  }
+
+  async function handleSearchBg() {
+    if (!pageState.searchBgKeyword) {
+      toast.error("Please provide a keyword to search for a background!");
+      return;
+    }
+    try {
+      const keyword = pageState.searchBgKeyword
+        .trim()
+        .replace(/[^a-zA-Z0-9\s]/g, "");
+      setPageState((prev) => ({
+        ...prev,
+        searchBgLoading: true,
+      }));
+      const res = await fetch(
+        `https://api.machinegenius.io/content-creation/get-images`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+          body: JSON.stringify({
+            searchImgKeyword: keyword,
+            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
+          }),
+        }
+      );
+      const json = await res.json();
+      if (!json) {
+        handleSearchBgError();
+        return;
+      } else if (json && json.success === false) {
+        handleSearchBgError();
+        return;
+      } else if (json && json.success === true && json.images) {
+        setPageState((prev) => ({
+          ...prev,
+          searchBgData: json.images.map((img) => img.original),
+          triggerFilterImages: true,
+        }));
+      } else {
+        handleSearchBgError();
+        return;
+      }
+    } catch (error) {
+      handleSearchBgError();
+      console.error("Error generateThumbnails:", error);
+    }
+  }
+
+  async function testImageUrl(url) {
+    // toast("Testing image url...");
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = url;
+
+      img.onload = () => {
+        // Create a canvas to attempt to draw the image
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Draw the image onto the canvas
+        ctx.drawImage(img, 0, 0);
+
+        try {
+          // Attempt to read pixel data from the canvas
+          ctx.getImageData(0, 0, 1, 1);
+          resolve(url); // Image loaded and CORS is okay
+        } catch (e) {
+          reject("CORS issue or image data blocked: " + url);
+        }
+      };
+
+      img.onerror = () => reject("Image load error: " + url);
+    });
+  }
+
+  async function handleFilterImages() {
+    const urlsToCheck = pageState.searchBgData;
+    if (!urlsToCheck.length) {
+      // toast.error("No images to check!");
+      return;
+    }
+    const validUrls = [];
+    const blocked = [];
+
+    for (const url of urlsToCheck) {
+      try {
+        await testImageUrl(url);
+        validUrls.push(url);
+      } catch {
+        blocked.push(url);
+      }
+    }
+
+    // Update with blocked URLs
+    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
+    const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
+    localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
+
+    // Update with valid URLs
+    setPageState((prev) => ({
+      ...prev,
+      searchBgLoading: false,
+      searchBgData: validUrls,
+    }));
+  }
+
+  useEffect(() => {
+    if (pageState.triggerFilterImages) {
+      handleFilterImages();
+    }
+  }, [pageState.triggerFilterImages]);
+
+  async function handleRemoveBg(img) {
+    try {
+      setPageState((prev) => ({
+        ...prev,
+        removeBgLoading: true,
+      }));
+      const res = await fetch(`https://api.remove.bg/v1.0/removebg`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": process.env.NEXT_PUBLIC_REMOVEBG_API_KEY,
+        },
+        body: JSON.stringify({
+          image_url: img,
+          size: "auto",
+        }),
+      });
+      if (!res.ok) {
+        toast.error("Something went wrong!");
+        console.error("Error handleRemoveBg:", error);
+        return;
+      }
+      // Convert the response to a Blob
+      const blob = await res.blob();
+      // Create a URL for the Blob
+      const imageUrl = URL.createObjectURL(blob);
+      // Use the imageUrl in your application
+      return imageUrl; // You can set this as the src of an img tag
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleRemoveBg:", error);
+    } finally {
+      setPageState((prev) => ({
+        ...prev,
+        removeBgLoading: false,
+      }));
+    }
+  }
+
   async function handleSearchImg() {
     if (!pageState.searchImgKeyword) {
       toast.error("Please provide a keyword to search for an image!");
@@ -543,45 +714,6 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function handleRemoveBg(img) {
-    try {
-      setPageState((prev) => ({
-        ...prev,
-        removeBgLoading: true,
-      }));
-      const res = await fetch(`https://api.remove.bg/v1.0/removebg`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Api-Key": process.env.NEXT_PUBLIC_REMOVEBG_API_KEY,
-        },
-        body: JSON.stringify({
-          image_url: img,
-          size: "auto",
-        }),
-      });
-      if (!res.ok) {
-        toast.error("Something went wrong!");
-        console.error("Error handleRemoveBg:", error);
-        return;
-      }
-      // Convert the response to a Blob
-      const blob = await res.blob();
-      // Create a URL for the Blob
-      const imageUrl = URL.createObjectURL(blob);
-      // Use the imageUrl in your application
-      return imageUrl; // You can set this as the src of an img tag
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error handleRemoveBg:", error);
-    } finally {
-      setPageState((prev) => ({
-        ...prev,
-        removeBgLoading: false,
-      }));
-    }
-  }
-
   async function handleSelectImg(img) {
     const removedBgImg = await handleRemoveBg(img);
 
@@ -593,6 +725,154 @@ export default function ThumbnailCanvas() {
       ],
     }));
   }
+  // ============= End Search Background & Search Image =================
+
+  // ============= Start Layer Controls ==================
+
+  const [layerList, setLayerList] = useState([]);
+
+  useEffect(() => {
+    if (canvasState) {
+      // Update layer controls when objects change
+      const handleCanvasChange = () => {
+        setLayerList([...canvasState.getObjects()]); // Update layer list
+      };
+
+      canvasState.on("object:added", handleCanvasChange);
+      canvasState.on("object:removed", handleCanvasChange);
+
+      // Clean up listeners on unmount
+      return () => {
+        canvasState.off("object:added", handleCanvasChange);
+        canvasState.off("object:removed", handleCanvasChange);
+      };
+    }
+  }, [canvasState]);
+
+  const [selectedLayer, setSelectedLayer] = useState(null);
+
+  useEffect(() => {
+    if (canvasState) {
+      // Handler for object selection
+      const handleObjectSelected = (event) => {
+        const selectedObject = event.target; // Get the selected object
+        if (selectedObject) {
+          // const objects = canvasState.getObjects();
+          // const index = objects.indexOf(selectedObject); // Get the index of the selected object
+          setSelectedLayer(selectedObject); // Update the selected layer index
+        }
+      };
+
+      // Add event listeners for object selection
+      canvasState.on("selection:created", handleObjectSelected);
+      canvasState.on("selection:updated", handleObjectSelected);
+
+      // Clear selection when objects are deselected
+      canvasState.on("selection:cleared", () => {
+        setSelectedLayer(null); // Reset selected layer index when selection is cleared
+      });
+
+      // Cleanup event listeners on component unmount
+      return () => {
+        canvasState.off("selection:created", handleObjectSelected);
+        canvasState.off("selection:updated", handleObjectSelected);
+        canvasState.off("selection:cleared", () => setSelectedLayer(null));
+      };
+    }
+  }, [canvasState]);
+
+  function moveLayerUp() {
+    // const object = canvasState.getObjects()[index];
+    if (selectedLayer) {
+      canvasState.bringForward(selectedLayer); // Move the object one level up
+      setSelectedLayer(null);
+      canvasState.discardActiveObject();
+      canvasState.renderAll();
+    }
+  }
+
+  function moveLayerDown() {
+    // const object = canvasState.getObjects()[index];
+    if (selectedLayer) {
+      canvasState.sendBackwards(selectedLayer); // Move the object one level down
+      setSelectedLayer(null);
+      canvasState.discardActiveObject();
+      canvasState.renderAll();
+    }
+  }
+
+  function deleteLayer() {
+    // const object = canvasState.getObjects()[index];
+    if (selectedLayer) {
+      canvasState.remove(selectedLayer); // Remove the object from the canvas
+      setSelectedLayer(null);
+
+      const filteredImgs = pageState.selectedImgsPath.filter(
+        ({ imgId }) => imgId !== selectedLayer.imageId
+      );
+      setPageState((prev) => ({
+        ...prev,
+        selectedImgsPath: filteredImgs,
+      }));
+
+      canvasState.discardActiveObject();
+      canvasState.renderAll();
+    }
+  }
+
+  function flipLayer() {
+    if (selectedLayer) {
+      // Flip the selected layer vertically
+      selectedLayer.flipX = !selectedLayer.flipX; // Toggles flip state
+      setSelectedLayer(null);
+      canvasState.discardActiveObject();
+      canvasState.renderAll(); // Re-render the canvas
+    }
+  }
+
+  const handleLayerClick = (obj) => {
+    const objImageId = obj.imageId;
+    function findObjectIndex(objImageId) {
+      return canvasState
+        .getObjects()
+        .findIndex((obj) => obj.imageId === objImageId);
+    }
+    const objIndex = findObjectIndex(objImageId);
+
+    console.log(objIndex, `objIndex`);
+
+    setSelectedLayer(obj); // Update the selected layer index state
+
+    canvasState.setActiveObject(obj); // Set the clicked layer as the active object on the canvas
+    canvasState.renderAll(); // Re-render the canvas
+
+    console.log(`obj---1`, obj);
+  };
+
+  useEffect(() => {
+    const handleObjectSelection = () => {
+      const activeObject = canvasState.getActiveObject();
+      if (activeObject) {
+        const index = canvasState.getObjects().indexOf(activeObject); // Get the index of the selected object
+        setSelectedLayer(activeObject); // Highlight the corresponding layer in the list
+      }
+    };
+
+    if (canvasState) {
+      // Listen to selection events on the canvas
+      canvasState.on("selection:created", handleObjectSelection);
+      canvasState.on("selection:updated", handleObjectSelection);
+    }
+
+    return () => {
+      if (canvasState) {
+        // Clean up event listeners
+        canvasState.off("selection:created", handleObjectSelection);
+        canvasState.off("selection:updated", handleObjectSelection);
+      }
+    };
+  }, [canvasState]);
+  // ============= End Layer Controls ==================
 
   // ============= Start Format Content =================
   function handleSelectThumbnail() {
@@ -780,276 +1060,7 @@ export default function ThumbnailCanvas() {
   }
   // ============= End Send Content ==================
 
-  // ==============================================
-  function handleSearchBgError() {
-    toast.error("Something went wrong!");
-    setPageState((prev) => ({
-      ...prev,
-      searchBgLoading: false,
-    }));
-  }
-
-  async function handleSearchBg() {
-    if (!pageState.searchBgKeyword) {
-      toast.error("Please provide a keyword to search for an image!");
-      return;
-    }
-    try {
-      setPageState((prev) => ({
-        ...prev,
-        searchBgLoading: true,
-      }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            searchImgKeyword: pageState.searchBgKeyword,
-            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
-          }),
-        }
-      );
-      const json = await res.json();
-      if (!json) {
-        handleSearchBgError();
-        return;
-      } else if (json && json.success === false) {
-        handleSearchBgError();
-        return;
-      } else if (json && json.success === true && json.images) {
-        setPageState((prev) => ({
-          ...prev,
-          searchBgData: json.images.map((img) => img.original),
-          triggerFilterImages: true,
-        }));
-      } else {
-        handleSearchBgError();
-        return;
-      }
-    } catch (error) {
-      handleSearchBgError();
-      console.error("Error generateThumbnails:", error);
-    }
-  }
-
-  async function testImageUrl(url) {
-    // toast("Testing image url...");
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = url;
-
-      img.onload = () => {
-        // Create a canvas to attempt to draw the image
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        // Draw the image onto the canvas
-        ctx.drawImage(img, 0, 0);
-
-        try {
-          // Attempt to read pixel data from the canvas
-          ctx.getImageData(0, 0, 1, 1);
-          resolve(url); // Image loaded and CORS is okay
-        } catch (e) {
-          reject("CORS issue or image data blocked: " + url);
-        }
-      };
-
-      img.onerror = () => reject("Image load error: " + url);
-    });
-  }
-
-  async function handleFilterImages() {
-    const urlsToCheck = pageState.searchBgData;
-    if (!urlsToCheck.length) {
-      toast.error("No images to check!");
-      return;
-    }
-    const validUrls = [];
-    const blocked = [];
-
-    for (const url of urlsToCheck) {
-      try {
-        await testImageUrl(url);
-        validUrls.push(url);
-      } catch {
-        blocked.push(url);
-      }
-    }
-
-    // Update with blocked URLs
-    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
-    const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
-    localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
-
-    // Update with valid URLs
-    setPageState((prev) => ({
-      ...prev,
-      searchBgLoading: false,
-      searchBgData: validUrls,
-    }));
-  }
-
-  useEffect(() => {
-    if (pageState.triggerFilterImages) {
-      handleFilterImages();
-    }
-  }, [pageState.triggerFilterImages]);
-  // =============================================
-
-  const [layerList, setLayerList] = useState([]);
-
-  useEffect(() => {
-    if (canvasState) {
-      // Update layer controls when objects change
-      const handleCanvasChange = () => {
-        setLayerList([...canvasState.getObjects()]); // Update layer list
-      };
-
-      canvasState.on("object:added", handleCanvasChange);
-      canvasState.on("object:removed", handleCanvasChange);
-
-      // Clean up listeners on unmount
-      return () => {
-        canvasState.off("object:added", handleCanvasChange);
-        canvasState.off("object:removed", handleCanvasChange);
-      };
-    }
-  }, [canvasState]);
-
-  const [selectedLayer, setSelectedLayer] = useState(null);
-
-  useEffect(() => {
-    if (canvasState) {
-      // Handler for object selection
-      const handleObjectSelected = (event) => {
-        const selectedObject = event.target; // Get the selected object
-        if (selectedObject) {
-          // const objects = canvasState.getObjects();
-          // const index = objects.indexOf(selectedObject); // Get the index of the selected object
-          setSelectedLayer(selectedObject); // Update the selected layer index
-        }
-      };
-
-      // Add event listeners for object selection
-      canvasState.on("selection:created", handleObjectSelected);
-      canvasState.on("selection:updated", handleObjectSelected);
-
-      // Clear selection when objects are deselected
-      canvasState.on("selection:cleared", () => {
-        setSelectedLayer(null); // Reset selected layer index when selection is cleared
-      });
-
-      // Cleanup event listeners on component unmount
-      return () => {
-        canvasState.off("selection:created", handleObjectSelected);
-        canvasState.off("selection:updated", handleObjectSelected);
-        canvasState.off("selection:cleared", () => setSelectedLayer(null));
-      };
-    }
-  }, [canvasState]);
-
-  function moveLayerUp() {
-    // const object = canvasState.getObjects()[index];
-    if (selectedLayer) {
-      canvasState.bringForward(selectedLayer); // Move the object one level up
-      setSelectedLayer(null);
-      canvasState.discardActiveObject();
-      canvasState.renderAll();
-    }
-  }
-
-  function moveLayerDown() {
-    // const object = canvasState.getObjects()[index];
-    if (selectedLayer) {
-      canvasState.sendBackwards(selectedLayer); // Move the object one level down
-      setSelectedLayer(null);
-      canvasState.discardActiveObject();
-      canvasState.renderAll();
-    }
-  }
-
-  function deleteLayer() {
-    // const object = canvasState.getObjects()[index];
-    if (selectedLayer) {
-      canvasState.remove(selectedLayer); // Remove the object from the canvas
-      setSelectedLayer(null);
-
-      const filteredImgs = pageState.selectedImgsPath.filter(
-        ({ imgId }) => imgId !== selectedLayer.imageId
-      );
-      setPageState((prev) => ({
-        ...prev,
-        selectedImgsPath: filteredImgs,
-      }));
-
-      canvasState.discardActiveObject();
-      canvasState.renderAll();
-    }
-  }
-
-  function flipLayer() {
-    if (selectedLayer) {
-      // Flip the selected layer vertically
-      selectedLayer.flipX = !selectedLayer.flipX; // Toggles flip state
-      setSelectedLayer(null);
-      canvasState.discardActiveObject();
-      canvasState.renderAll(); // Re-render the canvas
-    }
-  }
-
-  const handleLayerClick = (obj) => {
-    const objImageId = obj.imageId;
-    function findObjectIndex(objImageId) {
-      return canvasState
-        .getObjects()
-        .findIndex((obj) => obj.imageId === objImageId);
-    }
-    const objIndex = findObjectIndex(objImageId);
-
-    console.log(objIndex, `objIndex`);
-
-    setSelectedLayer(obj); // Update the selected layer index state
-
-    canvasState.setActiveObject(obj); // Set the clicked layer as the active object on the canvas
-    canvasState.renderAll(); // Re-render the canvas
-
-    console.log(`obj---1`, obj);
-  };
-
-  useEffect(() => {
-    const handleObjectSelection = () => {
-      const activeObject = canvasState.getActiveObject();
-      if (activeObject) {
-        const index = canvasState.getObjects().indexOf(activeObject); // Get the index of the selected object
-        setSelectedLayer(activeObject); // Highlight the corresponding layer in the list
-      }
-    };
-
-    if (canvasState) {
-      // Listen to selection events on the canvas
-      canvasState.on("selection:created", handleObjectSelection);
-      canvasState.on("selection:updated", handleObjectSelection);
-    }
-
-    return () => {
-      if (canvasState) {
-        // Clean up event listeners
-        canvasState.off("selection:created", handleObjectSelection);
-        canvasState.off("selection:updated", handleObjectSelection);
-      }
-    };
-  }, [canvasState]);
-
+  // =========== Start Assets ===============
   const searchIcon = (
     <svg
       className="w-[--24px] h-[--24px] text-white"
@@ -1066,8 +1077,7 @@ export default function ThumbnailCanvas() {
       />
     </svg>
   );
-
-  // ==========================
+  // =========== End Assets ===============
 
   return (
     <main className="relative">
@@ -1212,7 +1222,13 @@ export default function ThumbnailCanvas() {
                   <button
                     onClick={() => {
                       console.log(`searchBgKeyword`, pageState.searchBgKeyword);
-                      handleSearchBg();
+                      if (pageState.searchBgKeyword.trim() === "") {
+                        toast.error(
+                          "Please enter a keyword to search for a background."
+                        );
+                      } else {
+                        handleSearchBg();
+                      }
                     }}
                     title="Search Background"
                   >
@@ -1361,7 +1377,13 @@ export default function ThumbnailCanvas() {
                         pageState.searchImgKeyword
                       );
                       // handleSearchImg();
-                      handleTriggerSearchImg();
+                      if (pageState.searchImgKeyword.trim() === "") {
+                        toast.error(
+                          "Please enter a keyword to search for an image."
+                        );
+                      } else {
+                        handleTriggerSearchImg();
+                      }
                     }}
                   >
                     {searchIcon}
