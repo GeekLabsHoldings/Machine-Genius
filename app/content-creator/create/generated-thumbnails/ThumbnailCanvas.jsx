@@ -1029,6 +1029,23 @@ export default function ThumbnailCanvas() {
     };
   }, [canvasState]);
 
+  const searchIcon = (
+    <svg
+      className="w-[--24px] h-[--24px] text-white"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth={2}
+        d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+      />
+    </svg>
+  );
+
   // ==========================
 
   return (
@@ -1111,7 +1128,7 @@ export default function ThumbnailCanvas() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
 
-                  <div className="w-[45%]">
+                  <div className="w-[45%]" title="Font Size">
                     <CustomSelectInput
                       paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
                       label={"Font Size"}
@@ -1139,6 +1156,7 @@ export default function ThumbnailCanvas() {
                   placeholder="Edit thumbnail title ..."
                   value={selectedContentThumbnail}
                   onChange={(e) => setSelectedContentThumbnail(e.target.value)}
+                  title="Edit thumbnail title ..."
                 />
 
                 <MultipleSelectCheckmarks
@@ -1175,8 +1193,9 @@ export default function ThumbnailCanvas() {
                       console.log(`searchBgKeyword`, pageState.searchBgKeyword);
                       handleSearchBg();
                     }}
+                    title="Search Background"
                   >
-                    Search
+                    {searchIcon}
                   </button>
                 </div>
 
@@ -1294,9 +1313,8 @@ export default function ThumbnailCanvas() {
               {/* 04 Select Image */}
               <div className="flex flex-col gap-[--5px] w-full">
                 {/* 03-01 Select Image */}
-                {/* <div className="flex justify-between items-center"> */}
+
                 <h3 className="font-bold text-[--17px]">Select Image</h3>
-                {/* </div> */}
 
                 {/* 03-02 Search Image */}
                 <div className="flex gap-[--10px]">
@@ -1315,6 +1333,7 @@ export default function ThumbnailCanvas() {
                     }
                   />
                   <button
+                    title="Search Image"
                     onClick={() => {
                       console.log(
                         `searchImgKeyword`,
@@ -1323,12 +1342,12 @@ export default function ThumbnailCanvas() {
                       handleSearchImg();
                     }}
                   >
-                    Search
+                    {searchIcon}
                   </button>
                 </div>
 
                 {/* 03-03 Preview Images */}
-                <div className="flex gap-[--25px] overflow-x-auto p-[--5px] w-full">
+                <div className="flex gap-[--15px] overflow-x-auto w-full py-[--sy-7px] pr-[--5px]">
                   {!pageState.searchImgData.length ? (
                     <ImageCard
                       imgSrc="/generated-thumbnails/img-placeholder.jpg"
@@ -1343,7 +1362,7 @@ export default function ThumbnailCanvas() {
                         loading="lazy"
                         src={img}
                         alt="searchImg"
-                        className="w-[50%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
+                        className="w-[70%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-2 hover:outline-black transition-none cursor-pointer"
                         onClick={() => handleSelectImg(img)}
                       />
                     ))
@@ -1353,31 +1372,34 @@ export default function ThumbnailCanvas() {
 
               <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
 
-              {/* ========================== */}
+              {/* 05 Layers */}
               <div className="flex flex-col gap-[--5px] w-full">
                 {/* 05-01 Header */}
 
                 <h3 className="font-bold text-[--17px]">Layers</h3>
 
                 {/* 05-02 Layers */}
-                <div className="flex flex-col gap-[--5px]">
-                  {layerList
-                    ?.filter((obj) => obj.isImage)
-                    .map((obj, index) => (
-                      <div
-                        key={index}
-                        className={`flex justify-between items-center cursor-pointer ${
-                          selectedLayer &&
-                          obj.imageId === selectedLayer?.imageId
-                            ? "bg-gray-300"
-                            : ""
-                        }`} // Highlight selected layer
-                        onClick={() => handleLayerClick(obj)} // Handle layer click
-                      >
-                        <span className="flex justify-between items-center gap-[--20px]">
+                <div className="flex flex-col gap-[--5px] p-[--5px] rounded-[--15px] border border-[--gray-300]">
+                  {Array.isArray(layerList) &&
+                  layerList?.filter((obj) => obj.isImage).length ? (
+                    layerList
+                      ?.filter((obj) => obj.isImage)
+                      .map((obj, index) => (
+                        <div
+                          key={index}
+                          className={`flex justify-between items-center cursor-pointer rounded-[--15px] p-[--5px] ${
+                            selectedLayer &&
+                            obj.imageId === selectedLayer?.imageId
+                              ? "bg-[#E5E6E6B3]"
+                              : ""
+                          }`} // Highlight selected layer
+                          onClick={() => handleLayerClick(obj)} // Handle layer click
+                        >
+                          {/* <span className="flex justify-between items-center gap-[--20px]"> */}
                           {/* {`${index + 1}. ${obj.type} ${obj.text} ${obj.text}`} */}
 
-                          {`${index + 1}. ${obj.type} `}
+                          <span>{`${index + 1}. ${obj.type} `}</span>
+
                           {obj.type === "text" ? (
                             // Display the text content
                             <span>{obj.text}</span>
@@ -1390,39 +1412,45 @@ export default function ThumbnailCanvas() {
                               // crossOrigin={"anonymous"}
                             />
                           ) : null}
-                        </span>
-                      </div>
-                    ))}
 
-                  <div className="flex justify-between items-center w-[100%] m-auto bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px] px-[--15px]">
-                    <span
-                      className="cursor-pointer hover:font-bold"
-                      onClick={() => flipLayer()}
-                    >
-                      Flip
-                    </span>
-                    <span
-                      className="cursor-pointer hover:font-bold"
-                      onClick={() => moveLayerUp()}
-                    >
-                      Forwards
-                    </span>
-                    <span
-                      className="cursor-pointer hover:font-bold"
-                      onClick={() => moveLayerDown()}
-                    >
-                      Backwards
-                    </span>
-                    <span
-                      className="cursor-pointer hover:font-bold"
-                      onClick={() => deleteLayer()}
-                    >
-                      Delete
-                    </span>
-                  </div>
+                          {/* </span> */}
+                        </div>
+                      ))
+                  ) : (
+                    <div className="flex justify-center items-center">
+                      <p>No Layers Found</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* 05-03 Layers Actions */}
+                <div className="flex justify-between items-center w-[100%] m-auto bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px] px-[--15px]">
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => flipLayer()}
+                  >
+                    Flip
+                  </span>
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => moveLayerUp()}
+                  >
+                    Forwards
+                  </span>
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => moveLayerDown()}
+                  >
+                    Backwards
+                  </span>
+                  <span
+                    className="cursor-pointer hover:font-bold"
+                    onClick={() => deleteLayer()}
+                  >
+                    Delete
+                  </span>
                 </div>
               </div>
-              {/* ========================== */}
             </div>
           </div>
 
