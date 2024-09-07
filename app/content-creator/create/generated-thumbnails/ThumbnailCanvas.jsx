@@ -1088,6 +1088,10 @@ export default function ThumbnailCanvas() {
         </div>
       )}
 
+      <nav className="mb-[--sy-40px] bg-red-500 w-[70%] m-auto">
+        <h1>Thumbnail Canvas</h1>
+      </nav>
+
       <section
         className={`${
           (pageState.generateThumbnailsLoading ||
@@ -1100,90 +1104,115 @@ export default function ThumbnailCanvas() {
         }`}
       >
         <div className="thumbnailCanvas">
-          <div className="thumbnailCanvas_actionsBar max-h-[720px] overflow-y-auto pr-[--10px] pb-[--8px]">
-            {/* 01 Select Thumbnail */}
-            <div className="flex flex-col gap-[--10px] w-full">
-              <div className="flex justify-between items-center pt-[--10px]">
-                <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
+          <div className="border-[--1px] border-[--gray-300] rounded-[--20px] overflow-hidden">
+            <div className="thumbnailCanvas_actionsBar max-h-[720px] p-[--10px] overflow-y-auto overflow-x-hidden">
+              {/* 01 Select Thumbnail */}
+              <div className="flex flex-col gap-[--10px] w-full">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
 
-                <div className="w-1/2">
-                  <CustomSelectInput
-                    label={"Font Size"}
-                    options={Array.from({ length: 71 }, (_, i) => i + 60)}
-                    getValue={getThumbnailFontSizeValue}
-                  />
+                  <div className="w-[45%]">
+                    <CustomSelectInput
+                      paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
+                      label={"Font Size"}
+                      options={Array.from({ length: 71 }, (_, i) => i + 60)}
+                      getValue={getThumbnailFontSizeValue}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <CustomSelectInput
-                label={"Select Thumbnail"}
-                options={
-                  generatedThumbnails && generatedThumbnails?.length > 0
-                    ? generatedThumbnails?.map((e) => e.Thumbnail)
-                    : ["No Thumbnails Found"]
-                }
-                getValue={getSelectedContentThumbnailValue}
-              />
+                <CustomSelectInput
+                  label={"Select Thumbnail"}
+                  options={
+                    generatedThumbnails && generatedThumbnails?.length > 0
+                      ? generatedThumbnails?.map((e) => e.Thumbnail)
+                      : ["No Thumbnails Found"]
+                  }
+                  getValue={getSelectedContentThumbnailValue}
+                />
 
-              <input
-                className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
-                type="text"
-                name="thumbnail-title"
-                id="thumbnail-title"
-                placeholder="Edit thumbnail title ..."
-                value={selectedContentThumbnail}
-                onChange={(e) => setSelectedContentThumbnail(e.target.value)}
-              />
-
-              <MultipleSelectCheckmarks
-                words={words}
-                getHighlightedWordsValue={getHighlightedWordsValue}
-              />
-            </div>
-
-            {/* 02 Select Background */}
-            <div className="flex flex-col gap-[--5px] w-full">
-              {/* 02-01 Select Background */}
-              <h3 className="font-bold text-[--17px]">Select Background</h3>
-
-              {/* 02-02 Search Background */}
-              <div className="flex gap-[--10px]">
                 <input
                   className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
                   type="text"
-                  name="bg-search"
-                  id="bg-search"
-                  placeholder="Search for a background ..."
-                  value={pageState.searchBgKeyword}
-                  onChange={(e) =>
-                    setPageState((prev) => ({
-                      ...prev,
-                      searchBgKeyword: e.target.value,
-                    }))
-                  }
+                  name="thumbnail-title"
+                  id="thumbnail-title"
+                  placeholder="Edit thumbnail title ..."
+                  value={selectedContentThumbnail}
+                  onChange={(e) => setSelectedContentThumbnail(e.target.value)}
                 />
-                <button
-                  onClick={() => {
-                    console.log(`searchBgKeyword`, pageState.searchBgKeyword);
-                    handleSearchBg();
-                  }}
-                >
-                  Search
-                </button>
+
+                <MultipleSelectCheckmarks
+                  words={words}
+                  getHighlightedWordsValue={getHighlightedWordsValue}
+                />
               </div>
 
-              {/* 02-03 Preview Backgrounds */}
-              <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
-                {selectedBrand === "Investorcracy" &&
-                  Array.from({ length: 10 }, (_, i) => (
-                    <div className="!w-1/2" key={uuidv4()}>
+              <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
+
+              {/* 02 Select Background */}
+              <div className="flex flex-col gap-[--5px] w-full">
+                {/* 02-01 Select Background */}
+                <h3 className="font-bold text-[--17px]">Select Background</h3>
+
+                {/* 02-02 Search Background */}
+                <div className="flex gap-[--10px]">
+                  <input
+                    className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                    type="text"
+                    name="bg-search"
+                    id="bg-search"
+                    placeholder="Search for a background ..."
+                    value={pageState.searchBgKeyword}
+                    onChange={(e) =>
+                      setPageState((prev) => ({
+                        ...prev,
+                        searchBgKeyword: e.target.value,
+                      }))
+                    }
+                  />
+                  <button
+                    onClick={() => {
+                      console.log(`searchBgKeyword`, pageState.searchBgKeyword);
+                      handleSearchBg();
+                    }}
+                  >
+                    Search
+                  </button>
+                </div>
+
+                {/* 02-03 Preview Backgrounds */}
+                <div className="flex gap-[--50px-1] overflow-x-auto pb-[--sy-7px] pr-[--5px]">
+                  {selectedBrand === "Investorcracy" &&
+                    Array.from({ length: 10 }, (_, i) => (
+                      <div className="!w-1/2" key={uuidv4()}>
+                        <ImageCard
+                          inputType="radio"
+                          inputName="select-bg"
+                          imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
+                          checked={
+                            pageState.selectedBgPath ===
+                            `/generated-thumbnails/inv/bg/bg-${i}.jpg`
+                          }
+                          onChange={(e) => {
+                            // console.log(`e.target.value`, e.target.value);
+                            setPageState((prev) => ({
+                              ...prev,
+                              selectedBgPath: e.target.value,
+                            }));
+                          }}
+                        />
+                      </div>
+                    ))}
+
+                  {selectedBrand.includes("Street Politics") && (
+                    <div className="!w-1/2">
                       <ImageCard
                         inputType="radio"
                         inputName="select-bg"
-                        imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
+                        imgSrc={`/generated-thumbnails/sp/bg/bg-0.jpg`}
                         checked={
                           pageState.selectedBgPath ===
-                          `/generated-thumbnails/inv/bg/bg-${i}.jpg`
+                          `/generated-thumbnails/sp/bg/bg-0.jpg`
                         }
                         onChange={(e) => {
                           // console.log(`e.target.value`, e.target.value);
@@ -1194,217 +1223,207 @@ export default function ThumbnailCanvas() {
                         }}
                       />
                     </div>
-                  ))}
+                  )}
 
-                {selectedBrand.includes("Street Politics") && (
-                  <div className="!w-1/2">
-                    <ImageCard
-                      inputType="radio"
-                      inputName="select-bg"
-                      imgSrc={`/generated-thumbnails/sp/bg/bg-0.jpg`}
-                      checked={
-                        pageState.selectedBgPath ===
-                        `/generated-thumbnails/sp/bg/bg-0.jpg`
-                      }
-                      onChange={(e) => {
-                        // console.log(`e.target.value`, e.target.value);
-                        setPageState((prev) => ({
-                          ...prev,
-                          selectedBgPath: e.target.value,
-                        }));
-                      }}
-                    />
-                  </div>
-                )}
-
-                {!pageState.searchBgData.length ? (
-                  <div className="!w-1/2">
-                    <ImageCard
-                      imgSrc="/generated-thumbnails/img-placeholder.jpg"
-                      inputType="radio"
-                      inputName={"select-bg"}
-                      disabled
-                    />
-                  </div>
-                ) : (
-                  Array.isArray(pageState.searchBgData) &&
-                  pageState.searchBgData.length &&
-                  pageState.searchBgData.map((img) => (
-                    <div className="!w-1/2" key={uuidv4()}>
+                  {!pageState.searchBgData.length ? (
+                    <div className="!w-1/2">
                       <ImageCard
-                        imgSrc={img}
+                        imgSrc="/generated-thumbnails/img-placeholder.jpg"
                         inputType="radio"
                         inputName={"select-bg"}
-                        checked={pageState.selectedBgPath === img}
-                        onChange={(e) => {
-                          // console.log(`e.target.value`, e.target.value);
-                          setPageState((prev) => ({
-                            ...prev,
-                            selectedBgPath: e.target.value,
-                          }));
-                        }}
+                        disabled
                       />
                     </div>
-                  ))
-                )}
+                  ) : (
+                    Array.isArray(pageState.searchBgData) &&
+                    pageState.searchBgData.length &&
+                    pageState.searchBgData.map((img) => (
+                      <div className="!w-1/2" key={uuidv4()}>
+                        <ImageCard
+                          imgSrc={img}
+                          inputType="radio"
+                          inputName={"select-bg"}
+                          checked={pageState.selectedBgPath === img}
+                          onChange={(e) => {
+                            // console.log(`e.target.value`, e.target.value);
+                            setPageState((prev) => ({
+                              ...prev,
+                              selectedBgPath: e.target.value,
+                            }));
+                          }}
+                        />
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* 03 Select Icon */}
-            {selectedBrand.includes("Street Politics") && (
+              <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
+
+              {/* 03 Select Icon */}
+              {selectedBrand.includes("Street Politics") && (
+                <div className="flex flex-col gap-[--5px] w-full">
+                  <h3 className="font-bold text-[--17px]">Select Icon</h3>
+
+                  <div className="flex gap-[--50px-1] overflow-x-auto pb-[--sy-7px] pr-[--5px]">
+                    {Array.from({ length: 7 }, (_, i) => (
+                      <div className="!w-1/2" key={uuidv4()}>
+                        <ImageCard
+                          inputType="radio"
+                          inputName="select-icon"
+                          imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
+                          checked={
+                            pageState.selectedIconPath ===
+                            `/generated-thumbnails/sp/icons/illustration-${i}.png`
+                          }
+                          onChange={(e) => {
+                            setPageState((prev) => ({
+                              ...prev,
+                              selectedIconPath: e.target.value,
+                            }));
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
+
+              {/* 04 Select Image */}
               <div className="flex flex-col gap-[--5px] w-full">
-                <h3 className="font-bold text-[--17px]">Select Icon</h3>
+                {/* 03-01 Select Image */}
+                {/* <div className="flex justify-between items-center"> */}
+                <h3 className="font-bold text-[--17px]">Select Image</h3>
+                {/* </div> */}
 
-                <div className="flex gap-[--50px-1] overflow-x-auto p-[--5px]">
-                  {Array.from({ length: 7 }, (_, i) => (
-                    <div className="!w-1/2" key={uuidv4()}>
-                      <ImageCard
-                        inputType="radio"
-                        inputName="select-icon"
-                        imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
-                        checked={
-                          pageState.selectedIconPath ===
-                          `/generated-thumbnails/sp/icons/illustration-${i}.png`
-                        }
-                        onChange={(e) => {
-                          setPageState((prev) => ({
-                            ...prev,
-                            selectedIconPath: e.target.value,
-                          }));
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 04 Select Image */}
-            <div className="flex flex-col gap-[--5px] w-full">
-              {/* 03-01 Select Image */}
-              {/* <div className="flex justify-between items-center"> */}
-              <h3 className="font-bold text-[--17px]">Select Image</h3>
-              {/* </div> */}
-
-              {/* 03-02 Search Image */}
-              <div className="flex gap-[--10px]">
-                <input
-                  className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
-                  type="text"
-                  name="img-search"
-                  id="img-search"
-                  placeholder="Search for an image ..."
-                  value={pageState.searchImgKeyword}
-                  onChange={(e) =>
-                    setPageState((prev) => ({
-                      ...prev,
-                      searchImgKeyword: e.target.value,
-                    }))
-                  }
-                />
-                <button
-                  onClick={() => {
-                    console.log(`searchImgKeyword`, pageState.searchImgKeyword);
-                    handleSearchImg();
-                  }}
-                >
-                  Search
-                </button>
-              </div>
-
-              {/* 03-03 Preview Images */}
-              <div className="flex gap-[--25px] overflow-x-auto p-[--5px] w-full">
-                {!pageState.searchImgData.length ? (
-                  <ImageCard
-                    imgSrc="/generated-thumbnails/img-placeholder.jpg"
-                    inputType={"checkbox"}
-                    inputName={"select-img"}
-                    disabled
+                {/* 03-02 Search Image */}
+                <div className="flex gap-[--10px]">
+                  <input
+                    className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                    type="text"
+                    name="img-search"
+                    id="img-search"
+                    placeholder="Search for an image ..."
+                    value={pageState.searchImgKeyword}
+                    onChange={(e) =>
+                      setPageState((prev) => ({
+                        ...prev,
+                        searchImgKeyword: e.target.value,
+                      }))
+                    }
                   />
-                ) : (
-                  pageState.searchImgData.map((img) => (
-                    <img
-                      key={uuidv4()}
-                      loading="lazy"
-                      src={img}
-                      alt="searchImg"
-                      className="w-[50%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
-                      onClick={() => handleSelectImg(img)}
+                  <button
+                    onClick={() => {
+                      console.log(
+                        `searchImgKeyword`,
+                        pageState.searchImgKeyword
+                      );
+                      handleSearchImg();
+                    }}
+                  >
+                    Search
+                  </button>
+                </div>
+
+                {/* 03-03 Preview Images */}
+                <div className="flex gap-[--25px] overflow-x-auto p-[--5px] w-full">
+                  {!pageState.searchImgData.length ? (
+                    <ImageCard
+                      imgSrc="/generated-thumbnails/img-placeholder.jpg"
+                      // inputType={"checkbox"}
+                      inputName={"select-img"}
+                      disabled
                     />
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* ========================== */}
-            <div className="flex flex-col gap-[--5px] w-full">
-              {/* 05-01 Header */}
-
-              <h3 className="font-bold text-[--17px]">Layers</h3>
-
-              {/* 05-02 Layers */}
-              <div className="flex flex-col gap-[--5px]">
-                {layerList
-                  ?.filter((obj) => obj.isImage)
-                  .map((obj, index) => (
-                    <div
-                      key={index}
-                      className={`flex justify-between items-center cursor-pointer ${
-                        selectedLayer && obj.imageId === selectedLayer?.imageId
-                          ? "bg-gray-300"
-                          : ""
-                      }`} // Highlight selected layer
-                      onClick={() => handleLayerClick(obj)} // Handle layer click
-                    >
-                      <span className="flex justify-between items-center gap-[--20px]">
-                        {/* {`${index + 1}. ${obj.type} ${obj.text} ${obj.text}`} */}
-
-                        {`${index + 1}. ${obj.type} `}
-                        {obj.type === "text" ? (
-                          // Display the text content
-                          <span>{obj.text}</span>
-                        ) : obj.type === "image" ? (
-                          // Display the image
-                          <img
-                            src={obj.toDataURL() || obj.src}
-                            alt={`Layer ${index + 1}`}
-                            style={{ width: 50, height: 50 }} // Adjust size for preview
-                            // crossOrigin={"anonymous"}
-                          />
-                        ) : null}
-                      </span>
-                    </div>
-                  ))}
-
-                <div className="flex justify-between items-center w-[100%] m-auto bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px] px-[--15px]">
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => flipLayer()}
-                  >
-                    Flip
-                  </span>
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => moveLayerUp()}
-                  >
-                    Forwards
-                  </span>
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => moveLayerDown()}
-                  >
-                    Backwards
-                  </span>
-                  <span
-                    className="cursor-pointer hover:font-bold"
-                    onClick={() => deleteLayer()}
-                  >
-                    Delete
-                  </span>
+                  ) : (
+                    pageState.searchImgData.map((img) => (
+                      <img
+                        key={uuidv4()}
+                        loading="lazy"
+                        src={img}
+                        alt="searchImg"
+                        className="w-[50%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-3 hover:outline-black transition-none cursor-pointer"
+                        onClick={() => handleSelectImg(img)}
+                      />
+                    ))
+                  )}
                 </div>
               </div>
+
+              <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
+
+              {/* ========================== */}
+              <div className="flex flex-col gap-[--5px] w-full">
+                {/* 05-01 Header */}
+
+                <h3 className="font-bold text-[--17px]">Layers</h3>
+
+                {/* 05-02 Layers */}
+                <div className="flex flex-col gap-[--5px]">
+                  {layerList
+                    ?.filter((obj) => obj.isImage)
+                    .map((obj, index) => (
+                      <div
+                        key={index}
+                        className={`flex justify-between items-center cursor-pointer ${
+                          selectedLayer &&
+                          obj.imageId === selectedLayer?.imageId
+                            ? "bg-gray-300"
+                            : ""
+                        }`} // Highlight selected layer
+                        onClick={() => handleLayerClick(obj)} // Handle layer click
+                      >
+                        <span className="flex justify-between items-center gap-[--20px]">
+                          {/* {`${index + 1}. ${obj.type} ${obj.text} ${obj.text}`} */}
+
+                          {`${index + 1}. ${obj.type} `}
+                          {obj.type === "text" ? (
+                            // Display the text content
+                            <span>{obj.text}</span>
+                          ) : obj.type === "image" ? (
+                            // Display the image
+                            <img
+                              src={obj.toDataURL() || obj.src}
+                              alt={`Layer ${index + 1}`}
+                              style={{ width: 50, height: 50 }} // Adjust size for preview
+                              // crossOrigin={"anonymous"}
+                            />
+                          ) : null}
+                        </span>
+                      </div>
+                    ))}
+
+                  <div className="flex justify-between items-center w-[100%] m-auto bg-gray-300 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px] px-[--15px]">
+                    <span
+                      className="cursor-pointer hover:font-bold"
+                      onClick={() => flipLayer()}
+                    >
+                      Flip
+                    </span>
+                    <span
+                      className="cursor-pointer hover:font-bold"
+                      onClick={() => moveLayerUp()}
+                    >
+                      Forwards
+                    </span>
+                    <span
+                      className="cursor-pointer hover:font-bold"
+                      onClick={() => moveLayerDown()}
+                    >
+                      Backwards
+                    </span>
+                    <span
+                      className="cursor-pointer hover:font-bold"
+                      onClick={() => deleteLayer()}
+                    >
+                      Delete
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {/* ========================== */}
             </div>
-            {/* ========================== */}
           </div>
 
           <div className="canvas-container relative">
