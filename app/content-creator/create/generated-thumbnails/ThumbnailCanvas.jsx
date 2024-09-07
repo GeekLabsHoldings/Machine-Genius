@@ -855,6 +855,38 @@ export default function ThumbnailCanvas() {
   };
 
   useEffect(() => {
+    function handleKeyDown(event) {
+      if (!selectedLayer) return;
+      // Check if the active element is an input or textarea
+      if (
+        ["input", "textarea"].includes(
+          document.activeElement.tagName.toLowerCase()
+        )
+      ) {
+        return; // Don't trigger shortcuts when typing in form fields
+      }
+
+      switch (event.key) {
+        case "Escape":
+          handleDiscardActiveObject();
+          break;
+        case "Delete":
+          deleteLayer();
+          break;
+        // Add more shortcuts here as needed
+      }
+    }
+
+    // Add event listener
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedLayer]); // Dependencies array
+
+  useEffect(() => {
     const handleObjectSelection = () => {
       const activeObject = canvasState.getActiveObject();
       if (activeObject) {
