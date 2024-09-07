@@ -104,7 +104,6 @@ export default function ThumbnailCanvas() {
       isSendLoading: false,
       triggerSendContent: false,
       triggerSearchImg: false,
-      triggerFilterImages: false,
       isLoadingFormatToHtml: false,
       triggerFormatToHtml: false,
       highlightedWords: [],
@@ -542,7 +541,7 @@ export default function ThumbnailCanvas() {
         setPageState((prev) => ({
           ...prev,
           searchBgData: json.images.map((img) => img.original),
-          triggerFilterImages: true,
+          searchBgLoading: false,
         }));
       } else {
         handleSearchBgError();
@@ -554,70 +553,27 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function testImageUrl(url) {
-    // toast("Testing image url...");
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = url;
+  async function getProxiedImageUrl(originalUrl) {
+    const encodedUrl = encodeURIComponent(originalUrl);
+    const proxyUrl = `/api/proxy-image?url=${encodedUrl}`;
 
-      img.onload = () => {
-        // Create a canvas to attempt to draw the image
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        // Draw the image onto the canvas
-        ctx.drawImage(img, 0, 0);
-
-        try {
-          // Attempt to read pixel data from the canvas
-          ctx.getImageData(0, 0, 1, 1);
-          resolve(url); // Image loaded and CORS is okay
-        } catch (e) {
-          reject("CORS issue or image data blocked: " + url);
-        }
-      };
-
-      img.onerror = () => reject("Image load error: " + url);
-    });
-  }
-
-  async function handleFilterImages() {
-    const urlsToCheck = pageState.searchBgData;
-    if (!urlsToCheck.length) {
-      // toast.error("No images to check!");
-      return;
-    }
-    const validUrls = [];
-    const blocked = [];
-
-    for (const url of urlsToCheck) {
-      try {
-        await testImageUrl(url);
-        validUrls.push(url);
-      } catch {
-        blocked.push(url);
+    try {
+      const response = await fetch(proxyUrl);
+      if (!response.ok) {
+        toast.error("Error fetching proxied image. Please select another image.");
+        addToBlockedUrls(originalUrl);
+        // throw new Error(`HTTP error! status: ${response.status}`);
+        return null;
       }
+      const blob = await response.blob();
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      addToBlockedUrls(originalUrl);
+      toast.error("Error fetching proxied image. Please select another image.");
+      console.error("Error fetching proxied image:", error);
+      return null;
     }
-
-    // Update with blocked URLs
-    const blockedUrls = JSON.parse(localStorage.getItem("blockedUrls")) || [];
-    const newBlockedUrls = [...new Set([...blockedUrls, ...blocked])];
-    localStorage.setItem("blockedUrls", JSON.stringify(newBlockedUrls));
-
-    // Update with valid URLs
-    setPageState((prev) => ({
-      ...prev,
-      searchBgLoading: false,
-      searchBgData: validUrls,
-    }));
   }
-
-  useEffect(() => {
-    if (pageState.triggerFilterImages) {
-      handleFilterImages();
-    }
-  }, [pageState.triggerFilterImages]);
 
   async function handleRemoveBg(img) {
     try {
@@ -1108,11 +1064,7 @@ export default function ThumbnailCanvas() {
           <LogoAndTitle
             needTxt={true}
             textNeeded="Hold on tight."
-            title={
-              !pageState.triggerFilterImages
-                ? "Genius is searching for backgrounds..."
-                : "Genius is filtering backgrounds..."
-            }
+            title={"Genius is searching for backgrounds..."}
           />
         </div>
       )}
@@ -1300,11 +1252,15 @@ export default function ThumbnailCanvas() {
                           inputType="radio"
                           inputName={"select-bg"}
                           checked={pageState.selectedBgPath === img}
-                          onChange={(e) => {
+                          onChange={async (e) => {
+                            const url = await getProxiedImageUrl(
+                              e.target.value
+                            );
+
                             // console.log(`e.target.value`, e.target.value);
                             setPageState((prev) => ({
                               ...prev,
-                              selectedBgPath: e.target.value,
+                              selectedBgPath: url,
                             }));
                           }}
                         />
