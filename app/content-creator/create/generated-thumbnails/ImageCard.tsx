@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./ImageCard.module.css";
-import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
 type IProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,

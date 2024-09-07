@@ -1,38 +1,3 @@
-@font-face {
-  font-family: "Acumin Pro";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Acumin Pro"), url("/fonts/Acumin-RPro.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Acumin Pro Italic";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Acumin Pro Italic"),
-    url("/fonts/Acumin-ItPro.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Acumin Pro Bold";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Acumin Pro Bold"), url("/fonts/Acumin-BdPro.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Acumin Pro Bold Italic";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Acumin Pro Bold Italic"),
-    url("/fonts/Acumin-BdItPro.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Hellix-Black";
-  src: url("/fonts/Hellix-Black.woff2") format("woff2");
-}
-
 .thumbnailCanvas {
   display: flex;
   justify-content: space-between;

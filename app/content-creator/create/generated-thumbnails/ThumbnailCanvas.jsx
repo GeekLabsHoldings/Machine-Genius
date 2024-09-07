@@ -121,9 +121,12 @@ export default function ThumbnailCanvas() {
 
   const getSelectedContentThumbnailValue = useCallback((value) => {
     setSelectedContentThumbnail(value);
+  }, []);
+
+  const handleTriggerSearchImg = useCallback(() => {
     setPageState((prev) => ({
       ...prev,
-      searchImgKeyword: value.replace(/[^a-zA-Z0-9\s]/g, ""),
+      searchImgKeyword: prev.searchImgKeyword.replace(/[^a-zA-Z0-9\s]/g, ""),
       triggerSearchImg: true,
     }));
   }, []);
@@ -381,7 +384,7 @@ export default function ThumbnailCanvas() {
           fill: pageState.highlightedWords.includes(words[i])
             ? "red"
             : "#ffffff",
-          fontFamily: "Hellix-Black",
+          fontFamily: '"Hellix-Black", Helvetica, sans-serif',
           fontWeight: "600",
           stroke: "black", // Set the stroke color to black
           strokeWidth: 3, // Set the stroke width to 3px
@@ -393,8 +396,8 @@ export default function ThumbnailCanvas() {
           },
           isText: true,
         });
-
         canvasState.add(text);
+        canvasState.renderAll();
         text.bringToFront();
         top -= text.height * 0.7; // Move the next word up by the height of the text
       }
@@ -405,21 +408,22 @@ export default function ThumbnailCanvas() {
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
-        const text = new fabric.Text(words[i].toUpperCase(), {
+        const text = new fabric.Text(`${words[i].toUpperCase()}`, {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
           fill: pageState.highlightedWords.includes(words[i])
             ? "#C0FE15"
             : "#ffffff",
-          fontFamily: "Acumin Pro Bold Italic",
-          // fontWeight: "800",
-          // fontStyle: "italic",
+          fontFamily: '"Acumin Pro Bold Italic", Arial, sans-serif',
+          fontWeight: "800",
+          fontStyle: "italic",
           textBackgroundColor: "#1E2329",
           isText: true,
         });
 
         canvasState.add(text);
+        canvasState.renderAll();
         text.bringToFront();
         top -= text.height * 1.05; // Move the next word up by the height of the text
       }
@@ -441,7 +445,24 @@ export default function ThumbnailCanvas() {
       canvasState.on("after:render", bringAllTextToFront);
 
       // Initial text load
-      loadText();
+      // loadText();
+
+      if (typeof window !== "undefined") {
+        // Check if document.fonts is supported
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready
+            .then(() => {
+              loadText();
+            })
+            .catch((error) => {
+              console.error("Font loading failed:", error);
+              loadText();
+            });
+        } else {
+          // Fallback for browsers that don't support document.fonts
+          loadText();
+        }
+      }
 
       // Clean up the event listener on unmount
       return () => {
@@ -1339,7 +1360,8 @@ export default function ThumbnailCanvas() {
                         `searchImgKeyword`,
                         pageState.searchImgKeyword
                       );
-                      handleSearchImg();
+                      // handleSearchImg();
+                      handleTriggerSearchImg();
                     }}
                   >
                     {searchIcon}
@@ -1362,7 +1384,7 @@ export default function ThumbnailCanvas() {
                         loading="lazy"
                         src={img}
                         alt="searchImg"
-                        className="w-[70%] h-auto aspect-square object-cover hover:opacity-80 hover:outline hover:outline-2 hover:outline-black transition-none cursor-pointer"
+                        className="w-[60%] h-auto aspect-square object-cover hover:opacity-80 transition-none cursor-pointer"
                         onClick={() => handleSelectImg(img)}
                       />
                     ))
