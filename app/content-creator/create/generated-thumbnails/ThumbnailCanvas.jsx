@@ -99,7 +99,6 @@ export default function ThumbnailCanvas() {
       searchBgLoading: false,
       searchImgData: pageStateSearchImgDataInit(),
       searchBgData: pageStateSearchBgDataInit(),
-      selectedImgsPath: [],
       removeBgLoading: false,
       isSendLoading: false,
       triggerSendContent: false,
@@ -327,39 +326,6 @@ export default function ThumbnailCanvas() {
     }
   }, [canvasState, pageState.selectedIconPath]);
 
-  function loadImages() {
-    // Remove existing images before adding a new one
-    const objects = canvasState.getObjects();
-    console.log("objects", objects);
-    objects.forEach((obj) => {
-      if (obj.isImage) {
-        canvasState.remove(obj);
-      }
-    });
-
-    // Load images
-    pageState.selectedImgsPath.forEach(({ img, imgId }, index) => {
-      if (!isBlocked(img)) {
-        loadImage(img, (img) => {
-          img.scaleToWidth(500); // Optional: scale the image if needed
-          img.left =
-            canvasState.width - img.width * img.scaleX - 40 * (index + 1); // Position on the right edge
-          img.top =
-            canvasState.height - img.height * img.scaleY - 40 * (index + 1); // Position on the bottom edge
-          img.isImage = true;
-          img.imageId = imgId;
-          canvasState.add(img);
-        });
-      }
-    });
-  }
-
-  useEffect(() => {
-    if (canvasState) {
-      loadImages();
-    }
-  }, [canvasState, pageState.selectedImgsPath]);
-
   function loadText() {
     // Remove existing text before adding a new one
     const objects = canvasState.getObjects();
@@ -560,7 +526,9 @@ export default function ThumbnailCanvas() {
     try {
       const response = await fetch(proxyUrl);
       if (!response.ok) {
-        toast.error("Error fetching proxied image. Please select another image.");
+        toast.error(
+          "Error fetching proxied image. Please select another image."
+        );
         addToBlockedUrls(originalUrl);
         // throw new Error(`HTTP error! status: ${response.status}`);
         return null;
@@ -670,17 +638,35 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function handleSelectImg(img) {
-    const removedBgImg = await handleRemoveBg(img);
+  const handleSelectImg = useCallback(
+    async (img) => {
+      const removedBgImg = await handleRemoveBg(img);
+      // const proxiedImg = await getProxiedImageUrl(img);
+      // const imgToAdd = removedBgImg || proxiedImg;
+      const imgToAdd = removedBgImg;
 
-    setPageState((prev) => ({
-      ...prev,
-      selectedImgsPath: [
-        ...(prev.selectedImgsPath || []),
-        { img: removedBgImg, imgId: uuidv4() } || { img: img, imgId: uuidv4() },
-      ],
-    }));
-  }
+      loadImage(imgToAdd, (fabricImg) => {
+        fabricImg.scaleToWidth(500); // Optional: scale the image if needed
+
+        // Position the new image
+        const canvasWidth = canvasState.getWidth();
+        const canvasHeight = canvasState.getHeight();
+
+        fabricImg.set({
+          left: canvasWidth - fabricImg.getScaledWidth() - 40,
+          top: canvasHeight - fabricImg.getScaledHeight() - 40,
+          isImage: true,
+          imageId: uuidv4(),
+        });
+
+        canvasState.add(fabricImg);
+        // canvasState.setActiveObject(fabricImg);
+        canvasState.renderAll();
+      });
+    },
+    [canvasState]
+  );
+
   // ============= End Search Background & Search Image =================
 
   // ============= Start Layer Controls ==================
@@ -762,15 +748,6 @@ export default function ThumbnailCanvas() {
     if (selectedLayer) {
       canvasState.remove(selectedLayer); // Remove the object from the canvas
       setSelectedLayer(null);
-
-      const filteredImgs = pageState.selectedImgsPath.filter(
-        ({ imgId }) => imgId !== selectedLayer.imageId
-      );
-      setPageState((prev) => ({
-        ...prev,
-        selectedImgsPath: filteredImgs,
-      }));
-
       canvasState.discardActiveObject();
       canvasState.renderAll();
     }
