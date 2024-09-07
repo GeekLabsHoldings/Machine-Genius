@@ -55,7 +55,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
