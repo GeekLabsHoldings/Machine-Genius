@@ -380,9 +380,7 @@ export default function ThumbnailCanvas() {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
-          fill: pageState.highlightedWords.includes(words[i])
-            ? "#C0FE15"
-            : "#ffffff",
+          fill: "#ffffff",
           fontFamily: '"Acumin Pro Bold Italic", Arial, sans-serif',
           fontWeight: "800",
           fontStyle: "italic",
@@ -909,6 +907,41 @@ export default function ThumbnailCanvas() {
       }
     };
   }, [canvasState]);
+
+  const handleToggleHighlight = () => {
+    if (canvasState) {
+      const activeObject = canvasState.getActiveObject();
+      if (activeObject && activeObject.type === "i-text") {
+        const iTextObject = activeObject;
+        const selectionStart = iTextObject.selectionStart;
+        const selectionEnd = iTextObject.selectionEnd;
+
+        if (
+          selectionStart !== undefined &&
+          selectionEnd !== undefined &&
+          selectionStart !== selectionEnd
+        ) {
+          if (
+            iTextObject.getSelectionStyles(selectionStart, selectionEnd)[0]
+              .fill === "#ffffff"
+          ) {
+            iTextObject.setSelectionStyles(
+              { fill: "#C0FE15" },
+              selectionStart,
+              selectionEnd
+            );
+          } else {
+            iTextObject.setSelectionStyles(
+              { fill: "#ffffff" },
+              selectionStart,
+              selectionEnd
+            );
+          }
+          canvasState.renderAll();
+        }
+      }
+    }
+  };
   // ============= End Layer Controls ==================
 
   // ============= Start Format Content =================
@@ -1203,6 +1236,16 @@ export default function ThumbnailCanvas() {
             Backwards
           </button>
 
+          {selectedBrand === "Investorcracy" && (
+            <button
+              className={buttonClass}
+              onClick={handleToggleHighlight}
+              disabled={!selectedLayer}
+            >
+              Toggle Highlight
+            </button>
+          )}
+
           <button
             className={buttonClass}
             onClick={handleDiscardActiveObject}
@@ -1264,21 +1307,27 @@ export default function ThumbnailCanvas() {
                   getValue={getSelectedContentThumbnailValue}
                 />
 
-                <input
-                  className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
-                  type="text"
-                  name="thumbnail-title"
-                  id="thumbnail-title"
-                  placeholder="Edit thumbnail title ..."
-                  value={selectedContentThumbnail}
-                  onChange={(e) => setSelectedContentThumbnail(e.target.value)}
-                  title="Edit thumbnail title ..."
-                />
+                {selectedBrand !== "Investorcracy" && (
+                  <>
+                    <input
+                      className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                      type="text"
+                      name="thumbnail-title"
+                      id="thumbnail-title"
+                      placeholder="Edit thumbnail title ..."
+                      value={selectedContentThumbnail}
+                      onChange={(e) =>
+                        setSelectedContentThumbnail(e.target.value)
+                      }
+                      title="Edit thumbnail title ..."
+                    />
 
-                <MultipleSelectCheckmarks
-                  words={words}
-                  getHighlightedWordsValue={getHighlightedWordsValue}
-                />
+                    <MultipleSelectCheckmarks
+                      words={words}
+                      getHighlightedWordsValue={getHighlightedWordsValue}
+                    />
+                  </>
+                )}
               </div>
 
               <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
