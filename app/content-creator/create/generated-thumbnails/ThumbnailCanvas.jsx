@@ -376,7 +376,7 @@ export default function ThumbnailCanvas() {
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
-        const text = new fabric.Text(`${words[i].toUpperCase()}`, {
+        const text = new fabric.IText(`${words[i].toUpperCase()}`, {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
@@ -1179,7 +1179,7 @@ export default function ThumbnailCanvas() {
         </div>
       )}
 
-      <nav className="my-[--sy-12px] w-4/5 max-w-3xl mx-auto">
+      <nav className="my-[--sy-10px] w-4/5 max-w-3xl mx-auto">
         <div className="flex justify-between items-center w-full bg-gray-100 border border-gray-300 rounded-lg p-2">
           <button
             className={buttonClass}
@@ -1607,7 +1607,7 @@ export default function ThumbnailCanvas() {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mt-[--sy-20px]">
+        <div className="flex justify-between items-center mt-[--sy-15px]">
           <CustomBtn
             word={"Back"}
             btnColor="white"
