@@ -814,6 +814,7 @@ export default function ThumbnailCanvas() {
     if (selectedLayer) {
       setSelectedLayer(null);
       canvasState.discardActiveObject();
+      canvasState.renderAll();
     } else {
       toast("Please select a layer!");
     }
@@ -824,7 +825,7 @@ export default function ThumbnailCanvas() {
     if (selectedLayer) {
       canvasState.bringForward(selectedLayer); // Move the object one level up
       handleDiscardActiveObject();
-      canvasState.renderAll();
+      // canvasState.renderAll();
     } else {
       toast("Please select a layer!");
     }
@@ -835,7 +836,7 @@ export default function ThumbnailCanvas() {
     if (selectedLayer) {
       canvasState.sendBackwards(selectedLayer); // Move the object one level down
       handleDiscardActiveObject();
-      canvasState.renderAll();
+      // canvasState.renderAll();
     } else {
       toast("Please select a layer!");
     }
@@ -846,7 +847,7 @@ export default function ThumbnailCanvas() {
     if (selectedLayer) {
       canvasState.remove(selectedLayer); // Remove the object from the canvas
       handleDiscardActiveObject();
-      canvasState.renderAll();
+      // canvasState.renderAll();
     } else {
       toast("Please select a layer!");
     }
@@ -857,7 +858,7 @@ export default function ThumbnailCanvas() {
       // Flip the selected layer vertically
       selectedLayer.flipX = !selectedLayer.flipX; // Toggles flip state
       handleDiscardActiveObject();
-      canvasState.renderAll(); // Re-render the canvas
+      // canvasState.renderAll(); // Re-render the canvas
     } else {
       toast("Please select a layer!");
     }
