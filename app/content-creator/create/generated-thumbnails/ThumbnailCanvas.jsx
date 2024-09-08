@@ -308,7 +308,7 @@ export default function ThumbnailCanvas() {
             // toast.error("Failed to load icon image.");
             return;
           }
-          img.scaleToWidth(150); // Optional: scale the image if needed
+          img.scaleToWidth(185); // Optional: scale the image if needed
           img.set({
             crossOrigin: "anonymous", // Set crossOrigin attribute
             left: 75,
@@ -352,7 +352,7 @@ export default function ThumbnailCanvas() {
           top: top,
           fontSize: pageState.thumbnailFontSize,
           fill: pageState.highlightedWords.includes(words[i])
-            ? "red"
+            ? "#ff0000"
             : "#ffffff",
           fontFamily: "Hellix-Black",
           fontWeight: "600",
