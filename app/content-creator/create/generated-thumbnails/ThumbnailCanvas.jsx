@@ -751,6 +751,10 @@ export default function ThumbnailCanvas() {
 
   const [selectedLayer, setSelectedLayer] = useState(null);
 
+  // useEffect(() => {
+  //   console.log(`selectedLayer`, selectedLayer);
+  // }, [selectedLayer]);
+
   useEffect(() => {
     if (canvasState) {
       // Handler for object selection
@@ -854,15 +858,17 @@ export default function ThumbnailCanvas() {
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if (!selectedLayer) return;
+      if (!canvasState || !selectedLayer) return;
       // Check if the active element is an input or textarea
       if (
         ["input", "textarea"].includes(
-          document.activeElement.tagName.toLowerCase()
+          document.activeElement?.tagName.toLowerCase() || ""
         )
       ) {
         return; // Don't trigger shortcuts when typing in form fields
       }
+
+      const MOVE_DISTANCE = 1; // pixels to move
 
       switch (event.key) {
         case "Escape":
@@ -871,7 +877,23 @@ export default function ThumbnailCanvas() {
         case "Delete":
           deleteLayer();
           break;
+
+        case "ArrowLeft":
+          selectedLayer.set("left", selectedLayer.left - MOVE_DISTANCE);
+          break;
+        case "ArrowRight":
+          selectedLayer.set("left", selectedLayer.left + MOVE_DISTANCE);
+          break;
+        case "ArrowUp":
+          selectedLayer.set("top", selectedLayer.top - MOVE_DISTANCE);
+          break;
+        case "ArrowDown":
+          selectedLayer.set("top", selectedLayer.top + MOVE_DISTANCE);
+          break;
+
         // Add more shortcuts here as needed
+        default:
+          break;
       }
     }
 
@@ -909,36 +931,33 @@ export default function ThumbnailCanvas() {
   }, [canvasState]);
 
   const handleToggleHighlight = () => {
-    if (canvasState) {
-      const activeObject = canvasState.getActiveObject();
-      if (activeObject && activeObject.type === "i-text") {
-        const iTextObject = activeObject;
-        const selectionStart = iTextObject.selectionStart;
-        const selectionEnd = iTextObject.selectionEnd;
+    if (canvasState && selectedLayer && selectedLayer.type === "i-text") {
+      const iTextObject = selectedLayer;
+      const selectionStart = iTextObject.selectionStart;
+      const selectionEnd = iTextObject.selectionEnd;
 
+      if (
+        selectionStart !== undefined &&
+        selectionEnd !== undefined &&
+        selectionStart !== selectionEnd
+      ) {
         if (
-          selectionStart !== undefined &&
-          selectionEnd !== undefined &&
-          selectionStart !== selectionEnd
+          iTextObject.getSelectionStyles(selectionStart, selectionEnd)[0]
+            .fill === "#ffffff"
         ) {
-          if (
-            iTextObject.getSelectionStyles(selectionStart, selectionEnd)[0]
-              .fill === "#ffffff"
-          ) {
-            iTextObject.setSelectionStyles(
-              { fill: "#C0FE15" },
-              selectionStart,
-              selectionEnd
-            );
-          } else {
-            iTextObject.setSelectionStyles(
-              { fill: "#ffffff" },
-              selectionStart,
-              selectionEnd
-            );
-          }
-          canvasState.renderAll();
+          iTextObject.setSelectionStyles(
+            { fill: "#C0FE15" },
+            selectionStart,
+            selectionEnd
+          );
+        } else {
+          iTextObject.setSelectionStyles(
+            { fill: "#ffffff" },
+            selectionStart,
+            selectionEnd
+          );
         }
+        canvasState.renderAll();
       }
     }
   };
@@ -1238,9 +1257,13 @@ export default function ThumbnailCanvas() {
 
           {selectedBrand === "Investorcracy" && (
             <button
-              className={buttonClass}
+              className={
+                selectedLayer && selectedLayer.type !== "i-text"
+                  ? "px-3 py-2 rounded bg-gray-300 text-gray-500 cursor-not-allowed transition-colors duration-200 ease-in-out"
+                  : buttonClass
+              }
               onClick={handleToggleHighlight}
-              disabled={!selectedLayer}
+              disabled={!selectedLayer || selectedLayer.type !== "i-text"}
             >
               Toggle Highlight
             </button>
