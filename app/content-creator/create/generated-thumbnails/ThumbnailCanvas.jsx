@@ -88,7 +88,7 @@ export default function ThumbnailCanvas() {
   function pageStateInit() {
     return {
       generateThumbnailsLoading: false,
-      thumbnailFontSize: 84,
+      thumbnailFontSize: selectedBrand.includes("Street Politics") ? 110 : 84,
       selectedBgPath: selectedBrand.includes("Street Politics")
         ? "/generated-thumbnails/sp/bg/bg-0.jpg"
         : "/generated-thumbnails/inv/bg/bg-0.jpg",
@@ -263,8 +263,8 @@ export default function ThumbnailCanvas() {
 
           img.set({
             crossOrigin: "anonymous", // Set crossOrigin attribute
-            left: -1,
-            top: 0,
+            left: -25,
+            top: -2,
             selectable: false, // Make the image non-selectable (non-movable, non-resizable)
             evented: false, // Disable interaction events (prevents drag, resize)
             lockMovementX: true, // Prevent horizontal movement
@@ -342,8 +342,8 @@ export default function ThumbnailCanvas() {
     // ===== Add text =====
     if (selectedBrand.includes("Street Politics")) {
       // Set the starting position (bottom-left corner)
-      let left = 40;
-      let top = canvasState.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
+      let left = 15;
+      let top = canvasState.height - (pageState.thumbnailFontSize + 10); // Start near the bottom of the canvas
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
@@ -354,7 +354,7 @@ export default function ThumbnailCanvas() {
           fill: pageState.highlightedWords.includes(words[i])
             ? "red"
             : "#ffffff",
-          fontFamily: '"Hellix-Black", Helvetica, sans-serif',
+          fontFamily: "Hellix-Black",
           fontWeight: "600",
           stroke: "black", // Set the stroke color to black
           strokeWidth: 3, // Set the stroke width to 3px
