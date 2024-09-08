@@ -1535,7 +1535,7 @@ export default function ThumbnailCanvas() {
                       />
                     </div>
 
-                    {Array.from({ length: 7 }, (_, i) => (
+                    {Array.from({ length: 9 }, (_, i) => (
                       <div className="!w-1/2" key={uuidv4()}>
                         <ImageCard
                           inputType="radio"
