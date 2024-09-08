@@ -10,6 +10,7 @@ import CustomSelectInput from "../CustomSelectInput/CustomSelectInput";
 import { useRouter } from "next/navigation";
 import $ from "jquery";
 import { globalContext } from "@/app/_context/store";
+import debounce from "debounce";
 
 const rolsIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fill="none">
@@ -143,8 +144,8 @@ const SideNav = ({
   return (
     <div
       className={`${styles.side_Nav} ${isSideNavOpen ? "" : styles.close}`}
-      onMouseEnter={() => setIsSideNavOpen((prev: any) => !prev)}
-      onMouseLeave={() => setIsSideNavOpen((prev: any) => !prev)}
+      onMouseEnter={debounce(() => setIsSideNavOpen(true), 100)}
+      onMouseLeave={debounce(() => setIsSideNavOpen(false), 100)}
     >
       <div>
         <div
