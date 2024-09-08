@@ -4,6 +4,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Acumin Pro Bold Italic";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Acumin Pro Bold Italic"),
+    url("/fonts/Acumin-BdItPro.woff") format("woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hellix-Black";
+  src: url("/fonts/Hellix-Black.woff2") format("woff2");
+  font-display: swap;
+}
+
 /* ===== End Imports ==== */
 
 /* ===== Start Variables ===== */
@@ -64,7 +80,7 @@
   --48px: clamp(10px, calc(2.27vw + 0.1rem), 1000px);
   --49px: clamp(10px, calc(2.325vw + 0.1rem), 1000px);
   --50px: clamp(10px, calc(2.375vw + 0.1rem), 1000px);
-  --50px-1: clamp(60px, calc(2.375vw + 0.1rem), 1000px);
+  --50px-1: clamp(55px, calc(2vw + 0.1rem), 200px);
   --51px: clamp(10px, calc(2.425vw + 0.1rem), 1000px);
   --55px: clamp(10px, calc(2.944vw + 0.1rem), 1000px);
   --58px: clamp(10px, calc(3.111vw + 0.1rem), 1000px);
