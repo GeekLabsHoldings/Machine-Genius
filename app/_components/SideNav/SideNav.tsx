@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import styles from "./SideNav.module.css";
 import logo_image from "../../../public/assets/logo.svg";
 import logo_white_image from "../../../public/assets/logo white.svg";
@@ -141,11 +141,22 @@ const SideNav = ({
     // console.log(`SelectedRole:`, SelectedRole);
   }, [SelectedRole]);
 
+  // Create debounced functions using useCallback
+  const handleMouseEnter = useCallback(
+    debounce(() => setIsSideNavOpen(true), 100),
+    []
+  );
+
+  const handleMouseLeave = useCallback(
+    debounce(() => setIsSideNavOpen(false), 100),
+    []
+  );
+
   return (
     <div
       className={`${styles.side_Nav} ${isSideNavOpen ? "" : styles.close}`}
-      onMouseEnter={debounce(() => setIsSideNavOpen(true), 100)}
-      onMouseLeave={debounce(() => setIsSideNavOpen(false), 100)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div>
         <div
