@@ -173,9 +173,11 @@ export default function ThumbnailCanvas() {
       url,
       function (img, error) {
         if (error) {
-          toast.error(
-            `Failed to load image from ${url}. Please select another image.`
-          );
+          // toast.error(
+          //   `Failed to load image from ${url}. Please select another image.`
+          // );
+
+          toast(`Image is corrupt. Please select another image!`);
           addToBlockedUrls(url);
           return;
         }
@@ -255,7 +257,7 @@ export default function ThumbnailCanvas() {
         "/generated-thumbnails/sp/blackOverlay.png",
         function (img, error) {
           if (error) {
-            toast.error("Failed to load overlay image.");
+            // toast.error("Failed to load overlay image.");
             return;
           }
 
@@ -461,7 +463,10 @@ export default function ThumbnailCanvas() {
   const uploadImageRef = useRef(null);
 
   function handleSearchBgError() {
-    toast.error("Something went wrong!");
+    // toast.error("Something went wrong!");
+    toast(
+      "Subscription expired. Please contact support to renew subscription!"
+    );
     setPageState((prev) => ({
       ...prev,
       searchBgLoading: false,
@@ -529,9 +534,10 @@ export default function ThumbnailCanvas() {
     try {
       const response = await fetch(proxyUrl);
       if (!response.ok) {
-        toast.error(
-          "Error fetching proxied image. Please select another image."
-        );
+        // toast.error(
+        //   "Error fetching proxied image. Please select another image."
+        // );
+        toast(`Image is corrupt. Please select another image!`);
         addToBlockedUrls(originalUrl);
         // throw new Error(`HTTP error! status: ${response.status}`);
         return null;
@@ -540,7 +546,8 @@ export default function ThumbnailCanvas() {
       return URL.createObjectURL(blob);
     } catch (error) {
       addToBlockedUrls(originalUrl);
-      toast.error("Error fetching proxied image. Please select another image.");
+      // toast.error("Error fetching proxied image. Please select another image.");
+      toast(`Image is corrupt. Please select another image!`);
       console.error("Error fetching proxied image:", error);
       return null;
     }
@@ -564,7 +571,10 @@ export default function ThumbnailCanvas() {
         }),
       });
       if (!res.ok) {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
+        toast(
+          "Subscription expired. Please contact support to renew subscription!"
+        );
         console.error("Error handleRemoveBg:", res.status);
         return;
       }
@@ -575,7 +585,10 @@ export default function ThumbnailCanvas() {
       // Use the imageUrl in your application
       return imageUrl; // You can set this as the src of an img tag
     } catch (error) {
-      toast.error("Something went wrong!");
+      // toast.error("Something went wrong!");
+      toast(
+        "Subscription expired. Please contact support to renew subscription!"
+      );
       console.error("Error handleRemoveBg:", error);
     } finally {
       setPageState((prev) => ({
@@ -616,10 +629,16 @@ export default function ThumbnailCanvas() {
       );
       const json = await res.json();
       if (!json) {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
+        toast(
+          "Subscription expired. Please contact support to renew subscription!"
+        );
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
+        toast(
+          "Subscription expired. Please contact support to renew subscription!"
+        );
         return;
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
@@ -627,11 +646,17 @@ export default function ThumbnailCanvas() {
           searchImgData: json.images.map((img) => img.original),
         }));
       } else {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
+        toast(
+          "Subscription expired. Please contact support to renew subscription!"
+        );
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong!");
+      // toast.error("Something went wrong!");
+      toast(
+        "Subscription expired. Please contact support to renew subscription!"
+      );
       console.error("Error generateThumbnails:", error);
     } finally {
       setPageState((prev) => ({
