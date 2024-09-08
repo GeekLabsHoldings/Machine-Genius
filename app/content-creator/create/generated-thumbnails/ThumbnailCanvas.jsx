@@ -56,7 +56,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -1179,7 +1179,7 @@ export default function ThumbnailCanvas() {
         </div>
       )}
 
-      <nav className="my-[--sy-20px] w-4/5 max-w-3xl mx-auto">
+      <nav className="my-[--sy-12px] w-4/5 max-w-3xl mx-auto">
         <div className="flex justify-between items-center w-full bg-gray-100 border border-gray-300 rounded-lg p-2">
           <button
             className={buttonClass}
