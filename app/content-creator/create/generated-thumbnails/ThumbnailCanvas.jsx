@@ -1337,7 +1337,8 @@ export default function ThumbnailCanvas() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
 
-                  <div className="w-[45%]" title="Font Size">
+                  {selectedBrand === "Investorcracy" && (
+                    <div className="w-[45%]" title="Font Size">
                     <CustomSelectInput
                       paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
                       label={"Font Size"}
@@ -1345,6 +1346,7 @@ export default function ThumbnailCanvas() {
                       getValue={getThumbnailFontSizeValue}
                     />
                   </div>
+                  )}
                 </div>
 
                 <CustomSelectInput
@@ -1537,7 +1539,7 @@ export default function ThumbnailCanvas() {
                       />
                     </div>
 
-                    {Array.from({ length: 38 }, (_, i) => (
+                    {Array.from({ length: 39 }, (_, i) => (
                       <div className="!w-1/2" key={uuidv4()}>
                         <ImageCard
                           inputType="radio"
