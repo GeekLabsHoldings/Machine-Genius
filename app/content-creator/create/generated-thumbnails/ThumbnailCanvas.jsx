@@ -56,7 +56,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    handleGenerateThumbnails();
+    // handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -88,7 +88,9 @@ export default function ThumbnailCanvas() {
   function pageStateInit() {
     return {
       generateThumbnailsLoading: false,
-      thumbnailFontSize: selectedBrand.includes("Street Politics") ? 110 : 84,
+      thumbnailFontSize: selectedBrand.includes("Street Politics")
+        ? 105.66
+        : 84,
       selectedBgPath: selectedBrand.includes("Street Politics")
         ? "/generated-thumbnails/sp/bg/bg-0.jpg"
         : "/generated-thumbnails/inv/bg/bg-0.jpg",
@@ -357,7 +359,7 @@ export default function ThumbnailCanvas() {
           fontFamily: "Hellix-Black",
           fontWeight: "600",
           stroke: "black", // Set the stroke color to black
-          strokeWidth: 3, // Set the stroke width to 3px
+          strokeWidth: 2.266, // Set the stroke width to 3px
           shadow: {
             color: "rgba(0, 0, 0, 0.5)", // Shadow color with opacity
             blur: 5, // Blur level of the shadow
@@ -365,10 +367,17 @@ export default function ThumbnailCanvas() {
             offsetY: 3, // Vertical shadow offset
           },
           isText: true,
+          charSpacing: -30,
+          selectable: false, // Make the image non-selectable (non-movable, non-resizable)
+          lockMovementX: true, // Prevent horizontal movement
+          lockMovementY: true, // Prevent vertical movement
+          lockScalingX: true, // Prevent horizontal scaling
+          lockScalingY: true, // Prevent vertical scaling
+          lockRotation: true, // Prevent rotation
         });
         canvasState.add(text);
-        canvasState.renderAll();
         text.bringToFront();
+        canvasState.renderAll();
         top -= text.height * 0.7; // Move the next word up by the height of the text
       }
     } else {
@@ -776,9 +785,9 @@ export default function ThumbnailCanvas() {
 
   const [selectedLayer, setSelectedLayer] = useState(null);
 
-  // useEffect(() => {
-  //   console.log(`selectedLayer`, selectedLayer);
-  // }, [selectedLayer]);
+  useEffect(() => {
+    console.log(`selectedLayer`, selectedLayer);
+  }, [selectedLayer]);
 
   useEffect(() => {
     if (canvasState) {
@@ -1339,13 +1348,13 @@ export default function ThumbnailCanvas() {
 
                   {selectedBrand === "Investorcracy" && (
                     <div className="w-[45%]" title="Font Size">
-                    <CustomSelectInput
-                      paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
-                      label={"Font Size"}
-                      options={Array.from({ length: 71 }, (_, i) => i + 60)}
-                      getValue={getThumbnailFontSizeValue}
-                    />
-                  </div>
+                      <CustomSelectInput
+                        paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
+                        label={"Font Size"}
+                        options={Array.from({ length: 71 }, (_, i) => i + 60)}
+                        getValue={getThumbnailFontSizeValue}
+                      />
+                    </div>
                   )}
                 </div>
 

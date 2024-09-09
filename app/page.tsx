@@ -11,7 +11,7 @@ import AOS from "aos";
 import "aos/dist/aos.css"; // You can also use <link> for styles
 import Aos from "aos";
 import Footer from "./_components/Footer/Footer";
-import styles from "../app/_components/Footer/footer.module.css"
+import styles from "../app/_components/Footer/footer.module.css";
 
 let shuffleNum = 1;
 const businessDataMock = [
@@ -89,6 +89,18 @@ export default function Home() {
   const paragraphRef = useRef(null);
   const hiddenParagraphRef = useRef(null);
 
+  useEffect(() => {
+    const handleBeforeUnload = (): void => {
+      window.scrollTo(0, 0);
+    };
+
+    window.onbeforeunload = handleBeforeUnload;
+
+    return () => {
+      window.onbeforeunload = null; // Clean up the event listener
+    };
+  }, []);
+
   // useGSAP(() => {
   //   if (!infoCard.current) return;
 
@@ -128,7 +140,8 @@ export default function Home() {
   }, [subCounter]);
 
   useGSAP(() => {
-    if (!sectionRef.current || !triggerRef.current || window.scrollY > 0) return;
+    if (!sectionRef.current || !triggerRef.current || window.scrollY > 0)
+      return;
 
     let sections = gsap.utils.toArray(".scroll-section");
 
