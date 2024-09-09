@@ -88,15 +88,15 @@ const Footer = () => {
                   <h6 className=" mb-[--sy-40px] text-[--18px] leading-[--sy-28px] font-bold">Site Map</h6>
                   <ul>
                     <li><Link href={"/"} className=" text-[--18px] leading-[--sy-28px]">Home</Link></li>
-                    <li><Link href={"/"} className=" text-[--18px] leading-[--sy-28px]">Modules</Link></li>
+                    <li><Link href={"/modules"} className=" text-[--18px] leading-[--sy-28px]">Modules</Link></li>
                     <li><Link href={"/"} className=" text-[--18px] leading-[--sy-28px]">Pricing</Link></li>
-                    <li><Link href={"/"} className=" text-[--18px] leading-[--sy-28px]">Blog</Link></li>
+                    <li><Link href={"/blog"} className=" text-[--18px] leading-[--sy-28px]">Blog</Link></li>
                   </ul>
                 </div>
                 <div>
                   <h6 className=" mb-[--sy-40px] text-[--18px] leading-[--sy-28px] font-bold">Quick Links</h6>
                   <ul>
-                    <li><Link href={"/"} className=" text-[--18px] leading-[--sy-28px]">Privacy</Link></li>
+                    <li><Link href={"/privacy-security"} className=" text-[--18px] leading-[--sy-28px]">Privacy</Link></li>
                     <li><Link href={"/"} className=" text-[--18px] leading-[--sy-28px]">Terms & Conditions</Link></li>
                   </ul>
                 </div>

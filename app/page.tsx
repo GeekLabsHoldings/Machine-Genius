@@ -1717,7 +1717,7 @@ export default function Home() {
                       <ul>
                         <li>
                           <Link
-                            href={"/"}
+                            href={"/privacy-security"}
                             className=" text-[--18px] leading-[--sy-28px]"
                           >
                             Privacy
