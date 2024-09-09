@@ -56,7 +56,7 @@ export default function ThumbnailCanvas() {
   }
 
   useEffect(() => {
-    // handleGenerateThumbnails();
+    handleGenerateThumbnails();
   }, []);
 
   function pageStateSearchImgDataInit() {
@@ -265,7 +265,7 @@ export default function ThumbnailCanvas() {
 
           img.set({
             crossOrigin: "anonymous", // Set crossOrigin attribute
-            left: -25,
+            left: -2,
             top: -2,
             selectable: false, // Make the image non-selectable (non-movable, non-resizable)
             evented: false, // Disable interaction events (prevents drag, resize)
@@ -344,8 +344,8 @@ export default function ThumbnailCanvas() {
     // ===== Add text =====
     if (selectedBrand.includes("Street Politics")) {
       // Set the starting position (bottom-left corner)
-      let left = 15;
-      let top = canvasState.height - (pageState.thumbnailFontSize + 10); // Start near the bottom of the canvas
+      let left = 19.4;
+      let top = canvasState.height - (pageState.thumbnailFontSize + 11.8); // Start near the bottom of the canvas
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
@@ -356,8 +356,8 @@ export default function ThumbnailCanvas() {
           fill: pageState.highlightedWords.includes(words[i])
             ? "#ff0000"
             : "#ffffff",
-          fontFamily: "Hellix-Black",
-          fontWeight: "600",
+          fontFamily: "Hellix",
+          // fontWeight: "600",
           stroke: "black", // Set the stroke color to black
           strokeWidth: 2.266, // Set the stroke width to 3px
           shadow: {
@@ -378,7 +378,8 @@ export default function ThumbnailCanvas() {
         canvasState.add(text);
         text.bringToFront();
         canvasState.renderAll();
-        top -= text.height * 0.7; // Move the next word up by the height of the text
+        // top -= text.height * 0.7; // Move the next word up by the height of the text
+        top -= 83.3;
       }
     } else {
       // Set the starting position (bottom-left corner)
@@ -785,9 +786,9 @@ export default function ThumbnailCanvas() {
 
   const [selectedLayer, setSelectedLayer] = useState(null);
 
-  useEffect(() => {
-    console.log(`selectedLayer`, selectedLayer);
-  }, [selectedLayer]);
+  // useEffect(() => {
+  //   console.log(`selectedLayer`, selectedLayer);
+  // }, [selectedLayer]);
 
   useEffect(() => {
     if (canvasState) {

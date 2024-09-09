@@ -11,13 +11,18 @@
   font-weight: normal;
   src: local("Acumin Pro Bold Italic"),
     url("/fonts/Acumin-BdItPro.woff") format("woff");
-  font-display: swap;
 }
 
 @font-face {
-  font-family: "Hellix-Black";
-  src: url("/fonts/Hellix-Black.woff2") format("woff2");
-  font-display: swap;
+  font-family: "Hellix";
+  src: url("/fonts/Hellix-Black.eot");
+  src: local("Hellix Black"), local("Hellix-Black"),
+    url("/fonts/Hellix-Black.eot?#iefix") format("embedded-opentype"),
+    url("/fonts/Hellix-Black.woff2") format("woff2"),
+    url("/fonts/Hellix-Black.woff") format("woff"),
+    url("/fonts/Hellix-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
 }
 
 /* ===== End Imports ==== */
