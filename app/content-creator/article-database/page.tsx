@@ -4,49 +4,18 @@ import styles from "./article-database.module.css";
 // import { ArticleNames, Brands, ContentTypeFilter } from "@/app/_data/data";
 import { useEffect, useState, useContext, useRef } from "react";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useRouter } from "next/navigation";
 
 const ContentDatabase = () => {
   const router = useRouter();
+  const { authState } = useContext(globalContext);
   const [contentDatabase, setContentDatabase] = useState<any>([]);
   const [filteredContentDatabase, setFilteredContentDatabase] = useState<any>(
     []
   );
   const editBtnClicked = useRef(false);
-
-  async function getContentDatabase() {
-    const maxRetries = 2; // Define the maximum number of retries
-    let attempts = 0;
-    let json = null;
-
-    while (attempts < maxRetries) {
-      try {
-        const res = await fetch(
-          `https://api.machinegenius.io/content-creation/content`
-        );
-        json = await res.json();
-        if (json) {
-          // If valid data is found, break the loop
-          break;
-        }
-      } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
-        console.error("Error getContentDatabase:", error);
-      } finally {
-        attempts++;
-      }
-    }
-
-    if (json) {
-      setContentDatabase(json);
-    } else {
-      // setIsRetry(true);
-      // window.alert("Failed to generate content after multiple attempts");
-      // router.replace("/content-creator/dashboard");
-    }
-  }
-
   const { editContentData, setEditContentData } = useContext(
     contentCreatorContext
   );
@@ -57,8 +26,53 @@ const ContentDatabase = () => {
     date: "",
   });
 
+  async function getContentDatabase() {
+    const maxRetries = 2; // Define the maximum number of retries
+    let attempts = 0;
+    let json = null;
+
+    while (attempts < maxRetries) {
+      try {
+        const res = await fetch(
+          `https://api.machinegenius.io/content-creation/content`,
+          {
+            headers: {
+              Authorization: `barrer ${
+                typeof window !== "undefined"
+                  ? localStorage.getItem("token")
+                  : authState.token
+              }`,
+            },
+          }
+        );
+        json = await res.json();
+        if (json && json.content) {
+          // If valid data is found, break the loop
+          break;
+        }
+      } catch (error) {
+        toast.error("Something went wrong!");
+        console.error("Error getContentDatabase:", error);
+      } finally {
+        attempts++;
+      }
+    }
+
+    if (json && json.content) {
+      setContentDatabase(json.content);
+    } else {
+      // setIsRetry(true);
+      // window.alert("Failed to generate content after multiple attempts");
+      // router.replace("/content-creator/dashboard");
+    }
+  }
+
   useEffect(() => {
-    const reversedContentDatabase = [...contentDatabase].reverse();
+    const reversedContentDatabase =
+      Array.isArray(contentDatabase) && contentDatabase.length > 0
+        ? [...contentDatabase].reverse()
+        : [];
+
     const filteredData = reversedContentDatabase.filter((item: any) => {
       const matchesBrand = filterBy.brand
         ? item.brand === filterBy.brand
@@ -67,7 +81,7 @@ const ContentDatabase = () => {
         ? item.content_type === filterBy.contentType
         : true;
       const matchesDate = filterBy.date
-        ? formatDate(item.date) === filterBy.date
+        ? formatDate(item.date) === formatDate(filterBy.date)
         : true;
 
       return matchesBrand && matchesContentType && matchesDate;
@@ -84,14 +98,7 @@ const ContentDatabase = () => {
   }, []);
 
   function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    };
-    const formattedDate = date.toLocaleDateString("en-GB", options);
-    return formattedDate;
+    return dateString.split("T")[0];
   }
 
   const renderYourArticles = filteredContentDatabase.map(
@@ -167,12 +174,14 @@ const ContentDatabase = () => {
             <CustomSelectInput
               options={[
                 "All",
-                ...contentDatabase
-                  .map((item: any) => item.brand)
-                  .filter(
-                    (item: any, index: any, self: any) =>
-                      self.indexOf(item) === index
-                  ),
+                ...(Array.isArray(contentDatabase) && contentDatabase.length > 0
+                  ? contentDatabase
+                      .map((item: any) => item.brand)
+                      .filter(
+                        (item: any, index: any, self: any) =>
+                          self.indexOf(item) === index
+                      )
+                  : []),
               ]}
               getValue={(value: string) =>
                 setFilterBy({
@@ -188,12 +197,14 @@ const ContentDatabase = () => {
             <CustomSelectInput
               options={[
                 "All",
-                ...contentDatabase
-                  .map((item: any) => item.content_type)
-                  .filter(
-                    (item: any, index: any, self: any) =>
-                      self.indexOf(item) === index
-                  ),
+                ...(Array.isArray(contentDatabase) && contentDatabase.length > 0
+                  ? contentDatabase
+                      .map((item: any) => item.content_type)
+                      .filter(
+                        (item: any, index: any, self: any) =>
+                          self.indexOf(item) === index
+                      )
+                  : []),
               ]}
               getValue={(value: string) =>
                 setFilterBy({
@@ -209,12 +220,15 @@ const ContentDatabase = () => {
             <CustomSelectInput
               options={[
                 "All",
-                ...contentDatabase
-                  .map((item: any) => formatDate(item.date))
-                  .filter(
-                    (item: any, index: any, self: any) =>
-                      self.indexOf(item) === index
-                  ),
+                ...(Array.isArray(contentDatabase) && contentDatabase.length > 0
+                  ? contentDatabase
+                      .map((item: any) => formatDate(item.date))
+                      .filter(
+                        (item: any, index: any, self: any) =>
+                          self.indexOf(item) === index
+                      )
+                      .reverse()
+                  : []),
               ]}
               getValue={(value: string) =>
                 setFilterBy({

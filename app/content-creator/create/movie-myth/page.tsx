@@ -7,9 +7,11 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 const MovieMyth = () => {
+  const { authState } = useContext(globalContext);
   const dispatch = useDispatch();
   const router = useRouter();
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -42,18 +44,27 @@ const MovieMyth = () => {
   async function getPresignedURL() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-presignedURL`
+        `https://api.machinegenius.io/content-creation/get-presignedURL`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
       );
       const json = await res.json();
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else {
         setPresignedURLData(json);
         return json;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error getPresignedURL:", error);
     }
   }
@@ -89,7 +100,7 @@ const MovieMyth = () => {
         setError(`Upload failed with status: ${response.status}`);
       }
     } catch (error: any) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       setError(error?.message);
       console.error("Error in uploadVideo:", error);
     } finally {
@@ -110,6 +121,11 @@ const MovieMyth = () => {
           }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           redirect: "follow" as RequestRedirect,
         }
@@ -121,11 +137,11 @@ const MovieMyth = () => {
         dispatch(contentCreatorActions.setVideoTranscription(json));
         router.replace("/content-creator/create/movie-myth/create-movie");
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         setPageState((prev) => ({ ...prev, transcriptAudioLoading: false }));
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error transcriptAudio:", error);
       setPageState((prev) => ({ ...prev, transcriptAudioLoading: false }));
     }

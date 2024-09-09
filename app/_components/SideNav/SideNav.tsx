@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import styles from "./SideNav.module.css";
 import logo_image from "../../../public/assets/logo.svg";
 import logo_white_image from "../../../public/assets/logo white.svg";
@@ -10,6 +10,7 @@ import CustomSelectInput from "../CustomSelectInput/CustomSelectInput";
 import { useRouter } from "next/navigation";
 import $ from "jquery";
 import { globalContext } from "@/app/_context/store";
+import debounce from "debounce";
 
 const rolsIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 20" fill="none">
@@ -140,11 +141,22 @@ const SideNav = ({
     // console.log(`SelectedRole:`, SelectedRole);
   }, [SelectedRole]);
 
+  // Create debounced functions using useCallback
+  const handleMouseEnter = useCallback(
+    debounce(() => setIsSideNavOpen(true), 100),
+    []
+  );
+
+  const handleMouseLeave = useCallback(
+    debounce(() => setIsSideNavOpen(false), 100),
+    []
+  );
+
   return (
     <div
       className={`${styles.side_Nav} ${isSideNavOpen ? "" : styles.close}`}
-      onMouseEnter={() => setIsSideNavOpen((prev: any) => !prev)}
-      onMouseLeave={() => setIsSideNavOpen((prev: any) => !prev)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div>
         <div
@@ -188,7 +200,9 @@ const SideNav = ({
           options={
             authState.decodedToken?.department.includes("CEO")
               ? rols
-              : rols.filter((role: any) => role === authState.decodedToken?.department[0])
+              : rols.filter(
+                  (role: any) => role === authState.decodedToken?.department[0]
+                )
           }
           icon={rolsIcon}
           theme="dark"
@@ -204,53 +218,84 @@ const SideNav = ({
 
         <div className={styles.line}></div>
         <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
-          {sideNavLinks.slice(1).map((ele) => (
-            <li
-              key={ele.name}
-              className={ele.subLinks ? styles.has_sub_menu : ""}
-              onClick={(e) => handleToggleSubMenu(e)}
-            >
-              <Link
-                href={ele.path ? ele.path : ""}
-                onClick={() =>
-                  handleCurrentPageTitle((prev: any) =>
-                    ele.path ? ele.name : prev
-                  )
-                }
+          {sideNavLinks.slice(1).map((ele, index) => (
+            <>
+              <li
+                key={ele.name}
+                className={ele.subLinks ? styles.has_sub_menu : ""}
+                onClick={(e) => handleToggleSubMenu(e)}
               >
-                {ele.icon}
-                <p>{ele.name}</p>
-                {ele.subLinks && (
-                  <svg
-                    className={styles.toggleIcon}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="9"
-                    viewBox="0 0 18 9"
-                    fill="none"
+                <Link
+                  href={ele.path ? ele.path : ""}
+                  onClick={() =>
+                    handleCurrentPageTitle((prev: any) =>
+                      ele.path ? ele.name : prev
+                    )
+                  }
+                >
+                  {ele.icon}
+                  <p>{ele.name}</p>
+                  {ele.subLinks && (
+                    <svg
+                      className={styles.toggleIcon}
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="9"
+                      viewBox="0 0 18 9"
+                      fill="none"
+                    >
+                      <path
+                        d="M0.900542 9H17.101C17.265 8.99966 17.4258 8.96945 17.566 8.91262C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242983C9.40578 -0.0809944 8.59756 -0.0809944 8.26095 0.242983L0.160721 8.05692C0.0669606 8.14705 0.0119774 8.25261 0.00174508 8.36214C-0.00848727 8.47167 0.0264226 8.58098 0.102682 8.67819C0.178941 8.7754 0.293633 8.8568 0.434296 8.91353C0.57496 8.97027 0.736215 9.00017 0.900542 9Z"
+                        fill="#2A2B2A"
+                      />
+                    </svg>
+                  )}
+                </Link>
+
+                <ul className={styles.sub_menu_links}>
+                  {ele.subLinks
+                    ? ele.subLinks.map((ele) => (
+                        <li>
+                          <Link
+                            href={ele.path}
+                            onClick={() => handleCurrentPageTitle(ele.name)}
+                          >
+                            {ele.name}
+                          </Link>
+                        </li>
+                      ))
+                    : null}
+                </ul>
+              </li>
+              {index === sideNavLinks.length - 2 && (
+                <li
+                  key="Chat"
+                  // className={ele.subLinks ? styles.has_sub_menu : ""}
+                  onClick={(e) => handleToggleSubMenu(e)}
+                >
+                  <Link
+                    href={`/${sideNavLinks[0].path?.split("/")[1]}/chat`}
+                    onClick={() =>
+                      handleCurrentPageTitle((prev: any) => "Chat")
+                    }
                   >
-                    <path
-                      d="M0.900542 9H17.101C17.265 8.99966 17.4258 8.96945 17.566 8.91262C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242983C9.40578 -0.0809944 8.59756 -0.0809944 8.26095 0.242983L0.160721 8.05692C0.0669606 8.14705 0.0119774 8.25261 0.00174508 8.36214C-0.00848727 8.47167 0.0264226 8.58098 0.102682 8.67819C0.178941 8.7754 0.293633 8.8568 0.434296 8.91353C0.57496 8.97027 0.736215 9.00017 0.900542 9Z"
-                      fill="#2A2B2A"
-                    />
-                  </svg>
-                )}
-              </Link>
-              <ul className={styles.sub_menu_links}>
-                {ele.subLinks
-                  ? ele.subLinks.map((ele) => (
-                      <li>
-                        <Link
-                          href={ele.path}
-                          onClick={() => handleCurrentPageTitle(ele.name)}
-                        >
-                          {ele.name}
-                        </Link>
-                      </li>
-                    ))
-                  : null}
-              </ul>
-            </li>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="25"
+                      height="15"
+                      viewBox="0 0 25 15"
+                      fill="none"
+                    >
+                      <path
+                        d="M25 5.0645V2.11167C25 0.945411 24.0546 1.8913e-09 22.8885 1.8913e-09H2.11143C0.945361 -4.88262e-05 0 0.945361 0 2.11162V5.08418C1.07212 5.23818 1.89717 6.15781 1.89717 7.27261C1.89717 8.3874 1.07212 9.30713 0 9.46074V12.4337C0 13.5996 0.945361 14.545 2.11143 14.545H22.8885C24.0545 14.545 25 13.5996 25 12.4337V9.48042C23.8268 9.42554 22.8919 8.45957 22.8919 7.27266C22.8919 6.08579 23.8269 5.11982 25 5.0645ZM5.93335 13.2127H5.20693V11.3181H5.93335V13.2127ZM5.93335 9.88403H5.20693V7.98945H5.93335V9.88403ZM5.93335 6.55547H5.20693V4.66045H5.93335V6.55547ZM5.93335 3.2269H5.20693V1.33228H5.93335V3.2269Z"
+                        fill="#FFFFFB"
+                      />
+                    </svg>
+                    <p>Chat</p>
+                  </Link>
+                </li>
+              )}
+            </>
           ))}
         </ul>
       </div>

@@ -42,7 +42,7 @@ export default function GlobalContextProvider({
   // ===== 00. Start Authentication =====
   const handleSetRouteToDirect = useCallback((role: string) => {
     switch (role) {
-      case "ContentCreator":
+      case "content-creation":
         return "/content-creator/dashboard";
       case "Video Editing":
         return "/video-editor/dashboard";
@@ -54,7 +54,7 @@ export default function GlobalContextProvider({
         return "/customer-service/dashboard";
       case "Creative":
         return "/creative/dashboard";
-      case "HR":
+      case "hr":
         return "/hr/dashboard";
       case "Accounting":
         return "/accounting/dashboard";
@@ -150,7 +150,7 @@ export default function GlobalContextProvider({
         );
         const data = await res.json();
         if (data.result) {
-          toast.success("Token is valid");
+          toast.success("Session is valid");
         } else if (data.message && data.message.name === "TokenExpiredError") {
           handleSignOut();
         } else if (data.message === "USER_TOKEN_IS_INVALID") {

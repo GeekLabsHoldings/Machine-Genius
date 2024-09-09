@@ -139,6 +139,11 @@ const CreateMovie = () => {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `barrer ${
+                  typeof window !== "undefined"
+                    ? localStorage.getItem("token")
+                    : authState.token
+                }`,
               },
               // body: JSON.stringify(postBody),
               body: JSON.stringify({
@@ -159,7 +164,7 @@ const CreateMovie = () => {
             break;
           }
         } catch (error) {
-          toast.error("Something went wrong! Contact backend department");
+          toast.error("Something went wrong!");
           console.error("Error finalizeContent:", error);
         } finally {
           attempts++;

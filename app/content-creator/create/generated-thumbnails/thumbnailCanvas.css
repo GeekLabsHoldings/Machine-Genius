@@ -1,33 +1,31 @@
-@font-face {
-  font-family: "Hellix-Black";
-  src: url("/fonts/Hellix-Black.woff2") format("woff2");
-}
-
 .thumbnailCanvas {
   display: flex;
   justify-content: space-between;
-  gap: var(--25px);
+  gap: var(--5px);
   margin: 0;
 }
 
 .thumbnailCanvas .canvas-container {
-  /* margin: 20px 0; */
-  /* border: 2px solid #333; */
+  margin: 0;
 }
 
 .thumbnailCanvas_actionsBar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sy-20px);
-  min-width: 300px;
-  /* flex-grow: 1; */
+  /* gap: var(--sy-20px); */
+  /* min-width: 300px; */
+  flex-grow: 1;
 }
 
-.thumbnailCanvas_actionsBar div::-webkit-scrollbar{
+.thumbnailCanvas_actionsBar::-webkit-scrollbar {
   width: 0;
   display: none;
   background: transparent; /* WebKit-based browsers */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  cursor: pointer;
 }
 
 .thumbnailCanvas_actionsBar button,
@@ -48,17 +46,4 @@
 
 #downloadBtn:hover {
   background-color: #45a049;
-}
-
-.thumbnailCanvas_actionsBar_uploadImg {
-  gap: clamp(12px, calc(0.9vw + 0.1rem), 1400px);
-}
-.thumbnailCanvas_actionsBar_uploadImg input {
-  padding: 3px;
-  font-size: clamp(12px, calc(0.9vw + 0.1rem), 1400px);
-  border-radius: 0.4rem;
-  border: 1px solid var(--dark);
-  outline: none;
-  width: 100%;
-  background: var(--white);
 }

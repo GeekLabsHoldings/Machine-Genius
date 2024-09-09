@@ -142,7 +142,7 @@ const GeneratedThumbnailsPage = () => {
           break;
         }
       } catch (error) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         console.error("Error handleSendContent:", error);
       } finally {
         attempts++;

@@ -20,12 +20,13 @@ import FormControl from "@mui/material/FormControl";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 export default function ChooseBrandPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const abortControllerRef = useRef<AbortController | null>(null); // Store the AbortController in a ref
-
+  const { authState } = useContext(globalContext);
   const {
     setSelectedBrand,
     collectedData,
@@ -117,6 +118,7 @@ export default function ChooseBrandPage() {
       { value: "AMZN", label: "Amazon" },
       { value: "PLTR", label: "Palantir" },
       { value: "TSLA", label: "Tesla" },
+      { value: "ALPHA", label: "Alphabet" },
     ],
     []
   );
@@ -138,7 +140,7 @@ export default function ChooseBrandPage() {
   // }, [selectedBrand]);
 
   function handleGetCollectedDataFailure() {
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     setPageState((prevState) => ({
       ...prevState,
       triggerNav: false,
@@ -173,6 +175,11 @@ export default function ChooseBrandPage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify(postBody),
           signal, // Pass the signal to the fetch request
@@ -212,7 +219,7 @@ export default function ChooseBrandPage() {
   //     const json = await res.json();
   //     await setTwitterDataAsync(json.allArticles);
   //   } catch (error) {
-  //     toast.error("Something went wrong! Contact backend department");
+  //     toast.error("Something went wrong!");
   //     console.error("Error getCollectedData:", error);
   //   }
   // }
@@ -232,7 +239,7 @@ export default function ChooseBrandPage() {
     if (pageState.triggerNav === true) {
       router.replace("/content-creator/create/choose-articles");
     } else if (pageState.triggerNav === false) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
     }
 
     return () => {

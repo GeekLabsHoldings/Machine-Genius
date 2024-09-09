@@ -21,12 +21,39 @@
   aspect-ratio: 0.8/1;
   height: min-content;
 }
+.chat__chat__aside__menu__item > div {
+  transition: all 0.3s;
+}
+.chat__chat__aside__create_group .chat__chat__aside__menu__item > div {
+  padding-left: var(--50px);
+}
+.chat__chat__aside__menu__item input {
+  width: var(--20px) !important;
+  height: var(--20px) !important;
+  min-width: 10px;
+  min-height: 10px;
+  aspect-ratio: 1/1;
+  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  transition: all 0.15s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.chat__chat__aside__create_group .chat__chat__aside__menu__item input {
+  left: var(--15px);
+  opacity: 1;
+  visibility: visible;
+  /* remove transition delay on toggle */
+  /* transition: all 0s ease-in-out 0s; */
+}
 
 .chat__chat__aside__menu__profile_reversed {
   height: min-content;
-    border-radius: 38.82px 3.82px 3.82px 3.82px;
-    width: clamp(2rem, 2.466rem, 100%);
-    aspect-ratio: 0.8/1;
+  border-radius: 38.82px 3.82px 3.82px 3.82px;
+  width: clamp(2rem, 2.466rem, 100%);
+  aspect-ratio: 0.8/1;
 }
 
 .chat__chat__aside__menu ul {
@@ -60,8 +87,8 @@
 }
 
 .chat__box__header {
-    padding: 29px 33px;
-    border-bottom: 1px solid var(--dark);
+  padding: 29px 33px;
+  border-bottom: 1px solid var(--dark);
 }
 
 .chat__box__message__container {

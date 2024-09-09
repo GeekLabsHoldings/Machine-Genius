@@ -4,6 +4,7 @@ import styles from "./create-article.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,7 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
+import { formatToText } from "@/app/_utils/contentFormatter";
 // import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 // import { SelectArticleData } from "@/app/_data/data";
@@ -22,6 +24,7 @@ export default function CreateArticlePage() {
   // ===== End Hooks =====
 
   // ===== Start State =====
+  const { authState } = useContext(globalContext);
   const { selectedContentType, selectedBrand, choosedArticles } = useContext(
     contentCreatorContext
   );
@@ -226,7 +229,7 @@ export default function CreateArticlePage() {
   }, [choosedArticles]);
 
   function handleFinalizeContentFailure() {
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     setPageState((prevState) => ({
       ...prevState,
       triggerNav: false,
@@ -263,11 +266,16 @@ export default function CreateArticlePage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
-            selectedContent: selectedText
-              .map((item: any) => item.text)
-              .join(" "),
+            selectedContent: formatToText(
+              selectedText.map((item: any) => item.text).join(" ")
+            ),
             ...(selectedContentType === "Script" && {
               brandName: brandNamePayload,
             }),
@@ -283,19 +291,21 @@ export default function CreateArticlePage() {
         handleFinalizeContentFailure();
         return;
       } else if (json && json?.articles[0]?.content) {
-        // const updatedArticle = {
-        //   ...json,
-        //   articles: [
-        //     {
-        //       ...json.articles[0],
-        //       content: json.articles[0].content.replace(/<\/?[^>]+(>|$)/g, ""),
-        //     },
-        //   ],
-        // };
+        const updatedArticle = {
+          ...json,
+          articles: [
+            {
+              ...json.articles[0],
+              content: json.articles[0].content
+                .replace(/[`]/g, "")
+                .replace(/\bhtml\b/gi, ""),
+            },
+          ],
+        };
 
-        // dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
 
-        dispatch(contentCreatorActions.setFinalArticle(json));
+        // dispatch(contentCreatorActions.setFinalArticle(json));
         setPageState((prevState) => ({
           ...prevState,
           triggerNav: true,
@@ -311,7 +321,7 @@ export default function CreateArticlePage() {
     if (pageState.triggerNav === true) {
       router.replace("/content-creator/create/final-article");
     } else if (pageState.triggerNav === false) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
     }
   }, [pageState.triggerNav]);
 
@@ -417,9 +427,16 @@ export default function CreateArticlePage() {
                     >
                       Select
                     </button>
-                    <p contentEditable={"plaintext-only"}>
-                      {previewSelectedArticle()}
-                    </p>
+                    <div
+                      // contentEditable={"plaintext-only"}
+                      contentEditable={true}
+                      dangerouslySetInnerHTML={{
+                        __html: previewSelectedArticle(),
+                      }}
+                      className="outline-none"
+                    >
+                      {/* {previewSelectedArticle()} */}
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,11 +1,13 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
+import { formatToText } from "@/app/_utils/contentFormatter";
+import { globalContext } from "./store";
 
 const initialContextState = {
   // ===== 01. Start Content Creator =====
@@ -19,6 +21,7 @@ const initialContextState = {
   setTwitterData: (data: any) => {},
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
+
   checkStatus: {
     grammar: "waiting",
     // todo: temp until backend fix it
@@ -63,6 +66,7 @@ export default function ContentCreatorContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { authState } = useContext(globalContext);
   const router = useRouter();
   const path = usePathname();
   const dispatch = useDispatch();
@@ -191,7 +195,7 @@ export default function ContentCreatorContextProvider({
 
   function handleGrammerFetchError() {
     setCheckStatus((prev: any) => ({ ...prev, grammar: "fetchError" }));
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     // reset checkGrammerResults
     dispatch(contentCreatorActions.setCheckGrammerResults([]));
     return;
@@ -216,7 +220,7 @@ export default function ContentCreatorContextProvider({
         body: JSON.stringify({
           key: process.env.NEXT_PUBLIC_SAPLING_API_KEY as string,
           session_id: uuidv4(),
-          text: finalArticle?.articles[0]?.content,
+          text: formatToText(finalArticle?.articles[0]?.content),
         }),
       });
 
@@ -280,7 +284,7 @@ export default function ContentCreatorContextProvider({
         }
       } catch (error) {
         // setCheckStatus((prev:any) => ({ ...prev, plagiarism: "fetchError" }));
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         console.error("Error checkPlagiarism:", error);
       } finally {
         attempts++;
@@ -316,7 +320,7 @@ export default function ContentCreatorContextProvider({
 
   function handleAiFetchError() {
     setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
-    toast.error("Something went wrong! Contact backend department");
+    toast.error("Something went wrong!");
     // reset checkGrammerResults
     dispatch(contentCreatorActions.setCheckAiResults([]));
     return;
@@ -330,45 +334,55 @@ export default function ContentCreatorContextProvider({
       toast.error("No content found!");
       return;
     }
-    if (finalArticle.articles[0].content.length > 50000) {
-      toast.error("Content length must be between 1 and 50000 characters!");
-      return;
-    }
-
     try {
-      const res = await fetch(`https://api.gptzero.me/v2/predict/text`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_GPTZERO_API_KEY as string,
-        },
-        body: JSON.stringify({
-          document: finalArticle?.articles[0]?.content,
-          version: "",
-          multilingual: false,
-        }),
-      });
+      const res = await fetch(
+        `https://the-ghost-ai-backend-005c5dcbf4a6.herokuapp.com/detection/ai/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Api-Key ${
+              process.env.NEXT_PUBLIC_GHOST_API_KEY as string
+            }`,
+          },
+          body: JSON.stringify({
+            text: formatToText(finalArticle?.articles[0]?.content),
+            useAdditionalDetectors: true,
+          }),
+        }
+      );
 
       const json = await res.json();
 
-      if (!json) {
+      if (!json || (json && json.error)) {
         handleAiFetchError();
         return;
-      } else if (json && json.documents[0]) {
-        // console.log("checkAiResult", json);
-        const filteredJson = json?.documents[0]?.sentences.filter(
-          (sentence: any) =>
-            sentence.highlight_sentence_for_ai && sentence.generated_prob >= 0.9
-        );
-        if (
-          // json.documents[0].class_probabilities.human < 0.8
-          filteredJson.length > 0
-        ) {
+      } else if (json) {
+        let totalAi = 0;
+        let count = 0;
+        for (const key in json) {
+          if (key !== "human") {
+            totalAi += json[key].ai;
+            count++;
+          }
+        }
+        const averageAi = totalAi / count;
+
+        const filteredJson =
+          averageAi >= 0.3
+            ? [
+                {
+                  sentence: `averageAi: ${averageAi}`,
+                },
+              ]
+            : [];
+
+        if (averageAi >= 0.3) {
           setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
         } else {
           setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
         }
+
         dispatch(contentCreatorActions.setCheckAiResults(filteredJson));
       } else {
         handleAiFetchError();
@@ -443,6 +457,11 @@ export default function ContentCreatorContextProvider({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             brandName: brandNamePayload,
@@ -454,19 +473,19 @@ export default function ContentCreatorContextProvider({
       const json = await res.json();
 
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === true && json.Titles) {
         setGeneratedTitles(json.Titles);
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error generateTitles:", error);
     }
   }
@@ -561,6 +580,11 @@ export default function ContentCreatorContextProvider({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
           },
           body: JSON.stringify({
             brandName: brandNamePayload,
@@ -570,7 +594,7 @@ export default function ContentCreatorContextProvider({
       );
       const json = await res.json();
       if (!json) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (
         json &&
@@ -587,16 +611,16 @@ export default function ContentCreatorContextProvider({
         toast.error("brandName Not correct");
         return;
       } else if (json && json.success === false) {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       } else if (json && json.success === true && json.Thumbnail) {
         setGeneratedThumbnails(json.Thumbnail);
       } else {
-        toast.error("Something went wrong! Contact backend department");
+        toast.error("Something went wrong!");
         return;
       }
     } catch (error) {
-      toast.error("Something went wrong! Contact backend department");
+      toast.error("Something went wrong!");
       console.error("Error generateThumbnails:", error);
     }
   }
