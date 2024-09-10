@@ -9,6 +9,25 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 
+const TypingIndicator = () => {
+  return (
+    <div className="flex items-center space-x-[--4px] h-full py-[--5px] px-[--10px]">
+      <div className="text-gray-500 text-[--16px]">Someone is typing</div>
+      <div className="flex space-x-[--4px]">
+        <div className="w-[--4px] h-[--4px] bg-gray-500 rounded-full animate-bounce"></div>
+        <div
+          className="w-[--4px] h-[--4px] bg-gray-500 rounded-full animate-bounce"
+          style={{ animationDelay: "0.2s" }}
+        ></div>
+        <div
+          className="w-[--4px] h-[--4px] bg-gray-500 rounded-full animate-bounce"
+          style={{ animationDelay: "0.4s" }}
+        ></div>
+      </div>
+    </div>
+  );
+};
+
 const files = (
   <svg
     width="22"
@@ -109,6 +128,8 @@ function Chat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // const [currentConversation, setCurrentConversation] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
   const [userId, setUserId] = useState(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("decodedToken");
@@ -288,6 +309,16 @@ function Chat() {
     }
   }, [messages, handleUserSeenMessage]);
 
+  const handleTyping = (typing) => {
+    setIsTyping(typing);
+  };
+
+  const typingTimeoutRef = useRef(null);
+
+  // useEffOect(() => {
+  //   clearTimeout()
+  // }
+
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
       {/* 
@@ -382,7 +413,9 @@ function Chat() {
               <li
                 className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
                 key={index}
-                onClick={() => setCurrentConversation(message)}
+                onClick={() =>
+                  !toggleCreateGroup ? setCurrentConversation(message) : null
+                }
               >
                 <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
                   <CustomCheckBox />
@@ -426,8 +459,8 @@ function Chat() {
         >
           <div className="flex w-full items-center gap-5">
             <ProfileImageFrame />
-            <div>
-              <h3 className="font-bold text-2xl">
+            <div className="flex gap-[--8px]">
+              <h3 className="font-bold text-[--20px]">
                 {currentConversation?.type === "group"
                   ? currentConversation?.groupName
                   : currentConversation?.members[
@@ -438,6 +471,19 @@ function Chat() {
                       userId === currentConversation?.members[0]?._id ? 1 : 0
                     ].lastName}
               </h3>
+              <button>
+                <svg
+                  viewBox="0 0 15 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-[--15px] h-[--15px]"
+                >
+                  <path
+                    d="M0.453125 7.5C0.453125 8.93855 0.879704 10.3448 1.67892 11.5409C2.47814 12.737 3.61409 13.6693 4.94314 14.2198C6.27218 14.7703 7.73463 14.9143 9.14554 14.6337C10.5564 14.353 11.8524 13.6603 12.8697 12.6431C13.8869 11.6259 14.5796 10.3299 14.8602 8.91898C15.1409 7.50807 14.9968 6.04562 14.4463 4.71658C13.8958 3.38753 12.9636 2.25157 11.7675 1.45236C10.5714 0.653142 9.16511 0.226563 7.72656 0.226562C6.7714 0.226563 5.82559 0.414696 4.94314 0.78022C4.06068 1.14574 3.25887 1.6815 2.58347 2.3569C1.90806 3.0323 1.37231 3.83412 1.00678 4.71658C0.641257 5.59903 0.453124 6.54484 0.453125 7.5ZM11.282 6.21656L9.03113 3.96663L9.91861 3.07916C10.0553 2.94317 10.2403 2.86683 10.4331 2.86683C10.6259 2.86683 10.8109 2.94317 10.9476 3.07916L12.1685 4.30105C12.3045 4.43774 12.3809 4.62271 12.3809 4.81552C12.3809 5.00834 12.3045 5.19331 12.1685 5.33L11.282 6.21656ZM3.72098 11.693C3.60155 11.693 3.53172 11.6011 3.56204 11.4661L4.08846 9.13071C4.13771 8.94876 4.22968 8.7812 4.35673 8.64196L8.51849 4.48019L9.10095 5.0645L4.94011 9.22534L4.70859 8.99382C4.64804 9.06636 4.60217 9.14998 4.57354 9.24004L4.34111 10.2727L4.97502 10.9066L6.00857 10.6751C6.09864 10.646 6.18224 10.5999 6.25478 10.5391L5.45459 9.73982L9.61635 5.57805L10.7675 6.73104L6.60573 10.891C6.46621 11.0183 6.29835 11.1106 6.11606 11.1601L3.7807 11.6866C3.76082 11.6913 3.74048 11.6937 3.72006 11.6939L3.72098 11.693Z"
+                    fill="#2A2B2A"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
           <OptionsDropdown
@@ -497,6 +543,10 @@ function Chat() {
             </div>
           )}
         </div>
+        <div className="h-[--50px]" ref={ref}>
+          {/* ... existing message rendering code ... */}
+          {isTyping && <TypingIndicator />}
+        </div>
         <div className="flex items-center gap-[--38px] px-[--18px] py-[--21px] border-t border-[var(--dark)]">
           {/* <textarea
             placeholder="Type a message"
@@ -508,7 +558,19 @@ function Chat() {
             placeholder="Type your reply here..."
             maxRows={5}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              // Simulate sending typing status to server
+              handleTyping(true);
+              // Clear typing status after 2 seconds of inactivity
+              if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+              }
+              typingTimeoutRef.current = setTimeout(
+                () => handleTyping(false),
+                2000
+              );
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -518,6 +580,9 @@ function Chat() {
                 });
                 AddMessage({ text: message, sender: { _id: userId } });
                 setMessage("");
+                if (typingTimeoutRef.current) {
+                  clearTimeout(typingTimeoutRef.current);
+                }
               }
             }}
             ref={textareaRef}
