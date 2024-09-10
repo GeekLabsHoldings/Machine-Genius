@@ -507,7 +507,7 @@ export default function FinalArticlePage() {
               ...json.articles[0],
               content: json.articles[0].content
                 .replace(/[`]/g, "")
-                .replace(/\bhtml\b/gi, ""),
+                .replace(/<html[^>]*>|<\/html>/gi, ""),
             },
           ],
         };

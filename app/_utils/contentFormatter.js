@@ -7,7 +7,7 @@ export function formatToText(content) {
   }
 
   return content
-    .replace(/\bhtml\b/gi, "") // Remove the word "html"
+    .replace(/<html[^>]*>|<\/html>/gi, "") // Remove the word "html"
     .replace(/<\/?[^>]+(>|$)|[*#]|[`]|[’‘]|[“”]/g, (match) => {
       switch (match) {
         case "’":

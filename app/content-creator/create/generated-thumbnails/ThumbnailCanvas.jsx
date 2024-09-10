@@ -1053,7 +1053,7 @@ export default function ThumbnailCanvas() {
       } else if (json && json.success === true && json?.articles[0]?.content) {
         const data = json?.articles[0]?.content
           .replace(/\n/g, "")
-          .replace(/\bhtml\b/gi, "")
+          .replace(/<html[^>]*>|<\/html>/gi, "")
           .replace(/[`]/g, "");
         const updatedArticle = {
           ...finalArticle,
