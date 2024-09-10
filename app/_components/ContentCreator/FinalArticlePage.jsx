@@ -633,9 +633,11 @@ export default function FinalArticlePage() {
                     <div ref={editorRef}>
                       {isLayoutReady && (
                         <>
-                          <p className="ml-[72px] font-semibold">Word Count: 
-                            <span className="text-[--17px] ml-[3px]">{pageState.wordCount}</span>
-
+                          <p className="ml-[72px] font-semibold !my-[--sy-5px]">
+                            Word Count:
+                            <span className="text-[--17px] ml-[3px]">
+                              {pageState.wordCount}
+                            </span>
                           </p>
 
                           <DynamicCKEditor
