@@ -4,6 +4,10 @@
   }
 }
 
+.ck-powered-by-balloon{
+  display: none !important;
+}
+
 .main-container {
   --ckeditor5-preview-height: 700px;
   width: fit-content;
@@ -76,7 +80,8 @@
   /* margin-top: 28px; */
   margin-bottom: 28px;
   height: 100%;
-  max-height: 60vh;
+  min-height: 60vh;
+  max-height: 60vh;  
 }
 
 .editor-container_document-editor
