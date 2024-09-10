@@ -2,11 +2,56 @@ import { useState, useEffect, useCallback, useContext } from "react";
 import { useSocket } from "@/app/_context/SocketProvider";
 import { globalContext } from "@/app/_context/store";
 
+interface Conversation {
+  _id: string;
+  type: string;
+  name: string;
+  groupName: string;
+  lastMessage: string;
+  lastSeen: string;
+  updatedAt: string;
+}
+
 const useChat = () => {
   const socket = useSocket();
   const [messages, setMessages] = useState<string[]>([]);
   const [currentConversation, setCurrentConversation] = useState<any>(null);
+  const [conversation, setConversation] = useState<Conversation[]>([]);
   const { authState } = useContext(globalContext);
+
+  function updateConversation(conversation: any) {
+    console.log(`Updating conversation
+
+
+    id: ${conversation._id}
+    text: ${conversation.text}
+    lastSeen: ${conversation.lastSeen}
+    updatedAt: ${conversation.updatedAt}
+
+    `);
+
+    setConversation((prev) => {
+      const index = prev.findIndex((c) => c._id === conversation._id);
+      if (index === -1) {
+        return prev;
+      }
+      const newConversations = [...prev];
+      newConversations[index].lastMessage = conversation.lastMessage;
+      if (conversation.lastSeen) {
+        newConversations[index].lastSeen = conversation.lastSeen;
+      }
+      newConversations[index].updatedAt = conversation.updatedAt;
+      // remove updated conversation from the list & add it to the top
+      const updatedConversation = newConversations.splice(index, 1);
+      newConversations.unshift(updatedConversation[0]);
+      console.log("New Conversations", newConversations);
+      return newConversations;
+    });
+  }
+
+  useEffect(() => {
+    console.log("new conversation", conversation);
+  }, [conversation]);
 
   function getToken() {
     if (typeof window !== "undefined") {
@@ -45,6 +90,28 @@ const useChat = () => {
     [socket]
   );
 
+  // function to handle user seeing a message
+  const handleUserSeenMessage = useCallback(() => {
+    if (socket && currentConversation) {
+      socket.emit("userSeenMessage", {
+        conversationId: currentConversation._id,
+        userId: getToken(),
+      });
+
+      // Update the conversation to mark the message as seen
+      console.log("Updating conversation", currentConversation);
+      setConversation((prev) => {
+        const index = prev.findIndex((c) => c._id === currentConversation._id);
+        if (index === -1) {
+          return prev;
+        }
+        const newConversations = [...prev];
+        newConversations[index].lastSeen = new Date().getTime();
+        return newConversations;
+      });
+    }
+  }, [socket, currentConversation]);
+
   useEffect(() => {
     if (!socket) return;
 
@@ -60,6 +127,16 @@ const useChat = () => {
       console.log("Sender", data.sender);
       console.log("Chat", data.chat);
       console.log("Current", currentConversation);
+      updateConversation({
+        _id: data.chat,
+        lastMessage: data.text,
+        lastSeen:
+          data.chat === currentConversation._id ? new Date().getTime() : null,
+        updatedAt: new Date().getTime(),
+      });
+
+      // Automatically mark the message as seen
+      // handleUserSeenMessage();
       if (
         data.sender === getUserId() ||
         data.chat !== currentConversation._id
@@ -93,6 +170,9 @@ const useChat = () => {
     setMessages,
     currentConversation,
     setCurrentConversation,
+    conversation,
+    setConversation,
+    handleUserSeenMessage,
   };
 };
 

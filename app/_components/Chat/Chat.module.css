@@ -16,7 +16,7 @@
 }
 
 .chat__chat__aside__menu__profile {
-  border-radius: 3.82px 38.82px 3.82px 3.82px;
+  border-radius: 38.82px 3.82px 3.82px 3.82px;
   width: clamp(2rem, 2.466rem, 100%);
   aspect-ratio: 0.8/1;
   height: min-content;
@@ -50,10 +50,10 @@
 }
 
 .chat__chat__aside__menu__profile_reversed {
-  height: min-content;
-  border-radius: 38.82px 3.82px 3.82px 3.82px;
+  border-radius: 3.82px 38.82px 3.82px 3.82px;
   width: clamp(2rem, 2.466rem, 100%);
   aspect-ratio: 0.8/1;
+  height: min-content;
 }
 
 .chat__chat__aside__menu ul {
