@@ -6,8 +6,7 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import { useSelector } from "react-redux";
 import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import "./thumbnailCanvas.css";
@@ -21,7 +20,6 @@ import ImageCard from "./ImageCard";
 import MultipleSelectCheckmarks from "./MultipleSelectCheckmarks";
 
 export default function ThumbnailCanvas() {
-  const dispatch = useDispatch();
   const canvasEl = useRef(null);
   const fabricCanvasRef = useRef(null);
   const [canvasState, setCanvasState] = useState(null);
@@ -105,8 +103,7 @@ export default function ThumbnailCanvas() {
       isSendLoading: false,
       triggerSendContent: false,
       triggerSearchImg: false,
-      isLoadingFormatToHtml: false,
-      triggerFormatToHtml: false,
+
       highlightedWords: [],
     };
   }
@@ -999,12 +996,12 @@ export default function ThumbnailCanvas() {
   };
   // ============= End Layer Controls ==================
 
-  // ============= Start Format Content =================
+  // ============= Start Send Content =================
   function handleSelectThumbnail() {
     if (selectedContentThumbnail) {
       setPageState((prev) => ({
         ...prev,
-        triggerFormatToHtml: true,
+        triggerSendContent: true,
       }));
     } else {
       toast.error("Please select a thumbnail!");
@@ -1018,80 +1015,6 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function formatToHtml() {
-    try {
-      setPageState((prev) => ({
-        ...prev,
-        isLoadingFormatToHtml: true,
-      }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/format-to-html`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            contentBody: finalArticle?.articles[0]?.content,
-          }),
-        }
-      );
-
-      const json = await res.json();
-
-      if (!json) {
-        toast.error("Something went wrong!");
-        return finalArticle?.articles[0]?.content || "";
-      } else if (json && json.success === false) {
-        toast.error("Something went wrong!");
-        return finalArticle?.articles[0]?.content || "";
-      } else if (json && json.success === true && json?.articles[0]?.content) {
-        const data = json?.articles[0]?.content
-          .replace(/\n/g, "")
-          .replace(/<html[^>]*>|<\/html>/gi, "")
-          .replace(/[`]/g, "");
-        const updatedArticle = {
-          ...finalArticle,
-          articles: [
-            {
-              ...finalArticle.articles[0],
-              content: data,
-            },
-          ],
-        };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-      } else {
-        toast.error("Something went wrong!");
-        return finalArticle?.articles[0]?.content || "";
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error formatToHtml:", error);
-      return finalArticle?.articles[0]?.content || "";
-    } finally {
-      setPageState((prev) => ({
-        ...prev,
-        isLoadingFormatToHtml: false,
-        triggerSendContent: true,
-      }));
-    }
-  }
-
-  useEffect(() => {
-    if (pageState.triggerFormatToHtml) {
-      formatToHtml();
-    }
-  }, [pageState.triggerFormatToHtml]);
-
-  // ============= End Format Content ==================
-
-  // ============= Start Send Content =================
   useEffect(() => {
     if (pageState.triggerSendContent) {
       handleSendContent();
@@ -1151,7 +1074,6 @@ export default function ThumbnailCanvas() {
             ...prev,
             isSendLoading: false,
             triggerSendContent: false,
-            triggerFormatToHtml: false,
           }));
           toast.error("Something went wrong!");
           return;
@@ -1162,7 +1084,6 @@ export default function ThumbnailCanvas() {
           ...prev,
           isSendLoading: false,
           triggerSendContent: false,
-          triggerFormatToHtml: false,
         }));
         console.error("Error handleSendContent:", error);
       } finally {
@@ -1258,15 +1179,6 @@ export default function ThumbnailCanvas() {
         </div>
       )}
 
-      {pageState.isLoadingFormatToHtml && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={false}
-            title="Genius is formatting your content..."
-          />
-        </div>
-      )}
-
       <nav className="my-[--sy-5px] w-4/5 max-w-3xl mx-auto">
         <div className="flex justify-between items-center w-full bg-gray-100 border border-gray-300 rounded-lg p-2">
           <button
@@ -1333,8 +1245,7 @@ export default function ThumbnailCanvas() {
             pageState.isSendLoading ||
             pageState.searchImgLoading ||
             pageState.searchBgLoading ||
-            pageState.removeBgLoading ||
-            pageState.isLoadingFormatToHtml) &&
+            pageState.removeBgLoading) &&
           "!hidden"
         }`}
       >
