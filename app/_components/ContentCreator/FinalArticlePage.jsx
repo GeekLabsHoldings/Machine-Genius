@@ -91,7 +91,10 @@ import "./CKEDITOR.css";
 export default function FinalArticlePage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [IsLoading, setIsLoading] = useState(false);
+  const [pageState, setPageState] = useState({
+    isLoading: false,
+    isLoadingExpandContent: false,
+  });
   const [startNav, setStartNav] = useState(false);
 
   const {
@@ -386,13 +389,94 @@ export default function FinalArticlePage() {
 
   useEffect(() => {
     if (startNav) {
-      setIsLoading(true);
+      setPageState((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
       console.log("finalArticle right before startChecks()", finalArticle);
       startChecks();
     }
   }, [startNav]);
 
-  if (IsLoading) {
+  function handleExpandContentFailure() {
+    toast.error("Something went wrong!");
+    setPageState((prevState) => ({
+      ...prevState,
+      isLoadingExpandContent: false,
+    }));
+    return;
+  }
+
+  async function handleExpandContent() {
+    setPageState((prevState) => ({
+      ...prevState,
+      isLoadingExpandContent: true,
+    }));
+
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/content-creation/expand-script`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+          body: JSON.stringify({
+            // selectedContent: formatToText(finalArticle.articles[0].content),
+            selectedContent: finalArticle.articles[0].content,
+          }),
+        }
+      );
+
+      const json = await res.json();
+      if (!json) {
+        handleExpandContentFailure();
+        return;
+      } else if (json.success === false) {
+        handleExpandContentFailure();
+        return;
+      } else if (json && json?.articles[0]?.content) {
+        const updatedArticle = {
+          ...json,
+          articles: [
+            {
+              ...json.articles[0],
+              content: json.articles[0].content
+                .replace(/[`]/g, "")
+                .replace(/\bhtml\b/gi, ""),
+            },
+          ],
+        };
+
+        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+      }
+    } catch (error) {
+      // console.error("Error handleExpandContent:", error);
+      handleExpandContentFailure();
+    } finally {
+      setPageState((prevState) => ({
+        ...prevState,
+        isLoadingExpandContent: false,
+      }));
+    }
+  }
+
+  if (pageState.isLoadingExpandContent) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={"genuisWorking"}>
+          <LogoAndTitle needTxt={false} title={"Expanding Content..."} />
+        </div>
+      </div>
+    );
+  }
+
+  if (pageState.isLoading) {
     return (
       <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
         <div className={"genuisWorking"}>
@@ -559,6 +643,14 @@ export default function FinalArticlePage() {
             href="/content-creator/create/create-article"
           />
         )}
+
+        <CustomBtn
+          word={"Expand Content"}
+          btnColor="black"
+          onClick={() => {
+            handleExpandContent();
+          }}
+        />
 
         <CustomBtn
           word={"Next"}
