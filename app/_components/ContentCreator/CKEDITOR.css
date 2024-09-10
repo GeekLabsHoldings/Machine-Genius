@@ -4,7 +4,7 @@
   }
 }
 
-.ck-powered-by-balloon{
+.ck-powered-by-balloon {
   display: none !important;
 }
 
@@ -22,8 +22,12 @@
 }
 
 .main-container p {
-  margin-top: var(--12px);
-  margin-bottom: var(--12px);
+  margin-top: var(--sy-10px);
+  margin-bottom: var(--sy-10px);
+}
+
+.main-container p:has(br) {
+  height: 0 !important;
 }
 
 .ck-content {
@@ -81,7 +85,7 @@
   margin-bottom: 28px;
   height: 100%;
   min-height: 60vh;
-  max-height: 60vh;  
+  max-height: 60vh;
 }
 
 .editor-container_document-editor

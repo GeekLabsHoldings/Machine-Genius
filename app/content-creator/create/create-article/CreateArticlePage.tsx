@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { formatToText } from "@/app/_utils/contentFormatter";
+import { formatHtml } from "@/app/_utils/htmlFormatter";
 // import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 // import { SelectArticleData } from "@/app/_data/data";
@@ -296,9 +297,7 @@ export default function CreateArticlePage() {
           articles: [
             {
               ...json.articles[0],
-              content: json.articles[0].content
-                .replace(/[`]/g, "")
-                .replace(/<html[^>]*>|<\/html>/gi, ""),
+              content: formatHtml(json.articles[0].content),
             },
           ],
         };

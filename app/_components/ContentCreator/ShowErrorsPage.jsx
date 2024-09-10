@@ -92,6 +92,7 @@ import {
 import "ckeditor5/ckeditor5.css";
 import "./CKEDITOR.css";
 import { formatToText } from "@/app/_utils/contentFormatter";
+import { formatHtml } from "@/app/_utils/htmlFormatter";
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
@@ -333,10 +334,7 @@ export default function ShowErrorsPage() {
         toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       } else if (json && json.success === true && json?.articles[0]?.content) {
-        const data = json?.articles[0]?.content
-          .replace(/\n/g, "")
-          .replace(/<html[^>]*>|<\/html>/gi, "")
-          .replace(/[`]/g, "");
+        const data = formatHtml(json?.articles[0]?.content);
         const updatedArticle = {
           ...finalArticle,
           articles: [

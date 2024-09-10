@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import debounce from "debounce";
+import { formatHtml } from "@/app/_utils/htmlFormatter";
 // import { CKEditor } from "@ckeditor/ckeditor5-react";
 const DynamicCKEditor = dynamic(
   () => import("@ckeditor/ckeditor5-react").then((mod) => mod.CKEditor),
@@ -505,9 +506,7 @@ export default function FinalArticlePage() {
           articles: [
             {
               ...json.articles[0],
-              content: json.articles[0].content
-                .replace(/[`]/g, "")
-                .replace(/<html[^>]*>|<\/html>/gi, ""),
+              content: formatHtml(json.articles[0].content),
             },
           ],
         };
