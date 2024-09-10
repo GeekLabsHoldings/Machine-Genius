@@ -367,7 +367,6 @@ export default function ThumbnailCanvas() {
             offsetY: 3, // Vertical shadow offset
           },
           isText: true,
-          charSpacing: -30,
           selectable: false, // Make the image non-selectable (non-movable, non-resizable)
           lockMovementX: true, // Prevent horizontal movement
           lockMovementY: true, // Prevent vertical movement
