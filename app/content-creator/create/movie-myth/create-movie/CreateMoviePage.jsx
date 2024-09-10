@@ -179,7 +179,7 @@ const CreateMovie = () => {
           articles: [
             {
               ...json.articles[0],
-              content: json.articles[0].content.replace(/<[^>]*>)/g, ""),
+              content: json.articles[0].content.replace(/<[^>]*>/g, ""),
             },
           ],
         };
