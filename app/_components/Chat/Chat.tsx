@@ -5,7 +5,9 @@ import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
 import { TextareaAutosize } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { globalContext } from "@/app/_context/store";
+import useChat from "@/app/_hooks/useChat";
 
 const files = (
   <svg
@@ -42,7 +44,29 @@ function ProfileImageFrame({ reversed }: ProfileImageFrameProps) {
   );
 }
 
+interface ChatProps {
+  children: React.ReactNode;
+}
+
+interface Message {
+  text: string;
+  sender: {
+    _id: string;
+  };
+}
+
+interface Conversation {
+  _id: string;
+  type: string;
+  name: string;
+  groupName: string;
+  lastMessage: string;
+  lastSeen: string;
+  updatedAt: string;
+}
+
 function Chat() {
+  const { authState } = useContext(globalContext);
   const messagesApi = [
     {
       name: "John Doe",
@@ -89,26 +113,83 @@ function Chat() {
   ];
   const ref = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [messages, setMessages] = useState(messagesApi);
+  const [conversation, setConversation] = useState<Conversation[]>([]);
+  // const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [toggleCreateGroup, setToggleCreateGroup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // const [currentConversation, setCurrentConversation] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [userId, setUserId] = useState(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("decodedToken");
+      return token ? JSON.parse(token)._id : null;
+    } else {
+      return authState?.decodedToken?._id || null;
+    }
+  });
 
+  const {
+    messages,
+    sendMessage,
+    setMessages,
+    currentConversation,
+    setCurrentConversation,
+  } = useChat();
+  // const { sendMessage } = useChat();
   const AddMessage = (message: string) => {
-    setMessages([
-      ...messages,
-      {
-        name: "John Doe",
-        message: message,
-        time: new Date().toLocaleTimeString(),
-      },
-    ]);
+    setMessages((prev) => [...prev, message]);
   };
+  useEffect(() => {
+    console.log(userId);
+  }, [userId]);
 
   useEffect(() => {
+    setIsLoaded(false);
     if (textareaRef.current) {
       textareaRef.current.value = "";
     }
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight || 0;
+    }
+    // if (window.localStorage.getItem("decodedToken")) {
+    //   setUserId(window.localStorage.getItem("decodedToken")?._id);
+    // }
+
+    /*
+      fetch messages
+    */
+    console.log(currentConversation);
+    async function fetchMessages() {
+      const response = await fetch(
+        `https://api.machinegenius.io/user/conversation/all-messages/${currentConversation?._id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        console.log(data.messages);
+        setMessages(data.messages.reverse());
+      } else {
+        console.log(data.message);
+      }
+    }
+
+    try {
+      if (currentConversation._id) fetchMessages();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentConversation]);
+
+  useEffect(() => {
+    console.log(messages);
+    setIsLoaded(true);
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight || 0;
     }
@@ -133,12 +214,51 @@ function Chat() {
       }
     };
 
+    /*
+      fetch conversation
+    */
+    async function fetchConversation() {
+      const response = await fetch(
+        "https://api.machinegenius.io/user/conversation/all",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        setConversation(data.result);
+      } else {
+        console.log(data.message);
+      }
+    }
+
+    try {
+      fetchConversation();
+    } catch (error) {
+      console.log(error);
+    }
+
     ref.current?.addEventListener("scroll", handleScroll);
 
     return () => {
       ref.current?.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    console.log(
+      `----------------------/n/n/n/n/n/n/n/n------------------------------------`
+    );
+    console.log(conversation);
+    console.log(
+      `----------------------/n/n/n/n/n/n/n/n------------------------------------`
+    );
+    if (conversation.length > 0) setCurrentConversation(conversation[0]);
+  }, [conversation]);
 
   useEffect(() => {
     const uncheckOnGroupChange = () => {
@@ -150,6 +270,20 @@ function Chat() {
       uncheckOnGroupChange();
     }
   }, [toggleCreateGroup]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (ref.current) {
+  //       ref.current.scrollTop = ref.current.scrollHeight || 0;
+  //     }
+  //   }, 200);
+  // }, [isLoaded]);
+
+  // useEffect(() => {
+  //   if (ref.current) {
+  //     ref.current.scrollTop = ref.current.scrollHeight || 0;
+  //   }
+  // });
 
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
@@ -241,24 +375,29 @@ function Chat() {
             className="flex flex-col relative max-h-[90%] overflow-y-auto [border-color:#DBDBD7] w-full"
             id="chat-list"
           >
-            {messages.map((message, index) => (
+            {conversation.map((message, index) => (
               <li
                 className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
                 key={index}
+                onClick={() => setCurrentConversation(message)}
               >
                 <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
                   <CustomCheckBox />
                   <ProfileImageFrame />
                   <div className="flex flex-col justify-center gap-1 w-[80%]">
                     <h3 className="font-bold text-xl transition-colors duration-100">
-                      {message.name}
+                      {message.type === "group"
+                        ? message.groupName
+                        : message.name}
                     </h3>
                     <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
-                      {truncateText(message.message, 60)}
+                      {truncateText(message.lastMessage || "Message", 60)}
                     </p>
                   </div>
                   <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
-                    <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
+                    {message.lastSeen < message.updatedAt ? (
+                      <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
+                    ) : null}
                   </div>
                 </div>
               </li>
@@ -294,30 +433,41 @@ function Chat() {
             console.log(scrolled);
           }}
         >
-          <div className="flex flex-col gap-8 p-5">
-            {messages.map((message, index: number) => (
-              <div key={index}>
-                <div
-                  className={`flex gap-5 ${
-                    index % 2 === 0 ? "items-end flex-row-reverse" : ""
-                  }`}
-                >
-                  {index % 2 === 0 ? (
-                    <ProfileImageFrame />
-                  ) : (
-                    <ProfileImageFrame reversed />
-                  )}
+          {isLoaded ? (
+            <div className="flex flex-col gap-8 p-5">
+              {messages?.map((message, index: number) => (
+                <div key={index}>
                   <div
-                    className={`p-3 rounded-[20px] max-w-[60%] ${
-                      index % 2 === 0 ? "bg-[#CEEAE9] self-end" : "self-start"
-                    } ${styles.chat__box__message__container}`}
+                    className={`flex gap-5 ${
+                      message.sender._id == userId
+                        ? "items-end flex-row-reverse"
+                        : ""
+                    }`}
                   >
-                    <p>{message.message}</p>
+                    {message.sender._id == userId ? (
+                      <ProfileImageFrame />
+                    ) : (
+                      <ProfileImageFrame reversed />
+                    )}
+                    <div
+                      className={`p-3 rounded-[20px] max-w-[60%] ${
+                        message.sender._id == userId
+                          ? "bg-[#CEEAE9] self-end"
+                          : "self-start"
+                      } ${styles.chat__box__message__container}`}
+                    >
+                      <p>{message.text}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center">
+              {/* Add a sspinner loading animation */}
+              <div className="w-10 h-10 border-4 border-t-transparent border-[#DBDBD7] rounded-full animate-spin"></div>
+            </div>
+          )}
         </div>
         <div className="flex items-center justify-between px-[18px] py-[21px] border-t border-[var(--dark)]">
           {/* <textarea
@@ -334,13 +484,26 @@ function Chat() {
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                AddMessage(message);
+                sendMessage({
+                  conversationId: currentConversation._id,
+                  text: message,
+                });
+                AddMessage({ text: message, sender: { _id: userId } });
                 setMessage("");
               }
             }}
             ref={textareaRef}
           />
-          <button onClick={() => AddMessage(message)}>
+          <button
+            onClick={() => {
+              sendMessage({
+                conversationId: currentConversation._id,
+                text: message,
+              });
+              AddMessage({ text: message, sender: { _id: userId } });
+              setMessage("");
+            }}
+          >
             <svg
               width="40"
               height="39"
