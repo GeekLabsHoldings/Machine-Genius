@@ -471,7 +471,7 @@ export default function ThumbnailCanvas() {
   function handleSearchBgError() {
     // toast.error("Something went wrong!");
     toast(
-      "Subscription expired. Please contact support to renew subscription!"
+      "Please update search-images key!"
     );
     setPageState((prev) => ({
       ...prev,
@@ -579,7 +579,7 @@ export default function ThumbnailCanvas() {
       if (!res.ok) {
         // toast.error("Something went wrong!");
         toast(
-          "Subscription expired. Please contact support to renew subscription!"
+          "Please update remove-bg key!"
         );
         console.error("Error handleRemoveBg:", res.status);
         return;
@@ -593,7 +593,7 @@ export default function ThumbnailCanvas() {
     } catch (error) {
       // toast.error("Something went wrong!");
       toast(
-        "Subscription expired. Please contact support to renew subscription!"
+        "Please update remove-bg key!"
       );
       console.error("Error handleRemoveBg:", error);
     } finally {
@@ -637,13 +637,13 @@ export default function ThumbnailCanvas() {
       if (!json) {
         // toast.error("Something went wrong!");
         toast(
-          "Subscription expired. Please contact support to renew subscription!"
+          "Please update search-images key!"
         );
         return;
       } else if (json && json.success === false) {
         // toast.error("Something went wrong!");
         toast(
-          "Subscription expired. Please contact support to renew subscription!"
+          "Please update search-images key!"
         );
         return;
       } else if (json && json.success === true && json.images) {
@@ -654,14 +654,14 @@ export default function ThumbnailCanvas() {
       } else {
         // toast.error("Something went wrong!");
         toast(
-          "Subscription expired. Please contact support to renew subscription!"
+          "Please update search-images key!"
         );
         return;
       }
     } catch (error) {
       // toast.error("Something went wrong!");
       toast(
-        "Subscription expired. Please contact support to renew subscription!"
+        "Please update search-images key!"
       );
       console.error("Error generateThumbnails:", error);
     } finally {
