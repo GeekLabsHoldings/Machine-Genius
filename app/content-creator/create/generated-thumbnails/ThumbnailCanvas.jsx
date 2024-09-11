@@ -104,6 +104,8 @@ export default function ThumbnailCanvas() {
       triggerSendContent: false,
       triggerSearchImg: false,
       highlightedWords: [],
+      showRecentBg: true,
+      showRecentImg: true,
     };
   }
 
@@ -349,7 +351,7 @@ export default function ThumbnailCanvas() {
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
-        const text = new fabric.Text(words[i], {
+        const text = new fabric.Text(words[i].toUpperCase(), {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
@@ -1315,7 +1317,27 @@ export default function ThumbnailCanvas() {
               {/* 02 Select Background */}
               <div className="flex flex-col gap-[--5px] w-full">
                 {/* 02-01 Select Background */}
-                <h3 className="font-bold text-[--17px]">Select Background</h3>
+
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-[--17px]">Select Background</h3>
+
+                  <div className="form-control">
+                    <label className="cursor-pointer label">
+                      <input
+                        type="checkbox"
+                        checked={pageState.showRecentBg}
+                        className="checkbox checkbox-sm"
+                        onChange={(e) => {
+                          setPageState((prev) => ({
+                            ...prev,
+                            showRecentBg: e.target.checked,
+                          }));
+                        }}
+                      />
+                      <span className="label-text ml-[--5px]">Show Recent</span>
+                    </label>
+                  </div>
+                </div>
 
                 {/* 02-02 Search Background */}
                 <div className="flex gap-[--10px]">
@@ -1498,7 +1520,25 @@ export default function ThumbnailCanvas() {
               <div className="flex flex-col gap-[--5px] w-full">
                 {/* 03-01 Select Image */}
 
-                <h3 className="font-bold text-[--17px]">Select Image</h3>
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-[--17px]">Select Image</h3>
+                  <div className="form-control">
+                    <label className="cursor-pointer label">
+                      <input
+                        type="checkbox"
+                        checked={pageState.showRecentImg}
+                        onChange={(e) => {
+                          setPageState((prev) => ({
+                            ...prev,
+                            showRecentImg: e.target.checked,
+                          }));
+                        }}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span className="label-text ml-[--5px]">Show Recent</span>
+                    </label>
+                  </div>
+                </div>
 
                 {/* 03-02 Search Image */}
                 <div className="flex gap-[--10px]">
