@@ -139,6 +139,7 @@ function Chat() {
     }
   });
 
+  const unreadRef = useRef(null);
   const initialRef = useRef(true);
 
   const {
@@ -213,20 +214,20 @@ function Chat() {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight || 0;
     }
-    const handleScroll = () => {
-      if (ref.current) {
-        var limit = Math.max(
-          ref.current.scrollHeight - ref.current.clientHeight || 0,
-          0
-        );
+    // const handleScroll = () => {
+    //   if (ref.current) {
+    //     var limit = Math.max(
+    //       ref.current.scrollHeight - ref.current.clientHeight || 0,
+    //       0
+    //     );
 
-        if (ref.current.scrollTop < limit - 11) {
-          setScrolled(true);
-        } else {
-          setScrolled(false);
-        }
-      }
-    };
+    //     if (ref.current.scrollTop < limit - 11) {
+    //       setScrolled(true);
+    //     } else {
+    //       setScrolled(false);
+    //     }
+    //   }
+    // };
 
     /*
       fetch conversation
@@ -256,11 +257,11 @@ function Chat() {
       console.log(error);
     }
 
-    ref.current?.addEventListener("scroll", handleScroll);
+    // ref.current?.addEventListener("scroll", handleScroll);
 
-    return () => {
-      ref.current?.removeEventListener("scroll", handleScroll);
-    };
+    // return () => {
+    //   ref.current?.removeEventListener("scroll", handleScroll);
+    // };
   }, []);
 
   useEffect(() => {
@@ -289,13 +290,19 @@ function Chat() {
     }
   }, [toggleCreateGroup]);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (ref.current) {
-  //       ref.current.scrollTop = ref.current.scrollHeight || 0;
-  //     }
-  //   }, 200);
-  // }, [isLoaded]);
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight || 0;
+    }
+  }, [isLoaded, messages, currentConversation, conversation, message]);
+
+  useEffect(() => {
+    //   if (unreadRef.current) {
+    //     unreadRef.current[conversation.indexOf(currentConversation)] =
+    //       currentConversation.lastSeen;
+    //   }
+    // }
+  }, [isLoaded]);
 
   // useEffect(() => {
   //   if (ref.current) {
@@ -413,9 +420,11 @@ function Chat() {
               <li
                 className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
                 key={index}
-                onClick={() =>
-                  !toggleCreateGroup ? setCurrentConversation(message) : null
-                }
+                ref={(el) => (unreadRef.current = el)}
+                onClick={() => {
+                  unreadRef.current[index] = message.lastSeen;
+                  if (!toggleCreateGroup) setCurrentConversation(message);
+                }}
               >
                 <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
                   <CustomCheckBox />
@@ -503,14 +512,21 @@ function Chat() {
             <div className="flex flex-col gap-8 p-5">
               {messages?.map((message, index: number) => (
                 <div key={message._id || index}>
-                  {message.createdAt > currentConversation?.lastSeen ? (
+                  {message.createdAt >
+                    unreadRef.current[
+                      conversation.indexOf(currentConversation)
+                    ] &&
+                  messages[index - 1]?.createdAt <=
+                    unreadRef.current[
+                      conversation.indexOf(currentConversation)
+                    ] ? (
                     <div className="text-center text-[#FFFFFB] font-bold  text-[--16px] bg-[--dark] p-[--10px] my-[--10px]">
-                      1 New Message
+                      New Message
                     </div>
                   ) : null}
-                  <div className="text-center text-[#828282] text-sm p-[--10px]">
+                  {/* <div className="text-center text-[#828282] text-sm p-[--10px]">
                     1 New Message
-                  </div>
+                  </div> */}
                   <div
                     className={`flex gap-5 ${
                       message.sender._id == userId
