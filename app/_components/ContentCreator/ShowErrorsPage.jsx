@@ -423,6 +423,11 @@ export default function ShowErrorsPage() {
     }
   }
 
+  async function handleFormatToHtmlAndNavToGenerateTitles(path) {
+    await formatToHtml();
+    router.replace(path);
+  }
+
   const editorContainerRef = useRef(null);
   const editorMenuBarRef = useRef(null);
   const editorToolbarRef = useRef(null);
@@ -716,13 +721,23 @@ export default function ShowErrorsPage() {
               <CustomBtn
                 word={"Generate Titles"}
                 btnColor="black"
-                href="/content-creator/create/movie-myth/generated-titles"
+                // href="/content-creator/create/movie-myth/generated-titles"
+                onClick={() => {
+                  handleFormatToHtmlAndNavToGenerateTitles(
+                    "/content-creator/create/movie-myth/generated-titles"
+                  );
+                }}
               />
             ) : (
               <CustomBtn
                 word={"Generate Titles"}
                 btnColor="black"
-                href="/content-creator/create/generated-titles"
+                // href="/content-creator/create/generated-titles"
+                onClick={() => {
+                  handleFormatToHtmlAndNavToGenerateTitles(
+                    "/content-creator/create/generated-titles"
+                  );
+                }}
               />
             ))}
         </div>

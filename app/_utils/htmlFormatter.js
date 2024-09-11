@@ -7,8 +7,8 @@ export function formatHtml(content) {
   }
 
   return content
-    .replace(/\bhtml\b/gi, "")
     .replace(/<html[^>]*>|<\/html>/gi, "")
+    .replace(/\bhtml\b/gi, "")
     .replace(/[`]/g, "")
     .replace(/^\n+|\n+$|(\n)+/g, (match, group) =>
       group ? "<span class='custom-spacing'></span>" : ""
