@@ -17,6 +17,7 @@ interface Conversation {
 }
 
 interface Message {
+  [x: string]: any;
   text: string;
   sender: {
     _id: string;
