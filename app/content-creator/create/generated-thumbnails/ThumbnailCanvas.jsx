@@ -88,7 +88,7 @@ export default function ThumbnailCanvas() {
       generateThumbnailsLoading: false,
       thumbnailFontSize: selectedBrand.includes("Street Politics")
         ? 105.66
-        : 84,
+        : 90,
       selectedBgPath: selectedBrand.includes("Street Politics")
         ? "/generated-thumbnails/sp/bg/bg-0.jpg"
         : "/generated-thumbnails/inv/bg/bg-0.jpg",
@@ -103,7 +103,6 @@ export default function ThumbnailCanvas() {
       isSendLoading: false,
       triggerSendContent: false,
       triggerSearchImg: false,
-
       highlightedWords: [],
     };
   }
@@ -148,6 +147,10 @@ export default function ThumbnailCanvas() {
       highlightedWords: value,
     }));
   }, []);
+
+  // useEffect(() => {
+  //   console.log("pageState.highlightedWords", pageState.highlightedWords);
+  // }, [pageState.highlightedWords]);
 
   // ============= Start Canvas =================
   // ==============================================================
@@ -333,7 +336,7 @@ export default function ThumbnailCanvas() {
     const objects = canvasState.getObjects();
     console.log("objects", objects);
     objects.forEach((obj) => {
-      if (obj.isText) {
+      if (obj.isText || obj.isTextGroup) {
         canvasState.remove(obj);
       }
     });
@@ -378,29 +381,75 @@ export default function ThumbnailCanvas() {
         top -= 83.3;
       }
     } else {
-      // Set the starting position (bottom-left corner)
-      let left = 40;
-      let top = canvasState.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
+      // Calculate the total height of all text objects
+      let totalHeight = 0;
 
-      // Add each word as a separate text object
-      for (let i = words.length - 1; i >= 0; i--) {
-        const text = new fabric.IText(`${words[i].toUpperCase()}`, {
-          left: left,
-          top: top,
+      const textGroups = words.map((word) => {
+        const text = new fabric.Text(word.toUpperCase().replace(/\+/g, " "), {
           fontSize: pageState.thumbnailFontSize,
-          fill: "#ffffff",
-          fontFamily: '"Acumin Pro Bold Italic", Arial, sans-serif',
+          fill: pageState.highlightedWords.includes(word)
+            ? "#C0FE15"
+            : "#ffffff",
+          fontFamily: "Acumin Pro Bold Italic",
           fontWeight: "800",
           fontStyle: "italic",
-          textBackgroundColor: "#1E2329",
           isText: true,
+          originX: "center",
+          originY: "center",
+          scaleY: 1.2,
         });
 
-        canvasState.add(text);
-        canvasState.renderAll();
-        text.bringToFront();
-        top -= text.height * 1.05; // Move the next word up by the height of the text
+        // Create a background rectangle
+        const padding = pageState.thumbnailFontSize / 3.5; // Adjust this value for more or less padding
+        const rect = new fabric.Rect({
+          fill: "#1E2329",
+          width: text.width + padding * 2,
+          height: text.height,
+        });
+
+        // Center the text within the rectangle
+        text.set({
+          left: rect.width / 2 - padding / 2,
+          top: rect.height / 2,
+        });
+
+        // Group the rectangle and text
+        const group = new fabric.Group([rect, text], {
+          originX: "center",
+          originY: "center",
+          isTextGroup: true,
+          scaleY: 1.2,
+        });
+
+        totalHeight += group.height * 1.05; // Include the spacing
+        return group;
+      });
+
+      // Calculate the starting top position to center vertically
+      let startTop = (canvasState.height - totalHeight) / 2;
+
+      // Set the starting position
+      let left = 79;
+      let top = startTop;
+
+      // Add each word group to the canvas
+      for (const group of textGroups) {
+        group.set({
+          left: left + group.width / 2,
+          top: top + group.height / 2,
+          selectable: false, // Make the image non-selectable (non-movable, non-resizable)
+          lockMovementX: true, // Prevent horizontal movement
+          lockMovementY: true, // Prevent vertical movement
+          lockScalingX: true, // Prevent horizontal scaling
+          lockScalingY: true, // Prevent vertical scaling
+          lockRotation: true, // Prevent rotation
+        });
+        canvasState.add(group);
+        group.bringToFront();
+        top += group.height * 1.05; // Move the next word down by the height of the group plus spacing
       }
+
+      canvasState.renderAll();
     }
   }
 
@@ -408,7 +457,7 @@ export default function ThumbnailCanvas() {
     function bringAllTextToFront() {
       const objects = canvasState.getObjects();
       objects.forEach((obj) => {
-        if (obj.isText) {
+        if (obj.isText || obj.isTextGroup) {
           obj.bringToFront();
         }
       });
@@ -470,9 +519,7 @@ export default function ThumbnailCanvas() {
 
   function handleSearchBgError() {
     // toast.error("Something went wrong!");
-    toast(
-      "Please update search-images key!"
-    );
+    toast("Please update search-images key!");
     setPageState((prev) => ({
       ...prev,
       searchBgLoading: false,
@@ -578,9 +625,7 @@ export default function ThumbnailCanvas() {
       });
       if (!res.ok) {
         // toast.error("Something went wrong!");
-        toast(
-          "Please update remove-bg key!"
-        );
+        toast("Please update remove-bg key!");
         console.error("Error handleRemoveBg:", res.status);
         return;
       }
@@ -592,9 +637,7 @@ export default function ThumbnailCanvas() {
       return imageUrl; // You can set this as the src of an img tag
     } catch (error) {
       // toast.error("Something went wrong!");
-      toast(
-        "Please update remove-bg key!"
-      );
+      toast("Please update remove-bg key!");
       console.error("Error handleRemoveBg:", error);
     } finally {
       setPageState((prev) => ({
@@ -636,15 +679,11 @@ export default function ThumbnailCanvas() {
       const json = await res.json();
       if (!json) {
         // toast.error("Something went wrong!");
-        toast(
-          "Please update search-images key!"
-        );
+        toast("Please update search-images key!");
         return;
       } else if (json && json.success === false) {
         // toast.error("Something went wrong!");
-        toast(
-          "Please update search-images key!"
-        );
+        toast("Please update search-images key!");
         return;
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
@@ -653,16 +692,12 @@ export default function ThumbnailCanvas() {
         }));
       } else {
         // toast.error("Something went wrong!");
-        toast(
-          "Please update search-images key!"
-        );
+        toast("Please update search-images key!");
         return;
       }
     } catch (error) {
       // toast.error("Something went wrong!");
-      toast(
-        "Please update search-images key!"
-      );
+      toast("Please update search-images key!");
       console.error("Error generateThumbnails:", error);
     } finally {
       setPageState((prev) => ({
@@ -963,37 +998,6 @@ export default function ThumbnailCanvas() {
     };
   }, [canvasState]);
 
-  const handleToggleHighlight = () => {
-    if (canvasState && selectedLayer && selectedLayer.type === "i-text") {
-      const iTextObject = selectedLayer;
-      const selectionStart = iTextObject.selectionStart;
-      const selectionEnd = iTextObject.selectionEnd;
-
-      if (
-        selectionStart !== undefined &&
-        selectionEnd !== undefined &&
-        selectionStart !== selectionEnd
-      ) {
-        if (
-          iTextObject.getSelectionStyles(selectionStart, selectionEnd)[0]
-            .fill === "#ffffff"
-        ) {
-          iTextObject.setSelectionStyles(
-            { fill: "#C0FE15" },
-            selectionStart,
-            selectionEnd
-          );
-        } else {
-          iTextObject.setSelectionStyles(
-            { fill: "#ffffff" },
-            selectionStart,
-            selectionEnd
-          );
-        }
-        canvasState.renderAll();
-      }
-    }
-  };
   // ============= End Layer Controls ==================
 
   // ============= Start Send Content =================
@@ -1203,20 +1207,6 @@ export default function ThumbnailCanvas() {
             Backwards
           </button>
 
-          {selectedBrand === "Investorcracy" && (
-            <button
-              className={
-                selectedLayer && selectedLayer.type !== "i-text"
-                  ? "px-3 py-2 rounded bg-gray-300 text-gray-500 cursor-not-allowed transition-colors duration-200 ease-in-out"
-                  : buttonClass
-              }
-              onClick={handleToggleHighlight}
-              disabled={!selectedLayer || selectedLayer.type !== "i-text"}
-            >
-              Toggle Highlight
-            </button>
-          )}
-
           <button
             className={buttonClass}
             onClick={handleDiscardActiveObject}
@@ -1262,7 +1252,7 @@ export default function ThumbnailCanvas() {
                       <CustomSelectInput
                         paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
                         label={"Font Size"}
-                        options={Array.from({ length: 71 }, (_, i) => i + 60)}
+                        options={Array.from({ length: 41 }, (_, i) => i + 80)}
                         getValue={getThumbnailFontSizeValue}
                       />
                     </div>
@@ -1279,27 +1269,36 @@ export default function ThumbnailCanvas() {
                   getValue={getSelectedContentThumbnailValue}
                 />
 
-                {selectedBrand !== "Investorcracy" && (
-                  <>
-                    <input
-                      className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
-                      type="text"
-                      name="thumbnail-title"
-                      id="thumbnail-title"
-                      placeholder="Edit thumbnail title ..."
-                      value={selectedContentThumbnail}
-                      onChange={(e) =>
-                        setSelectedContentThumbnail(e.target.value)
-                      }
-                      title="Edit thumbnail title ..."
-                    />
+                <div className="flex flex-col gap-[--5px]">
+                  <input
+                    className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                    type="text"
+                    name="thumbnail-title"
+                    id="thumbnail-title"
+                    placeholder="Edit thumbnail title ..."
+                    value={selectedContentThumbnail}
+                    onChange={(e) =>
+                      setSelectedContentThumbnail(e.target.value)
+                    }
+                    title="Edit thumbnail title ..."
+                  />
 
-                    <MultipleSelectCheckmarks
-                      words={words}
-                      getHighlightedWordsValue={getHighlightedWordsValue}
-                    />
-                  </>
-                )}
+                  {selectedBrand === "Investorcracy" && (
+                    <div className="flex flex-col gap-[--5px]">
+                      <span className="text-sm text-gray-500">
+                        Note: enter + to group words in one line
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        Note: enter space to break line
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <MultipleSelectCheckmarks
+                  words={words}
+                  getHighlightedWordsValue={getHighlightedWordsValue}
+                />
               </div>
 
               <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
