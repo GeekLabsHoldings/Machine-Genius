@@ -1,15 +1,19 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext, use } from "react";
 import { useSocket } from "@/app/_context/SocketProvider";
 import { globalContext } from "@/app/_context/store";
+import { flexibleCompare } from "@fullcalendar/core/internal";
 
 interface Conversation {
   _id: string;
   type: string;
-  name: string;
-  groupName: string;
   lastMessage: string;
-  lastSeen: string;
-  updatedAt: string;
+  lastSeen: number;
+  updatedAt: number;
+  members: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  }[];
 }
 
 const useChat = () => {
@@ -17,6 +21,7 @@ const useChat = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [currentConversation, setCurrentConversation] = useState<any>(null);
   const [conversation, setConversation] = useState<Conversation[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { authState } = useContext(globalContext);
 
   function updateConversation(conversation: any) {
@@ -154,7 +159,6 @@ const useChat = () => {
         },
       ]);
     };
-
     // socket.on("message", handleMessage);
 
     socket.addEventListener("message", handleMessage);
@@ -163,6 +167,17 @@ const useChat = () => {
       socket.removeEventListener("message", handleMessage);
     };
   }, [socket, currentConversation]);
+
+  useEffect(() => {
+    setIsLoaded((prev) => {
+      if (prev) {
+        return prev;
+      }
+      if (messages.length > 0) {
+        setIsLoaded(true);
+      }
+    });
+  }, [messages]);
 
   return {
     messages,
@@ -173,6 +188,8 @@ const useChat = () => {
     conversation,
     setConversation,
     handleUserSeenMessage,
+    isLoaded,
+    setIsLoaded,
   };
 };
 
