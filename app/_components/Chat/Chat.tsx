@@ -5,7 +5,28 @@ import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
 import { TextareaAutosize } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { globalContext } from "@/app/_context/store";
+import useChat from "@/app/_hooks/useChat";
+
+const TypingIndicator = () => {
+  return (
+    <div className="flex items-center space-x-[--4px] h-full py-[--5px] px-[--10px]">
+      <div className="text-gray-500 text-[--16px]">Someone is typing</div>
+      <div className="flex space-x-[--4px]">
+        <div className="w-[--4px] h-[--4px] bg-gray-500 rounded-full animate-bounce"></div>
+        <div
+          className="w-[--4px] h-[--4px] bg-gray-500 rounded-full animate-bounce"
+          style={{ animationDelay: "0.2s" }}
+        ></div>
+        <div
+          className="w-[--4px] h-[--4px] bg-gray-500 rounded-full animate-bounce"
+          style={{ animationDelay: "0.4s" }}
+        ></div>
+      </div>
+    </div>
+  );
+};
 
 const files = (
   <svg
@@ -42,103 +63,398 @@ function ProfileImageFrame({ reversed }: ProfileImageFrameProps) {
   );
 }
 
+interface ChatProps {
+  children: React.ReactNode;
+}
+
+// interface Message {
+//   _id: string;
+//   text: string;
+//   sender: {
+//     _id: string;
+//   };
+// }
+
+interface Conversation {
+  _id: string;
+  type: string;
+  lastMessage: string;
+  lastSeen: number;
+  updatedAt: number;
+  members: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  }[];
+}
+
+interface Employee {
+  _id: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface Message {
+  _id?: string;
+  text: string;
+  createdAt?: number;
+  sender: {
+    _id: string;
+  };
+}
+
+interface Conversation {
+  _id: string;
+  type: string;
+  lastMessage: string;
+  lastSeen: number;
+  updatedAt: number;
+  members: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  }[];
+}
+
 function Chat() {
-  const messagesApi = [
-    {
-      name: "John Doe",
-      message: "Hello, how can I help you today?",
-      time: "12:00 PM",
-    },
-    {
-      name: "John Doe",
-      message:
-        "Hello, how can I help you today? lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      time: "12:00 PM",
-    },
-    {
-      name: "John Doe",
-      message: "Hello, how can I help you today?",
-      time: "12:00 PM",
-    },
-    {
-      name: "John Doe",
-      message: "Hello, how can I help you today?",
-      time: "12:00 PM",
-    },
-    {
-      name: "John Doe",
-      message:
-        "Hello, how can I help you today? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      time: "12:00 PM",
-    },
-    {
-      name: "John Doe",
-      message: "Hello, how can I help you today?",
-      time: "12:00 PM",
-    },
-    {
-      name: "John Doe",
-      message: "Hello, how can I help you today?",
-      time: "12:00 PM",
-    },
-    {
-      name: "John Doe",
-      message: "Hello, how can I help you today?",
-      time: "12:00 PM",
-    },
-  ];
+  const { authState } = useContext(globalContext);
+  // const messagesApi = [
+  //   {
+  //     name: "John Doe",
+  //     message: "Hello, how can I help you today?",
+  //     time: "12:00 PM",
+  //   },
+  //   {
+  //     name: "John Doe",
+  //     message:
+  //       "Hello, how can I help you today? lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  //     time: "12:00 PM",
+  //   },
+  //   {
+  //     name: "John Doe",
+  //     message: "Hello, how can I help you today?",
+  //     time: "12:00 PM",
+  //   },
+  //   {
+  //     name: "John Doe",
+  //     message: "Hello, how can I help you today?",
+  //     time: "12:00 PM",
+  //   },
+  //   {
+  //     name: "John Doe",
+  //     message:
+  //       "Hello, how can I help you today? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  //     time: "12:00 PM",
+  //   },
+  //   {
+  //     name: "John Doe",
+  //     message: "Hello, how can I help you today?",
+  //     time: "12:00 PM",
+  //   },
+  //   {
+  //     name: "John Doe",
+  //     message: "Hello, how can I help you today?",
+  //     time: "12:00 PM",
+  //   },
+  //   {
+  //     name: "John Doe",
+  //     message: "Hello, how can I help you today?",
+  //     time: "12:00 PM",
+  //   },
+  // ];
   const ref = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [messages, setMessages] = useState(messagesApi);
+  // const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [toggleCreateGroup, setToggleCreateGroup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // const [currentConversation, setCurrentConversation] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [searchBarFocus, setSearchBarFocus] = useState(false);
 
-  const AddMessage = (message: string) => {
-    setMessages([
-      ...messages,
-      {
-        name: "John Doe",
-        message: message,
-        time: new Date().toLocaleTimeString(),
-      },
-    ]);
+  const [userId, setUserId] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("decodedToken");
+      return token ? JSON.parse(token)._id : "";
+    } else {
+      return authState?.decodedToken?._id || "";
+    }
+  });
+
+  const unreadRef = useRef<any>([]);
+  const initialRef = useRef(true);
+
+  const {
+    messages,
+    sendMessage,
+    setMessages,
+    currentConversation,
+    setCurrentConversation,
+    conversation,
+    setConversation,
+    handleUserSeenMessage,
+    isLoaded,
+    setIsLoaded,
+  } = useChat();
+  // const { sendMessage } = useChat();
+
+  const AddMessage = (message: Message) => {
+    if (message.text.trim() === "") return;
+    setMessages((prev) => [...prev, message]);
   };
 
   useEffect(() => {
+    async function fetchEmployees() {
+      const response = await fetch(
+        "https://api.machinegenius.io/user/employee/data",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(`
+        
+        
+        
+        
+        
+        ${JSON.stringify(response)}
+        
+        
+        
+        
+        
+        `);
+      const data = await response.json();
+      console.log(data);
+      if (data) {
+        setEmployees(data);
+      } else {
+        console.log(data.message);
+      }
+    }
+
+    try {
+      fetchEmployees();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  async function createConversation(
+    type: string,
+    members: string[],
+    groupName?: string
+  ) {
+    const response = await fetch(
+      "https://api.machinegenius.io/user/conversation/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          type,
+          members,
+          groupName,
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    if (data.Success) {
+      console.log(data);
+      setCurrentConversation(data.result);
+      setConversation((prev) => [data.result, ...prev]);
+    } else {
+      console.log(data.message);
+    }
+  }
+
+  useEffect(() => {
+    console.log(`-----------------------------------------------------
+      
+      
+      
+      
+      
+      
+      
+
+      ${employees}
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      -----------------------------------------------------------------`);
+  }, [employees]);
+
+  useEffect(() => {
+    console.log(userId);
+  }, [userId]);
+
+  useEffect(() => {
+    setIsLoaded(false);
     if (textareaRef.current) {
       textareaRef.current.value = "";
     }
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight || 0;
     }
+    // if (window.localStorage.getItem("decodedToken")) {
+    //   setUserId(window.localStorage.getItem("decodedToken")?._id);
+    // }
+
+    /*
+      fetch messages
+    */
+    async function fetchMessages() {
+      const response = await fetch(
+        `https://api.machinegenius.io/user/conversation/all-messages/${currentConversation?._id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        console.log(data.messages);
+        setMessages(data.messages.reverse());
+      } else {
+        console.log(data.message);
+      }
+    }
+
+    try {
+      if (currentConversation._id) fetchMessages();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [currentConversation]);
+
+  useEffect(() => {
+    console.log(messages);
+    setIsLoaded(true);
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight || 0;
+    }
   }, [messages]);
+
+  /*
+    fetch conversation
+  */
+  async function fetchConversation() {
+    const response = await fetch(
+      "https://api.machinegenius.io/user/conversation/all",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    const data = await response.json();
+    if (data.success) {
+      setConversation(data.result);
+    } else {
+      console.log(data.message);
+    }
+  }
 
   useEffect(() => {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight || 0;
     }
-    const handleScroll = () => {
-      if (ref.current) {
-        var limit = Math.max(
-          ref.current.scrollHeight - ref.current.clientHeight || 0,
-          0
-        );
+    // const handleScroll = () => {
+    //   if (ref.current) {
+    //     var limit = Math.max(
+    //       ref.current.scrollHeight - ref.current.clientHeight || 0,
+    //       0
+    //     );
 
-        if (ref.current.scrollTop < limit - 11) {
-          setScrolled(true);
-        } else {
-          setScrolled(false);
-        }
-      }
-    };
+    //     if (ref.current.scrollTop < limit - 11) {
+    //       setScrolled(true);
+    //     } else {
+    //       setScrolled(false);
+    //     }
+    //   }
+    // };
 
-    ref.current?.addEventListener("scroll", handleScroll);
+    /*
+      fetch conversation
+      */
 
-    return () => {
-      ref.current?.removeEventListener("scroll", handleScroll);
-    };
+    try {
+      fetchConversation();
+    } catch (error) {
+      console.log(error);
+    }
+    // ref.current?.addEventListener("scroll", handleScroll);
+
+    // return () => {
+    //   ref.current?.removeEventListener("scroll", handleScroll);
+    // };
   }, []);
+
+  useEffect(() => {
+    console.log(
+      `----------------------/n/n/n/n/n/n/n/n------------------------------------`
+    );
+    console.log(conversation);
+
+    console.log(currentConversation);
+    console.log(
+      `----------------------/n/n/n/n/n/n/n/n------------------------------------`
+    );
+    if (searchBarFocus) {
+      setSearchBarFocus(false);
+    }
+    if (conversation.length > 0 && initialRef.current) {
+      setCurrentConversation(conversation[0]);
+      initialRef.current = false;
+    }
+  }, [conversation, currentConversation]);
+
+  useEffect(() => {
+    console.log(`
+      
+      
+
+***********************************************************      
+      
+      
+      
+      
+      ${JSON.stringify(currentConversation)}
+      
+      
+      
+
+
+
+
+      
+**************************************************************      
+      
+      
+      
+      
+      `);
+  }, [currentConversation]);
 
   useEffect(() => {
     const uncheckOnGroupChange = () => {
@@ -150,6 +466,53 @@ function Chat() {
       uncheckOnGroupChange();
     }
   }, [toggleCreateGroup]);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight || 0;
+    }
+  }, [isLoaded, messages, currentConversation, conversation, message]);
+
+  useEffect(() => {
+    //   if (unreadRef.current) {
+    //     unreadRef.current[conversation.indexOf(currentConversation)] =
+    //       currentConversation.lastSeen;
+    //   }
+    // }
+  }, [isLoaded]);
+
+  // useEffect(() => {
+  //   if (ref.current) {
+  //     ref.current.scrollTop = ref.current.scrollHeight || 0;
+  //   }
+  // });
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      handleUserSeenMessage();
+    }
+  }, [messages, handleUserSeenMessage]);
+
+  const handleTyping = (typing: boolean) => {
+    setIsTyping(typing);
+  };
+
+  const typingTimeoutRef = useRef<any>(null);
+
+  // useEffOect(() => {
+  //   clearTimeout()
+  // }
+
+  useEffect(() => {
+    console.log(`
+################################################################################################
+      `);
+    console.log(conversation);
+    console.log(currentConversation);
+    console.log(`
+################################################################################################
+      `);
+  }, [searchBarFocus]);
 
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
@@ -220,6 +583,8 @@ function Chat() {
               type="text"
               placeholder="Search"
               className="outline-none grow"
+              onFocus={() => setSearchBarFocus(true)}
+              // onBlur={() => setSearchBarFocus(false)}
             />
             <svg
               viewBox="0 0 20 21"
@@ -241,28 +606,85 @@ function Chat() {
             className="flex flex-col relative max-h-[90%] overflow-y-auto [border-color:#DBDBD7] w-full"
             id="chat-list"
           >
-            {messages.map((message, index) => (
-              <li
-                className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
-                key={index}
-              >
-                <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
-                  <CustomCheckBox />
-                  <ProfileImageFrame />
-                  <div className="flex flex-col justify-center gap-1 w-[80%]">
-                    <h3 className="font-bold text-xl transition-colors duration-100">
-                      {message.name}
-                    </h3>
-                    <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
-                      {truncateText(message.message, 60)}
-                    </p>
-                  </div>
-                  <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
-                    <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
-                  </div>
-                </div>
-              </li>
-            ))}
+            {searchBarFocus || toggleCreateGroup
+              ? employees?.map((employee, index) => (
+                  <li
+                    className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
+                    key={index}
+                    // ref={(el) => (unreadRef.current = el)}
+                    onClick={() => {
+                      if (!toggleCreateGroup)
+                        createConversation("oneToOne", [userId, employee._id]);
+                    }}
+                  >
+                    <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
+                      <CustomCheckBox />
+                      <ProfileImageFrame />
+                      <div className="flex flex-col justify-center gap-1 w-[80%]">
+                        <h3 className="font-bold text-xl transition-colors duration-100">
+                          {employee.firstName + " " + employee.lastName}
+                        </h3>
+                        <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
+                          {/* {truncateText(message.lastMessage || "Message", 60)} */}
+                        </p>
+                      </div>
+                      <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
+                        {/* {message.lastSeen < message.updatedAt &&
+                        message?._id !== currentConversation?._id &&
+                        userId !==
+                          message.members[
+                            userId === message.members[0]?._id ? 1 : 0
+                          ]._id ? (
+                          <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
+                        ) : null} */}
+                      </div>
+                    </div>
+                  </li>
+                ))
+              : conversation?.map((message: any, index) => (
+                  <li
+                    className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
+                    key={index}
+                    ref={(el: HTMLLIElement | null) => {
+                      unreadRef.current = el;
+                    }}
+                    onClick={() => {
+                      unreadRef.current[index] = message.lastSeen;
+                      if (!toggleCreateGroup) setCurrentConversation(message);
+                    }}
+                  >
+                    <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
+                      <CustomCheckBox />
+                      <ProfileImageFrame />
+                      <div className="flex flex-col justify-center gap-1 w-[80%]">
+                        <h3 className="font-bold text-xl transition-colors duration-100">
+                          {message.type === "group"
+                            ? message.groupName
+                            : message.members[
+                                userId === message.members[0]?._id ? 1 : 0
+                              ].firstName +
+                              " " +
+                              message.members[
+                                userId === message.members[0]?._id ? 1 : 0
+                              ].lastName}
+                        </h3>
+                        <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
+                          {truncateText(message.lastMessage || "Message", 60)}
+                        </p>
+                      </div>
+                      <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
+                        {message.lastSeen < message.updatedAt &&
+                        message?._id !== currentConversation?._id &&
+                        userId !==
+                          message.members[
+                            userId === message.members[0]?._id ? 1 : 0
+                          ]._id ? (
+                          <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </li>
+                ))}
           </ul>
           <div className="h-[1px] bg-[#DBDBD7] mx-5"></div>
         </div>
@@ -276,9 +698,32 @@ function Chat() {
           className={`flex justify-between items-center ${styles.chat__box__header}`}
         >
           <div className="flex w-full items-center gap-5">
-            <ProfileImageFrame reversed />
-            <div>
-              <h3 className="font-bold text-2xl">John Doe</h3>
+            <ProfileImageFrame />
+            <div className="flex gap-[--8px]">
+              <h3 className="font-bold text-[--20px]">
+                {currentConversation?.type === "group"
+                  ? currentConversation?.groupName
+                  : currentConversation?.members[
+                      userId === currentConversation?.members[0]?._id ? 1 : 0
+                    ].firstName +
+                    " " +
+                    currentConversation?.members[
+                      userId === currentConversation?.members[0]?._id ? 1 : 0
+                    ].lastName}
+              </h3>
+              <button>
+                <svg
+                  viewBox="0 0 15 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-[--15px] h-[--15px]"
+                >
+                  <path
+                    d="M0.453125 7.5C0.453125 8.93855 0.879704 10.3448 1.67892 11.5409C2.47814 12.737 3.61409 13.6693 4.94314 14.2198C6.27218 14.7703 7.73463 14.9143 9.14554 14.6337C10.5564 14.353 11.8524 13.6603 12.8697 12.6431C13.8869 11.6259 14.5796 10.3299 14.8602 8.91898C15.1409 7.50807 14.9968 6.04562 14.4463 4.71658C13.8958 3.38753 12.9636 2.25157 11.7675 1.45236C10.5714 0.653142 9.16511 0.226563 7.72656 0.226562C6.7714 0.226563 5.82559 0.414696 4.94314 0.78022C4.06068 1.14574 3.25887 1.6815 2.58347 2.3569C1.90806 3.0323 1.37231 3.83412 1.00678 4.71658C0.641257 5.59903 0.453124 6.54484 0.453125 7.5ZM11.282 6.21656L9.03113 3.96663L9.91861 3.07916C10.0553 2.94317 10.2403 2.86683 10.4331 2.86683C10.6259 2.86683 10.8109 2.94317 10.9476 3.07916L12.1685 4.30105C12.3045 4.43774 12.3809 4.62271 12.3809 4.81552C12.3809 5.00834 12.3045 5.19331 12.1685 5.33L11.282 6.21656ZM3.72098 11.693C3.60155 11.693 3.53172 11.6011 3.56204 11.4661L4.08846 9.13071C4.13771 8.94876 4.22968 8.7812 4.35673 8.64196L8.51849 4.48019L9.10095 5.0645L4.94011 9.22534L4.70859 8.99382C4.64804 9.06636 4.60217 9.14998 4.57354 9.24004L4.34111 10.2727L4.97502 10.9066L6.00857 10.6751C6.09864 10.646 6.18224 10.5999 6.25478 10.5391L5.45459 9.73982L9.61635 5.57805L10.7675 6.73104L6.60573 10.891C6.46621 11.0183 6.29835 11.1106 6.11606 11.1601L3.7807 11.6866C3.76082 11.6913 3.74048 11.6937 3.72006 11.6939L3.72098 11.693Z"
+                    fill="#2A2B2A"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
           <OptionsDropdown
@@ -294,63 +739,146 @@ function Chat() {
             console.log(scrolled);
           }}
         >
-          <div className="flex flex-col gap-8 p-5">
-            {messages.map((message, index: number) => (
-              <div key={index}>
-                <div
-                  className={`flex gap-5 ${
-                    index % 2 === 0 ? "items-end flex-row-reverse" : ""
-                  }`}
-                >
-                  {index % 2 === 0 ? (
-                    <ProfileImageFrame />
-                  ) : (
-                    <ProfileImageFrame reversed />
-                  )}
+          {isLoaded ? (
+            <div className="flex flex-col gap-8 p-5">
+              {messages?.map((message: any, index: number) => (
+                <div key={message._id || index}>
+                  {conversation &&
+                    currentConversation &&
+                    unreadRef?.current && (
+                      <>
+                        {message.createdAt >
+                          (unreadRef.current[
+                            conversation.indexOf(currentConversation)
+                          ] || 0) &&
+                        messages[index - 1]?.createdAt <=
+                          (unreadRef.current[
+                            conversation.indexOf(currentConversation)
+                          ] || 0) &&
+                        userId !== message.sender._id ? (
+                          <div className="text-center text-[#FFFFFB] font-bold  text-[--16px] bg-[--dark] p-[--10px] my-[--10px]">
+                            New Message
+                          </div>
+                        ) : null}
+                      </>
+                    )}
+                  {/* <div className="text-center text-[#828282] text-sm p-[--10px]">
+                    1 New Message
+                  </div> */}
                   <div
-                    className={`p-3 rounded-[20px] max-w-[60%] ${
-                      index % 2 === 0 ? "bg-[#CEEAE9] self-end" : "self-start"
-                    } ${styles.chat__box__message__container}`}
+                    className={`flex gap-5 whitespace-pre-wrap ${
+                      message.sender._id == userId
+                        ? "items-end flex-row-reverse"
+                        : ""
+                    }`}
                   >
-                    <p>{message.message}</p>
+                    {message.sender._id == userId ? (
+                      <ProfileImageFrame reversed />
+                    ) : (
+                      <ProfileImageFrame />
+                    )}
+                    <div
+                      className={`p-3 rounded-[20px] max-w-[60%] ${
+                        message.sender._id == userId
+                          ? "bg-[#CEEAE9] self-end"
+                          : "self-start"
+                      } ${styles.chat__box__message__container}`}
+                    >
+                      <p>{message.text}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center">
+              {/* Add a sspinner loading animation */}
+              <div className="w-10 h-10 border-4 border-t-transparent border-[#DBDBD7] rounded-full animate-spin"></div>
+            </div>
+          )}
         </div>
-        <div className="flex items-center justify-between px-[18px] py-[21px] border-t border-[var(--dark)]">
+        <div className="h-[--50px]">
+          {/* ... existing message rendering code ... */}
+          {isTyping && <TypingIndicator />}
+        </div>
+        <div className="flex items-center gap-[--38px] px-[--18px] py-[--21px] border-t border-[var(--dark)]">
           {/* <textarea
             placeholder="Type a message"
             className="flex-1 resize-none border md:max-w-[90%] lg:max-w-[85%] text-3xl:max-w-[80%] [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
             rows={1}
           /> */}
           <TextareaAutosize
-            className="flex-1 resize-none border md:max-w-[90%] lg:max-w-[85%] text-3xl:max-w-[80%] [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
+            className="flex-1 resize-none border [border-color:var(--dark)] rounded-[12px] py-2 px-4 placeholder:[color:var(--dark)] bg-[#DBDBD73D]"
             placeholder="Type your reply here..."
             maxRows={5}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              // Simulate sending typing status to server
+              handleTyping(true);
+              // Clear typing status after 2 seconds of inactivity
+              if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+              }
+              typingTimeoutRef.current = setTimeout(
+                () => handleTyping(false),
+                2000
+              );
+              console.log(e.target.value);
+            }}
             onKeyDown={(e) => {
+              if (e.key === "Enter" && e.shiftKey) {
+                e.preventDefault();
+                console.log("Enter key pressed");
+                setMessage((prev) => prev + "\n");
+              }
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                AddMessage(message);
+                sendMessage({
+                  conversationId: currentConversation._id,
+                  text: message,
+                });
+                AddMessage({ text: message, sender: { _id: userId } });
                 setMessage("");
+              }
+              if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
               }
             }}
             ref={textareaRef}
           />
-          <button onClick={() => AddMessage(message)}>
+          <button>
             <svg
-              width="40"
-              height="39"
-              viewBox="0 0 40 39"
+              viewBox="0 0 27 28"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              className="w-[--27px] h-[--28px]"
             >
               <path
-                d="M40 19.4351C40.0018 20.2583 39.773 21.0651 39.3403 21.7616C38.9076 22.4582 38.2887 23.0159 37.5557 23.3698L6.14463 38.4565C5.56973 38.7743 4.93286 38.9599 4.27926 39C3.56403 38.9985 2.86052 38.8156 2.23279 38.468C1.60507 38.1204 1.07307 37.6192 0.685217 37.0099C0.297369 36.4006 0.0659961 35.7026 0.012164 34.9795C-0.0416681 34.2564 0.0837501 33.5311 0.377 32.8697L5.26555 21.609H17.1439C17.7125 21.609 18.2579 21.38 18.66 20.9723C19.0621 20.5646 19.288 20.0117 19.288 19.4351C19.288 18.8586 19.0621 18.3057 18.66 17.898C18.2579 17.4903 17.7125 17.2613 17.1439 17.2613H5.26555L0.377 6.10929C0.0227774 5.29889 -0.0786688 4.39807 0.0862584 3.52757C0.251186 2.65707 0.674606 1.85848 1.29977 1.23882C1.92494 0.619169 2.72197 0.208059 3.58407 0.0605917C4.44616 -0.0868758 5.33211 0.0363454 6.12319 0.413741L37.5343 15.5004C38.2713 15.8513 38.8946 16.4076 39.3312 17.1044C39.7679 17.8012 39.9998 18.6096 40 19.4351Z"
-                fill="#231F20"
+                d="M8.5526 19.8417C8.88102 20.1708 9.37365 20.116 9.70208 19.8417L15.1757 14.3566C15.5589 13.9727 16.2157 13.9178 16.7084 14.3566C17.201 14.7954 17.1463 15.5633 16.7084 16.0021L9.97576 22.6391C8.49787 24.1201 6.03472 24.1201 4.55683 22.6391L4.50209 22.5842C3.0242 21.1033 3.0242 18.635 4.50209 17.154L16.3799 5.25139C17.8578 3.77042 20.321 3.77042 21.7989 5.25139L21.8536 5.30624C23.3315 6.78721 23.3315 9.2555 21.8536 10.7365L21.7989 10.7913C21.5252 11.0656 21.4705 11.4495 21.6894 11.7786C22.0178 12.382 22.2915 13.0402 22.4557 13.6984C22.5652 14.1372 23.0578 14.2469 23.3862 13.9727C23.4744 13.8843 23.5603 13.796 23.6413 13.7113C24.0268 13.3081 24.4175 12.9073 24.7631 12.4696C26.9735 9.66985 26.8011 5.58616 24.246 2.98673C24.2214 2.96174 24.1876 2.94765 24.1526 2.94765C24.1175 2.94765 24.0838 2.93348 24.0588 2.90886C21.2641 0.150322 16.7501 0.163251 13.9715 2.94765L2.09368 14.7954C-0.697893 17.5928 -0.697893 22.1454 2.09368 24.9428L2.20315 25.0525C4.99472 27.8499 9.48313 27.8499 12.2747 25.0525L19.062 18.3059C20.8136 16.5507 20.7589 13.6984 18.9526 11.9432C17.201 10.2428 14.3547 10.3525 12.6579 12.1077L7.29366 17.4831C6.96524 17.8122 6.96524 18.3607 7.29366 18.6898L8.5526 19.8417Z"
+                fill="#2A2B2A"
+              />
+            </svg>
+          </button>
+          <button
+            onClick={() => {
+              sendMessage({
+                conversationId: currentConversation?._id,
+                text: message,
+              });
+              AddMessage({ text: message, sender: { _id: userId } });
+              setMessage("");
+            }}
+          >
+            <svg
+              viewBox="0 0 25 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-[--25px] h-[--24px]"
+            >
+              <path
+                d="M24.7668 11.9598C24.7679 12.4633 24.6279 12.9567 24.3633 13.3828C24.0986 13.8088 23.7201 14.1499 23.2718 14.3664L4.05915 23.5942C3.70751 23.7886 3.31797 23.9021 2.9182 23.9266C2.48072 23.9257 2.05042 23.8139 1.66647 23.6013C1.28252 23.3886 0.957122 23.0821 0.719894 22.7094C0.482667 22.3367 0.341148 21.9098 0.308221 21.4675C0.275295 21.0252 0.352007 20.5816 0.531374 20.177L3.52146 13.2894H10.7868C11.1347 13.2894 11.4682 13.1493 11.7142 12.9C11.9601 12.6506 12.0983 12.3124 12.0983 11.9598C12.0983 11.6071 11.9601 11.2689 11.7142 11.0196C11.4682 10.7702 11.1347 10.6301 10.7868 10.6301H3.52146L0.531374 3.80902C0.314713 3.31333 0.252663 2.76235 0.353541 2.22991C0.454419 1.69746 0.713404 1.20901 1.09579 0.829993C1.47817 0.450981 1.96568 0.199525 2.49298 0.109327C3.02028 0.019128 3.56217 0.0944963 4.04603 0.325331L23.2586 9.55311C23.7094 9.7677 24.0907 10.108 24.3577 10.5342C24.6248 10.9604 24.7667 11.4548 24.7668 11.9598Z"
+                fill="#2A2B2A"
               />
             </svg>
           </button>

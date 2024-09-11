@@ -6,6 +6,7 @@ import styles from "./mainLayout.module.css"; // Importing styles for the main l
 import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
+import { SocketProvider } from "./_context/SocketProvider";
 // import { Toaster } from "react-hot-toast";
 import dynamic from "next/dynamic";
 
@@ -36,9 +37,11 @@ export default function RootLayout({
       <body>
         <Provider store={store}>
           <GlobalContextProvider>
-            <div className={styles.main_wrapper}>
-              <div className="w-full h-100vh p-0 flex">{children}</div>
-            </div>
+            <SocketProvider>
+              <div className={styles.main_wrapper}>
+                <div className="w-full h-100vh p-0 flex">{children}</div>
+              </div>
+            </SocketProvider>
           </GlobalContextProvider>
         </Provider>
         <Toaster
