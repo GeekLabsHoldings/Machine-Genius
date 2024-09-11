@@ -74,6 +74,25 @@ interface Message {
   };
 }
 
+interface Conversation {
+  _id: string;
+  type: string;
+  lastMessage: string;
+  lastSeen: number;
+  updatedAt: number;
+  members: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  }[];
+}
+
+interface Employee {
+  _id: string;
+  firstName: string;
+  lastName: string;
+}
+
 function Chat() {
   const { authState } = useContext(globalContext);
   // const messagesApi = [
@@ -127,8 +146,9 @@ function Chat() {
   const [toggleCreateGroup, setToggleCreateGroup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // const [currentConversation, setCurrentConversation] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [searchBarFocus, setSearchBarFocus] = useState(false);
 
   const [userId, setUserId] = useState(() => {
     if (typeof window !== "undefined") {
@@ -151,11 +171,110 @@ function Chat() {
     conversation,
     setConversation,
     handleUserSeenMessage,
+    isLoaded,
+    setIsLoaded,
   } = useChat();
   // const { sendMessage } = useChat();
   const AddMessage = (message: string) => {
+    if (message.text.trim() === "") return;
     setMessages((prev) => [...prev, message]);
   };
+
+  useEffect(() => {
+    async function fetchEmployees() {
+      const response = await fetch(
+        "https://api.machinegenius.io/user/employee/data",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(`
+        
+        
+        
+        
+        
+        ${JSON.stringify(response)}
+        
+        
+        
+        
+        
+        `);
+      const data = await response.json();
+      console.log(data);
+      if (data) {
+        setEmployees(data);
+      } else {
+        console.log(data.message);
+      }
+    }
+
+    try {
+      fetchEmployees();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  async function createConversation(
+    type: string,
+    members: string[],
+    groupName?: string
+  ) {
+    const response = await fetch(
+      "https://api.machinegenius.io/user/conversation/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          type,
+          members,
+          groupName,
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    if (data.Success) {
+      console.log(data);
+      setCurrentConversation(data.result);
+      setConversation((prev) => [data.result, ...prev]);
+    } else {
+      console.log(data.message);
+    }
+  }
+
+  useEffect(() => {
+    console.log(`-----------------------------------------------------
+      
+      
+      
+      
+      
+      
+      
+
+      ${employees}
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      -----------------------------------------------------------------`);
+  }, [employees]);
+
   useEffect(() => {
     console.log(userId);
   }, [userId]);
@@ -210,6 +329,28 @@ function Chat() {
     }
   }, [messages]);
 
+  /*
+    fetch conversation
+  */
+  async function fetchConversation() {
+    const response = await fetch(
+      "https://api.machinegenius.io/user/conversation/all",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    const data = await response.json();
+    if (data.success) {
+      setConversation(data.result);
+    } else {
+      console.log(data.message);
+    }
+  }
+
   useEffect(() => {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight || 0;
@@ -231,32 +372,13 @@ function Chat() {
 
     /*
       fetch conversation
-    */
-    async function fetchConversation() {
-      const response = await fetch(
-        "https://api.machinegenius.io/user/conversation/all",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      const data = await response.json();
-      if (data.success) {
-        setConversation(data.result);
-      } else {
-        console.log(data.message);
-      }
-    }
+      */
 
     try {
       fetchConversation();
     } catch (error) {
       console.log(error);
     }
-
     // ref.current?.addEventListener("scroll", handleScroll);
 
     // return () => {
@@ -270,14 +392,45 @@ function Chat() {
     );
     console.log(conversation);
 
+    console.log(currentConversation);
     console.log(
       `----------------------/n/n/n/n/n/n/n/n------------------------------------`
     );
+    if (searchBarFocus) {
+      setSearchBarFocus(false);
+    }
     if (conversation.length > 0 && initialRef.current) {
       setCurrentConversation(conversation[0]);
       initialRef.current = false;
     }
-  }, [conversation]);
+  }, [conversation, currentConversation]);
+
+  useEffect(() => {
+    console.log(`
+      
+      
+
+***********************************************************      
+      
+      
+      
+      
+      ${JSON.stringify(currentConversation)}
+      
+      
+      
+
+
+
+
+      
+**************************************************************      
+      
+      
+      
+      
+      `);
+  }, [currentConversation]);
 
   useEffect(() => {
     const uncheckOnGroupChange = () => {
@@ -325,6 +478,17 @@ function Chat() {
   // useEffOect(() => {
   //   clearTimeout()
   // }
+
+  useEffect(() => {
+    console.log(`
+################################################################################################
+      `);
+    console.log(conversation);
+    console.log(currentConversation);
+    console.log(`
+################################################################################################
+      `);
+  }, [searchBarFocus]);
 
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
@@ -395,6 +559,8 @@ function Chat() {
               type="text"
               placeholder="Search"
               className="outline-none grow"
+              onFocus={() => setSearchBarFocus(true)}
+              // onBlur={() => setSearchBarFocus(false)}
             />
             <svg
               viewBox="0 0 20 21"
@@ -416,44 +582,83 @@ function Chat() {
             className="flex flex-col relative max-h-[90%] overflow-y-auto [border-color:#DBDBD7] w-full"
             id="chat-list"
           >
-            {conversation.map((message, index) => (
-              <li
-                className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
-                key={index}
-                ref={(el) => (unreadRef.current = el)}
-                onClick={() => {
-                  unreadRef.current[index] = message.lastSeen;
-                  if (!toggleCreateGroup) setCurrentConversation(message);
-                }}
-              >
-                <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
-                  <CustomCheckBox />
-                  <ProfileImageFrame />
-                  <div className="flex flex-col justify-center gap-1 w-[80%]">
-                    <h3 className="font-bold text-xl transition-colors duration-100">
-                      {message.type === "group"
-                        ? message.groupName
-                        : message.members[
-                            userId === message.members[0]?._id ? 1 : 0
-                          ].firstName +
-                          " " +
+            {searchBarFocus || toggleCreateGroup
+              ? employees?.map((employee, index) => (
+                  <li
+                    className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
+                    key={index}
+                    // ref={(el) => (unreadRef.current = el)}
+                    onClick={() => {
+                      if (!toggleCreateGroup)
+                        createConversation("oneToOne", [userId, employee._id]);
+                    }}
+                  >
+                    <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
+                      <CustomCheckBox />
+                      <ProfileImageFrame />
+                      <div className="flex flex-col justify-center gap-1 w-[80%]">
+                        <h3 className="font-bold text-xl transition-colors duration-100">
+                          {employee.firstName + " " + employee.lastName}
+                        </h3>
+                        <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
+                          {/* {truncateText(message.lastMessage || "Message", 60)} */}
+                        </p>
+                      </div>
+                      <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
+                        {/* {message.lastSeen < message.updatedAt &&
+                        message?._id !== currentConversation?._id &&
+                        userId !==
                           message.members[
                             userId === message.members[0]?._id ? 1 : 0
-                          ].lastName}
-                    </h3>
-                    <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
-                      {truncateText(message.lastMessage || "Message", 60)}
-                    </p>
-                  </div>
-                  <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
-                    {message.lastSeen < message.updatedAt &&
-                    message?._id !== currentConversation?._id ? (
-                      <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
-                    ) : null}
-                  </div>
-                </div>
-              </li>
-            ))}
+                          ]._id ? (
+                          <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
+                        ) : null} */}
+                      </div>
+                    </div>
+                  </li>
+                ))
+              : conversation?.map((message, index) => (
+                  <li
+                    className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
+                    key={index}
+                    ref={(el) => (unreadRef.current = el)}
+                    onClick={() => {
+                      unreadRef.current[index] = message.lastSeen;
+                      if (!toggleCreateGroup) setCurrentConversation(message);
+                    }}
+                  >
+                    <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
+                      <CustomCheckBox />
+                      <ProfileImageFrame />
+                      <div className="flex flex-col justify-center gap-1 w-[80%]">
+                        <h3 className="font-bold text-xl transition-colors duration-100">
+                          {message.type === "group"
+                            ? message.groupName
+                            : message.members[
+                                userId === message.members[0]?._id ? 1 : 0
+                              ].firstName +
+                              " " +
+                              message.members[
+                                userId === message.members[0]?._id ? 1 : 0
+                              ].lastName}
+                        </h3>
+                        <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
+                          {truncateText(message.lastMessage || "Message", 60)}
+                        </p>
+                      </div>
+                      <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
+                        {message.lastSeen < message.updatedAt &&
+                        message?._id !== currentConversation?._id &&
+                        userId !==
+                          message.members[
+                            userId === message.members[0]?._id ? 1 : 0
+                          ]._id ? (
+                          <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </li>
+                ))}
           </ul>
           <div className="h-[1px] bg-[#DBDBD7] mx-5"></div>
         </div>
@@ -512,23 +717,30 @@ function Chat() {
             <div className="flex flex-col gap-8 p-5">
               {messages?.map((message, index: number) => (
                 <div key={message._id || index}>
-                  {message.createdAt >
-                    unreadRef.current[
-                      conversation.indexOf(currentConversation)
-                    ] &&
-                  messages[index - 1]?.createdAt <=
-                    unreadRef.current[
-                      conversation.indexOf(currentConversation)
-                    ] ? (
-                    <div className="text-center text-[#FFFFFB] font-bold  text-[--16px] bg-[--dark] p-[--10px] my-[--10px]">
-                      New Message
-                    </div>
-                  ) : null}
+                  {conversation &&
+                    currentConversation &&
+                    unreadRef?.current && (
+                      <>
+                        {message.createdAt >
+                          (unreadRef.current[
+                            conversation.indexOf(currentConversation)
+                          ] || 0) &&
+                        messages[index - 1]?.createdAt <=
+                          (unreadRef.current[
+                            conversation.indexOf(currentConversation)
+                          ] || 0) &&
+                        userId !== message.sender._id ? (
+                          <div className="text-center text-[#FFFFFB] font-bold  text-[--16px] bg-[--dark] p-[--10px] my-[--10px]">
+                            New Message
+                          </div>
+                        ) : null}
+                      </>
+                    )}
                   {/* <div className="text-center text-[#828282] text-sm p-[--10px]">
                     1 New Message
                   </div> */}
                   <div
-                    className={`flex gap-5 ${
+                    className={`flex gap-5 whitespace-pre-wrap ${
                       message.sender._id == userId
                         ? "items-end flex-row-reverse"
                         : ""
@@ -559,7 +771,7 @@ function Chat() {
             </div>
           )}
         </div>
-        <div className="h-[--50px]" ref={ref}>
+        <div className="h-[--50px]">
           {/* ... existing message rendering code ... */}
           {isTyping && <TypingIndicator />}
         </div>
@@ -586,8 +798,14 @@ function Chat() {
                 () => handleTyping(false),
                 2000
               );
+              console.log(e.target.value);
             }}
             onKeyDown={(e) => {
+              if (e.key === "Enter" && e.shiftKey) {
+                e.preventDefault();
+                console.log("Enter key pressed");
+                setMessage((prev) => prev + "\n");
+              }
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage({
@@ -596,9 +814,9 @@ function Chat() {
                 });
                 AddMessage({ text: message, sender: { _id: userId } });
                 setMessage("");
-                if (typingTimeoutRef.current) {
-                  clearTimeout(typingTimeoutRef.current);
-                }
+              }
+              if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
               }
             }}
             ref={textareaRef}
@@ -619,7 +837,7 @@ function Chat() {
           <button
             onClick={() => {
               sendMessage({
-                conversationId: currentConversation._id,
+                conversationId: currentConversation?._id,
                 text: message,
               });
               AddMessage({ text: message, sender: { _id: userId } });
