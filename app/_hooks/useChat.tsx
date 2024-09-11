@@ -16,9 +16,16 @@ interface Conversation {
   }[];
 }
 
+interface Message {
+  text: string;
+  sender: {
+    _id: string;
+  };
+}
+
 const useChat = () => {
   const socket = useSocket();
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [currentConversation, setCurrentConversation] = useState<any>(null);
   const [conversation, setConversation] = useState<Conversation[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -120,7 +127,7 @@ const useChat = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleMessage = (event: MessageEvent) => {
+    const handleMessage = (event: { [key: string]: any }) => {
       console.log("Hellllooooo");
       let data = null;
       if (event[0]) {
@@ -159,23 +166,23 @@ const useChat = () => {
         },
       ]);
     };
-    // socket.on("message", handleMessage);
 
-    socket.addEventListener("message", handleMessage);
+    socket.on("message", handleMessage);
 
     return () => {
-      socket.removeEventListener("message", handleMessage);
+      socket.removeListener("message", handleMessage);
     };
   }, [socket, currentConversation]);
 
   useEffect(() => {
     setIsLoaded((prev) => {
       if (prev) {
-        return prev;
+        return true;
       }
       if (messages.length > 0) {
-        setIsLoaded(true);
+        return true;
       }
+      return false;
     });
   }, [messages]);
 

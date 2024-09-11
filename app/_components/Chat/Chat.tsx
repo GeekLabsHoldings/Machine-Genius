@@ -67,12 +67,13 @@ interface ChatProps {
   children: React.ReactNode;
 }
 
-interface Message {
-  text: string;
-  sender: {
-    _id: string;
-  };
-}
+// interface Message {
+//   _id: string;
+//   text: string;
+//   sender: {
+//     _id: string;
+//   };
+// }
 
 interface Conversation {
   _id: string;
@@ -91,6 +92,28 @@ interface Employee {
   _id: string;
   firstName: string;
   lastName: string;
+}
+
+interface Message {
+  _id?: string;
+  text: string;
+  createdAt?: number;
+  sender: {
+    _id: string;
+  };
+}
+
+interface Conversation {
+  _id: string;
+  type: string;
+  lastMessage: string;
+  lastSeen: number;
+  updatedAt: number;
+  members: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  }[];
 }
 
 function Chat() {
@@ -150,16 +173,16 @@ function Chat() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [searchBarFocus, setSearchBarFocus] = useState(false);
 
-  const [userId, setUserId] = useState(() => {
+  const [userId, setUserId] = useState<string>(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("decodedToken");
-      return token ? JSON.parse(token)._id : null;
+      return token ? JSON.parse(token)._id : "";
     } else {
-      return authState?.decodedToken?._id || null;
+      return authState?.decodedToken?._id || "";
     }
   });
 
-  const unreadRef = useRef(null);
+  const unreadRef = useRef<any>([]);
   const initialRef = useRef(true);
 
   const {
@@ -175,7 +198,8 @@ function Chat() {
     setIsLoaded,
   } = useChat();
   // const { sendMessage } = useChat();
-  const AddMessage = (message: string) => {
+
+  const AddMessage = (message: Message) => {
     if (message.text.trim() === "") return;
     setMessages((prev) => [...prev, message]);
   };
@@ -469,11 +493,11 @@ function Chat() {
     }
   }, [messages, handleUserSeenMessage]);
 
-  const handleTyping = (typing) => {
+  const handleTyping = (typing: boolean) => {
     setIsTyping(typing);
   };
 
-  const typingTimeoutRef = useRef(null);
+  const typingTimeoutRef = useRef<any>(null);
 
   // useEffOect(() => {
   //   clearTimeout()
@@ -617,11 +641,13 @@ function Chat() {
                     </div>
                   </li>
                 ))
-              : conversation?.map((message, index) => (
+              : conversation?.map((message: any, index) => (
                   <li
                     className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
                     key={index}
-                    ref={(el) => (unreadRef.current = el)}
+                    ref={(el: HTMLLIElement | null) => {
+                      unreadRef.current = el;
+                    }}
                     onClick={() => {
                       unreadRef.current[index] = message.lastSeen;
                       if (!toggleCreateGroup) setCurrentConversation(message);
@@ -715,7 +741,7 @@ function Chat() {
         >
           {isLoaded ? (
             <div className="flex flex-col gap-8 p-5">
-              {messages?.map((message, index: number) => (
+              {messages?.map((message: any, index: number) => (
                 <div key={message._id || index}>
                   {conversation &&
                     currentConversation &&
