@@ -1070,8 +1070,7 @@ export default function ThumbnailCanvas() {
           body: JSON.stringify(postBody),
         });
         json = await res.json();
-        if (json && json.message === "successfully") {
-          // If valid data is found, break the loop
+        if (json) {
           break;
         } else {
           setPageState((prev) => ({
@@ -1095,8 +1094,18 @@ export default function ThumbnailCanvas() {
       }
     }
 
-    if (json && json.message === "successfully") {
-      // toast.success("Content sent successfully");
+    if (json.message === "Content already exists") {
+      toast.error("Content already exists");
+      setPageState((prev) => ({
+        ...prev,
+        isSendLoading: false,
+        triggerSendContent: false,
+      }));
+    } else if (
+      (method === "POST" && json.message === "successfully") ||
+      (method === "PATCH" && json.user_name)
+    ) {
+      toast.success("Content sent successfully");
       if (selectedBrand === "Movie Myth") {
         router.replace("/content-creator/create/movie-myth/article-ready");
       } else {
