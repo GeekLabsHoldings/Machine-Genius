@@ -23,6 +23,7 @@ const initialContextState = {
     decodedToken: null as any,
   },
   setAuthState: (authState: AuthStateType) => {},
+  handleSignOut: () => {},
   // ===== 00. End Authentication =====
 };
 
@@ -148,6 +149,9 @@ export default function GlobalContextProvider({
             },
           }
         );
+        if (res.status === 401) {
+          handleSignOut();
+        }
         const data = await res.json();
         if (data.result) {
           toast.success("Session is valid");
@@ -195,6 +199,7 @@ export default function GlobalContextProvider({
       // ===== 00. Start Authentication =====
       authState,
       setAuthState,
+      handleSignOut,
       // ===== 00. End Authentication =====
     }),
     [authState]

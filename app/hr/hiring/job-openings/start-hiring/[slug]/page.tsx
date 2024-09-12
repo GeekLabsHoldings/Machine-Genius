@@ -1,12 +1,14 @@
 "use client";
 import styles from "./new-template.module.css";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const { handleSignOut } = useContext(globalContext);
   const [data, setData] = useState<any>({});
   const [isEditing, setIsEditing] = useState(false);
   const textRef = useRef<(HTMLParagraphElement | null)[]>([]);
@@ -26,6 +28,9 @@ export default function Page({ params }: { params: { slug: string } }) {
             },
           }
         );
+        if (res.status === 401) {
+          handleSignOut();
+        }
         const result = await res.json();
         setData(result);
         console.log("result", result);
@@ -63,6 +68,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const result = await res.json();
       console.log(result);
       // navigate to the next page
@@ -121,6 +129,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const result = await res.json();
       console.log(result);
       // navigate to the next page

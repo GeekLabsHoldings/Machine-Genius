@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./AttendanceTable.module.css";
 import { data } from "jquery";
+import { globalContext } from "@/app/_context/store";
 
 interface Attendance {
   firstName: string;
@@ -25,6 +26,8 @@ export default function AttendanceTable({
   activeTab: number;
   filter: { name: string; department: string; date: string };
 }): JSX.Element {
+  const { handleSignOut } = useContext(globalContext);
+
   // An array of objects representing the rows of the table body.
 
   const [attendance, setAttendance] = useState<Attendance[]>([
@@ -52,7 +55,13 @@ export default function AttendanceTable({
           },
         }
       )
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 401) {
+            handleSignOut();
+          } else {
+            return response.json();
+          }
+        })
         .then((data) => {
           setAttendance(data);
         });
@@ -128,62 +137,63 @@ export default function AttendanceTable({
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {attendance.length && attendance?.map((e, idx) => (
-            <ul key={idx} className="relative">
-              <div
-                className="absolute"
-                style={{
-                  paddingLeft: "clamp(10px, calc(1.2vw + 0.1rem), 1000px)",
-                }}
-              >
-                {parseInt(e.warningCount) >= 3
-                  ? redWarning
-                  : parseInt(e.warningCount) === 2
-                  ? yellowWarning
-                  : null}
-              </div>
-              <li>
-                <span>{e.firstName}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>{e.lastName}</span>
-              </li>
-              <li>
-                <span>{e.department.join(", ")}</span>
-              </li>
-              {activeTab == 2 && (
-                <li>
-                  <span>{new Date(e.checkedIn)?.toDateString()}</span>
-                </li>
-              )}
-              <li>
-                <span>{new Date(e.checkedIn)?.toLocaleTimeString()}</span>
-              </li>
-              {activeTab == 2 && (
-                <li>
-                  <span>
-                    {e.checkedOut
-                      ? new Date(e.checkedOut)?.toLocaleTimeString()
-                      : "-"}
-                  </span>
-                </li>
-              )}
-              <li>
-                <span
+          {attendance.length &&
+            attendance?.map((e, idx) => (
+              <ul key={idx} className="relative">
+                <div
+                  className="absolute"
                   style={{
-                    color:
-                      parseInt(e.warningCount) >= 3
-                        ? "#e9313e"
-                        : parseInt(e.warningCount) === 2
-                        ? "#e1c655"
-                        : "inherit",
+                    paddingLeft: "clamp(10px, calc(1.2vw + 0.1rem), 1000px)",
                   }}
                 >
-                  {e.warningCount}
-                </span>
-              </li>
-            </ul>
-          ))}
+                  {parseInt(e.warningCount) >= 3
+                    ? redWarning
+                    : parseInt(e.warningCount) === 2
+                    ? yellowWarning
+                    : null}
+                </div>
+                <li>
+                  <span>{e.firstName}</span>
+                </li>
+                <li className="w-[10%]">
+                  <span>{e.lastName}</span>
+                </li>
+                <li>
+                  <span>{e.department.join(", ")}</span>
+                </li>
+                {activeTab == 2 && (
+                  <li>
+                    <span>{new Date(e.checkedIn)?.toDateString()}</span>
+                  </li>
+                )}
+                <li>
+                  <span>{new Date(e.checkedIn)?.toLocaleTimeString()}</span>
+                </li>
+                {activeTab == 2 && (
+                  <li>
+                    <span>
+                      {e.checkedOut
+                        ? new Date(e.checkedOut)?.toLocaleTimeString()
+                        : "-"}
+                    </span>
+                  </li>
+                )}
+                <li>
+                  <span
+                    style={{
+                      color:
+                        parseInt(e.warningCount) >= 3
+                          ? "#e9313e"
+                          : parseInt(e.warningCount) === 2
+                          ? "#e1c655"
+                          : "inherit",
+                    }}
+                  >
+                    {e.warningCount}
+                  </span>
+                </li>
+              </ul>
+            ))}
         </div>
       </div>
       {/* End Table */}

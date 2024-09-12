@@ -66,7 +66,7 @@ export default function ContentCreatorContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const router = useRouter();
   const path = usePathname();
   const dispatch = useDispatch();
@@ -469,7 +469,9 @@ export default function ContentCreatorContextProvider({
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
 
       if (!json) {
@@ -592,6 +594,9 @@ export default function ContentCreatorContextProvider({
           }),
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         toast.error("Something went wrong!");

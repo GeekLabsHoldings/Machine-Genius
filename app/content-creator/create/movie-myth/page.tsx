@@ -11,7 +11,7 @@ import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
 const MovieMyth = () => {
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const dispatch = useDispatch();
   const router = useRouter();
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -55,6 +55,9 @@ const MovieMyth = () => {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
@@ -130,7 +133,9 @@ const MovieMyth = () => {
           redirect: "follow" as RequestRedirect,
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
 
       if (json && json?.transcriptionResults) {

@@ -2,16 +2,18 @@
 import "./calender.css";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid"; // a plugin!
-import {  useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import eventContentImg from "../../../public/assets/calender event content img.png";
 import Image from "next/image";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-
+import { globalContext } from "@/app/_context/store";
 
 export default function Calendar() {
+  const { handleSignOut } = useContext(globalContext);
+
   const brandOptions: string[] = [
     "Street Politics",
     "Street Politics",
@@ -40,36 +42,29 @@ export default function Calendar() {
   const [createModal, setCreateModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [editModal, setEditModal] = useState<boolean>(false);
-  const [eventsOnly,setEventsOnly] = useState<boolean>(false)
+  const [eventsOnly, setEventsOnly] = useState<boolean>(false);
 
-
-  
-
-  
   async function getSchedule() {
     const token = localStorage.getItem("token");
     try {
-      const data = await fetch(
-        "https://api.machinegenius.io/user/task/all",
-        {
-          method: "get",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const data = await fetch("https://api.machinegenius.io/user/task/all", {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       console.log(res);
-      
+
       setCurrentEvents(res);
     } catch (error) {
       console.log(error);
     }
   }
-  
-  
-
 
   const today = new Date();
   const month = today.getMonth() + 1; // Note: Month is zero-based (0 for January, 1 for February, etc.)
@@ -100,36 +95,52 @@ export default function Calendar() {
   }, []);
 
   useEffect(() => {
-    
-
-    if (document.querySelector(".eventsCalendar input[type='checkbox']:checked")) {
+    if (
+      document.querySelector(".eventsCalendar input[type='checkbox']:checked")
+    ) {
       console.log("yes");
-      setCurrentEvents(currentEvents?.filter((e:any,i:number)=>{return e.assignedTo == null}))
-      console.log(currentEvents?.filter((e:any,i:number)=>{return e.assignedTo == null}));
-      
+      setCurrentEvents(
+        currentEvents?.filter((e: any, i: number) => {
+          return e.assignedTo == null;
+        })
+      );
+      console.log(
+        currentEvents?.filter((e: any, i: number) => {
+          return e.assignedTo == null;
+        })
+      );
     } else {
-      getSchedule()
+      getSchedule();
     }
   }, [eventsOnly]);
   return (
     <>
-    <div className="pt-[1.5vw] h-full w-full full-calender eventsCalendar">
-      <div className="grid grid-cols-3 lg:grid-cols-4 gap-[1vw] filters">
-        <CustomSelectInput label="Brand Name" options={brandOptions} />
-        <CustomSelectInput label="Content Type" options={contentTypeOptions} />
-        <CustomBtn
-          btnColor="white"
-          word="Clear"
-          onClick={() => console.log("clear")}
-          style={{ width: "max-content" }}
-        />
-        <div className="flex items-center justify-end">
-          <CustomCheckBox value={"Show Events Only"} name="show-events-only" accentColor="black" onClick={()=>setEventsOnly(!eventsOnly)} checked={eventsOnly}/>
-          <label htmlFor="">Show Events Only</label>
+      <div className="pt-[1.5vw] h-full w-full full-calender eventsCalendar">
+        <div className="grid grid-cols-3 lg:grid-cols-4 gap-[1vw] filters">
+          <CustomSelectInput label="Brand Name" options={brandOptions} />
+          <CustomSelectInput
+            label="Content Type"
+            options={contentTypeOptions}
+          />
+          <CustomBtn
+            btnColor="white"
+            word="Clear"
+            onClick={() => console.log("clear")}
+            style={{ width: "max-content" }}
+          />
+          <div className="flex items-center justify-end">
+            <CustomCheckBox
+              value={"Show Events Only"}
+              name="show-events-only"
+              accentColor="black"
+              onClick={() => setEventsOnly(!eventsOnly)}
+              checked={eventsOnly}
+            />
+            <label htmlFor="">Show Events Only</label>
+          </div>
         </div>
-      </div>
-      {/* FullCalendar component */}
-      <FullCalendar
+        {/* FullCalendar component */}
+        <FullCalendar
           height="75vh"
           plugins={[dayGridPlugin, interactionPlugin]}
           headerToolbar={{
@@ -144,10 +155,7 @@ export default function Calendar() {
           dayMaxEvents={true}
           events={currentEvents}
         />
-
-      
-    </div>
-    
+      </div>
     </>
   );
 }

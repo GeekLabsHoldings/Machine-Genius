@@ -10,7 +10,7 @@ export default function page() {
     title: "",
     level: "",
   });
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
 
   function getTitleValue(value: string) {
     setRequestHiringData({
@@ -50,7 +50,9 @@ export default function page() {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
 
       if (json) {

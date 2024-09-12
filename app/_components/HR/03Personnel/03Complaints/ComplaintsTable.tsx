@@ -1,9 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./ComplaintsTable.module.css";
 import { truncateText } from "@/app/_utils/text";
 import RequestedByCard from "./RequestedByCard";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { globalContext } from "@/app/_context/store";
 
 /**
  * Renders a table component displaying a list of complaints. Each complaint is represented by an object in the `bodyRow` array.
@@ -18,6 +19,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
  * @return {JSX.Element} The rendered table component.
  */
 export default function ComplaintsTable() {
+  const { handleSignOut } = useContext(globalContext);
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -96,13 +98,13 @@ export default function ComplaintsTable() {
       />
     </svg>
   );
-  const [complaints,setComplaints] = useState([])
+  const [complaints, setComplaints] = useState([]);
 
   async function getComplaints() {
     const token = localStorage.getItem("token");
     try {
       console.log("xzcasdqe");
-      
+
       const data = await fetch(
         "https://api.machinegenius.io/hr/complaint/get-all?name=&department=&solve=&urgencyLevel=&limit&skip",
         {
@@ -112,16 +114,19 @@ export default function ComplaintsTable() {
           },
         }
       );
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
-      setComplaints(res)
+      setComplaints(res);
       console.log(res);
     } catch (error) {
       console.log(error);
     }
   }
-  useEffect(()=>{
-    getComplaints()
-  },[])
+  useEffect(() => {
+    getComplaints();
+  }, []);
 
   return (
     <div className={`${styles.tableContainer} h-[65vh]`}>
@@ -148,37 +153,36 @@ export default function ComplaintsTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {Array.isArray(complaints) && complaints.length && complaints.map((e:any,i) => (
-            <ul className="w-[100%] relative" key={e._id}>
-              <div className="absolute">{e.newStatus && newRibbon}</div>
-              <li className="w-[20%]">{e.complaintIssue}</li>
-              <li className="w-[30%]">
-                {truncateText(e.description, 35)}
-              </li>
-              <li className="w-[20%]">
-                <RequestedByCard
-                  name={e.employee.firstName + " " + e.employee.lastName}
-                  color={e.employee.theme}
-                />
-                
-              </li>
-              <li
-                className={`w-[15%] `}
-                style={{
-                  color:`${e.employee.theme}`
-                }}
-              >
-                {e.urgencyLevel}
-              </li>
-              <li className="w-[15%]">
-                <CustomBtn
-                  btnColor="black"
-                  word="Preview"
-                  href={`/hr/personnel/complaints/${e._id}/`}
-                />
-              </li>
-            </ul>
-          ))}
+          {Array.isArray(complaints) &&
+            complaints.length &&
+            complaints.map((e: any, i) => (
+              <ul className="w-[100%] relative" key={e._id}>
+                <div className="absolute">{e.newStatus && newRibbon}</div>
+                <li className="w-[20%]">{e.complaintIssue}</li>
+                <li className="w-[30%]">{truncateText(e.description, 35)}</li>
+                <li className="w-[20%]">
+                  <RequestedByCard
+                    name={e.employee.firstName + " " + e.employee.lastName}
+                    color={e.employee.theme}
+                  />
+                </li>
+                <li
+                  className={`w-[15%] `}
+                  style={{
+                    color: `${e.employee.theme}`,
+                  }}
+                >
+                  {e.urgencyLevel}
+                </li>
+                <li className="w-[15%]">
+                  <CustomBtn
+                    btnColor="black"
+                    word="Preview"
+                    href={`/hr/personnel/complaints/${e._id}/`}
+                  />
+                </li>
+              </ul>
+            ))}
         </div>
       </div>
       {/* End Table */}

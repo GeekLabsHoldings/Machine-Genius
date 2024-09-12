@@ -105,7 +105,7 @@ import debounce from "debounce";
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     checkStatus,
@@ -385,7 +385,9 @@ export default function ShowErrorsPage() {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
 
       if (!json) {

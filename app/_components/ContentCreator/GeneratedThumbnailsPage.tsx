@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 
 const GeneratedThumbnailsPage = () => {
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     selectedBrand,
@@ -136,6 +136,9 @@ const GeneratedThumbnailsPage = () => {
           },
           body: JSON.stringify(postBody),
         });
+        if (res.status === 401) {
+          handleSignOut();
+        }
         json = await res.json();
         if (json) {
           // If valid data is found, break the loop

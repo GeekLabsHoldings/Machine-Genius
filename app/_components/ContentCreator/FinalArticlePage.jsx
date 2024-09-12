@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import debounce from "debounce";
 import { formatHtml } from "@/app/_utils/htmlFormatter";
@@ -101,6 +102,7 @@ export default function FinalArticlePage() {
   const finalArticle = useSelector(
     (state) => state.contentCreator.finalArticle
   );
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     checkStatus,
@@ -492,7 +494,9 @@ export default function FinalArticlePage() {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         handleExpandContentFailure();

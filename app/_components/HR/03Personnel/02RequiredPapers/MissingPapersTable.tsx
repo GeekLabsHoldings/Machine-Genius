@@ -1,14 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./MissingPapersTable.module.css";
 import Link from "next/link";
-
+import { globalContext } from "@/app/_context/store";
 /**
  * Renders a table component displaying missing papers for employees.
  *
  * @return {JSX.Element} The table component.
  */
 export default function MissingPapersTable() {
+  const { handleSignOut } = useContext(globalContext);
+
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -77,6 +79,9 @@ export default function MissingPapersTable() {
           },
         }
       );
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       setPapers(res)
       console.log(res);

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 const ContentDatabase = () => {
   const router = useRouter();
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const [contentDatabase, setContentDatabase] = useState<any>([]);
   const [filteredContentDatabase, setFilteredContentDatabase] = useState<any>(
     []
@@ -27,7 +27,7 @@ const ContentDatabase = () => {
   });
 
   async function getContentDatabase() {
-    const maxRetries = 2; // Define the maximum number of retries
+    const maxRetries = 1; // Define the maximum number of retries
     let attempts = 0;
     let json = null;
 
@@ -45,6 +45,9 @@ const ContentDatabase = () => {
             },
           }
         );
+        if (res.status === 401) {
+          handleSignOut();
+        }
         json = await res.json();
         if (json && json.content) {
           // If valid data is found, break the loop

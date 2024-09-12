@@ -10,6 +10,7 @@ import TemplateDetails from "../[templateId]/page";
 import { title } from "process";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -143,6 +144,7 @@ const templateContent: TemplateContent = {
 };
 
 const Page = () => {
+  const { handleSignOut } = useContext(globalContext);
   const [Templates, setTemplates] = useState<Template[]>([]);
   const [groups, setGroups] = useState<any>([]);
   const [groupID, setGroupID] = useState("");
@@ -226,6 +228,9 @@ const Page = () => {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       setGroups(data);
     } catch (error) {
@@ -250,6 +255,9 @@ const Page = () => {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       console.log(data);
       setTempOptions(data);
@@ -276,7 +284,9 @@ const Page = () => {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       if (res.ok) {
         toast.success("Group Created Successfully");
@@ -319,6 +329,9 @@ const Page = () => {
           body: JSON.stringify(body),
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       if (res.ok) {
         toast.success("Template Created Successfully");

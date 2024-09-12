@@ -26,7 +26,7 @@ export default function CreateArticlePage() {
   // ===== End Hooks =====
 
   // ===== Start State =====
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const { selectedContentType, selectedBrand, choosedArticles } = useContext(
     contentCreatorContext
   );
@@ -284,7 +284,9 @@ export default function CreateArticlePage() {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         handleFinalizeContentFailure();

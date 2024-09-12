@@ -23,7 +23,7 @@ export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
   const fabricCanvasRef = useRef(null);
   const [canvasState, setCanvasState] = useState(null);
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     selectedBrand,
@@ -559,6 +559,9 @@ export default function ThumbnailCanvas() {
           }),
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         handleSearchBgError();
@@ -678,6 +681,9 @@ export default function ThumbnailCanvas() {
           }),
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         // toast.error("Something went wrong!");
@@ -1071,6 +1077,9 @@ export default function ThumbnailCanvas() {
           },
           body: JSON.stringify(postBody),
         });
+        if (res.status === 401) {
+          handleSignOut();
+        }
         json = await res.json();
         if (json) {
           break;
