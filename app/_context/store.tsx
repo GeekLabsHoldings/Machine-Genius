@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
+import debounce from "debounce";
 
 // Define type for AuthState for better type safety
 type AuthStateType = {
@@ -128,43 +129,42 @@ export default function GlobalContextProvider({
     [router]
   );
 
-  const debouncedCheckAuth = useCallback(() => {
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
+  async function checkAuth() {
+    toast("Checking authentication...");
+    const authToken = authState.token || localStorage.getItem("token");
+    if (!authToken) {
+      handleSignOut("No token found, redirecting to signin...");
+      return;
     }
-    debounceTimer.current = setTimeout(async () => {
-      toast("Checking authentication...");
-      const authToken = authState.token || localStorage.getItem("token");
-      if (!authToken) {
-        handleSignOut("No token found, redirecting to signin...");
-        return;
-      }
-      try {
-        const res = await fetch(
-          "https://api.machinegenius.io/authentication/check-auth",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (res.status === 401) {
-          handleSignOut();
+    try {
+      const res = await fetch(
+        "https://api.machinegenius.io/authentication/check-auth",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
         }
-        const data = await res.json();
-        if (data.result) {
-          toast.success("Session is valid");
-        } else if (data.message && data.message.name === "TokenExpiredError") {
-          handleSignOut();
-        } else if (data.message === "USER_TOKEN_IS_INVALID") {
-          handleSignOut();
-        }
-      } catch (error) {
-        console.error("Error checking auth:", error);
+      );
+      if (res.status === 401) {
+        handleSignOut();
       }
-    }, 300); // Debounce delay in milliseconds
-  }, [authState.token, handleSignOut]);
+      const data = await res.json();
+      if (data.result) {
+        toast.success("Session is valid");
+      } else if (data.message && data.message.name === "TokenExpiredError") {
+        handleSignOut();
+      } else if (data.message === "USER_TOKEN_IS_INVALID") {
+        handleSignOut();
+      }
+    } catch (error) {
+      console.error("Error checking auth:", error);
+    }
+  }
+  const debouncedCheckAuth = useMemo(
+    () => debounce(checkAuth, 300),
+    [checkAuth]
+  );
 
   // Clear timeout on component unmount
   useEffect(() => {
