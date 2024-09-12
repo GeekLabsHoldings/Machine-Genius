@@ -179,6 +179,8 @@ export default function ShowErrorsPage() {
     }
   }, [pageState.isLoading]);
 
+  const triggerGenerateTitles = useRef(false);
+
   // =======================================
   async function handleFixAndCheck() {
     if (checkGrammerResults.length) {
@@ -414,16 +416,19 @@ export default function ShowErrorsPage() {
       console.error("Error formatToHtml:", error);
       return finalArticle?.articles[0]?.content || "";
     } finally {
-      setPageState((prev) => ({
-        ...prev,
-        // isLayoutReady: true,
-        isLoadingFormatToHtml: false,
-        isLoading: false,
-      }));
+      if (!triggerGenerateTitles.current) {
+        setPageState((prev) => ({
+          ...prev,
+          // isLayoutReady: true,
+          isLoadingFormatToHtml: false,
+          isLoading: false,
+        }));
+      }
     }
   }
 
   async function handleFormatToHtmlAndNavToGenerateTitles(path) {
+    triggerGenerateTitles.current = true;
     await formatToHtml();
     router.replace(path);
   }
@@ -704,6 +709,7 @@ export default function ShowErrorsPage() {
               btnColor="black"
               onClick={() => {
                 formatToHtml();
+                // Moved inside formatToHtml:
                 // setPageState({
                 //   ...pageState,
                 //   isLoading: false,
