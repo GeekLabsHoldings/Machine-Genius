@@ -55,9 +55,10 @@
   width: 65% !important;
   text-align: center;
   margin: 0 auto;
+  margin-top: var(--sy-10px);
+  margin-bottom: var(--sy-10px);
   border-radius: var(--20px);
   display: block;
-  margin-bottom: var(--5px);
 }
 /* ===== Start ArticleWithCheck ===== */
 .article_with_check {
