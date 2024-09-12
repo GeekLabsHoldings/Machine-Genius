@@ -14,6 +14,7 @@ import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreato
 import toast from "react-hot-toast";
 import { formatToText } from "@/app/_utils/contentFormatter";
 import { formatHtml } from "@/app/_utils/htmlFormatter";
+import { contentCleaner } from "@/app/_utils/contentCleaner";
 // import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 // import { SelectArticleData } from "@/app/_data/data";
@@ -356,7 +357,7 @@ export default function CreateArticlePage() {
       const selectedContent = choosedArticles.find(
         (item: any) => item.title === selectedArticle
       )?.content;
-      return selectedContent;
+      return contentCleaner(selectedContent);
     }
   }
 

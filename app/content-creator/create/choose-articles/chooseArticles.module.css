@@ -44,7 +44,7 @@
 .preview_wrapper .selected_article_container p {
   text-align: justify;
   /* margin-top: var(--12px); */
-  margin-bottom: var(--12px);
+  margin-bottom: var(--10px);
 }
 
 .preview_wrapper .selected_article_container p:last-child {
