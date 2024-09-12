@@ -5,7 +5,13 @@ import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
 import { TextareaAutosize } from "@mui/material";
-import { useContext, useEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 
@@ -162,7 +168,7 @@ function Chat() {
   //     time: "12:00 PM",
   //   },
   // ];
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<any>(null);
   const [scrolled, setScrolled] = useState(false);
   // const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -203,6 +209,61 @@ function Chat() {
     if (message.text.trim() === "") return;
     setMessages((prev) => [...prev, message]);
   };
+
+  const [messagesUpdated, setMessagesUpdated] = useState(false);
+
+  // useEffect(() => {
+  //   if (messagesUpdated && ref.current) {
+  //     setTimeout(() => {
+  //       ref.current.scrollTop = ref.current.scrollHeight;
+  //       setMessagesUpdated(false);
+  //     }, 100); // 100ms delay
+  //   }
+  // }, [messagesUpdated]);
+
+  const scrollTimeoutRef = useRef<any>(null);
+
+  // ... other code ...
+
+  useEffect(() => {
+    if (isLoaded) {
+      setMessagesUpdated(true);
+
+      // Clear any existing timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      // Set a new timeout
+      scrollTimeoutRef.current = setTimeout(() => {
+        setMessagesUpdated(true);
+      }, 50);
+    }
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [isLoaded]);
+
+  useLayoutEffect(() => {
+    if (messagesUpdated && ref.current) {
+      const scrollToBottom = () => {
+        requestAnimationFrame(() => {
+          ref.current.scrollTop = ref.current.scrollHeight;
+        });
+      };
+
+      scrollToBottom();
+
+      // Scroll again after a short delay to catch any late updates
+      setTimeout(scrollToBottom, 100);
+
+      setMessagesUpdated(false);
+    }
+  }, [messagesUpdated]);
+
+  // ... rest of the component ...
 
   useEffect(() => {
     async function fetchEmployees() {
@@ -275,33 +336,6 @@ function Chat() {
       console.log(data.message);
     }
   }
-
-  useEffect(() => {
-    console.log(`-----------------------------------------------------
-      
-      
-      
-      
-      
-      
-      
-
-      ${employees}
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      -----------------------------------------------------------------`);
-  }, [employees]);
-
-  useEffect(() => {
-    console.log(userId);
-  }, [userId]);
 
   useEffect(() => {
     setIsLoaded(false);
@@ -467,31 +501,25 @@ function Chat() {
     }
   }, [toggleCreateGroup]);
 
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollTop = ref.current.scrollHeight || 0;
-    }
-  }, [isLoaded, messages, currentConversation, conversation, message]);
-
-  useEffect(() => {
-    //   if (unreadRef.current) {
-    //     unreadRef.current[conversation.indexOf(currentConversation)] =
-    //       currentConversation.lastSeen;
-    //   }
-    // }
-  }, [isLoaded]);
-
   // useEffect(() => {
   //   if (ref.current) {
   //     ref.current.scrollTop = ref.current.scrollHeight || 0;
   //   }
-  // });
+  // }, [isLoaded, messages, currentConversation, conversation, message]);
+
+  // useEffect(() => {
+  //   if (isLoaded) {
+  //     setMessagesUpdated(true);
+  //   }
+  // }, [isLoaded]);
 
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages.length > 0 && isLoaded) {
+      console.log("messages have been seen");
+      console.log(isLoaded);
       handleUserSeenMessage();
     }
-  }, [messages, handleUserSeenMessage]);
+  }, [handleUserSeenMessage, isLoaded]);
 
   const handleTyping = (typing: boolean) => {
     setIsTyping(typing);
