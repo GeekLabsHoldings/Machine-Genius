@@ -1504,6 +1504,7 @@ export default function ThumbnailCanvas() {
                           inputType="radio"
                           inputName="select-icon"
                           imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
+                          imgProps="!object-contain"
                           checked={
                             pageState.selectedIconPath ===
                             `/generated-thumbnails/sp/icons/illustration-${i}.png`

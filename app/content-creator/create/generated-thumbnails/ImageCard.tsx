@@ -7,6 +7,7 @@ type IProps = React.DetailedHTMLProps<
 > & {
   imgSrc: string;
   inputName: string;
+  imgProps?: string;
 };
 
 export default function ImageCard({
@@ -15,6 +16,7 @@ export default function ImageCard({
   onChange,
   checked,
   disabled,
+  imgProps,
 }: IProps) {
   return (
     <label className={`${styles.box} cursor-pointer`}>
@@ -28,7 +30,12 @@ export default function ImageCard({
         disabled={disabled}
       />
       <div className={`${styles.selectedOverlay}`}></div>
-      <img loading="lazy" src={imgSrc} alt="image" />
+      <img
+        loading="lazy"
+        src={imgSrc}
+        alt="image"
+        className={imgProps ? imgProps : ""}
+      />
     </label>
   );
 }
