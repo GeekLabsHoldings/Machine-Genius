@@ -34,6 +34,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* <!-- Preload Acumin Pro Bold Italic --> */}
+        <link
+          rel="preload"
+          href="/fonts/Acumin-BdItPro.woff"
+          as="font"
+          crossOrigin="anonymous"
+        />
+
+        {/* <!-- Preload Hellix Black --> */}
+        <link
+          rel="preload"
+          href="/fonts/Hellix-Black.woff2"
+          as="font"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <Provider store={store}>
           <GlobalContextProvider>
