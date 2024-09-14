@@ -97,6 +97,12 @@ const useChat = () => {
         if (message.text.trim()) {
           console.log("Sending message", message);
           socket.emit("sendMessage", message);
+          updateConversation({
+            _id: message.conversationId,
+            lastMessage: message.text,
+            lastSeen: new Date().getTime(),
+            updatedAt: new Date().getTime(),
+          });
         }
       }
     },
