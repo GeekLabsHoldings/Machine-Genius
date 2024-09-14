@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
   useRef,
+  useMemo,
 } from "react";
 import { useSelector } from "react-redux";
 import { globalContext } from "@/app/_context/store";
@@ -18,6 +19,12 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useRouter } from "next/navigation";
 import ImageCard from "./ImageCard";
 import MultipleSelectCheckmarks from "./MultipleSelectCheckmarks";
+
+const LoadingOverlay = ({ title }) => (
+  <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
+    <LogoAndTitle needTxt={false} title={title} />
+  </div>
+);
 
 export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
@@ -121,6 +128,17 @@ export default function ThumbnailCanvas() {
   const getSelectedContentThumbnailValue = useCallback((value) => {
     setSelectedContentThumbnail(value);
   }, []);
+
+  const loadingStates = useMemo(
+    () => [
+      { key: "generateThumbnailsLoading", title: "Generating Thumbnails..." },
+      { key: "isSendLoading", title: "Sending Content..." },
+      { key: "searchImgLoading", title: "searching for images..." },
+      { key: "searchBgLoading", title: "searching for backgrounds..." },
+      { key: "removeBgLoading", title: "removing image background..." },
+    ],
+    []
+  );
 
   const handleTriggerSearchImg = useCallback(() => {
     setPageState((prev) => ({
@@ -1161,46 +1179,9 @@ export default function ThumbnailCanvas() {
 
   return (
     <main className="relative">
-      {pageState.generateThumbnailsLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] py-[1.5vw] ">
-          <LogoAndTitle needTxt={false} title="Generating Thumbnails..." />
-        </div>
-      )}
-
-      {pageState.isSendLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] py-[1.5vw]">
-          <LogoAndTitle needTxt={false} title="Sending Content..." />
-        </div>
-      )}
-
-      {pageState.searchImgLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={true}
-            textNeeded="Hold on tight."
-            title={"Genius is searching for images..."}
-          />
-        </div>
-      )}
-
-      {pageState.searchBgLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={true}
-            textNeeded="Hold on tight."
-            title={"Genius is searching for backgrounds..."}
-          />
-        </div>
-      )}
-
-      {pageState.removeBgLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={true}
-            textNeeded="Hold on tight."
-            title={"Genius is removing image background..."}
-          />
-        </div>
+      {loadingStates.map(
+        ({ key, title }) =>
+          pageState[key] && <LoadingOverlay key={key} title={title} />
       )}
 
       <nav className="my-[--sy-5px] w-4/5 max-w-3xl mx-auto">
