@@ -18,8 +18,12 @@ import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useRouter } from "next/navigation";
-import ImageCard from "./ImageCard";
-import MultipleSelectCheckmarks from "./MultipleSelectCheckmarks";
+import dynamic from "next/dynamic";
+const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
+const MultipleSelectCheckmarks = dynamic(
+  () => import("./MultipleSelectCheckmarks"),
+  { ssr: false }
+);
 
 const LoadingOverlay = memo(({ title }) => (
   <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
@@ -91,32 +95,34 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  function pageStateInit() {
-    return {
-      generateThumbnailsLoading: false,
-      thumbnailFontSize: selectedBrand.includes("Street Politics")
-        ? 105.66
-        : 90,
-      selectedBgPath: selectedBrand.includes("Street Politics")
-        ? "/generated-thumbnails/sp/bg/bg-0.jpg"
-        : "/generated-thumbnails/inv/bg/bg-0.jpg",
-      selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
-      searchImgKeyword: "",
-      searchBgKeyword: "",
-      searchImgLoading: false,
-      searchBgLoading: false,
-      searchImgData: pageStateSearchImgDataInit(),
-      searchBgData: pageStateSearchBgDataInit(),
-      removeBgLoading: false,
-      isSendLoading: false,
-      triggerSendContent: false,
-      triggerSearchImg: false,
-      highlightedWords: [],
-      showRecentBg: true,
-      showRecentImg: true,
-    };
-  }
-
+  // Memoize complex calculations
+  const usePageStateInit = (selectedBrand) =>
+    useMemo(() => {
+      return {
+        generateThumbnailsLoading: false,
+        thumbnailFontSize: selectedBrand.includes("Street Politics")
+          ? 105.66
+          : 90,
+        selectedBgPath: selectedBrand.includes("Street Politics")
+          ? "/generated-thumbnails/sp/bg/bg-0.jpg"
+          : "/generated-thumbnails/inv/bg/bg-0.jpg",
+        selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
+        searchImgKeyword: "",
+        searchBgKeyword: "",
+        searchImgLoading: false,
+        searchBgLoading: false,
+        searchImgData: pageStateSearchImgDataInit(),
+        searchBgData: pageStateSearchBgDataInit(),
+        removeBgLoading: false,
+        isSendLoading: false,
+        triggerSendContent: false,
+        triggerSearchImg: false,
+        highlightedWords: [],
+        showRecentBg: true,
+        showRecentImg: true,
+      };
+    }, [selectedBrand]);
+  const pageStateInit = usePageStateInit(selectedBrand);
   const [pageState, setPageState] = useState(pageStateInit);
 
   useEffect(() => {
