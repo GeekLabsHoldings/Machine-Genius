@@ -6,6 +6,7 @@ import React, {
   useState,
   useRef,
   useMemo,
+  memo,
 } from "react";
 import { useSelector } from "react-redux";
 import { globalContext } from "@/app/_context/store";
@@ -20,11 +21,11 @@ import { useRouter } from "next/navigation";
 import ImageCard from "./ImageCard";
 import MultipleSelectCheckmarks from "./MultipleSelectCheckmarks";
 
-const LoadingOverlay = ({ title }) => (
+const LoadingOverlay = memo(({ title }) => (
   <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
     <LogoAndTitle needTxt={false} title={title} />
   </div>
-);
+));
 
 export default function ThumbnailCanvas() {
   const canvasEl = useRef(null);
