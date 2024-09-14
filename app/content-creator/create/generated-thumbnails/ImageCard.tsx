@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { memo } from "react";
 import styles from "./ImageCard.module.css";
 
 type IProps = React.DetailedHTMLProps<
@@ -10,7 +11,7 @@ type IProps = React.DetailedHTMLProps<
   imgProps?: string;
 };
 
-export default function ImageCard({
+const ImageCard = memo(function ImageCard({
   imgSrc,
   inputName,
   onChange,
@@ -38,4 +39,6 @@ export default function ImageCard({
       />
     </label>
   );
-}
+});
+
+export default ImageCard;
