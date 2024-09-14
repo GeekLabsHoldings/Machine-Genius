@@ -702,11 +702,7 @@ function Chat() {
                       </div>
                       <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
                         {message.lastSeen < message.updatedAt &&
-                        message?._id !== currentConversation?._id &&
-                        userId !==
-                          message.members[
-                            userId === message.members[0]?._id ? 1 : 0
-                          ]._id ? (
+                        message?._id !== currentConversation?._id ? (
                           <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
                         ) : null}
                       </div>
