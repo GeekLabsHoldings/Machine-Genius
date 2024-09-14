@@ -6,6 +6,7 @@ import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
 import { TextareaAutosize } from "@mui/material";
 import {
+  useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -14,11 +15,14 @@ import {
 } from "react";
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
+import debounce from "debounce";
 
-const TypingIndicator = () => {
+const TypingIndicator = ({ firstName, lastName, theme }: any) => {
   return (
     <div className="flex items-center space-x-[--4px] h-full py-[--5px] px-[--10px]">
-      <div className="text-gray-500 text-[--16px]">Someone is typing</div>
+      <div className={`text-[${theme} text-[--16px]`}>
+        {firstName} {lastName} is typing
+      </div>
       <div className="flex space-x-[--4px]">
         <div className="w-[--4px] h-[--4px] bg-gray-500 rounded-full animate-bounce"></div>
         <div
@@ -175,7 +179,6 @@ function Chat() {
   const [toggleCreateGroup, setToggleCreateGroup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // const [currentConversation, setCurrentConversation] = useState(null);
-  const [isTyping, setIsTyping] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [searchBarFocus, setSearchBarFocus] = useState(false);
 
@@ -202,6 +205,9 @@ function Chat() {
     handleUserSeenMessage,
     isLoaded,
     setIsLoaded,
+    isTyping,
+    setIsTyping,
+    handleUserTyping,
   } = useChat();
   // const { sendMessage } = useChat();
 
@@ -521,9 +527,9 @@ function Chat() {
     }
   }, [handleUserSeenMessage, isLoaded]);
 
-  const handleTyping = (typing: boolean) => {
-    setIsTyping(typing);
-  };
+  // const handleTyping = (typing:
+  //   setIsTyping
+  // };
 
   const typingTimeoutRef = useRef<any>(null);
 
@@ -541,6 +547,18 @@ function Chat() {
 ################################################################################################
       `);
   }, [searchBarFocus]);
+
+  const debouncedHandleUserTyping = useCallback(
+    debounce(() => {
+      handleUserTyping({
+        _id: userId,
+        firstName: "John",
+        lastName: "Doe",
+        theme: "#FF0000",
+      });
+    }, 500),
+    [userId, handleUserTyping]
+  );
 
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
@@ -823,7 +841,13 @@ function Chat() {
         </div>
         <div className="h-[--50px]">
           {/* ... existing message rendering code ... */}
-          {isTyping && <TypingIndicator />}
+          {isTyping && isTyping[currentConversation._id] && (
+            <TypingIndicator
+              firstName={isTyping[currentConversation._id].user.firstName}
+              lastName={isTyping[currentConversation._id].user.lastName}
+              theme={isTyping[currentConversation._id].user.theme}
+            />
+          )}
         </div>
         <div className="flex items-center gap-[--38px] px-[--18px] py-[--21px] border-t border-[var(--dark)]">
           {/* <textarea
@@ -839,15 +863,16 @@ function Chat() {
             onChange={(e) => {
               setMessage(e.target.value);
               // Simulate sending typing status to server
-              handleTyping(true);
+              // handleTyping(true);
               // Clear typing status after 2 seconds of inactivity
-              if (typingTimeoutRef.current) {
-                clearTimeout(typingTimeoutRef.current);
-              }
-              typingTimeoutRef.current = setTimeout(
-                () => handleTyping(false),
-                2000
-              );
+              // if (typingTimeoutRef.current) {
+              //   clearTimeout(typingTimeoutRef.current);
+              // }
+              debouncedHandleUserTyping();
+              // typingTimeoutRef.current = setTimeout(
+              //   () => handleTyping(false),
+              //   2000
+              // );
               console.log(e.target.value);
             }}
             onKeyDown={(e) => {
@@ -864,9 +889,6 @@ function Chat() {
                 });
                 AddMessage({ text: message, sender: { _id: userId } });
                 setMessage("");
-              }
-              if (typingTimeoutRef.current) {
-                clearTimeout(typingTimeoutRef.current);
               }
             }}
             ref={textareaRef}
