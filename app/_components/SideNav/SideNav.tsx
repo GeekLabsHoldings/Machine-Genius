@@ -1,5 +1,11 @@
 "use client";
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  memo,
+} from "react";
 import styles from "./SideNav.module.css";
 import logo_image from "../../../public/assets/logo.svg";
 import logo_white_image from "../../../public/assets/logo white.svg";
@@ -312,4 +318,4 @@ const SideNav = ({
   );
 };
 
-export default SideNav;
+export default memo(SideNav);
