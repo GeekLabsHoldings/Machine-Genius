@@ -225,7 +225,7 @@ const SideNav = ({
         <div className={styles.line}></div>
         <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
           {sideNavLinks.slice(1).map((ele, index) => (
-            <>
+            <React.Fragment key={ele.name}>
               <li
                 key={ele.name}
                 className={ele.subLinks ? styles.has_sub_menu : ""}
@@ -301,7 +301,7 @@ const SideNav = ({
                   </Link>
                 </li>
               )}
-            </>
+            </React.Fragment>
           ))}
         </ul>
       </div>
