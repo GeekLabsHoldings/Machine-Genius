@@ -637,29 +637,72 @@ export default function ThumbnailCanvas() {
     }
   }
 
+  const removeBgKeys = ["mswBGVPPK8gQmebR2a4AXv8G"];
+
   async function handleRemoveBg(img, type) {
+    if (removeBgKeys.length === 0) {
+      // toast("No remove-bg keys available. Please add keys!");
+      return;
+    }
+
+    function getKeyIndex() {
+      if (typeof window !== "undefined") {
+        const keyIndex = localStorage.getItem("removeBgKeyIndex");
+        const index = keyIndex ? parseInt(keyIndex) : 0;
+        // Ensure the index is within the bounds of the current array
+        return index < removeBgKeys.length ? index : 0;
+      }
+      return 0;
+    }
+
+    function incrementKeyIndex(currentIndex) {
+      const newIndex = (currentIndex + 1) % removeBgKeys.length;
+      localStorage.setItem("removeBgKeyIndex", newIndex.toString());
+      return newIndex;
+    }
+
     try {
       setPageState((prev) => ({
         ...prev,
         removeBgLoading: true,
       }));
-      const res = await fetch(`https://api.remove.bg/v1.0/removebg`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Api-Key": process.env.NEXT_PUBLIC_REMOVEBG_API_KEY,
-        },
-        body: JSON.stringify({
-          ...(type === "select" ? { image_url: img } : { image_file_b64: img }),
-          size: "auto",
-        }),
-      });
-      if (!res.ok) {
-        // toast.error("Something went wrong!");
-        toast("Please update remove-bg key!");
-        console.error("Error handleRemoveBg:", res.status);
+
+      let keyIndex = getKeyIndex();
+      let res;
+      let attempts = 0;
+
+      while (attempts < removeBgKeys.length) {
+        res = await fetch(`https://api.remove.bg/v1.0/removebg`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Api-Key": removeBgKeys[keyIndex],
+          },
+          body: JSON.stringify({
+            ...(type === "select"
+              ? { image_url: img }
+              : { image_file_b64: img }),
+            size: "auto",
+          }),
+        });
+
+        if (res.ok) {
+          break;
+        }
+
+        // toast(`API key ${keyIndex + 1} failed. Trying next key...`);
+        keyIndex = incrementKeyIndex(keyIndex);
+        attempts++;
+      }
+
+      if (!res || !res.ok) {
+        localStorage.setItem("removeBgKeyIndex", "0");
+        // toast(
+        //   "All remove-bg keys have been exhausted. Please update the keys!"
+        // );
         return;
       }
+
       // Convert the response to a Blob
       const blob = await res.blob();
       // Create a URL for the Blob
@@ -667,8 +710,6 @@ export default function ThumbnailCanvas() {
       // Use the imageUrl in your application
       return imageUrl; // You can set this as the src of an img tag
     } catch (error) {
-      // toast.error("Something went wrong!");
-      toast("Please update remove-bg key!");
       console.error("Error handleRemoveBg:", error);
     } finally {
       setPageState((prev) => ({
