@@ -23,7 +23,7 @@ const initialContextState = {
     decodedToken: null as any,
   },
   setAuthState: (authState: AuthStateType) => {},
-  handleSignOut: () => {},
+  handleSignOut: (message?: string) => {},
   // ===== 00. End Authentication =====
 };
 
@@ -179,7 +179,9 @@ export default function GlobalContextProvider({
       });
       localStorage.removeItem("token");
       localStorage.removeItem("decodedToken");
-      toast.error(message);
+      if (message !== "") {
+        toast.error(message);
+      }
       router.replace("/");
     },
     [router]
@@ -196,7 +198,7 @@ export default function GlobalContextProvider({
       handleSignOut,
       // ===== 00. End Authentication =====
     }),
-    [authState]
+    [authState, handleSignOut]
   );
 
   return (

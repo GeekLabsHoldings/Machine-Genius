@@ -117,7 +117,7 @@ const SideNav = ({
   }, []);
 
   useEffect(() => {
-    if (SelectedRole === "ContentCreator") {
+    if (SelectedRole === "ContentCreator" || SelectedRole === "CEO") {
       localStorage.setItem("selected-role", SelectedRole);
       router.push("/content-creator/dashboard");
     } else if (SelectedRole === "Video Editing") {

@@ -1,17 +1,16 @@
 "use client";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import img from "../public/seoModule.png";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AOS from "aos";
 import "aos/dist/aos.css"; // You can also use <link> for styles
-import Aos from "aos";
-import Footer from "./_components/Footer/Footer";
 import styles from "../app/_components/Footer/footer.module.css";
+import { globalContext } from "./_context/store";
 
 let shuffleNum = 1;
 const businessDataMock = [
@@ -47,6 +46,20 @@ const businessTitleMock = "SEO";
 const businessTitleMock2 = "HR";
 
 export default function Home() {
+  const { handleSignOut } = useContext(globalContext);
+  useEffect(() => {
+    localStorage.removeItem("selected-role");
+    handleSignOut("");
+    const handleBeforeUnload = (): void => {
+      window.scrollTo(0, 0);
+    };
+
+    window.onbeforeunload = handleBeforeUnload;
+
+    return () => {
+      window.onbeforeunload = null; // Clean up the event listener
+    };
+  }, []);
   const [selectedWheel, setSelectedWheel] = useState("hr");
   const [wheelColor, setWheelColor] = useState("#E1C655");
   const [selectedNum, setSelectedNum] = useState<number>(0);
@@ -88,18 +101,6 @@ export default function Home() {
   const logoRef = useRef(null);
   const paragraphRef = useRef(null);
   const hiddenParagraphRef = useRef(null);
-
-  useEffect(() => {
-    const handleBeforeUnload = (): void => {
-      window.scrollTo(0, 0);
-    };
-
-    window.onbeforeunload = handleBeforeUnload;
-
-    return () => {
-      window.onbeforeunload = null; // Clean up the event listener
-    };
-  }, []);
 
   // useGSAP(() => {
   //   if (!infoCard.current) return;
