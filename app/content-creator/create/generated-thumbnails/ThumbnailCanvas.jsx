@@ -106,6 +106,7 @@ export default function ThumbnailCanvas() {
         selectedBgPath: selectedBrand.includes("Street Politics")
           ? "/generated-thumbnails/sp/bg/bg-0.jpg"
           : "/generated-thumbnails/inv/bg/bg-0.jpg",
+        selectedBg: null,
         selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
         searchImgKeyword: "",
         searchBgKeyword: "",
@@ -1398,7 +1399,7 @@ export default function ThumbnailCanvas() {
                           inputName="select-bg"
                           imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
                           checked={
-                            pageState.selectedBgPath ===
+                            pageState.selectedBg ===
                             `/generated-thumbnails/inv/bg/bg-${i}.jpg`
                           }
                           onChange={(e) => {
@@ -1406,6 +1407,7 @@ export default function ThumbnailCanvas() {
                             setPageState((prev) => ({
                               ...prev,
                               selectedBgPath: e.target.value,
+                              selectedBg: e.target.value
                             }));
                           }}
                         />
@@ -1419,7 +1421,7 @@ export default function ThumbnailCanvas() {
                         inputName="select-bg"
                         imgSrc={`/generated-thumbnails/sp/bg/bg-0.jpg`}
                         checked={
-                          pageState.selectedBgPath ===
+                          pageState.selectedBg ===
                           `/generated-thumbnails/sp/bg/bg-0.jpg`
                         }
                         onChange={(e) => {
@@ -1427,6 +1429,7 @@ export default function ThumbnailCanvas() {
                           setPageState((prev) => ({
                             ...prev,
                             selectedBgPath: e.target.value,
+                            selectedBg: e.target.value,
                           }));
                         }}
                       />
@@ -1440,18 +1443,21 @@ export default function ThumbnailCanvas() {
                         <ImageCard
                           imgSrc={img}
                           inputType="radio"
-                          inputName={"select-bg"}
-                          checked={pageState.selectedBgPath === img}
+                          inputName="select-bg"
+                          checked={pageState.selectedBg === img}
                           onChange={async (e) => {
                             const url = await getProxiedImageUrl(
                               e.target.value
                             );
 
                             // console.log(`e.target.value`, e.target.value);
-                            setPageState((prev) => ({
-                              ...prev,
-                              selectedBgPath: url,
-                            }));
+                            if (url) {
+                              setPageState((prev) => ({
+                                ...prev,
+                                selectedBgPath: url,
+                                selectedBg: e.target.value,
+                              }));
+                            }
                           }}
                         />
                       </div>
