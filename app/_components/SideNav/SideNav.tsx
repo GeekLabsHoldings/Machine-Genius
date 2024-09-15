@@ -5,6 +5,7 @@ import React, {
   useContext,
   useCallback,
   memo,
+  useMemo,
 } from "react";
 import styles from "./SideNav.module.css";
 import logo_image from "../../../public/assets/logo.svg";
@@ -87,16 +88,25 @@ const SideNav = ({
   const router = useRouter();
 
   // function that get role value from select option by send it as a prop
-  const getRole = (value: string | number) => {
+  const getRole = useCallback((value: string | number) => {
     setSelectedRole(value);
-  };
+  }, []);
+
+  const filteredRoles = useMemo(() => {
+    return authState.decodedToken?.department.includes("CEO")
+      ? rols
+      : rols.filter((role) => role === authState.decodedToken?.department[0]);
+  }, [authState.decodedToken?.department]);
 
   // function that get current
-  const handleCurrentPageTitle = (name: any) => {
-    setCurrentPage(name);
-  };
+  const handleCurrentPageTitle = useCallback(
+    (name: any) => {
+      setCurrentPage(name);
+    },
+    [setCurrentPage]
+  );
 
-  const handleToggleSubMenu = (e: any) => {
+  const handleToggleSubMenu = useCallback((e: any) => {
     console.log($(e.target).parents(`.${styles.has_sub_menu}`));
     $(`.${styles.has_sub_menu}`)
       .not($(e.target).parents(`.${styles.has_sub_menu}`))
@@ -104,7 +114,7 @@ const SideNav = ({
     $(e.target)
       .parents(`.${styles.has_sub_menu}`)
       .toggleClass(`${styles.open}`);
-  };
+  }, []);
 
   useEffect(() => {
     if (SelectedRole === "ContentCreator") {
@@ -147,6 +157,17 @@ const SideNav = ({
     // console.log(`SelectedRole:`, SelectedRole);
   }, [SelectedRole]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedRole =
+        localStorage.getItem("selected-role") ||
+        authState.decodedToken?.department[0];
+      if (storedRole) {
+        setSelectedRole(storedRole);
+      }
+    }
+  }, []);
+
   // Create debounced functions using useCallback
   const handleMouseEnter = useCallback(
     debounce(() => setIsSideNavOpen(true), 100),
@@ -157,6 +178,13 @@ const SideNav = ({
     debounce(() => setIsSideNavOpen(false), 100),
     []
   );
+
+  useEffect(() => {
+    return () => {
+      handleMouseEnter.clear();
+      handleMouseLeave.clear();
+    };
+  }, [handleMouseEnter, handleMouseLeave]);
 
   return (
     <div
@@ -174,12 +202,7 @@ const SideNav = ({
             <div className={styles.avatar + " " + styles.active}></div>
             <div className="flex flex-col">
               <h6>{authState.decodedToken?.email.split("@")[0]}</h6>
-              <p>
-                {typeof window !== "undefined"
-                  ? localStorage.getItem("selected-role") ??
-                    authState.decodedToken?.department[0]
-                  : authState.decodedToken?.department[0]}
-              </p>
+              <p>{SelectedRole}</p>
             </div>
           </div>
           <div className={styles.logo}>
@@ -203,23 +226,12 @@ const SideNav = ({
         <div className={styles.line}></div>
 
         <CustomSelectInput
-          options={
-            authState.decodedToken?.department.includes("CEO")
-              ? rols
-              : rols.filter(
-                  (role: any) => role === authState.decodedToken?.department[0]
-                )
-          }
+          options={filteredRoles}
           icon={rolsIcon}
           theme="dark"
           whenSideNavClosed={!isSideNavOpen}
           getValue={getRole}
-          label={
-            typeof window !== "undefined"
-              ? localStorage.getItem("selected-role") ??
-                authState.decodedToken?.department[0]
-              : authState.decodedToken?.department[0]
-          }
+          label={SelectedRole}
         />
 
         <div className={styles.line}></div>
