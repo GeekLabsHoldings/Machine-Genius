@@ -82,9 +82,22 @@ const SideNav = ({
   setCurrentPage: any;
 }) => {
   const { authState } = useContext(globalContext);
-
   // current role
+
+  // Memoize the result of selectedRoleTitleInit
+  const SelectedRoleTitle = useMemo(() => {
+    if (typeof window !== "undefined") {
+      const selectedRoleInitValue = localStorage.getItem("selected-role");
+      return selectedRoleInitValue
+        ? selectedRoleInitValue
+        : authState.decodedToken?.department[0] || "";
+    } else {
+      return authState.decodedToken?.department[0] || "";
+    }
+  }, [authState.decodedToken?.department]);
+
   const [SelectedRole, setSelectedRole] = useState<string | number>("");
+
   const router = useRouter();
 
   // function that get role value from select option by send it as a prop
@@ -117,56 +130,36 @@ const SideNav = ({
   }, []);
 
   useEffect(() => {
+    if (SelectedRole && rols.includes(SelectedRole as string)) {
+      localStorage.setItem("selected-role", SelectedRole.toString());
+    }
     if (SelectedRole === "ContentCreator" || SelectedRole === "CEO") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/content-creator/dashboard");
+      router.replace("/content-creator/dashboard");
     } else if (SelectedRole === "Video Editing") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/video-editor/dashboard");
+      router.replace("/video-editor/dashboard");
     } else if (SelectedRole === "Social Media") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/social-media/dashboard");
+      router.replace("/social-media/dashboard");
     } else if (SelectedRole === "Administrative") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/administrative/dashboard");
+      router.replace("/administrative/dashboard");
     } else if (SelectedRole === "Customer Service") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/customer-service/dashboard");
+      router.replace("/customer-service/dashboard");
     } else if (SelectedRole === "Creative") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/creative/dashboard");
+      router.replace("/creative/dashboard");
     } else if (SelectedRole === "HR") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/hr/dashboard");
+      router.replace("/hr/dashboard");
     } else if (SelectedRole === "Accounting") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/accounting/dashboard");
+      router.replace("/accounting/dashboard");
     } else if (SelectedRole === "Newsletter") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/newsletter/dashboard");
+      router.replace("/newsletter/dashboard");
     } else if (SelectedRole === "Out Reach") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/outreach/dashboard");
+      router.replace("/outreach/dashboard");
     } else if (SelectedRole === "SEO") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/seo/dashboard");
+      router.replace("/seo/dashboard");
     } else if (SelectedRole === "OP") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/op/dashboard");
+      router.replace("/op/dashboard");
     }
     // console.log(`SelectedRole:`, SelectedRole);
   }, [SelectedRole]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedRole =
-        localStorage.getItem("selected-role") ||
-        authState.decodedToken?.department[0];
-      if (storedRole) {
-        setSelectedRole(storedRole);
-      }
-    }
-  }, []);
 
   // Create debounced functions using useCallback
   const handleMouseEnter = useCallback(
@@ -202,7 +195,7 @@ const SideNav = ({
             <div className={styles.avatar + " " + styles.active}></div>
             <div className="flex flex-col">
               <h6>{authState.decodedToken?.email.split("@")[0]}</h6>
-              <p>{SelectedRole}</p>
+              <p>{SelectedRoleTitle}</p>
             </div>
           </div>
           <div className={styles.logo}>
@@ -231,7 +224,7 @@ const SideNav = ({
           theme="dark"
           whenSideNavClosed={!isSideNavOpen}
           getValue={getRole}
-          label={SelectedRole}
+          label={SelectedRoleTitle}
         />
 
         <div className={styles.line}></div>
