@@ -1269,7 +1269,7 @@ export default function ThumbnailCanvas() {
                 </div>
 
                 <CustomSelectInput
-                  label={"Select Thumbnail"}
+                  label={"Select Thumbnail Title"}
                   options={
                     generatedThumbnails && generatedThumbnails?.length > 0
                       ? generatedThumbnails?.map((e) => e.Thumbnail)
@@ -1407,7 +1407,7 @@ export default function ThumbnailCanvas() {
                             setPageState((prev) => ({
                               ...prev,
                               selectedBgPath: e.target.value,
-                              selectedBg: e.target.value
+                              selectedBg: e.target.value,
                             }));
                           }}
                         />

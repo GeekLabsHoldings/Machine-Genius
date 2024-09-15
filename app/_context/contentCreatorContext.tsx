@@ -637,7 +637,7 @@ export default function ContentCreatorContextProvider({
       );
       return selectedContentThumbnailInitValue
         ? selectedContentThumbnailInitValue
-        : (generatedThumbnails && generatedThumbnails[0]?.Thumbnail) || "";
+        : "";
     } else {
       return "";
     }
