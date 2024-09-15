@@ -637,7 +637,12 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  const removeBgKeys = ["mswBGVPPK8gQmebR2a4AXv8G"];
+  const removeBgKeys = [
+    "mswBGVPPK8gQmebR2a4AXv8G",
+    "avYD913vYZCsgzGU81rGfsCs",
+    "pPzPf7Euze5DE6GKjatd6Mpz",
+    "cXasYbxVHaKbYxyeVh5szu6p",
+  ];
 
   async function handleRemoveBg(img, type) {
     if (removeBgKeys.length === 0) {
