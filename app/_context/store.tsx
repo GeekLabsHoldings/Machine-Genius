@@ -10,6 +10,17 @@ import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import debounce from "debounce";
 
+const publicPaths = [
+  "/",
+  "/modules",
+  "/about-us",
+  "/contact-us",
+  "/blog",
+  "/privacy-security",
+  "/disclaimer",
+  "/careers",
+];
+
 // Define type for AuthState for better type safety
 type AuthStateType = {
   token: string;
@@ -157,8 +168,13 @@ export default function GlobalContextProvider({
       debouncedCheckAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
-      console.log("Redirecting to signin...");
-      router.replace("/");
+      const isPublicPath = publicPaths.some(
+        (publicPath) => path === publicPath || path.startsWith(`${publicPath}/`)
+      );
+      if (!isPublicPath) {
+        console.log("It's Not Public Path, Redirecting to signin...");
+        router.replace("/");
+      }
     }
     return () => {
       debouncedCheckAuth.clear(); // Clear any pending auth checks on unmount
