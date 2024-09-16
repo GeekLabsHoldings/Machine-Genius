@@ -4,7 +4,7 @@ import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
-import { TextareaAutosize } from "@mui/material";
+import { TextareaAutosize, colors } from "@mui/material";
 import {
   useCallback,
   useContext,
@@ -16,6 +16,144 @@ import {
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 import debounce from "debounce";
+
+const ExpandableCircleMenu = ({ isExpanded }: any) => {
+  const menuItems = [
+    {
+      icon: (
+        <svg
+          fill="#000000"
+          viewBox="0 0 1920 1920"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-[--26px] h-[--26px]"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            {" "}
+            <path
+              d="M425.818 709.983V943.41c0 293.551 238.946 532.497 532.497 532.497 293.55 0 532.496-238.946 532.496-532.497V709.983h96.818V943.41c0 330.707-256.438 602.668-580.9 627.471l-.006 252.301h242.044V1920H667.862v-96.818h242.043l-.004-252.3C585.438 1546.077 329 1274.116 329 943.41V709.983h96.818ZM958.315 0c240.204 0 435.679 195.475 435.679 435.68v484.087c0 240.205-195.475 435.68-435.68 435.68-240.204 0-435.679-195.475-435.679-435.68V435.68C522.635 195.475 718.11 0 958.315 0Z"
+              fill-rule="evenodd"
+            ></path>{" "}
+          </g>
+        </svg>
+      ),
+      label: "Audio",
+      color: "#31B2E9B2",
+    },
+
+    {
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-[--26px] h-[--26px]"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            {" "}
+            <path
+              d="M13 4H8.8C7.11984 4 6.27976 4 5.63803 4.32698C5.07354 4.6146 4.6146 5.07354 4.32698 5.63803C4 6.27976 4 7.11984 4 8.8V15.2C4 16.8802 4 17.7202 4.32698 18.362C4.6146 18.9265 5.07354 19.3854 5.63803 19.673C6.27976 20 7.11984 20 8.8 20H15.2C16.8802 20 17.7202 20 18.362 19.673C18.9265 19.3854 19.3854 18.9265 19.673 18.362C20 17.7202 20 16.8802 20 15.2V11"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>{" "}
+            <path
+              d="M4 16L8.29289 11.7071C8.68342 11.3166 9.31658 11.3166 9.70711 11.7071L13 15M13 15L15.7929 12.2071C16.1834 11.8166 16.8166 11.8166 17.2071 12.2071L20 15M13 15L15.25 17.25"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>{" "}
+            <path
+              d="M18 8V3M18 3L16 5M18 3L20 5"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>{" "}
+          </g>
+        </svg>
+      ),
+      label: "Media",
+      color: "#5FA85BB5",
+    },
+    {
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-[--26px] h-[--26px]"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            {" "}
+            <path
+              d="M13.5 3H12H8C6.34315 3 5 4.34315 5 6V18C5 19.6569 6.34315 21 8 21H12M13.5 3L19 8.625M13.5 3V7.625C13.5 8.17728 13.9477 8.625 14.5 8.625H19M19 8.625V11.8125"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>{" "}
+            <path
+              d="M17.5 21L17.5 15M17.5 15L20 17.5M17.5 15L15 17.5"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>{" "}
+          </g>
+        </svg>
+      ),
+      label: "Files",
+      color: "#E1C655B2",
+    },
+  ];
+
+  return (
+    <div className="absolute bottom-[--30px] flex flex-col-reverse items-center">
+      {menuItems.map((item, index) => (
+        <button
+          key={index}
+          className={`
+              w-12 h-12 rounded-full
+              }] text-white flex items-center justify-center transition-all duration-300 ease-in-out
+              backdrop-blur-xl bg-opacity-90
+            ${
+              isExpanded
+                ? "mb-4 translate-y-0 opacity-100"
+                : "mb-0 -translate-y-4 opacity-0"
+            }
+          `}
+          style={{
+            boxShadow: `0 0 0 2px white, 0 0 0 4px ${item.color}, 0 0 10px 2px ${item.color}`,
+            transitionDelay: `${index * 50}ms`,
+            backgroundColor: item.color,
+          }}
+        >
+          {item.icon}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 const TypingIndicator = ({ firstName, lastName, theme }: any) => {
   return (
@@ -193,6 +331,9 @@ function Chat() {
 
   const unreadRef = useRef<any>([]);
   const initialRef = useRef(true);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleMenu = () => setIsExpanded(!isExpanded);
 
   const {
     messages,
@@ -231,6 +372,21 @@ function Chat() {
   const scrollTimeoutRef = useRef<any>(null);
 
   // ... other code ...
+
+  const menuRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsExpanded(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (isLoaded) {
@@ -940,7 +1096,12 @@ function Chat() {
             }}
             ref={textareaRef}
           />
-          <button>
+          {/* // center the button */}
+          <button
+            className="relative flex items-center justify-center"
+            onClick={toggleMenu}
+            ref={menuRef}
+          >
             <svg
               viewBox="0 0 27 28"
               fill="none"
@@ -952,6 +1113,7 @@ function Chat() {
                 fill="#2A2B2A"
               />
             </svg>
+            <ExpandableCircleMenu isExpanded={isExpanded} />
           </button>
           <button
             onClick={() => {
