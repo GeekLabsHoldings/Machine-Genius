@@ -217,6 +217,7 @@ function Chat() {
   };
 
   const [messagesUpdated, setMessagesUpdated] = useState(false);
+  const [newGroupMembers, setNewGroupMembers] = useState<string[]>([]);
 
   // useEffect(() => {
   //   if (messagesUpdated && ref.current) {
@@ -341,6 +342,35 @@ function Chat() {
     } else {
       console.log(data.message);
     }
+  }
+
+  async function createGroup() {
+    console.log(newGroupMembers);
+    const response = await fetch(
+      "https://api.machinegenius.io/user/conversation/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          type: "group",
+          members: [userId, ...newGroupMembers],
+          groupName: "New Group",
+        }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    if (data.Success) {
+      console.log(data);
+      setCurrentConversation(data.result);
+      setConversation((prev) => [data.result, ...prev]);
+    } else {
+      console.log(data.message);
+    }
+    setNewGroupMembers([]);
   }
 
   useEffect(() => {
@@ -581,7 +611,12 @@ function Chat() {
             <h2 className="text-[--24px] font-semibold">Chats</h2>
             <button
               className="flex flex-col gap-1 items-center"
-              onClick={() => setToggleCreateGroup(!toggleCreateGroup)}
+              onClick={() => {
+                if (newGroupMembers.length > 0) {
+                  createGroup();
+                }
+                setToggleCreateGroup(!toggleCreateGroup);
+              }}
             >
               {toggleCreateGroup ? (
                 <>
@@ -661,10 +696,22 @@ function Chat() {
                     onClick={() => {
                       if (!toggleCreateGroup)
                         createConversation("oneToOne", [userId, employee._id]);
+                      else {
+                        // create group
+                        if (newGroupMembers.includes(employee._id)) {
+                          setNewGroupMembers((prev) =>
+                            prev.filter((member) => member !== employee._id)
+                          );
+                        } else {
+                          setNewGroupMembers((prev) => [...prev, employee._id]);
+                        }
+                      }
                     }}
                   >
                     <div className="flex items-center relative mx-5 gap-5 py-[23px] group-hover:border-transparent">
-                      <CustomCheckBox />
+                      <CustomCheckBox
+                        checked={newGroupMembers.includes(employee._id)}
+                      />
                       <ProfileImageFrame />
                       <div className="flex flex-col justify-center gap-1 w-[80%]">
                         <h3 className="font-bold text-xl transition-colors duration-100">
