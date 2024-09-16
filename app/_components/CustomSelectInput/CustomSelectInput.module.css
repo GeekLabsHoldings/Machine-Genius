@@ -106,7 +106,6 @@
 }
 
 .dropdown_content .item:hover {
-  background-color: var(--orange);
   color: var(--white);
 }
 

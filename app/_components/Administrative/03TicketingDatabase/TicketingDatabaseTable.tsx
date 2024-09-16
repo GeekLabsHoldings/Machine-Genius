@@ -98,8 +98,7 @@ export default function TicketingDatabaseTable() {
 
   const newRibbon = (
     <svg
-      width="40"
-      height="20"
+      className="w-[--40px] h-[--20px]"
       viewBox="0 0 40 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

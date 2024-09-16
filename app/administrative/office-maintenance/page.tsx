@@ -165,7 +165,9 @@ export default function Page() {
                 <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
                   Cleaning Supplies
                 </h3>
-                <CustomSelectInput label="Weekly" options={annualOptions} />
+                <CustomSelectInput label="Weekly" options={annualOptions}
+                hoverColor="hover:bg-[#31B2E9]"
+                />
               </div>
 
               <CustomBtn
@@ -281,7 +283,9 @@ export default function Page() {
                 <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
                   Food List
                 </h3>
-                <CustomSelectInput label="Monthly" options={annualOptions} />
+                <CustomSelectInput label="Monthly" options={annualOptions} 
+                hoverColor="hover:bg-[#31B2E9]"
+                />
               </div>
 
               <CustomBtn

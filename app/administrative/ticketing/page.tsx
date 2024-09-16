@@ -18,7 +18,7 @@ export default function Page() {
 
       {/* Filters section to filter and edit data in the table */}
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader my-[25px]`}>
-        <div className="flex justify-between items-end">
+        <div className="flex justify-between items-end items-center">
           {/* Left section containing filters */}
           <div
             className={`${styles.ticketingPage} w-8/12 flex items-end gap-[1vw]`}
@@ -26,7 +26,11 @@ export default function Page() {
             {/* Ticket Type filter */}
             <div className="flex flex-col w-1/4 gap-[0.3vw]">
               <h5>Ticket Type</h5>
-              <CustomSelectInput label="All" options={ticketTypeOptions} />
+              <CustomSelectInput
+                label="All"
+                options={ticketTypeOptions}
+                hoverColor="hover:bg-[#31B2E9]"
+              />
             </div>
             {/* Date filter with order toggle */}
             <div className="flex flex-col w-[25%] gap-[0.3vw]">

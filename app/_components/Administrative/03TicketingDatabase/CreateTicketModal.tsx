@@ -46,6 +46,7 @@ export default function CreateTicketModal({
         btnColor={btnColor}
         icon={btnIcon}
         onClick={handleOpen}
+        paddingVal="py-[--10px] px-[--22px]"
       />
 
       <Modal

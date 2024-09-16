@@ -3,7 +3,7 @@ import VideoDatabaseTable from "@/app/_components/Administrative/02VideoDatabase
 import React, { useState } from "react";
 import styles from "./database.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import CustomBtn from "@/app/_components/Button/CustomBtn";
+// import CustomBtn from "@/app/_components/Button/CustomBtn";
 import AddNewProductModal from "@/app/_components/Administrative/02VideoDatabase/AddNewProductModal";
 import UploadReceiptModal from "@/app/_components/Administrative/02VideoDatabase/UploadReceiptModal";
 
@@ -55,6 +55,7 @@ export default function Page() {
                     <CustomSelectInput
                       label="All"
                       options={productTypeOptions}
+                      hoverColor="hover:bg-[#31B2E9]"
                     />
                   </div>
                   <div className="flex flex-col w-[25%] gap-[0.3vw]">
@@ -158,6 +159,7 @@ export default function Page() {
                     <CustomSelectInput
                       label="All"
                       options={productTypeOptions}
+                      hoverColor="hover:bg-[#31B2E9]"
                     />
                   </div>
                   <div className="flex flex-col w-[25%] gap-[0.3vw]">
