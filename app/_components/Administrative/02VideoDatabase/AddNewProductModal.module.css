@@ -20,11 +20,11 @@
 }
 .modalBox h3,
 .modalBox label {
-  font-size: clamp(14px, calc(0.95vw + 0.1rem), 70px);
+  font-size: var(--20px);
   font-weight: 700;
 }
 .modalBox h2 {
-  font-size: clamp(24px, calc(0.7vw + 0.1rem), 60px);
+  font-size: var(--24px);
   font-weight: 700;
 }
 .addNewProduct svg {

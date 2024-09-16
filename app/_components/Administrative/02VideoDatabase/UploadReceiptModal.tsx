@@ -107,7 +107,7 @@ export default function UploadReceiptModal({
               </div>
               <div className={`flex flex-col gap-2`}>
                 <h3>Date Uploaded</h3>
-                <span style={{ color: "#A6A6A6", fontWeight: "700" }}>
+                <span className="text-[#A6A6A6] font-bold">
                   20 March 2024
                 </span>
               </div>

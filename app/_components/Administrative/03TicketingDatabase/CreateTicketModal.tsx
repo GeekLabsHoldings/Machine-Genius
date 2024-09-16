@@ -12,7 +12,7 @@ interface IProps {
   modalTitle: string; // Modal title text.
 }
 
-const ticketTypeOptions: string[] = ["IT", "System Issue", "Request"];
+const ticketTypeOptions: string[] = ["All", "IT", "System Issue", "Request"];
 
 /**
  * Renders a modal for creating a ticket.
@@ -92,9 +92,10 @@ export default function CreateTicketModal({
               <div className="flex gap-[1vw]">
                 <div className="flex flex-col gap-[0.3vw] w-full">
                   <CustomSelectInput
-                    label="IT"
+                    label="All"
                     options={ticketTypeOptions}
                     paddingVal="py-[0.2vw] px-[0.5vw]"
+                    hoverColor="hover:bg-[#31B2E9]"
                   />
                 </div>
               </div>
@@ -109,6 +110,7 @@ export default function CreateTicketModal({
                   id="subjectLine"
                   required
                   className={`${styles.input}`}
+                  placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing."
                 />
               </div>
               <div className={`flex flex-col gap-[0.2vw]`}>
@@ -117,7 +119,9 @@ export default function CreateTicketModal({
                   <textarea
                     id="tiketDescription"
                     required
+                    rows={5}
                     className={`${styles.input} w-full`}
+                    placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
                   />
                 </div>
               </div>
@@ -128,7 +132,7 @@ export default function CreateTicketModal({
               <CustomBtn
                 word="Create"
                 btnColor="black"
-                style={{ width: "max-content" }}
+                paddingVal="py-[--10px] px-[--42px]"
               />
             </div>
           </div>

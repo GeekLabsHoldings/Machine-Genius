@@ -92,16 +92,18 @@ export default function AddNewProductModal({
                   id="productName"
                   required
                   className={`${styles.input}`}
+                  placeholder="V7 Pina Colada"
                 />
               </div>
               <div className={`flex flex-col gap-[0.2vw]`}>
                 <label htmlFor="productPrice">Product Price*</label>
                 <div>
                   <input
-                    type="text"
+                    type="number"
                     id="productPrice"
                     required
                     className={`${styles.input} w-full`}
+                    placeholder="15"
                   />
                 </div>
               </div>
@@ -116,6 +118,7 @@ export default function AddNewProductModal({
                     label="Drinks"
                     options={productTypeOptions}
                     paddingVal="py-[0.2vw] px-[0.5vw]"
+                    hoverColor="hover:bg-[#31B2E9]"
                   />
                 </div>
               </div>
@@ -126,7 +129,7 @@ export default function AddNewProductModal({
               <CustomBtn
                 word="Add Product"
                 btnColor="black"
-                style={{ width: "max-content" }}
+                paddingVal="py-[--10px] px-[--22px]"
               />
             </div>
           </div>
