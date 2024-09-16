@@ -6,7 +6,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 export default function Page() {
-  const [activeTab, setActiveTab] = React.useState<number>(1);
+  const [activeTab, setActiveTab] = useState<number>(1);
   const annualOptions: string[] = ["Daily", "Weekly", "Monthly", "Yearly"];
 
   return (
@@ -161,15 +161,17 @@ export default function Page() {
         {activeTab === 2 && (
           <div className={`${styles.tab2}`}>
             <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-[0.3vw] my-[43px] w-[393px]">
-                <h3 className={`${styles.cardsTitle}`}>Cleaning Supplies</h3>
+              <div className="flex flex-col my-[43px] w-[393px]">
+                <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
+                  Cleaning Supplies
+                </h3>
                 <CustomSelectInput label="Weekly" options={annualOptions} />
               </div>
 
               <CustomBtn
                 btnColor="white"
                 word="Receipts Database"
-                style={{ minWidth: "188px" }}
+                paddingVal="py-[--12px] px-[--20px]"
               />
             </div>
 
@@ -275,15 +277,17 @@ export default function Page() {
         {activeTab === 3 && (
           <div className={`${styles.tab3}`}>
             <div className="flex justify-between items-center">
-              <div className="flex flex-col gap-[0.3vw] my-[43px] w-[393px]">
-                <h3 className={`${styles.cardsTitle}`}>Food List</h3>
+              <div className="flex flex-col my-[43px] w-[393px]">
+                <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
+                  Food List
+                </h3>
                 <CustomSelectInput label="Monthly" options={annualOptions} />
               </div>
 
               <CustomBtn
                 btnColor="white"
                 word="Receipts Database"
-                style={{ minWidth: "188px" }}
+                paddingVal="py-[--12px] px-[--20px]"
               />
             </div>
 

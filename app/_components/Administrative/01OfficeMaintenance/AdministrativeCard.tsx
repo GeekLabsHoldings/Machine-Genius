@@ -40,12 +40,12 @@ export default function AdministrativeCard({
   return (
     <div className={styles.card}>
       {/* Card header containing the title and optional icon */}
-      <div className="card-head flex justify-between">
-        <div className={`${styles.cardTitle} flex gap-3`}>
+      <div className="card-head flex justify-between items-center">
+        <div className={`flex gap-3 items-center`}>
           {/* Display the provided icon */}
           {icon}
           {/* Display the card title */}
-          <div>{title}</div>
+          <div className={`${styles.cardTitle}`}>{title}</div>
         </div>
         {/* Conditionally render an additional icon in the header if addIcon is true */}
         {addIcon && (

@@ -48,6 +48,6 @@
 }
 
 .cardTitle {
-  font-size: 24px;
+  font-size: var(--24px);
   font-weight: 700;
 }
