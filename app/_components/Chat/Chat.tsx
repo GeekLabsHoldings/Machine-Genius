@@ -373,7 +373,7 @@ function Chat() {
 
   // ... other code ...
 
-  const menuRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -1097,8 +1097,8 @@ function Chat() {
             ref={textareaRef}
           />
           {/* // center the button */}
-          <button
-            className="relative flex items-center justify-center"
+          <div
+            className="relative flex items-center justify-center cursor-pointer"
             onClick={toggleMenu}
             ref={menuRef}
           >
@@ -1114,7 +1114,7 @@ function Chat() {
               />
             </svg>
             <ExpandableCircleMenu isExpanded={isExpanded} />
-          </button>
+          </div>
           <button
             onClick={() => {
               sendMessage({
