@@ -39,7 +39,7 @@ export default function Page() {
                 className={`${styles.changeOrder} `}
                 onClick={() => {
                   // Toggles the date order between ascending and descending.
-                  setDateOrder(!dateOrder);
+                  setDateOrder((prev) => !prev);
                 }}
               >
                 <p>{dateOrder ? "Ascend" : "Descend"}</p>
