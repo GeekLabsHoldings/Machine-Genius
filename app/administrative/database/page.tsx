@@ -134,7 +134,7 @@ export default function Page() {
                     modalTitle={"Add New Product"}
                   />
 
-                  <CustomBtn btnColor="white" word="Receipts Database" />
+                  {/* <CustomBtn btnColor="white" word="Receipts Database" /> */}
                 </div>
               </div>
             </div>

@@ -47,7 +47,7 @@ export default function Page() {
         {/* 1. Tab 1 Content */}
         {activeTab === 1 && (
           <div className={`${styles.tab1}`}>
-            <h3 className={`${styles.cardsTitle} my-[43px]`}>
+            <h3 className={`${styles.cardsTitle} my-[--sy-33px]`}>
               Weekly Checklist
             </h3>
 
@@ -161,7 +161,7 @@ export default function Page() {
         {activeTab === 2 && (
           <div className={`${styles.tab2}`}>
             <div className="flex justify-between items-center">
-              <div className="flex flex-col my-[43px] w-[393px]">
+              <div className="flex flex-col my-[--sy-33px] w-[393px]">
                 <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
                   Cleaning Supplies
                 </h3>
@@ -277,7 +277,7 @@ export default function Page() {
         {activeTab === 3 && (
           <div className={`${styles.tab3}`}>
             <div className="flex justify-between items-center">
-              <div className="flex flex-col my-[43px] w-[393px]">
+              <div className="flex flex-col my-[--sy-33px] w-[393px]">
                 <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
                   Food List
                 </h3>
@@ -333,9 +333,9 @@ export default function Page() {
                   { title: "Tissues" },
                   { title: "Toilet Paper" },
                   { title: "Soap" },
-                  { title: "Air Freshener" },
-                  { title: "Dish Soap" },
-                  { title: "Tissues" },
+                  { title: "Air Freshener-1" },
+                  { title: "1" },
+                  { title: "2" },
                 ]}
               />
 
