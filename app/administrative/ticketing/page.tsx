@@ -18,7 +18,7 @@ export default function Page() {
 
       {/* Filters section to filter and edit data in the table */}
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader my-[25px]`}>
-        <div className="flex justify-between items-end items-center">
+        <div className="flex justify-between items-center">
           {/* Left section containing filters */}
           <div
             className={`${styles.ticketingPage} w-8/12 flex items-end gap-[1vw]`}
