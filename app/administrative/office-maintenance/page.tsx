@@ -137,7 +137,7 @@ export default function Page() {
   async function getRooms() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/rooms/get-rooms/`,
+        `https://api.machinegenius.io/administrative/rooms/get-rooms?limit=1000`,
         {
           headers: {
             Authorization: `barrer ${

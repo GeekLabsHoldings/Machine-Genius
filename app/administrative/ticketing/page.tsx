@@ -20,7 +20,7 @@ export default function Page() {
   async function getTickets() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/tickets/get-tickets`,
+        `https://api.machinegenius.io/administrative/tickets/get-tickets?limit=1000`,
         {
           headers: {
             Authorization: `barrer ${
