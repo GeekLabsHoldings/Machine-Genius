@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import styles from "./TicketingDatabaseTable.module.css";
+import convertTimestampToDate from "@/app/_utils/convertTimestampToDate";
 
 const newRibbon = (
   <svg
@@ -23,14 +24,13 @@ export default function TicketingDatabaseTable({
   tickets: any;
   getTickets: () => void;
 }) {
+
+
+
   useEffect(() => {
     getTickets();
   }, []);
 
-  function convertTimestampToDate(timestamp: any) {
-    const date = new Date(timestamp);
-    return date.toLocaleString().split(",")[0]; // You can customize the format as needed
-  }
 
   function isWithinLastWeek(timestamp: string) {
     const oneWeekAgo = new Date();

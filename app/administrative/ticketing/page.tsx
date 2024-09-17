@@ -130,7 +130,10 @@ export default function Page() {
       </div>
 
       {/* Component to display the ticketing database table */}
-      <TicketingDatabaseTable tickets={pageState.tickets} getTickets={getTickets} />
+      <TicketingDatabaseTable
+        tickets={pageState.tickets}
+        getTickets={getTickets}
+      />
     </div>
   );
 }
