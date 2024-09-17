@@ -93,6 +93,7 @@ export default function ReceiptsDatabaseTable({
                 btnWord={"Upload Receipts"}
                 btnColor={"black"}
                 modalTitle={"Upload Receipt"}
+                getReceipts={getReceipts}
               />
             </div>
           </div>

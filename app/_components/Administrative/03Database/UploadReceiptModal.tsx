@@ -1,15 +1,18 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./UploadReceiptModal.module.css";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "../../Button/CustomBtn";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
 
 interface IProps {
   btnWord: string; // Button text.
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
+  getReceipts: () => void;
 }
 
 /**
@@ -22,20 +25,177 @@ interface IProps {
  * @param {string} props.btnIcon - The icon displayed on the button.
  * @return {JSX.Element} The rendered modal component.
  */
+
 export default function UploadReceiptModal({
   modalTitle,
   btnWord,
   btnColor,
   btnIcon,
+  getReceipts,
 }: IProps) {
+  const { authState, handleSignOut } = useContext(globalContext);
+  const [pageState, setPageState] = useState<{
+    presignedURLData: any;
+    selectedFileName: string;
+    totalPrice: number | null;
+  }>({
+    presignedURLData: null,
+    selectedFileName: "",
+    totalPrice: null,
+  });
   // State for controlling the modal open/close state
   const [open, setOpen] = React.useState(false);
   // Function to handle modal open.
   const handleOpen = () => setOpen(true);
   // Function to handle modal close.
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setPageState((prev: any) => ({
+      ...prev,
+      selectedFileName: "",
+      totalPrice: null,
+    }));
+  };
+  const receiptFileRef = useRef<HTMLInputElement>(null);
 
-  const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
+  // ===== 01. get Presigned URL =====
+  async function getPresignedURL() {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/receipts/presigned-url`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else {
+        setPageState((prev: any) => ({
+          ...prev,
+          presignedURLData: json,
+        }));
+        return json;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getPresignedURL:", error);
+    }
+  }
+
+  // ===== 02. upload Receipt =====
+  async function uploadReceipt(file: File) {
+    const getPresignedURLData = await getPresignedURL();
+    // setPageState((prev) => ({ ...prev, uploadVideoLoading: true }));
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/octet-stream");
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: file,
+      redirect: "follow" as RequestRedirect,
+    };
+
+    try {
+      const response = await fetch(
+        getPresignedURLData.presignedURL,
+        requestOptions
+      );
+      if (response.ok) {
+        console.log("Upload successful");
+        // setPageState((prev) => ({ ...prev, triggerCreateReceipt: true }));
+      } else {
+        // const errorText = await response.text();
+        // toast.error(
+        //   `Upload failed with status: ${response.status} - ${errorText}`
+        // );
+      }
+    } catch (error: any) {
+      toast.error("Something went wrong!");
+      console.error("Error in uploadReceipt:", error);
+    } finally {
+      // setPageState((prev) => ({ ...prev, uploadVideoLoading: false }));
+    }
+  }
+
+  // ===== 03. create Receipt =====
+  async function createReceipt() {
+    if (!pageState.totalPrice || !pageState.presignedURLData) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/receipts`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            receiptUrl: pageState?.presignedURLData?.receiptUrl,
+            totalPrice: pageState.totalPrice,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json) {
+        toast.success("Ticket created successfully!");
+        handleClose();
+        setPageState((prev: any) => ({
+          ...prev,
+          presignedURLData: null,
+          selectedFileName: "",
+          totalPrice: null,
+        }));
+        getReceipts();
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error createReceipt:", error);
+    }
+  }
+
+  // ===== 00. handleFileChange =====
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files[0]) {
+      setPageState((prev) => ({ ...prev, selectedFileName: files[0].name }));
+      uploadReceipt(files[0]);
+    }
+  };
+
+  const getTodayDate = () => {
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+    return today.toLocaleDateString("en-US", options);
+  };
 
   return (
     <>
@@ -88,9 +248,13 @@ export default function UploadReceiptModal({
               <div className="flex items-center justify-between gap-[0.2vw]">
                 <div className="flex flex-col gap-2">
                   <h3>Upload Receipt</h3>
-                  <span>scan7385824.jpg</span>
+                  <span>{pageState.selectedFileName || "No file chosen"}</span>
                 </div>
-                <div className="cursor-pointer">
+
+                <div
+                  className="cursor-pointer"
+                  onClick={() => receiptFileRef.current?.click()}
+                >
                   <svg
                     width="35"
                     height="23"
@@ -103,12 +267,38 @@ export default function UploadReceiptModal({
                       fill="#A6A6A6"
                     />
                   </svg>
+                  <input
+                    type="file"
+                    ref={receiptFileRef}
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
                 </div>
               </div>
+
+              <div className={`flex flex-col gap-[0.2vw]`}>
+                <label htmlFor="totalPrice">Total Price</label>
+                <div>
+                  <input
+                    type="number"
+                    id="totalPrice"
+                    required
+                    className={`${styles.input} w-full`}
+                    placeholder="15"
+                    onChange={(e) =>
+                      setPageState((prev: any) => ({
+                        ...prev,
+                        totalPrice: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+
               <div className={`flex flex-col gap-2`}>
                 <h3>Date Uploaded</h3>
                 <span className="text-[#A6A6A6] font-bold">
-                  20 March 2024
+                  {getTodayDate()}
                 </span>
               </div>
             </div>
@@ -119,6 +309,8 @@ export default function UploadReceiptModal({
                 word="Upload Receipts"
                 btnColor="black"
                 style={{ width: "100%" }}
+                onClick={createReceipt}
+                disabled={!pageState.totalPrice || !pageState.presignedURLData}
               />
             </div>
           </div>
