@@ -222,6 +222,7 @@ const useChat = () => {
         ...prev,
         {
           text: data.text,
+          mediaUrl: data.mediaUrl,
           sender: {
             _id: data.sender,
           },
