@@ -6,6 +6,7 @@ import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
 import { TextareaAutosize, colors } from "@mui/material";
 import {
+  Children,
   useCallback,
   useContext,
   useEffect,
@@ -17,7 +18,7 @@ import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 import debounce from "debounce";
 
-const ExpandableCircleMenu = ({ isExpanded }: any) => {
+const ExpandableCircleMenu = ({ isExpanded, handleFileUpload }: any) => {
   const menuItems = [
     {
       icon: (
@@ -133,6 +134,7 @@ const ExpandableCircleMenu = ({ isExpanded }: any) => {
         <button
           key={index}
           className={`
+            relative
               w-12 h-12 rounded-full
               }] text-white flex items-center justify-center transition-all duration-300 ease-in-out
               backdrop-blur-xl bg-opacity-90
@@ -149,6 +151,13 @@ const ExpandableCircleMenu = ({ isExpanded }: any) => {
           }}
         >
           {item.icon}
+          {index === 2 && (
+            <input
+              type="file"
+              onChange={handleFileUpload}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+            />
+          )}
         </button>
       ))}
     </div>
@@ -355,6 +364,7 @@ function Chat() {
   const AddMessage = (message: Message) => {
     if (message.text.trim() === "") return;
     setMessages((prev) => [...prev, message]);
+    setInQueueAttachments([]);
   };
 
   const [messagesUpdated, setMessagesUpdated] = useState(false);
@@ -717,7 +727,7 @@ function Chat() {
   //   setIsTyping
   // };
 
-  const typingTimeoutRef = useRef<any>(null);
+  // const typingTimeoutRef = useRef<any>(null);
 
   // useEffOect(() => {
   //   clearTimeout()
@@ -745,6 +755,79 @@ function Chat() {
     }, 500),
     [userId, handleUserTyping]
   );
+
+  // ===== 01. get Presigned URL =====
+  async function getPresignedURL() {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/receipts/presigned-url`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        // handleSignOut();
+      }
+      const json = await res.json();
+      if (!json) {
+        // toast.error("Something went wrong!");
+        return;
+      } else {
+        // setPresignedURLData(json);
+        return json;
+      }
+    } catch (error) {
+      // toast.error("Something went wrong!");
+      console.error("Error getPresignedURL:", error);
+    }
+  }
+  const [presignedURLData, setPresignedURLData] = useState<any>(null);
+  const [receiptUrl, setReceiptUrl] = useState<string>("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [inQueueAttachments, setInQueueAttachments] = useState<any[]>([]);
+
+  const handleFileUpload = async (e: any) => {
+    const file = e.target.files[0];
+    const presignedURLData = await getPresignedURL();
+    console.log(presignedURLData);
+    if (presignedURLData) {
+      const { presignedURL, receiptUrl } = presignedURLData;
+      console.log(presignedURL);
+      console.log(receiptUrl);
+      const res = await fetch(presignedURL, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/octet-stream",
+        },
+        body: file,
+      });
+      if (res.status === 200) {
+        setReceiptUrl(receiptUrl);
+        setInQueueAttachments((prev) => [
+          ...prev,
+          { name: file.name, receiptUrl },
+        ]);
+
+        // AddMessage({
+        //   text: receiptUrl,
+        //   sender: {
+        //     _id: userId,
+        //   },
+        // });
+        // sendMessage({
+        //   conversationId: currentConversation._id,
+        //   text: receiptUrl,
+        // });
+      }
+    }
+  };
 
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
@@ -846,7 +929,7 @@ function Chat() {
             {searchBarFocus || toggleCreateGroup
               ? employees?.map((employee, index) => (
                   <li
-                    className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)]`}
+                    className={`cursor-pointer ${styles.chat__chat__aside__menu__item} group transition-colors duration-300 ease-in-out hover:[background-color:var(--dark)] !transition-none`}
                     key={index}
                     // ref={(el) => (unreadRef.current = el)}
                     onClick={() => {
@@ -906,7 +989,7 @@ function Chat() {
                       <CustomCheckBox />
                       <ProfileImageFrame />
                       <div className="flex flex-col justify-center gap-1 w-[80%]">
-                        <h3 className="font-bold text-xl transition-colors duration-100">
+                        <h3 className="font-bold text-xl !transition-none">
                           {message.type === "group"
                             ? message.groupName
                             : message.members[
@@ -1029,7 +1112,17 @@ function Chat() {
                           : "self-start"
                       } ${styles.chat__box__message__container}`}
                     >
-                      <p>{message.text}</p>
+                      <p>
+                        {message.mediaUrl ? (
+                          <img
+                            src={message.mediaUrl}
+                            alt="media"
+                            className="w-full h-full object-cover rounded-[20px]"
+                          />
+                        ) : null}
+
+                        {message.text}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1052,6 +1145,40 @@ function Chat() {
             />
           )}
         </div>
+        {inQueueAttachments.length > 0 && (
+          <div className="flex items-center gap-[--25px] px-[--18px] py-[--15px] border-t border-[var(--dark)]">
+            {inQueueAttachments.map((attachment, index) => (
+              <div
+                className="relative w-[--58px] h-[--58px] border-[--1px] border-[var(--dark)] rounded-[12px]"
+                key={index}
+              >
+                <img
+                  src={attachment.receiptUrl}
+                  alt={attachment.name}
+                  className="w-full h-full object-cover rounded-[12px]"
+                />
+                <div className="absolute -top-[--5px] -right-[--5px] flex items-center justify-center w-[--20px] h-[--20px] bg-[#DBDBD7] rounded-full border-[--2px] border-[var(--white)]">
+                  <button
+                    onClick={() => {
+                      setInQueueAttachments((prev) =>
+                        prev.filter((_, i) => i !== index)
+                      );
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-[--15px] h-[--15px]"
+                    >
+                      <path d="M 4.9902344 3.9902344 A 1.0001 1.0001 0 0 0 4.2929688 5.7070312 L 10.585938 12 L 4.2929688 18.292969 A 1.0001 1.0001 0 1 0 5.7070312 19.707031 L 12 13.414062 L 18.292969 19.707031 A 1.0001 1.0001 0 1 0 19.707031 18.292969 L 13.414062 12 L 19.707031 5.7070312 A 1.0001 1.0001 0 0 0 18.980469 3.9902344 A 1.0001 1.0001 0 0 0 18.292969 4.2929688 L 12 10.585938 L 5.7070312 4.2929688 A 1.0001 1.0001 0 0 0 4.9902344 3.9902344 z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="flex items-center gap-[--38px] px-[--18px] py-[--21px] border-t border-[var(--dark)]">
           {/* <textarea
             placeholder="Type a message"
@@ -1087,10 +1214,15 @@ function Chat() {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage({
-                  conversationId: currentConversation._id,
+                  conversationId: currentConversation?._id,
                   text: message,
+                  mediaUrl: inQueueAttachments[0]?.receiptUrl,
                 });
-                AddMessage({ text: message, sender: { _id: userId } });
+                AddMessage({
+                  text: message,
+                  mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                  sender: { _id: userId },
+                });
                 setMessage("");
               }
             }}
@@ -1098,7 +1230,7 @@ function Chat() {
           />
           {/* // center the button */}
           <div
-            className="relative flex items-center justify-center cursor-pointer"
+            className="relative flex items-center justify-center"
             onClick={toggleMenu}
             ref={menuRef}
           >
@@ -1106,22 +1238,32 @@ function Chat() {
               viewBox="0 0 27 28"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-[--27px] h-[--28px]"
+              className="w-[--27px] h-[--28px] cursor-pointer"
             >
               <path
                 d="M8.5526 19.8417C8.88102 20.1708 9.37365 20.116 9.70208 19.8417L15.1757 14.3566C15.5589 13.9727 16.2157 13.9178 16.7084 14.3566C17.201 14.7954 17.1463 15.5633 16.7084 16.0021L9.97576 22.6391C8.49787 24.1201 6.03472 24.1201 4.55683 22.6391L4.50209 22.5842C3.0242 21.1033 3.0242 18.635 4.50209 17.154L16.3799 5.25139C17.8578 3.77042 20.321 3.77042 21.7989 5.25139L21.8536 5.30624C23.3315 6.78721 23.3315 9.2555 21.8536 10.7365L21.7989 10.7913C21.5252 11.0656 21.4705 11.4495 21.6894 11.7786C22.0178 12.382 22.2915 13.0402 22.4557 13.6984C22.5652 14.1372 23.0578 14.2469 23.3862 13.9727C23.4744 13.8843 23.5603 13.796 23.6413 13.7113C24.0268 13.3081 24.4175 12.9073 24.7631 12.4696C26.9735 9.66985 26.8011 5.58616 24.246 2.98673C24.2214 2.96174 24.1876 2.94765 24.1526 2.94765C24.1175 2.94765 24.0838 2.93348 24.0588 2.90886C21.2641 0.150322 16.7501 0.163251 13.9715 2.94765L2.09368 14.7954C-0.697893 17.5928 -0.697893 22.1454 2.09368 24.9428L2.20315 25.0525C4.99472 27.8499 9.48313 27.8499 12.2747 25.0525L19.062 18.3059C20.8136 16.5507 20.7589 13.6984 18.9526 11.9432C17.201 10.2428 14.3547 10.3525 12.6579 12.1077L7.29366 17.4831C6.96524 17.8122 6.96524 18.3607 7.29366 18.6898L8.5526 19.8417Z"
                 fill="#2A2B2A"
               />
             </svg>
-            <ExpandableCircleMenu isExpanded={isExpanded} />
+            <ExpandableCircleMenu
+              isExpanded={isExpanded}
+              handleFileUpload={handleFileUpload}
+              // handleImageUpload={handleImageUpload}
+              // handleAudioUpload={handleAudioUpload}
+            />
           </div>
           <button
             onClick={() => {
               sendMessage({
                 conversationId: currentConversation?._id,
                 text: message,
+                mediaUrl: inQueueAttachments[0]?.receiptUrl,
               });
-              AddMessage({ text: message, sender: { _id: userId } });
+              AddMessage({
+                text: message,
+                mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                sender: { _id: userId },
+              });
               setMessage("");
             }}
           >

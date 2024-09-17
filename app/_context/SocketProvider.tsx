@@ -66,8 +66,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Disconnected from Socket.IO server");
     });
 
+    // setTimeout(() => {
+    //   newSocket.disconnect(); // Clean up on unmount
+    // }, 15000);
     return () => {
-      newSocket.disconnect(); // Clean up on unmount
+      newSocket.disconnect();
     };
   }, []);
 
