@@ -1,16 +1,53 @@
 "use client"; // Directive to indicate that this file is a client component in a Next.js application.
-
 import TicketingDatabaseTable from "@/app/_components/Administrative/03TicketingDatabase/TicketingDatabaseTable"; // Importing the TicketingDatabaseTable component.
-import React, { useState } from "react"; // Importing React and useState hook.
+import React, { useContext, useState } from "react"; // Importing React and useState hook.
 import styles from "./ticketing.module.css"; // Importing CSS module for styling.
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing CustomSelectInput component.
 import CreateTicketModal from "@/app/_components/Administrative/03TicketingDatabase/CreateTicketModal"; // Importing CreateTicketModal component.
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 export default function Page() {
   // Defining ticket type options for the select input.
   const ticketTypeOptions: string[] = ["All", "IT", "System Issue", "Request"];
   // State variable to manage the order of dates, initialized to true (ascending).
   const [dateOrder, setDateOrder] = useState<boolean>(true);
+  const { authState, handleSignOut } = useContext(globalContext);
+  const [pageState, setPageState] = useState<any>({
+    tickets: null,
+  });
+
+  async function getTickets() {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/tickets/get-tickets`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          tickets: json,
+        }));
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getTickets:", error);
+    }
+  }
 
   return (
     <div className="pageHeader">
@@ -86,13 +123,14 @@ export default function Page() {
               }
               btnColor={"black"} // Button color.
               modalTitle={"Create Ticket"} // Title of the modal.
+              getTickets={getTickets}
             />
           </div>
         </div>
       </div>
 
       {/* Component to display the ticketing database table */}
-      <TicketingDatabaseTable />
+      <TicketingDatabaseTable tickets={pageState.tickets} getTickets={getTickets} />
     </div>
   );
 }

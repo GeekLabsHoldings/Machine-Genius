@@ -1,8 +1,6 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./TicketingDatabaseTable.module.css";
-import toast from "react-hot-toast";
-import { globalContext } from "@/app/_context/store";
 
 const newRibbon = (
   <svg
@@ -17,131 +15,31 @@ const newRibbon = (
     />
   </svg>
 );
-export default function TicketingDatabaseTable() {
-  const [pageState, setPageState] = useState<any>({});
-  const { authState, handleSignOut } = useContext(globalContext);
-  // An array of objects representing the rows of the table body.
-  const bodyRow = [
-    {
-      newStatus: true,
-      type: "Request",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-17",
-    },
-    {
-      newStatus: true,
-      type: "System Issue",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-04-20",
-    },
-    {
-      newStatus: false,
-      type: "IT",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-12",
-    },
-    {
-      newStatus: false,
-      type: "Request",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-05",
-    },
-    {
-      newStatus: false,
-      type: "System Issue",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-15",
-    },
-    {
-      newStatus: false,
-      type: "IT",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-10",
-    },
-    {
-      newStatus: false,
-      type: "Request",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-08",
-    },
-    {
-      newStatus: false,
-      type: "System Issue",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-18",
-    },
-    {
-      newStatus: false,
-      type: "IT",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-14",
-    },
-    {
-      newStatus: false,
-      type: "Request",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-11",
-    },
-    {
-      newStatus: false,
-      type: "System Issue",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-16",
-    },
-    {
-      newStatus: false,
-      type: "IT",
-      subject: "Lorem ipsum dolor sit amet",
-      desc: "Lorem ipsum dolorx reyswr",
-      date: "2023-05-13",
-    },
-  ];
 
-  async function getTickets() {
-    try {
-      const res = await fetch(
-        `https://api.machinegenius.io/administrative/rooms/get-rooms/`,
-        {
-          headers: {
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
-      const json = await res.json();
-      if (json && (json.CheckList || json.Missed || json.Done)) {
-        setPageState((prevState: any) => ({
-          ...prevState,
-          rooms: json,
-        }));
-      } else {
-        toast.error("Something went wrong!");
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error getRooms:", error);
-    }
+export default function TicketingDatabaseTable({
+  tickets,
+  getTickets,
+}: {
+  tickets: any;
+  getTickets: () => void;
+}) {
+  useEffect(() => {
+    getTickets();
+  }, []);
+
+  function convertTimestampToDate(timestamp: any) {
+    const date = new Date(timestamp);
+    return date.toLocaleString().split(",")[0]; // You can customize the format as needed
+  }
+
+  function isWithinLastWeek(timestamp: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    return new Date(timestamp) > oneWeekAgo;
   }
 
   return (
-    <div className={`${styles.tableContainer} h-[65vh]`}>
+    <div className={`h-[65vh]`}>
       {/* Start Table */}
       <div className={styles.table}>
         {/* Table Header */}
@@ -220,15 +118,25 @@ export default function TicketingDatabaseTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
-            <ul className="w-[100%] relative" key={idx}>
-              <div className="absolute">{e.newStatus && newRibbon}</div>
-              <li className="w-[20%]">{e.type}</li>
-              <li className="w-[20%]">{e.subject}</li>
-              <li className="w-[20%]">{e.desc}</li>
-              <li className="w-[20%]">{e.date}</li>
-            </ul>
-          ))}
+          {Array.isArray(tickets) && tickets.length > 0 ? (
+            tickets.map((e: any) => (
+              <ul className="w-[100%] relative" key={e._id}>
+                <div className="absolute">
+                  {e.createdAt && isWithinLastWeek(e.createdAt) && newRibbon}
+                </div>
+                <li className="w-[20%]">{e.ticketType}</li>
+                <li className="w-[20%]">{e.subjectLine}</li>
+                <li className="w-[20%]">{e.ticketDescription}</li>
+                <li className="w-[20%]">
+                  {convertTimestampToDate(e.createdAt)}
+                </li>
+              </ul>
+            ))
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <span className="text-gray-500">No tickets found!</span>
+            </div>
+          )}
         </div>
       </div>
       {/* End Table */}

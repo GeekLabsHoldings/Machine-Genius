@@ -1,18 +1,30 @@
 "use client";
-import React from "react";
+import React, { useContext, useState } from "react";
 import styles from "./CreateTicketModal.module.css";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "../../Button/CustomBtn";
 import CustomSelectInput from "../../CustomSelectInput/CustomSelectInput";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 interface IProps {
   btnWord: string; // Button text.
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
+  getTickets: () => void;
 }
 
-const ticketTypeOptions: string[] = ["All", "IT", "System Issue", "Request"];
+enum TicketTypeEnum {
+  IT = "IT",
+  SystemIssue = "System Issue",
+  Request = "Request",
+}
+const ticketTypeOptions: TicketTypeEnum[] = [
+  TicketTypeEnum.IT,
+  TicketTypeEnum.SystemIssue,
+  TicketTypeEnum.Request,
+];
 
 /**
  * Renders a modal for creating a ticket.
@@ -29,7 +41,9 @@ export default function CreateTicketModal({
   btnWord,
   btnColor,
   btnIcon,
+  getTickets,
 }: IProps) {
+  const { authState, handleSignOut } = useContext(globalContext);
   // State for controlling the modal open/close state
   const [open, setOpen] = React.useState(false);
   // Function to handle modal open.
@@ -37,7 +51,66 @@ export default function CreateTicketModal({
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
-  const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
+  const [pageState, setPageState] = useState<{
+    ticketType: TicketTypeEnum | "";
+    subjectLine: string;
+    ticketDescription: string;
+  }>({
+    ticketType: "",
+    subjectLine: "",
+    ticketDescription: "",
+  });
+
+  async function createTicket() {
+    if (
+      !pageState.ticketType ||
+      !pageState.subjectLine ||
+      !pageState.ticketDescription
+    ) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/tickets/create-ticket`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ticketType: pageState.ticketType as TicketTypeEnum,
+            subjectLine: pageState.subjectLine,
+            ticketDescription: pageState.ticketDescription,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json) {
+        toast.success("Ticket created successfully!");
+        handleClose();
+        setPageState({
+          ticketType: "",
+          subjectLine: "",
+          ticketDescription: "",
+        });
+        getTickets();
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error createTicket:", error);
+    }
+  }
 
   return (
     <>
@@ -92,10 +165,16 @@ export default function CreateTicketModal({
               <div className="flex gap-[1vw]">
                 <div className="flex flex-col gap-[0.3vw] w-full">
                   <CustomSelectInput
-                    label="All"
+                    label="Select Ticket Type"
                     options={ticketTypeOptions}
                     paddingVal="py-[0.2vw] px-[0.5vw]"
                     hoverColor="hover:bg-[#31B2E9]"
+                    getValue={(value: TicketTypeEnum) => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        ticketType: value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -111,6 +190,12 @@ export default function CreateTicketModal({
                   required
                   className={`${styles.input}`}
                   placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing."
+                  onChange={(e) => {
+                    setPageState((prev: any) => ({
+                      ...prev,
+                      subjectLine: e.target.value,
+                    }));
+                  }}
                 />
               </div>
               <div className={`flex flex-col gap-[0.2vw]`}>
@@ -122,6 +207,12 @@ export default function CreateTicketModal({
                     rows={5}
                     className={`${styles.input} w-full`}
                     placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                    onChange={(e) => {
+                      setPageState((prev: any) => ({
+                        ...prev,
+                        ticketDescription: e.target.value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -133,6 +224,7 @@ export default function CreateTicketModal({
                 word="Create"
                 btnColor="black"
                 paddingVal="py-[--10px] px-[--42px]"
+                onClick={createTicket}
               />
             </div>
           </div>

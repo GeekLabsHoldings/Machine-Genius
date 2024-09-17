@@ -430,6 +430,7 @@ export default function Page() {
                   btnColor="white"
                   word="Receipts Database"
                   paddingVal="py-[--12px] px-[--20px]"
+                  href="/administrative/database"
                 />
               </div>
 
@@ -545,6 +546,8 @@ export default function Page() {
                   btnColor="white"
                   word="Receipts Database"
                   paddingVal="py-[--12px] px-[--20px]"
+                  href="/administrative/database"
+
                 />
               </div>
 
