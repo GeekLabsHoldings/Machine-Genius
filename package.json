@@ -40,6 +40,8 @@
     "next-video": "^1.0.4",
     "react": "^18",
     "react-apexcharts": "^1.4.1",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18",
     "react-h5-audio-player": "^3.9.1",
     "react-hot-toast": "^2.4.1",

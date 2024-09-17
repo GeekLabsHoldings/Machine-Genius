@@ -6,8 +6,25 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const annualOptions: string[] = ["Daily", "Weekly", "Monthly", "Yearly"];
+interface Item {
+  id: string;
+  title: string; // The title of the item
+  info?: any; // Optional additional information about the item
+}
+enum RoomStatus {
+  CheckList = "CheckList",
+  Done = "Done",
+  Missed = "Missed",
+}
+enum SupplyStatus {
+  CheckList = "CheckList",
+  Available = "Available",
+  Repurchase = "Repurchase",
+}
 
 const missingIcon = (
   <svg
@@ -93,6 +110,30 @@ export default function Page() {
     foodSupplies: null,
   });
 
+  async function handleDropRoomItem(item: Item, newStatus: RoomStatus) {
+    if (!item.id || !newStatus) {
+      console.error("Room ID or newStatus is missing");
+      toast.error(
+        "Unable to update room status. Room ID or newStatus is missing."
+      );
+      return;
+    }
+    await updateRoom(item.id, newStatus);
+    await getRooms();
+  }
+
+  async function handleDropSupplyItem(item: Item, newStatus: SupplyStatus) {
+    if (!item.id || !newStatus) {
+      console.error("Supply ID or newStatus is missing");
+      toast.error(
+        "Unable to update supply status. Supply ID or newStatus is missing."
+      );
+      return;
+    }
+    await updateSupply(item.id, newStatus);
+    await getCleaningAndFoodSupplies();
+  }
+
   async function getRooms() {
     try {
       const res = await fetch(
@@ -175,7 +216,7 @@ export default function Page() {
     }
   }
 
-  async function updateRoom(roomId: string, roomStatus: string) {
+  async function updateRoom(roomId: string, roomStatus: RoomStatus) {
     try {
       const res = await fetch(
         `https://api.machinegenius.io/administrative/rooms/update-room/${roomId}`,
@@ -198,10 +239,38 @@ export default function Page() {
       }
       const json = await res.json();
       if (json) {
-        // setPageState((prevState: any) => ({
-        //   ...prevState,
-        //   rooms: json,
-        // }));
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getRooms:", error);
+    }
+  }
+
+  async function updateSupply(supplyId: string, supplyStatus: SupplyStatus) {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/supplies/${supplyId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ supplyStatus: supplyStatus }),
+          headers: {
+            "Content-Type": "application/json",
+
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json) {
       } else {
         toast.error("Something went wrong!");
       }
@@ -220,256 +289,355 @@ export default function Page() {
   }, [activeTab]);
 
   return (
-    <section className={`${styles.officeMaintenance}`}>
-      {/* Container */}
-      <div>
-        {/* Tabs */}
-        <div role="tablist" className={`${styles.tabs} flex`}>
-          <a
-            role="tab"
-            className={`${styles.tab} ${
-              activeTab === 1 ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab(1)}
-          >
-            Office Cleaning
-          </a>
-          <a
-            role="tab"
-            className={`${styles.tab} ${
-              activeTab === 2 ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab(2)}
-          >
-            Cleaning Supplies
-          </a>
-          <a
-            role="tab"
-            className={`${styles.tab} ${
-              activeTab === 3 ? styles.activeTab : ""
-            }`}
-            onClick={() => setActiveTab(3)}
-          >
-            Food List
-          </a>
+    <DndProvider backend={HTML5Backend}>
+      <section className={`${styles.officeMaintenance}`}>
+        {/* Container */}
+        <div>
+          {/* Tabs */}
+          <div role="tablist" className={`${styles.tabs} flex`}>
+            <a
+              role="tab"
+              className={`${styles.tab} ${
+                activeTab === 1 ? styles.activeTab : ""
+              }`}
+              onClick={() => setActiveTab(1)}
+            >
+              Office Cleaning
+            </a>
+            <a
+              role="tab"
+              className={`${styles.tab} ${
+                activeTab === 2 ? styles.activeTab : ""
+              }`}
+              onClick={() => setActiveTab(2)}
+            >
+              Cleaning Supplies
+            </a>
+            <a
+              role="tab"
+              className={`${styles.tab} ${
+                activeTab === 3 ? styles.activeTab : ""
+              }`}
+              onClick={() => setActiveTab(3)}
+            >
+              Food List
+            </a>
+          </div>
+
+          {/* 1. Tab 1 Content */}
+          {activeTab === 1 && (
+            <div className={`${styles.tab1}`}>
+              <h3 className={`${styles.cardsTitle} my-[--sy-33px]`}>
+                Weekly Checklist
+              </h3>
+
+              {/* 1.1 Cards Container */}
+              <div className="cards-container grid grid-cols-3 gap-[27px]">
+                {/*  Card 1 */}
+                <AdministrativeCard
+                  icon={checkListicon}
+                  addIcon={true}
+                  title="Checklist"
+                  onDrop={(item) =>
+                    handleDropRoomItem(item, RoomStatus.CheckList)
+                  }
+                  items={
+                    Array.isArray(pageState.rooms?.CheckList) &&
+                    pageState.rooms?.CheckList.length > 0
+                      ? pageState.rooms?.CheckList.map((item: any) => ({
+                          id: item._id,
+                          title: item.roomName,
+                          ...(item.warning === true && { info: missingIcon }),
+                          isDraggable: true,
+                        }))
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+
+                {/* Card 2 */}
+                <AdministrativeCard
+                  icon={doneIcon}
+                  addIcon={false}
+                  title="Done"
+                  onDrop={(item) => handleDropRoomItem(item, RoomStatus.Done)}
+                  items={
+                    Array.isArray(pageState.rooms?.Done) &&
+                    pageState.rooms?.Done.length > 0
+                      ? pageState.rooms?.Done.map((item: any) => ({
+                          id: item._id,
+                          title: item.roomName,
+                          ...(item.warning === true && { info: missingIcon }),
+                        }))
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+
+                {/* Card 3 */}
+                <AdministrativeCard
+                  onDrop={(item) => handleDropRoomItem(item, RoomStatus.Missed)}
+                  icon={missedIcon}
+                  addIcon={false}
+                  title="Missed"
+                  items={
+                    Array.isArray(pageState.rooms?.Missed) &&
+                    pageState.rooms?.Missed.length > 0
+                      ? pageState.rooms?.Missed.map((item: any) => ({
+                          id: item._id,
+                          title: item.roomName,
+                          ...(item.warning === true && { info: missingIcon }),
+                        }))
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Tab 2 Content */}
+          {activeTab === 2 && (
+            <div className={`${styles.tab2}`}>
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col my-[--sy-33px] w-[393px]">
+                  <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
+                    Cleaning Supplies
+                  </h3>
+                  <CustomSelectInput
+                    label="Weekly"
+                    options={annualOptions}
+                    hoverColor="hover:bg-[#31B2E9]"
+                  />
+                </div>
+
+                <CustomBtn
+                  btnColor="white"
+                  word="Receipts Database"
+                  paddingVal="py-[--12px] px-[--20px]"
+                />
+              </div>
+
+              {/* 1.1 Cards Container */}
+              <div className="cards-container grid grid-cols-3 gap-[27px]">
+                {/*  Card 1 */}
+                <AdministrativeCard
+                  icon={checkListicon}
+                  addIcon={true}
+                  title="Checklist"
+                  onDrop={(item) =>
+                    handleDropSupplyItem(item, SupplyStatus.CheckList)
+                  }
+                  items={
+                    Array.isArray(pageState.cleaningSupplies?.CheckList) &&
+                    pageState.cleaningSupplies?.CheckList.length > 0
+                      ? pageState.cleaningSupplies?.CheckList.map(
+                          (item: any) => ({
+                            id: item._id,
+
+                            title: item.supplyName,
+                            info: `x${item.wantedQuantity}`,
+                            isDraggable: true,
+                          })
+                        )
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+
+                {/* Card 2 */}
+                <AdministrativeCard
+                  icon={doneIcon}
+                  addIcon={false}
+                  title="Availability"
+                  onDrop={(item) =>
+                    handleDropSupplyItem(item, SupplyStatus.Available)
+                  }
+                  items={
+                    Array.isArray(pageState.cleaningSupplies?.Available) &&
+                    pageState.cleaningSupplies?.Available.length > 0
+                      ? pageState.cleaningSupplies?.Available.map(
+                          (item: any) => ({
+                            id: item._id,
+                            title: item.supplyName,
+                            info: `x${item.wantedQuantity}`,
+                            isDraggable: true,
+                          })
+                        )
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+
+                {/* Card 3 */}
+                <AdministrativeCard
+                  icon={missedIcon}
+                  addIcon={false}
+                  title="To Repurchase"
+                  onDrop={(item) =>
+                    handleDropSupplyItem(item, SupplyStatus.Repurchase)
+                  }
+                  items={
+                    Array.isArray(pageState.cleaningSupplies?.Repurchase) &&
+                    pageState.cleaningSupplies?.Repurchase.length > 0
+                      ? pageState.cleaningSupplies?.Repurchase.map(
+                          (item: any) => ({
+                            id: item._id,
+                            title: item.supplyName,
+                            info: `x${item.wantedQuantity}`,
+                            isDraggable: true,
+                          })
+                        )
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Tab 3 Content */}
+          {activeTab === 3 && (
+            <div className={`${styles.tab3}`}>
+              <div className="flex justify-between items-center">
+                <div className="flex flex-col my-[--sy-33px] w-[393px]">
+                  <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
+                    Food List
+                  </h3>
+                  <CustomSelectInput
+                    label="Monthly"
+                    options={annualOptions}
+                    hoverColor="hover:bg-[#31B2E9]"
+                  />
+                </div>
+
+                <CustomBtn
+                  btnColor="white"
+                  word="Receipts Database"
+                  paddingVal="py-[--12px] px-[--20px]"
+                />
+              </div>
+
+              {/* 1.1 Cards Container */}
+              <div className="cards-container grid grid-cols-3 gap-[27px]">
+                {/*  Card 1 */}
+                <AdministrativeCard
+                  icon={checkListicon}
+                  addIcon={true}
+                  title="Checklist"
+                  onDrop={(item) =>
+                    handleDropSupplyItem(item, SupplyStatus.CheckList)
+                  }
+                  items={
+                    Array.isArray(pageState.foodSupplies?.CheckList) &&
+                    pageState.foodSupplies?.CheckList.length > 0
+                      ? pageState.foodSupplies?.CheckList.map((item: any) => ({
+                          id: item._id,
+
+                          title: item.supplyName,
+                          info: `x${item.wantedQuantity}`,
+                          isDraggable: true,
+                        }))
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+
+                {/* Card 2 */}
+                <AdministrativeCard
+                  icon={doneIcon}
+                  addIcon={false}
+                  title="Availability"
+                  onDrop={(item) =>
+                    handleDropSupplyItem(item, SupplyStatus.Available)
+                  }
+                  items={
+                    Array.isArray(pageState.foodSupplies?.Available) &&
+                    pageState.foodSupplies?.Available.length > 0
+                      ? pageState.foodSupplies?.Available.map((item: any) => ({
+                          id: item._id,
+
+                          title: item.supplyName,
+                          info: `x${item.wantedQuantity}`,
+                          isDraggable: true,
+                        }))
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+
+                {/* Card 3 */}
+                <AdministrativeCard
+                  icon={missedIcon}
+                  addIcon={false}
+                  title="To Repurchase"
+                  onDrop={(item) =>
+                    handleDropSupplyItem(item, SupplyStatus.Repurchase)
+                  }
+                  items={
+                    Array.isArray(pageState.foodSupplies?.Repurchase) &&
+                    pageState.foodSupplies?.Repurchase.length > 0
+                      ? pageState.foodSupplies?.Repurchase.map((item: any) => ({
+                          id: item._id,
+
+                          title: item.supplyName,
+                          info: `x${item.wantedQuantity}`,
+                          isDraggable: true,
+                        }))
+                      : [
+                          {
+                            id: "no-data",
+                            title: "No data available!",
+                            isDraggable: false,
+                          },
+                        ]
+                  }
+                />
+              </div>
+            </div>
+          )}
         </div>
-
-        {/* 1. Tab 1 Content */}
-        {activeTab === 1 && (
-          <div className={`${styles.tab1}`}>
-            <h3 className={`${styles.cardsTitle} my-[--sy-33px]`}>
-              Weekly Checklist
-            </h3>
-
-            {/* 1.1 Cards Container */}
-            <div className="cards-container grid grid-cols-3 gap-[27px]">
-              {/*  Card 1 */}
-              <AdministrativeCard
-                icon={checkListicon}
-                addIcon={true}
-                title="Checklist"
-                items={
-                  Array.isArray(pageState.rooms?.CheckList) &&
-                  pageState.rooms?.CheckList.length > 0
-                    ? pageState.rooms?.CheckList.map((item: any) => ({
-                        title: item.roomName,
-                        ...(item.warning === true && { info: missingIcon }),
-                      }))
-                    : [{ title: "No data available!" }]
-                }
-              />
-
-              {/* Card 2 */}
-              <AdministrativeCard
-                icon={doneIcon}
-                addIcon={false}
-                title="Done"
-                items={
-                  Array.isArray(pageState.rooms?.Done) &&
-                  pageState.rooms?.Done.length > 0
-                    ? pageState.rooms?.Done.map((item: any) => ({
-                        title: item.roomName,
-                        ...(item.warning === true && { info: missingIcon }),
-                      }))
-                    : [{ title: "No data available!" }]
-                }
-              />
-
-              {/* Card 3 */}
-              <AdministrativeCard
-                icon={missedIcon}
-                addIcon={false}
-                title="Missed"
-                items={
-                  Array.isArray(pageState.rooms?.Missed) &&
-                  pageState.rooms?.Missed.length > 0
-                    ? pageState.rooms?.Missed.map((item: any) => ({
-                        title: item.roomName,
-                        ...(item.warning === true && { info: missingIcon }),
-                      }))
-                    : [{ title: "No data available!" }]
-                }
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Tab 2 Content */}
-        {activeTab === 2 && (
-          <div className={`${styles.tab2}`}>
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col my-[--sy-33px] w-[393px]">
-                <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
-                  Cleaning Supplies
-                </h3>
-                <CustomSelectInput
-                  label="Weekly"
-                  options={annualOptions}
-                  hoverColor="hover:bg-[#31B2E9]"
-                />
-              </div>
-
-              <CustomBtn
-                btnColor="white"
-                word="Receipts Database"
-                paddingVal="py-[--12px] px-[--20px]"
-              />
-            </div>
-
-            {/* 1.1 Cards Container */}
-            <div className="cards-container grid grid-cols-3 gap-[27px]">
-              {/*  Card 1 */}
-              <AdministrativeCard
-                icon={checkListicon}
-                addIcon={true}
-                title="Checklist"
-                items={
-                  Array.isArray(pageState.cleaningSupplies?.CheckList) &&
-                  pageState.cleaningSupplies?.CheckList.length > 0
-                    ? pageState.cleaningSupplies?.CheckList.map(
-                        (item: any) => ({
-                          title: item.supplyName,
-                          info: `x${item.wantedQuantity}`,
-                        })
-                      )
-                    : [{ title: "No data available!" }]
-                }
-              />
-
-              {/* Card 2 */}
-              <AdministrativeCard
-                icon={doneIcon}
-                addIcon={false}
-                title="Availability"
-                items={
-                  Array.isArray(pageState.cleaningSupplies?.Available) &&
-                  pageState.cleaningSupplies?.Available.length > 0
-                    ? pageState.cleaningSupplies?.Available.map(
-                        (item: any) => ({
-                          title: item.supplyName,
-                          info: `x${item.wantedQuantity}`,
-                        })
-                      )
-                    : [{ title: "No data available!" }]
-                }
-              />
-
-              {/* Card 3 */}
-              <AdministrativeCard
-                icon={missedIcon}
-                addIcon={false}
-                title="To Repurchase"
-                items={
-                  Array.isArray(pageState.cleaningSupplies?.Repurchase) &&
-                  pageState.cleaningSupplies?.Repurchase.length > 0
-                    ? pageState.cleaningSupplies?.Repurchase.map(
-                        (item: any) => ({
-                          title: item.supplyName,
-                          info: `x${item.wantedQuantity}`,
-                        })
-                      )
-                    : [{ title: "No data available!" }]
-                }
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Tab 3 Content */}
-        {activeTab === 3 && (
-          <div className={`${styles.tab3}`}>
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col my-[--sy-33px] w-[393px]">
-                <h3 className={`${styles.cardsTitle} mb-[--sy-10px]`}>
-                  Food List
-                </h3>
-                <CustomSelectInput
-                  label="Monthly"
-                  options={annualOptions}
-                  hoverColor="hover:bg-[#31B2E9]"
-                />
-              </div>
-
-              <CustomBtn
-                btnColor="white"
-                word="Receipts Database"
-                paddingVal="py-[--12px] px-[--20px]"
-              />
-            </div>
-
-            {/* 1.1 Cards Container */}
-            <div className="cards-container grid grid-cols-3 gap-[27px]">
-              {/*  Card 1 */}
-              <AdministrativeCard
-                icon={checkListicon}
-                addIcon={true}
-                title="Checklist"
-                items={
-                  Array.isArray(pageState.foodSupplies?.CheckList) &&
-                  pageState.foodSupplies?.CheckList.length > 0
-                    ? pageState.foodSupplies?.CheckList.map((item: any) => ({
-                        title: item.supplyName,
-                        info: `x${item.wantedQuantity}`,
-                      }))
-                    : [{ title: "No data available!" }]
-                }
-              />
-
-              {/* Card 2 */}
-              <AdministrativeCard
-                icon={doneIcon}
-                addIcon={false}
-                title="Availability"
-                items={
-                  Array.isArray(pageState.foodSupplies?.Available) &&
-                  pageState.foodSupplies?.Available.length > 0
-                    ? pageState.foodSupplies?.Available.map((item: any) => ({
-                        title: item.supplyName,
-                        info: `x${item.wantedQuantity}`,
-                      }))
-                    : [{ title: "No data available!" }]
-                }
-              />
-
-              {/* Card 3 */}
-              <AdministrativeCard
-                icon={missedIcon}
-                addIcon={false}
-                title="To Repurchase"
-                items={
-                  Array.isArray(pageState.foodSupplies?.Repurchase) &&
-                  pageState.foodSupplies?.Repurchase.length > 0
-                    ? pageState.foodSupplies?.Repurchase.map((item: any) => ({
-                        title: item.supplyName,
-                        info: `x${item.wantedQuantity}`,
-                      }))
-                    : [{ title: "No data available!" }]
-                }
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
+      </section>
+    </DndProvider>
   );
 }

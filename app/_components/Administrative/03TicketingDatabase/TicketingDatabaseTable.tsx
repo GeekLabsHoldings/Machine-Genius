@@ -1,6 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./TicketingDatabaseTable.module.css";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 const newRibbon = (
   <svg
@@ -17,6 +19,7 @@ const newRibbon = (
 );
 export default function TicketingDatabaseTable() {
   const [pageState, setPageState] = useState<any>({});
+  const { authState, handleSignOut } = useContext(globalContext);
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
