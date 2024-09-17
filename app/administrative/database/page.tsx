@@ -1,5 +1,5 @@
 "use client";
-import VideoDatabaseTable from "@/app/_components/Administrative/03Database/VideoDatabaseTable";
+import ReceiptsDatabaseTable from "@/app/_components/Administrative/03Database/ReceiptsDatabaseTable";
 import React, { useState } from "react";
 import styles from "./database.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
@@ -228,7 +228,7 @@ export default function Page() {
             </div>
           </div>
 
-<VideoDatabaseTable />
+<ReceiptsDatabaseTable />
           </>
         )}
 

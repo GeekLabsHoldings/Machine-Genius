@@ -1,14 +1,14 @@
 "use client"; // Directive to indicate that this file is a client component in a Next.js application.
 
 import React from "react"; // Import the React library for building the component.
-import styles from "./VideoDatabaseTable.module.css"; // Import CSS module for component-specific styles.
+import styles from "./ReceiptsDatabaseTable.module.css"; // Import CSS module for component-specific styles.
 
 /**
  * Renders a table component displaying Video Database information.
  *
  * @return {JSX.Element} The rendered table component.
  */
-export default function VideoDatabaseTable() {
+export default function ReceiptsDatabaseTable() {
   // Array containing data to be displayed in the table
   const bodyRow = [
     {
