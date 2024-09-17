@@ -5,12 +5,27 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "../../Button/CustomBtn";
 import CustomSelectInput from "../../CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
+import { useState, useContext } from "react";
+import toast from "react-hot-toast";
 interface IProps {
   btnWord: string; // Button text.
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
+  getSupplies: () => void; // Function to get supplies.
 }
+
+enum ProductTypeEnum {
+  Snacks = "Snacks",
+  Cleaning = "Cleaning",
+  Drinks = "Drinks",
+}
+const productTypeOptions: ProductTypeEnum[] = [
+  ProductTypeEnum.Snacks,
+  ProductTypeEnum.Cleaning,
+  ProductTypeEnum.Drinks,
+];
 
 /**
  * Renders a modal for adding a new product.
@@ -27,7 +42,10 @@ export default function AddNewProductModal({
   btnWord,
   btnColor,
   btnIcon,
+  getSupplies,
 }: IProps) {
+  const { authState, handleSignOut } = useContext(globalContext);
+
   // State for controlling the modal open/close state
   const [open, setOpen] = React.useState(false);
   // Function to handle modal open.
@@ -35,7 +53,71 @@ export default function AddNewProductModal({
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
-  const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
+  const [pageState, setPageState] = useState<{
+    supplyName: string;
+    wantedQuantity: number | null;
+    subType: ProductTypeEnum | "";
+    productPrice: number | null;
+  }>({
+    supplyName: "",
+    wantedQuantity: null,
+    subType: "",
+    productPrice: null,
+  });
+
+  async function createSupply() {
+    if (
+      !pageState.supplyName ||
+      !pageState.wantedQuantity ||
+      !pageState.subType ||
+      !pageState.productPrice
+    ) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/supplies`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            supplyName: pageState.supplyName,
+            wantedQuantity: pageState.wantedQuantity,
+            subType: pageState.subType as ProductTypeEnum,
+            productPrice: pageState.productPrice,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json) {
+        toast.success("Product created successfully!");
+        handleClose();
+        setPageState({
+          supplyName: "",
+          wantedQuantity: null,
+          subType: "",
+          productPrice: null,
+        });
+        getSupplies();
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error createTicket:", error);
+    }
+  }
 
   return (
     <>
@@ -93,6 +175,12 @@ export default function AddNewProductModal({
                   required
                   className={`${styles.input}`}
                   placeholder="V7 Pina Colada"
+                  onChange={(e) => {
+                    setPageState((prev) => ({
+                      ...prev,
+                      supplyName: e.target.value,
+                    }));
+                  }}
                 />
               </div>
               <div className={`flex flex-col gap-[0.2vw]`}>
@@ -104,6 +192,31 @@ export default function AddNewProductModal({
                     required
                     className={`${styles.input} w-full`}
                     placeholder="15"
+                    onChange={(e) => {
+                      setPageState((prev: any) => ({
+                        ...prev,
+                        productPrice: Number(e.target.value),
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className={`flex flex-col gap-[0.2vw]`}>
+                <label htmlFor="wantedQuantity">Wanted Quantity*</label>
+                <div>
+                  <input
+                    type="number"
+                    id="wantedQuantity"
+                    required
+                    className={`${styles.input} w-full`}
+                    placeholder="5"
+                    onChange={(e) => {
+                      setPageState((prev: any) => ({
+                        ...prev,
+                        wantedQuantity: Number(e.target.value),
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -115,10 +228,16 @@ export default function AddNewProductModal({
               <div className="flex gap-[1vw]">
                 <div className="flex flex-col w-1/2 gap-[0.3vw]">
                   <CustomSelectInput
-                    label="Drinks"
+                    label="Select Product Type"
                     options={productTypeOptions}
                     paddingVal="py-[0.2vw] px-[0.5vw]"
                     hoverColor="hover:bg-[#31B2E9]"
+                    getValue={(value: ProductTypeEnum) => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        subType: value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -130,6 +249,7 @@ export default function AddNewProductModal({
                 word="Add Product"
                 btnColor="black"
                 paddingVal="py-[--10px] px-[--22px]"
+                onClick={createSupply}
               />
             </div>
           </div>

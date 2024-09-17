@@ -304,11 +304,21 @@ export default function UploadReceiptModal({
             </div>
 
             {/* Upload Receipt button */}
-            <div className="flex justify-end">
+            <div className={`flex justify-end `}>
               <CustomBtn
                 word="Upload Receipts"
                 btnColor="black"
-                style={{ width: "100%" }}
+                style={{
+                  width: "100%",
+                  opacity:
+                    !pageState.totalPrice || !pageState.presignedURLData
+                      ? 0.5
+                      : 1,
+                  cursor:
+                    !pageState.totalPrice || !pageState.presignedURLData
+                      ? "not-allowed"
+                      : "pointer",
+                }}
                 onClick={createReceipt}
                 disabled={!pageState.totalPrice || !pageState.presignedURLData}
               />

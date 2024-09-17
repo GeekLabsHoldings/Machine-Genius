@@ -120,6 +120,7 @@ export default function SupplyDatabaseTable({
                 }
                 btnColor={"black"}
                 modalTitle={"Add New Product"}
+                getSupplies={getSupplies}
               />
 
               {/* <CustomBtn btnColor="white" word="Receipts Database" /> */}
