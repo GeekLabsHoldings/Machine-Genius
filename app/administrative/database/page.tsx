@@ -1,11 +1,11 @@
 "use client";
-import VideoDatabaseTable from "@/app/_components/Administrative/02VideoDatabase/VideoDatabaseTable";
+import VideoDatabaseTable from "@/app/_components/Administrative/03Database/VideoDatabaseTable";
 import React, { useState } from "react";
 import styles from "./database.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 // import CustomBtn from "@/app/_components/Button/CustomBtn";
-import AddNewProductModal from "@/app/_components/Administrative/02VideoDatabase/AddNewProductModal";
-import UploadReceiptModal from "@/app/_components/Administrative/02VideoDatabase/UploadReceiptModal";
+import AddNewProductModal from "@/app/_components/Administrative/03Database/AddNewProductModal";
+import UploadReceiptModal from "@/app/_components/Administrative/03Database/UploadReceiptModal";
 
 export default function Page() {
   const [activeTab, setActiveTab] = React.useState<number>(1);
@@ -144,6 +144,7 @@ export default function Page() {
 
         {/* Tab 2 Content */}
         {activeTab === 2 && (
+          <>
           <div className={`${styles.tab2}`}>
             {" "}
             {/* filters options to filter and edit data in table */}
@@ -226,9 +227,12 @@ export default function Page() {
               </div>
             </div>
           </div>
+
+<VideoDatabaseTable />
+          </>
         )}
 
-        <VideoDatabaseTable />
+        
       </div>
     </section>
   );

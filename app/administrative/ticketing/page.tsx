@@ -1,9 +1,9 @@
 "use client"; // Directive to indicate that this file is a client component in a Next.js application.
-import TicketingDatabaseTable from "@/app/_components/Administrative/03TicketingDatabase/TicketingDatabaseTable"; // Importing the TicketingDatabaseTable component.
+import TicketingDatabaseTable from "@/app/_components/Administrative/02TicketingDatabase/TicketingDatabaseTable"; // Importing the TicketingDatabaseTable component.
 import React, { useContext, useState } from "react"; // Importing React and useState hook.
 import styles from "./ticketing.module.css"; // Importing CSS module for styling.
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing CustomSelectInput component.
-import CreateTicketModal from "@/app/_components/Administrative/03TicketingDatabase/CreateTicketModal"; // Importing CreateTicketModal component.
+import CreateTicketModal from "@/app/_components/Administrative/02TicketingDatabase/CreateTicketModal"; // Importing CreateTicketModal component.
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 
