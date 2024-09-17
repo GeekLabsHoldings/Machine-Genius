@@ -336,7 +336,7 @@ export default function Page() {
                 {/*  Card 1 */}
                 <AdministrativeCard
                   icon={checkListicon}
-                  addIcon={true}
+                  addIcon={false}
                   title="Checklist"
                   onDrop={(item) =>
                     handleDropRoomItem(item, RoomStatus.CheckList)
@@ -439,7 +439,7 @@ export default function Page() {
                 {/*  Card 1 */}
                 <AdministrativeCard
                   icon={checkListicon}
-                  addIcon={true}
+                  addIcon={false}
                   title="Checklist"
                   onDrop={(item) =>
                     handleDropSupplyItem(item, SupplyStatus.CheckList)
@@ -556,7 +556,7 @@ export default function Page() {
                 {/*  Card 1 */}
                 <AdministrativeCard
                   icon={checkListicon}
-                  addIcon={true}
+                  addIcon={false}
                   title="Checklist"
                   onDrop={(item) =>
                     handleDropSupplyItem(item, SupplyStatus.CheckList)

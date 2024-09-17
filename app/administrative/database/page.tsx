@@ -11,11 +11,44 @@ import SupplyDatabaseTable from "@/app/_components/Administrative/03Database/Sup
 
 export default function Page() {
   const { authState, handleSignOut } = useContext(globalContext);
-  const [activeTab, setActiveTab] = React.useState<number>(2);
+  const [activeTab, setActiveTab] = React.useState<number>(1);
 
   const [pageState, setPageState] = useState<any>({
+    supplies: null,
     receipts: null,
   });
+
+  async function getSupplies() {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/supplies/all?limit=1000`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.result && json.result.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          supplies: json.result,
+        }));
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getSupplies:", error);
+    }
+  }
 
   async function getReceipts() {
     try {
@@ -76,7 +109,12 @@ export default function Page() {
         </div>
 
         {/* Tab 1 Content */}
-        {activeTab === 1 && <SupplyDatabaseTable />}
+        {activeTab === 1 && (
+          <SupplyDatabaseTable
+            getSupplies={getSupplies}
+            supplies={pageState.supplies}
+          />
+        )}
 
         {/* Tab 2 Content */}
         {activeTab === 2 && (
