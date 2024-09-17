@@ -175,6 +175,42 @@ export default function Page() {
     }
   }
 
+  async function updateRoom(roomId: string, roomStatus: string) {
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/administrative/rooms/update-room/${roomId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({ typeStatus: roomStatus }),
+          headers: {
+            "Content-Type": "application/json",
+
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json) {
+        // setPageState((prevState: any) => ({
+        //   ...prevState,
+        //   rooms: json,
+        // }));
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getRooms:", error);
+    }
+  }
+
   useEffect(() => {
     if (activeTab === 1) {
       getRooms();
@@ -310,10 +346,12 @@ export default function Page() {
                 items={
                   Array.isArray(pageState.cleaningSupplies?.CheckList) &&
                   pageState.cleaningSupplies?.CheckList.length > 0
-                    ? pageState.cleaningSupplies?.CheckList.map((item: any) => ({
-                        title: item.supplyName,
-                        info: `x${item.wantedQuantity}`,
-                      }))
+                    ? pageState.cleaningSupplies?.CheckList.map(
+                        (item: any) => ({
+                          title: item.supplyName,
+                          info: `x${item.wantedQuantity}`,
+                        })
+                      )
                     : [{ title: "No data available!" }]
                 }
               />
@@ -326,10 +364,12 @@ export default function Page() {
                 items={
                   Array.isArray(pageState.cleaningSupplies?.Available) &&
                   pageState.cleaningSupplies?.Available.length > 0
-                    ? pageState.cleaningSupplies?.Available.map((item: any) => ({
-                        title: item.supplyName,
-                        info: `x${item.wantedQuantity}`,
-                      }))
+                    ? pageState.cleaningSupplies?.Available.map(
+                        (item: any) => ({
+                          title: item.supplyName,
+                          info: `x${item.wantedQuantity}`,
+                        })
+                      )
                     : [{ title: "No data available!" }]
                 }
               />
@@ -342,10 +382,12 @@ export default function Page() {
                 items={
                   Array.isArray(pageState.cleaningSupplies?.Repurchase) &&
                   pageState.cleaningSupplies?.Repurchase.length > 0
-                    ? pageState.cleaningSupplies?.Repurchase.map((item: any) => ({
-                        title: item.supplyName,
-                        info: `x${item.wantedQuantity}`,
-                      }))
+                    ? pageState.cleaningSupplies?.Repurchase.map(
+                        (item: any) => ({
+                          title: item.supplyName,
+                          info: `x${item.wantedQuantity}`,
+                        })
+                      )
                     : [{ title: "No data available!" }]
                 }
               />
