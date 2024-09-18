@@ -30,6 +30,53 @@ const Page = () => {
   const { handleSignOut } = useContext(globalContext);
 
   useEffect(() => {
+    function dynamicSort(
+      property: string
+    ): (a: SalaryRecord, b: SalaryRecord) => number {
+      let sortOrder = 1;
+      if (property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+      }
+      return function (a: SalaryRecord, b: SalaryRecord): number {
+        const result =
+          a[property as keyof SalaryRecord] < b[property as keyof SalaryRecord]
+            ? -1
+            : a[property as keyof SalaryRecord] >
+              b[property as keyof SalaryRecord]
+            ? 1
+            : 0;
+        return result * sortOrder;
+      };
+    }
+
+    function dynamicSortMultiple(...props: string[]) {
+      return function (obj1: SalaryRecord, obj2: SalaryRecord): number {
+        var i = 0,
+          result = 0,
+          numberOfProperties = props.length;
+        /* try getting a different result from 0 (equal)
+         * as long as we have extra properties to compare
+         */
+        while (result === 0 && i < numberOfProperties) {
+          result = dynamicSort(props[i])(obj1, obj2);
+          i++;
+        }
+        return result;
+      };
+    }
+    setPayrollData((prevPayrollData) =>
+      [...prevPayrollData].sort(
+        dynamicSortMultiple(
+          `${sorting1 === "Ascend" ? "" : "-"}netSalary`,
+          `${sorting2 === "Ascend" ? "" : "-"}grossSalary`,
+          `${sorting3 === "Ascend" ? "" : "-"}createdAt`
+        )
+      )
+    );
+  }, [sorting1, sorting2, sorting3]);
+
+  useEffect(() => {
     // Fetch data from API
     const getPayrollData = async () => {
       const response = await fetch(
