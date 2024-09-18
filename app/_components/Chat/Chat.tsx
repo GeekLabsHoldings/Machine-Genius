@@ -1126,13 +1126,14 @@ function Chat() {
                           : "self-start"
                       } ${styles.chat__box__message__container}`}
                     >
-                      {currentConversation.type === "group" && (
-                        <p className="text-[#2A2B2A] font-semibold text-[--16px]">
-                          {message.sender.firstName +
-                            " " +
-                            message.sender.lastName}
-                        </p>
-                      )}
+                      {currentConversation.type === "group" &&
+                        message.sender._id !== userId && (
+                          <p className="text-[#2A2B2A] font-semibold text-[--16px]">
+                            {message.sender.firstName +
+                              " " +
+                              message.sender.lastName}
+                          </p>
+                        )}
                       <p>
                         {message.mediaUrl ? (
                           <img
