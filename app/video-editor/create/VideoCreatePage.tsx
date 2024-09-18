@@ -1,6 +1,6 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import styles from "./video-creation.module.css";
+import styles from "./VideoCreatePage.module.css";
 import { AssignedVideos } from "@/app/_data/data";
 
 const VideoCreatePage = () => {
@@ -36,7 +36,7 @@ const VideoCreatePage = () => {
           width="w-full"
           word={video.videoStatus}
           href={
-            video.videoStatus === "Convert Audio" ? "converted-article" : ""
+            video.videoStatus === "Convert Audio" ? "/video-editor/create/converted-script" : ""
           }
           btnColor="black"
         />{" "}
