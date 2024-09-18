@@ -9,7 +9,8 @@ import { globalContext } from "@/app/_context/store";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const annualOptions: string[] = ["Daily", "Weekly", "Monthly", "Yearly"];
+// const annualOptions: string[] = ["Daily", "Weekly", "Monthly", "Yearly"];
+const annualOptions: string[] = ["No filters available!"];
 interface Item {
   id: string;
   title: string; // The title of the item
