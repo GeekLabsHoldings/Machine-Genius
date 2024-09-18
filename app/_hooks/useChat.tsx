@@ -94,7 +94,7 @@ const useChat = () => {
   }
   // Send a new message
   const sendMessage = useCallback(
-    (message: { conversationId: string; text: string }) => {
+    (message: { conversationId: string; text: string; mediaUrl: string }) => {
       if (socket) {
         console.log("Sending message", message.text);
         if (message.text.trim()) {

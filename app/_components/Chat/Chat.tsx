@@ -17,6 +17,7 @@ import {
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 import debounce from "debounce";
+import { formatDate } from "@fullcalendar/core/index.js";
 
 const ExpandableCircleMenu = ({ isExpanded, handleFileUpload }: any) => {
   const menuItems = [
@@ -254,6 +255,7 @@ interface Employee {
 interface Message {
   _id?: string;
   text: string;
+  mediaUrl: string;
   createdAt?: number;
   sender: {
     _id: string;
@@ -829,6 +831,18 @@ function Chat() {
     }
   };
 
+  function formatTime(date: Date) {
+    let hours = date.getHours();
+    let minutes: number | string = date.getMinutes();
+    let ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+
+    return hours + ":" + minutes + ampm;
+  }
+
   return (
     <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
       {/* 
@@ -1106,12 +1120,19 @@ function Chat() {
                       <ProfileImageFrame />
                     )}
                     <div
-                      className={`p-3 rounded-[20px] max-w-[60%] ${
+                      className={`p-[--15px] rounded-[20px] max-w-[60%] flex flex-col gap-[--10px] ${
                         message.sender._id == userId
                           ? "bg-[#CEEAE9] self-end"
                           : "self-start"
                       } ${styles.chat__box__message__container}`}
                     >
+                      {currentConversation.type === "group" && (
+                        <p className="text-[#2A2B2A] font-semibold text-[--16px]">
+                          {message.sender.firstName +
+                            " " +
+                            message.sender.lastName}
+                        </p>
+                      )}
                       <p>
                         {message.mediaUrl ? (
                           <img
@@ -1122,6 +1143,11 @@ function Chat() {
                         ) : null}
 
                         {message.text}
+                      </p>
+                      <p
+                        className={`text-[#828282] text-[--10px] place-content-start`}
+                      >
+                        {formatTime(new Date(message.createdAt))}
                       </p>
                     </div>
                   </div>
@@ -1221,6 +1247,7 @@ function Chat() {
                 AddMessage({
                   text: message,
                   mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                  //! Need sender data
                   sender: { _id: userId },
                 });
                 setMessage("");
