@@ -5,7 +5,7 @@ import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import { SimplePagination } from "@/app/_components/Pagination/pagination";
 import { useEffect, useState } from "react";
-// import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
+import CustomVideoPlayer from "@/app/_components/VideoEditing/CustomVideoPlayer/CustomVideoPlayer";
 
 const ChooseFootagePage = () => {
   // state that holds video url when click on it to display it in preview section
@@ -15,7 +15,7 @@ const ChooseFootagePage = () => {
   const renderVideo = () => {
     return (
       <div>
-        {/* <VideoPlayer video={video} autoplay={true} videoUrl={video} /> */}
+        <CustomVideoPlayer video={video} autoplay={true} videoUrl={video} />
       </div>
     );
   };
@@ -49,12 +49,12 @@ const ChooseFootagePage = () => {
                   name="choose-footage"
                 />
               </div>
-              {/* <VideoPlayer
+              <CustomVideoPlayer
                 video={video}
                 setVideo={setVideo}
                 autoplay={false}
                 videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-              /> */}
+              />
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
@@ -64,12 +64,12 @@ const ChooseFootagePage = () => {
                   name="choose-footage"
                 />
               </div>
-              {/* <VideoPlayer
+              <CustomVideoPlayer
                 video={video}
                 setVideo={setVideo}
                 autoplay={false}
                 videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
-              /> */}
+              />
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
@@ -79,12 +79,12 @@ const ChooseFootagePage = () => {
                   name="choose-footage"
                 />
               </div>
-              {/* <VideoPlayer
+              <CustomVideoPlayer
                 video={video}
                 setVideo={setVideo}
                 autoplay={false}
                 videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-              /> */}
+              />
             </div>
           </div>
           {/* preview footage in large area */}

@@ -1,5 +1,5 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
+import CustomVideoPlayer from "@/app/_components/VideoEditing/CustomVideoPlayer/CustomVideoPlayer";
 import styles from "./VideoUploadPage.module.css";
 
 const VideoReady = () => {
@@ -19,7 +19,7 @@ const VideoReady = () => {
             <div
               className={`${styles.videoHolder} flex justify-center items-center `}
             >
-              {/* <VideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
+              <CustomVideoPlayer autoplay={false} videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
             </div>
           </div>
         </div>

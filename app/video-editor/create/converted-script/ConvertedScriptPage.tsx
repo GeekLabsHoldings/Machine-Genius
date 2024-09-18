@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./ConvertedScriptPage.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
-import CustomAudioPlayer from "@/app/_components/customAudioPlayer/CustomAudioPlayer";
+import CustomAudioPlayer from "@/app/_components/VideoEditing/CustomAudioPlayer/CustomAudioPlayer";
 
 const ConvertedScriptPage = () => {
   return (

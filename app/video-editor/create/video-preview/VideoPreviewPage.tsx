@@ -1,5 +1,5 @@
 "use client";
-import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
+import CustomVideoPlayer from "@/app/_components/VideoEditing/CustomVideoPlayer/CustomVideoPlayer";
 import styles from "./VideoPreviewPage.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
@@ -20,7 +20,7 @@ const VideoPreviewPage = () => {
             <div
               className={`${styles.videoHolder} flex justify-center items-center `}
             >
-              {/* <VideoPlayer videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' /> */}
+              <CustomVideoPlayer videoUrl='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' />
             </div>
           </div>
         </div>
