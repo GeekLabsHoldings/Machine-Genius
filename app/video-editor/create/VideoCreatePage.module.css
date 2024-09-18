@@ -4,6 +4,7 @@
   border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
   overflow: hidden;
 }
+
 .tableBody {
   padding: clamp(10px, calc(0.5vw + 0.1rem), 60px)
     clamp(10px, calc(0.5vw + 0.1rem), 60px) !important;
@@ -22,6 +23,8 @@
 }
 .tableHeader {
   border-bottom: 1px solid #2a2b2a;
+  padding: clamp(10px, calc(0.85vw + 0.1rem), 60px)
+  clamp(10px, calc(0.5vw + 0.1rem), 60px) !important;
 }
 .tableHeader li {
   text-align: center;
