@@ -6,6 +6,7 @@ import styles from "./mainLayout.module.css"; // Importing styles for the main l
 import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
+import { SocketProvider } from "./_context/SocketProvider";
 // import { Toaster } from "react-hot-toast";
 import dynamic from "next/dynamic";
 
@@ -34,27 +35,30 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* <!-- Preload Acumin Pro Bold Italic --> */}
         <link
           rel="preload"
           href="/fonts/Acumin-BdItPro.woff"
           as="font"
-          type="font/woff"
           crossOrigin="anonymous"
         />
+
+        {/* <!-- Preload Hellix Black --> */}
         <link
           rel="preload"
           href="/fonts/Hellix-Black.woff2"
           as="font"
-          type="font/woff2"
           crossOrigin="anonymous"
         />
       </head>
       <body>
         <Provider store={store}>
           <GlobalContextProvider>
-            <div className={styles.main_wrapper}>
-              <div className="w-full h-100vh p-0 flex">{children}</div>
-            </div>
+            <SocketProvider>
+              <div className={styles.main_wrapper}>
+                <div className="w-full h-100vh p-0 flex">{children}</div>
+              </div>
+            </SocketProvider>
           </GlobalContextProvider>
         </Provider>
         <Toaster

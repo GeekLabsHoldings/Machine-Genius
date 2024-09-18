@@ -4,6 +4,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useSelector } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
@@ -21,6 +22,7 @@ const VideoPlayer = dynamic(
 );
 
 const CreateMovie = () => {
+  const { handleSignOut } = useContext(globalContext);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -156,7 +158,9 @@ const CreateMovie = () => {
               }),
             }
           );
-
+          if (res.status === 401) {
+            handleSignOut();
+          }
           json = await res.json();
 
           if (json && json?.articles[0]?.content) {
@@ -179,7 +183,7 @@ const CreateMovie = () => {
           articles: [
             {
               ...json.articles[0],
-              content: json.articles[0].content.replace(/<\/?[^>]+(>|$)/g, ""),
+              content: json.articles[0].content.replace(/<[^>]*>/g, ""),
             },
           ],
         };

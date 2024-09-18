@@ -125,6 +125,28 @@
   gap: clamp(10px, calc(0.7vw + 0.1rem), 100px);
 }
 
+.articleContent p {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 500px);
+  font-weight: 300;
+  user-select: none;
+  outline: none;
+  margin-bottom: var(--10px);
+}
+
+.articleContent p:last-child {
+  margin-bottom: 0;
+}
+
+.articleContent img {
+  width: 65% !important;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: var(--sy-10px);
+  margin-bottom: var(--sy-10px);
+  border-radius: var(--20px);
+  display: block;
+}
+
 .beginSelection {
   user-select: auto !important;
 }
@@ -133,12 +155,6 @@
 }
 .highlightedBefore {
   background-color: #feede0;
-}
-.articleContent p {
-  font-size: clamp(10px, calc(0.7vw + 0.1rem), 500px);
-  font-weight: 300;
-  user-select: none;
-  outline: none;
 }
 
 /* Track */

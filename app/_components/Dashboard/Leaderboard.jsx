@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
+import React, { memo } from "react";
 import styles from "./Leaderboard.module.css";
 
-export default function Leaderboard() {
+function Leaderboard() {
   return (
     <div className={`${styles.box} flex h-[20vh] justify-between`}>
       <div className={`${styles.animated} my-[1vw]`}>
@@ -306,3 +306,5 @@ export default function Leaderboard() {
     </div>
   );
 }
+
+export default memo(Leaderboard);

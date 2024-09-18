@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import styles from "../../_components/Administrative/03TicketingDatabase/CreateTicketModal.module.css";
+import styles from "../../_components/Accounting/CreateTicketModal.module.css";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "@/app/_components/Button/CustomBtn";

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -19,22 +19,23 @@ const MenuProps = {
   },
 };
 
-export default function MultipleSelectCheckmarks({
+const MultipleSelectCheckmarks = memo(function MultipleSelectCheckmarks({
   words,
   getHighlightedWordsValue,
 }) {
   const [highlightedWords, setHighlightedWords] = useState([]);
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setHighlightedWords(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-    getHighlightedWordsValue(value);
-  };
+  const handleChange = useCallback(
+    (event) => {
+      const {
+        target: { value },
+      } = event;
+      const newValue = typeof value === "string" ? value.split(",") : value;
+      setHighlightedWords(newValue);
+      getHighlightedWordsValue(newValue);
+    },
+    [getHighlightedWordsValue]
+  );
 
   return (
     <div>
@@ -62,4 +63,6 @@ export default function MultipleSelectCheckmarks({
       </FormControl>
     </div>
   );
-}
+});
+
+export default MultipleSelectCheckmarks;

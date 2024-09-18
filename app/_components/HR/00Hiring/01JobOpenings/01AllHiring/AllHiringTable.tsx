@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./AllHiringTable.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 
 interface HiringData {
   _id: string;
@@ -14,6 +15,7 @@ interface HiringData {
 }
 
 export default function AllHiringTable() {
+  const { handleSignOut } = useContext(globalContext);
   const router = useRouter();
   const [data, setData] = useState<HiringData[]>([]);
   const [skip, setSkip] = useState(0);
@@ -30,6 +32,9 @@ export default function AllHiringTable() {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const result = await res.json();
       console.log(result);
       // navigate to the next page
@@ -51,6 +56,9 @@ export default function AllHiringTable() {
             },
           }
         );
+        if (res.status === 401) {
+          handleSignOut();
+        }
         const result = await res.json();
         setData(result);
       } catch (error) {

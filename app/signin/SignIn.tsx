@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 // SignIn component
 const SignIn = () => {
-  const { authState, setAuthState } = useContext(globalContext);
+  const { authState, setAuthState, handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState({
     loader: false,
     showWelcomeMessage: false,
@@ -126,6 +126,9 @@ const SignIn = () => {
         },
         body: JSON.stringify(values),
       });
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       // console.log(`json`, json.message);
       if (json.message === "invalid credentials") {

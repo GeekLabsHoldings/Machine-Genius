@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { memo } from "react";
 import styles from "./ImageCard.module.css";
 
 type IProps = React.DetailedHTMLProps<
@@ -7,14 +8,16 @@ type IProps = React.DetailedHTMLProps<
 > & {
   imgSrc: string;
   inputName: string;
+  imgProps?: string;
 };
 
-export default function ImageCard({
+const ImageCard = memo(function ImageCard({
   imgSrc,
   inputName,
   onChange,
   checked,
   disabled,
+  imgProps,
 }: IProps) {
   return (
     <label className={`${styles.box} cursor-pointer`}>
@@ -28,7 +31,14 @@ export default function ImageCard({
         disabled={disabled}
       />
       <div className={`${styles.selectedOverlay}`}></div>
-      <img loading="lazy" src={imgSrc} alt="image" />
+      <img
+        loading="lazy"
+        src={imgSrc}
+        alt="image"
+        className={imgProps ? imgProps : ""}
+      />
     </label>
   );
-}
+});
+
+export default ImageCard;

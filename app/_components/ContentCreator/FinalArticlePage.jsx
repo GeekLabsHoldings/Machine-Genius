@@ -1,5 +1,12 @@
 "use client";
-import { useEffect, useRef, useState, useContext } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import dynamic from "next/dynamic";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
@@ -8,7 +15,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
+import debounce from "debounce";
+import { formatHtml } from "@/app/_utils/htmlFormatter";
 // import { CKEditor } from "@ckeditor/ckeditor5-react";
 const DynamicCKEditor = dynamic(
   () => import("@ckeditor/ckeditor5-react").then((mod) => mod.CKEditor),
@@ -89,11 +99,10 @@ import "ckeditor5/ckeditor5.css";
 import "./CKEDITOR.css";
 
 export default function FinalArticlePage() {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const [IsLoading, setIsLoading] = useState(false);
-  const [startNav, setStartNav] = useState(false);
-
+  const finalArticle = useSelector(
+    (state) => state.contentCreator.finalArticle
+  );
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     checkStatus,
@@ -105,9 +114,37 @@ export default function FinalArticlePage() {
     setSelectedBrand,
     setSelectedContentType,
   } = useContext(contentCreatorContext);
-  const finalArticle = useSelector(
-    (state) => state.contentCreator.finalArticle
-  );
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  function handleDisplayContentDataToEdit() {
+    const updatedArticle = {
+      ...finalArticle,
+      articles: [
+        {
+          title: editContentData.content_title,
+          content: editContentData.content,
+        },
+      ],
+    };
+    dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+    setSelectedBrand(editContentData.brand);
+    setSelectedContentType(editContentData.content_type);
+  }
+
+  useEffect(() => {
+    if (editContentData) {
+      // console.log("editContentData11", editContentData);
+      handleDisplayContentDataToEdit();
+    }
+  }, [editContentData]);
+
+  const [pageState, setPageState] = useState({
+    isLoading: false,
+    isLoadingExpandContent: false,
+    wordCount: "Loading ...",
+  });
+  const [startNav, setStartNav] = useState(false);
 
   useEffect(() => {
     // console.log("finalArticle", finalArticle);
@@ -132,28 +169,6 @@ export default function FinalArticlePage() {
     });
   }, []);
 
-  function handleDisplayContentDataToEdit() {
-    const updatedArticle = {
-      ...finalArticle,
-      articles: [
-        {
-          title: editContentData.content_title,
-          content: editContentData.content,
-        },
-      ],
-    };
-    dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-    setSelectedBrand(editContentData.brand);
-    setSelectedContentType(editContentData.content_type);
-  }
-
-  useEffect(() => {
-    if (editContentData) {
-      // console.log("editContentData11", editContentData);
-      handleDisplayContentDataToEdit();
-    }
-  }, [editContentData]);
-
   useEffect(() => {
     if (!finalArticle && !editContentData) {
       toast.error(
@@ -164,6 +179,56 @@ export default function FinalArticlePage() {
       }, 1500);
     }
   }, []);
+
+  const countWords = useCallback((text) => {
+    if (text) {
+      // Remove HTML tags and trim whitespace
+      const plainText = text.replace(/<[^>]*>/g, " ").trim();
+      // Split by whitespace and filter out empty strings
+      const words = plainText.split(/\s+/).filter((word) => word.length > 0);
+      return words.length;
+    } else {
+      return 0;
+    }
+  }, []);
+
+  const updateWordCount = useCallback(
+    (editor) => {
+      if (editor) {
+        const data = editor.getData();
+        setPageState((prevState) => ({
+          ...prevState,
+          wordCount: countWords(data),
+        }));
+      }
+    },
+    [countWords, setPageState]
+  );
+
+  const debouncedUpdateWordCount = useMemo(
+    () => debounce(updateWordCount, 100),
+    [updateWordCount]
+  );
+
+  const handleEditorOnChange = useCallback(
+    (event, editor) => {
+      const data = editor.getData();
+
+      const updatedArticle = {
+        ...finalArticle,
+        articles: [
+          {
+            ...finalArticle.articles[0],
+            content: data,
+          },
+        ],
+      };
+      dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+      // updateWordCount(editor);
+      debouncedUpdateWordCount(editor);
+    },
+    [finalArticle, dispatch, updateWordCount, debouncedUpdateWordCount]
+  );
 
   // ========================
   const editorContainerRef = useRef(null);
@@ -386,13 +451,94 @@ export default function FinalArticlePage() {
 
   useEffect(() => {
     if (startNav) {
-      setIsLoading(true);
+      setPageState((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
       console.log("finalArticle right before startChecks()", finalArticle);
       startChecks();
     }
   }, [startNav]);
 
-  if (IsLoading) {
+  function handleExpandContentFailure() {
+    toast.error("Something went wrong!");
+    setPageState((prevState) => ({
+      ...prevState,
+      isLoadingExpandContent: false,
+    }));
+    return;
+  }
+
+  async function handleExpandContent() {
+    setPageState((prevState) => ({
+      ...prevState,
+      isLoadingExpandContent: true,
+    }));
+
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/content-creation/expand-script`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+          body: JSON.stringify({
+            // selectedContent: formatToText(finalArticle.articles[0].content),
+            selectedContent: finalArticle.articles[0].content,
+          }),
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (!json) {
+        handleExpandContentFailure();
+        return;
+      } else if (json.success === false) {
+        handleExpandContentFailure();
+        return;
+      } else if (json && json?.articles[0]?.content) {
+        const updatedArticle = {
+          ...json,
+          articles: [
+            {
+              ...json.articles[0],
+              content: formatHtml(json.articles[0].content),
+            },
+          ],
+        };
+
+        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+      }
+    } catch (error) {
+      // console.error("Error handleExpandContent:", error);
+      handleExpandContentFailure();
+    } finally {
+      setPageState((prevState) => ({
+        ...prevState,
+        isLoadingExpandContent: false,
+      }));
+    }
+  }
+
+  if (pageState.isLoadingExpandContent) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={"genuisWorking"}>
+          <LogoAndTitle needTxt={false} title={"Expanding Content..."} />
+        </div>
+      </div>
+    );
+  }
+
+  if (pageState.isLoading) {
     return (
       <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
         <div className={"genuisWorking"}>
@@ -489,45 +635,39 @@ export default function FinalArticlePage() {
                   <div className="editor-container__editor">
                     <div ref={editorRef}>
                       {isLayoutReady && (
-                        <DynamicCKEditor
-                          onReady={(editor) => {
-                            editorToolbarRef.current.appendChild(
-                              editor.ui.view.toolbar.element
-                            );
-                            editorMenuBarRef.current.appendChild(
-                              editor.ui.view.menuBarView.element
-                            );
-                          }}
-                          onAfterDestroy={() => {
-                            Array.from(
-                              editorToolbarRef.current?.children || []
-                            ).forEach((child) => child.remove());
-                            Array.from(
-                              editorMenuBarRef.current?.children || []
-                            ).forEach((child) => child.remove());
-                          }}
-                          onChange={(event, editor) => {
-                            const data = editor.getData();
+                        <>
+                          <p className="ml-[72px] font-semibold !my-[--sy-5px]">
+                            Word Count:
+                            <span className="text-[--17px] ml-[3px]">
+                              {pageState.wordCount}
+                            </span>
+                          </p>
 
-                            const updatedArticle = {
-                              ...finalArticle,
-                              articles: [
-                                {
-                                  ...finalArticle.articles[0],
-                                  content: data,
-                                },
-                              ],
-                            };
-
-                            dispatch(
-                              contentCreatorActions.setFinalArticle(
-                                updatedArticle
-                              )
-                            );
-                          }}
-                          editor={DecoupledEditor}
-                          config={editorConfig}
-                        />
+                          <DynamicCKEditor
+                            onReady={(editor) => {
+                              editorToolbarRef.current.appendChild(
+                                editor.ui.view.toolbar.element
+                              );
+                              editorMenuBarRef.current.appendChild(
+                                editor.ui.view.menuBarView.element
+                              );
+                              updateWordCount(editor);
+                            }}
+                            onAfterDestroy={() => {
+                              Array.from(
+                                editorToolbarRef.current?.children || []
+                              ).forEach((child) => child.remove());
+                              Array.from(
+                                editorMenuBarRef.current?.children || []
+                              ).forEach((child) => child.remove());
+                            }}
+                            onChange={(event, editor) => {
+                              handleEditorOnChange(event, editor);
+                            }}
+                            editor={DecoupledEditor}
+                            config={editorConfig}
+                          />
+                        </>
                       )}
                     </div>
                   </div>
@@ -559,6 +699,14 @@ export default function FinalArticlePage() {
             href="/content-creator/create/create-article"
           />
         )}
+
+        <CustomBtn
+          word={"Expand Content"}
+          btnColor="black"
+          onClick={() => {
+            handleExpandContent();
+          }}
+        />
 
         <CustomBtn
           word={"Next"}

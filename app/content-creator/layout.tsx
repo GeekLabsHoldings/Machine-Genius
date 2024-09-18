@@ -6,7 +6,14 @@ import dynamic from "next/dynamic";
 const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
   ssr: false,
 }); // Importing the SideNav component
-import TitleOfPage from "../_components/TitleOfPage/TitleOfPage"; // Importing the TitleOfPage component
+
+const TitleOfPage = dynamic(
+  () => import("../_components/TitleOfPage/TitleOfPage"),
+  {
+    ssr: false,
+  }
+); // Importing the TitleOfPage component
+
 import ContentCreatorContextProvider from "../_context/contentCreatorContext";
 // import { usePathname } from 'next/navigation';
 

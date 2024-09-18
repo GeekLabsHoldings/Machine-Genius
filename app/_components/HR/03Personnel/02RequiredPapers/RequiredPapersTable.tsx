@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./RequiredPapersTable.module.css";
 import Link from "next/link";
+import { globalContext } from "@/app/_context/store";
 
 /**
  * Renders a table component displaying required papers for employees.
@@ -9,6 +10,7 @@ import Link from "next/link";
  * @return {JSX.Element} The table component.
  */
 export default function RequiredPapersTable() {
+  const { handleSignOut } = useContext(globalContext);
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -205,6 +207,9 @@ export default function RequiredPapersTable() {
           },
         }
       );
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       setPapers(res);
       console.log(res);

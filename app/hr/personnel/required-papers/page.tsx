@@ -2,14 +2,15 @@
 import MissingPapersTable from "@/app/_components/HR/03Personnel/02RequiredPapers/MissingPapersTable";
 import RequiredPapersTable from "@/app/_components/HR/03Personnel/02RequiredPapers/RequiredPapersTable";
 import styles from "./RequiredPapers.module.css";
-import React, { useEffect, useState } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
+import { globalContext } from "@/app/_context/store";
 /**
  * Renders a page with tabs for displaying required and missing papers for all employees.
  *
  * @return {JSX.Element} The rendered page with tabs and corresponding tab content.
  */
 export default function Page() {
+  const { handleSignOut } = useContext(globalContext);
   const [activeTab, setActiveTab] = useState<number>(1);
   const [found,setFound] = useState(false)
 
@@ -25,6 +26,9 @@ export default function Page() {
           },
         }
       );
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       console.log(res);
       console.log(res.filter((e:any)=>Object.values(e).includes("")));
