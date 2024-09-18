@@ -2,7 +2,7 @@
 import "./calender.css"; // Importing CSS styles for the calendar component
 import FullCalendar from "@fullcalendar/react"; // Importing the FullCalendar component
 import dayGridPlugin from "@fullcalendar/daygrid"; // Importing the dayGridPlugin for FullCalendar
-import {  useState } from "react"; // Importing React hooks for state management
+import { useState } from "react"; // Importing React hooks for state management
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing custom select input component
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Importing custom button component
 import eventContentImg from "../../../public/assets/calender event content img.png"; // Importing event content image

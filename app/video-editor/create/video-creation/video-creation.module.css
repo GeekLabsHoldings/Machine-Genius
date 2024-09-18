@@ -1,44 +1,44 @@
-.videoDatabase{
-    box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
-    border: 1px solid transparent;
-    border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
-    overflow: hidden;
+.videoDatabase {
+  box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+  border: 1px solid transparent;
+  border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  overflow: hidden;
 }
-.tableBody{
-    padding: clamp(10px, calc( 0.5vw + 0.1rem), 60px) clamp(10px, calc( 0.5vw + 0.1rem), 60px) !important;
-    overflow-y: auto;
-    height: 70vh;
-    width: 99%;
+.tableBody {
+  padding: clamp(10px, calc(0.5vw + 0.1rem), 60px)
+    clamp(10px, calc(0.5vw + 0.1rem), 60px) !important;
+  overflow-y: auto;
+  height: 70vh;
+  width: 99%;
 }
 .tableBody::-webkit-scrollbar-track {
-    background: transparent; 
+  background: transparent;
 }
 
 .tableBody::-webkit-scrollbar-thumb {
-    background: #2A2B2A; 
-    width: clamp(2px, calc( 0.08vw + 0.1rem), 40px);
-    border-radius: 10vw ;
+  background: #2a2b2a;
+  width: clamp(2px, calc(0.08vw + 0.1rem), 40px);
+  border-radius: 10vw;
 }
-.tableHeader{
-    border-bottom: 1px solid #2A2B2A;
+.tableHeader {
+  border-bottom: 1px solid #2a2b2a;
 }
-.tableHeader li{
-    text-align: center;
-    font-weight: 700;
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
-    transition: all 0s;
+.tableHeader li {
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 200px);
+  transition: all 0s;
 }
-.tableBody li{
-    text-align: center;
-    font-weight: 500;
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
-    transition: all 0s;
+.tableBody li {
+  text-align: center;
+  font-weight: 500;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 200px);
+  transition: all 0s;
 }
-.tableBody li span{
-    padding: 0.1vw 0.3vw;
-    border-radius: 0.1vw;
-    font-weight: 500;
-    font-size: clamp(10px, calc( 0.7vw + 0.1rem), 200px);
-    transition: all 0s;
-
+.tableBody li span {
+  padding: 0.1vw 0.3vw;
+  border-radius: 0.1vw;
+  font-weight: 500;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 200px);
+  transition: all 0s;
 }

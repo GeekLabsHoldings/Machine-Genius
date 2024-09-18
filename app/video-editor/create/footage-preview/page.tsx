@@ -11,7 +11,7 @@ const FootagePreview = () => {
   // state that holds video url when click on it to display it in preview section
   const [video, setVideo] = useState<string>("");
 
-// render video in every update in its url 
+  // render video in every update in its url
   const renderVideo = () => {
     return (
       <div>
@@ -24,11 +24,8 @@ const FootagePreview = () => {
   }, [video]);
 
   return (
-    <div
-      className={`w-full h-full flex flex-col ${styles.footagePreview}`}
-    >
+    <div className={`w-full h-full flex flex-col ${styles.footagePreview}`}>
       <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
-        
         <div className="w-1/2">
           <ArticlePreview
             height="h-full"
@@ -46,7 +43,11 @@ const FootagePreview = () => {
           <div className="flex gap-[0.6vw]">
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" type="checkbox" name="choose-footage"/>
+                <CustomCheckBox
+                  value=""
+                  type="checkbox"
+                  name="choose-footage"
+                />
               </div>
               {/* <VideoPlayer
                 video={video}
@@ -57,7 +58,11 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" type="checkbox" name="choose-footage" />
+                <CustomCheckBox
+                  value=""
+                  type="checkbox"
+                  name="choose-footage"
+                />
               </div>
               {/* <VideoPlayer
                 video={video}
@@ -68,7 +73,11 @@ const FootagePreview = () => {
             </div>
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox value="" type="checkbox" name="choose-footage" />
+                <CustomCheckBox
+                  value=""
+                  type="checkbox"
+                  name="choose-footage"
+                />
               </div>
               {/* <VideoPlayer
                 video={video}
@@ -104,8 +113,16 @@ const FootagePreview = () => {
       </div>
       {/* buttons lead you to last and next page */}
       <div className="flex justify-between">
-        <CustomBtn word="Back" btnColor={"white"}  href='/video-editor/create/video-templates' />
-        <CustomBtn word="Next" btnColor={"black"}  href='/video-editor/create/video-preview'/>
+        <CustomBtn
+          word="Back"
+          btnColor={"white"}
+          href="/video-editor/create/video-templates"
+        />
+        <CustomBtn
+          word="Next"
+          btnColor={"black"}
+          href="/video-editor/create/video-preview"
+        />
       </div>
     </div>
   );

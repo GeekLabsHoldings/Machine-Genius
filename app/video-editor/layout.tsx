@@ -11,7 +11,6 @@ const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
 import TitleOfPage from "../_components/TitleOfPage/TitleOfPage";
 // import { usePathname } from 'next/navigation';
 
-
 // Define the layout component
 const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   // get path from usePathname hook from next/navigation
@@ -114,13 +113,6 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     </>
   );
 };
-
-
-
-
-
-
-
 
 // Export the layout component
 export default layout;
