@@ -8,12 +8,12 @@ const VideoCreation = () => {
   const renderVideosData = AssignedVideos.map((video, idx) => (
     <ul
       key={idx}
-      className="borderBottom w-full flex justify-between assignedVideo items-center py-[0.5vh] text-center"
+      className="borderBottom w-full flex justify-between  items-center py-[0.5vh] text-center"
     >
       <li className="w-[5%]">{video.id}</li>
-      <li className="w-3/12">{video.title}</li>
-      <li className="w-2/12">{video.date}</li>
-      <li className="w-2/12">
+      <li className="w-[45%]">{video.title}</li>
+      <li className="w-[15%]">{video.date}</li>
+      <li className="w-[15%]">
         <span
           className={
             video.assignedTo === "Sherry"
@@ -29,7 +29,7 @@ const VideoCreation = () => {
         </span>
       </li>
       {/* lead user to convert article to video or disply it after conversion */}
-      <li className="w-2/12 ">
+      <li className="w-[20%]">
         {" "}
         <CustomBtn
           class="videoStatusBtn"
@@ -57,10 +57,10 @@ const VideoCreation = () => {
             className={`${styles.tableHeader} w-full flex justify-between items-center text-center py-[2vh]`}
           >
             <li className="w-[5%]">#</li>
-            <li className="w-3/12">Script Title</li>
-            <li className="w-2/12">Date</li>
-            <li className="w-2/12">Assigned To</li>
-            <li className="w-2/12">Edit</li>
+            <li className="w-[45%]">Script Title</li>
+            <li className="w-[15%]">Date</li>
+            <li className="w-[15%]">Assigned To</li>
+            <li className="w-[20%]">Edit</li>
           </ul>
           {/* table body */}
           <div className={`${styles.tableBody} flex flex-col`}>
