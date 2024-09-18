@@ -42,10 +42,7 @@
 .movedCheckbox input:checked::after {
   background-color: #9b5fbf;
 }
-.footagePreview h3 {
-  font-weight: 700;
-  font-size: clamp(14px, calc(1.1vw + 0.1rem), 70px);
-}
+
 .footagePreview h5 {
   font-weight: 700;
   font-size: clamp(10px, calc(0.7vw + 0.1rem), 60px);
