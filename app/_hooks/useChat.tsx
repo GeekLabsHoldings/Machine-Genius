@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useContext, use } from "react";
 import { useSocket } from "@/app/_context/SocketProvider";
 import { globalContext } from "@/app/_context/store";
 import { flexibleCompare } from "@fullcalendar/core/internal";
+import { first } from "ckeditor5";
+import theme from "@material-tailwind/react/theme";
 
 interface Conversation {
   _id: string;
@@ -30,6 +32,7 @@ const useChat = () => {
   const [currentConversation, setCurrentConversation] = useState<any>(null);
   const [conversation, setConversation] = useState<Conversation[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isTyping, setIsTyping] = useState<{ [key: string]: any } | null>(null);
   const { authState } = useContext(globalContext);
 
   function updateConversation(conversation: any) {
@@ -91,12 +94,18 @@ const useChat = () => {
   }
   // Send a new message
   const sendMessage = useCallback(
-    (message: { conversationId: string; text: string }) => {
+    (message: { conversationId: string; text: string; mediaUrl: string }) => {
       if (socket) {
         console.log("Sending message", message.text);
         if (message.text.trim()) {
           console.log("Sending message", message);
           socket.emit("sendMessage", message);
+          updateConversation({
+            _id: message.conversationId,
+            lastMessage: message.text,
+            lastSeen: new Date().getTime(),
+            updatedAt: new Date().getTime(),
+          });
         }
       }
     },
@@ -123,6 +132,58 @@ const useChat = () => {
         return newConversations;
       });
     }
+  }, [socket, currentConversation]);
+
+  // Listen for typing events
+  const handleUserTyping = useCallback(
+    (user: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+      theme: string;
+    }) => {
+      if (socket && currentConversation) {
+        console.log("User typing", user);
+        socket.emit("userTyping", {
+          conversationId: currentConversation._id,
+          user,
+        });
+      }
+    },
+    [socket, currentConversation]
+  );
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleTyping = (event: { [key: string]: any }) => {
+      console.log("Typing event", event);
+      if (event.user._id === getUserId()) {
+        return;
+      }
+      setIsTyping((prev) => {
+        if (!prev) {
+          return { [event.conversationId]: { user: event.user } };
+        }
+        return { ...prev, [event.conversationId]: { user: event.user } };
+      });
+      setTimeout(() => {
+        setIsTyping((prev) => {
+          if (!prev) {
+            return null;
+          }
+          const newTyping = { ...prev };
+          delete newTyping[event.conversationId];
+          return newTyping;
+        });
+      }, 2000);
+    };
+
+    socket.on("userTyping", handleTyping);
+
+    return () => {
+      socket.removeListener("userTyping", handleTyping);
+    };
   }, [socket, currentConversation]);
 
   useEffect(() => {
@@ -161,6 +222,7 @@ const useChat = () => {
         ...prev,
         {
           text: data.text,
+          mediaUrl: data.mediaUrl,
           sender: {
             _id: data.sender,
           },
@@ -198,6 +260,9 @@ const useChat = () => {
     handleUserSeenMessage,
     isLoaded,
     setIsLoaded,
+    isTyping,
+    setIsTyping,
+    handleUserTyping,
   };
 };
 
