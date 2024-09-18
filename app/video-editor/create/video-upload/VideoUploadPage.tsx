@@ -66,7 +66,7 @@ const VideoReady = () => {
         <CustomBtn
           word="Next"
           btnColor="black"
-          href="/video-editor/create/exporting-video"
+          href=""
         />
       </div>
     </div>

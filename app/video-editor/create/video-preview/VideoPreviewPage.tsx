@@ -80,12 +80,12 @@ const VideoPreviewPage = () => {
         <CustomBtn
           word="Back"
           btnColor="white"
-          href="/video-editor/create/footage-preview"
+          href="/video-editor/create/choose-footage"
         />
         <CustomBtn
           word="Next"
           btnColor="black"
-          href="/video-editor/create/video-ready"
+          href="/video-editor/create/video-upload"
         />
       </div>
     </div>

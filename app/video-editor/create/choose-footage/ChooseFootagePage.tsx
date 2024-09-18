@@ -116,7 +116,7 @@ const ChooseFootagePage = () => {
         <CustomBtn
           word="Back"
           btnColor={"white"}
-          href="/video-editor/create/video-templates"
+          href="/video-editor/create/converted-script"
         />
         <CustomBtn
           word="Next"

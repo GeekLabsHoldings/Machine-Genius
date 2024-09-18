@@ -11,7 +11,7 @@ const ConvertedScriptPage = () => {
       <div className="flex justify-center items-end h-[75vh] py-[1.5vw] w-full gap-[2vw]">
         <div className="w-7/12 flex flex-col gap-[1vw] h-full">
           <div className={`${styles.yourArticle} h-full`}>
-            <h3>Converted Article</h3>
+            <h3>Converted Script To Audio</h3>
             <ArticlePreview
               yourNewArticle={false}
               height="h-[90%]"
@@ -98,12 +98,12 @@ const ConvertedScriptPage = () => {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/video-editor/create/video-creation"}
+          href={"/video-editor/create"}
         />
         <CustomBtn
-          word={"Generate Titles"}
+          word={"Next"}
           btnColor="black"
-          href={"/video-editor/create/video-templates"}
+          href={"/video-editor/create/choose-footage"}
         />
       </div>
     </div>
