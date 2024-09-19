@@ -38,12 +38,17 @@ function SubscriptionsCreator({
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
-  const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
-
   const [subscriptionName, setSubscriptionName] = useState("");
   const [subscriptionPrice, setSubscriptionPrice] = useState(0);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+
+  function clearFields() {
+    setSubscriptionName("");
+    setSubscriptionPrice(0);
+    setStartDate("");
+    setEndDate("");
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -78,6 +83,7 @@ function SubscriptionsCreator({
         toast.success("Subscription added successfully");
         handleClose();
         setSubscriptions((prev: Subscription[]) => [...prev, data]);
+        clearFields();
       }
     } catch (error) {
       console.error(error);
