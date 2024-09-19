@@ -1,9 +1,9 @@
 "use client";
-import React from "react";
+import React, { useContext, useState } from "react";
 import styles from "./ConvertedScriptPage.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 import CustomAudioPlayer from "@/app/_components/VideoEditing/CustomAudioPlayer/CustomAudioPlayer";
+import { videoEditingContext } from "@/app/_context/videoEditingContext";
 
 const audioIcon = (
   <svg
@@ -50,18 +50,75 @@ const arrowIcon = (
   </svg>
 );
 
+interface ScriptSegment {
+  index: number;
+  text: string;
+  keywordsAndImages: {
+    keyword: string;
+    imageUrl: string[];
+  }[];
+  audioPath: {
+    index: number;
+    url: string;
+    duration: number;
+  };
+}
+
 const ConvertedScriptPage = () => {
+  const { splitedContent, setSplitedContent } = useContext(videoEditingContext);
+  const [pageState, setPageState] = useState<{
+    selectedScriptSegment: ScriptSegment | null;
+    selectedIncorrectWord: string | null;
+  }>({
+    selectedScriptSegment: null,
+    selectedIncorrectWord: null,
+  });
+
   return (
     <div className="flex flex-col">
-      <div className="flex justify-center h-[75vh] py-[1.5vw] w-full gap-[2vw]">
+      <div className="flex justify-center h-[80vh] py-[1.5vw] w-full gap-[2vw]">
         <div className="w-7/12 flex flex-col gap-[1vw] h-full">
-          <div className={`${styles.yourArticle} h-full`}>
+          <div className={`${styles.yourScript} h-full`}>
             <h3>Converted Script To Audio</h3>
-            <ArticlePreview
-              yourNewArticle={false}
-              height="h-[90%]"
-              withEdit={false}
-            />
+            {/* Script Preview */}
+            <div className={` ${styles.articlePreview} h-[90%] `}>
+              <div className={`${styles.articlePreviewData} `}>
+                <div className={`${styles.articleHeader} `}>
+                  <h1 className="mx-auto pb-[--sy-15px]">Script Title</h1>
+                  <div className="cursor-pointer h-max"></div>
+                </div>
+                {Array.isArray(splitedContent) && splitedContent.length > 0 ? (
+                  splitedContent.map((scriptSegment: ScriptSegment) => (
+                    <div
+                      className={`${styles.articleContent} cursor-pointer`}
+                      key={scriptSegment.index}
+                    >
+                      <p
+                        className={`${
+                          pageState.selectedScriptSegment?.index ===
+                          scriptSegment.index
+                            ? styles.active
+                            : ""
+                        }`}
+                        onClick={() =>
+                          setPageState((prevState) => ({
+                            ...prevState,
+                            selectedScriptSegment: scriptSegment,
+                            selectedIncorrectWord: null,
+                          }))
+                        }
+                      >
+                        {scriptSegment.text}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <div>
+                    <p>No data available!</p>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -71,7 +128,13 @@ const ConvertedScriptPage = () => {
             Audio Preview
           </h3>
           <div className={styles.audio_player + " mb-[2vw]"}>
-            <CustomAudioPlayer />
+            <CustomAudioPlayer
+              audioSrc={
+                pageState.selectedScriptSegment?.audioPath.url
+                  ? pageState.selectedScriptSegment?.audioPath.url
+                  : ""
+              }
+            />
           </div>
 
           <div className={styles.selected_words}>
@@ -87,36 +150,58 @@ const ConvertedScriptPage = () => {
             </div>
 
             <div className={styles.selected_words_body}>
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque
-                architecto adipisci molestiae fuga iusto atque illum voluptatem
-                voluptates quam enim? Reprehenderit distinctio veritatis
-                delectus laboriosam officia voluptate tempore voluptates
-                officiis!
+              <p className="flex flex-wrap gap-[1px] h-[170px] overflow-y-auto w-[95%] mx-auto">
+                {pageState.selectedScriptSegment &&
+                pageState.selectedScriptSegment?.text ? (
+                  pageState.selectedScriptSegment?.text
+                    .split(" ")
+                    .map((word, index) => (
+                      <span
+                        className={`${
+                          pageState.selectedIncorrectWord === word
+                            ? styles.active
+                            : ""
+                        }`}
+                        key={index}
+                        onClick={() =>
+                          setPageState((prevState) => ({
+                            ...prevState,
+                            selectedIncorrectWord: word,
+                          }))
+                        }
+                      >
+                        {word}
+                      </span>
+                    ))
+                ) : (
+                  <p>Please select a paragraph!</p>
+                )}
               </p>
             </div>
 
             <div className="border border-solid border-[#ACACAC] rounded-[--10px] p-[--24px] flex items-center justify-between">
-              <div>
+              <div className="w-[40%]">
                 <div className="flex flex-col gap-[--sy-2px] mb-[--sy-16px]">
                   <span className="font-semibold">Word Correction</span>
                   <span className="text-[#ACACAC]">Mispronounced word</span>
                 </div>
 
                 <div className="border border-solid border-[#2A2B2A] rounded-[--5px] py-[--10px] px-[--20px] flex items-center justify-between">
-                  <span>labore</span>
+                  <span>{pageState.selectedIncorrectWord}</span>
                   {audioIcon}
                 </div>
               </div>
               {arrowIcon}
-              <div>
+              <div className="w-[40%]">
                 <div className="flex flex-col gap-[--sy-2px] mb-[--sy-16px]">
                   <span className="font-semibold">Word Correction</span>
-                  <span className="text-[#ACACAC]">Write the correct pronunciation</span>
+                  <span className="text-[#ACACAC]">
+                    Write the correct pronunciation
+                  </span>
                 </div>
 
                 <div className="border border-solid border-[#2A2B2A] rounded-[--5px] py-[--10px] px-[--20px] flex items-center justify-between">
-                  <span>labore</span>
+                  <span>{pageState.selectedIncorrectWord}</span>
                   {audioIcon}
                 </div>
               </div>

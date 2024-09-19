@@ -8,10 +8,10 @@ const AudioPlayer = dynamic(() => import("react-h5-audio-player"), {
   loading: () => <div>Loading audio player...</div>,
 });
 
-const CustomAudioPlayer = () => {
+const CustomAudioPlayer = ({ audioSrc }: { audioSrc: string }) => {
   return (
     <AudioPlayer
-      src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"
+      src={audioSrc}
       onPlay={(e) => console.log("onPlay")}
       autoPlayAfterSrcChange={true}
       // other props here

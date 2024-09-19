@@ -1,10 +1,10 @@
-.yourArticle {
+.yourScript {
   display: flex;
   flex-direction: column;
   gap: clamp(10px, calc(0.7vw + 0.1rem), 600px);
 }
 
-.yourArticle h3 {
+.yourScript h3 {
   font-size: clamp(16px, calc(1.6vw + 0.1rem), 800px);
   font-weight: 700;
   user-select: none;
@@ -44,4 +44,87 @@
   background: var(--Foundation-Primary-Normal, #fffffb);
   box-shadow: -1px 2px 8.7px 0px rgba(0, 0, 0, 0.25) inset;
   padding: var(--25px);
+  padding-left: var(--10px);
+  padding-right: 0;
+}
+
+.selected_words_body p span{
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 10px;
+  font-weight: 400;
+}
+
+.selected_words_body p span:hover, .selected_words_body p span.active{
+  background-color: #2a2b2a;
+  color: white;
+  font-weight: 700;
+}
+
+/* Script Preview */
+.articleHeader h1,
+.articlesToSelect h3 {
+  font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  font-weight: 700;
+}
+.articleHeader {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  user-select: none;
+}
+.articlePreviewData {
+  display: flex;
+  flex-direction: column;
+  /* gap: clamp(16px, calc(1.6vw + 0.1rem), 80px); */
+  padding-right: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  padding-left: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+  padding-top: var(--sy-15px);
+  padding-bottom: var(--sy-15px);
+  overflow-y: auto;
+  max-height: 100%;
+}
+.articlePreview {
+  box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
+  border: 1px solid transparent;
+  border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  /* max-height: 57vh; */
+  position: relative;
+  padding: clamp(4px, calc(0.5vw + 0.1rem), 80px);
+}
+.articleHeader svg {
+  width: clamp(14px, calc(1.5vw + 0.1rem), 70px);
+  height: clamp(14px, calc(1.5vw + 0.1rem), 70px);
+}
+.articleContent {
+  text-align: justify;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+}
+
+.articleContent p {
+  cursor: pointer;
+  padding: 27px 22px;
+  border-radius: 10px;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 500px);
+  font-weight: 400;
+  user-select: none;
+}
+.articleContent p:hover, .articleContent p.active {
+  font-weight: 700;
+  background-color: #2a2b2a;
+  color: white;
+}
+
+
+/* Track */
+.articlePreviewData::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* Handle */
+.articlePreviewData::-webkit-scrollbar-thumb {
+  background: #2a2b2a;
+  width: clamp(2px, calc(0.08vw + 0.1rem), 40px);
+  border-radius: 10vw;
 }
