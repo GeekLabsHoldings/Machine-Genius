@@ -34,10 +34,8 @@ const VideoCreatePage = () => {
         <CustomBtn
           class="videoStatusBtn"
           width="w-full"
-          word={video.videoStatus}
-          href={
-            video.videoStatus === "Convert Audio" ? "/video-editor/create/converted-script" : ""
-          }
+          word="Create Video"
+          href={"/video-editor/create/converted-script"}
           btnColor="black"
         />{" "}
       </li>
