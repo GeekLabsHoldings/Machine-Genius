@@ -1,5 +1,4 @@
 "use client"; // Directive to indicate that this file is a client component in a Next.js application.
-
 import React, { useEffect, useState } from "react"; // Import the React library for building the component.
 import styles from "./SupplyDatabaseTable.module.css"; // Import CSS module for component-specific styles.
 import AddNewProductModal from "@/app/_components/Administrative/03Database/AddNewProductModal";

@@ -1,5 +1,4 @@
 "use client"; // Directive to indicate that this file is a client component in a Next.js application.
-
 import React, { useEffect, useState } from "react"; // Import the React library for building the component.
 import styles from "./ReceiptsDatabaseTable.module.css"; // Import CSS module for component-specific styles.
 import convertTimestampToDate from "@/app/_utils/convertTimestampToDate";
@@ -18,11 +17,51 @@ export default function ReceiptsDatabaseTable({
   receipts: any;
   getReceipts: () => void;
 }) {
+  const [pageState, setPageState] = useState<any>({
+    filteredReceipts: null,
+  });
+
+  const [filterBy, setFilterBy] = useState({
+    totalPriceOrder: "asc",
+    dateOrder: "desc",
+  });
+
   useEffect(() => {
     getReceipts();
   }, []);
-  const [demandOrder, setDemandOrder] = useState<boolean>(true);
-  const [lastBoughtOrder, setLastBoughtOrder] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (Array.isArray(receipts) && receipts.length > 0) {
+      let filteredData = [...receipts];
+
+      // Sort the filtered data based on totalPrice and dateOrder
+      filteredData.sort((a: any, b: any) => {
+        if (filterBy.totalPriceOrder === "asc") {
+          return a.totalPrice - b.totalPrice;
+        } else {
+          return b.totalPrice - a.totalPrice;
+        }
+      });
+
+      if (filterBy.dateOrder === "asc") {
+        filteredData.sort(
+          (a: any, b: any) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      } else {
+        filteredData.sort(
+          (a: any, b: any) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }
+
+      setPageState((prevState: any) => ({
+        ...prevState,
+        filteredReceipts: filteredData,
+      }));
+    }
+  }, [filterBy, receipts]);
+
   return (
     <>
       <div className={`${styles.tab2}`}>
@@ -39,10 +78,18 @@ export default function ReceiptsDatabaseTable({
                 <div
                   className={`${styles.changeOrder} `}
                   onClick={() => {
-                    setDemandOrder(!demandOrder);
+                    setFilterBy((prev: any) => ({
+                      ...prev,
+                      totalPriceOrder:
+                        prev.totalPriceOrder === "asc" ? "desc" : "asc",
+                    }));
                   }}
                 >
-                  <p>{demandOrder ? "Ascend" : "Decend"}</p>
+                  <p>
+                    {filterBy.totalPriceOrder === "asc"
+                      ? "Ascending"
+                      : "Descending"}
+                  </p>
                   <svg
                     width="16"
                     height="16"
@@ -64,10 +111,15 @@ export default function ReceiptsDatabaseTable({
                 <div
                   className={`${styles.changeOrder} `}
                   onClick={() => {
-                    setLastBoughtOrder(!lastBoughtOrder);
+                    setFilterBy((prev: any) => ({
+                      ...prev,
+                      dateOrder: prev.dateOrder === "asc" ? "desc" : "asc",
+                    }));
                   }}
                 >
-                  <p>{lastBoughtOrder ? "Ascend" : "Decend"}</p>
+                  <p>
+                    {filterBy.dateOrder === "asc" ? "Ascending" : "Descending"}
+                  </p>
                   <svg
                     width="16"
                     height="16"
@@ -122,8 +174,9 @@ export default function ReceiptsDatabaseTable({
           {/* Table Body */}
           {/* Rendering table rows dynamically based on bodyRow array */}
           <div className={styles.table_body}>
-            {Array.isArray(receipts) && receipts.length > 0 ? (
-              receipts.map((e: any, idx: number) => (
+            {Array.isArray(pageState.filteredReceipts) &&
+            pageState.filteredReceipts.length > 0 ? (
+              pageState.filteredReceipts.map((e: any, idx: number) => (
                 <ul className="w-[100%]" key={idx}>
                   <li className="w-[25%]">{idx + 1}</li>
                   <li className="w-[25%]">{e.totalPrice}</li>
