@@ -319,6 +319,7 @@ function Page() {
               }
               btnColor={"black"}
               modalTitle={"Add Subscription"}
+              setSubscriptions={setSubscriptions}
             />
           </div>
         </div>
