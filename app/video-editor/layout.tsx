@@ -9,6 +9,7 @@ const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
   ssr: false,
 });
 import TitleOfPage from "../_components/TitleOfPage/TitleOfPage";
+import VideoEditingContextProvider from "../_context/videoEditingContext";
 // import { usePathname } from 'next/navigation';
 
 // Define the layout component
@@ -94,7 +95,9 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         {/* Title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Children components */}
-        <div className="h-full">{children}</div>
+        <div className="h-full">
+          <VideoEditingContextProvider>{children}</VideoEditingContextProvider>
+        </div>
       </div>
     </>
   );
