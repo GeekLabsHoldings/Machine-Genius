@@ -7,6 +7,22 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
+import toast from "react-hot-toast";
+
+interface BankAccount {
+  _id: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+  ApiConnect: string;
+  brand: string;
+  country: string;
+  IBANumber: string;
+  password: string;
+  SWIFTCode: string;
+  userName: string;
+  createdAt: number; // Unix timestamp in milliseconds
+}
 
 // Define the props for the SubscriptionsCreator component
 interface IProps {
@@ -14,6 +30,7 @@ interface IProps {
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
+  setBankAccounts: (value: React.SetStateAction<BankAccount[]>) => void; // Function to set the bank accounts state.
 }
 
 // Define options for the ticket type dropdown
@@ -32,6 +49,7 @@ function BankAccountCreator({
   btnWord,
   btnColor,
   btnIcon,
+  setBankAccounts,
 }: IProps) {
   // State for controlling the modal open/close state
   const [open, setOpen] = useState(false);
@@ -42,8 +60,93 @@ function BankAccountCreator({
   // Function to handle modal close
   const handleClose = () => setOpen(false);
 
-  // Define options for the product type dropdown
+  const [bankName, setBankName] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [IBANumber, setIBANumber] = useState("");
+  const [SWIFTCode, setSWIFTCode] = useState("");
+  const [country, setCountry] = useState("");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [ApiConnect, setApiConnect] = useState("");
+  const [brand, setBrand] = useState("");
+  const [brandTag, setBrandTag] = useState("");
+
+  const [loading, setLoading] = useState(false);
   const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
+
+  function clearFields() {
+    setBankName("");
+    setAccountName("");
+    setAccountNumber("");
+    setIBANumber("");
+    setSWIFTCode("");
+    setCountry("");
+    setUserName("");
+    setPassword("");
+    setApiConnect("");
+    setBrand("");
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // check if
+    if (
+      brand === "" ||
+      ApiConnect === "" ||
+      password === "" ||
+      userName === "" ||
+      country === "" ||
+      SWIFTCode === "" ||
+      IBANumber === "" ||
+      accountNumber === "" ||
+      accountName === "" ||
+      bankName === ""
+    ) {
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "https://api.machinegenius.io/accounting/bank-accounts",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            bankName,
+            accountName,
+            accountNumber,
+            IBANumber,
+            SWIFTCode,
+            country,
+            userName,
+            password,
+            ApiConnect,
+            brand,
+          }),
+        }
+      );
+      const data: BankAccount = await response.json();
+
+      // check if the data is of type Subscription
+      if (data.bankName) {
+        toast.success("Subscription added successfully");
+        handleClose();
+        setBankAccounts((prev: BankAccount[]) => [...prev, data]);
+        clearFields();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>
@@ -65,7 +168,10 @@ function BankAccountCreator({
         aria-describedby="modal-modal-description"
       >
         <Box>
-          <div className={`${styles.modalBox}  w-[50vw] mx-auto`}>
+          <form
+            className={`${styles.modalBox}  w-[50vw] mx-auto`}
+            onSubmit={handleSubmit}
+          >
             {/* Modal Head */}
             <div className={`flex justify-between ${styles.createTicket}`}>
               {/* Modal title */}
@@ -105,7 +211,10 @@ function BankAccountCreator({
                       Bank Name*
                     </label>
                     <div className="w-[40%] min-w-56">
-                      <CustomSelectInput options={productTypeOptions} />
+                      <CustomSelectInput
+                        options={productTypeOptions}
+                        getValue={(e: string) => setBankName(e)}
+                      />
                     </div>
                   </div>
                   <div className={`flex flex-col gap-[0.2vw]`}>
@@ -117,6 +226,8 @@ function BankAccountCreator({
                       id="subjectLine"
                       required
                       className={`${styles.input}`}
+                      value={accountName}
+                      onChange={(e) => setAccountName(e.target.value)}
                     />
                   </div>
                   <div className={`flex flex-col gap-[0.2vw]`}>
@@ -128,6 +239,8 @@ function BankAccountCreator({
                       id="subjectLine"
                       required
                       className={`${styles.input}`}
+                      value={accountNumber}
+                      onChange={(e) => setAccountNumber(e.target.value)}
                     />
                   </div>
                 </div>
@@ -140,6 +253,8 @@ function BankAccountCreator({
                     id="subjectLine"
                     required
                     className={`${styles.input}`}
+                    value={IBANumber}
+                    onChange={(e) => setIBANumber(e.target.value)}
                   />
                 </div>
                 <div className={`flex flex-col gap-[0.2vw]`}>
@@ -151,13 +266,18 @@ function BankAccountCreator({
                     id="subjectLine"
                     required
                     className={`${styles.input}`}
+                    value={SWIFTCode}
+                    onChange={(e) => setSWIFTCode(e.target.value)}
                   />
                 </div>
                 <div className={`flex flex-col gap-[0.2vw]`}>
                   <label htmlFor="tiketDescription" className="text-xl">
                     Country*
                   </label>
-                  <CustomSelectInput options={["Egypt", "USA", "UK"]} />
+                  <CustomSelectInput
+                    options={["Egypt", "USA", "UK"]}
+                    getValue={(e: string) => setCountry(e)}
+                  />
                 </div>
               </div>
 
@@ -174,6 +294,8 @@ function BankAccountCreator({
                       id="subjectLine"
                       required
                       className={`${styles.input}`}
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
                     />
                   </div>
                   <div className={`flex flex-col gap-[0.2vw]`}>
@@ -181,10 +303,12 @@ function BankAccountCreator({
                       Password*
                     </label>
                     <input
-                      type="text"
+                      type="password"
                       id="subjectLine"
                       required
                       className={`${styles.input}`}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                   <div className={`flex flex-col gap-[0.2vw]`}>
@@ -196,6 +320,8 @@ function BankAccountCreator({
                       id="subjectLine"
                       required
                       className={`${styles.input}`}
+                      value={ApiConnect}
+                      onChange={(e) => setApiConnect(e.target.value)}
                     />
                   </div>
 
@@ -206,38 +332,47 @@ function BankAccountCreator({
                     <div className="w-[40%] min-w-56">
                       <CustomSelectInput
                         options={["Brand 1", "Brand 2", "Brand 3"]}
+                        getValue={(e: string) => setBrand(e)}
                       />
                     </div>
                   </div>
                   <div className="flex mt-24 justify-end">
                     {/* Button to add bank account */}
-                    <CustomBtn
-                      word="Add Bank Account"
-                      icon={
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="11"
-                          height="11"
-                          viewBox="0 0 11 11"
-                          fill="none"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
-                            fill="#FFFFFB"
-                          />
-                        </svg>
-                      }
-                      btnColor="black"
-                      style={{ width: "max-content" }}
-                      paddingVal="py-[0.5vw] px-[0.8vw]"
-                    />
+                    {loading ? (
+                      <div className="flex items-center gap-2">
+                        <p>Adding...</p>
+                        <div className="loader"></div>
+                      </div>
+                    ) : (
+                      <CustomBtn
+                        word="Add Bank Account"
+                        icon={
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="11"
+                            height="11"
+                            viewBox="0 0 11 11"
+                            fill="none"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
+                              fill="#FFFFFB"
+                            />
+                          </svg>
+                        }
+                        btnColor="black"
+                        style={{ width: "max-content" }}
+                        paddingVal="py-[0.5vw] px-[0.8vw]"
+                        type="submit"
+                      />
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </form>
         </Box>
       </Modal>
     </>
