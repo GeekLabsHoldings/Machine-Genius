@@ -119,6 +119,10 @@ export default function UploadReceiptModal({
       );
       if (response.ok) {
         console.log("Upload successful");
+        setPageState((prev) => ({
+          ...prev,
+          uploadReceiptError: "",
+        }));
       } else {
         setPageState((prev) => ({
           ...prev,
@@ -334,13 +338,15 @@ export default function UploadReceiptModal({
                   opacity:
                     !pageState.totalPrice ||
                     !pageState.presignedURLData ||
-                    pageState.uploadReceiptLoading
+                    pageState.uploadReceiptLoading ||
+                    pageState.uploadReceiptError !== ""
                       ? 0.5
                       : 1,
                   cursor:
                     !pageState.totalPrice ||
                     !pageState.presignedURLData ||
-                    pageState.uploadReceiptLoading
+                    pageState.uploadReceiptLoading ||
+                    pageState.uploadReceiptError !== ""
                       ? "not-allowed"
                       : "pointer",
                 }}
@@ -348,7 +354,8 @@ export default function UploadReceiptModal({
                 disabled={
                   !pageState.totalPrice ||
                   !pageState.presignedURLData ||
-                  pageState.uploadReceiptLoading
+                  pageState.uploadReceiptLoading ||
+                  pageState.uploadReceiptError !== ""
                 }
               />
             </div>
