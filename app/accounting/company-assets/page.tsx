@@ -450,7 +450,7 @@ const Page = () => {
             className={`${styles.table} w-[85vw] rounded-xl overflow-y-hidden overflow-x-scroll px-2 max-w-full`}
           >
             {/* Header section of the table */}
-            <div className={`${styles.tableHead} w-full`}>
+            <div className={`${styles.tableHead} w-fit`}>
               <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                 {/* Mapping over the dataHeadRealEstate array to create table header columns */}
                 {dataHeadRealEstate.map((e, i) => (
@@ -463,7 +463,7 @@ const Page = () => {
             </div>
             {/* Body section of the table with scrollable content */}
             <div
-              className={`${styles.tableBody} w-full overflow-y-scroll rounded-xl h-[53vh]`}
+              className={`${styles.tableBody} w-fit overflow-y-scroll rounded-xl h-[53vh]`}
             >
               {/* Mapping over the dataRealEstate array to create table rows */}
               {dataRealEstate.map((e, i) => (
@@ -616,7 +616,7 @@ const Page = () => {
             className={`${styles.table} w-[85vw] rounded-xl overflow-y-hidden overflow-x-scroll px-2 max-w-full`}
           >
             {/* Header section of the table */}
-            <div className={`${styles.tableHead} w-full`}>
+            <div className={`${styles.tableHead} w-fit`}>
               <ul className=" flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                 {/* Each header item has a minimum width and is evenly
                 distributed */}
@@ -626,7 +626,7 @@ const Page = () => {
               </ul>
             </div>
             <div
-              className={`${styles.tableBody} w-full overflow-y-scroll h-[53vh]`}
+              className={`${styles.tableBody} w-fit overflow-y-auto h-[53vh]`}
             >
               {dataEquipment.map((e, i) => (
                 <ul className=" flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full">
@@ -757,7 +757,7 @@ const Page = () => {
             className={`${styles.table} w-[85vw] rounded-xl overflow-y-hidden overflow-x-scroll px-2 max-w-full`}
           >
             {/* Header section of the table */}
-            <div className={`${styles.tableHead} w-full`}>
+            <div className={`${styles.tableHead} w-fit`}>
               <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                 {/* Mapping over the dataHeadRealEstate array to create table header columns */}
                 {dataHeadRealEstate.map((e, i) => (
@@ -770,7 +770,7 @@ const Page = () => {
             </div>
             {/* Body section of the table with scrollable content */}
             <div
-              className={`${styles.tableBody} w-full overflow-y-scroll rounded-xl h-[53vh]`}
+              className={`${styles.tableBody} w-fit overflow-y-scroll rounded-xl h-[53vh]`}
             >
               {/* Mapping over the dataRealEstate array to create table rows */}
               {dataRealEstate.map((e, i) => (
