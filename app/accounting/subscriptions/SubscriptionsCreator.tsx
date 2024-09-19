@@ -48,6 +48,12 @@ function SubscriptionsCreator({
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // check if the end date is greater than the start date
+    if (new Date(startDate) > new Date(endDate)) {
+      toast.error("End date must be greater than start date");
+      return;
+    }
+
     try {
       const response = await fetch(
         "https://api.machinegenius.io/accounting/subscriptions",
