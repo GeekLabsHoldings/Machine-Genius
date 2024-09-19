@@ -19,12 +19,48 @@ export default function SupplyDatabaseTable({
   getSupplies: () => void;
   supplies: any;
 }) {
+  const [filterBy, setFilterBy] = useState({
+    productType: "",
+    productPrice: true,
+    demandOrder: true,
+  });
+
+  const [pageState, setPageState] = useState<any>({
+    filteredSupplies: null,
+  });
+
   useEffect(() => {
     getSupplies();
   }, []);
 
-  const [demandOrder, setDemandOrder] = useState<boolean>(true);
-  const [lastBoughtOrder, setLastBoughtOrder] = useState<boolean>(true);
+  useEffect(() => {
+    if (Array.isArray(supplies) && supplies.length > 0) {
+      let filteredData = supplies.filter((item: any) => {
+        return filterBy.productType
+          ? item.subType === filterBy.productType
+          : true;
+      });
+
+      // Sort the filtered data based on productPrice
+      filteredData.sort((a: any, b: any) => {
+        return filterBy.productPrice
+          ? a.productPrice - b.productPrice
+          : b.productPrice - a.productPrice;
+      });
+
+      // Sort the filtered data based on demandOrder (using wantedQuantity)
+      filteredData.sort((a: any, b: any) => {
+        return filterBy.demandOrder
+          ? a.wantedQuantity - b.wantedQuantity
+          : b.wantedQuantity - a.wantedQuantity;
+      });
+
+      setPageState((prevState: any) => ({
+        ...prevState,
+        filteredSupplies: filteredData,
+      }));
+    }
+  }, [filterBy, supplies]);
 
   return (
     <>
@@ -43,17 +79,26 @@ export default function SupplyDatabaseTable({
                   label="All"
                   options={productTypeOptions}
                   hoverColor="hover:bg-[#31B2E9]"
+                  getValue={(value: string) =>
+                    setFilterBy({
+                      ...filterBy,
+                      productType: value === "All" ? "" : value,
+                    })
+                  }
                 />
               </div>
               <div className="flex flex-col w-[25%] gap-[0.3vw]">
-                <h5>Demand</h5>
+                <h5>Product Price</h5>
                 <div
                   className={`${styles.changeOrder} `}
                   onClick={() => {
-                    setDemandOrder(!demandOrder);
+                    setFilterBy((prev) => ({
+                      ...prev,
+                      productPrice: !prev.productPrice,
+                    }));
                   }}
                 >
-                  <p>{demandOrder ? "Ascend" : "Decend"}</p>
+                  <p>{filterBy.productPrice ? "Ascend" : "Decend"}</p>
                   <svg
                     width="16"
                     height="16"
@@ -71,14 +116,17 @@ export default function SupplyDatabaseTable({
                 </div>
               </div>
               <div className="flex flex-col w-[25%] gap-[0.3vw]">
-                <h5>Last Bought</h5>
+                <h5>Demand</h5>
                 <div
                   className={`${styles.changeOrder} `}
                   onClick={() => {
-                    setLastBoughtOrder(!lastBoughtOrder);
+                    setFilterBy((prev) => ({
+                      ...prev,
+                      demandOrder: !prev.demandOrder,
+                    }));
                   }}
                 >
-                  <p>{lastBoughtOrder ? "Ascend" : "Decend"}</p>
+                  <p>{filterBy.demandOrder ? "Ascend" : "Decend"}</p>
                   <svg
                     width="16"
                     height="16"
@@ -218,14 +266,14 @@ export default function SupplyDatabaseTable({
               </svg>
               <span>Demand</span>
             </li>
-           
           </ul>
 
           {/* Table Body */}
           {/* Rendering table rows dynamically based on bodyRow array */}
           <div className={styles.table_body}>
-            {Array.isArray(supplies) && supplies.length > 0 ? (
-              supplies.map((e) => (
+            {Array.isArray(pageState.filteredSupplies) &&
+            pageState.filteredSupplies.length > 0 ? (
+              pageState.filteredSupplies.map((e: any) => (
                 <ul className="w-[100%]" key={e._id}>
                   <li className="w-[25%]">{e.supplyName}</li>
                   <li className="w-[25%]">
@@ -235,7 +283,6 @@ export default function SupplyDatabaseTable({
                   </li>
                   <li className="w-[25%]">{e.productPrice}</li>
                   <li className="w-[25%]">{e.wantedQuantity}</li>
-                
                 </ul>
               ))
             ) : (

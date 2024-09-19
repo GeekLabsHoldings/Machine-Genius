@@ -20,10 +20,11 @@ const newRibbon = (
     />
   </svg>
 );
+const ticketTypeOptions: string[] = ["All", "IT", "System Issue", "Request"];
 
 export default function Page() {
   // Defining ticket type options for the select input.
-  const ticketTypeOptions: string[] = ["All", "IT", "System Issue", "Request"];
+
   const { authState, handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<any>({
     tickets: null,
@@ -34,38 +35,6 @@ export default function Page() {
     ticketType: "",
     dateOrder: true,
   });
-
-  useEffect(() => {
-    getTickets();
-  }, []);
-
-  function isWithinLastWeek(timestamp: string) {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    return new Date(timestamp) > oneWeekAgo;
-  }
-
-  useEffect(() => {
-    if (Array.isArray(pageState.tickets) && pageState.tickets.length > 0) {
-      let filteredData = pageState.tickets.filter((item: any) => {
-        return filterBy.ticketType
-          ? item.ticketType === filterBy.ticketType
-          : true;
-      });
-
-      // Sort the filtered data based on dateOrder
-      filteredData.sort((a: any, b: any) => {
-        const dateA = new Date(a.createdAt).getTime();
-        const dateB = new Date(b.createdAt).getTime();
-        return filterBy.dateOrder ? dateB - dateA : dateA - dateB;
-      });
-
-      setPageState((prevState: any) => ({
-        ...prevState,
-        filteredTickets: filteredData,
-      }));
-    }
-  }, [filterBy, pageState.tickets]);
 
   async function getTickets() {
     try {
@@ -98,6 +67,38 @@ export default function Page() {
       console.error("Error getTickets:", error);
     }
   }
+
+  useEffect(() => {
+    getTickets();
+  }, []);
+
+  function isWithinLastWeek(timestamp: string) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    return new Date(timestamp) > oneWeekAgo;
+  }
+
+  useEffect(() => {
+    if (Array.isArray(pageState.tickets) && pageState.tickets.length > 0) {
+      let filteredData = pageState.tickets.filter((item: any) => {
+        return filterBy.ticketType
+          ? item.ticketType === filterBy.ticketType
+          : true;
+      });
+
+      // Sort the filtered data based on dateOrder
+      filteredData.sort((a: any, b: any) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return filterBy.dateOrder ? dateB - dateA : dateA - dateB;
+      });
+
+      setPageState((prevState: any) => ({
+        ...prevState,
+        filteredTickets: filteredData,
+      }));
+    }
+  }, [filterBy, pageState.tickets]);
 
   return (
     <div className="pageHeader">
