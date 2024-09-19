@@ -136,7 +136,7 @@ function BankAccountCreator({
 
       // check if the data is of type Subscription
       if (data.bankName) {
-        toast.success("Subscription added successfully");
+        toast.success("New Bank Account Has Been Added");
         handleClose();
         setBankAccounts((prev: BankAccount[]) => [...prev, data]);
         clearFields();

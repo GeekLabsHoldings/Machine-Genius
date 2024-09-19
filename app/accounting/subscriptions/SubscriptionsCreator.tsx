@@ -80,7 +80,7 @@ function SubscriptionsCreator({
 
       // check if the data is of type Subscription
       if (data.subscriptionName) {
-        toast.success("Subscription added successfully");
+        toast.success("New Subscription Has Been Added");
         handleClose();
         setSubscriptions((prev: Subscription[]) => [...prev, data]);
         clearFields();
