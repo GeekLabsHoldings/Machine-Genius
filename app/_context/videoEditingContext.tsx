@@ -1,10 +1,10 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { v4 as uuidv4 } from "uuid";
-import { formatToText } from "@/app/_utils/contentFormatter";
-import { globalContext } from "./store";
+// import { useRouter } from "next/navigation";
+// import toast from "react-hot-toast";
+// import { v4 as uuidv4 } from "uuid";
+// import { formatToText } from "@/app/_utils/contentFormatter";
+// import { globalContext } from "./store";
 
 const initialContextState = {
   selectedContent: "" as string,
@@ -22,8 +22,8 @@ export default function VideoEditingContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authState, handleSignOut } = useContext(globalContext);
-  const router = useRouter();
+  // const { authState, handleSignOut } = useContext(globalContext);
+  // const router = useRouter();
 
   // ===== Start selectedContent =====
   function selectedContentInit(): string {
