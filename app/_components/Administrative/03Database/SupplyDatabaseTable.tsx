@@ -89,8 +89,8 @@ export default function SupplyDatabaseTable({
                     {filterBy.sortBy === "productPrice"
                       ? filterBy.sortOrder === "asc"
                         ? "Ascend"
-                        : "Decend"
-                      : "Filter not applied"}
+                        : "Descend"
+                      : "Not sorted"}
                   </p>
                   <svg
                     width="16"
@@ -120,8 +120,8 @@ export default function SupplyDatabaseTable({
                     {filterBy.sortBy === "wantedQuantity"
                       ? filterBy.sortOrder === "asc"
                         ? "Ascend"
-                        : "Decend"
-                      : "Filter not applied"}
+                        : "Descend"
+                      : "Not sorted"}
                   </p>
                   <svg
                     width="16"

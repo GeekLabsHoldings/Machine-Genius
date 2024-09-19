@@ -168,7 +168,7 @@ function SortContainer({ title }: { title: string }) {
           settoggleSort(!toggleSort);
         }}
       >
-        <p>{toggleSort ? "Ascend" : "Decend"}</p>
+        <p>{toggleSort ? "Ascend" : "Descend"}</p>
         <svg
           width="16"
           height="16"
