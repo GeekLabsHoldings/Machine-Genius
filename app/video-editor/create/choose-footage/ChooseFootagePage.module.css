@@ -58,7 +58,7 @@
   height: 30vh;
   overflow: hidden;
 }
-/* Script Preview */
+/* ===== Script Preview ===== */
 .articleHeader h1,
 .articlesToSelect h3 {
   font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);

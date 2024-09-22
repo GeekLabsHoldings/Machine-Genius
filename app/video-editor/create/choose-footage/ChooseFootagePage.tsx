@@ -32,20 +32,7 @@ const ChooseFootagePage = () => {
     selectedIncorrectWord: null,
   });
 
-  // state that holds video url when click on it to display it in preview section
-  const [video, setVideo] = useState<string>("");
 
-  // render video in every update in its url
-  // const renderVideo = () => {
-  //   return (
-  //     <div>
-  //       <CustomVideoPlayer video={video} autoplay={true} videoUrl={video} />
-  //     </div>
-  //   );
-  // };
-  // useEffect(() => {
-  //   renderVideo;
-  // }, [video]);
 
   return (
     <div className={`w-full h-full flex flex-col ${styles.footagePreview}`}>
@@ -102,6 +89,10 @@ const ChooseFootagePage = () => {
           </div>
           {/* holds sample of footage */}
           <div className="flex gap-[0.6vw]">
+
+
+
+
             <div className={`${styles.box} h-[12vh] w-1/3 `}>
               <div className={`${styles.movedCheckbox}`}>
                 <CustomCheckBox
@@ -110,44 +101,80 @@ const ChooseFootagePage = () => {
                   name="choose-footage"
                 />
               </div>
-              <CustomVideoPlayer
+              {/* <CustomVideoPlayer
                 video={video}
                 setVideo={setVideo}
                 autoplay={false}
                 videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-              />
+              /> */}
             </div>
-            <div className={`${styles.box} h-[12vh] w-1/3 `}>
-              <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox
-                  value=""
-                  type="checkbox"
-                  name="choose-footage"
-                />
-              </div>
-              <CustomVideoPlayer
-                video={video}
-                setVideo={setVideo}
-                autoplay={false}
-                videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
-              />
-            </div>
-            <div className={`${styles.box} h-[12vh] w-1/3 `}>
-              <div className={`${styles.movedCheckbox}`}>
-                <CustomCheckBox
-                  value=""
-                  type="checkbox"
-                  name="choose-footage"
-                />
-              </div>
-              <CustomVideoPlayer
-                video={video}
-                setVideo={setVideo}
-                autoplay={false}
-                videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-              />
-            </div>
+
+
+
+
+
+
+
+
+
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           <div className="flex items-center justify-between">
             <p className="font-bold text-[--24px]">Out Sourced Footage</p>
@@ -158,8 +185,55 @@ const ChooseFootagePage = () => {
               paddingVal="py-[--8px] px-[--24px]"
             />
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
       </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       {/* buttons lead you to last and next page */}
       <div className="flex justify-between mt-[--sy-30px]">
