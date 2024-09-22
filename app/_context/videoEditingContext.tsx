@@ -6,15 +6,40 @@ import { createContext, useContext, useEffect, useState } from "react";
 // import { formatToText } from "@/app/_utils/contentFormatter";
 // import { globalContext } from "./store";
 
-const initialContextState = {
-  selectedContent: "" as string,
-  setSelectedContent: (content: string) => {},
-  splitedContent: null as [] | null,
-  setSplitedContent: (content: [] | null) => {},
+// Define your interfaces
+interface KeywordsAndImage {
+  keyword: string;
+  imageUrl: string[];
+}
+
+interface ScriptSegment {
+  index: number;
+  text: string;
+  keywordsAndImages: KeywordsAndImage[];
+  audioPath: {
+    index: number;
+    url: string;
+    duration: number;
+  };
+}
+
+interface VideoEditingContextType {
+  selectedContent: string;
+  setSelectedContent: (content: string) => void;
+  splitedContent: ScriptSegment[] | null;
+  setSplitedContent: (content: ScriptSegment[] | null) => void;
+}
+
+const initialContextState: VideoEditingContextType = {
+  selectedContent: "",
+  setSelectedContent: () => {},
+  splitedContent: null,
+  setSplitedContent: () => {},
 };
 
 // 1- create context, export it
-export const videoEditingContext = createContext(initialContextState);
+export const videoEditingContext =
+  createContext<VideoEditingContextType>(initialContextState);
 
 // 2- provide context, export it
 export default function VideoEditingContextProvider({
@@ -26,19 +51,18 @@ export default function VideoEditingContextProvider({
   // const router = useRouter();
 
   // ===== Start selectedContent =====
-  function selectedContentInit(): string {
+  const [selectedContent, setSelectedContent] = useState<string>("");
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const selectedContentInitValue = sessionStorage.getItem(
         "VideoEditing-selectedContent"
       );
-      return selectedContentInitValue ? selectedContentInitValue : "";
-    } else {
-      return "";
+      if (selectedContentInitValue !== null) {
+        setSelectedContent(selectedContentInitValue);
+      }
     }
-  }
-
-  const [selectedContent, setSelectedContent] =
-    useState<string>(selectedContentInit);
+  }, []);
 
   useEffect(() => {
     sessionStorage.setItem("VideoEditing-selectedContent", selectedContent);
@@ -47,18 +71,20 @@ export default function VideoEditingContextProvider({
   // ===== End selectedContent =====
 
   // ===== Start splitedContent =====
-  function splitedContentInit(): [] | null {
+  const [splitedContent, setSplitedContent] = useState<ScriptSegment[] | null>(
+    null
+  );
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const splitedContentInitValue = sessionStorage.getItem(
         "VideoEditing-splitedContent"
       );
-      return splitedContentInitValue ? JSON.parse(splitedContentInitValue) : null;
-    } else {
-      return null;
+      if (splitedContentInitValue !== null) {
+        setSplitedContent(JSON.parse(splitedContentInitValue));
+      }
     }
-  }
-
-  const [splitedContent, setSplitedContent] = useState<[] | null>(splitedContentInit);
+  }, []);
 
   useEffect(() => {
     sessionStorage.setItem(
@@ -70,7 +96,7 @@ export default function VideoEditingContextProvider({
   // ===== End splitedContent =====
 
   // Create a context value object
-  const contextValue = {
+  const contextValue: VideoEditingContextType = {
     selectedContent,
     setSelectedContent,
     splitedContent,
