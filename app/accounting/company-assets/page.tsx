@@ -1,13 +1,52 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./companyAssets.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
+
+enum AssetsTypeEnum {
+  RealEstate = "realState",
+  Equipment = "equipment",
+  DigitalAsset = "digital-asset",
+}
+
+interface IAssetsModel {
+  propertyType: string;
+  amountPaid: number;
+  sellerPhoneNumber: string;
+  dateAcquired: number;
+}
+
+interface IRealEstateModel extends IAssetsModel {
+  assetAddress: string;
+  space: number;
+  marketRate: number;
+  ratings: number;
+}
+
+interface IEquipmentModel extends IAssetsModel {
+  equipmentName: string;
+}
+
+interface IDigitalAssetModel extends IRealEstateModel {
+  assetName: string;
+  TTMProfit: number;
+  TTMRevenue: number;
+}
+
+type AssetsTypes = IRealEstateModel | IEquipmentModel | IDigitalAssetModel;
 
 const Page = () => {
   const [sorting1, setSorting1] = useState("Ascend");
   const [sorting2, setSorting2] = useState("Ascend");
   const [sorting3, setSorting3] = useState("Ascend");
   const [sorting4, setSorting4] = useState("Ascend");
+
+  const [assetsType, setAssetsType] = useState<AssetsTypeEnum>(
+    AssetsTypeEnum.RealEstate
+  );
+  const [assets, setAssets] = useState<AssetsTypes[]>([]);
+  const { handleSignOut } = useContext(globalContext);
 
   function getRandomBackgroundColor() {
     const colors = [
@@ -97,129 +136,140 @@ const Page = () => {
     "Seller",
     "Date Acquired",
   ];
-
-  const dataRealEstate = [
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Commercial",
-      Space: "15000 sq",
-      AmountPaid: "8,000,000 EGP",
-      MarketRate: "8,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Commercial",
-      Space: "23000 sq",
-      AmountPaid: "5,000,000 EGP",
-      MarketRate: "5,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Residential",
-      Space: "30000 sq",
-      AmountPaid: "12,000,000 EGP",
-      MarketRate: "12,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Commercial",
-      Space: "45000 sq",
-      AmountPaid: "8,000,000 EGP",
-      MarketRate: "8,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Residential",
-      Space: "15000 sq",
-      AmountPaid: "5,000,000 EGP",
-      MarketRate: "5,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Residential",
-      Space: "30000 sq",
-      AmountPaid: "12,000,000 EGP",
-      MarketRate: "12,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Commercial",
-      Space: "30000 sq",
-      AmountPaid: "12,000,000 EGP",
-      MarketRate: "12,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Commercial",
-      Space: "15000 sq",
-      AmountPaid: "8,000,000 EGP",
-      MarketRate: "8,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Commercial",
-      Space: "15000 sq",
-      AmountPaid: "12,000,000 EGP",
-      MarketRate: "12,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Residential",
-      Space: "45000 sq",
-      AmountPaid: "5,000,000 EGP",
-      MarketRate: "5,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Commercial",
-      Space: "30000 sq",
-      AmountPaid: "8,000,000 EGP",
-      MarketRate: "8,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      PropertyAddress: "123, Internet St",
-      PropertyType: "Residential",
-      Space: "15000 sq",
-      AmountPaid: "5,000,000 EGP",
-      MarketRate: "5,000,000 EGP",
-      Ratings: 3.5,
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
+  const dataHeadDigitalAsset = [
+    "Asset Name",
+    "Address",
+    "Amount Paid",
+    "Market Rate",
+    "Seller",
+    "Ratings",
+    "TTM Profit",
+    "TTM Revenue",
+    "Date Acquired",
   ];
+
+  // const dataRealEstate = [
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     Space: "15000 sq",
+  //     AmountPaid: "8,000,000 EGP",
+  //     MarketRate: "8,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     Space: "23000 sq",
+  //     AmountPaid: "5,000,000 EGP",
+  //     MarketRate: "5,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     Space: "30000 sq",
+  //     AmountPaid: "12,000,000 EGP",
+  //     MarketRate: "12,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     Space: "45000 sq",
+  //     AmountPaid: "8,000,000 EGP",
+  //     MarketRate: "8,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     Space: "15000 sq",
+  //     AmountPaid: "5,000,000 EGP",
+  //     MarketRate: "5,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     Space: "30000 sq",
+  //     AmountPaid: "12,000,000 EGP",
+  //     MarketRate: "12,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     Space: "30000 sq",
+  //     AmountPaid: "12,000,000 EGP",
+  //     MarketRate: "12,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     Space: "15000 sq",
+  //     AmountPaid: "8,000,000 EGP",
+  //     MarketRate: "8,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     Space: "15000 sq",
+  //     AmountPaid: "12,000,000 EGP",
+  //     MarketRate: "12,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     Space: "45000 sq",
+  //     AmountPaid: "5,000,000 EGP",
+  //     MarketRate: "5,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     Space: "30000 sq",
+  //     AmountPaid: "8,000,000 EGP",
+  //     MarketRate: "8,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     PropertyAddress: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     Space: "15000 sq",
+  //     AmountPaid: "5,000,000 EGP",
+  //     MarketRate: "5,000,000 EGP",
+  //     Ratings: 3.5,
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  // ];
 
   const headEquipment = [
     "Equipments",
@@ -228,92 +278,124 @@ const Page = () => {
     "Seller",
     "Date Acquired",
   ];
-  const dataEquipment = [
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Commercial",
-      AmountPaid: "8,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Commercial",
-      AmountPaid: "5,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Residential",
-      AmountPaid: "12,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Commercial",
-      AmountPaid: "8,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Residential",
-      AmountPaid: "5,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Residential",
-      AmountPaid: "12,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Commercial",
-      AmountPaid: "12,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Commercial",
-      AmountPaid: "8,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Commercial",
-      AmountPaid: "12,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Residential",
-      AmountPaid: "5,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Commercial",
-      AmountPaid: "8,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-    {
-      Equipments: "123, Internet St",
-      PropertyType: "Residential",
-      AmountPaid: "5,000,000 EGP",
-      Seller: "01148996574",
-      DateAcquired: "12 March 2024",
-    },
-  ];
+  // const dataEquipment = [
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     AmountPaid: "8,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     AmountPaid: "5,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     AmountPaid: "12,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     AmountPaid: "8,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     AmountPaid: "5,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     AmountPaid: "12,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     AmountPaid: "12,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     AmountPaid: "8,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     AmountPaid: "12,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     AmountPaid: "5,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Commercial",
+  //     AmountPaid: "8,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  //   {
+  //     Equipments: "123, Internet St",
+  //     PropertyType: "Residential",
+  //     AmountPaid: "5,000,000 EGP",
+  //     Seller: "01148996574",
+  //     DateAcquired: "12 March 2024",
+  //   },
+  // ];
+
+  useEffect(() => {
+    // Fetch data from API
+    const getAssetsData = async () => {
+      const response = await fetch(
+        `https://api.machinegenius.io/accounting/assets/get?limit=10&page=0&assetType=${assetsType}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // check if the fetch request is an array of objects
+      if (response.status === 401) {
+        handleSignOut();
+      } else {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          console.log(data);
+          setAssets(data);
+        }
+      }
+    };
+
+    try {
+      getAssetsData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [assetsType]);
 
   return (
     <div className={`${styles.assets} pt-[1vw] overflow-hidden`}>
@@ -324,6 +406,7 @@ const Page = () => {
           className="tab"
           aria-label="Real Estate"
           defaultChecked
+          onClick={() => setAssetsType(AssetsTypeEnum.RealEstate)}
         />
         <div className={`tab-content px-2 pt-[1.5vw] w-full overflow-hidden`}>
           <div className=" flex gap-2">
@@ -335,7 +418,7 @@ const Page = () => {
                 <CustomSelectInput
                   options={[
                     "All",
-                    ...dataRealEstate.map((e, i) => e.PropertyType),
+                    ...new Set(assets.map((asset) => asset.propertyType)),
                   ]}
                 />
               </div>
@@ -466,45 +549,57 @@ const Page = () => {
               className={`${styles.tableBody} w-fit overflow-y-scroll rounded-xl h-[53vh]`}
             >
               {/* Mapping over the dataRealEstate array to create table rows */}
-              {dataRealEstate.map((e, i) => (
+              {assets.map((e: AssetsTypes, i) => {
                 // Each row with styling applied and a border at the bottom
-                <ul
-                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full"
-                  key={i}
-                >
-                  {/* Property address column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>
-                    {e.PropertyAddress}
-                  </li>
-                  {/* Property type column with dynamic background color */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>
-                    <span
-                      className="p-2 rounded-md"
-                      style={{
-                        backgroundColor: `${getRandomBackgroundColor()}`,
-                      }}
-                    >
-                      {e.PropertyType}
-                    </span>
-                  </li>
-                  {/* Space column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.Space}</li>
-                  {/* Amount paid column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.AmountPaid}</li>
-                  {/* Market rate column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.MarketRate}</li>
-                  {/* Ratings column with custom star rating component */}
-                  <li className={`w-[12.5%] min-w-[200px] text-[#E1C655]`}>
-                    {rating(e.Ratings)}
-                  </li>
-                  {/* Seller column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.Seller}</li>
-                  {/* Date acquired column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>
-                    {e.DateAcquired}
-                  </li>
-                </ul>
-              ))}
+                const isRealEstate = (
+                  asset: AssetsTypes
+                ): asset is IRealEstateModel => "assetAddress" in asset;
+                return isRealEstate(e) ? (
+                  <ul
+                    className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full"
+                    key={i}
+                  >
+                    {/* Property address column */}
+                    <li className={`w-[12.5%] min-w-[200px]`}>
+                      {e.assetAddress}
+                    </li>
+                    {/* Property type column with dynamic background color */}
+                    <li className={`w-[12.5%] min-w-[200px]`}>
+                      <span
+                        className="p-2 rounded-md"
+                        style={{
+                          backgroundColor: `${getRandomBackgroundColor()}`,
+                        }}
+                      >
+                        {e.propertyType}
+                      </span>
+                    </li>
+                    {/* Space column */}
+                    <li className={`w-[12.5%] min-w-[200px]`}>{e.space}</li>
+                    {/* Amount paid column */}
+                    <li className={`w-[12.5%] min-w-[200px]`}>
+                      {e.amountPaid}
+                    </li>
+                    {/* Market rate column */}
+                    <li className={`w-[12.5%] min-w-[200px]`}>
+                      {e.marketRate}
+                    </li>
+                    {/* Date acquired column */}
+                    {/* Ratings column with custom star rating component */}
+                    <li className={`w-[12.5%] min-w-[200px] text-[#E1C655]`}>
+                      {rating(e.ratings)}
+                    </li>
+                    {/* Seller column */}
+                    <li className={`w-[12.5%] min-w-[200px]`}>
+                      {e.sellerPhoneNumber}
+                    </li>
+                    {/* Date acquired column */}
+                    <li className={`w-[12.5%] min-w-[200px]`}>
+                      {e.dateAcquired}
+                    </li>
+                  </ul>
+                ) : null;
+              })}
             </div>
           </div>
         </div>
@@ -514,6 +609,7 @@ const Page = () => {
           name="tabs"
           className="tab"
           aria-label="Equipments"
+          onClick={() => setAssetsType(AssetsTypeEnum.Equipment)}
         />
         <div className={`tab-content px-2 pt-[1.5vw] overflow-hidden`}>
           <div className=" flex gap-2">
@@ -525,7 +621,7 @@ const Page = () => {
                 <CustomSelectInput
                   options={[
                     "All",
-                    ...dataRealEstate.map((e, i) => e.PropertyType),
+                    ...new Set(assets.map((asset) => asset.propertyType)),
                   ]}
                 />
               </div>
@@ -628,24 +724,31 @@ const Page = () => {
             <div
               className={`${styles.tableBody} w-fit overflow-y-auto h-[53vh]`}
             >
-              {dataEquipment.map((e, i) => (
-                <ul className=" flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full">
-                  <li className="w-[20%] min-w-[320px]">{e.Equipments}</li>
-                  <li className="w-[20%] min-w-[320px]">
-                    <span
-                      className="p-2 rounded-md"
-                      style={{
-                        backgroundColor: `${getRandomBackgroundColor()}`,
-                      }}
-                    >
-                      {e.PropertyType}
-                    </span>
-                  </li>
-                  <li className="w-[20%] min-w-[320px]">{e.AmountPaid}</li>
-                  <li className="w-[20%] min-w-[320px]">{e.Seller}</li>
-                  <li className="w-[20%] min-w-[320px]">{e.DateAcquired}</li>
-                </ul>
-              ))}
+              {assets.map((e: AssetsTypes, i) => {
+                const isEquipment = (
+                  asset: AssetsTypes
+                ): asset is IEquipmentModel => "equipmentName" in asset;
+                return isEquipment(e) ? (
+                  <ul className=" flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full">
+                    <li className="w-[20%] min-w-[320px]">{e.equipmentName}</li>
+                    <li className="w-[20%] min-w-[320px]">
+                      <span
+                        className="p-2 rounded-md"
+                        style={{
+                          backgroundColor: `${getRandomBackgroundColor()}`,
+                        }}
+                      >
+                        {e.propertyType}
+                      </span>
+                    </li>
+                    <li className="w-[20%] min-w-[320px]">{e.amountPaid}</li>
+                    <li className="w-[20%] min-w-[320px]">
+                      {e.sellerPhoneNumber}
+                    </li>
+                    <li className="w-[20%] min-w-[320px]">{e.dateAcquired}</li>
+                  </ul>
+                ) : null;
+              })}
             </div>
           </div>
         </div>
@@ -655,6 +758,7 @@ const Page = () => {
           name="tabs"
           className="tab"
           aria-label="Digital Assets"
+          onClick={() => setAssetsType(AssetsTypeEnum.DigitalAsset)}
         />
         <div className={`tab-content px-2 pt-[1.5vw] overflow-hidden`}>
           <div className=" flex gap-2">
@@ -666,7 +770,7 @@ const Page = () => {
                 <CustomSelectInput
                   options={[
                     "All",
-                    ...dataRealEstate.map((e, i) => e.PropertyType),
+                    ...new Set(assets.map((asset) => asset.propertyType)),
                   ]}
                 />
               </div>
@@ -760,7 +864,7 @@ const Page = () => {
             <div className={`${styles.tableHead} w-fit`}>
               <ul className="flex justify-between items-center border-b-2 border-b-[var(--dark)] w-full">
                 {/* Mapping over the dataHeadRealEstate array to create table header columns */}
-                {dataHeadRealEstate.map((e, i) => (
+                {dataHeadDigitalAsset.map((e, i) => (
                   // Each header item has a minimum width and is evenly distributed
                   <li className={`w-[12.5%] min-w-[200px]`} key={i}>
                     {e}
@@ -769,49 +873,38 @@ const Page = () => {
               </ul>
             </div>
             {/* Body section of the table with scrollable content */}
-            <div
-              className={`${styles.tableBody} w-fit overflow-y-scroll rounded-xl h-[53vh]`}
-            >
+            <div className={`${styles.tableBody} w-full rounded-xl h-[53vh]`}>
               {/* Mapping over the dataRealEstate array to create table rows */}
-              {dataRealEstate.map((e, i) => (
+              {assets.map((e: AssetsTypes, i) => {
                 // Each row with styling applied and a border at the bottom
-                <ul
-                  className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-full"
-                  key={i}
-                >
-                  {/* Property address column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>
-                    {e.PropertyAddress}
-                  </li>
-                  {/* Property type column with dynamic background color */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>
-                    <span
-                      className="p-2 rounded-md"
-                      style={{
-                        backgroundColor: `${getRandomBackgroundColor()}`,
-                      }}
-                    >
-                      {e.PropertyType}
-                    </span>
-                  </li>
-                  {/* Space column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.Space}</li>
-                  {/* Amount paid column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.AmountPaid}</li>
-                  {/* Market rate column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.MarketRate}</li>
-                  {/* Ratings column with custom star rating component */}
-                  <li className={`w-[12.5%] min-w-[200px] text-[#E1C655]`}>
-                    {rating(e.Ratings)}
-                  </li>
-                  {/* Seller column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>{e.Seller}</li>
-                  {/* Date acquired column */}
-                  <li className={`w-[12.5%] min-w-[200px]`}>
-                    {e.DateAcquired}
-                  </li>
-                </ul>
-              ))}
+                const isDigitalAsset = (
+                  asset: AssetsTypes
+                ): asset is IDigitalAssetModel => "TTMRevenue" in asset;
+                return isDigitalAsset(e) ? (
+                  <ul
+                    className="flex justify-between items-center border-b-2 border-b-[#2A2B2A4A] w-fit"
+                    key={i}
+                  >
+                    <li className="w-[12.5%] min-w-[200px]">{e.assetName}</li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {e.assetAddress}
+                    </li>
+                    <li className="w-[12.5%] min-w-[200px]">{e.amountPaid}</li>
+                    <li className="w-[12.5%] min-w-[200px]">{e.marketRate}</li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {e.sellerPhoneNumber}
+                    </li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {rating(e.ratings)}
+                    </li>
+                    <li className="w-[12.5%] min-w-[200px]">{e.TTMProfit}</li>
+                    <li className="w-[12.5%] min-w-[200px]">{e.TTMRevenue}</li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {e.dateAcquired}
+                    </li>
+                  </ul>
+                ) : null;
+              })}
             </div>
           </div>
         </div>
