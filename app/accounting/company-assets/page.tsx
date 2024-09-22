@@ -575,14 +575,16 @@ const Page = () => {
                       </span>
                     </li>
                     {/* Space column */}
-                    <li className={`w-[12.5%] min-w-[200px]`}>{e.space}</li>
+                    <li className={`w-[12.5%] min-w-[200px]`}>
+                      {e.space + " sq"}
+                    </li>
                     {/* Amount paid column */}
                     <li className={`w-[12.5%] min-w-[200px]`}>
-                      {e.amountPaid}
+                      {e.amountPaid + " EGP"}
                     </li>
                     {/* Market rate column */}
                     <li className={`w-[12.5%] min-w-[200px]`}>
-                      {e.marketRate}
+                      {e.marketRate + " EGP"}
                     </li>
                     {/* Date acquired column */}
                     {/* Ratings column with custom star rating component */}
@@ -595,7 +597,13 @@ const Page = () => {
                     </li>
                     {/* Date acquired column */}
                     <li className={`w-[12.5%] min-w-[200px]`}>
-                      {e.dateAcquired}
+                      {e.dateAcquired
+                        ? new Intl.DateTimeFormat("en-GB", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                          }).format(new Date(e?.dateAcquired))
+                        : null}
                     </li>
                   </ul>
                 ) : null;
@@ -741,7 +749,9 @@ const Page = () => {
                         {e.propertyType}
                       </span>
                     </li>
-                    <li className="w-[20%] min-w-[320px]">{e.amountPaid}</li>
+                    <li className="w-[20%] min-w-[320px]">
+                      {e.amountPaid + " EGP"}
+                    </li>
                     <li className="w-[20%] min-w-[320px]">
                       {e.sellerPhoneNumber}
                     </li>
@@ -889,16 +899,24 @@ const Page = () => {
                     <li className="w-[12.5%] min-w-[200px]">
                       {e.assetAddress}
                     </li>
-                    <li className="w-[12.5%] min-w-[200px]">{e.amountPaid}</li>
-                    <li className="w-[12.5%] min-w-[200px]">{e.marketRate}</li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {e.amountPaid + " EGP"}
+                    </li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {e.marketRate + " EGP"}
+                    </li>
                     <li className="w-[12.5%] min-w-[200px]">
                       {e.sellerPhoneNumber}
                     </li>
                     <li className="w-[12.5%] min-w-[200px]">
                       {rating(e.ratings)}
                     </li>
-                    <li className="w-[12.5%] min-w-[200px]">{e.TTMProfit}</li>
-                    <li className="w-[12.5%] min-w-[200px]">{e.TTMRevenue}</li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {e.TTMProfit + " EGP"}
+                    </li>
+                    <li className="w-[12.5%] min-w-[200px]">
+                      {e.TTMRevenue + " EGP"}
+                    </li>
                     <li className="w-[12.5%] min-w-[200px]">
                       {e.dateAcquired}
                     </li>
