@@ -247,7 +247,7 @@ const ChooseFootagePage = () => {
                 selectedSegment.keywordsAndImages.length > 0 &&
                 selectedSegment.keywordsAndImages[0].imageUrl.length > 0 ? (
                   selectedSegment.keywordsAndImages[0].imageUrl.map(
-                    (imageUrl) => (
+                    (imageUrl: string) => (
                       <div className="!w-[194px]" key={uuidv4()}>
                         <ImageCard
                           inputName="select-footage"
