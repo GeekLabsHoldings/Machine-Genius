@@ -126,7 +126,9 @@ function Page() {
   );
 
   const handleLabelClick = useCallback((content: any) => {
+    console.log("content:", content);
     const filteredContent = contentCleaner(content);
+    console.log("filteredContent:", filteredContent);
     setPreviewText(filteredContent);
   }, []);
   return (
@@ -164,7 +166,11 @@ function Page() {
                   svgBtn={favIcon}
                   title={item.generalTitle}
                   key={`${i}-${item.generalTitle}`}
-                  date={"April 16th 2024"}
+                  date={new Date(item.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                   hasCheckedArticles={() => hasCheckedArticles(i)}
                 >
                   {item?.articleJson.map((ele: any, j: number) => (
@@ -174,6 +180,11 @@ function Page() {
                         article={ele.title}
                         name="select-articles"
                         accsentColor="#E1C655"
+                        handleCheckboxChange={() => handleCheckboxChange(ele)}
+                        handleLabelClick={() => handleLabelClick(ele.content)}
+                        checked={choosedArticles.some(
+                          (article: any) => article.title === ele.title
+                        )}
                       />
                     </>
                   ))}
@@ -203,11 +214,22 @@ function Page() {
           btnColor="white"
           href={"/newsletter/create/choose-brand"}
         />
-        <CustomBtn
-          word={"Next"}
-          btnColor="black"
-          href={"/newsletter/create/newsletter-generated-titles"}
-        />
+        {isChoosedArticles ? (
+          <CustomBtn
+            word="Next"
+            btnColor="black"
+            href="/content-creator/create/create-article"
+          />
+        ) : (
+          <CustomBtn
+            word="Next"
+            btnColor="black"
+            onClick={(e?: React.MouseEvent<HTMLButtonElement>) => {
+              e?.preventDefault();
+              toast.error("Please select at least one article!");
+            }}
+          />
+        )}
       </div>
     </div>
   );
