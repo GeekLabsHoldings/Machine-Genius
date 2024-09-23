@@ -58,6 +58,10 @@
   height: 30vh;
   overflow: hidden;
 }
+
+.custom_scrollbar::-webkit-scrollbar-thumb {
+  cursor: pointer;
+}
 /* ===== Script Preview ===== */
 .articleHeader h1,
 .articlesToSelect h3 {

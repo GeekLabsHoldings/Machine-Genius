@@ -241,7 +241,7 @@ const ChooseFootagePage = () => {
           </div>
           {/* holds sample of footage */}
 
-          <div className="w-full overflow-x-auto">
+          <div className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}>
             <div className="flex gap-[1.25vw] pb-[--sy-5px]">
               {selectedSegment ? (
                 selectedSegment.keywordsAndImages.length > 0 &&
