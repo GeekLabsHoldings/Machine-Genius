@@ -67,6 +67,7 @@ function Page() {
     setCollectedData,
     // twitterData,
     // setTwitterData,
+    setGeneralTitles,
   } = useContext(createNewsletterContext);
 
   useEffect(() => {
@@ -124,6 +125,31 @@ function Page() {
     },
     [setChoosedArticles]
   );
+
+  useEffect(() => {
+    setGeneralTitles(
+      collectedData.reduce((matches: any, item: any) => {
+        if (!item.articleJson || item.articleJson.length === 0) {
+          return matches; // Skip items with no articleJson
+        }
+
+        const matchingArticles = item.articleJson.filter((article: any) =>
+          choosedArticles.some(
+            (secondItem: any) => secondItem.title === article.title
+          )
+        );
+
+        if (matchingArticles.length > 0) {
+          matches.push({
+            title: item.generalTitle,
+            articles: matchingArticles.map((article: any) => article.title),
+          });
+        }
+
+        return matches;
+      }, [])
+    );
+  }, [choosedArticles]);
 
   const handleLabelClick = useCallback((content: any) => {
     console.log("content:", content);
@@ -218,7 +244,7 @@ function Page() {
           <CustomBtn
             word="Next"
             btnColor="black"
-            href="/content-creator/create/create-article"
+            href="/newsletter/create/newsletter-generated-titles"
           />
         ) : (
           <CustomBtn

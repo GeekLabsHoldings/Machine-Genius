@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
+import { v4 as uuidv4 } from "uuid";
 
 const initialContextState = {
   // ===== 01. Start Content Creator =====
@@ -35,20 +36,23 @@ const initialContextState = {
   lockedGeneratedTitles: [] as any,
   setLockedGeneratedTitles: (titles: any) => {},
 
-  generatedThumbnails: [] as any,
-  setGeneratedThumbnails: (thumbnails: any) => {},
-  generateThumbnails: () => {},
-  selectedContentThumbnail: "",
-  setSelectedContentThumbnail: (thumbnail: any) => {},
+  // generatedThumbnails: [] as any,
+  // setGeneratedThumbnails: (thumbnails: any) => {},
+  // generateThumbnails: () => {},
+  // selectedContentThumbnail: "",
+  // setSelectedContentThumbnail: (thumbnail: any) => {},
 
   selectedContentTitle: "",
   setSelectedContentTitle: (title: any) => {},
 
-  presignedURLData: null as any,
-  setPresignedURLData: (data: any) => {},
+  // presignedURLData: null as any,
+  // setPresignedURLData: (data: any) => {},
 
-  editContentData: null as any,
-  setEditContentData: (id: any) => {},
+  // editContentData: null as any,
+  // setEditContentData: (id: any) => {},
+
+  setGeneralTitles: (titles: any) => {},
+  generalTitles: [] as any,
   // ===== 01. End Content Creator =====
 };
 
@@ -190,6 +194,25 @@ export default function CreateNewsletterContextProvider({
     }
   }
 
+  function generalTitlesInit() {
+    if (typeof window !== "undefined") {
+      const generalTitlesInitValue = sessionStorage.getItem(
+        "Newsletter-generalTitles"
+      );
+      return generalTitlesInitValue ? JSON.parse(generalTitlesInitValue) : [];
+    } else {
+      return [];
+    }
+  }
+
+  const [generalTitles, setGeneralTitles] = useState<any>(generalTitlesInit);
+  useEffect(() => {
+    sessionStorage.setItem(
+      "Newsletter-generalTitles",
+      JSON.stringify(generalTitles)
+    );
+  }, [generalTitles]);
+
   const [generatedTitles, setGeneratedTitles] =
     useState<any>(generatedTitlesInit);
   useEffect(() => {
@@ -198,7 +221,7 @@ export default function CreateNewsletterContextProvider({
   }, [generatedTitles]);
 
   async function generateTitles() {
-    if (!selectedBrand || !finalArticle?.articles[0]?.content) {
+    if (!generateTitles) {
       toast.error("No content or brand name provided");
       return;
     }
@@ -217,7 +240,7 @@ export default function CreateNewsletterContextProvider({
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/generate-titles`,
+        `https://api.machinegenius.io/social-media/news-letter/generate-titles`,
         {
           method: "POST",
           headers: {
@@ -229,8 +252,7 @@ export default function CreateNewsletterContextProvider({
             }`,
           },
           body: JSON.stringify({
-            brandName: brandNamePayload,
-            content: finalArticle?.articles[0]?.content,
+            articles: generalTitles.map((topic: any) => topic.title),
           }),
         }
       );
@@ -245,8 +267,13 @@ export default function CreateNewsletterContextProvider({
       } else if (json && json.success === false) {
         toast.error("Something went wrong!");
         return;
-      } else if (json && json.success === true && json.Titles) {
-        setGeneratedTitles(json.Titles);
+      } else if (Array.isArray(json)) {
+        setGeneratedTitles(
+          json.map((title: any) => ({
+            id: uuidv4(),
+            generalTitle: title,
+          }))
+        );
       } else {
         toast.error("Something went wrong!");
         return;
@@ -296,174 +323,6 @@ export default function CreateNewsletterContextProvider({
     );
     console.log("lockedGeneratedTitles:", lockedGeneratedTitles);
   }, [generatedTitles, lockedGeneratedTitles]);
-  // ===== End generateTitles =====
-
-  // ===== Start generatedThumbnails =====
-
-  function generatedThumbnailsInit() {
-    if (typeof window !== "undefined") {
-      const generatedThumbnailsInitValue = sessionStorage.getItem(
-        "generatedThumbnails"
-      );
-      return generatedThumbnailsInitValue
-        ? JSON.parse(generatedThumbnailsInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-  const [generatedThumbnails, setGeneratedThumbnails] = useState<any>(
-    generatedThumbnailsInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "generatedThumbnails",
-      JSON.stringify(generatedThumbnails)
-    );
-    // console.log("generatedThumbnails:", generatedThumbnails);
-  }, [generatedThumbnails]);
-
-  async function generateThumbnails() {
-    if (!selectedBrand || !finalArticle?.articles[0]?.content) {
-      toast.error("No content or brand name provided");
-      return;
-    }
-    let brandNamePayload: string = "";
-    if (selectedBrand === "Street Politics Canada") {
-      brandNamePayload = "streetPoliticsCanada";
-    } else if (selectedBrand === "Street Politics UK") {
-      brandNamePayload = "streetPoliticsUK";
-    } else if (selectedBrand === "Street Politics Africa") {
-      brandNamePayload = "streetPoliticsAfrica";
-    } else if (selectedBrand === "Investorcracy") {
-      brandNamePayload = "investocracy";
-    } else if (selectedBrand === "Movie Myth") {
-      brandNamePayload = "movieMyth";
-    }
-    try {
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/generate-thumbnails`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            brandName: brandNamePayload,
-            content: finalArticle?.articles[0]?.content,
-          }),
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
-      const json = await res.json();
-      if (!json) {
-        toast.error("Something went wrong!");
-        return;
-      } else if (
-        json &&
-        json.success === false &&
-        json.error === "No content or brand name provided"
-      ) {
-        toast.error("No content or brand name provided");
-        return;
-      } else if (
-        json &&
-        json.success === false &&
-        json.error === "brandName Not correct"
-      ) {
-        toast.error("brandName Not correct");
-        return;
-      } else if (json && json.success === false) {
-        toast.error("Something went wrong!");
-        return;
-      } else if (json && json.success === true && json.Thumbnail) {
-        setGeneratedThumbnails(json.Thumbnail);
-      } else {
-        toast.error("Something went wrong!");
-        return;
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error generateThumbnails:", error);
-    }
-  }
-
-  function selectedContentThumbnailInit() {
-    if (typeof window !== "undefined") {
-      const selectedContentThumbnailInitValue = sessionStorage.getItem(
-        "selectedContentThumbnail"
-      );
-      return selectedContentThumbnailInitValue
-        ? selectedContentThumbnailInitValue
-        : "";
-    } else {
-      return "";
-    }
-  }
-  const [selectedContentThumbnail, setSelectedContentThumbnail] = useState<any>(
-    selectedContentThumbnailInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "selectedContentThumbnail",
-      selectedContentThumbnail
-    );
-  }, [selectedContentThumbnail]);
-
-  // ===== End generatedThumbnails =====
-
-  // ===== Start videoTranscription =====
-  const videoTranscription = useSelector(
-    (state: any) => state.contentCreator.videoTranscription
-  );
-  useEffect(() => {
-    sessionStorage.setItem(
-      "videoTranscription",
-      JSON.stringify(videoTranscription)
-    );
-  }, [videoTranscription]);
-  // ===============================================================
-
-  // function presignedURLDataInit() {
-  //   if (typeof window !== "undefined") {
-  //     const presignedURLDataInitValue = sessionStorage.getItem("presignedURLData");
-  //     return presignedURLDataInitValue ? JSON.parse(presignedURLDataInitValue) : null;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  const [presignedURLData, setPresignedURLData] = useState<any>(null);
-  // useEffect(() => {
-  //   sessionStorage.setItem("presignedURLData", JSON.stringify(presignedURLData));
-  // }, [presignedURLData]);
-
-  // ===== End videoTranscription =====
-
-  // ===== Start editContentData =====
-  function editContentDataInit() {
-    if (typeof window !== "undefined") {
-      const editContentDataInitValue =
-        sessionStorage.getItem("editContentData");
-      return editContentDataInitValue
-        ? JSON.parse(editContentDataInitValue)
-        : null;
-    } else {
-      return null;
-    }
-  }
-  const [editContentData, setEditContentData] =
-    useState<any>(editContentDataInit);
-  useEffect(() => {
-    sessionStorage.setItem("editContentData", JSON.stringify(editContentData));
-  }, [editContentData]);
-  // ===== End editContentData =====
 
   // ===== 01. End Content Creator =====
 
@@ -487,24 +346,27 @@ export default function CreateNewsletterContextProvider({
     setGeneratedTitles,
     lockedGeneratedTitles,
     setLockedGeneratedTitles,
-    generatedThumbnails,
-    setGeneratedThumbnails,
-    generateThumbnails,
-    selectedContentThumbnail,
-    setSelectedContentThumbnail,
+    // generatedThumbnails,
+    // setGeneratedThumbnails,
+    // generateThumbnails,
+    // selectedContentThumbnail,
+    // setSelectedContentThumbnail,
     selectedContentTitle,
     setSelectedContentTitle,
 
-    presignedURLData,
-    setPresignedURLData,
+    // presignedURLData,
+    // setPresignedURLData,
 
-    editContentData,
-    setEditContentData,
+    // editContentData,
+    // setEditContentData,
 
     checkGrammer: () => {},
     checkPlagiarism: () => {},
     checkAi: () => {},
     startChecks: () => {},
+
+    setGeneralTitles,
+    generalTitles,
     // ===== 01. End Content Creator =====
   };
 

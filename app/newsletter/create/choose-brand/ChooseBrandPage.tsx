@@ -35,7 +35,6 @@ export default function ChooseBrandPage() {
     setCheckStatus,
     setGeneratedTitles,
     setLockedGeneratedTitles,
-    setEditContentData,
   } = useContext(createNewsletterContext);
 
   // reset all the data
@@ -53,7 +52,6 @@ export default function ChooseBrandPage() {
       });
       setGeneratedTitles([]);
       setLockedGeneratedTitles([]);
-      setEditContentData(null);
       if (typeof window !== "undefined") {
         const keysToRemove = [
           "selectedBrand",
