@@ -64,12 +64,11 @@ const Page = () => {
           <p className=" text-white text-[0.568vw] font-medium me-2">
             Members (4)
           </p>{" "}
-          <div className=" flex items-center">
-            <QuarterCircles color={"#EAD787"} translate={0} />{" "}
-            <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
-            <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
-            <QuarterCircles color={"#F06F77"} translate={-120} />{" "}
-          </div>{" "}
+          <div className="flex-shrink-0">
+              <QuarterCircles
+                colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
+              />
+            </div>
           <div></div>
         </div>
       </div>
@@ -137,7 +136,11 @@ const Page = () => {
                   </p>
                 </div>
                 {/* Quarter Circles */}
-                <QuarterCircles color="#6FC9EE" translate={0} />
+                <div className="flex-shrink-0">
+              <QuarterCircles
+                colors={[ "#6FC9EE"]}
+              />
+            </div>
               </div>
             </div>
             <div
@@ -150,11 +153,11 @@ const Page = () => {
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] flex justify-between`}
             >
               <h6>Brief</h6>
-              <div>
-                <QuarterCircles color="#6FC9EE" translate={0} />
-                <QuarterCircles color="#8DC189" translate={-35} />
-                <QuarterCircles color="#F06F77" translate={-80} />
-              </div>
+                          <div className="flex-shrink-0">
+              <QuarterCircles
+                colors={[ "#6FC9EE", "#8DC189", "#F06F77"]}
+              />
+            </div>
             </div>
           </div>
           <CustomBtn

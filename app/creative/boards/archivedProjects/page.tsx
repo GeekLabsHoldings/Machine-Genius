@@ -348,10 +348,11 @@ const Page = () => {
                 <div className={`mb-[0.6vw] ${styles.cards} p-4 rounded-3xl`}>
                   <div className=" mb-[0.8vh] flex items-center">
                     <h3 className=" pe-[0.662vw]">{e.name}</h3>
-                    <QuarterCircles color={"#EAD787"} translate={0} />{" "}
-                    <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
-                    <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
-                    <QuarterCircles color={"#F06F77"} translate={-120} />
+                    <div className="flex-shrink-0">
+              <QuarterCircles
+                colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
+              />
+            </div>
                   </div>
                   <div
                     className={`bg-[${e.stateColor}] rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
