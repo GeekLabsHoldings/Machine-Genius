@@ -53,12 +53,6 @@ function Page() {
     );
 
     setIsLoading(true);
-
-    // setTimeout(() => {
-    //   // Your action here
-    //   router.push('/content-creator/create/generated-titles')
-
-    // }, 1500); // 3000 milliseconds = 3 seconds
   };
 
   return (

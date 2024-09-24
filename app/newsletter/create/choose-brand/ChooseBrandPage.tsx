@@ -32,7 +32,6 @@ export default function ChooseBrandPage() {
     // setTwitterData,
     setCollectedData,
     setChoosedArticles,
-    setCheckStatus,
     setGeneratedTitles,
     setLockedGeneratedTitles,
   } = useContext(createNewsletterContext);
@@ -42,30 +41,17 @@ export default function ChooseBrandPage() {
     function resetStateAndSessionStorage() {
       setSelectedBrand("");
       setCollectedData(null);
-      // setTwitterData(null);
       setChoosedArticles([]);
-      setCheckStatus({
-        grammar: "waiting",
-        // todo: temp until backend fix it
-        plagiarism: "pass",
-        ai: "waiting",
-      });
+
       setGeneratedTitles([]);
       setLockedGeneratedTitles([]);
       if (typeof window !== "undefined") {
         const keysToRemove = [
           "selectedBrand",
           "collectedData",
-          "twitterData",
           "choosedArticles",
-          "selectedText",
-          "finalArticle",
-          "checkGrammerResults",
-          "checkAiResults",
           "generatedTitles",
           "lockedGeneratedTitles",
-          "videoTranscription",
-          "editContentData",
         ];
 
         keysToRemove.forEach((key) => sessionStorage.removeItem(key));
@@ -126,10 +112,6 @@ export default function ChooseBrandPage() {
   const getValue = useCallback((value: string | number) => {
     setSelectedBrand(value);
   }, []); // No dependencies, function reference is stable/
-
-  // useEffect(() => {
-  //   console.log(`selectedBrand:`, selectedBrand);
-  // }, [selectedBrand]);
 
   function handleGetCollectedDataFailure() {
     toast.error("Something went wrong!");
@@ -199,34 +181,12 @@ export default function ChooseBrandPage() {
     }
   }
 
-  // async function setTwitterDataAsync(json: any) {
-  //   setTwitterData(json);
-  //   return Promise.resolve(); // Ensure this function is awaited properly
-  // }
-
-  // async function getTwitterData() {
-  //   try {
-  //     const res = await fetch(
-  //       `https://api.machinegenius.io/content-creation/collect/twitter/PLTR`
-  //     );
-
-  //     const json = await res.json();
-  //     await setTwitterDataAsync(json.allArticles);
-  //   } catch (error) {
-  //     toast.error("Something went wrong!");
-  //     console.error("Error getCollectedData:", error);
-  //   }
-  // }
-
   async function generateContent() {
     setPageState((prevState) => ({
       ...prevState,
       isLoading: true,
     }));
     await getCollectedData();
-    // if (selectedBrand === "Investorcracy") {
-    // await getTwitterData();
-    // }
   }
 
   useEffect(() => {

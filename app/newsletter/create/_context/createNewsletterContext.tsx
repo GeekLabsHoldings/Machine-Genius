@@ -1,16 +1,12 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
-import { useSelector, useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { v4 as uuidv4 } from "uuid";
 
 const initialContextState = {
   // ===== 01. Start Content Creator =====
-  selectedContentType: "" as any,
-  setSelectedContentType: (contentType: any) => {},
+
   selectedBrand: "" as any,
   setSelectedBrand: (brand: any) => {},
   collectedData: null as any,
@@ -18,38 +14,14 @@ const initialContextState = {
   choosedArticles: [] as any,
   setChoosedArticles: (articles: any) => {},
 
-  checkStatus: {
-    grammar: "waiting",
-    // todo: temp until backend fix it
-    plagiarism: "pass",
-    ai: "waiting",
-    isGrammerChecked: false,
-  },
-  setCheckStatus: (status: any) => {},
-  checkGrammer: () => {},
-  checkPlagiarism: () => {},
-  checkAi: () => {},
-  startChecks: () => {},
   generateTitles: () => {},
   generatedTitles: [] as any,
   setGeneratedTitles: (titles: any) => {},
   lockedGeneratedTitles: [] as any,
   setLockedGeneratedTitles: (titles: any) => {},
 
-  // generatedThumbnails: [] as any,
-  // setGeneratedThumbnails: (thumbnails: any) => {},
-  // generateThumbnails: () => {},
-  // selectedContentThumbnail: "",
-  // setSelectedContentThumbnail: (thumbnail: any) => {},
-
   selectedContentTitle: "",
   setSelectedContentTitle: (title: any) => {},
-
-  // presignedURLData: null as any,
-  // setPresignedURLData: (data: any) => {},
-
-  // editContentData: null as any,
-  // setEditContentData: (id: any) => {},
 
   setGeneralTitles: (titles: any) => {},
   generalTitles: [] as any,
@@ -70,9 +42,6 @@ export default function CreateNewsletterContextProvider({
   children: React.ReactNode;
 }) {
   const { authState, handleSignOut } = useContext(globalContext);
-  const router = useRouter();
-  const path = usePathname();
-  const dispatch = useDispatch();
 
   function subjectLineInit() {
     if (typeof window !== "undefined") {
@@ -103,26 +72,6 @@ export default function CreateNewsletterContextProvider({
     sessionStorage.setItem("openingLine", openingLine);
   }, [openingLine]);
   // ===== 01. Start Content Creator =====
-
-  // ===== Start selectedContentType =====
-  function selectedContentTypeInit() {
-    if (typeof window !== "undefined") {
-      const selectedContentTypeInitValue = sessionStorage.getItem(
-        "selectedContentType"
-      );
-      return selectedContentTypeInitValue ? selectedContentTypeInitValue : "";
-    } else {
-      return "";
-    }
-  }
-  const [selectedContentType, setSelectedContentType] = useState<any>(
-    selectedContentTypeInit
-  );
-  useEffect(() => {
-    sessionStorage.setItem("selectedContentType", selectedContentType);
-  }, [selectedContentType]);
-  // ===== End selectedContentType =====
-
   // ===== Start selectedBrand =====
   function selectedBrandInit() {
     if (typeof window !== "undefined") {
@@ -152,18 +101,6 @@ export default function CreateNewsletterContextProvider({
     sessionStorage.setItem("collectedData", JSON.stringify(collectedData));
   }, [collectedData]);
 
-  function twitterDataInit() {
-    if (typeof window !== "undefined") {
-      const twitterDataInitValue = sessionStorage.getItem("twitterData");
-      return twitterDataInitValue ? JSON.parse(twitterDataInitValue) : null;
-    } else {
-      return null;
-    }
-  }
-  const [twitterData, setTwitterData] = useState<any>(twitterDataInit);
-  useEffect(() => {
-    sessionStorage.setItem("twitterData", JSON.stringify(twitterData));
-  }, [twitterData]);
   // ===== End collectedData =====
 
   // ===== Start choosedArticles =====
@@ -183,37 +120,7 @@ export default function CreateNewsletterContextProvider({
   useEffect(() => {
     sessionStorage.setItem("choosedArticles", JSON.stringify(choosedArticles));
   }, [choosedArticles]);
-  // ===== End choosedArticles =====
 
-  // ===== Start finalArticle =====
-  // function finalArticleInit() {
-  //   if (typeof window !== "undefined") {
-  //     const finalArticleInitValue = sessionStorage.getItem("finalArticle");
-  //     return finalArticleInitValue ? JSON.parse(finalArticleInitValue) : null;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  // const [finalArticle, setFinalArticle] = useState<any>(finalArticleInit);
-  const finalArticle = useSelector(
-    (state: any) => state.contentCreator.finalArticle
-  );
-  useEffect(() => {
-    sessionStorage.setItem("finalArticle", JSON.stringify(finalArticle));
-  }, [finalArticle]);
-  // ===== End finalArticle =====
-
-  // ===== Start Checks =====
-  const [checkStatus, setCheckStatus] = useState({
-    grammar: "waiting",
-    // todo: temp until backend fix it
-    plagiarism: "pass",
-    ai: "waiting",
-    isGrammerChecked: false,
-  });
-  // const [checkGrammerResults, setCheckGrammerResults] = useState<any>(
-  //   checkGrammerResultsInit
-  // );
   function generatedTitlesInit() {
     if (typeof window !== "undefined") {
       const generatedTitlesInitValue =
@@ -361,41 +268,20 @@ export default function CreateNewsletterContextProvider({
   // Create a context value object
   const contextValue = {
     // ===== 01. Start Content Creator =====
-    selectedContentType,
-    setSelectedContentType,
     selectedBrand,
     setSelectedBrand,
     collectedData,
     setCollectedData,
-    twitterData,
-    setTwitterData,
     choosedArticles,
     setChoosedArticles,
-    checkStatus,
-    setCheckStatus,
     generateTitles,
     generatedTitles,
     setGeneratedTitles,
     lockedGeneratedTitles,
     setLockedGeneratedTitles,
-    // generatedThumbnails,
-    // setGeneratedThumbnails,
-    // generateThumbnails,
-    // selectedContentThumbnail,
-    // setSelectedContentThumbnail,
+
     selectedContentTitle,
     setSelectedContentTitle,
-
-    // presignedURLData,
-    // setPresignedURLData,
-
-    // editContentData,
-    // setEditContentData,
-
-    checkGrammer: () => {},
-    checkPlagiarism: () => {},
-    checkAi: () => {},
-    startChecks: () => {},
 
     setGeneralTitles,
     generalTitles,
