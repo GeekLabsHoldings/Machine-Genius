@@ -1,9 +1,6 @@
-import { useState, useEffect, useCallback, useContext, use } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useSocket } from "@/app/_context/SocketProvider";
 import { globalContext } from "@/app/_context/store";
-import { flexibleCompare } from "@fullcalendar/core/internal";
-import { first } from "ckeditor5";
-import theme from "@material-tailwind/react/theme";
 
 interface Conversation {
   _id: string;
