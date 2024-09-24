@@ -141,8 +141,10 @@ function Page() {
 
         if (matchingArticles.length > 0) {
           matches.push({
-            title: item.generalTitle,
-            articles: matchingArticles.map((article: any) => article.title),
+            generalTitle: item.generalTitle,
+            content: matchingArticles.map((article: any) => {
+              return { title: article.title, article_id: article._id };
+            }),
           });
         }
 

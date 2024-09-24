@@ -1,9 +1,11 @@
-'use client'
+"use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import styles from "@/app/newsletter/create/newsletter-subjectline/newsletter-subjectline.module.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { createNewsletterContext } from "../_context/createNewsletterContext";
+import { title } from "process";
 
 // const ReGenerateIcon = (
 //   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13" fill="none">
@@ -18,7 +20,38 @@ function Page() {
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   // to handle loading content before navigation to next page
-  const handleNavigate = () => {
+
+  const {
+    selectedContentTitle,
+    setSelectedContentTitle,
+    generalTitles,
+    openingLine,
+    subjectLine,
+    setSubjectLine,
+    setOpeningLine,
+    selectedBrand,
+  } = useContext(createNewsletterContext);
+
+  const handleSchedule = async () => {
+    const response = await fetch(
+      "https://api.machinegenius.io/social-media/news-letter/send-newsletter",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: selectedContentTitle,
+          subjectLine: subjectLine,
+          openingLine: openingLine,
+          articles: generalTitles,
+          brand: "test",
+          uploadTime: 1726725120000,
+        }),
+      }
+    );
+
     setIsLoading(true);
 
     // setTimeout(() => {
@@ -74,6 +107,12 @@ function Page() {
                         id="subjectLine"
                         required
                         className={`${styles.input}`}
+                        value={selectedContentTitle}
+                        onClick={(e) =>
+                          setSelectedContentTitle(
+                            (e.target as HTMLInputElement).value
+                          )
+                        }
                       />
                     </div>
                     <div className={`flex flex-col gap-[0.2vw]`}>
@@ -88,6 +127,8 @@ function Page() {
                         id="subjectLine"
                         required
                         className={`${styles.input}`}
+                        value={subjectLine}
+                        onChange={(e) => setSubjectLine(e.target.value)}
                       />
                     </div>
                     <div className={`flex flex-col gap-[0.2vw]`}>
@@ -102,6 +143,8 @@ function Page() {
                         id="subjectLine"
                         required
                         className={`${styles.input}`}
+                        value={openingLine}
+                        onChange={(e) => setOpeningLine(e.target.value)}
                       />
                     </div>
                   </div>
@@ -139,9 +182,9 @@ function Page() {
                 href={"/newsletter/create/newsletter-subjectline"}
               />
               <CustomBtn
-                word={"Next"}
+                word={"Schedule"}
                 btnColor="black"
-                onClick={handleNavigate}
+                onClick={handleSchedule}
               />
             </div>
           </>

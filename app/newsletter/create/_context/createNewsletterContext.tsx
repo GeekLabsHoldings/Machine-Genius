@@ -53,6 +53,10 @@ const initialContextState = {
 
   setGeneralTitles: (titles: any) => {},
   generalTitles: [] as any,
+  subjectLine: [] as any,
+  setSubjectLine: (lines: any) => {},
+  openingLine: [] as any,
+  setOpeningLine: (lines: any) => {},
   // ===== 01. End Content Creator =====
 };
 
@@ -70,6 +74,34 @@ export default function CreateNewsletterContextProvider({
   const path = usePathname();
   const dispatch = useDispatch();
 
+  function subjectLineInit() {
+    if (typeof window !== "undefined") {
+      const subjectLineInitValue = sessionStorage.getItem("subjectLine");
+      return subjectLineInitValue ? subjectLineInitValue : "";
+    } else {
+      return "";
+    }
+  }
+
+  const [subjectLine, setSubjectLine] = useState(subjectLineInit);
+
+  useEffect(() => {
+    sessionStorage.setItem("subjectLine", subjectLine);
+  }, [subjectLine]);
+
+  function openingLineInit() {
+    if (typeof window !== "undefined") {
+      const openingLineInitValue = sessionStorage.getItem("openingLine");
+      return openingLineInitValue ? openingLineInitValue : "";
+    } else {
+      return "";
+    }
+  }
+  const [openingLine, setOpeningLine] = useState(openingLineInit);
+
+  useEffect(() => {
+    sessionStorage.setItem("openingLine", openingLine);
+  }, [openingLine]);
   // ===== 01. Start Content Creator =====
 
   // ===== Start selectedContentType =====
@@ -252,7 +284,7 @@ export default function CreateNewsletterContextProvider({
             }`,
           },
           body: JSON.stringify({
-            articles: generalTitles.map((topic: any) => topic.title),
+            articles: generalTitles.map((topic: any) => topic.generalTitle),
           }),
         }
       );
@@ -367,6 +399,11 @@ export default function CreateNewsletterContextProvider({
 
     setGeneralTitles,
     generalTitles,
+
+    subjectLine,
+    setSubjectLine,
+    openingLine,
+    setOpeningLine,
     // ===== 01. End Content Creator =====
   };
 

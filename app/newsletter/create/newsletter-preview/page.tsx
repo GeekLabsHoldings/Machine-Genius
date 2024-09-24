@@ -6,8 +6,8 @@ import { createNewsletterContext } from "../_context/createNewsletterContext";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 interface NewsLetter {
-  title: string;
-  articles: string[];
+  generalTitle: string;
+  content: { _id: string; title: string }[];
 }
 
 function Page() {
@@ -52,12 +52,12 @@ function Page() {
               <div key={index} className="">
                 <li className="text-2xl font-bold bg-[#E1C655] text-white">
                   <h4 className="text-2xl font-bold bg-[#E1C655] text-white">
-                    {section?.title}
+                    {section?.generalTitle}
                   </h4>
                 </li>
-                {section?.articles?.map((news, index) => (
-                  <li key={news} className="p-2">
-                    {news}
+                {section?.content?.map((news, index) => (
+                  <li key={news._id} className="p-2">
+                    {news.title}
                   </li>
                 ))}
               </div>
