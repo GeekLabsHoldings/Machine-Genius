@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./details.module.css";
-import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles";
+import QuarterCircles from "@/app/_components/Creative/QuarterCircles/QuarterCircles";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";

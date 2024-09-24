@@ -2,7 +2,7 @@
 
 import styles from "./archivedProjects.module.css";
 import Slider from "react-slick";
-import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles";
+import QuarterCircles from "@/app/_components/Creative/QuarterCircles/QuarterCircles";
 import { useRouter } from "next/navigation";
 
 const Page = () => {

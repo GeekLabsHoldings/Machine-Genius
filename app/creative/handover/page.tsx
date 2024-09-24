@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import Slider from "react-slick";
 import styles from "./handover.module.css"
 import Link from "next/link";
-import QuarterCircles from '@/app/_components/QuarterCircles/QuarterCircles';
+import QuarterCircles from '@/app/_components/Creative/QuarterCircles/QuarterCircles';
 
 
 

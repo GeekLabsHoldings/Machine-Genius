@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import styles from "./boards.module.css"; // Importing CSS module for styling
 import Slider from "react-slick"; // Importing Slider component from react-slick
 import Link from "next/link"; // Next.js Link component for client-side navigation
-import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles"; // Custom component import
+import QuarterCircles from "@/app/_components/Creative/QuarterCircles/QuarterCircles"; // Custom component import
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom button component import
 
 // Interface defining the properties for the Arrow component
@@ -15,25 +15,6 @@ interface ArrowProps {
 
 // Variable to track the current position of the slider
 let position = 0;
-
-// Function to navigate to the next slide in the slider
-const next = () => {
-  if (sliderRef.current) {
-    position++;
-    sliderRef.current.slickNext(); // Move to the next slide
-    console.log(sliderRef.current); // Log the current state of the slider
-  }
-};
-
-// Function to navigate to the previous slide in the slider
-const previous = () => {
-  if (sliderRef.current) {
-    if (position !== 0) {
-      sliderRef.current.slickPrev(); // Move to the previous slide
-      position--;
-    }
-  }
-};
 
 // Data for the projects to be displayed in the slider
 const project = [
@@ -201,6 +182,7 @@ const project = [
     stateColor: "#5FA85B",
     stateText: "#2A2B2A",
   },
+  
 ];
 
 const settings = {
@@ -235,6 +217,24 @@ const settings = {
   ],
 };
 
+const plusIcon = (
+  <svg
+    className="me-[0.61vw]"
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
+      fill="#FFFFFB"
+    />
+  </svg>
+);
+
 const Page = () => {
   // References to HTML elements and components
   const btnRef = useRef<any>(null); // Reference for the button element
@@ -244,79 +244,100 @@ const Page = () => {
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
 
+  // Function to navigate to the next slide in the slider
+  const next = () => {
+    if (sliderRef.current) {
+      position++;
+      sliderRef.current.slickNext(); // Move to the next slide
+      console.log(sliderRef.current); // Log the current state of the slider
+    }
+  };
+  const nextArrow = (
+    <svg
+      onClick={() => {
+        previous();
+      }}
+      width="29"
+      height="28"
+      viewBox="0 0 29 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className=" cursor-pointer"
+    >
+      {/* SVG path for previous button */}
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M14.3587 19.7181C14.7009 19.3768 14.7009 18.823 14.3587 18.4808L10.7529 14.875L20.0156 14.875C20.4969 14.875 20.8906 14.483 20.8906 14C20.8906 13.5161 20.4969 13.125 20.0156 13.125L10.7529 13.125L14.3587 9.51915C14.7009 9.17702 14.7009 8.62227 14.3587 8.2819C14.0184 7.93977 13.4636 7.93977 13.1215 8.2819L8.17252 13.2308C7.96252 13.4408 7.89689 13.7279 7.94502 14C7.89689 14.2721 7.96252 14.5591 8.17252 14.7691L13.1215 19.7181C13.4636 20.0602 14.0184 20.0602 14.3587 19.7181ZM0.765626 24.5L0.765625 3.5C0.765625 1.56712 2.33275 -6.85012e-08 4.26562 -1.5299e-07L25.2656 -1.07093e-06C27.1994 -1.15546e-06 28.7656 1.56712 28.7656 3.5L28.7656 24.5C28.7656 26.4329 27.1994 28 25.2656 28L4.26563 28C2.33275 28 0.765626 26.4329 0.765626 24.5Z"
+        fill="#D9D9D9"
+      />
+    </svg>
+  );
+
+  // Function to navigate to the previous slide in the slider
+  const previous = () => {
+    if (sliderRef.current) {
+      if (position !== 0) {
+        sliderRef.current.slickPrev(); // Move to the previous slide
+        position--;
+      }
+    }
+  };
+  const prevArrow = (
+    <svg
+      onClick={() => next()}
+      width="28"
+      height="28"
+      viewBox="0 0 29 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className=" cursor-pointer"
+    >
+      {/* SVG path for next button */}
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M14.6413 19.7181C14.2991 19.3768 14.2991 18.823 14.6413 18.4808L18.2471 14.875L8.98438 14.875C8.50313 14.875 8.10938 14.483 8.10938 14C8.10938 13.5161 8.50313 13.125 8.98438 13.125L18.2471 13.125L14.6413 9.51915C14.2991 9.17702 14.2991 8.62227 14.6413 8.2819C14.9816 7.93977 15.5364 7.93977 15.8785 8.2819L20.8275 13.2308C21.0375 13.4408 21.1031 13.7279 21.055 14C21.1031 14.2721 21.0375 14.5591 20.8275 14.7691L15.8785 19.7181C15.5364 20.0602 14.9816 20.0602 14.6413 19.7181ZM28.2344 24.5L28.2344 3.5C28.2344 1.56712 26.6673 -6.85012e-08 24.7344 -1.5299e-07L3.73438 -1.07093e-06C1.80063 -1.15546e-06 0.234377 1.56712 0.234377 3.5L0.234376 24.5C0.234376 26.4329 1.80063 28 3.73438 28L24.7344 28C26.6672 28 28.2344 26.4329 28.2344 24.5Z"
+        fill="#2A2B2A"
+      />
+    </svg>
+  );
+
   return (
-    <>
-      {/* Container for the boards */}
-      <div className={`${styles.boards} boards w-full`}>
-        {/* Section for displaying members */}
-        <div className=" flex justify-between my-[1vw]">
+    <section className={`${styles.boards} boards`}>
+      {/* ===== 01 All Projects Container =====*/}
+      <div className="w-full">
+        {/* 01-1 Section for displaying members */}
+        <div className="flex justify-between items-center my-[1vw]">
           <h3>All Projects</h3>
-          {/* Container for member icons */}
+
           <div
-            className={`bg-[var(--dark)] ${styles.members} h-fit rounded-md flex items-center`}
+            className={`bg-[--dark] ${styles.members} h-fit rounded-md flex items-center p-2`}
           >
-            {/* Text indicating the number of members */}
-            <p className=" text-white text-[0.568vw] font-medium me-2">
+            <p className="text-white text-[0.568vw] font-medium mr-2 whitespace-nowrap">
               Members (4)
-            </p>{" "}
-            {/* Member icons */}
-            <div className=" flex items-center">
-              <QuarterCircles color={"#EAD787"} translate={0} />{" "}
-              <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
-              <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
-              <QuarterCircles color={"#F06F77"} translate={-120} />{" "}
-            </div>{" "}
-            {/* Empty div */}
-            <div></div>
+            </p>
+
+            <div className="flex-shrink-0">
+              <QuarterCircles
+                colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Section for current projects */}
-        <div className=" flex justify-between items-center">
-          {" "}
+        {/* 01-2 Section for current projects */}
+        <div className="flex justify-between items-center ">
           {/* Container for project title and navigation buttons */}
-          <div className=" flex justify-between gap-2 items-center mb-[1.3vh]">
-            <h4>Current Projects</h4> {/* Navigation buttons */}
-            <div className=" flex items-center gap-2">
-              <svg
-                onClick={() => {
-                  previous();
-                }}
-                width="29"
-                height="28"
-                viewBox="0 0 29 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className=" cursor-pointer"
-              >
-                {/* SVG path for previous button */}
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M14.3587 19.7181C14.7009 19.3768 14.7009 18.823 14.3587 18.4808L10.7529 14.875L20.0156 14.875C20.4969 14.875 20.8906 14.483 20.8906 14C20.8906 13.5161 20.4969 13.125 20.0156 13.125L10.7529 13.125L14.3587 9.51915C14.7009 9.17702 14.7009 8.62227 14.3587 8.2819C14.0184 7.93977 13.4636 7.93977 13.1215 8.2819L8.17252 13.2308C7.96252 13.4408 7.89689 13.7279 7.94502 14C7.89689 14.2721 7.96252 14.5591 8.17252 14.7691L13.1215 19.7181C13.4636 20.0602 14.0184 20.0602 14.3587 19.7181ZM0.765626 24.5L0.765625 3.5C0.765625 1.56712 2.33275 -6.85012e-08 4.26562 -1.5299e-07L25.2656 -1.07093e-06C27.1994 -1.15546e-06 28.7656 1.56712 28.7656 3.5L28.7656 24.5C28.7656 26.4329 27.1994 28 25.2656 28L4.26563 28C2.33275 28 0.765626 26.4329 0.765626 24.5Z"
-                  fill="#D9D9D9"
-                />
-              </svg>
+          <div className="flex items-center gap-[--30px]">
+            <h4>Current Projects</h4>
+            <div className=" flex items-center gap-[--15px]">
+              {nextArrow}
 
-              <svg
-                onClick={() => next()}
-                width="28"
-                height="28"
-                viewBox="0 0 29 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className=" cursor-pointer"
-              >
-                {/* SVG path for next button */}
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M14.6413 19.7181C14.2991 19.3768 14.2991 18.823 14.6413 18.4808L18.2471 14.875L8.98438 14.875C8.50313 14.875 8.10938 14.483 8.10938 14C8.10938 13.5161 8.50313 13.125 8.98438 13.125L18.2471 13.125L14.6413 9.51915C14.2991 9.17702 14.2991 8.62227 14.6413 8.2819C14.9816 7.93977 15.5364 7.93977 15.8785 8.2819L20.8275 13.2308C21.0375 13.4408 21.1031 13.7279 21.055 14C21.1031 14.2721 21.0375 14.5591 20.8275 14.7691L15.8785 19.7181C15.5364 20.0602 14.9816 20.0602 14.6413 19.7181ZM28.2344 24.5L28.2344 3.5C28.2344 1.56712 26.6673 -6.85012e-08 24.7344 -1.5299e-07L3.73438 -1.07093e-06C1.80063 -1.15546e-06 0.234377 1.56712 0.234377 3.5L0.234376 24.5C0.234376 26.4329 1.80063 28 3.73438 28L24.7344 28C26.6672 28 28.2344 26.4329 28.2344 24.5Z"
-                  fill="#2A2B2A"
-                />
-              </svg>
+              {prevArrow}
             </div>
-          </div>{" "}
+          </div>
+
           {/* Link to view all archived projects */}
           <Link
             href="/creative/boards/archivedProjects"
@@ -326,8 +347,7 @@ const Page = () => {
           </Link>
         </div>
 
-        {/* Container for project slider */}
-
+        {/* 01-3 Container for Current Projects slider */}
         <div className="slider-container py-[1vh]">
           <Slider ref={sliderRef} {...settings}>
             {project.map((e, i) => (
@@ -338,10 +358,11 @@ const Page = () => {
                   >
                     <div className=" mb-[0.8vh] flex items-center">
                       <h3 className=" pe-[0.662vw]">{e.name}</h3>
-                      <QuarterCircles color={"#EAD787"} translate={0} />{" "}
-                      <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
-                      <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
-                      <QuarterCircles color={"#F06F77"} translate={-120} />
+                      <div className="flex-shrink-0">
+                        <QuarterCircles
+                          colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
+                        />
+                      </div>
                     </div>
                     <div
                       className={`bg-[${e.stateColor}] rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
@@ -360,29 +381,34 @@ const Page = () => {
             ))}
           </Slider>
         </div>
-        <div>
-          <div className="w-fit ms-auto">
-            <button className=" bg-[var(--dark)] text-[var(--white)] rounded-md px-[0.757vw] py-[0.946vw] flex items-center h-[4.5vh]">
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-              Create New Board
-            </button>
-          </div>
+
+        {/* 01-4 Container for Create New Board button */}
+        <div className="w-fit ms-auto">
+          <button className=" bg-[var(--dark)] text-[var(--white)] rounded-md px-[0.757vw] py-[0.946vw] flex items-center h-[4.5vh]">
+            <svg
+              className="me-[0.61vw]"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
+                fill="#FFFFFB"
+              />
+            </svg>
+            Create New Board
+          </button>
         </div>
+      </div>
+
+      {/* ===== 02 Templates Container =====*/}
+      <div>
         <h3 className="mb-[2.8vh]">Templates</h3>
+        {/* 02-1 Container for Templates */}
         <div className="flex gap-[0.946vw] mb-[1.6vw]">
           <div
             className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
@@ -405,71 +431,10 @@ const Page = () => {
             <h4>Research Project</h4>
           </div>
         </div>
-      </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      <div>
+        {/* 02-2 Container for New Template button */}
         <div className="w-fit ms-auto">
-          <CustomBtn
-            btnColor="black"
-            word="New Template"
-            icon={
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-            }
-          />
+          <CustomBtn btnColor="black" word="New Template" icon={plusIcon} />
+
           {/* <button ref={btnRef} onMouseMove={(e)=>{
             console.log(btnRef.current.offsetTop);
             console.log(e.pageY - btnRef.current.offsetTop);
@@ -503,7 +468,7 @@ const Page = () => {
           </button> */}
         </div>
       </div>
-    </>
+    </section>
   );
 };
 
