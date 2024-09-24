@@ -1,20 +1,9 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import VideoCreation from "./video-creation/page";
-// import ArticlePreview from "./_components/ArticlePreview/ArticlePreview";
+import dynamic from "next/dynamic";
+import React from "react";
 
-export default function Home() {
-  const router = useRouter();
+export default function Page() {
+  const VideoCreatePage = dynamic(() => import("./VideoCreatePage"), { ssr: false });
 
-  useEffect(() => {
-    router.push("create/video-creation");
-  });
-
-  return (
-    <>
-      <VideoCreation />
-    </>
-  );
+  return <VideoCreatePage />;
 }

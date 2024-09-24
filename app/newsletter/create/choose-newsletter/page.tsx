@@ -1,10 +1,156 @@
+"use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./choose-newsletter.module.css";
 import TopicColapse from "@/app/_components/TopicCollapse/TopicCollapse";
 import ArticleWithCheck from "@/app/_components/ArticleWithCheck/ArticleWithCheck";
-
+import { useRouter } from "next/navigation";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { createNewsletterContext } from "../_context/createNewsletterContext";
+import { contentCleaner } from "@/app/_utils/contentCleaner";
+import toast from "react-hot-toast";
 
 function Page() {
+  const router = useRouter();
+  // favorite icon
+  const favIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" fill="none">
+      <g filter="url(#filter0_i_623_11960)">
+        <path d="M11.3675 3.38104C7.17949 -2.47623 0 -0.121939 0 5.8532C0 11.8284 11.9659 20 11.9659 20C11.9659 20 23.3333 11.5004 23.3333 5.8532C23.3333 0.205986 16.7522 -2.47621 12.5641 3.38104L11.9659 3.84887L11.3675 3.38104Z" />
+      </g>
+      <defs>
+        <filter
+          id="filter0_i_623_11960"
+          x="0"
+          y="0"
+          width="23.333"
+          height="21.1111"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="1.11111" />
+          <feGaussianBlur stdDeviation="1.66667" />
+          <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="shape"
+            result="effect1_innerShadow_623_11960"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+
+  const [isChoosedArticles, setIsChoosedArticles] = useState(false);
+  const [previewText, setPreviewText] = useState<any>("");
+
+  const {
+    choosedArticles,
+    setChoosedArticles,
+    collectedData,
+    setGeneralTitles,
+  } = useContext(createNewsletterContext);
+
+  useEffect(() => {
+    // console.log("collectedData:", collectedData);
+    if (!collectedData) {
+      toast.error(
+        "No data is available. You will be redirected to refetch new data!"
+      );
+
+      setTimeout(() => {
+        router.replace("/content-creator/create/choose-brand");
+      }, 1500);
+    }
+  }, [collectedData, router]);
+
+  useEffect(() => {
+    console.log("choosedArticles:", choosedArticles);
+    if (choosedArticles.length > 0) {
+      setIsChoosedArticles(true);
+    } else {
+      setIsChoosedArticles(false);
+    }
+  }, [choosedArticles]);
+
+  const hasCheckedArticles = useCallback((i: number) => {
+    const topicCollapse = document.querySelectorAll(".topic_collapse")[i];
+    const checkboxes = topicCollapse.querySelectorAll(
+      'input[name="select-articles"]'
+    );
+    for (let j = 0; j < checkboxes.length; j++) {
+      const checkbox = checkboxes[j] as HTMLInputElement;
+      if (checkbox.checked) {
+        return true;
+      }
+    }
+    return false;
+  }, []);
+
+  const handleCheckboxChange = useCallback(
+    (ele: any) => {
+      setChoosedArticles((prevArticles: any) => {
+        if (prevArticles.some((article: any) => article.title === ele.title)) {
+          return prevArticles.filter(
+            (article: any) => article.title !== ele.title
+          );
+        } else {
+          return [...prevArticles, ele];
+        }
+      });
+    },
+    [setChoosedArticles]
+  );
+
+  useEffect(() => {
+    setGeneralTitles(
+      collectedData.reduce((matches: any, item: any) => {
+        if (!item.articleJson || item.articleJson.length === 0) {
+          return matches; // Skip items with no articleJson
+        }
+
+        const matchingArticles = item.articleJson.filter((article: any) =>
+          choosedArticles.some(
+            (secondItem: any) => secondItem.title === article.title
+          )
+        );
+
+        if (matchingArticles.length > 0) {
+          matches.push({
+            generalTitle: item.generalTitle,
+            content: matchingArticles.map((article: any) => {
+              return { title: article.title, article_id: article._id };
+            }),
+          });
+        }
+
+        return matches;
+      }, [])
+    );
+  }, [choosedArticles]);
+
+  const handleLabelClick = useCallback((content: any) => {
+    console.log("content:", content);
+    const filteredContent = contentCleaner(content);
+    console.log("filteredContent:", filteredContent);
+    setPreviewText(filteredContent);
+  }, []);
   return (
     <div className="flex flex-col">
       <div className="flex justify-center items-start gap-[2rem] h-[75vh] py-[1.5vw]">
@@ -32,101 +178,38 @@ function Page() {
           {/* topics container */}
           <div className={styles.select_article_container}>
             {/* topic collapse */}
-            <TopicColapse
-              forComments={false}
-              title="#TSLA is in the lead"
-              date="April 16th 2024"
-            >
-              {/* article with check */}
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-
-              />
-            </TopicColapse>
-
-            {/* topic collapse */}
-            <TopicColapse
-              forComments={false}
-              title="#SAVE is on the low"
-              date="April 16th 2024"
-            >
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-            </TopicColapse>
-
-            {/* topic collapse */}
-            <TopicColapse
-              forComments={false}
-              title="U.S military hit IRAN"
-              date="April 16th 2024"
-            >
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-            </TopicColapse>
-
-            {/* topic collapse */}
-            <TopicColapse
-              forComments={false}
-              title="Food Prices are high"
-              date="April 16th 2024"
-            >
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-            </TopicColapse>
-
-            {/* topic collapse */}
-            <TopicColapse
-              forComments={false}
-              title="Lowest 2024 Property Prices"
-              date="April 16th 2024"
-            >
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-              <ArticleWithCheck
-                article="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
-                name="select-articles"
-                accsentColor="#E1C655"
-              />
-            </TopicColapse>
+            {collectedData
+              ?.filter((item: any) => item.articleJson.length > 0)
+              .map((item: any, i: number) => (
+                <TopicColapse
+                  forComments={false}
+                  svgBtn={favIcon}
+                  title={item.generalTitle}
+                  key={`${i}-${item.generalTitle}`}
+                  date={new Date(item.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                  hasCheckedArticles={() => hasCheckedArticles(i)}
+                >
+                  {item?.articleJson.map((ele: any, j: number) => (
+                    <>
+                      {/* article with check */}
+                      <ArticleWithCheck
+                        article={ele.title}
+                        name="select-articles"
+                        accsentColor="#E1C655"
+                        handleCheckboxChange={() => handleCheckboxChange(ele)}
+                        handleLabelClick={() => handleLabelClick(ele.content)}
+                        checked={choosedArticles.some(
+                          (article: any) => article.title === ele.title
+                        )}
+                      />
+                    </>
+                  ))}
+                </TopicColapse>
+              ))}
           </div>
         </div>
 
@@ -136,42 +219,10 @@ function Page() {
             <h6>Preview</h6>
           </div>
           <div className={styles.selected_article_container}>
-            <h6>TESLA IS ON TOP!</h6>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae
-              labore recusandae tempora eveniet eius, veritatis corporis hic
-              itaque doloribus nemo expedita excepturi nesciunt laborum
-              accusamus perspiciatis, asperiores ipsam officia?
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est
-              laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est
-              laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad vitae
-              labore recusandae tempora eveniet eius, veritatis corporis hic
-              itaque doloribus nemo expedita excepturi nesciunt laborum
-              accusamus perspiciatis, asperiores ipsam officia?
-            </p>
+            <div
+              className={styles.selected_article_container}
+              dangerouslySetInnerHTML={{ __html: previewText }}
+            />
           </div>
         </div>
       </div>
@@ -181,13 +232,24 @@ function Page() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href={"/newsletter/create/"}
+          href={"/newsletter/create/choose-brand"}
         />
-        <CustomBtn
-          word={"Next"}
-          btnColor="black"
-          href={"/newsletter/create/newsletter-generated-titles"}
-        />
+        {isChoosedArticles ? (
+          <CustomBtn
+            word="Next"
+            btnColor="black"
+            href="/newsletter/create/newsletter-generated-titles"
+          />
+        ) : (
+          <CustomBtn
+            word="Next"
+            btnColor="black"
+            onClick={(e?: React.MouseEvent<HTMLButtonElement>) => {
+              e?.preventDefault();
+              toast.error("Please select at least one article!");
+            }}
+          />
+        )}
       </div>
     </div>
   );

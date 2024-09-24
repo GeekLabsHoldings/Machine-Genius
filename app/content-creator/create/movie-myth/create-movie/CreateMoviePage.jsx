@@ -12,10 +12,9 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
-// import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
 
 const VideoPlayer = dynamic(
-  () => import("@/app/_components/VideoPlayer/VideoPlayer"),
+  () => import("@/app/_components/ContentCreator/VideoPlayer/VideoPlayer"),
   {
     ssr: false,
   }

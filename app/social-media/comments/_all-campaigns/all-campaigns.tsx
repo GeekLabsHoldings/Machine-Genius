@@ -103,7 +103,7 @@ const runningIcon = <svg xmlns="http://www.w3.org/2000/svg" width="10" height="1
             <div className="flex flex-col w-[25%] gap-[0.3vw]">
               <h5>Followers</h5>
               <div className={`${styles.changeOrder} `} onClick={() => { setengagementOrder(!engagementOrder) }}>
-                <p>{engagementOrder ? 'Ascend' : 'Decend'}</p>
+                <p>{engagementOrder ? 'Ascend' : 'Descend'}</p>
                 <svg
                   width="16"
                   height="16"
@@ -124,7 +124,7 @@ const runningIcon = <svg xmlns="http://www.w3.org/2000/svg" width="10" height="1
             <div className={`flex flex-col w-[25%] gap-[0.3vw] `}>
               <h5>Engagement</h5>
               <div className={`${styles.changeOrder} `} onClick={() => { setsubscriberOrder(!subscriberOrder) }}>
-                <p>{subscriberOrder ? 'Ascend' : 'Decend'}</p>
+                <p>{subscriberOrder ? 'Ascend' : 'Descend'}</p>
                 <svg
                   width="16"
                   height="16"

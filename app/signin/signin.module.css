@@ -1,195 +1,182 @@
-@font-face {
-    font-family: 'CustomFont';
-    src: url('../../public/fonts/LTSaeada-Bold.otf') format('woff2'),
-         url('../../public/fonts/LTSaeada-Black.otf') format('woff2'),
-         url('../../public/fonts/LTSaeada-ExtraBold.otf') format('woff2'),
-         url('../../public/fonts/LTSaeada-SemiBold.otf') format('woff2'),
-
-    /* Add additional font formats if necessary */
-    /* Specify the correct path to the font files */
-  }
-
-
-
-
-.welcomePart{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    transition: all 1s 1.15s;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.welcomePart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: all 1s 1.15s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.welcomePart h1{
-    position: relative;
-    background-color: var(--dark);
-    color: var(--white);
-    display: flex;
-    align-items: end;
-    justify-content: center;
-    height: clamp(120px, calc(11vw + 0.1rem),1000px);
-    width: clamp(120px, calc(19vw + 0.1rem),2000px);
-    z-index: 2;
-    font-size: clamp(32px, calc(3vw + 0.1rem),800px);
-    font-style: normal;
-    font-weight: 700;
-    padding-bottom: clamp(6px, calc(0.3vw + 0.1rem),800px);
-    margin-bottom: clamp(6px, calc(0.3vw + 0.1rem),800px);
-    font-family: 'CustomFont', sans-serif;
-    
+.welcomePart h1 {
+  position: relative;
+  background-color: var(--dark);
+  color: var(--white);
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  height: clamp(120px, calc(11vw + 0.1rem), 1000px);
+  width: clamp(120px, calc(19vw + 0.1rem), 2000px);
+  z-index: 2;
+  font-size: clamp(32px, calc(3vw + 0.1rem), 800px);
+  font-style: normal;
+  font-weight: 700;
+  padding-bottom: clamp(6px, calc(0.3vw + 0.1rem), 800px);
+  margin-bottom: clamp(6px, calc(0.3vw + 0.1rem), 800px);
+  font-family: "CustomLTSaeadaBold", sans-serif;
 }
 
-.welcomePart h1::after{
-    content: "";
-    position: absolute;
-    width: 0%;
-    height: 1px;
-    bottom: 0;
-    left: 50%;
-    transform:  translateX(-50%);
-    background-color: var(--white);
-    transition: all 1s 0s ease-in-out ;
+.welcomePart h1::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 1px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--white);
+  transition: all 1s 0s ease-in-out;
 }
 
-.welcomePart img{
-    transform: translateY(clamp(-1000px , calc(-10.5vw + -0.1rem), -20px));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    transition: all 1s 1s ease-in-out;
-    width: clamp(120px, calc(17vw + 0.1rem),2000px);
-    margin-bottom: clamp(12px, calc(1.2vw + 0.1rem),800px);
+.welcomePart img {
+  transform: translateY(clamp(-1000px, calc(-10.5vw + -0.1rem), -20px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: all 1s 1s ease-in-out;
+  width: clamp(120px, calc(17vw + 0.1rem), 2000px);
+  margin-bottom: clamp(12px, calc(1.2vw + 0.1rem), 800px);
 }
 
-.welcomePart.startAnimation{
-    transform: translate(-50%, calc(-50% + clamp(-1000px, calc(-4vw + -0.1rem), -10px)));
-
+.welcomePart.startAnimation {
+  transform: translate(
+    -50%,
+    calc(-50% + clamp(-1000px, calc(-4vw + -0.1rem), -10px))
+  );
 }
 
-.welcomePart.startAnimation h1::after{
-    width: 100%;
+.welcomePart.startAnimation h1::after {
+  width: 100%;
 }
 
-.welcomePart.startAnimation img{
-    transform: translateY(0%);
+.welcomePart.startAnimation img {
+  transform: translateY(0%);
 }
 
-.welcomePart button{
-    opacity: 0;
-    transition: opacity 0.5s 2s , background-color 0.3s 0s ;
+.welcomePart button {
+  opacity: 0;
+  transition: opacity 0.5s 2s, background-color 0.3s 0s;
 }
-.welcomePart.startAnimation button{
-    opacity: 1;
+.welcomePart.startAnimation button {
+  opacity: 1;
 }
 
 .welcomePart.hide {
-    opacity: 0;
-    transition: all 0.2s 0s;
+  opacity: 0;
+  transition: all 0.2s 0s;
 }
 
 /* ==================================================== */
 
-.signin_wrapper{
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 9;
-    width: calc(100% - clamp(250px , calc(18vw + 0.1rem) , 1000px ));
-    transform: translateX(100%);
-    height: 100vh;
-    background: #FFFFFB;
-    border-radius:  clamp(0.5rem, calc(4.3vw + 0.1rem) , 1000px ) 0 0 0 ;
-    padding: clamp(20px, calc( 2vw + 0.1rem ) ,1400px) clamp(20px, calc( 3.5vw + 0.1rem ) ,1400px) clamp(20px, calc( 2vw + 0.1rem ) ,1400px) ;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.8s;
+.signin_wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  width: calc(100% - clamp(250px, calc(18vw + 0.1rem), 1000px));
+  transform: translateX(100%);
+  height: 100vh;
+  background: #fffffb;
+  border-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 1000px) 0 0 0;
+  padding: clamp(20px, calc(2vw + 0.1rem), 1400px)
+    clamp(20px, calc(3.5vw + 0.1rem), 1400px)
+    clamp(20px, calc(2vw + 0.1rem), 1400px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.8s;
 }
 
-.signin_wrapper.show{
-    transform: translateX(0%);
+.signin_wrapper.show {
+  transform: translateX(0%);
 }
 
-.signin_wrapper .logo_title{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(0.7rem, calc(0.8vw + 0.1rem) , 800px );
-    margin-bottom: clamp(25px, calc( 3vw + 0.1rem ) ,400px);
+.signin_wrapper .logo_title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.7rem, calc(0.8vw + 0.1rem), 800px);
+  margin-bottom: clamp(25px, calc(3vw + 0.1rem), 400px);
 }
 
-.signin_wrapper .logo_title img{
-    width: clamp(2rem, calc(2.5vw + 0.1rem) , 800px );
-    transition: transform 0.8s;
-    position: relative;
-    z-index: 99;
+.signin_wrapper .logo_title img {
+  width: clamp(2rem, calc(2.5vw + 0.1rem), 800px);
+  transition: transform 0.8s;
+  position: relative;
+  z-index: 99;
 }
 
-.signin_wrapper .logo_title h3{
-    font-size: clamp(1rem, calc(2.5vw + 0.1rem) , 800px );
-    font-weight: 700;
-    font-family: 'CustomFont', sans-serif;
-    color: var(--dark);
+.signin_wrapper .logo_title h3 {
+  font-size: clamp(1rem, calc(2.5vw + 0.1rem), 800px);
+  font-weight: 700;
+  font-family: "CustomLTSaeadaBold", sans-serif;
+  color: var(--dark);
 }
 
-.signin_wrapper .form_group input{
-    outline: none;
-    box-shadow: none;
-    border-bottom: 1px solid var(--dark);
-    padding: clamp(0.5rem, calc(0.5vw + 0.1rem) , 800px ) 0;
-    font-size: clamp(1rem, calc(1vw + 0.1rem) , 800px );
-    width: clamp(300px , calc( 20vw + 0.1rem ) , 2000px);
-    background-color: var(--white);
+.signin_wrapper .form_group input {
+  outline: none;
+  box-shadow: none;
+  border-bottom: 1px solid var(--dark);
+  padding: clamp(0.5rem, calc(0.5vw + 0.1rem), 800px) 0;
+  font-size: clamp(1rem, calc(1vw + 0.1rem), 800px);
+  width: clamp(300px, calc(20vw + 0.1rem), 2000px);
+  background-color: var(--white);
 }
 
-.signin_wrapper .form_group{
-    margin-bottom: clamp(15px, calc( 1vw + 0.1rem ) , 400px);
+.signin_wrapper .form_group {
+  margin-bottom: clamp(15px, calc(1vw + 0.1rem), 400px);
 }
 
-.signin_wrapper .form_group:last-child{
-    margin-bottom: 0;
+.signin_wrapper .form_group:last-child {
+  margin-bottom: 0;
 }
 
-.signin_wrapper a{
-    margin-top: clamp(30px, calc( 1.5vw + 0.1rem ) ,400px);
+.signin_wrapper a {
+  margin-top: clamp(30px, calc(1.5vw + 0.1rem), 400px);
 }
-
 
 /* =========================================== */
 
-.hi_message{
-    visibility: hidden;
-    display: flex;
-    opacity: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50% , -50%) scale(0.8);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    transition: opacity 1s 0.5s , transform 1s 0.5s;
+.hi_message {
+  visibility: hidden;
+  display: flex;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 1s 0.5s, transform 1s 0.5s;
 }
 
-.hi_message h2{
-    font-size: clamp(30px, calc( 2.8vw + 0.1rem ) ,800px);
-    font-weight: 700;
-    color: var(--dark);
-    margin-bottom: clamp(25px, calc( 2vw + 0.1rem ) ,800px);
-    text-align: center;
-    font-family: 'CustomFont', sans-serif;
-
+.hi_message h2 {
+  font-size: clamp(30px, calc(2.8vw + 0.1rem), 800px);
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: clamp(25px, calc(2vw + 0.1rem), 800px);
+  text-align: center;
+  font-family: "CustomLTSaeadaBold", sans-serif;
 }
 
-.hi_message.show{
-    visibility: visible;
-    opacity: 1;
-    transform: translate(-50% , -50%) scale(1);
+.hi_message.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }

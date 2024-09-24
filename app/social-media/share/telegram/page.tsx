@@ -89,7 +89,7 @@ const Telegram = () => {
             <div className={`flex flex-col w-[25%] gap-[0.3vw] `}>
               <h5>Subscribers</h5>
               <div className={`${styles.changeOrder} `} onClick={() => { setsubscriberOrder(!subscriberOrder) }}>
-                <p>{subscriberOrder ? 'Ascend' : 'Decend'}</p>
+                <p>{subscriberOrder ? 'Ascend' : 'Descend'}</p>
                 <svg
                   width="16"
                   height="16"
@@ -109,7 +109,7 @@ const Telegram = () => {
             <div className="flex flex-col w-[25%] gap-[0.3vw]">
               <h5>Engagement</h5>
               <div className={`${styles.changeOrder} `} onClick={() => { setengagementOrder(!engagementOrder) }}>
-                <p>{engagementOrder ? 'Ascend' : 'Decend'}</p>
+                <p>{engagementOrder ? 'Ascend' : 'Descend'}</p>
                 <svg
                   width="16"
                   height="16"

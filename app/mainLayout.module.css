@@ -7,28 +7,30 @@
 /* .page-wrapper{
     height: 100%;
   } */
-
 .Side_Nav_Wrapper {
-  width: clamp(300px, calc(18vw + 0.1rem), 1000px);
+  width: clamp(300px, calc(18vw + 0.1rem), 400px); /* Reduced max width */
   height: 100vh;
   background: transparent;
   transition: all 0.3s;
+  flex-shrink: 0; /* Prevents shrinking in flex container */
 }
 
 .Side_Nav_Wrapper.close {
-  width: clamp(70px, calc(6vw + 0.1rem), 300px);
+  width: clamp(70px, calc(6vw + 0.1rem), 200px); /* Reduced max width */
   transition: all 0.3s;
 }
 
 .Page_Wrapper {
-  width: 100%;
+  box-sizing: border-box; /* Include padding in width */
+  flex: 1; /* Allows the wrapper to grow and fill remaining space */
+  width: auto; /* Adjust width */
   height: 100vh;
   background: #fffffb;
-  border-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 1000px) 0 0 0;
-  padding: clamp(20px, calc(2vw + 0.1rem), 1400px)
-    clamp(20px, calc(3.5vw + 0.1rem), 1400px);
+  border-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 100px) 0 0 0;
+  padding: var(--sy-20px) clamp(20px, calc(3.5vw + 0.1rem), 100px); /* Reduced max padding */
   display: flex;
   flex-direction: column;
   position: relative;
   transition: all 0.3s;
+  overflow: hidden; /* Prevents content overflow */
 }
