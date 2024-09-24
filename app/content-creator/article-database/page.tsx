@@ -112,8 +112,8 @@ const ContentDatabase = () => {
         // onClick={(e)=>{handleSelectedBg(e)}}
       >
         <li className="w-[5%]">{idx + 1}</li>
-        <li className="w-[60%]">{oneArticle?.content_title}</li>
-        <li className="w-[10%]">
+        <li className="w-[55%]">{oneArticle?.content_title}</li>
+        <li className="w-[15%]">
           <span
             className={
               oneArticle?.brand === "Street Politics Canada"
@@ -251,8 +251,8 @@ const ContentDatabase = () => {
             className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
           >
             <li className="w-[5%]">#</li>
-            <li className="w-[60%] ">Content Title</li>
-            <li className="w-[10%] ">Brand</li>
+            <li className="w-[55%] ">Content Title</li>
+            <li className="w-[15%] ">Brand</li>
             <li className="w-[10%] ">Content Type</li>
             <li className="w-[10%] ">Date</li>
             <li className="w-[5%]">Edit</li>
