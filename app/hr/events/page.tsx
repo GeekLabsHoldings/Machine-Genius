@@ -3,15 +3,9 @@ import "../../video-editor/calender/calender.css"; // Importing CSS styles for t
 import FullCalendar from "@fullcalendar/react"; // Importing the FullCalendar component
 import dayGridPlugin from "@fullcalendar/daygrid"; // Importing the dayGridPlugin for FullCalendar
 import { useContext, useEffect, useState } from "react"; // Importing React hooks for state management
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing custom select input component
-import CustomBtn from "@/app/_components/Button/CustomBtn"; // Importing custom button component
 import eventContentImg from "../../../public/assets/calender event content img.png"; // Importing event content image
 import Image from "next/image"; // Importing Next.js Image component for optimized image loading
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-import { headers } from "next/headers";
-import { title } from "process";
-import { url } from "inspector";
-import { log } from "console";
 import { globalContext } from "@/app/_context/store";
 
 // Calendar component definition
