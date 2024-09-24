@@ -260,6 +260,7 @@
 *::-webkit-scrollbar-thumb {
   background: var(--dark);
   border-radius: 20px;
+  cursor: pointer;
 }
 
 /* Handle on hover */
