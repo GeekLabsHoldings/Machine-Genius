@@ -4,9 +4,8 @@ import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
-import { TextareaAutosize, colors } from "@mui/material";
+import { TextareaAutosize } from "@mui/material";
 import {
-  Children,
   useCallback,
   useContext,
   useEffect,
@@ -17,7 +16,7 @@ import {
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 import debounce from "debounce";
-import { formatDate } from "@fullcalendar/core/index.js";
+// import { formatDate } from "@fullcalendar/core/index.js";
 
 const ExpandableCircleMenu = ({ isExpanded, handleFileUpload }: any) => {
   const menuItems = [
