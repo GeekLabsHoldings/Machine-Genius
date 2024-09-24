@@ -64,9 +64,6 @@ function Page() {
     choosedArticles,
     setChoosedArticles,
     collectedData,
-    setCollectedData,
-    // twitterData,
-    // setTwitterData,
     setGeneralTitles,
   } = useContext(createNewsletterContext);
 
@@ -108,11 +105,6 @@ function Page() {
 
   const handleCheckboxChange = useCallback(
     (ele: any) => {
-      // setChoosedArticles((prevArticles: any) => [
-      //   ...prevArticles,
-      //   ele,
-      // ])
-
       setChoosedArticles((prevArticles: any) => {
         if (prevArticles.some((article: any) => article.title === ele.title)) {
           return prevArticles.filter(

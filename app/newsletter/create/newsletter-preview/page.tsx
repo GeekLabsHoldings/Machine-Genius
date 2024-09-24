@@ -1,7 +1,7 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "@/app/newsletter/create/newsletter-preview/newsletter-preview.module.css";
-import { use, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { createNewsletterContext } from "../_context/createNewsletterContext";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 

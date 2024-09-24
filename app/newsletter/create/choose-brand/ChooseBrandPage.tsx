@@ -11,13 +11,11 @@ import {
   useRef,
 } from "react";
 import { useRouter } from "next/navigation";
-import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { createNewsletterContext } from "../_context/createNewsletterContext";
@@ -29,7 +27,6 @@ export default function ChooseBrandPage() {
   const {
     setSelectedBrand,
     selectedBrand,
-    // setTwitterData,
     setCollectedData,
     setChoosedArticles,
     setGeneratedTitles,
@@ -132,7 +129,6 @@ export default function ChooseBrandPage() {
       abortControllerRef.current.abort();
     }
     abortControllerRef.current = new AbortController(); // Initialize the AbortController
-    const { signal } = abortControllerRef.current;
 
     let postBody: any = {};
     if (selectedBrand === "Street Politics Canada") {
