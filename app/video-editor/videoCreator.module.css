@@ -13,7 +13,7 @@
   width: auto; /* Adjust width */
   height: 100vh;
   background: #fffffb;
-  border-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 50px) 0 0 0;
+  border-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 100px) 0 0 0;
   padding: var(--sy-20px) clamp(20px, calc(3.5vw + 0.1rem), 100px);
   display: flex;
   flex-direction: column;
