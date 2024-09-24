@@ -1,16 +1,28 @@
 import React from "react";
 
 interface QuarterCirclesProps {
-  color: string;
-  translate: number;
+  colors: string[];
 }
 
-const QuarterCircles = ({ color, translate }: QuarterCirclesProps) => {
+const QuarterCircles: React.FC<QuarterCirclesProps> = ({ colors }) => {
   return (
-    <span
-      className={`w-[0.693vw] h-[0.876vw] rounded-sm rounded-tr-3xl inline-block p-0 m-0`}
-      style={{ background: color, transform: `translateX(${translate}%)` }}
-    ></span>
+    <div className="flex">
+      {colors.map((color, index) => (
+        <div
+          key={index}
+          className="w-[0.693vw] h-[0.876vw] relative"
+          style={{
+            marginLeft: index > 0 ? "-0.2vw" : "0",
+            zIndex: index + 1,
+          }}
+        >
+          <div
+            className="absolute inset-0 rounded-[--3px] rounded-tr-[--21px]"
+            style={{ backgroundColor: color }}
+          />
+        </div>
+      ))}
+    </div>
   );
 };
 
