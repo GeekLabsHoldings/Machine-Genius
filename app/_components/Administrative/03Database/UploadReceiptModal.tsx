@@ -36,10 +36,14 @@ export default function UploadReceiptModal({
   const { authState, handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     presignedURLData: any;
+    uploadReceiptLoading: boolean;
+    uploadReceiptError: string;
     selectedFileName: string;
     totalPrice: number | null;
   }>({
     presignedURLData: null,
+    uploadReceiptLoading: false,
+    uploadReceiptError: "",
     selectedFileName: "",
     totalPrice: null,
   });
@@ -96,7 +100,7 @@ export default function UploadReceiptModal({
   // ===== 02. upload Receipt =====
   async function uploadReceipt(file: File) {
     const getPresignedURLData = await getPresignedURL();
-    // setPageState((prev) => ({ ...prev, uploadVideoLoading: true }));
+    setPageState((prev) => ({ ...prev, uploadReceiptLoading: true }));
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/octet-stream");
@@ -115,18 +119,27 @@ export default function UploadReceiptModal({
       );
       if (response.ok) {
         console.log("Upload successful");
-        // setPageState((prev) => ({ ...prev, triggerCreateReceipt: true }));
+        setPageState((prev) => ({
+          ...prev,
+          uploadReceiptError: "",
+        }));
       } else {
-        // const errorText = await response.text();
-        // toast.error(
-        //   `Upload failed with status: ${response.status} - ${errorText}`
-        // );
+        setPageState((prev) => ({
+          ...prev,
+          uploadReceiptError: "Upload failed",
+        }));
+
+        toast.error(`Upload failed with status: ${response.status}`);
       }
     } catch (error: any) {
+      setPageState((prev) => ({
+        ...prev,
+        uploadReceiptError: "Upload failed",
+      }));
       toast.error("Something went wrong!");
       console.error("Error in uploadReceipt:", error);
     } finally {
-      // setPageState((prev) => ({ ...prev, uploadVideoLoading: false }));
+      setPageState((prev) => ({ ...prev, uploadReceiptLoading: false }));
     }
   }
 
@@ -248,7 +261,19 @@ export default function UploadReceiptModal({
               <div className="flex items-center justify-between gap-[0.2vw]">
                 <div className="flex flex-col gap-2">
                   <h3>Upload Receipt</h3>
-                  <span>{pageState.selectedFileName || "No file chosen"}</span>
+                  <span>
+                    {pageState.uploadReceiptLoading
+                      ? `Uploading ${pageState.selectedFileName.slice(
+                          0,
+                          20
+                        )} ...`
+                      : pageState.selectedFileName || "No file chosen"}
+                  </span>
+                  {pageState.uploadReceiptError && (
+                    <span className="text-red-500">
+                      {pageState.uploadReceiptError}
+                    </span>
+                  )}
                 </div>
 
                 <div
@@ -311,16 +336,27 @@ export default function UploadReceiptModal({
                 style={{
                   width: "100%",
                   opacity:
-                    !pageState.totalPrice || !pageState.presignedURLData
+                    !pageState.totalPrice ||
+                    !pageState.presignedURLData ||
+                    pageState.uploadReceiptLoading ||
+                    pageState.uploadReceiptError !== ""
                       ? 0.5
                       : 1,
                   cursor:
-                    !pageState.totalPrice || !pageState.presignedURLData
+                    !pageState.totalPrice ||
+                    !pageState.presignedURLData ||
+                    pageState.uploadReceiptLoading ||
+                    pageState.uploadReceiptError !== ""
                       ? "not-allowed"
                       : "pointer",
                 }}
                 onClick={createReceipt}
-                disabled={!pageState.totalPrice || !pageState.presignedURLData}
+                disabled={
+                  !pageState.totalPrice ||
+                  !pageState.presignedURLData ||
+                  pageState.uploadReceiptLoading ||
+                  pageState.uploadReceiptError !== ""
+                }
               />
             </div>
           </div>

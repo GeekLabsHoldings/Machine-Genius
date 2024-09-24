@@ -25,6 +25,21 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "CustomLTSaeadaMedium";
+  font-style: normal;
+  font-weight: normal;
+  src: local("LT Saeada Medium"),
+    url("/fonts/LTSaeada-Medium.woff") format("woff");
+}
+
+@font-face {
+  font-family: "CustomLTSaeadaBold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("LT Saeada Bold"), url("/fonts/LTSaeada-Bold.woff") format("woff");
+}
+
 /* ===== End Imports ==== */
 
 /* ===== Start Variables ===== */
@@ -228,7 +243,6 @@
   padding: 0;
   margin: 0;
   line-height: normal;
-  font-size: var(--16px);
   transition: all 0.3s;
 }
 
@@ -256,6 +270,7 @@
 body {
   background-color: #2a2b2a;
   color: #000;
+  font-size: var(--16px);
 }
 
 input,

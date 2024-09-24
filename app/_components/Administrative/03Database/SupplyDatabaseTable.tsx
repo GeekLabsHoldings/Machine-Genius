@@ -1,14 +1,8 @@
 "use client"; // Directive to indicate that this file is a client component in a Next.js application.
-
-import React, { useEffect, useState } from "react"; // Import the React library for building the component.
+import React, { useEffect, useMemo, useState } from "react"; // Import the React library for building the component.
 import styles from "./SupplyDatabaseTable.module.css"; // Import CSS module for component-specific styles.
 import AddNewProductModal from "@/app/_components/Administrative/03Database/AddNewProductModal";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-/**
- * Renders a table component displaying Video Database information.
- *
- * @return {JSX.Element} The rendered table component.
- */
 
 const productTypeOptions: string[] = ["All", "Snacks", "Cleaning", "Drinks"];
 
@@ -19,12 +13,44 @@ export default function SupplyDatabaseTable({
   getSupplies: () => void;
   supplies: any;
 }) {
+  const [filterBy, setFilterBy] = useState({
+    productType: "",
+    sortBy: "productPrice",
+    sortOrder: "asc",
+  });
+
   useEffect(() => {
     getSupplies();
   }, []);
 
-  const [demandOrder, setDemandOrder] = useState<boolean>(true);
-  const [lastBoughtOrder, setLastBoughtOrder] = useState<boolean>(true);
+  const filteredAndSortedSupplies = useMemo(() => {
+    if (!Array.isArray(supplies) || supplies.length === 0) return [];
+
+    return supplies
+      .filter((item) =>
+        filterBy.productType ? item.subType === filterBy.productType : true
+      )
+      .sort((a, b) => {
+        const sortValue =
+          filterBy.sortBy === "productPrice"
+            ? "productPrice"
+            : "wantedQuantity";
+        if (filterBy.sortOrder === "asc") {
+          return a[sortValue] - b[sortValue];
+        } else {
+          return b[sortValue] - a[sortValue];
+        }
+      });
+  }, [supplies, filterBy]);
+
+  const handleSortChange = (sortBy: string) => {
+    setFilterBy((prev) => ({
+      ...prev,
+      sortBy,
+      sortOrder:
+        prev.sortBy === sortBy && prev.sortOrder === "asc" ? "desc" : "asc",
+    }));
+  };
 
   return (
     <>
@@ -43,17 +69,29 @@ export default function SupplyDatabaseTable({
                   label="All"
                   options={productTypeOptions}
                   hoverColor="hover:bg-[#31B2E9]"
+                  getValue={(value: string) =>
+                    setFilterBy((prev) => ({
+                      ...prev,
+                      productType: value === "All" ? "" : value,
+                    }))
+                  }
                 />
               </div>
               <div className="flex flex-col w-[25%] gap-[0.3vw]">
-                <h5>Demand</h5>
+                <h5>Product Price</h5>
                 <div
                   className={`${styles.changeOrder} `}
                   onClick={() => {
-                    setDemandOrder(!demandOrder);
+                    handleSortChange("productPrice");
                   }}
                 >
-                  <p>{demandOrder ? "Ascend" : "Decend"}</p>
+                  <p>
+                    {filterBy.sortBy === "productPrice"
+                      ? filterBy.sortOrder === "asc"
+                        ? "Ascend"
+                        : "Descend"
+                      : "Not sorted"}
+                  </p>
                   <svg
                     width="16"
                     height="16"
@@ -71,14 +109,20 @@ export default function SupplyDatabaseTable({
                 </div>
               </div>
               <div className="flex flex-col w-[25%] gap-[0.3vw]">
-                <h5>Last Bought</h5>
+                <h5>Demand</h5>
                 <div
                   className={`${styles.changeOrder} `}
                   onClick={() => {
-                    setLastBoughtOrder(!lastBoughtOrder);
+                    handleSortChange("wantedQuantity");
                   }}
                 >
-                  <p>{lastBoughtOrder ? "Ascend" : "Decend"}</p>
+                  <p>
+                    {filterBy.sortBy === "wantedQuantity"
+                      ? filterBy.sortOrder === "asc"
+                        ? "Ascend"
+                        : "Descend"
+                      : "Not sorted"}
+                  </p>
                   <svg
                     width="16"
                     height="16"
@@ -218,14 +262,14 @@ export default function SupplyDatabaseTable({
               </svg>
               <span>Demand</span>
             </li>
-           
           </ul>
 
           {/* Table Body */}
           {/* Rendering table rows dynamically based on bodyRow array */}
           <div className={styles.table_body}>
-            {Array.isArray(supplies) && supplies.length > 0 ? (
-              supplies.map((e) => (
+            {Array.isArray(filteredAndSortedSupplies) &&
+            filteredAndSortedSupplies.length > 0 ? (
+              filteredAndSortedSupplies.map((e: any) => (
                 <ul className="w-[100%]" key={e._id}>
                   <li className="w-[25%]">{e.supplyName}</li>
                   <li className="w-[25%]">
@@ -235,7 +279,6 @@ export default function SupplyDatabaseTable({
                   </li>
                   <li className="w-[25%]">{e.productPrice}</li>
                   <li className="w-[25%]">{e.wantedQuantity}</li>
-                
                 </ul>
               ))
             ) : (

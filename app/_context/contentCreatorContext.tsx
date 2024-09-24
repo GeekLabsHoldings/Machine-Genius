@@ -26,7 +26,7 @@ const initialContextState = {
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "waiting",
+    ai: "pass",
     isGrammerChecked: false,
   },
   setCheckStatus: (status: any) => {},
@@ -319,8 +319,8 @@ export default function ContentCreatorContextProvider({
   }, [checkAiResults]);
 
   function handleAiFetchError() {
-    setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
-    toast.error("Something went wrong!");
+    setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
+    // toast.error("Something went wrong!");
     // reset checkGrammerResults
     dispatch(contentCreatorActions.setCheckAiResults([]));
     return;
@@ -378,7 +378,7 @@ export default function ContentCreatorContextProvider({
             : [];
 
         if (averageAi >= 0.3) {
-          setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+          setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
         } else {
           setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
         }

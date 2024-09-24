@@ -228,7 +228,7 @@ export default function AddNewProductModal({
               <div className="flex gap-[1vw]">
                 <div className="flex flex-col w-1/2 gap-[0.3vw]">
                   <CustomSelectInput
-                    label="Select Product Type"
+                    label="Product Type"
                     options={productTypeOptions}
                     paddingVal="py-[0.2vw] px-[0.5vw]"
                     hoverColor="hover:bg-[#31B2E9]"
