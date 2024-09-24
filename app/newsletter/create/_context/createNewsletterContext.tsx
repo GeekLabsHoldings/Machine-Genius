@@ -49,21 +49,27 @@ export default function CreateNewsletterContextProvider({
 }) {
   const { authState, handleSignOut } = useContext(globalContext);
 
-  const [subjectLine, setSubjectLine] = useSessionStorage("subjectLine", "");
-  const [openingLine, setOpeningLine] = useSessionStorage("openingLine", "");
+  const [subjectLine, setSubjectLine] = useSessionStorage(
+    "Newsletter-subjectLine",
+    ""
+  );
+  const [openingLine, setOpeningLine] = useSessionStorage(
+    "Newsletter-openingLine",
+    ""
+  );
 
   const [selectedBrand, setSelectedBrand] = useSessionStorage(
-    "selectedBrand",
+    "Newsletter-selectedBrand",
     ""
   );
 
   const [collectedData, setCollectedData] = useSessionStorage(
-    "collectedData",
+    "Newsletter-collectedData",
     null
   );
 
   const [choosedArticles, setChoosedArticles] = useSessionStorage(
-    "choosedArticles",
+    "Newsletter-choosedArticles",
     []
   );
 
@@ -74,7 +80,7 @@ export default function CreateNewsletterContextProvider({
 
   const [generatedTitles, setGeneratedTitles] = useSessionStorage<
     IGeneralTitles[]
-  >("generatedTitles", []);
+  >("Newsletter-generatedTitles", []);
 
   async function generateTitles() {
     if (!generateTitles) {
@@ -141,12 +147,12 @@ export default function CreateNewsletterContextProvider({
   }
 
   const [selectedContentTitle, setSelectedContentTitle] = useSessionStorage(
-    "selectedContentTitle",
+    "Newsletter-selectedContentTitle",
     ""
   );
 
   const [lockedGeneratedTitles, setLockedGeneratedTitles] = useSessionStorage(
-    "lockedGeneratedTitles",
+    "Newsletter-lockedGeneratedTitles",
     []
   );
 

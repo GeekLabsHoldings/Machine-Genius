@@ -47,11 +47,15 @@ export default function ChooseBrandPage() {
       setLockedGeneratedTitles([]);
       if (typeof window !== "undefined") {
         const keysToRemove = [
-          "selectedBrand",
-          "collectedData",
-          "choosedArticles",
-          "generatedTitles",
-          "lockedGeneratedTitles",
+          "Newsletter-selectedBrand",
+          "Newsletter-collectedData",
+          "Newsletter-choosedArticles",
+          "Newsletter-generatedTitles",
+          "Newsletter-selectedContentTitle",
+          "Newsletter-generalTitles",
+          "Newsletter-lockedGeneratedTitles",
+          "Newsletter-subjectLine",
+          "Newsletter-openingLine",
         ];
 
         keysToRemove.forEach((key) => sessionStorage.removeItem(key));
