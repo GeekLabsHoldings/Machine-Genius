@@ -232,7 +232,7 @@ const Page = () => {
       <div className="w-full">
         {/* 01-1 Section for displaying members */}
         <div className="flex justify-between items-center my-[1vw]">
-          <h3>All Projects</h3>
+          <h3 className="!text-[--32px]">All Projects</h3>
 
           <div
             className={`bg-[--dark] ${styles.members} h-fit rounded-md flex items-center py-[0.3vw] px-[0.328vw]`}
@@ -273,31 +273,35 @@ const Page = () => {
         <div className="slider-container py-[1vh]">
           <Slider ref={sliderRef} {...settings}>
             {project.map((e, i) => (
-              <div className={`pr-[1.25vw] ${styles.sliderCard} py-3`} key={i}>
+              <div className={`py-3 pr-[1.25vw] ${styles.sliderCard}`} key={i}>
                 <Link href={`/creative/boards/projectDetails`}>
                   <div
-                    className={`mb-[0.6vw] ${styles.cards} p-4 rounded-3xl cursor-pointer`}
+                    className={`mb-[0.6vw] ${styles.cards} py-[--25px] px-[--19px] rounded-[--20px]`}
                   >
-                    <div className="mb-[0.8vh] flex items-center">
-                      <h3 className="pr-[0.662vw]">{e.name}</h3>
+                    <div className="mb-[--sy-26px] flex items-center">
+                      <h3 className="pr-[0.662vw] !text-[--20px]">{e.name}</h3>
+
                       <div className="flex-shrink-0">
                         <QuarterCircles
                           colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
                         />
                       </div>
                     </div>
+
                     <div
-                      className={`rounded-sm px-2 py-1 ${styles.state} flex items-center gap-2 w-fit`}
+                      className={`rounded-[--3px] p-[--4px] px-[--10px] ${styles.state} flex items-center gap-[--8px] w-fit`}
                       style={{
                         backgroundColor:
                           stateColors[e.state as keyof typeof stateColors],
                       }}
                     >
-                      {stateIcons[e.state as keyof typeof stateIcons]}{" "}
-                      <p className="text-xs font-medium">{e.state}</p>
+                      {stateIcons[e.state as keyof typeof stateIcons]}
+
+                      <p className="!text-[--16px] font-medium">{e.state}</p>
                     </div>
                   </div>
                 </Link>
+
                 <span
                   className={`${styles.lastUpdate} text-[#ACACAC] block text-end`}
                 >
@@ -316,7 +320,7 @@ const Page = () => {
 
       {/* ===== 02 Templates Container =====*/}
       <div>
-        <h3 className="mb-[2.8vh]">Templates</h3>
+        <h3 className="mb-[2.8vh] !text-[--32px]">Templates</h3>
         {/* 02-1 Container for Templates */}
         <div className="flex gap-[0.946vw] mb-[1.6vw]">
           <div
