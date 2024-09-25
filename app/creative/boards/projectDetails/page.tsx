@@ -11,23 +11,29 @@ import { useRouter } from "next/navigation";
 const Page = () => {
   const router = useRouter();
 
-  const [startDate,setStartDate] = useState("2024-04-04")
-  const [dueDate,setDueDate] = useState("2024-04-04")
-  const [counter,setCounter] = useState(0)
+  const [startDate, setStartDate] = useState("2024-04-04");
+  const [dueDate, setDueDate] = useState("2024-04-04");
+  const [counter, setCounter] = useState(0);
 
   // handle change in date input
 
-  function handleDateInput(e:any) {
-    setCounter((prev:number)=>prev+1)
-    
-    if (counter % 2 == 0 ) {      
-      setStartDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
-    console.log(counter);
+  function handleDateInput(e: any) {
+    setCounter((prev: number) => prev + 1);
 
-    } else if (counter % 2 != 0 ) {
-      setDueDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
-    console.log(counter);
-
+    if (counter % 2 == 0) {
+      setStartDate(
+        `${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${
+          e.$D < 10 ? `0${e.$D}` : e.$D
+        }`
+      );
+      console.log(counter);
+    } else if (counter % 2 != 0) {
+      setDueDate(
+        `${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${
+          e.$D < 10 ? `0${e.$D}` : e.$D
+        }`
+      );
+      console.log(counter);
     }
   }
 
@@ -65,10 +71,10 @@ const Page = () => {
             Members (4)
           </p>{" "}
           <div className="flex-shrink-0">
-              <QuarterCircles
-                colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
-              />
-            </div>
+            <QuarterCircles
+              colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
+            />
+          </div>
           <div></div>
         </div>
       </div>
@@ -137,10 +143,8 @@ const Page = () => {
                 </div>
                 {/* Quarter Circles */}
                 <div className="flex-shrink-0">
-              <QuarterCircles
-                colors={[ "#6FC9EE"]}
-              />
-            </div>
+                  <QuarterCircles colors={["#6FC9EE"]} />
+                </div>
               </div>
             </div>
             <div
@@ -153,17 +157,15 @@ const Page = () => {
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] flex justify-between`}
             >
               <h6>Brief</h6>
-                          <div className="flex-shrink-0">
-              <QuarterCircles
-                colors={[ "#6FC9EE", "#8DC189", "#F06F77"]}
-              />
-            </div>
+              <div className="flex-shrink-0">
+                <QuarterCircles colors={["#6FC9EE", "#8DC189", "#F06F77"]} />
+              </div>
             </div>
           </div>
           <CustomBtn
-          onClick={() => {
-            setIsOpen(true);
-          }}
+            onClick={() => {
+              setIsOpen(true);
+            }}
             width="100%"
             btnColor="white"
             word="Add Card"
@@ -239,7 +241,7 @@ const Page = () => {
                     0/4 Tasks
                   </p>
                 </div>
-                <QuarterCircles color="#6FC9EE" translate={0} />
+                <QuarterCircles colors={["#6FC9EE"]} />
               </div>
             </div>
             <div
@@ -278,7 +280,7 @@ const Page = () => {
                     0/4 Tasks
                   </p>
                 </div>
-                <QuarterCircles color="#6FC9EE" translate={0} />
+                <QuarterCircles colors={["#6FC9EE"]} />
               </div>
             </div>
             <div
@@ -317,18 +319,16 @@ const Page = () => {
                     0/4 Tasks
                   </p>
                 </div>
-                <div>
-                  <QuarterCircles color="#6FC9EE" translate={70} />
-                  <QuarterCircles color="#8DC189" translate={35} />
-                  <QuarterCircles color="#F06F77" translate={0} />
+                <div className="flex-shrink-0">
+                  <QuarterCircles colors={["#6FC9EE", "#8DC189", "#F06F77"]} />
                 </div>
               </div>
             </div>
           </div>
           <CustomBtn
-          onClick={() => {
-            setIsOpen(true);
-          }}
+            onClick={() => {
+              setIsOpen(true);
+            }}
             width="100%"
             btnColor="white"
             word="Add Card"
@@ -424,7 +424,9 @@ const Page = () => {
         </div>
       </div>
       <div
-        className={` ${styles.overlay}  absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
+        className={` ${
+          styles.overlay
+        }  absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
           isOpen ? "flex" : "hidden" // Conditional rendering based on isOpen state
         }`}
       >
@@ -471,7 +473,11 @@ const Page = () => {
                 <div className="flex justify-end items-end pb-[0.2vw] w-full">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className="board-add-calendar-card rounded-2xl">
-                      <DateCalendar onChange={(e)=>{handleDateInput(e)}} />
+                      <DateCalendar
+                        onChange={(e) => {
+                          handleDateInput(e);
+                        }}
+                      />
                       <div className=" flex gap-[1.188vw] mb-[2.2vh] px-[1.615vw]">
                         <div>
                           {/* <p className=" mb-[1.2vh] font-semibold">Start Date</p>
@@ -480,7 +486,7 @@ const Page = () => {
                             Start Date
                           </p>
                           <input
-                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
                             type="text"
                             name=""
                             id="myDateInput1"
@@ -491,7 +497,7 @@ const Page = () => {
                         <div>
                           <p className=" mb-[1.2vh] font-semibold">Due Date</p>
                           <input
-                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
                             type="text"
                             readOnly
                             name=""
@@ -581,19 +587,19 @@ const Page = () => {
                 <h6 className=" mb-[1.7vh]">Board Members</h6>
                 <ul>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--dark)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#6FC9EE" translate={0} />
+                    <QuarterCircles colors={["#6FC9EE"]} />
                     <p className=" text-white">Shahenda El Naggar</p>
                   </li>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--white)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#F36F24B3" translate={0} />
+                    <QuarterCircles colors={["#F36F24B3"]} />
                     <p className="  text-[var(--dark)]">Yara Hesham</p>
                   </li>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--dark)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#E1C655FF" translate={0} />
+                    <QuarterCircles colors={["#E1C655FF"]} />
                     <p className=" text-white">Mostafa Sakr</p>
                   </li>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--white)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#9B5FBFFF" translate={0} />
+                    <QuarterCircles colors={["#9B5FBFFF"]} />
                     <p className="  text-[var(--dark)]">Sherry Magdi</p>
                   </li>
                 </ul>
