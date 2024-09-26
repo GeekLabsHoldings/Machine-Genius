@@ -203,7 +203,7 @@ function Page() {
                 </li>
                 <li className="w-[20%]">
                   <span
-                    className="p-2 rounded-[3px]"
+                    className="py-[--3px] px-[--6px] rounded-[--3px] font-medium"
                     style={{ backgroundColor: getRandomColor() }}
                   >
                     {ele.brand}
