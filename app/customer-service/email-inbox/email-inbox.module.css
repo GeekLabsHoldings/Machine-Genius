@@ -2,7 +2,6 @@
   width: clamp(8rem, calc(18rem - 1vmin), 100%);
 }
 
-
 .table__container {
   box-shadow: 0px 4px 4px 0px #00000040;
 }

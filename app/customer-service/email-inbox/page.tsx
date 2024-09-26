@@ -1,8 +1,8 @@
+import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
 import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import Dropdown from "@/app/_components/Dropdown/Dropdown";
-import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
-import { truncateText } from "@/app/_utils/text";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
+import { truncateText } from "@/app/_utils/text";
 import Link from "next/link";
 
 const table = [
@@ -161,6 +161,7 @@ function Page() {
           />
         </div>
       </div>
+
       <div className="h-[75vh] py-[1.5vw] ">
         <div className={styles.database_table}>
           <ul className={styles.table_header}>
@@ -170,7 +171,7 @@ function Page() {
             <li className="w-[15%]">
               <span>Content Name</span>
             </li>
-            <li className="w-[30%]">
+            <li className="w-[40%]">
               <span>Subject</span>
             </li>
             <li className="w-[20%]">
@@ -184,14 +185,16 @@ function Page() {
           <div className={styles.table_body}>
             {table.map((ele, idx) => (
               <ul className="w-[100%] group relative" key={idx}>
-                <Link href="/customer-service/email-inbox/email" className="absolute inset-0 z-[1]">
-                  </Link>
+                <Link
+                  href="/customer-service/email-inbox/email"
+                  className="absolute inset-0 z-[1]"
+                ></Link>
                 <li className="w-[5%]">
                   <CheckBox />
                 </li>
                 <li className="w-[15%]">{ele.customerName}</li>
-                <li className="w-[30%] font-bold">
-                  <p>{truncateText(ele.subject, 100)}</p>
+                <li className="w-[40%] font-bold">
+                  <p>{truncateText(ele.subject, 70)}</p>
                 </li>
                 <li className="w-[20%]">
                   <span
