@@ -11,6 +11,7 @@
   /* max-width: 200px; */
   overflow-x: hidden;
   text-overflow: ellipsis;
+  
   white-space: nowrap;
 }
 
