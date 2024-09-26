@@ -2,9 +2,10 @@
   width: clamp(8rem, calc(18rem - 1vmin), 100%);
 }
 
-.table__container {
+/* .table__container {
+  border: 2px solid #dbdbd7;
   box-shadow: 0px 4px 4px 0px #00000040;
-}
+} */
 
 .table__row td {
   /* width: max-content; */
