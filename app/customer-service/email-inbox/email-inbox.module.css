@@ -35,6 +35,14 @@
   overflow: hidden;
 }
 
+.database_table * {
+  transition: all 0s;
+  -webkit-transition: all 0s;
+  -moz-transition: all 0s;
+  -ms-transition: all 0s;
+  -o-transition: all 0s;
+}
+
 .database_table .table_header {
   position: relative;
   display: flex;
@@ -141,6 +149,7 @@
 
 .database_table .table_body ul:hover li {
   color: var(--white);
+  font-weight: 600;
 }
 
 .database_table .table_body ul:hover li label:has(input:checked) {
@@ -149,44 +158,4 @@
 
 .database_table .table_body ul:hover li svg path {
   fill: var(--white);
-}
-
-.database_table .table_body ul li .status_page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4vw;
-  transition: all 0s;
-  -webkit-transition: all 0s;
-  -moz-transition: all 0s;
-  -ms-transition: all 0s;
-  -o-transition: all 0s;
-}
-
-.database_table .table_body ul li .status_page {
-  font-size: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
-  padding: clamp(3px, calc(0.2vw + 0.1rem), 1000px)
-    clamp(10px, calc(0.4vw + 0.1rem), 1000px);
-  border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -webkit-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -moz-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -ms-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-  -o-border-radius: clamp(3px, calc(0.2vw + 0.1rem), 1000px);
-}
-
-.database_table .table_body ul li .status_page.running {
-  background: rgba(233, 49, 62, 0.7);
-}
-
-.database_table .table_body ul li .status_page.paused {
-  background: rgba(225, 198, 85, 0.7);
-}
-
-.database_table .table_body ul li .status_page.finished {
-  background: rgba(95, 168, 91, 0.71);
-}
-
-.database_table .table_body ul li .status_page svg {
-  width: 0.6vw;
-  height: 0.6vw;
 }

@@ -1,4 +1,4 @@
-import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
+import styles from "./email-inbox.module.css";
 import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
