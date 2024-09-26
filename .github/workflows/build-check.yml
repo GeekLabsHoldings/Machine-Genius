@@ -1,0 +1,31 @@
+name: Build Check
+
+on:
+  pull_request:
+    branches: main
+  push:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18.x'
+
+    - name: Clean npm cache
+      run: npm cache clean --force
+
+    - name: Remove node_modules and package-lock.json
+      run: rm -rf node_modules package-lock.json
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Next.js app
+      run: npm run build
