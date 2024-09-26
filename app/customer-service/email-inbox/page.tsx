@@ -1,6 +1,6 @@
 import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
 import CheckBox from "@/app/_components/CheckBox/CheckBox";
-import Dropdown from "@/app/_components/Dropdown/Dropdown";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import Link from "next/link";
@@ -147,9 +147,14 @@ function Page() {
         <span className="text-lg font-semibold [text-color:var(--dark)]">
           Brand
         </span>
-        <div className="flex items-center gap-5 mt-2 shrink-0 grow">
-          <div className={styles.dropdown__container}>
-            <Dropdown title="Filter by" items={["All", "Unread", "Read"]} />
+        <div className="flex items-center mt-2 shrink-0 grow">
+          <div className={`${styles.dropdown__container} pr-[--8px]`}>
+            <CustomSelectInput
+              label="Filter by"
+              options={["All", "Unread", "Read"]}
+              paddingVal="py-[0.2vw] px-[0.5vw]"
+              hoverColor="hover:bg-[#31B2E9]"
+            />
           </div>
           <OptionsDropdown
             icon={files}
@@ -193,7 +198,7 @@ function Page() {
                   <CheckBox />
                 </li>
                 <li className="w-[15%]">{ele.customerName}</li>
-                <li className="w-[40%] font-bold">
+                <li className="w-[40%]">
                   <p>{truncateText(ele.subject, 70)}</p>
                 </li>
                 <li className="w-[20%]">
