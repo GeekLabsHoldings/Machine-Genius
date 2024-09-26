@@ -24,6 +24,26 @@ const VideoCreatePage = () => {
     setSplitedContent,
   } = useContext(videoEditingContext);
 
+  function parseParagraph(paragraph: string) {
+    const result = {
+      intro: "",
+      selectedContent: "",
+    };
+
+    const introMatch = paragraph.match(/Intro([\s\S]*?)(?=Body|\s*$)/);
+    const bodyMatch = paragraph.match(/Body([\s\S]*)/);
+
+    if (introMatch) {
+      result.intro = introMatch[1].trim();
+    }
+
+    if (bodyMatch) {
+      result.selectedContent = bodyMatch[1].trim();
+    }
+
+    return result;
+  }
+
   useEffect(() => {
     const formattedContent = formatToText(selectedScript);
     setSelectedContent(formattedContent);
@@ -45,9 +65,7 @@ const VideoCreatePage = () => {
       setPageState((prev) => ({ ...prev, createVideoLoading: true }));
       const res = await fetch(`http://localhost:3000/split-content`, {
         method: "POST",
-        body: JSON.stringify({
-          selectedContent: selectedContent,
-        }),
+        body: JSON.stringify(parseParagraph(selectedContent)),
         headers: {
           "Content-Type": "application/json",
           Authorization: `barrer ${
