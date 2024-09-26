@@ -54,7 +54,12 @@ function Page() {
         </div>
       </header>
       <div className="w-full flex justify-end mt-4">
-        <CustomBtn word="Reply" btnColor="black" href="/customer-service/email-inbox/email/reply" />
+        <CustomBtn
+          word="Reply"
+          btnColor="black"
+          href="/customer-service/email-inbox/email/reply"
+          paddingVal="py-[--10px] px-[--42px]"
+        />
       </div>
       <div className="p-8 text-xl">
         <div className="mb-11">
@@ -76,21 +81,16 @@ function Page() {
             Here are my account details for your reference:
           </p>
           <ul className="list-disc list-inside ml-4 mt-2">
-            <li>
-              Username: JohnDoe123
-            </li>
-            <li>
-              Email associated with the account:
-              johndoe@email.com
-            </li>
+            <li>Username: JohnDoe123</li>
+            <li>Email associated with the account: johndoe@email.com</li>
           </ul>
 
           <p className="mt-4">
             I haven't made any recent transactions or changes to my account, and
             this issue has left me unable to access important features and
-            information on your platform. <br /> I appreciate your prompt attention to
-            this matter. If you require any further information from my end,
-            please do not hesitate to ask.
+            information on your platform. <br /> I appreciate your prompt
+            attention to this matter. If you require any further information
+            from my end, please do not hesitate to ask.
           </p>
 
           <p className="mt-4">Thank you for your assistance and support.</p>
