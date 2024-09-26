@@ -1,11 +1,9 @@
-// import { withNextVideo } from "next-video/process";
-/**
- * @type {import('next').NextConfig}
- *
- */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: { unoptimized: true },
+  images: {
+    unoptimized: true,
+  },
   reactStrictMode: false,
 };
 
-export default nextConfig;
+module.exports = nextConfig;
