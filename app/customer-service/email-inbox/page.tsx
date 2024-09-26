@@ -148,18 +148,20 @@ function Page() {
           Brand
         </span>
         <div className="flex items-center mt-2 shrink-0 grow">
-          <div className={`${styles.dropdown__container} pr-[--8px]`}>
+          <div className={`${styles.dropdown__container} mr-[--16px]`}>
             <CustomSelectInput
               label="Filter by"
               options={["All", "Unread", "Read"]}
               paddingVal="py-[0.2vw] px-[0.5vw]"
-              hoverColor="hover:bg-[#31B2E9]"
+              hoverColor="hover:bg-[#00B3BE]"
             />
           </div>
-          <OptionsDropdown
-            icon={files}
-            options={["Mark as Read", "Mark as Unread", "Delete"]}
-          />
+          <div className="mr-[--8px]">
+            <OptionsDropdown
+              icon={files}
+              options={["Mark as Read", "Mark as Unread", "Delete"]}
+            />
+          </div>
           <OptionsDropdown
             icon={bin}
             options={["Mark as Read", "Mark as Unread", "Delete"]}
@@ -174,7 +176,7 @@ function Page() {
               <CheckBox />
             </li>
             <li className="w-[15%]">
-              <span>Content Name</span>
+              <span>Customer Name</span>
             </li>
             <li className="w-[40%]">
               <span>Subject</span>

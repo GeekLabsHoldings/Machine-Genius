@@ -1,7 +1,7 @@
 "use client";
-
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import styles from "../email.module.css";
+import styles1 from "./reply.module.css";
 import { useRouter } from "next/navigation";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 // import { TextareaAutosize } from "@mui/material";
@@ -76,11 +76,19 @@ function Page() {
             </svg>
             <h2 className="text-[2rem] w-max font-bold"> Issues with Brand </h2>
           </div>
-          <OptionsDropdown
-            icon={files}
-            options={["Send To Sales Team", "Escalate To Manager"]}
-            openIndecator
-          />
+
+
+
+        <div className={styles1.replyDropdown}>
+              <OptionsDropdown
+                  icon={files}
+                  options={["Send To Sales Team", "Escalate To Manager"]}
+                  openIndecator
+                />
+        </div>
+
+
+
         </div>
       </header>
       <div className="relative flex flex-col justify-end w-full h-[90%] mt-9 text-xl">

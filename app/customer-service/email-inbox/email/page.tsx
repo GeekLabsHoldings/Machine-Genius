@@ -26,9 +26,7 @@ function Page() {
   return (
     <div className="h-[85vh] py-[1.5vw]">
       <header>
-        <div
-          className={`flex items-center justify-between ${styles.email__title}`}
-        >
+        <div className={`flex items-center gap-[--50px] ${styles.email__title}`}>
           <div
             className="flex items-center space-x-4 cursor-pointer"
             onClick={() => router.back()}
@@ -45,7 +43,8 @@ function Page() {
                 fill="#2A2B2A"
               />
             </svg>
-            <h2 className="text-[2rem] w-max font-bold"> Issues with Brand </h2>
+
+            <h2 className="text-[2rem] w-max font-bold">Issues with Brand</h2>
           </div>
           <OptionsDropdown
             icon={files}
