@@ -188,6 +188,7 @@ function Page() {
                   word="Reply"
                   btnColor="black"
                   href="/customer-service/email-inbox/email/reply"
+                  paddingVal="py-[--10px] px-[--42px]"
                 />
               </div>
               {/* </div> */}
