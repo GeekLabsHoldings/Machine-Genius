@@ -1,5 +1,5 @@
 "use client"; // Indicates that this file is intended for use on the client side
-import "../../video-editor/calender/calender.css"; // Importing CSS styles for the calendar component
+import "@/app/_components/Calendar/calender.css"; // Importing CSS styles for the calendar component
 import FullCalendar from "@fullcalendar/react"; // Importing the FullCalendar component
 import dayGridPlugin from "@fullcalendar/daygrid"; // Importing the dayGridPlugin for FullCalendar
 import { useContext, useEffect, useState } from "react"; // Importing React hooks for state management
