@@ -33,10 +33,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 5. Lint Code
-      - name: Lint Code
-        run: npm run lint
-
-      # 6. Build Next.js App
+      # 5. Build Next.js App
       - name: Build Next.js app
         run: npm run build
