@@ -56,7 +56,9 @@ export default function RootLayout({
           <GlobalContextProvider>
             <SocketProvider>
               <div className={styles.main_wrapper}>
-                <div className="w-full h-100vh p-0 flex overflow-hidden">{children}</div>
+                <div className="w-full h-100vh p-0 overflow-hidden">
+                  {children}
+                </div>
               </div>
             </SocketProvider>
           </GlobalContextProvider>

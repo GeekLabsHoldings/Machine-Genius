@@ -1,7 +1,6 @@
 "use client";
 // Import necessary dependencies
 import React, { useState } from "react";
-import styles from "./contentCreator.module.css";
 import dynamic from "next/dynamic";
 const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
   ssr: false,
@@ -97,13 +96,9 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
   // Return the layout structure
   return (
-    <>
+    <div className="module-layout">
       {/* Side navigation wrapper */}
-      <div
-        className={`${styles.Side_Nav_Wrapper} ${
-          isSideNavOpen ? "" : styles.close
-        }`}
-      >
+      <div className={`Side_Nav_Wrapper ${isSideNavOpen ? "" : "close"}`}>
         {/* Render the SideNav component */}
         <SideNav
           isSideNavOpen={isSideNavOpen}
@@ -113,9 +108,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page wrapper */}
-      <div
-        className={`${styles.Page_Wrapper} ${!isSideNavOpen && styles.close}`}
-      >
+      <div className={`Page_Wrapper`}>
         {/* Render the title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Render the children components */}
@@ -125,7 +118,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
           </ContentCreatorContextProvider>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
