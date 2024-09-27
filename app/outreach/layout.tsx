@@ -153,7 +153,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
   // Return the layout component
   return (
-    <>
+    <div className="module-layout">
       {/* Side nav wrapper */}
       <div className={`Side_Nav_Wrapper ${isSideNavOpen ? "" : "close"}`}>
         <SideNav
@@ -170,7 +170,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         {/* Children components */}
         <div className="h-full">{children}</div>
       </div>
-    </>
+    </div>
   );
 };
 
