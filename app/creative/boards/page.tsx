@@ -20,7 +20,7 @@ const NextArrow: React.FC<ArrowProps> = ({ onClick, isDisabled }) => {
       viewBox="0 0 29 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-[--28px] h-[--28px] cursor-pointer`}
+      className={`w-[--30px] h-[--30px] cursor-pointer`}
       style={{ pointerEvents: isDisabled ? "none" : "auto" }}
     >
       <path
@@ -41,7 +41,7 @@ const PrevArrow: React.FC<ArrowProps> = ({ onClick, isDisabled }) => {
       viewBox="0 0 29 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-[--28px] h-[--28px] cursor-pointer`}
+      className={`w-[--30px] h-[--30px] cursor-pointer`}
       style={{ pointerEvents: isDisabled ? "none" : "auto" }}
     >
       <path
