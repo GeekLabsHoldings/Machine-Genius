@@ -8,7 +8,7 @@
 .details .heading::before {
     content: "";
     position: absolute;
-    border: 7px solid black;
+    border: 9px solid black;
     border-color: transparent black transparent transparent;
     top: 50%;
     left: -23px;
