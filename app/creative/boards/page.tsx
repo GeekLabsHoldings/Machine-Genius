@@ -1,23 +1,26 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./boards.module.css"; // Importing CSS module for styling
 import Slider, { Settings } from "react-slick"; // Importing Slider component and Settings type from react-slick
 import Link from "next/link"; // Next.js Link component for client-side navigation
 import QuarterCircles from "@/app/_components/Creative/QuarterCircles/QuarterCircles"; // Custom component import
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom button component import
 
-// Define NextArrow component
-const NextArrow = (props: any) => {
-  const { className, onClick } = props;
-  const isDisabled = className.includes("slick-disabled");
+// Define an interface for arrow props
+interface ArrowProps {
+  onClick?: () => void;
+  isDisabled: boolean;
+}
 
+// Define NextArrow component
+const NextArrow: React.FC<ArrowProps> = ({ onClick, isDisabled }) => {
   return (
     <svg
       onClick={isDisabled ? undefined : onClick}
       viewBox="0 0 29 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-[--28px] h-[--28px] cursor-pointer ${className}`}
+      className={`w-[--28px] h-[--28px] cursor-pointer`}
       style={{ pointerEvents: isDisabled ? "none" : "auto" }}
     >
       <path
@@ -31,17 +34,14 @@ const NextArrow = (props: any) => {
 };
 
 // Define PrevArrow component
-const PrevArrow = (props: any) => {
-  const { className, onClick } = props;
-  const isDisabled = className.includes("slick-disabled");
-
+const PrevArrow: React.FC<ArrowProps> = ({ onClick, isDisabled }) => {
   return (
     <svg
       onClick={isDisabled ? undefined : onClick}
       viewBox="0 0 29 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-[--28px] h-[--28px] cursor-pointer ${className}`}
+      className={`w-[--28px] h-[--28px] cursor-pointer`}
       style={{ pointerEvents: isDisabled ? "none" : "auto" }}
     >
       <path
@@ -149,7 +149,28 @@ const Page = () => {
   // References to HTML elements and components
   const sliderRef = useRef<Slider>(null); // Reference for the slider component
 
-  // Slider settings with custom arrows
+  // State variables to manage slider state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideCount, setSlideCount] = useState(0);
+
+  // Fetch the total number of slides after the first render
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (slider && (slider as any).innerSlider) {
+      setSlideCount((slider as any).innerSlider.state.slideCount);
+    }
+  }, []);
+
+  // Function to get the current slidesToShow value considering responsive settings
+  const getSlidesToShow = (): number => {
+    const slider = sliderRef.current;
+    if (slider && (slider as any).innerSlider) {
+      return (slider as any).innerSlider.props.slidesToShow || 1;
+    }
+    return 1;
+  };
+
+  // Slider settings with arrows disabled
   const settings: Settings = {
     infinite: false,
     speed: 600,
@@ -158,8 +179,8 @@ const Page = () => {
     rows: 2,
     centerPadding: "60px",
     swipeToSlide: false,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    arrows: false, // Disable default arrows
+    afterChange: (index) => setCurrentSlide(index), // Update current slide index
     responsive: [
       {
         breakpoint: 600,
@@ -169,8 +190,7 @@ const Page = () => {
           speed: 600,
           rows: 2,
           centerPadding: "60px",
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />,
+          arrows: false, // Disable default arrows for responsive settings
         },
       },
       {
@@ -181,12 +201,16 @@ const Page = () => {
           speed: 600,
           rows: 2,
           centerPadding: "60px",
-          nextArrow: <NextArrow />,
-          prevArrow: <PrevArrow />,
+          arrows: false, // Disable default arrows for responsive settings
         },
       },
     ],
   };
+
+  // Determine if previous and next arrows should be disabled
+  const slidesToShow = getSlidesToShow();
+  const canGoPrev = currentSlide > 0;
+  const canGoNext = currentSlide < slideCount - slidesToShow;
 
   return (
     <section className={`${styles.boards} boards`}>
@@ -216,8 +240,16 @@ const Page = () => {
           {/* Container for project title and navigation buttons */}
           <div className="flex items-center gap-[--30px]">
             <h4>Current Projects</h4>
-            <div className=" flex items-center gap-[--15px]">
-              {/* I want the arrows shown here ! */}
+            <div className="flex items-center gap-[--15px]">
+              {/* Arrows are shown here */}
+              <PrevArrow
+                onClick={() => sliderRef.current?.slickPrev()}
+                isDisabled={!canGoPrev}
+              />
+              <NextArrow
+                onClick={() => sliderRef.current?.slickNext()}
+                isDisabled={!canGoNext}
+              />
             </div>
           </div>
 
@@ -285,22 +317,22 @@ const Page = () => {
         {/* 02-1 Container for Templates */}
         <div className="flex gap-[0.946vw] mb-[1.6vw]">
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Design Sprint</h4>
           </div>
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Application Design Project</h4>
           </div>
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Saas Product</h4>
           </div>
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Research Project</h4>
           </div>
