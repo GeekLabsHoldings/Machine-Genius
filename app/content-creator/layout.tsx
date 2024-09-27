@@ -16,17 +16,6 @@ const TitleOfPage = dynamic(
 import ContentCreatorContextProvider from "../_context/contentCreatorContext";
 // import { usePathname } from 'next/navigation';
 
-// Define a layout component
-const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  // get path from usePathname hook from next/navigation
-  // const path = usePathname();
-
-  // State variables to manage side nav and current page
-  const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>("Content Creator");
-
-  // path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1)
-
   // Array containing navigation links for the side navigation bar
   const sideNavLinks = [
     // Each object represents a link with its name, path, and icon
@@ -94,6 +83,19 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     },
   ];
 
+// Define a layout component
+const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  // get path from usePathname hook from next/navigation
+  // const path = usePathname();
+
+  // State variables to manage side nav and current page
+  const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
+  const [CurrentPage, setCurrentPage] = useState<string>("Content Creator");
+
+  // path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1)
+
+
+
   // Return the layout structure
   return (
     <div className="module-layout">
@@ -108,7 +110,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page wrapper */}
-      <div className={`Page_Wrapper`}>
+      <div className="Page_Wrapper">
         {/* Render the title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Render the children components */}
