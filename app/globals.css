@@ -255,11 +255,6 @@
   cursor: pointer;
 }
 
-/* Handle on hover */
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--dark);
-}
-
 body {
   background-color: #2a2b2a;
   color: #000;
