@@ -129,7 +129,6 @@ const project = [
 
 const plusIcon = (
   <svg
-    className="mr-[0.61vw]"
     width="12"
     height="12"
     viewBox="0 0 12 12"
@@ -307,7 +306,12 @@ const Page = () => {
 
         {/* 01-4 Container for Create New Board button */}
         <div className="w-fit ml-auto">
-          <CustomBtn btnColor="black" word="Create New Board" icon={plusIcon} />
+          <CustomBtn
+            btnColor="black"
+            word="Create New Board"
+            icon={plusIcon}
+            paddingVal="px-[--20px] py-[--10px]"
+          />
         </div>
       </div>
 
@@ -339,7 +343,12 @@ const Page = () => {
         </div>
         {/* 02-2 Container for New Template button */}
         <div className="w-fit ml-auto">
-          <CustomBtn btnColor="black" word="New Template" icon={plusIcon} />
+          <CustomBtn
+            btnColor="black"
+            word="New Template"
+            icon={plusIcon}
+            paddingVal="px-[--20px] py-[--10px]"
+          />
         </div>
       </div>
     </section>
