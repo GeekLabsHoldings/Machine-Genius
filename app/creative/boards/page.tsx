@@ -220,7 +220,7 @@ const Page = () => {
           <h3 className="!text-[--32px]">All Projects</h3>
 
           <div
-            className={`bg-[--dark] ${styles.members} h-fit rounded-md flex items-center py-[0.3vw] px-[0.328vw]`}
+            className={`bg-[--dark]  h-fit rounded-md flex items-center py-[0.3vw] px-[0.328vw]`}
           >
             <p className="text-white text-[--12px] font-medium mr-2 whitespace-nowrap">
               Members (4)

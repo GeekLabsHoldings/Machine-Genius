@@ -1,0 +1,39 @@
+.handover h3 {
+  font-weight: 700;
+}
+.handover h4 {
+  font-weight: 700;
+  font-size: clamp(14px, calc(1.2vw + 0.1rem), 80px);
+}
+.handover button {
+  font-size: clamp(10px, calc(0.757vw + 0.1rem), 70px);
+}
+
+/* 01-3 Container for Current Projects slider */
+.handover .lastUpdate {
+  font-size: clamp(10px, calc(0.57vw + 0.1rem), 70px);
+  text-align: end;
+}
+
+/* Project Cards & Template Cards */
+.handover .cards {
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  border: 2px solid #eaeaea;
+}
+
+/* Project Cards & Template Cards Hover States */
+.handover .cards:hover {
+  transition: transform 0.5s;
+  background: var(--dark);
+}
+.handover .cards:hover h3,
+.handover .cards:hover .state p {
+  color: white;
+}
+
+.handover .sliderCard:hover {
+  transform: translateY(-0.378vw);
+}
+.handover .cards:hover svg path {
+  fill: white;
+}
