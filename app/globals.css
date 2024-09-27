@@ -238,14 +238,6 @@
 /* ===== End Variables ===== */
 
 /* ===== Start Global Styles ===== */
-* {
-  font-family: "DM Sans", sans-serif;
-  padding: 0;
-  margin: 0;
-  line-height: normal;
-  transition: all 0.3s;
-}
-
 *::-webkit-scrollbar {
   width: 3px;
   height: 3px;
@@ -272,6 +264,8 @@ body {
   background-color: #2a2b2a;
   color: #000;
   font-size: var(--16px);
+  font-family: "DM Sans", sans-serif;
+  line-height: normal;
 }
 
 input,
