@@ -119,8 +119,8 @@ export default function ThumbnailCanvas() {
         triggerSendContent: false,
         triggerSearchImg: false,
         highlightedWords: [],
-        showRecentBg: true,
-        showRecentImg: true,
+        // showRecentBg: true,
+        // showRecentImg: true,
       };
     }, [selectedBrand]);
   const pageStateInit = usePageStateInit(selectedBrand);
@@ -1371,7 +1371,7 @@ export default function ThumbnailCanvas() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-[--17px]">Select Background</h3>
 
-                  <div className="form-control">
+                  {/* <div className="form-control">
                     <label className="cursor-pointer label">
                       <input
                         type="checkbox"
@@ -1386,7 +1386,7 @@ export default function ThumbnailCanvas() {
                       />
                       <span className="label-text ml-[--5px]">Show Recent</span>
                     </label>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* 02-02 Search Background */}
@@ -1578,7 +1578,7 @@ export default function ThumbnailCanvas() {
 
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-[--17px]">Select Image</h3>
-                  <div className="form-control">
+                  {/* <div className="form-control">
                     <label className="cursor-pointer label">
                       <input
                         type="checkbox"
@@ -1593,7 +1593,7 @@ export default function ThumbnailCanvas() {
                       />
                       <span className="label-text ml-[--5px]">Show Recent</span>
                     </label>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* 03-02 Search Image */}
