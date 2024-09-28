@@ -14,7 +14,7 @@ async function handleSearchImg(searchImgKeyword) {
     return data.images_results.map((img) => img.original) || [];
   } catch (error) {
     console.error("Error in handleSearchImg:", error);
-    // throw new Error("Failed to fetch images from the API");
+    throw new Error("Failed to fetch images from the API");
   }
 }
 
