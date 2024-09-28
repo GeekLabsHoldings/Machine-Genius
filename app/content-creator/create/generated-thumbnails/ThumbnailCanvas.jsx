@@ -567,27 +567,15 @@ export default function ThumbnailCanvas() {
         ...prev,
         searchBgLoading: true,
       }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            searchImgKeyword: keyword,
-            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
-          }),
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
+      const res = await fetch(`/api/get-images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchImgKeyword: keyword,
+        }),
+      });
       const json = await res.json();
       if (!json) {
         handleSearchBgError();
@@ -598,7 +586,7 @@ export default function ThumbnailCanvas() {
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
           ...prev,
-          searchBgData: json.images.map((img) => img.original),
+          searchBgData: json.images,
           searchBgLoading: false,
         }));
       } else {
@@ -647,7 +635,7 @@ export default function ThumbnailCanvas() {
     "TBgpp1op1vFqWXZT6apW2o7m",
     "Xd8e5XD6GeJLhydu8Dv4YpVh",
     "ezvNXhQ4ZxqybWynLTtt6ysG",
-    "SvJ2oUgreLTtiLk2TdAxYg1Y"
+    "SvJ2oUgreLTtiLk2TdAxYg1Y",
   ];
 
   async function handleRemoveBg(img, type) {
@@ -741,27 +729,15 @@ export default function ThumbnailCanvas() {
         searchImgLoading: true,
         triggerSearchImg: false,
       }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            searchImgKeyword: pageState.searchImgKeyword,
-            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
-          }),
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
+      const res = await fetch(`/api/get-images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchImgKeyword: pageState.searchImgKeyword,
+        }),
+      });
       const json = await res.json();
       if (!json) {
         // toast.error("Something went wrong!");
@@ -774,7 +750,7 @@ export default function ThumbnailCanvas() {
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
           ...prev,
-          searchImgData: json.images.map((img) => img.original),
+          searchImgData: json.images,
         }));
       } else {
         // toast.error("Something went wrong!");
