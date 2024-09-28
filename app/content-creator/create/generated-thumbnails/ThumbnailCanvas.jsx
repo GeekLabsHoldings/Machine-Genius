@@ -626,12 +626,12 @@ export default function ThumbnailCanvas() {
   }
 
   const removeBgKeys = [
-    "mswBGVPPK8gQmebR2a4AXv8G",
-    "avYD913vYZCsgzGU81rGfsCs",
-    "pPzPf7Euze5DE6GKjatd6Mpz",
-    "cXasYbxVHaKbYxyeVh5szu6p",
-    "2BsGqFyNaiaQfnv4GbNGr2su",
-    "iKuc4SqkXrEL9wJVkmra1LE1",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
     "TBgpp1op1vFqWXZT6apW2o7m",
     "Xd8e5XD6GeJLhydu8Dv4YpVh",
     "ezvNXhQ4ZxqybWynLTtt6ysG",
