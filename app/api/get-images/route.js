@@ -7,9 +7,9 @@ async function handleSearchImg(searchImgKeyword) {
       `https://serpapi.com/search.json?q=${encodedKeyword}&engine=google_images&ijn=0&api_key=${process.env.SERP_API_KEY}`
     );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // if (!response.ok) {
+    //   throw new Error(`HTTP error! status: ${response.status}`);
+    // }
 
     const data = await response.json();
     return data.images_results.map((img) => img.original) || [];
