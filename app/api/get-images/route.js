@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
 async function handleSearchImg(searchImgKeyword) {
+  const encodedKeyword = encodeURIComponent(searchImgKeyword);
   try {
     const response = await fetch(
-      `https://serpapi.com/search.json?q=${searchImgKeyword}&engine=google_images&ijn=0&api_key=${process.env.SERP_API_KEY}`
+      `https://serpapi.com/search.json?q=${encodedKeyword}&engine=google_images&ijn=0&api_key=${process.env.SERP_API_KEY}`
     );
 
     if (!response.ok) {
