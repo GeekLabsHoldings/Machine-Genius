@@ -14,8 +14,8 @@ async function handleSearchImg(searchImgKeyword) {
     const data = await response.json();
     return data.images_results.map((img) => img.original) || [];
   } catch (error) {
-    // console.error("Error in handleSearchImg:", error);
-    throw new Error(`error: ${error}`);
+    console.error("Error in handleSearchImg:", error);
+    throw error;
   }
 }
 
@@ -27,9 +27,9 @@ export async function POST(request) {
 
     return NextResponse.json({ success: true, images });
   } catch (error) {
-    // console.error("Error in getImg:", error);
+    console.error("Error in getImg:", error);
     return NextResponse.json(
-      { success: false, error: `error: ${error}` },
+      { success: false, error: error.message || "Internal Server Error" },
       { status: 500 }
     );
   }
