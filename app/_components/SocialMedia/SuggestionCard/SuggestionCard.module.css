@@ -1,0 +1,105 @@
+.item {
+  position: relative;
+  min-height: clamp(50px, calc(4.4vw + 0.1rem), 1000px);
+  padding: clamp(10px, calc(0.6vw + 0.1rem), 1000px) 0
+    clamp(10px, calc(0.6vw + 0.1rem), 1000px)
+    clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+  display: flex;
+  align-items: center;
+  gap: 6%;
+  border: 1px solid var(--dark);
+  border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -webkit-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -moz-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -ms-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -o-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  /* border: 1px solid red !important; */
+}
+
+/* .item > div { */
+/* border: 1px solid pink !important; */
+/* } */
+
+.item::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  width: 1px;
+  background-color: var(--dark);
+  height: 60%;
+  left: 87%;
+  /* border: 1px solid green !important; */
+}
+
+.item p {
+  font-size: clamp(10px, calc(0.75vw + 0.1rem), 1000px);
+  text-align: justify;
+  max-height: 7vh;
+  overflow-y: auto;
+  padding-right: 0.5vw;
+  /* border: 1px solid purple !important; */
+}
+
+.item span {
+  margin: 0 5.5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border: 1px solid orange !important; */
+}
+
+.item svg {
+  width: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
+  height: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
+}
+
+.item svg path {
+  fill: var(--dark);
+}
+/* ===== Start Hover States ===== */
+.item:hover {
+  background-color: var(--dark);
+  cursor: pointer;
+}
+
+.item:hover p {
+  color: var(--white);
+}
+
+.item:hover p::-webkit-scrollbar-track {
+  background: var(--dark);
+}
+
+/* Handle */
+.item:hover p::-webkit-scrollbar-thumb {
+  background: var(--white);
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+}
+
+/* Handle on hover */
+.item:hover p::-webkit-scrollbar-thumb:hover {
+  background: var(--white);
+}
+
+.item:hover {
+  background-color: var(--dark);
+  cursor: pointer;
+}
+
+.item:hover::after {
+  background-color: var(--white);
+}
+
+.item:hover svg path {
+  fill: var(--white);
+}
+/* ===== End Hover States ===== */

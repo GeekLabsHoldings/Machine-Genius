@@ -5,6 +5,7 @@ import styles from "./TwitterPost.module.css"; // CSS module for styling
 import { useState } from "react"; // React's useState hook
 import profileImg from "@/public/assets/post-profile.svg"; // Profile image
 import Image from "next/image"; // Next.js Image component for optimized image loading
+import SuggestionCard from "@/app/_components/SocialMedia/SuggestionCard/SuggestionCard";
 
 // SVG icon for re-generating content
 const reGenerateIcon = (
@@ -91,21 +92,9 @@ const TwitterPost = () => {
               <h6>Tweet Content Suggestions</h6>
               {/* Mapping through suggestion posts and displaying them */}
               {SuggetionPosts.map((ele) => (
-                <div
-                  className={styles.item}
-                  onClick={() => setPostText(ele.length < 280 ? ele : "")}
-                >
-                  <p>{ele}</p>
-                  <a href="">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 19 19"
-                      fill="none"
-                    >
-                      ...
-                    </svg>
-                  </a>
-                </div>
+                <SuggestionCard
+                  text={ele}
+                />
               ))}
               {/* Button to regenerate content */}
               <CustomBtn
