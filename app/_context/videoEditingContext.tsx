@@ -12,7 +12,7 @@ interface KeywordsAndImage {
   imageUrl: string[];
 }
 
-interface ScriptSegment {
+export interface ScriptSegment {
   index: number;
   text: string;
   keywordsAndImages: KeywordsAndImage[];

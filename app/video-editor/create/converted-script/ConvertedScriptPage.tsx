@@ -1,9 +1,15 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./ConvertedScriptPage.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomAudioPlayer from "@/app/_components/VideoEditing/CustomAudioPlayer/CustomAudioPlayer";
-import { videoEditingContext } from "@/app/_context/videoEditingContext";
+import {
+  ScriptSegment,
+  videoEditingContext,
+} from "@/app/_context/videoEditingContext";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
+import { useRouter } from "next/navigation";
 
 const audioIcon = (
   <svg
@@ -50,29 +56,128 @@ const arrowIcon = (
   </svg>
 );
 
-interface ScriptSegment {
-  index: number;
-  text: string;
-  keywordsAndImages: {
-    keyword: string;
-    imageUrl: string[];
-  }[];
-  audioPath: {
-    index: number;
-    url: string;
-    duration: number;
-  };
-}
+// interface ScriptSegment {
+//   index: number;
+//   text: string;
+//   keywordsAndImages: {
+//     keyword: string;
+//     imageUrl: string[];
+//   }[];
+//   audioPath: {
+//     index: number;
+//     url: string;
+//     duration: number;
+//   };
+// }
+
+const LoadingSpinner = () => {
+  return (
+    <div className="flex justify-center items-center">
+      <div className="animate-spin rounded-full h-[--15px] w-[--15px] border-t-2 border-b-2 border-gray-900"></div>
+    </div>
+  );
+};
 
 const ConvertedScriptPage = () => {
-  const { splitedContent, setSplitedContent } = useContext(videoEditingContext);
+  const { splitedContent, setSplitedContent, setSelectedContent } =
+    useContext(videoEditingContext);
+  const { handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     selectedScriptSegment: ScriptSegment | null;
     selectedIncorrectWord: string | null;
+    selectedToBeCorrectedWord: string;
   }>({
     selectedScriptSegment: null,
     selectedIncorrectWord: null,
+    selectedToBeCorrectedWord: "",
   });
+
+  const [loadingReplaceWord, setLoadingReplaceWord] = useState(false);
+
+  const router = useRouter();
+  const regenerateAudio = async () => {
+    if (
+      !pageState.selectedIncorrectWord ||
+      !pageState.selectedToBeCorrectedWord
+    ) {
+      toast.error("Please select a word to replace");
+      return;
+    } else if (
+      pageState.selectedIncorrectWord === pageState.selectedToBeCorrectedWord
+    ) {
+      toast.error("The incorrect word and the correct word are the same");
+      return;
+    }
+
+    setLoadingReplaceWord(true);
+    const updatedSplitedContent = splitedContent
+      ?.map((segment) => {
+        if (
+          segment.audioPath.index ===
+          pageState.selectedScriptSegment?.audioPath.index
+        ) {
+          return {
+            index: segment.audioPath.index,
+            selectedContent: segment.text.replace(
+              pageState.selectedIncorrectWord ?? "",
+              pageState.selectedToBeCorrectedWord
+            ),
+          };
+        }
+      })
+      .filter((segment) => segment !== undefined)[0];
+
+    console.log(updatedSplitedContent);
+
+    const response = await fetch(
+      "http://api.machinegenius.io/VideoEditing/regenrate-audio",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(updatedSplitedContent),
+      }
+    );
+    if (response.status === 401) {
+      toast.error("Session expired");
+      handleSignOut();
+      return;
+    }
+
+    if (!response.ok) {
+      toast.error("Failed to regenerate audio");
+      setLoadingReplaceWord(false);
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.success) {
+      setSplitedContent((prevState: ScriptSegment[]) => {
+        return prevState.map((segment: ScriptSegment) => {
+          if (
+            segment.audioPath.index ===
+            pageState.selectedScriptSegment?.audioPath.index
+          ) {
+            return {
+              ...segment,
+              audioPath: data.audioPath,
+            };
+          }
+          return segment;
+        });
+      });
+      setLoadingReplaceWord(false);
+    }
+
+    console.log(data);
+  };
+
+  useEffect(() => {
+    console.log(splitedContent);
+  }, [splitedContent]);
 
   return (
     <div className="flex flex-col">
@@ -91,12 +196,12 @@ const ConvertedScriptPage = () => {
                   splitedContent.map((scriptSegment: ScriptSegment) => (
                     <div
                       className={`${styles.articleContent} cursor-pointer`}
-                      key={scriptSegment.index}
+                      key={scriptSegment.audioPath.index}
                     >
                       <p
                         className={`${
-                          pageState.selectedScriptSegment?.index ===
-                          scriptSegment.index
+                          pageState.selectedScriptSegment?.audioPath.index ===
+                          scriptSegment.audioPath.index
                             ? styles.active
                             : ""
                         }`}
@@ -105,6 +210,7 @@ const ConvertedScriptPage = () => {
                             ...prevState,
                             selectedScriptSegment: scriptSegment,
                             selectedIncorrectWord: null,
+                            selectedToBeCorrectedWord: "",
                           }))
                         }
                       >
@@ -167,6 +273,7 @@ const ConvertedScriptPage = () => {
                           setPageState((prevState) => ({
                             ...prevState,
                             selectedIncorrectWord: word,
+                            selectedToBeCorrectedWord: word,
                           }))
                         }
                       >
@@ -185,13 +292,16 @@ const ConvertedScriptPage = () => {
                   <span className="font-semibold">Word Correction</span>
                   <span className="text-[#ACACAC]">Mispronounced word</span>
                 </div>
-
                 <div className="border border-solid border-[#2A2B2A] rounded-[--5px] py-[--10px] px-[--20px] flex items-center justify-between">
-                  <span>{pageState.selectedIncorrectWord}</span>
+                  <span className="text-nowrap overflow-hidden w-[80%]">
+                    {pageState.selectedIncorrectWord}
+                  </span>
                   {audioIcon}
                 </div>
               </div>
+
               {arrowIcon}
+
               <div className="w-[40%]">
                 <div className="flex flex-col gap-[--sy-2px] mb-[--sy-16px]">
                   <span className="font-semibold">Word Correction</span>
@@ -199,20 +309,34 @@ const ConvertedScriptPage = () => {
                     Write the correct pronunciation
                   </span>
                 </div>
-
                 <div className="border border-solid border-[#2A2B2A] rounded-[--5px] py-[--10px] px-[--20px] flex items-center justify-between">
-                  <span>{pageState.selectedIncorrectWord}</span>
+                  <input
+                    className="outline-none"
+                    type="text"
+                    value={pageState.selectedToBeCorrectedWord}
+                    onChange={(e) => {
+                      setPageState((prevState) => ({
+                        ...prevState,
+                        selectedToBeCorrectedWord: e.target.value,
+                      }));
+                    }}
+                  />
                   {audioIcon}
                 </div>
               </div>
             </div>
 
             <div className="flex justify-end gap-[1.5vw]">
-              <CustomBtn
-                btnColor="white"
-                word="Replace Word"
-                paddingVal="py-[--8px] px-[--24px]"
-              />
+              {loadingReplaceWord ? (
+                <LoadingSpinner />
+              ) : (
+                <CustomBtn
+                  btnColor="white"
+                  word="Replace Word"
+                  paddingVal="py-[--8px] px-[--24px]"
+                  onClick={regenerateAudio}
+                />
+              )}
               <CustomBtn
                 btnColor="black"
                 word="Update Database"
@@ -233,7 +357,11 @@ const ConvertedScriptPage = () => {
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/video-editor/create/choose-footage"}
+          onClick={() => {
+            setSplitedContent(null);
+            setSelectedContent("");
+            router.replace("/video-editor/create/choose-footage");
+          }}
         />
       </div>
     </div>
