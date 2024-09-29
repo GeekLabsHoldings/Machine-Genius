@@ -162,8 +162,8 @@ const RedditPost = () => {
                     paddingVal="py-[--10px] px-[--22px]"
                   />
                 </div>
-                <div className="space-y-[--sy-14px]">
-                  {Array.from({ length: 4 }).map((_, index) => (
+                <div className="space-y-[--sy-14px] overflow-y-auto max-h-[60vh] pr-[--6px] pb-[--5px]">
+                  {Array.from({ length: 8 }).map((_, index) => (
                     <SuggestionCard
                       key={index}
                       title="Stocks, the heartbeat of the market!"
