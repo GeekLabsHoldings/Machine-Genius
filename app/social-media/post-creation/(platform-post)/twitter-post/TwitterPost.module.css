@@ -167,9 +167,6 @@
   font-size: clamp(10px, calc(0.55vw + 0.1rem), 1000px);
 }
 
-
-
-
 /* ===== Start Hashtags ===== */
 .hashtags {
   display: flex;

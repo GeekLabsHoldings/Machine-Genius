@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./SuggestionCard.module.css";
 
+// todo: handle when card is selected.
 interface SuggestionCardProps {
   icon?: JSX.Element;
   text: string;
