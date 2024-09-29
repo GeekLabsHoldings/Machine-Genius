@@ -329,7 +329,7 @@ const ConvertedScriptPage = () => {
                     .split(" ")
                     .map((word, index) => (
                       <span
-                        className={`${
+                        className={`h-fit ${
                           pageState.selectedIncorrectWord === word
                             ? styles.active
                             : ""
