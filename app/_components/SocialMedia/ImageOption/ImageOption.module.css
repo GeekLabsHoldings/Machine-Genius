@@ -1,5 +1,5 @@
 .image_option {
-  width: 28%;
+  /* width: 28%; */
   position: relative;
   border-radius: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
   border: 1px solid var(--dark);

@@ -1,7 +1,7 @@
 .add_post_wrapper h6 {
   font-family: "DM Sans";
   font-size: clamp(16px, calc(1.2vw + 0.1rem), 1000px);
-  margin-bottom: clamp(8px, calc(0.6vw + 0.1rem), 1000px);
+  margin-bottom: var(--sy-10px);
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -58,6 +58,16 @@
 /* ===== End 01- Col (1) ===== */
 
 /* ===== Start 02- Col (2) ===== */
+.image_selection {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; /* Changed from space-between */
+  gap: var(--10px);
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping */
+  padding-bottom: 8px;
+}
+
 .post_view_screens {
   margin-bottom: clamp(20px, calc(1.3vw + 0.1rem), 1000px);
 }

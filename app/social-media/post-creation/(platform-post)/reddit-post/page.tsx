@@ -8,6 +8,8 @@ import Image from "next/image"; // Next.js Image component for optimized image l
 import SuggestionCard from "@/app/_components/SocialMedia/SuggestionCard/SuggestionCard";
 import { reGenerateIcon, addIcon } from "@/app/_utils/svgIcons";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import postImage from "@/public/assets/post-img.svg"; // Post image
+import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
 
 const RedditPost = () => {
   const [pageState, setPageState] = useState({
@@ -174,7 +176,7 @@ const RedditPost = () => {
             )}
 
             {pageState.activeTab === 2 && (
-              <>
+              <div className="flex flex-col gap-[--sy-25px]">
                 <div className="flex flex-col gap-[--sy-10px]">
                   <div className="flex justify-between items-center mt-[--sy-20px]">
                     <h4 className="text-[--24px] font-semibold">
@@ -188,6 +190,18 @@ const RedditPost = () => {
                       paddingVal="py-[--10px] px-[--22px]"
                     />
                   </div>
+                  <div className={styles.image_selection}>
+                    {/* Image options */}
+                    {Array.from({ length: 10 }).map((_, index) => (
+                      <div className="min-w-[23%]">
+                        <ImageOption
+                          key={index}
+                          imageSrc={postImage}
+                          inputName="image"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div
@@ -196,7 +210,7 @@ const RedditPost = () => {
                   }
                 >
                   {/* Desktop view */}
-                  <div className={styles.desctop_screen + " w-2/3 h-full"}>
+                  <div className={styles.desctop_screen + " w-2/3 h-[40vh]"}>
                     <h6>Desktop View</h6>
                     <div className={styles.desctop_view}>
                       <div className={styles.avatar}>
@@ -243,14 +257,14 @@ const RedditPost = () => {
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
       </div>
 
       {/* Buttons to move to the last or next page */}
-      <div className="flex justify-between items-center mt-[--sy-30px]">
+      <div className="flex justify-between items-center mt-[--sy-40px]">
         <CustomBtn
           word="Back"
           btnColor="white"
