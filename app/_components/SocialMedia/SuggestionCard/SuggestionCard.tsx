@@ -30,7 +30,9 @@ export default function SuggestionCard({
   return (
     <div className={styles.item + " group"}>
       <div className="flex-grow flex flex-col gap-[--sy-8px]">
-        <h4 className="font-black group-hover:text-white">{title}</h4>
+        {title && (
+          <h4 className="font-black group-hover:text-white">{title}</h4>
+        )}
         <p>{text}</p>
       </div>
       <span>{icon}</span>
