@@ -56,7 +56,7 @@ const ChooseBrand = () => {
       {/* Buttons to navigate */}
       <div className="flex justify-between items-center">
         {/* Button to navigate back */}
-        <CustomBtn word="Back" btnColor="white" href="/social-media/post" />
+        <CustomBtn word="Back" btnColor="white" href="/social-media/post-creation" />
         {/* Button to navigate to the next page */}
         <CustomBtn
           word="Next"
