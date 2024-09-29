@@ -9,13 +9,12 @@ type IProps = React.DetailedHTMLProps<
 > & {
   imageSrc: string;
   imageAlt?: string;
-  inputName: string;
 };
 
 const ImageOption = memo(function ImageOption({
   imageSrc,
   imageAlt = "post image",
-  inputName,
+  name,
   onChange,
   checked,
   disabled,
@@ -25,14 +24,19 @@ const ImageOption = memo(function ImageOption({
     <label className={styles.image_option}>
       <input
         type="checkbox"
-        name={inputName}
+        name={name}
         onChange={onChange}
         checked={checked}
         disabled={disabled}
         {...rest}
       />
       <div className={styles.selectedOverlay}></div>
-      <Image src={imageSrc} alt={imageAlt} layout="fill" objectFit="cover" />
+      <Image
+        src={imageSrc}
+        alt={imageAlt}
+        fill
+        style={{ objectFit: "cover" }}
+      />
     </label>
   );
 });
