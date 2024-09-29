@@ -6,7 +6,7 @@ import { useState } from "react"; // React's useState hook
 import profileImg from "@/public/assets/post-profile.svg"; // Profile image
 import Image from "next/image"; // Next.js Image component for optimized image loading
 import SuggestionCard from "@/app/_components/SocialMedia/SuggestionCard/SuggestionCard";
-import { reGenerateIcon, addIcon } from "@/app/_utils/svgIcons";
+import { reGenerateIcon } from "@/app/_utils/svgIcons";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import postImage from "@/public/assets/post-img.svg"; // Post image
 import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
@@ -197,7 +197,7 @@ const RedditPost = () => {
                         <ImageOption
                           key={index}
                           imageSrc={postImage}
-                          inputName="image"
+                          name="image"
                         />
                       </div>
                     ))}
@@ -216,16 +216,7 @@ const RedditPost = () => {
                       <div className={styles.avatar}>
                         <Image src={profileImg} alt="avatar" />
                         <div className={styles.avatar_info}>
-                          <p>
-                            Investocracy
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 14 14"
-                              fill="none"
-                            >
-                              ...
-                            </svg>
-                          </p>
+                          <p>Investocracy</p>
                           <span>@Investocrasy</span>
                         </div>
                       </div>
@@ -240,16 +231,7 @@ const RedditPost = () => {
                       <div className={styles.avatar}>
                         <Image src={profileImg} alt="avatar" />
                         <div className={styles.avatar_info}>
-                          <p>
-                            Investocracy
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 14 14"
-                              fill="none"
-                            >
-                              ...
-                            </svg>
-                          </p>
+                          <p>Investocracy</p>
                           <span>@Investocrasy</span>
                         </div>
                       </div>
@@ -268,13 +250,9 @@ const RedditPost = () => {
         <CustomBtn
           word="Back"
           btnColor="white"
-          href="/social-media/post/twitter"
+          href="/social-media/post-creation/select-brand"
         />
-        <CustomBtn
-          word="Next"
-          btnColor="black"
-          href="/social-media/post/schadule-post"
-        />
+        <CustomBtn word="Publish" btnColor="black" />
       </div>
     </div>
   );

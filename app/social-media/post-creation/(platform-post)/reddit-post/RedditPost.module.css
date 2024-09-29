@@ -130,6 +130,8 @@
 .desctop_screen .desctop_view > p {
   color: var(--white);
   font-size: clamp(12px, calc(0.7vw + 0.1rem), 1000px);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .mobile_view {
@@ -187,5 +189,12 @@
 .mobile_screen .mobile_view > p {
   color: var(--white);
   font-size: clamp(10px, calc(0.55vw + 0.1rem), 1000px);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.desctop_screen .desctop_view > p,
+.mobile_screen .mobile_view > p {
+  white-space: pre-wrap;
 }
 /* ===== End 02- Col (2) ===== */
