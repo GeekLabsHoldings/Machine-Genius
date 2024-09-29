@@ -10,6 +10,7 @@ import {
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { useRouter } from "next/navigation";
+import { original } from "@reduxjs/toolkit";
 
 const audioIcon = (
   <svg
@@ -79,8 +80,12 @@ const LoadingSpinner = () => {
 };
 
 const ConvertedScriptPage = () => {
-  const { splitedContent, setSplitedContent, setSelectedContent } =
-    useContext(videoEditingContext);
+  const {
+    splitedContent,
+    setSplitedContent,
+    setSelectedContent,
+    selectedContent,
+  } = useContext(videoEditingContext);
   const { handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     selectedScriptSegment: ScriptSegment | null;
@@ -93,6 +98,7 @@ const ConvertedScriptPage = () => {
   });
 
   const [loadingReplaceWord, setLoadingReplaceWord] = useState(false);
+  const [loadingUpdateDatabase, setLoadingUpdateDatabase] = useState(false);
 
   const router = useRouter();
   const regenerateAudio = async () => {
@@ -175,9 +181,69 @@ const ConvertedScriptPage = () => {
     console.log(data);
   };
 
+  const updateDatabase = async () => {
+    if (
+      !pageState.selectedIncorrectWord ||
+      !pageState.selectedToBeCorrectedWord
+    ) {
+      toast.error("Please select a word to replace");
+      return;
+    } else if (
+      pageState.selectedIncorrectWord === pageState.selectedToBeCorrectedWord
+    ) {
+      toast.error("The incorrect word and the correct word are the same");
+      return;
+    }
+    setLoadingUpdateDatabase(true);
+    const response = await fetch(
+      "http://api.machinegenius.io/VideoEditing/replace-words",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          original_word: pageState.selectedIncorrectWord,
+          replacement_word: pageState.selectedToBeCorrectedWord,
+        }),
+      }
+    );
+
+    if (response.status === 401) {
+      toast.error("Session expired");
+      handleSignOut();
+      return;
+    }
+
+    if (!response.ok) {
+      toast.error("Failed to update database");
+      setLoadingUpdateDatabase(false);
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success("Database updated successfully");
+      setLoadingUpdateDatabase(false);
+    }
+  };
+
   useEffect(() => {
     console.log(splitedContent);
   }, [splitedContent]);
+
+  const backBTN = () => {
+    setSplitedContent(null);
+    setSelectedContent("");
+  };
+
+  useEffect(() => {
+    if (!splitedContent && !selectedContent) {
+      router.replace("/video-editor/create");
+    }
+  }, [splitedContent, selectedContent]);
 
   return (
     <div className="flex flex-col">
@@ -337,11 +403,16 @@ const ConvertedScriptPage = () => {
                   onClick={regenerateAudio}
                 />
               )}
-              <CustomBtn
-                btnColor="black"
-                word="Update Database"
-                paddingVal="py-[--8px] px-[--24px]"
-              />
+              {loadingUpdateDatabase ? (
+                <LoadingSpinner />
+              ) : (
+                <CustomBtn
+                  btnColor="black"
+                  word="Update Database"
+                  paddingVal="py-[--8px] px-[--24px]"
+                  onClick={updateDatabase}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -349,19 +420,11 @@ const ConvertedScriptPage = () => {
 
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          href={"/video-editor/create"}
-        />
+        <CustomBtn word={"Back"} btnColor="white" onClick={backBTN} />
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          onClick={() => {
-            setSplitedContent(null);
-            setSelectedContent("");
-            router.replace("/video-editor/create/choose-footage");
-          }}
+          href="/video-editor/create/choose-footage"
         />
       </div>
     </div>
