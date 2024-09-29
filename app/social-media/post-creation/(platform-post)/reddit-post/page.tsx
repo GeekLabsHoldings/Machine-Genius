@@ -13,7 +13,7 @@ import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
 
 const RedditPost = () => {
   const [pageState, setPageState] = useState({
-    activeTab: 2,
+    activeTab: 1,
   });
 
   // State for managing post text
@@ -101,7 +101,6 @@ const RedditPost = () => {
             </div>
 
             {/* ===== Schedule ===== */}
-
             <div
               className={`!transition-none flex flex-col gap-[--sy-10px] ${
                 pageState.activeTab === 2 ? "mt-[--sy-50px]" : ""
