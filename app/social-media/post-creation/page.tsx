@@ -3,11 +3,14 @@ import CustomBtn from "../../_components/Button/CustomBtn"; // Custom button com
 import styles from "./Post.module.css"; // Stylesheet for Post component
 
 // Options for post creation type
-const options = [
+const platformsOptions = [
   "Facebook",
   "Raddit",
   "Telegram",
   "Twitter",
+  "LinkedIn",
+  "Youtube",
+  "Instagram",
 ];
 
 // Post component
@@ -18,9 +21,13 @@ const Post = () => {
         {/* Container for post creation */}
         <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw]">
           {/* Label for selecting post creation type */}
-          <label className={styles.select_label}>I am creating a post on </label>
+          <label className={styles.select_label}>I am creating a post on</label>
           {/* Custom select input for selecting post creation type */}
-          <CustomSelectInput label="select option " options={options} />
+          <CustomSelectInput
+            label="Select Platform"
+            options={platformsOptions}
+            hoverColor="hover:bg-[#E1C655]"
+          />
         </div>
 
         {/* Buttons to navigate */}
@@ -28,7 +35,7 @@ const Post = () => {
           <CustomBtn
             word="Next" // Button text
             btnColor="black" // Button color
-            href="/social-media/post/choose-brand" // Navigation link
+            href="/social-media/post-creation/select-brand" // Navigation link
           />
         </div>
       </div>
