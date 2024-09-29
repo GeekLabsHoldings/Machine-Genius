@@ -1,0 +1,46 @@
+.image_option {
+  width: 28%;
+  position: relative;
+  border-radius: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+  border: 1px solid var(--dark);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  display: block;
+  cursor: pointer;
+}
+
+.image_option input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.image_option input:checked + .selectedOverlay::after {
+  content: "Selected";
+  color: var(--white);
+  font-weight: 700;
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.selectedOverlay::after {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.image_option input:disabled {
+  cursor: not-allowed;
+}
