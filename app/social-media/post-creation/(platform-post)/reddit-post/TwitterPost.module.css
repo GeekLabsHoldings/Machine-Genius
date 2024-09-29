@@ -167,10 +167,13 @@
   font-size: clamp(10px, calc(0.55vw + 0.1rem), 1000px);
 }
 
+
+
+
+/* ===== Start Hashtags ===== */
 .hashtags {
   display: flex;
   justify-content: space-between;
-  margin-bottom: clamp(16px, calc(1vw + 0.1rem), 1000px);
 }
 
 .hashtags > a > div {
@@ -193,3 +196,4 @@
   width: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
   height: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
 }
+/* ===== End Hashtags ===== */

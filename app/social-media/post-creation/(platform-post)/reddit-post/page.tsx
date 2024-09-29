@@ -40,6 +40,7 @@ const addIcon = (
     />
   </svg>
 );
+
 // Array of suggested Twitter post contents
 const SuggetionPosts = [
   "Stocks, the heartbeat of the marketStocks, the heartbeat of the market! ! Whether you are a seasoned investor or just getting started, understanding trends and staying informed is key to navigating this thrilling financial landscape.",
@@ -92,9 +93,7 @@ const TwitterPost = () => {
               <h6>Tweet Content Suggestions</h6>
               {/* Mapping through suggestion posts and displaying them */}
               {SuggetionPosts.map((ele) => (
-                <SuggestionCard
-                  text={ele}
-                />
+                <SuggestionCard text={ele} />
               ))}
               {/* Button to regenerate content */}
               <CustomBtn
@@ -158,47 +157,88 @@ const TwitterPost = () => {
                 </div>
               </div>
             </div>
-            {/* Section for adding hashtags */}
-            <div className={styles.hashtags}>
-              <CustomBtn
-                btnColor="white"
-                word="#SAVE"
-                icon={addIcon}
-                onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
-                  handleAddHashTags(e)
-                }
-              />
-              <CustomBtn
-                btnColor="white"
-                word="#ElonMusk"
-                icon={addIcon}
-                onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
-                  handleAddHashTags(e)
-                }
-              />
-              <CustomBtn
-                btnColor="white"
-                word="#SAVE"
-                icon={addIcon}
-                onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
-                  handleAddHashTags(e)
-                }
-              />
-              <CustomBtn
-                btnColor="white"
-                word="#TSLA"
-                icon={addIcon}
-                onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
-                  handleAddHashTags(e)
-                }
-              />
+
+            {/* ===== Start Hashtags ===== */}
+            <div className="flex flex-col gap-[--sy-14px]">
+              <div className="flex justify-between items-center">
+                <h4 className="text-[--24px] font-semibold">Hashtags</h4>
+
+                <CustomBtn
+                  btnColor="black"
+                  word="Re-Generate"
+                  icon={reGenerateIcon}
+                />
+              </div>
+
+              {/* Section for adding hashtags */}
+              <div className={styles.hashtags}>
+                <CustomBtn
+                  btnColor="white"
+                  word="#SAVE"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+                <CustomBtn
+                  btnColor="white"
+                  word="#ElonMusk"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+                <CustomBtn
+                  btnColor="white"
+                  word="#SAVE"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+                <CustomBtn
+                  btnColor="white"
+                  word="#TSLA"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+                <CustomBtn
+                  btnColor="white"
+                  word="#SAVE"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+                <CustomBtn
+                  btnColor="white"
+                  word="#ElonMusk"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+                <CustomBtn
+                  btnColor="white"
+                  word="#SAVE"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+                <CustomBtn
+                  btnColor="white"
+                  word="#TSLA"
+                  icon={addIcon}
+                  onClick={(e?: React.MouseEvent<HTMLButtonElement>) =>
+                    handleAddHashTags(e)
+                  }
+                />
+              </div>
             </div>
-            {/* Button to regenerate content */}
-            <CustomBtn
-              btnColor="black"
-              word="Re-Generate"
-              icon={reGenerateIcon}
-            />
+            {/* ===== End Hashtags ===== */}
           </div>
         </div>
       </div>
