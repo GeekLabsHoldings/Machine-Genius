@@ -1,5 +1,4 @@
 "use client";
-
 // Importing necessary libraries and components
 import React, { useState } from "react";
 import TitleOfPage from "../_components/TitleOfPage/TitleOfPage";
@@ -36,8 +35,8 @@ const sideNavLinks = [
   },
   // Post link
   {
-    name: "Post",
-    path: "/social-media/post",
+    name: "Post Creation",
+    path: "/social-media/post-creation",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 21" fill="none">
         <path
@@ -53,8 +52,8 @@ const sideNavLinks = [
   },
   // Share link
   {
-    name: "Share",
-    path: "/social-media/share",
+    name: "Post Sharing",
+    path: "/social-media/post-sharing",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 24" fill="none">
         <path
@@ -68,8 +67,8 @@ const sideNavLinks = [
   },
   // Comments link
   {
-    name: "Comments",
-    path: "/social-media/comments",
+    name: "Post Comments",
+    path: "/social-media/post-comments",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 23" fill="none">
         <path
@@ -81,25 +80,10 @@ const sideNavLinks = [
       </svg>
     ),
   },
-  // Campaigns link
-  {
-    name: "Campaigns",
-    path: "/social-media/campaigns",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 21" fill="none">
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M12.375 13.75H14.4375V4.125H12.375V13.75ZM20.625 0L15.8125 3.20856V14.6664L20.625 17.875C21.384 17.875 22 17.259 22 16.5V1.375C22 0.616 21.384 0 20.625 0ZM0 8.9375C0 11.5039 1.76069 13.1642 4.13806 13.6194L4.125 13.75V19.25C4.125 20.009 4.741 20.625 5.5 20.625H7.5625C8.3215 20.625 8.9375 20.009 8.9375 19.25V13.75H11V4.125H5.5C2.46262 4.125 0 5.90013 0 8.9375Z"
-          fill="#FFFFFB"
-        />
-      </svg>
-    ),
-  },
   // Database link
   {
-    name: "Database",
-    path: "/social-media/database",
+    name: "Posts Database",
+    path: "/social-media/posts-database",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 19" fill="none">
         <path
