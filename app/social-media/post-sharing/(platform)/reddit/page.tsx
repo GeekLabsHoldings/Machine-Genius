@@ -46,7 +46,7 @@ const Reddit = () => {
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
 
   return (
-    <div className={`${styles.postInReddit} w-full h-full pt-[0.5vw]`}>
+    <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
       {/* 01- Header: Back & Filters options & Add to list */}
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
         {/* 01-1 Back */}
@@ -61,7 +61,7 @@ const Reddit = () => {
 
         {/* 01-2 Filters options & Add to list */}
         <div className="flex justify-between items-end">
-          <div className={`${styles.redditPage} w-8/12 flex gap-[1vw]`}>
+          <div className={`${styles.filters} w-8/12 flex gap-[1vw]`}>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
               <h5>Sub Reddit</h5>
               <CustomSelectInput
@@ -139,21 +139,14 @@ const Reddit = () => {
             </div>
           </div>
           <div>
-
-
             <BasicModal
               btnWord="Add To List"
               btnIcon={addIcon}
               btnColor={"black"}
               modalTitle="Add To List"
-              forWhat={"add_post"}
+              forWhat={"add_to_list"}
             />
-
-
           </div>
-
-
-
         </div>
       </div>
 
@@ -161,6 +154,7 @@ const Reddit = () => {
       <div className="flex w-full">
         <div className={`${styles.box} w-full px-[0.5vw] `}>
           <div className={`${styles.tableContent}`}>
+            {/* 02-1 Table Header */}
             <ul
               className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
             >
@@ -301,7 +295,7 @@ const Reddit = () => {
                 </div>
               </li>
             </ul>
-
+            {/* 02-2 Table Body */}
             <div className={styles.tableBodyWrapper}>{renderBodyRows}</div>
           </div>
         </div>
