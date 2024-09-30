@@ -6,13 +6,13 @@ import AutoPostNotifications from "./_AutoPostNotifications/AutoPostNotification
 import styles from "./PostComments.module.css";
 const Comments = () => {
   const [pageState, setPageState] = useState({
-    activeTab: 1,
+    activeTab: 3,
   });
 
   return (
     <div className="flex flex-col h-full">
       {/* Tabs */}
-      <div role="tablist" className={`${styles.tabs} flex`}>
+      <div role="tablist" className={`${styles.tabs} flex mb-[--sy-25px]`}>
         <a
           role="tab"
           className={`${styles.tab} ${
@@ -42,24 +42,24 @@ const Comments = () => {
         </a>
       </div>
 
-      <div className={"flex flex-col w-full h-[80vh] py-[1vw] "}>
+      <div className={"flex flex-col w-full h-[80vh]"}>
         {/* Tab (1): Twitter Comments List */}
         {pageState.activeTab === 1 && (
-          <div className="h-[75vh] pt-[1vw]">
+          <div className="h-[75vh]">
             <TwitterCommentsList />
           </div>
         )}
 
         {/* Tab (2): Twitter Comment Campaign */}
         {pageState.activeTab === 2 && (
-          <div className="h-[75vh] pt-[1vw]">
+          <div className="h-[75vh]">
             <TwitterCommentCampaign />
           </div>
         )}
 
         {/* Tab (3): Auto Post Notifications */}
         {pageState.activeTab === 3 && (
-          <div className="h-[75vh] pt-[1vw]">
+          <div className="h-[75vh]">
             <AutoPostNotifications />
           </div>
         )}
