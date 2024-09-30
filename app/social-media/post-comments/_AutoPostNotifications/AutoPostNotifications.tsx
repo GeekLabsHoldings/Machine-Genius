@@ -1,7 +1,7 @@
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import Image from "next/image";
 import profileImg from "@/public/assets/man-img.svg";
-import styles from "./notifications.module.css";
+import styles from "./AutoPostNotifications.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 const reGenerateIcon = (
@@ -27,7 +27,7 @@ const SuggetionPosts = [
 
 const TimeRange = ["1 min", "5 min", "10 min", "15 min", "20 min"];
 // it has news and suggestion comments
-const Notifications = () => {
+const AutoPostNotifications = () => {
   return (
     <div className="py-[1.5vw] grid grid-cols-2 gap-[2vw] h-full">
       <div className="flex flex-col h-full">
@@ -189,4 +189,4 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default AutoPostNotifications;
