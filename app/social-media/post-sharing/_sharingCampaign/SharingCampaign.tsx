@@ -15,7 +15,7 @@ const SharingCampaign = () => {
       <li className="w-[20%] ">{oneCampaign.date}</li>
       <li className={` w-[20%] flex justify-center`}>
         <CustomBtn
-          href="/social-media/campaigns/share-campaign"
+          href="/social-media/post-sharing/campaign-details"
           class="videoStatusBtn"
           word={"Start Campaign"}
           btnColor="black"

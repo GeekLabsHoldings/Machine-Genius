@@ -90,3 +90,20 @@ export const closeIcon = (
     />
   </svg>
 );
+
+export const editPenIcon = (
+  <svg
+    width="24"
+    height="25"
+    viewBox="0 0 24 25"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M0 19.5007V24.5H4.99931L19.7439 9.75538L14.7446 4.75608L0 19.5007ZM23.6101 5.88925C24.13 5.36932 24.13 4.52944 23.6101 4.00951L20.4905 0.889946C19.9706 0.370018 19.1307 0.370018 18.6107 0.889946L16.1711 3.32961L21.1704 8.32891L23.6101 5.88925Z"
+      fill="#FFFFFB"
+    />
+  </svg>
+);
