@@ -120,10 +120,7 @@ const Page = () => {
       <div className="h-[78vh]">
         <div className={styles.database_table}>
           <ul className={styles.table_header}>
-            <li className="w-[5%]">
-              <span>#</span>
-            </li>
-            <li className="w-[35%]">
+            <li className="w-[30%]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 18"
@@ -178,9 +175,9 @@ const Page = () => {
                   fill="#2A2B2A"
                 />
               </svg>
-              <span>Posts</span>
+              <span>Posts Shared</span>
             </li>
-            <li className="w-[20%]">
+            <li className="w-[10%]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
@@ -193,16 +190,39 @@ const Page = () => {
               </svg>
               <span>Status</span>
             </li>
+            <li className="w-[20%]">
+              <svg
+                width="20"
+                height="14"
+                viewBox="0 0 20 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3.5 11V3C3.5 1.34315 2.15685 0 0.5 0C0.22386 0 0 0.22386 0 0.5V13.5C0 13.7761 0.22386 14 0.5 14C2.15685 14 3.5 12.6569 3.5 11Z"
+                  fill="#2A2B2A"
+                />
+                <path
+                  d="M10.5 0C12.3856 0 13.3284 2.28882e-07 13.9142 0.58579C14.5 1.17157 14.5 2.11438 14.5 4V10C14.5 11.8856 14.5 12.8284 13.9142 13.4142C13.3284 14 12.3856 14 10.5 14H9.5C7.61438 14 6.67157 14 6.08579 13.4142C5.5 12.8284 5.5 11.8856 5.5 10V4C5.5 2.11438 5.5 1.17157 6.08579 0.58579C6.67157 2.28882e-07 7.61438 0 9.5 0H10.5Z"
+                  fill="#2A2B2A"
+                />
+                <path
+                  d="M16.5 3V11C16.5 12.6569 17.8431 14 19.5 14C19.7761 14 20 13.7761 20 13.5V0.5C20 0.22386 19.7761 0 19.5 0C17.8431 0 16.5 1.34315 16.5 3Z"
+                  fill="#2A2B2A"
+                />
+              </svg>
+
+              <span>Engagement</span>
+            </li>
           </ul>
 
           <div className={styles.table_body}>
             {taleData.map((ele, idx) => (
               <ul className="w-[100%]">
-                <li className="w-[5%]">{idx}</li>
-                <li className="w-[35%]">{ele.content_name}</li>
+                <li className="w-[30%]">{ele.content_name}</li>
                 <li className="w-[20%]">{ele.date}</li>
                 <li className="w-[20%]">{ele.post}</li>
-                <li className="w-[20%]">
+                <li className="w-[10%]">
                   <span
                     className={`${styles.status_page} ${
                       ele.status === "Running"
@@ -225,6 +245,7 @@ const Page = () => {
                     {ele.status}
                   </span>
                 </li>
+                <li className="w-[20%]">{idx}</li>
               </ul>
             ))}
           </div>
