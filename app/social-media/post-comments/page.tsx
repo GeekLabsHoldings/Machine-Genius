@@ -45,21 +45,21 @@ const Comments = () => {
       <div className={"flex flex-col w-full h-[80vh] py-[1vw] "}>
         {/* Tab (1): Twitter Comments List */}
         {pageState.activeTab === 1 && (
-          <div className="tab-content h-[75vh] pt-[1vw]">
+          <div className="h-[75vh] pt-[1vw]">
             <TwitterCommentsList />
           </div>
         )}
 
         {/* Tab (2): Twitter Comment Campaign */}
         {pageState.activeTab === 2 && (
-          <div className="tab-content h-[75vh] pt-[1vw]">
+          <div className="h-[75vh] pt-[1vw]">
             <TwitterCommentCampaign />
           </div>
         )}
 
         {/* Tab (3): Auto Post Notifications */}
         {pageState.activeTab === 3 && (
-          <div className="tab-content h-[75vh] pt-[1vw]">
+          <div className="h-[75vh] pt-[1vw]">
             <AutoPostNotifications />
           </div>
         )}
