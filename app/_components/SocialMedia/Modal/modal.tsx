@@ -49,7 +49,7 @@ export default function BasicModal({
   return (
     <div>
       {/* 01- Conditional rendering of different buttons based on 'forWhat' prop */}
-      {forWhat === "add_post" ? (
+      {forWhat === "add_to_list" ? (
         <CustomBtn
           word={btnWord}
           icon={btnIcon}
@@ -98,7 +98,7 @@ export default function BasicModal({
               </div>
             </div>
             {/* Conditional rendering based on 'forWhat' prop */}
-            {forWhat === "add_post" ? (
+            {forWhat === "add_to_list" ? (
               <>
                 {/* Form fields for adding a post */}
                 <div className="flex flex-col gap-[0.7vw]">
