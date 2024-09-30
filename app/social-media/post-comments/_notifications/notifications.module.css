@@ -1,223 +1,222 @@
 .recent_notification {
-    padding: clamp(16px, calc(1.5vw + 0.1rem), 1000px);
-    border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
-    border: 2px solid #DBDBD7;
-    box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
-    -webkit-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
-    -moz-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
-    -ms-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
-    -o-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
+  padding: clamp(16px, calc(1.5vw + 0.1rem), 1000px);
+  border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
+  border: 2px solid #dbdbd7;
+  box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
+  -webkit-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
+  -moz-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
+  -ms-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
+  -o-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
 }
 .recent_notification::-webkit-scrollbar {
-    width: 0;
-    display: none;
+  width: 0;
+  display: none;
 }
 .recent_notification .item {
-    padding: clamp(16px, calc(1vw + 0.1rem), 1000px);
-    border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
-    border: 1px solid #DBDBD7;
-    box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
-    -webkit-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
-    -moz-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
-    -ms-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
-    -o-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
+  padding: clamp(16px, calc(1vw + 0.1rem), 1000px);
+  border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
+  border: 1px solid #dbdbd7;
+  box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
+  -webkit-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
+  -moz-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
+  -ms-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
+  -o-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
 }
 .recent_notification .item p {
-    color: var(--dark);
-    font-size: clamp(12px, calc(0.75vw + 0.1rem), 1000px);
+  color: var(--dark);
+  font-size: clamp(12px, calc(0.75vw + 0.1rem), 1000px);
 }
-.recent_notification .item p>a {
-    color: var(--dark);
-    font-size: clamp(12px, calc(0.75vw + 0.1rem), 1000px);
+.recent_notification .item p > a {
+  color: var(--dark);
+  font-size: clamp(12px, calc(0.75vw + 0.1rem), 1000px);
 }
 
 .avatar {
-    display: flex;
-    align-items: center;
-    gap: clamp(5px, calc(0.3vw + 0.1rem), 1000px);
-    margin-bottom: clamp(14px, calc(0.8vw + 0.1rem), 1000px);
-    padding-bottom: clamp(14px, calc(0.8vw + 0.1rem), 1000px);
-    border-bottom: solid 1px #2A2B2A;
+  display: flex;
+  align-items: center;
+  gap: clamp(5px, calc(0.3vw + 0.1rem), 1000px);
+  margin-bottom: clamp(14px, calc(0.8vw + 0.1rem), 1000px);
+  padding-bottom: clamp(14px, calc(0.8vw + 0.1rem), 1000px);
+  border-bottom: solid 1px #2a2b2a;
 }
 
 .avatar img {
-    width: clamp(40px, calc(2.2vw + 0.1rem), 1000px);
-    height: clamp(40px, calc(2.2vw + 0.1rem), 1000px);
-    border-radius: 50%;
+  width: clamp(40px, calc(2.2vw + 0.1rem), 1000px);
+  height: clamp(40px, calc(2.2vw + 0.1rem), 1000px);
+  border-radius: 50%;
 }
 
 .avatar_info {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
 }
 
 .avatar_info p {
-    font-size: clamp(12px, calc(0.7vw + 0.1rem), 1000px);
-    font-weight: 700;
-    color: var(--dark);
-    display: flex;
-    align-items: center;
-    gap: clamp(5px, calc(0.3vw + 0.1rem), 1000px);
-    line-height: normal;
+  font-size: clamp(12px, calc(0.7vw + 0.1rem), 1000px);
+  font-weight: 700;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: clamp(5px, calc(0.3vw + 0.1rem), 1000px);
+  line-height: normal;
 }
 
 .avatar_info p svg {
-    width: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
-    height: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+  width: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+  height: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
 }
 
 .avatar_info span {
-    font-size: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
-    font-weight: 400;
-    color: var(--dark);
-    line-height: normal;
+  font-size: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+  font-weight: 400;
+  color: var(--dark);
+  line-height: normal;
 }
 
 .recent_notification .item:hover {
-    background-color: #192734;
-    cursor: pointer;
+  background-color: #192734;
+  cursor: pointer;
 }
 
 .recent_notification .item:hover p {
-    color: var(--white);
+  color: var(--white);
 }
 
-.recent_notification .item:hover p>a {
-    color: var(--white);
+.recent_notification .item:hover p > a {
+  color: var(--white);
 }
 
 .recent_notification .item:hover .avatar {
-    border-bottom: solid 1px var(--white);
+  border-bottom: solid 1px var(--white);
 }
 
 .recent_notification .item:hover .avatar_info p {
-    color: var(--white);
+  color: var(--white);
 }
 
 .recent_notification .item:hover .avatar_info span {
-    color: var(--white);
+  color: var(--white);
 }
-
 
 .comments_suggestions {
-    margin-bottom: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+  margin-bottom: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
 }
 
-.comments_suggestions>a {
-    margin: clamp(10px, calc(0.6vw + 0.1rem), 1000px) 0 0 auto;
+.comments_suggestions > a {
+  margin: clamp(10px, calc(0.6vw + 0.1rem), 1000px) 0 0 auto;
 }
 
 .comments_suggestions .item {
-    position: relative;
-    padding: clamp(10px, calc(0.6vw + 0.1rem), 1000px) 0 clamp(10px, calc(0.6vw + 0.1rem), 1000px) clamp(10px, calc(0.6vw + 0.1rem), 1000px);
-    display: flex;
-    align-items: center;
-    gap: 6%;
-    border: 1px solid var(--dark);
-    border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
-    -webkit-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
-    -moz-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
-    -ms-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
-    -o-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  position: relative;
+  padding: clamp(10px, calc(0.6vw + 0.1rem), 1000px) 0
+    clamp(10px, calc(0.6vw + 0.1rem), 1000px)
+    clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+  display: flex;
+  align-items: center;
+  gap: 6%;
+  border: 1px solid var(--dark);
+  border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -webkit-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -moz-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -ms-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  -o-border-radius: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
 }
 
 .comments_suggestions .item::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    width: 1px;
-    background-color: var(--dark);
-    height: 60%;
-    left: 87%;
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  width: 1px;
+  background-color: var(--dark);
+  height: 60%;
+  left: 87%;
 }
 
 .comments_suggestions .item p {
-    width: 84%;
-    font-size: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
-    text-align: justify;
-    max-height: 7vh;
-    overflow-y: auto;
-    padding-right: 0.5vw;
+  width: 84%;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 1000px);
+  text-align: justify;
+  max-height: 7vh;
+  overflow-y: auto;
+  padding-right: 0.5vw;
 }
 
 .comments_suggestions .item a {
-    margin: 0 5.5%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  margin: 0 5.5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-
-
 .comments_suggestions .item svg {
-    width: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
-    height: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
+  width: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
+  height: clamp(14px, calc(0.9vw + 0.1rem), 1000px);
 }
 
 .comments_suggestions .item svg path {
-    fill: var(--dark);
+  fill: var(--dark);
 }
 
-
 .comments_suggestions .item:hover {
-    background-color: var(--dark);
-    cursor: pointer;
+  background-color: var(--dark);
+  cursor: pointer;
 }
 
 .comments_suggestions .item:hover p {
-    color: var(--white);
+  color: var(--white);
 }
 
 .comments_suggestions .item:hover p::-webkit-scrollbar-track {
-    background: var(--dark);
-  }
-  
-  /* Handle */
-.comments_suggestions .item:hover p::-webkit-scrollbar-thumb {
-    background: var(--white);
-    border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
+  background: var(--dark);
 }
-  
-  /* Handle on hover */
-.comments_suggestions .item:hover p::-webkit-scrollbar-thumb:hover {
-    background: var(--white);
-  }
 
+/* Handle */
+.comments_suggestions .item:hover p::-webkit-scrollbar-thumb {
+  background: var(--white);
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+}
+
+/* Handle on hover */
+.comments_suggestions .item:hover p::-webkit-scrollbar-thumb:hover {
+  background: var(--white);
+}
 
 .comments_suggestions .item:hover {
-    background-color: var(--dark);
-    cursor: pointer;
+  background-color: var(--dark);
+  cursor: pointer;
 }
 
 .comments_suggestions .item:hover::after {
-    background-color: var(--white);
+  background-color: var(--white);
 }
 
 .comments_suggestions .item:hover svg path {
-    fill: var(--white);
+  fill: var(--white);
 }
 
-
-.schadule_comment .time_range p , .schadule_comment .sleep_time p {
-    font-size: clamp(16px, calc(0.9vw + 0.1rem), 1000px);
-    font-weight: 700;
+.schadule_comment .time_range p,
+.schadule_comment .sleep_time p {
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 1000px);
+  font-weight: 700;
 }
 
-.schadule_comment .time_range p + span , .schadule_comment .sleep_time p + span {
-    font-size: clamp(16px, calc(0.6vw + 0.1rem), 1000px);
-    font-weight: 400;
-    margin:  clamp(4px, calc(0.2vw + 0.1rem), 1000px) 0 clamp(5px, calc(0.5vw + 0.1rem), 1000px) 0;
-    display: block;
-    color: #737371;
+.schadule_comment .time_range p + span,
+.schadule_comment .sleep_time p + span {
+  font-size: clamp(16px, calc(0.6vw + 0.1rem), 1000px);
+  font-weight: 400;
+  margin: clamp(4px, calc(0.2vw + 0.1rem), 1000px) 0
+    clamp(5px, calc(0.5vw + 0.1rem), 1000px) 0;
+  display: block;
+  color: #737371;
 }
