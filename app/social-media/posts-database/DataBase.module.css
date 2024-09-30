@@ -1,3 +1,8 @@
+.filters h5 {
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+
 .database_table {
   border-radius: clamp(16px, calc(1vw + 0.1rem), 1000px);
   border: 2px solid #dbdbd7;

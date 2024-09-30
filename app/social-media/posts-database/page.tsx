@@ -1,4 +1,4 @@
-// import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./DataBase.module.css";
 import {
   runningClockIcon,
@@ -90,9 +90,34 @@ const taleData = [
 const Page = () => {
   return (
     <>
-      {/* todo: filters options  */}
+      <div className={`${styles.filters} flex gap-[1vw] my-[--sy-17px]`}>
+        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+          <h5>Content Name</h5>
+          <CustomSelectInput options={["All"]} />
+        </div>
 
-      <div className="h-[85vh] py-[1.5vw] ">
+        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+          <h5>Date Published</h5>
+          <CustomSelectInput options={["All"]} />
+        </div>
+
+        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+          <h5>Posts Shared</h5>
+          <CustomSelectInput options={["All"]} />
+        </div>
+
+        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+          <h5>Status</h5>
+          <CustomSelectInput options={["All"]} />
+        </div>
+
+        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+          <h5>Engagement</h5>
+          <CustomSelectInput options={["All"]} />
+        </div>
+      </div>
+
+      <div className="h-[78vh]">
         <div className={styles.database_table}>
           <ul className={styles.table_header}>
             <li className="w-[5%]">
