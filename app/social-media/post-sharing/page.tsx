@@ -13,7 +13,7 @@ const platformOptions = ["Reddit", "Telegram", "Facebook"];
 // display all platforms
 const Share = () => {
   const [pageState, setPageState] = useState({
-    activeTab: 2,
+    activeTab: 1,
   });
 
   return (

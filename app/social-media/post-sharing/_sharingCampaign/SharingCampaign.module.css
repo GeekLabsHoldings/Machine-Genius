@@ -5,7 +5,7 @@
 }
 .tableContentWrapper {
   overflow-y: auto;
-  height: 69vh;
+  height: 71vh;
 }
 /* Track */
 .tableContentWrapper::-webkit-scrollbar-track {
