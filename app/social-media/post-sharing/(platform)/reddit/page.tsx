@@ -2,7 +2,7 @@
 import styles from "./reddit.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { ArticleNames, Brands, Posts } from "@/app/_data/data";
-import BasicModal from "@/app/_components/Modal/modal";
+import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import { useState } from "react";
 import Link from "next/link";
 import { addIcon, backIcon, redditIcon } from "@/app/_utils/svgIcons";
@@ -139,6 +139,8 @@ const Reddit = () => {
             </div>
           </div>
           <div>
+
+
             <BasicModal
               btnWord="Add To List"
               btnIcon={addIcon}
@@ -146,7 +148,12 @@ const Reddit = () => {
               modalTitle="Add To List"
               forWhat={"add_post"}
             />
+
+
           </div>
+
+
+
         </div>
       </div>
 

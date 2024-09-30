@@ -3,7 +3,7 @@ import { AccountsData, ArticleNames, Brands } from '@/app/_data/data';
 // import { useRouter } from "next/navigation";
 import { useState } from 'react';
 import CustomSelectInput from '@/app/_components/CustomSelectInput/CustomSelectInput';
-import BasicModal from '@/app/_components/Modal/modal';
+import BasicModal from '@/app/_components/SocialMedia/Modal/modal';
 import CustomCheckBox from '@/app/_components/CustomCheckBox/CustomCheckBox';
 import styles from './setting.module.css';
 

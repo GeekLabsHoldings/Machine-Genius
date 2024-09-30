@@ -1,7 +1,7 @@
 'use client'
 import { AccountsData} from '@/app/_data/data';
 import { useState } from 'react';
-import BasicModal from '@/app/_components/Modal/modal';
+import BasicModal from '@/app/_components/SocialMedia/Modal/modal';
 
 import styles from './account-list.module.css';
 

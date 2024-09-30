@@ -6,7 +6,7 @@ import {
   Brands,
   Posts,
 } from "@/app/_data/data";
-import BasicModal from '@/app/_components/Modal/modal';
+import BasicModal from '@/app/_components/SocialMedia/Modal/modal';
 import { useState } from 'react';
 import Link from 'next/link';
 

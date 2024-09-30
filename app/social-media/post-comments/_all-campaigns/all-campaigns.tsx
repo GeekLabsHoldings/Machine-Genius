@@ -2,7 +2,7 @@
 import { AccountsData } from '@/app/_data/data';
 import styles from './all-campaigns.module.css'
 import { useState } from 'react';
-import BasicModal from '@/app/_components/Modal/modal';
+import BasicModal from '@/app/_components/SocialMedia/Modal/modal';
 
 
 const AllCampaigns = ()=>{
