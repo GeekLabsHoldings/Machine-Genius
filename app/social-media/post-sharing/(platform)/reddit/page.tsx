@@ -5,85 +5,61 @@ import { ArticleNames, Brands, Posts } from "@/app/_data/data";
 import BasicModal from "@/app/_components/Modal/modal";
 import { useState } from "react";
 import Link from "next/link";
+import { addIcon, backIcon, redditIcon } from "@/app/_utils/svgIcons";
+
+const renderBodyRows = Posts.map((onePost, idx) => (
+  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
+    <li className="w-2/12">{onePost.subReddit}</li>
+    <li className="w-3/12 ">
+      <a href={onePost.link}>{onePost.link}</a>
+    </li>
+    <li className={`w-2/12 `}>
+      {onePost.subscribers > 999
+        ? onePost.subscribers / 100 / 10.0 + "k"
+        : onePost.subscribers}
+    </li>
+    <li className="w-1/12 ">{onePost.niche}</li>
+    <li className="w-2/12  ">
+      <span
+        className={
+          onePost.brand === "PST USA"
+            ? "bg-[#31B2E9B2]"
+            : onePost.brand === "Canada"
+            ? "bg-[#E9313EB2]"
+            : onePost.brand === "PST Asia"
+            ? "bg-[#E1C655B2]"
+            : onePost.brand === "Investocracy"
+            ? "bg-[#5FA85BB5]"
+            : "bg-[#F36F24B2]"
+        }
+      >
+        {onePost.brand}
+      </span>
+    </li>
+    <li className="w-2/12 ">{onePost.engagement}</li>
+  </ul>
+));
 
 const Reddit = () => {
-  const renderRedditPosts = Posts.map((onePost, idx) => (
-    <ul key={idx} className={`${styles.tableBody} borderBottom articleRow `}>
-      <li className="w-2/12">{onePost.subReddit}</li>
-      <li className="w-3/12 ">
-        <a href={onePost.link}>{onePost.link}</a>
-      </li>
-      <li className={`w-2/12 `}>
-        {onePost.subscribers > 999
-          ? onePost.subscribers / 100 / 10.0 + "k"
-          : onePost.subscribers}
-      </li>
-      <li className="w-1/12 ">{onePost.niche}</li>
-      <li className="w-2/12  ">
-        {" "}
-        <span
-          className={
-            onePost.brand === "PST USA"
-              ? "bg-[#31B2E9B2]"
-              : onePost.brand === "Canada"
-              ? "bg-[#E9313EB2]"
-              : onePost.brand === "PST Asia"
-              ? "bg-[#E1C655B2]"
-              : onePost.brand === "Investocracy"
-              ? "bg-[#5FA85BB5]"
-              : "bg-[#F36F24B2]"
-          }
-        >
-          {onePost.brand}
-        </span>
-      </li>
-      <li className="w-2/12 ">{onePost.engagement}</li>
-    </ul>
-  ));
   // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
 
   return (
     <div className={`${styles.postInReddit} w-full h-full pt-[0.5vw]`}>
-      {/* filters options to filter and edit data in table */}
+      {/* 01- Header: Back & Filters options & Add to list */}
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
+        {/* 01-1 Back */}
         <Link
           href="/social-media/share"
-          className={` flex items-center gap-[1vw]`}
+          className={` flex items-center gap-[1vw] w-fit`}
         >
-          <svg
-            viewBox="0 0 11 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className={`cursor-pointer ${styles.backArrow}`}
-          >
-            <path
-              d="M11 20.8993L11 1.09878C10.9996 0.898304 10.9627 0.701801 10.8932 0.530416C10.8237 0.359031 10.7244 0.219253 10.6058 0.126133C10.4873 0.03301 10.354 -0.00993011 10.2203 0.0019317C10.0867 0.0137935 9.95773 0.080009 9.84734 0.19345L0.296979 10.0937C-0.0989937 10.504 -0.0989937 11.4919 0.296979 11.9033L9.84734 21.8036C9.9575 21.9182 10.0865 21.9854 10.2204 21.9979C10.3543 22.0104 10.4879 21.9677 10.6067 21.8745C10.7255 21.7813 10.825 21.6411 10.8943 21.4692C10.9637 21.2973 11.0002 21.1002 11 20.8993Z"
-              fill="#2A2B2A"
-            />
-          </svg>
+          {backIcon}
           <h3>Reddit</h3>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="31"
-            height="30"
-            viewBox="0 0 31 30"
-            fill="none"
-          >
-            <path
-              d="M15.5 0C7.22656 0 0.5 6.72656 0.5 15C0.5 23.2735 7.22656 30 15.5 30C23.7735 30 30.5 23.2735 30.5 15C30.5 6.72656 23.7735 0 15.5 0Z"
-              fill="#FC471E"
-            />
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M19.8067 7.40333C19.7931 7.48939 19.786 7.5777 19.786 7.6677C19.786 8.57631 20.5056 9.31292 21.3931 9.31292C22.2807 9.31292 23.0003 8.57631 23.0003 7.6677C23.0003 6.75905 22.2807 6.02246 21.3931 6.02246C20.9977 6.02246 20.6355 6.16871 20.3555 6.41127L16.1819 5.35742L14.6735 11.5343C12.6668 11.6695 10.8621 12.2916 9.5006 13.2308C9.11403 12.8427 8.58447 12.6034 8.00028 12.6034C6.81681 12.6034 5.85742 13.5856 5.85742 14.797C5.85742 15.6402 6.32206 16.3722 7.0035 16.7394C6.95426 17.0011 6.92885 17.2681 6.92885 17.5391C6.92885 20.8709 10.7664 23.5717 15.5003 23.5717C20.2342 23.5717 24.0717 20.8709 24.0717 17.5391C24.0717 17.2681 24.0463 17.0011 23.997 16.7394C24.6785 16.3722 25.1431 15.6402 25.1431 14.797C25.1431 13.5856 24.1838 12.6034 23.0003 12.6034C22.4161 12.6034 21.8865 12.8427 21.5 13.2308C20.0167 12.2076 18.0073 11.5607 15.7839 11.5099L16.9615 6.68753L19.8067 7.40333ZM11.7503 18.0876C12.6379 18.0876 13.3574 17.351 13.3574 16.4423C13.3574 15.5336 12.6379 14.797 11.7503 14.797C10.8627 14.797 10.1431 15.5336 10.1431 16.4423C10.1431 17.351 10.8627 18.0876 11.7503 18.0876ZM19.2503 18.0876C20.1379 18.0876 20.8574 17.351 20.8574 16.4423C20.8574 15.5336 20.1379 14.797 19.2503 14.797C18.3627 14.797 17.6431 15.5336 17.6431 16.4423C17.6431 17.351 18.3627 18.0876 19.2503 18.0876ZM12.0474 19.8249C11.8013 19.6569 11.4687 19.725 11.3046 19.977C11.1404 20.2291 11.207 20.5696 11.4531 20.7376C12.6189 21.5331 14.0596 21.9309 15.5003 21.9309C16.9409 21.9309 18.3817 21.5331 19.5474 20.7376C19.7936 20.5696 19.8601 20.2291 19.696 19.977C19.5319 19.725 19.1993 19.6569 18.9531 19.8249C17.9672 20.4977 16.7338 20.8341 15.5003 20.8341C14.7688 20.8341 14.0372 20.7158 13.3574 20.4792C12.8909 20.3168 12.4486 20.0987 12.0474 19.8249Z"
-              fill="white"
-            />
-          </svg>
+          {redditIcon}
         </Link>
 
+        {/* 01-2 Filters options & Add to list */}
         <div className="flex justify-between items-end">
           <div className={`${styles.redditPage} w-8/12 flex gap-[1vw]`}>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
@@ -165,22 +141,7 @@ const Reddit = () => {
           <div>
             <BasicModal
               btnWord="Add To List"
-              btnIcon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="11"
-                  viewBox="0 0 11 11"
-                  fill="none"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
-                    fill="#FFFFFB"
-                  />
-                </svg>
-              }
+              btnIcon={addIcon}
               btnColor={"black"}
               modalTitle="Add To List"
               forWhat={"add_post"}
@@ -189,7 +150,7 @@ const Reddit = () => {
         </div>
       </div>
 
-      {/* // table has all reddit posts and its data  */}
+      {/* 02- Table  */}
       <div className="flex w-full">
         <div className={`${styles.box} w-full px-[0.5vw] `}>
           <div className={`${styles.tableContent}`}>
@@ -333,7 +294,8 @@ const Reddit = () => {
                 </div>
               </li>
             </ul>
-            <div className={styles.tableBodyWrapper}>{renderRedditPosts}</div>
+
+            <div className={styles.tableBodyWrapper}>{renderBodyRows}</div>
           </div>
         </div>
       </div>

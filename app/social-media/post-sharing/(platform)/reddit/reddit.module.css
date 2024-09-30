@@ -80,10 +80,6 @@
   font-weight: 500;
   font-size: clamp(10px, calc(0.7vw + 0.1rem), 200px);
 }
-.backArrow {
-  width: clamp(10px, calc(0.5vw + 0.1rem), 60px);
-  height: clamp(10px, calc(1vw + 0.1rem), 60px);
-}
 .redditFace {
   width: clamp(14px, calc(1.2vw + 0.1rem), 70px);
   height: clamp(14px, calc(1.2vw + 0.1rem), 70px);

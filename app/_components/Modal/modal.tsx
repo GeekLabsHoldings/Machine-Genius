@@ -56,6 +56,7 @@ export default function BasicModal({
           icon={btnIcon}
           btnColor={btnColor}
           onClick={handleOpen}
+          paddingVal="py-[--10px] px-[--22px]"
         />
       ) : forWhat === "add_account" ? (
         <CustomBtn
@@ -63,14 +64,14 @@ export default function BasicModal({
           icon={btnIcon}
           btnColor={btnColor}
           onClick={handleOpen}
-          paddingVal="py-[0.5vw] px-[1vw]"
+          paddingVal="py-[--10px] px-[--22px]"
         />
       ) : (
         <CustomBtn
           word={btnWord}
           btnColor={btnColor}
           onClick={handleOpen}
-          paddingVal="py-[0.5vw] px-[1vw]"
+          paddingVal="py-[--10px] px-[--22px]"
         />
       )}
       <Modal
