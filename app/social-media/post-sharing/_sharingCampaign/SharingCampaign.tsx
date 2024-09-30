@@ -26,8 +26,8 @@ const SharingCampaign = () => {
   ));
 
   return (
-    <div className={`${styles.box} w-full px-[0.5vw] `}>
-      <div className={`${styles.tableContent}`}>
+    <div className={`${styles.box} w-full px-[0.5vw] !h-full`}>
+      <div className="!h-[77vh]">
         <ul
           className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
         >

@@ -5,7 +5,8 @@ import { useState } from "react";
 import PlatformBox from "@/app/_components/SocialMedia/PlatformBox/PlatformBox";
 import { redditIcon } from "@/app/_utils/svgIcons";
 // Tab (2): Sharing Campaign
-import Sharing from "./_sharingCampaign/SharingCampaign";
+import SharingCampaign from "./_sharingCampaign/SharingCampaign";
+import AllCampaigns from "./_allCampaigns/AllCampaigns";
 
 const platformOptions = ["Reddit", "Telegram", "Facebook"];
 
@@ -79,13 +80,10 @@ const Share = () => {
         )}
 
         {/* ===== Tab (2): Sharing Campaign ===== */}
-        {pageState.activeTab === 2 && (
-          <div className={"flex flex-col w-full h-[75vh]"}>
-            <Sharing />
-          </div>
-        )}
+        {pageState.activeTab === 2 && <SharingCampaign />}
 
         {/* ===== Tab (3): All Campaigns ===== */}
+        {pageState.activeTab === 3 && <AllCampaigns />}
       </div>
     </div>
   );
