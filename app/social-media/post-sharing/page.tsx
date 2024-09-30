@@ -63,7 +63,7 @@ const Share = () => {
                   key={i}
                   platformIcon={redditIcon}
                   platformName={"Reddit"}
-                  platformRoute={"/social-media/share/reddit"}
+                  platformRoute={"/social-media/post-sharing/reddit"}
                   platformColor={"#fc471e"}
                   platformCards={Array.from({ length: 4 }).map((_, i) => ({
                     title: "Wall Street Bets",
