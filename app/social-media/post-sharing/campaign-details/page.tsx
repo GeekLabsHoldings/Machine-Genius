@@ -149,8 +149,11 @@ const ShareCampaign = () => {
             >
               {/* Sharing List */}
               <div>
-                <label htmlFor="">Sharing List</label>
-                <CustomSelectInput options={sharingListOptions} />
+                <label htmlFor="">Posting Time</label>
+                <CustomSelectInput
+                  options={["10:00 AM", "11:00 AM"]}
+                  label={"8:30 PM GMT"}
+                />
               </div>
             </div>
           </div>
