@@ -4,13 +4,15 @@ import styles from "./share.module.css";
 import { useState } from "react";
 import PlatformBox from "@/app/_components/SocialMedia/PlatformBox/PlatformBox";
 import { redditIcon } from "@/app/_utils/svgIcons";
+// Tab (2): Sharing Campaign
+import Sharing from "./_sharingCampaign/SharingCampaign";
 
 const platformOptions = ["Reddit", "Telegram", "Facebook"];
 
 // display all platforms
 const Share = () => {
   const [pageState, setPageState] = useState({
-    activeTab: 1,
+    activeTab: 2,
   });
 
   return (
@@ -77,6 +79,12 @@ const Share = () => {
         )}
 
         {/* ===== Tab (2): Sharing Campaign ===== */}
+        {pageState.activeTab === 2 && (
+          <div className={"flex flex-col w-full h-[75vh]"}>
+            <Sharing />
+          </div>
+        )}
+
         {/* ===== Tab (3): All Campaigns ===== */}
       </div>
     </div>

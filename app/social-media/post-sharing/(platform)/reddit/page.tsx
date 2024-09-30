@@ -51,7 +51,7 @@ const Reddit = () => {
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
         {/* 01-1 Back */}
         <Link
-          href="/social-media/share"
+          href="/social-media/post-sharing"
           className={` flex items-center gap-[1vw] w-fit`}
         >
           {backIcon}
