@@ -108,12 +108,13 @@ const ConvertedScriptPage = () => {
     ) {
       toast.error("Please select a word to replace");
       return;
-    } else if (
-      pageState.selectedIncorrectWord === pageState.selectedToBeCorrectedWord
-    ) {
-      toast.error("The incorrect word and the correct word are the same");
-      return;
     }
+    // else if (
+    //   pageState.selectedIncorrectWord === pageState.selectedToBeCorrectedWord
+    // ) {
+    //   toast.error("The incorrect word and the correct word are the same");
+    //   return;
+    // }
 
     setLoadingReplaceWord(true);
     const updatedSplitedContent = splitedContent
@@ -158,9 +159,32 @@ const ConvertedScriptPage = () => {
       return;
     }
 
-    const data = await response.json();
+    let data = await response.json();
+
+    const { index, url, duration } = data.audioPath;
+
+    data = {
+      ...data,
+      audioPath: {
+        index,
+        url: `${url}?t=${new Date().getTime()}`,
+        duration,
+      },
+    };
 
     if (data.success) {
+      setPageState((prevState) => {
+        if (prevState.selectedScriptSegment?.audioPath.index === index) {
+          return {
+            ...prevState,
+            selectedScriptSegment: {
+              ...prevState.selectedScriptSegment,
+              audioPath: data.audioPath,
+            },
+          };
+        }
+        return prevState;
+      });
       setSplitedContent((prevState: ScriptSegment[]) => {
         return prevState.map((segment: ScriptSegment) => {
           if (
@@ -175,11 +199,22 @@ const ConvertedScriptPage = () => {
           return segment;
         });
       });
-      setLoadingReplaceWord(false);
+      toast.success("Audio regenerated successfully");
     }
 
     console.log(data);
   };
+
+  useEffect(() => {
+    if (loadingReplaceWord) {
+      setLoadingReplaceWord(false);
+      console.log(pageState.selectedScriptSegment);
+    }
+  }, [splitedContent]);
+
+  useEffect(() => {
+    console.log(pageState.selectedScriptSegment);
+  }, [pageState.selectedScriptSegment]);
 
   const updateDatabase = async () => {
     if (
