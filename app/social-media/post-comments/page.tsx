@@ -6,7 +6,7 @@ import AutoPostNotifications from "./_AutoPostNotifications/AutoPostNotification
 import styles from "./PostComments.module.css";
 const Comments = () => {
   const [pageState, setPageState] = useState({
-    activeTab: 2,
+    activeTab: 1,
   });
 
   return (

@@ -10,7 +10,7 @@ import {
   pausedIcon,
 } from "@/app/_utils/svgIcons";
 import { useState } from "react";
-import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
+
 
 //   return data about account , number of comments and campaign type
 const renderAccounts = AccountsData.map((oneAccount, idx) => (
