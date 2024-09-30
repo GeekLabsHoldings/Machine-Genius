@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 interface AssignedVideo {
   _id: string;
   user_id: string;
+  user_name: string;
   content_title: string;
   content: string;
   brand: string;
@@ -45,7 +46,7 @@ const VideoCreatePage = () => {
     }
 
     if (bodyMatch) {
-      result.selectedContent = bodyMatch[1].trim();
+      result.selectedContent = bodyMatch[1].trim().slice(0, 1500);
     }
 
     return result;
@@ -165,7 +166,7 @@ const VideoCreatePage = () => {
             "bg-[#F36F24B2]"
           }
         >
-          {video.user_id}
+          {video?.user_name?.split("@")[0]}
         </span>
       </li>
       {/* lead user to convert article to video or disply it after conversion */}
