@@ -1,12 +1,12 @@
 "use client";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext } from "react";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { v4 as uuidv4 } from "uuid";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
 const initialContextState = {
-  // ===== 01. Start Content Creator =====
+  // ===== 01. Start Newsletter =====
 
   selectedBrand: "" as any,
   setSelectedBrand: (brand: any) => {},
@@ -30,7 +30,7 @@ const initialContextState = {
   setSubjectLine: (lines: any) => {},
   openingLine: [] as any,
   setOpeningLine: (lines: any) => {},
-  // ===== 01. End Content Creator =====
+  // ===== 01. End Newsletter =====
 };
 
 // 1- create context, export it
@@ -158,7 +158,7 @@ export default function CreateNewsletterContextProvider({
 
   // Create a context value object
   const contextValue = {
-    // ===== 01. Start Content Creator =====
+    // ===== 01. Start Newsletter =====
     selectedBrand,
     setSelectedBrand,
     collectedData,
@@ -181,7 +181,7 @@ export default function CreateNewsletterContextProvider({
     setSubjectLine,
     openingLine,
     setOpeningLine,
-    // ===== 01. End Content Creator =====
+    // ===== 01. End Newsletter =====
   };
 
   return (
