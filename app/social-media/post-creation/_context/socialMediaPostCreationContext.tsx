@@ -12,7 +12,7 @@ interface ContextState {
   setSelectedPlatform: (platform: PlatformEnum | null) => void;
 }
 
-enum PlatformEnum {
+export enum PlatformEnum {
   TWITTER = "TWITTER",
   FACEBOOK = "FACEBOOK",
   LINKEDIN = "LINKEDIN",
