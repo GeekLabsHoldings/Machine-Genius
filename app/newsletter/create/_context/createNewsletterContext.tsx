@@ -51,16 +51,19 @@ export default function CreateNewsletterContextProvider({
 
   const [subjectLine, setSubjectLine] = useSessionStorage(
     "Newsletter-subjectLine",
-    ""
+    "",
+    { isSerializable: false }
   );
   const [openingLine, setOpeningLine] = useSessionStorage(
     "Newsletter-openingLine",
-    ""
+    "",
+    { isSerializable: false }
   );
 
   const [selectedBrand, setSelectedBrand] = useSessionStorage(
     "Newsletter-selectedBrand",
-    ""
+    "",
+    { isSerializable: false }
   );
 
   const [collectedData, setCollectedData] = useSessionStorage(
@@ -148,7 +151,8 @@ export default function CreateNewsletterContextProvider({
 
   const [selectedContentTitle, setSelectedContentTitle] = useSessionStorage(
     "Newsletter-selectedContentTitle",
-    ""
+    "",
+    { isSerializable: false }
   );
 
   const [lockedGeneratedTitles, setLockedGeneratedTitles] = useSessionStorage(
