@@ -216,7 +216,6 @@ const ConvertedScriptPage = () => {
           return {
             ...prevState,
             selectedScriptSegment: {
-              ...prevState.selectedScriptSegment,
               ...prevState.selectedScriptSegment!,
               audioPath: data.audioPath,
             },
