@@ -2,20 +2,63 @@
 // Import necessary modules and components
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom Button component
 import styles from "./PublishPost.module.css"; // CSS module for styling
-import { useState } from "react"; // React's useState hook
+import { useContext, useState } from "react"; // React's useState hook
 import profileImg from "@/public/assets/post-profile.svg"; // Profile image
 import Image from "next/image"; // Next.js Image component for optimized image loading
 import { reGenerateIcon } from "@/app/_utils/svgIcons";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import postImage from "@/public/assets/post-img.svg"; // Post image
 import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
+import { socialMediaPostCreationContext } from "../../../_context/socialMediaPostCreationContext";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 const PublishPost = () => {
+  const { authState, handleSignOut } = useContext(globalContext);
+  const { postCaption } = useContext(socialMediaPostCreationContext);
+
   // const [pageState, setPageState] = useState({
   // });
 
-  // State for managing post text
-  const [PostText, setPostText] = useState<string>("");
+  async function handleAddPost() {
+    if (!postCaption) {
+      toast.error("No post caption provided!");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/social-media/linkedin/add-post`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            brand: "Geek Labs Holdings",
+            content: postCaption,
+            // "asset":"urn:li:digitalmediaAsset:D5622AQHi_q2dnUqL6Q"
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.hashTags) {
+        return json.hashTags.match(/#\w+/g);
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleGenerateHashtags:", error);
+    }
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -104,7 +147,7 @@ const PublishPost = () => {
                     <span>@Investocrasy</span>
                   </div>
                 </div>
-                <p>{PostText}</p>
+                <p>{postCaption}</p>
               </div>
             </div>
 
@@ -119,7 +162,7 @@ const PublishPost = () => {
                     <span>@Investocrasy</span>
                   </div>
                 </div>
-                <p>{PostText}</p>
+                <p>{postCaption}</p>
               </div>
             </div>
           </div>
@@ -131,7 +174,7 @@ const PublishPost = () => {
         <CustomBtn
           word="Back"
           btnColor="white"
-          href="/social-media/post-creation/select-brand"
+          href="/social-media/post-creation/linkedin-post/"
         />
         <CustomBtn word="Publish" btnColor="black" />
       </div>
