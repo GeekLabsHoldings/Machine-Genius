@@ -8,8 +8,10 @@ import { globalContext } from "@/app/_context/store";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
 interface ContextState {
-  selectedPlatform: PlatformEnum | null;
-  setSelectedPlatform: (platform: PlatformEnum | null) => void;
+  selectedPlatform: PlatformEnum | "";
+  setSelectedPlatform: (platform: PlatformEnum | "") => void;
+  selectedBrand: string | "";
+  setSelectedBrand: (brand: string | "") => void;
 }
 
 export enum PlatformEnum {
@@ -22,10 +24,23 @@ export enum PlatformEnum {
   INSTAGRAM = "INSTAGRAM",
 }
 
+enum brandEnum {
+  PST = "PST",
+  STREET_POLITICS = "Street Politics",
+  MOVIE_MYTH = "Movie Myth",
+  INVESTOCRACY = "Investocracy",
+  MEDIA_PROJECTS = "Media Projects",
+  PST_CANADA = "PST Canada",
+  GEEK_LABS = "Geek Labs Holdings",
+  machinegenius = "r/machinegenius",
+}
+
 const initialContextState: ContextState = {
   // ===== 01. Start =====
-  selectedPlatform: null,
+  selectedPlatform: "",
   setSelectedPlatform: () => {},
+  selectedBrand: "",
+  setSelectedBrand: () => {},
   // ===== 01. End =====
 };
 
@@ -44,11 +59,15 @@ export default function SocialMediaPostCreationContextProvider({
   //   const path = usePathname();
 
   // ===== 01. Start =====
-  const [selectedPlatform, setSelectedPlatform] =
-    useSessionStorage<PlatformEnum | null>(
-      "SocialMediaPostCreation-selectedPlatform",
-      null
-    );
+  const [selectedPlatform, setSelectedPlatform] = useSessionStorage<
+    PlatformEnum | ""
+  >("SocialMediaPostCreation-selectedPlatform", "", { isSerializable: false });
+
+  const [selectedBrand, setSelectedBrand] = useSessionStorage<string | "">(
+    "SocialMediaPostCreation-selectedBrand",
+    "",
+    { isSerializable: false }
+  );
   // ===== 01. End =====
 
   // Create a context value object
@@ -56,6 +75,8 @@ export default function SocialMediaPostCreationContextProvider({
     // ===== 01. Start =====
     selectedPlatform,
     setSelectedPlatform,
+    selectedBrand,
+    setSelectedBrand,
     // ===== 01. End =====
   };
 
