@@ -6,6 +6,8 @@ import { videoEditingContext } from "@/app/_context/videoEditingContext";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
 
@@ -31,7 +33,9 @@ interface SelectedFootage {
 }
 
 const ChooseFootagePage = () => {
+  const { handleSignOut } = useContext(globalContext);
   const router = useRouter();
+  const [search, setSearch] = useState<string>("");
   const { splitedContent, setSplitedContent } = useContext(videoEditingContext);
   const [pageState, setPageState] = useState<{
     selectedScriptSegment: ScriptSegment | null;
@@ -40,6 +44,7 @@ const ChooseFootagePage = () => {
     selectedScriptSegment: null,
     selectedScriptSegmentIndex: null,
   });
+  const [searchFootage, setSearchFootage] = useState<string[]>([]);
 
   // State to hold selected footage
   function selectedFootageInitValue() {
@@ -184,7 +189,85 @@ const ChooseFootagePage = () => {
 
       // Navigate to the next page
       // router.push("/video-editor/create/video-preview");
+      sessionStorage.setItem(
+        "VideoEditing-splitedContent",
+        JSON.stringify(updatedParagraphJson)
+      );
+      router.replace("/video-editor/create/video-preview");
+    } else {
+      toast.error("No data available!");
     }
+  };
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!search) {
+      toast.error("Please enter a keyword to search for footage!");
+    }
+
+    const fetchFootage = async (search: string) => {
+      const response = await fetch(
+        "http://api.machinegenius.io/VideoEditing/get-img",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ searchImgKeyword: search }),
+        }
+      );
+
+      if (response.status === 401) {
+        toast.error("Session expired");
+        handleSignOut();
+        return;
+      }
+
+      if (!response.ok) {
+        toast.error("Failed to fetch footage");
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log(`data`, data);
+        setSearchFootage(data.images);
+      } else {
+        toast.error("Failed to fetch footage");
+      }
+    };
+
+    try {
+      fetchFootage(search);
+    } catch (error) {
+      console.error(`Error fetching footage:`, error);
+    }
+  };
+
+  const handleRemoveFootage = (imageUrl: string) => {
+    setSelectedFootage(
+      (prevSelectedFootage) =>
+        prevSelectedFootage
+          .map((sf) => {
+            if (sf.imageUrl.includes(imageUrl)) {
+              const updatedImageUrls = sf.imageUrl.filter(
+                (url) => url !== imageUrl
+              );
+              if (updatedImageUrls.length === 0) {
+                return null;
+              } else {
+                return {
+                  ...sf,
+                  imageUrl: updatedImageUrls,
+                };
+              }
+            }
+            return sf;
+          })
+          .filter((sf) => sf !== null) as SelectedFootage[]
+    );
   };
 
   return (
@@ -215,12 +298,13 @@ const ChooseFootagePage = () => {
                           ? styles.active
                           : ""
                       }`}
-                      onClick={() =>
+                      onClick={() => {
                         setPageState((prevState) => ({
                           ...prevState,
                           selectedScriptSegment: scriptSegment,
-                        }))
-                      }
+                        }));
+                        setSearchFootage([]);
+                      }}
                     >
                       {scriptSegment.text}
                     </p>
@@ -238,14 +322,92 @@ const ChooseFootagePage = () => {
         <div className="w-1/2 flex flex-col gap-[1vw]">
           <div className="flex justify-between">
             <h3 className="font-bold text-[--24px]">Footage Found</h3>
+            <CustomBtn
+              icon={
+                <svg
+                  viewBox="0 0 14 13"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-[--14px] h-[--13px]"
+                >
+                  <path
+                    d="M1.26254 6.49635C0.81827 6.55953 0.509357 6.97089 0.572489 7.41516C0.765701 8.77361 1.38385 10.0362 2.33838 11.0219C3.29298 12.0075 4.53497 12.6659 5.88657 12.9026C7.23816 13.1392 8.62998 12.9421 9.86269 12.3394C10.1497 12.1991 10.4247 12.0385 10.6858 11.8593C11.1298 11.5546 11.74 11.5579 12.1208 11.9387C12.6326 12.4506 13.5078 12.088 13.5078 11.3642V9.12498C13.5078 8.57269 13.0601 8.12498 12.5078 8.12498H10.2686C9.54474 8.12498 9.18223 9.00013 9.69408 9.51201C10.0176 9.83548 10.0074 10.3701 9.62118 10.6153C9.46934 10.7117 9.31173 10.8 9.14895 10.8796C8.22442 11.3316 7.18056 11.4794 6.16687 11.3019C5.1532 11.1244 4.22167 10.6307 3.50578 9.89137C2.7898 9.15207 2.32619 8.20527 2.18132 7.18636C2.11811 6.7421 1.70674 6.43317 1.26254 6.49635ZM4.15293 0.660543C3.86389 0.801857 3.58708 0.963766 3.32436 1.14447C2.88225 1.44855 2.27425 1.44537 1.89483 1.06594C1.38296 0.554093 0.507812 0.916605 0.507812 1.64047V3.875C0.507812 4.42729 0.955528 4.875 1.50781 4.875H3.74238C4.46623 4.875 4.82877 3.99983 4.31689 3.48799C3.99455 3.16564 4.00455 2.63303 4.38905 2.38813C4.54255 2.29037 4.70195 2.20093 4.86663 2.1204C5.79121 1.6684 6.83507 1.52056 7.84876 1.69807C8.86245 1.87558 9.79396 2.36934 10.5099 3.10861C11.2258 3.84788 11.6894 4.79476 11.8343 5.81363C11.8975 6.25789 12.3089 6.56681 12.7531 6.50363C13.1974 6.44045 13.5063 6.02909 13.4431 5.58483C13.2499 4.22635 12.6318 2.96385 11.6772 1.97815C10.7227 0.992452 9.48064 0.334114 8.12905 0.0974319C6.77747 -0.139249 5.38565 0.0578646 4.15293 0.660543Z"
+                    fill="#FFFFFB"
+                  />
+                </svg>
+              }
+              word="Load More"
+              btnColor="black"
+              paddingVal="py-[--8px] px-[--24px]"
+            />
           </div>
           {/* holds sample of footage */}
+          {/* Search bar */}
+          <form
+            className="flex w-full border border-solid border-[#ACACAC] rounded-[--10px]"
+            onSubmit={(e) => {
+              handleSearch(e);
+            }}
+          >
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search"
+              className="outline-none flex-1 pl-[--16px]"
+            />
+            <CustomBtn
+              icon={
+                <svg
+                  className="w-[--24px] h-[--24px] text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeWidth={2}
+                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              }
+              btnColor="black"
+              paddingVal="py-[--8px] px-[--20px]"
+              type="submit"
+            />
+          </form>
 
-          <div className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}>
+          <div
+            className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
+          >
             <div className="flex gap-[1.25vw] pb-[--sy-5px]">
               {selectedSegment ? (
-                selectedSegment.keywordsAndImages.length > 0 &&
-                selectedSegment.keywordsAndImages[0].imageUrl.length > 0 ? (
+                searchFootage.length > 0 ? (
+                  searchFootage.map((imageUrl: string) => (
+                    <div className="!w-[194px]" key={uuidv4()}>
+                      <ImageCard
+                        inputName="select-footage"
+                        imgSrc={imageUrl}
+                        checked={selectedFootage.some((sf) =>
+                          sf.imageUrl.includes(imageUrl)
+                        )}
+                        onChange={(e) => {
+                          if (pageState.selectedScriptSegmentIndex !== null) {
+                            handleSelectFootage(
+                              e,
+                              pageState.selectedScriptSegmentIndex
+                            );
+                          } else {
+                            toast.error("Please select a paragraph!");
+                          }
+                        }}
+                      />
+                    </div>
+                  ))
+                ) : selectedSegment.keywordsAndImages.length > 0 &&
+                  selectedSegment.keywordsAndImages[0].imageUrl.length > 0 ? (
                   selectedSegment.keywordsAndImages[0].imageUrl.map(
                     (imageUrl: string) => (
                       <div className="!w-[194px]" key={uuidv4()}>
@@ -275,6 +437,28 @@ const ChooseFootagePage = () => {
                     <p>No footage found!</p>
                   </div>
                 )
+              ) : searchFootage.length > 0 ? (
+                searchFootage.map((imageUrl: string) => (
+                  <div className="!w-[194px]" key={uuidv4()}>
+                    <ImageCard
+                      inputName="select-footage"
+                      imgSrc={imageUrl}
+                      checked={selectedFootage.some((sf) =>
+                        sf.imageUrl.includes(imageUrl)
+                      )}
+                      onChange={(e) => {
+                        if (pageState.selectedScriptSegmentIndex !== null) {
+                          handleSelectFootage(
+                            e,
+                            pageState.selectedScriptSegmentIndex
+                          );
+                        } else {
+                          toast.error("Please select a paragraph!");
+                        }
+                      }}
+                    />
+                  </div>
+                ))
               ) : (
                 <div>
                   <p>Please select a paragraph!</p>
@@ -282,7 +466,70 @@ const ChooseFootagePage = () => {
               )}
             </div>
           </div>
-
+          <div className="flex w-full flex-col gap-[--sy-10px] mt-[--sy-10px]">
+            <h3 className="font-bold text-[--24px]">Selected Footage</h3>
+            <div
+              className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
+            >
+              <div className="flex gap-[1.25vw] pb-[--sy-5px]">
+                {selectedFootage.length > 0 ? (
+                  selectedFootage.map((sf, idx) =>
+                    sf.imageUrl.map((imageUrl, idx) => (
+                      <div
+                        className="!w-[194px] h-[--102px] flex-shrink-0 relative rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden"
+                        key={uuidv4()}
+                      >
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            backgroundImage: `url(${imageUrl})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                          }}
+                        >
+                          <div
+                            className="absolute cursor-pointer top-[--5px] right-[--10px] bg-[--white] opacity-75 w-[--20px] h-[--20px] rounded-full flex items-center justify-center"
+                            onClick={() => {
+                              handleRemoveFootage(imageUrl);
+                            }}
+                          >
+                            <svg
+                              fill="#000000"
+                              height="200px"
+                              width="200px"
+                              version="1.1"
+                              id="Layer_1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              // xmlns:="http://www.w3.org/1999/xlink"
+                              viewBox="0 0 1792 1792"
+                              // xml:space="preserve"
+                              className="w-[--15px] h-[--15px]"
+                            >
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g
+                                id="SVGRepo_tracerCarrier"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              ></g>
+                              <g id="SVGRepo_iconCarrier">
+                                {" "}
+                                <path d="M1082.2,896.6l410.2-410c51.5-51.5,51.5-134.6,0-186.1s-134.6-51.5-186.1,0l-410.2,410L486,300.4 c-51.5-51.5-134.6-51.5-186.1,0s-51.5,134.6,0,186.1l410.2,410l-410.2,410c-51.5,51.5-51.5,134.6,0,186.1 c51.6,51.5,135,51.5,186.1,0l410.2-410l410.2,410c51.5,51.5,134.6,51.5,186.1,0c51.1-51.5,51.1-134.6-0.5-186.2L1082.2,896.6z"></path>{" "}
+                              </g>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )
+                ) : (
+                  <div>
+                    <p className="pl-[--30px]">No footage selected!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
           <div className="flex items-center justify-between">
             <p className="font-bold text-[--24px]">Out Sourced Footage</p>
 

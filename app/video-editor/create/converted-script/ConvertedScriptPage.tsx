@@ -101,6 +101,44 @@ const ConvertedScriptPage = () => {
   const [loadingUpdateDatabase, setLoadingUpdateDatabase] = useState(false);
 
   const router = useRouter();
+  function getAudioDuration(audioPath: string): Promise<number> {
+    return new Promise((resolve) => {
+      const audio = new Audio(audioPath);
+      audio.addEventListener("loadedmetadata", () => {
+        resolve(audio.duration);
+      });
+      audio.addEventListener("error", () => {
+        console.error("Error loading audio:", audio.error);
+        resolve(0);
+      });
+    });
+  }
+
+  useEffect(() => {
+    const fetchAudioDurations = async () => {
+      if (!splitedContent) return;
+
+      const updatedSplitedContent = await Promise.all(
+        splitedContent.map(async (segment) => {
+          console.log(segment.audioPath.url);
+          const duration = await getAudioDuration(segment.audioPath.url);
+          console.log(duration);
+          return {
+            ...segment,
+            audioPath: {
+              ...segment.audioPath,
+              duration,
+            },
+          };
+        })
+      );
+
+      setSplitedContent(updatedSplitedContent);
+    };
+
+    fetchAudioDurations();
+  }, []);
+
   const regenerateAudio = async () => {
     if (
       !pageState.selectedIncorrectWord ||
@@ -168,7 +206,7 @@ const ConvertedScriptPage = () => {
       audioPath: {
         index,
         url: `${url}?t=${new Date().getTime()}`,
-        duration,
+        duration: await getAudioDuration(`${url}?t=${new Date().getTime()}`),
       },
     };
 
@@ -179,6 +217,7 @@ const ConvertedScriptPage = () => {
             ...prevState,
             selectedScriptSegment: {
               ...prevState.selectedScriptSegment,
+              ...prevState.selectedScriptSegment!,
               audioPath: data.audioPath,
             },
           };
