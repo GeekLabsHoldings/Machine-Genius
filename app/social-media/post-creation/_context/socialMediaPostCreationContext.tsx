@@ -2,16 +2,19 @@
 import { createContext, useContext } from "react";
 // import { useRouter } from "next/navigation";
 // import { usePathname } from "next/navigation";
-// import toast from "react-hot-toast";
 // import { v4 as uuidv4 } from "uuid";
 import { globalContext } from "@/app/_context/store";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
+import toast from "react-hot-toast";
 
 interface ContextState {
   selectedPlatform: PlatformEnum | "";
   setSelectedPlatform: (platform: PlatformEnum | "") => void;
-  selectedBrand: string | "";
-  setSelectedBrand: (brand: string | "") => void;
+  selectedBrand: string;
+  setSelectedBrand: (brand: string) => void;
+  postCaption: string;
+  setPostCaption: (value: string | ((prev: string) => string)) => void;
+  handleGenerateHashtags: () => void;
 }
 
 export enum PlatformEnum {
@@ -24,23 +27,15 @@ export enum PlatformEnum {
   INSTAGRAM = "INSTAGRAM",
 }
 
-enum brandEnum {
-  PST = "PST",
-  STREET_POLITICS = "Street Politics",
-  MOVIE_MYTH = "Movie Myth",
-  INVESTOCRACY = "Investocracy",
-  MEDIA_PROJECTS = "Media Projects",
-  PST_CANADA = "PST Canada",
-  GEEK_LABS = "Geek Labs Holdings",
-  machinegenius = "r/machinegenius",
-}
-
 const initialContextState: ContextState = {
   // ===== 01. Start =====
   selectedPlatform: "",
   setSelectedPlatform: () => {},
   selectedBrand: "",
   setSelectedBrand: () => {},
+  postCaption: "",
+  setPostCaption: () => {},
+  handleGenerateHashtags: () => {},
   // ===== 01. End =====
 };
 
@@ -63,11 +58,55 @@ export default function SocialMediaPostCreationContextProvider({
     PlatformEnum | ""
   >("SocialMediaPostCreation-selectedPlatform", "", { isSerializable: false });
 
-  const [selectedBrand, setSelectedBrand] = useSessionStorage<string | "">(
+  const [selectedBrand, setSelectedBrand] = useSessionStorage<string>(
     "SocialMediaPostCreation-selectedBrand",
     "",
     { isSerializable: false }
   );
+
+  const [postCaption, setPostCaption] = useSessionStorage<string>(
+    "SocialMediaPostCreation-PostCaption",
+    "",
+    { isSerializable: false }
+  );
+
+  async function handleGenerateHashtags() {
+    if (!postCaption) {
+      toast.error("No post caption provided!");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.machinegenius.io/social-media/twitter/generate-hashtags`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            content: postCaption,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.hashTags) {
+        return json.hashTags.match(/#\w+/g);
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleGenerateHashtags:", error);
+    }
+  }
   // ===== 01. End =====
 
   // Create a context value object
@@ -77,6 +116,9 @@ export default function SocialMediaPostCreationContextProvider({
     setSelectedPlatform,
     selectedBrand,
     setSelectedBrand,
+    postCaption,
+    setPostCaption,
+    handleGenerateHashtags,
     // ===== 01. End =====
   };
 
