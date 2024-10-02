@@ -29,7 +29,7 @@ interface IPublishPostResponse {
   message?: string;
 }
 
-interface ILinkedInPostResponse {
+interface LinkedInDataResponse {
   success: boolean;
   message: string;
   data: {
@@ -111,7 +111,7 @@ const PublishPost = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: ILinkedInPostResponse = await res.json();
+      const json: LinkedInDataResponse = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
@@ -130,7 +130,7 @@ const PublishPost = () => {
 
   // ===== 02. upload Image =====
   async function uploadImage(file: File) {
-    const LinkedInData: ILinkedInPostResponse | undefined =
+    const LinkedInData: LinkedInDataResponse | undefined =
       await getLinkedInData();
 
     if (!LinkedInData) {
