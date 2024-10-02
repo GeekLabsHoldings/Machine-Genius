@@ -106,7 +106,7 @@ const SideNav = ({
   }, []);
 
   const filteredRoles = useMemo(() => {
-    return authState.decodedToken?.department.includes("CEO")
+    return authState.decodedToken?.department.includes("ceo")
       ? rols
       : rols.filter((role) => role === authState.decodedToken?.department[0]);
   }, [authState.decodedToken?.department]);

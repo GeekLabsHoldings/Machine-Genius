@@ -107,7 +107,7 @@ export default function GlobalContextProvider({
 
   const checkIfUserOnCorrespondingRoute = useCallback(() => {
     // if (!decodedToken) return;
-    if (authState.decodedToken?.department.includes("CEO")) {
+    if (authState.decodedToken?.department.includes("ceo")) {
       // console.log("CEO has access to all routes");
       return;
     }
