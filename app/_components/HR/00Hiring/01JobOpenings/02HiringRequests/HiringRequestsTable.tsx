@@ -14,7 +14,7 @@ export default function HiringRequestsTable() {
   async function updateNextStep() {
     try {
       const res = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/hr/hiring/next-step/${data[0]._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/next-step/${data[0]._id}`,
         {
           method: "PUT",
           headers: {
@@ -39,7 +39,7 @@ export default function HiringRequestsTable() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `process.env.NEXT_PUBLIC_API_BASE_URL/hr/hiring/hiring?limit=10&skip=${skip}&type=Request`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/hiring?limit=10&skip=${skip}&type=Request`,
           {
             method: "GET",
             headers: {

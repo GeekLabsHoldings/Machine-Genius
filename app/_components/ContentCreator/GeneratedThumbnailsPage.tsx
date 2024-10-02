@@ -106,8 +106,8 @@ const GeneratedThumbnailsPage = () => {
 
   async function handleSendContent() {
     let endpoint = editContentData
-      ? `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/content/${editContentData._id}`
-      : "process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/content";
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content/${editContentData._id}`
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content`;
     let method = editContentData ? "PATCH" : "POST";
     setIsSendLoading(true);
     let postBody: any = {

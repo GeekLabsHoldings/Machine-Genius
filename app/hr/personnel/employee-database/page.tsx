@@ -116,7 +116,7 @@ export default function Page() {
       console.log("xzcasdqe");
 
       const res = await fetch(
-        "process.env.NEXT_PUBLIC_API_BASE_URL/hr/employee/data?name=&department=&limit&skip",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/employee/data?name=&department=&limit&skip`,
         {
           method: "get",
           headers: {

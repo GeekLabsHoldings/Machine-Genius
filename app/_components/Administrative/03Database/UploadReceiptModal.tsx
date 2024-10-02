@@ -66,7 +66,7 @@ export default function UploadReceiptModal({
   async function getPresignedURL() {
     try {
       const res = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/administrative/receipts/presigned-url`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/receipts/presigned-url`,
         {
           headers: {
             Authorization: `barrer ${
@@ -151,7 +151,7 @@ export default function UploadReceiptModal({
     }
     try {
       const res = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/administrative/receipts`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/receipts`,
         {
           method: "POST",
           body: JSON.stringify({

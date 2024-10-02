@@ -96,7 +96,7 @@ const Page = () => {
     // Fetch data from API
     const getExpensesData = async () => {
       const response = await fetch(
-        "process.env.NEXT_PUBLIC_API_BASE_URL/accounting/expenses",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/expenses`,
         {
           method: "GET",
           headers: {

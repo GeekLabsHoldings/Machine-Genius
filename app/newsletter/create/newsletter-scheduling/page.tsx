@@ -24,7 +24,7 @@ function Page() {
 
   const handleSchedule = async () => {
     const response = await fetch(
-      "process.env.NEXT_PUBLIC_API_BASE_URL/social-media/news-letter/send-newsletter",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/send-newsletter`,
       {
         method: "POST",
         headers: {

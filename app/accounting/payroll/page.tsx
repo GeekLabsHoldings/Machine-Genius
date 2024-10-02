@@ -80,7 +80,7 @@ const Page = () => {
     // Fetch data from API
     const getPayrollData = async () => {
       const response = await fetch(
-        "process.env.NEXT_PUBLIC_API_BASE_URL/accounting/payroll",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/payroll`,
         {
           method: "GET",
           headers: {

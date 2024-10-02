@@ -144,7 +144,7 @@ export default function ChooseBrandPage() {
 
     try {
       const res = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/social-media/news-letter/get-generated-news-letter?brand=${
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/get-generated-news-letter?brand=${
           postBody.brandName
         }${
           selectedBrand === "Investorcracy"

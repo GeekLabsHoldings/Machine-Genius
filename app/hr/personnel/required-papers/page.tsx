@@ -18,7 +18,7 @@ export default function Page() {
     const token = localStorage.getItem("token");
     try {      
       const data = await fetch(
-        "process.env.NEXT_PUBLIC_API_BASE_URL/hr/employee-paper/get-paper",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/employee-paper/get-paper`,
         {
           method: "get",
           headers: {

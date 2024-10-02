@@ -133,7 +133,7 @@ const CreateMovie = () => {
       while (attempts < maxRetries) {
         try {
           const res = await fetch(
-            `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/${
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/${
               selectedContentType === "Script" ? "script" : "article"
             }/finalize-content`,
             {

@@ -18,7 +18,7 @@ export default function Page({ params }: any) {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `process.env.NEXT_PUBLIC_API_BASE_URL/hr/complaint/get-one/${params.complaintsDetails}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/complaint/get-one/${params.complaintsDetails}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
