@@ -9,7 +9,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom Button com
 import { useContext, useState } from "react"; // React's useState hook
 import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCreationContext";
 
-// Array of suggested Twitter post contents
+// Array of suggested post contents
 const SuggetionPosts = [
   "Stocks, the heartbeat of the marketStocks, the heartbeat of the market! ! Whether you are a seasoned investor or just getting started, understanding trends and staying informed is key to navigating this thrilling financial landscape.",
   "Whether you are a seasoned investor or just getting started, understanding trends and staying. Whether you are a seasoned investor or just getting started, understanding trends and staying. Whether you are a seasoned investor or just getting started",
@@ -23,9 +23,12 @@ const SuggetionPosts = [
 ];
 
 export default function PlatformPost() {
-  const { postCaption, setPostCaption, handleGenerateHashtags } = useContext(
-    socialMediaPostCreationContext
-  );
+  const {
+    selectedPlatform,
+    postCaption,
+    setPostCaption,
+    handleGenerateHashtags,
+  } = useContext(socialMediaPostCreationContext);
   const [pageState, setPageState] = useState<{
     isGenerateHashtagLoading: boolean;
     generatedHashtags: string[];
@@ -61,13 +64,18 @@ export default function PlatformPost() {
   };
   return (
     <div className="flex flex-col h-full">
-      {/* Wrapper for adding a Twitter post */}
+      {/* Wrapper for adding a post */}
       <div
         className={
           "flex flex-col w-full h-[75vh] py-[1vw] " + styles.add_post_wrapper
         }
       >
-        <h6 className="!font-bold !mb-[--sy-20px]">LinkedIn Post</h6>
+        <h6 className="!font-bold !mb-[--sy-20px]">
+          {selectedPlatform.slice(0, 1) +
+            selectedPlatform.toLowerCase().slice(1) +
+            " "}
+          Post
+        </h6>
 
         {/* Grid for arranging content */}
         <div className="grid grid-cols-2 gap-[2vw] w-full h-full">
@@ -199,7 +207,7 @@ export default function PlatformPost() {
         <CustomBtn
           word="Next"
           btnColor="black"
-          href="/social-media/post-creation/linkedin-post/publish-post"
+          href={`/social-media/post-creation/${selectedPlatform.toLowerCase()}-post/publish-post`}
         />
       </div>
     </div>
