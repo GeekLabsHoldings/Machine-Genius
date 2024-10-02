@@ -12,6 +12,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import { socialMediaPostCreationContext } from "../../../_context/socialMediaPostCreationContext";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
+import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostViewScreens";
 
 interface IPublishPostResponse {
   result?: {
@@ -289,37 +290,7 @@ const PublishPost = () => {
           </div>
 
           {/* 02- Col (2) */}
-          <div className={styles.post_view_screens + " flex gap-[1vw] h-[70%]"}>
-            {/* Desktop view */}
-            <div className={styles.desctop_screen + " w-2/3 h-[40vh]"}>
-              <h6>Desktop View</h6>
-              <div className={styles.desctop_view}>
-                <div className={styles.avatar}>
-                  <Image src={profileImg} alt="avatar" />
-                  <div className={styles.avatar_info}>
-                    <p>Investocracy</p>
-                    <span>@Investocrasy</span>
-                  </div>
-                </div>
-                <p>{postCaption}</p>
-              </div>
-            </div>
-
-            {/* Mobile view */}
-            <div className={styles.mobile_screen + " w-1/3"}>
-              <h6>Mobile View</h6>
-              <div className={styles.mobile_view}>
-                <div className={styles.avatar}>
-                  <Image src={profileImg} alt="avatar" />
-                  <div className={styles.avatar_info}>
-                    <p>Investocracy</p>
-                    <span>@Investocrasy</span>
-                  </div>
-                </div>
-                <p>{postCaption}</p>
-              </div>
-            </div>
-          </div>
+          <PostViewScreens />
         </div>
       </div>
 

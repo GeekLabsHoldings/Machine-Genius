@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import styles from "./PlatformPost.module.css";
-import profileImg from "@/public/assets/post-profile.svg"; // Profile image
-import Image from "next/image"; // Next.js Image component for optimized image loading
+
 import SuggestionCard from "@/app/_components/SocialMedia/SuggestionCard/SuggestionCard";
 import { reGenerateIcon, addIcon } from "@/app/_utils/svgIcons";
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom Button component
 import { useContext, useState } from "react"; // React's useState hook
 import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCreationContext";
+import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostViewScreens";
 
 // Array of suggested post contents
 const SuggetionPosts = [
@@ -125,39 +125,7 @@ export default function PlatformPost() {
 
           {/* 02- Col (2) */}
           <div className="h-full">
-            <div
-              className={styles.post_view_screens + " flex gap-[1vw] h-[70%]"}
-            >
-              {/* Desktop view */}
-              <div className={styles.desctop_screen + " w-2/3 h-full"}>
-                <h6>Desktop View</h6>
-                <div className={styles.desctop_view}>
-                  <div className={styles.avatar}>
-                    <Image src={profileImg} alt="avatar" />
-                    <div className={styles.avatar_info}>
-                      <p>Investocracy</p>
-                      <span>@Investocrasy</span>
-                    </div>
-                  </div>
-                  <p>{postCaption}</p>
-                </div>
-              </div>
-
-              {/* Mobile view */}
-              <div className={styles.mobile_screen + " w-1/3"}>
-                <h6>Mobile View</h6>
-                <div className={styles.mobile_view}>
-                  <div className={styles.avatar}>
-                    <Image src={profileImg} alt="avatar" />
-                    <div className={styles.avatar_info}>
-                      <p>Investocracy</p>
-                      <span>@Investocrasy</span>
-                    </div>
-                  </div>
-                  <p>{postCaption}</p>
-                </div>
-              </div>
-            </div>
+            <PostViewScreens />
 
             {/* ===== Start Hashtags ===== */}
             <div className="flex flex-col gap-[--sy-14px]">
