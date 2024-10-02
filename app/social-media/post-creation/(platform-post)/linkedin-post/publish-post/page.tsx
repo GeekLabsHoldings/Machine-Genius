@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 
 const PublishPost = dynamic(
-  () => import('./PublishPost'),
+  () => import('./LinkedInPublishPost'),
   { ssr: false }
 );
 
