@@ -10,6 +10,25 @@ import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
+interface IPresignedURLData {
+  message: string;
+  preSignedURL: string;
+  movieUrl: string;
+  s3BucketURL: string;
+}
+
+interface ITranscriptionResult {
+  part: number;
+  timeDuration: string;
+  transcription: {
+    content: string;
+  };
+}
+
+interface ITranscriptAudioData {
+  transcriptionResults: ITranscriptionResult[];
+}
+
 const MovieMyth = () => {
   const { authState, handleSignOut } = useContext(globalContext);
   const dispatch = useDispatch();
@@ -58,7 +77,7 @@ const MovieMyth = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json = await res.json();
+      const json: IPresignedURLData = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
@@ -74,7 +93,14 @@ const MovieMyth = () => {
 
   // ===== 02. upload video =====
   async function uploadVideo(file: File) {
-    const getPresignedURLData = await getPresignedURL();
+    const getPresignedURLData: IPresignedURLData | undefined =
+      await getPresignedURL();
+
+    if (!getPresignedURLData) {
+      toast.error("Failed to getPresignedURLData!");
+      return;
+    }
+
     setPageState((prev) => ({ ...prev, uploadVideoLoading: true }));
     // setError(null);
     const myHeaders = new Headers();
@@ -136,7 +162,7 @@ const MovieMyth = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json = await res.json();
+      const json: ITranscriptAudioData = await res.json();
 
       if (json && json?.transcriptionResults) {
         dispatch(contentCreatorActions.setVideoTranscription(json));
