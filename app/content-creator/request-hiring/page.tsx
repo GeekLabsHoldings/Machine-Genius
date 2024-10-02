@@ -33,7 +33,7 @@ export default function page() {
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/admin/hiring-request`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/admin/hiring-request`,
         {
           method: "POST",
           headers: {

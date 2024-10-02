@@ -222,7 +222,7 @@ function Page() {
     // Fetch data from API
     const getSUbscriptionsData = async () => {
       const response = await fetch(
-        "https://api.machinegenius.io/accounting/subscriptions",
+        "process.env.NEXT_PUBLIC_API_BASE_URL/accounting/subscriptions",
         {
           method: "GET",
           headers: {

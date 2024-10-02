@@ -39,7 +39,7 @@ export default function Page() {
   async function getTickets() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/tickets/get-tickets?limit=1000`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/administrative/tickets/get-tickets?limit=1000`,
         {
           headers: {
             Authorization: `barrer ${

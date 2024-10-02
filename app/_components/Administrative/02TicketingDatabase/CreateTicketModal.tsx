@@ -72,7 +72,7 @@ export default function CreateTicketModal({
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/tickets/create-ticket`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/administrative/tickets/create-ticket`,
         {
           method: "POST",
           body: JSON.stringify({

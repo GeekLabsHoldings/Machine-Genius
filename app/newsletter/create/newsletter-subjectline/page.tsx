@@ -41,7 +41,7 @@ function Page() {
     const getSubjectAndOpeningLines = async () => {
       // fetch data
       const response = await fetch(
-        "https://api.machinegenius.io/social-media/news-letter/generate-subject-line-opening-line",
+        "process.env.NEXT_PUBLIC_API_BASE_URL/social-media/news-letter/generate-subject-line-opening-line",
         {
           method: "POST",
           headers: {

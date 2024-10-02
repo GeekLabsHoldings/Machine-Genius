@@ -369,7 +369,7 @@ const Page = () => {
     // Fetch data from API
     const getAssetsData = async () => {
       const response = await fetch(
-        `https://api.machinegenius.io/accounting/assets/get?limit=10&page=0&assetType=${assetsType}`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/accounting/assets/get?limit=10&page=0&assetType=${assetsType}`,
         {
           method: "GET",
           headers: {

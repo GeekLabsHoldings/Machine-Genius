@@ -72,7 +72,7 @@ export default function Calendar() {
   async function getSchedule() {
     const token = localStorage.getItem("token");
     try {
-      const data = await fetch("https://api.machinegenius.io/user/task/all", {
+      const data = await fetch("process.env.NEXT_PUBLIC_API_BASE_URL/user/task/all", {
         method: "get",
         headers: {
           "Content-Type": "application/json",

@@ -105,7 +105,7 @@ export default function CreateNewsletterContextProvider({
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/social-media/news-letter/generate-titles`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/social-media/news-letter/generate-titles`,
         {
           method: "POST",
           headers: {

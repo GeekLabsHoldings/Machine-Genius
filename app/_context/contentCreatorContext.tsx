@@ -264,7 +264,7 @@ export default function ContentCreatorContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/content-creation/plagiarism-check`,
+          `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/plagiarism-check`,
           {
             method: "POST",
             headers: {
@@ -452,7 +452,7 @@ export default function ContentCreatorContextProvider({
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/generate-titles`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/generate-titles`,
         {
           method: "POST",
           headers: {
@@ -577,7 +577,7 @@ export default function ContentCreatorContextProvider({
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/generate-thumbnails`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/generate-thumbnails`,
         {
           method: "POST",
           headers: {

@@ -77,7 +77,7 @@ export default function SocialMediaPostCreationContextProvider({
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/social-media/twitter/generate-hashtags`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/social-media/twitter/generate-hashtags`,
         {
           method: "POST",
           body: JSON.stringify({

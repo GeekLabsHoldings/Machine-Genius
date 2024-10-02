@@ -369,7 +369,7 @@ export default function ShowErrorsPage() {
         isLoadingFormatToHtml: true,
       }));
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/format-to-html`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/format-to-html`,
         {
           method: "POST",
           headers: {

@@ -477,7 +477,7 @@ export default function FinalArticlePage() {
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/expand-script`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/expand-script`,
         {
           method: "POST",
           headers: {

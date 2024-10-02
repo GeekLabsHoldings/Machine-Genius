@@ -44,7 +44,7 @@ const MovieMyth = () => {
   async function getPresignedURL() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-presignedURL`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/get-presignedURL`,
         {
           headers: {
             Authorization: `barrer ${
@@ -116,7 +116,7 @@ const MovieMyth = () => {
     setPageState((prev) => ({ ...prev, transcriptAudioLoading: true }));
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/transcript-audio`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/content-creation/transcript-audio`,
         {
           method: "POST",
           body: JSON.stringify({

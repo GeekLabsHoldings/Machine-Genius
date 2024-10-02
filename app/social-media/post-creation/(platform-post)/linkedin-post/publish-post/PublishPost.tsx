@@ -59,7 +59,7 @@ const PublishPost = () => {
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/social-media/linkedin/add-post`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/social-media/linkedin/add-post`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -98,7 +98,7 @@ const PublishPost = () => {
   async function getLinkedInData() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/social-media/linkedin/get`,
+        `process.env.NEXT_PUBLIC_API_BASE_URL/social-media/linkedin/get`,
         {
           headers: {
             Authorization: `barrer ${

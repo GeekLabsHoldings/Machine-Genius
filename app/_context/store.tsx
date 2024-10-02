@@ -133,7 +133,7 @@ export default function GlobalContextProvider({
     }
     try {
       const res = await fetch(
-        "https://api.machinegenius.io/authentication/check-auth",
+        "process.env.NEXT_PUBLIC_API_BASE_URL/authentication/check-auth",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
