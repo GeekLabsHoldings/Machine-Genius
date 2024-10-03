@@ -202,8 +202,38 @@ export default function GlobalContextProvider({
     },
     [router]
   );
-
   // ===== 00. End Authentication =====
+
+  // ===== 00. Start Global Brands =====
+  async function getBrands() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/get-brands?limit=9999`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.hashTags) {
+        return json.hashTags.match(/#\w+/g);
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleGenerateHashtags:", error);
+    }
+  }
+  // ===== 00. End Global Brands =====
 
   // Create a context value object
   const contextValue = useMemo(

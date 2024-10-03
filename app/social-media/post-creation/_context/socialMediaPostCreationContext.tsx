@@ -14,7 +14,7 @@ interface ContextState {
   setSelectedBrand: (brand: string) => void;
   postCaption: string;
   setPostCaption: (value: string | ((prev: string) => string)) => void;
-  handleGenerateHashtags: () => void;
+  handleGenerateHashtags: () => Promise<string[] | void>;
 }
 
 export enum PlatformEnum {
@@ -27,6 +27,10 @@ export enum PlatformEnum {
   INSTAGRAM = "INSTAGRAM",
 }
 
+interface GenerateHashtagsResponse {
+  hashTags: string;
+}
+
 const initialContextState: ContextState = {
   // ===== 01. Start =====
   selectedPlatform: "",
@@ -35,7 +39,7 @@ const initialContextState: ContextState = {
   setSelectedBrand: () => {},
   postCaption: "",
   setPostCaption: () => {},
-  handleGenerateHashtags: () => {},
+  handleGenerateHashtags: async () => {},
   // ===== 01. End =====
 };
 
@@ -70,7 +74,7 @@ export default function SocialMediaPostCreationContextProvider({
     { isSerializable: false }
   );
 
-  async function handleGenerateHashtags() {
+  async function handleGenerateHashtags(): Promise<string[] | void> {
     if (!postCaption) {
       toast.error("No post caption provided!");
       return;
@@ -96,9 +100,9 @@ export default function SocialMediaPostCreationContextProvider({
       if (res.status === 401) {
         handleSignOut();
       }
-      const json = await res.json();
+      const json: GenerateHashtagsResponse = await res.json();
       if (json && json.hashTags) {
-        return json.hashTags.match(/#\w+/g);
+        return json.hashTags.match(/#\w+/g) || [];
       } else {
         toast.error("Something went wrong!");
       }
