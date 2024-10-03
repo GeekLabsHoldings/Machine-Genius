@@ -12,7 +12,8 @@ import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCr
 interface IProps {
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   pageState: {
-    asset: string | null;
+    asset?: string | null;
+    mediaId?: string | null;
     uploadedAsset: string | null | File;
   };
   handleAddPost: () => void;
