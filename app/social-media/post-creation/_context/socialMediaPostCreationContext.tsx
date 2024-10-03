@@ -10,8 +10,6 @@ import toast from "react-hot-toast";
 interface ContextState {
   selectedPlatform: PlatformEnum | "";
   setSelectedPlatform: (platform: PlatformEnum | "") => void;
-  selectedBrand: string;
-  setSelectedBrand: (brand: string) => void;
   postCaption: string;
   setPostCaption: (value: string | ((prev: string) => string)) => void;
   handleGenerateHashtags: () => Promise<string[] | void>;
@@ -35,8 +33,6 @@ const initialContextState: ContextState = {
   // ===== 01. Start =====
   selectedPlatform: "",
   setSelectedPlatform: () => {},
-  selectedBrand: "",
-  setSelectedBrand: () => {},
   postCaption: "",
   setPostCaption: () => {},
   handleGenerateHashtags: async () => {},
@@ -61,12 +57,6 @@ export default function SocialMediaPostCreationContextProvider({
   const [selectedPlatform, setSelectedPlatform] = useSessionStorage<
     PlatformEnum | ""
   >("SocialMediaPostCreation-selectedPlatform", "", { isSerializable: false });
-
-  const [selectedBrand, setSelectedBrand] = useSessionStorage<string>(
-    "SocialMediaPostCreation-selectedBrand",
-    "",
-    { isSerializable: false }
-  );
 
   const [postCaption, setPostCaption] = useSessionStorage<string>(
     "SocialMediaPostCreation-PostCaption",
@@ -118,8 +108,6 @@ export default function SocialMediaPostCreationContextProvider({
     // ===== 01. Start =====
     selectedPlatform,
     setSelectedPlatform,
-    selectedBrand,
-    setSelectedBrand,
     postCaption,
     setPostCaption,
     handleGenerateHashtags,
