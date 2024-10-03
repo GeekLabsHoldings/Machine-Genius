@@ -34,7 +34,8 @@ interface LinkedInDataResponse {
 }
 
 const LinkedInPublishPost = () => {
-  const { authState, handleSignOut } = useContext(globalContext);
+  const { authState, handleSignOut, selectedBrandId } =
+    useContext(globalContext);
   const { postCaption } = useContext(socialMediaPostCreationContext);
   const [pageState, setPageState] = useState<{
     asset: string | null;
@@ -48,14 +49,16 @@ const LinkedInPublishPost = () => {
     if (!postCaption) {
       toast.error("No post caption provided!");
       return;
+    } else if (!selectedBrandId) {
+      toast.error("No brand selected!");
+      return;
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/add-post`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/add-post/${selectedBrandId}`,
         {
           method: "POST",
           body: JSON.stringify({
-            brand: "Geek Labs Holdings",
             content: postCaption,
             ...(pageState.asset !== null && { asset: pageState.asset }),
           }),
@@ -88,9 +91,13 @@ const LinkedInPublishPost = () => {
 
   // ===== 01. get LinkedIn Data =====
   async function getLinkedInData() {
+    if (!selectedBrandId) {
+      toast.error("No brand selected!");
+      return;
+    }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/get`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/get/${selectedBrandId}`,
         {
           headers: {
             Authorization: `barrer ${
