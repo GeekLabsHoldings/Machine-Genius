@@ -33,7 +33,7 @@ interface LinkedInDataResponse {
   };
 }
 
-const LinkedInPublishPost = () => {
+const LinkedInPublishPostPage = () => {
   const { authState, handleSignOut, selectedBrandId } =
     useContext(globalContext);
   const { postCaption } = useContext(socialMediaPostCreationContext);
@@ -188,4 +188,4 @@ const LinkedInPublishPost = () => {
   );
 };
 
-export default LinkedInPublishPost;
+export default LinkedInPublishPostPage;

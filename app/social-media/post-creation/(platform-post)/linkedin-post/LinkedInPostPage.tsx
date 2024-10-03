@@ -4,8 +4,8 @@ const PlatformPost = dynamic(() => import("../_platform-post/PlatformPost"), {
   ssr: false,
 });
 
-const LinkedInPost = () => {
+const LinkedInPostPage = () => {
   return <PlatformPost />;
 };
 
-export default LinkedInPost;
+export default LinkedInPostPage;
