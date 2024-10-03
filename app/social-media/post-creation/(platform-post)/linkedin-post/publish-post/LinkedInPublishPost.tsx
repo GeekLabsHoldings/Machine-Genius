@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useRef, useState } from "react"; // React's useState hook
+import { useContext, useState } from "react"; // React's useState hook
 import { socialMediaPostCreationContext } from "@/app/social-media/post-creation/_context/socialMediaPostCreationContext";
 import { globalContext } from "@/app/_context/store";
 // import postImage from "@/public/assets/post-img.svg"; // Post image
@@ -36,7 +36,6 @@ interface LinkedInDataResponse {
 const LinkedInPublishPost = () => {
   const { authState, handleSignOut } = useContext(globalContext);
   const { postCaption } = useContext(socialMediaPostCreationContext);
-  const uploadImageRef = useRef<HTMLInputElement>(null);
   const [pageState, setPageState] = useState<{
     asset: string | null;
     uploadedAsset: string | null | File;
@@ -175,7 +174,6 @@ const LinkedInPublishPost = () => {
 
   return (
     <PublishPost
-      uploadImageRef={uploadImageRef}
       handleUploadImage={handleUploadImage}
       pageState={pageState}
       handleAddPost={handleAddPost}

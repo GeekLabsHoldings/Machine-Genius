@@ -1,4 +1,4 @@
-import React, { RefObject, useContext } from "react";
+import React, { useContext, useRef } from "react";
 // Import necessary modules and components
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom Button component
 import styles from "./PublishPost.module.css"; // CSS module for styling
@@ -10,7 +10,6 @@ import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostV
 import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCreationContext";
 
 interface IProps {
-  uploadImageRef: RefObject<HTMLInputElement>;
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   pageState: {
     asset: string | null;
@@ -20,12 +19,12 @@ interface IProps {
 }
 
 export default function PublishPost({
-  uploadImageRef,
   handleUploadImage,
   pageState,
   handleAddPost,
 }: IProps) {
   const { selectedPlatform } = useContext(socialMediaPostCreationContext);
+  const uploadImageRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="flex flex-col h-full">
