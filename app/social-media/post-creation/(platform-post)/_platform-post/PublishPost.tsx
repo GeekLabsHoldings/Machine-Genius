@@ -3,6 +3,8 @@ import React, { useContext, useRef } from "react";
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom Button component
 import styles from "./PublishPost.module.css"; // CSS module for styling
 // import profileImg from "@/public/assets/post-profile.svg"; // Profile image
+// import postImage from "@/public/assets/post-img.svg"; // Post image
+// import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
 import Image from "next/image"; // Next.js Image component for optimized image loading
 import { reGenerateIcon } from "@/app/_utils/svgIcons";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";

@@ -2,8 +2,6 @@
 import { useContext, useState } from "react"; // React's useState hook
 import { socialMediaPostCreationContext } from "@/app/social-media/post-creation/_context/socialMediaPostCreationContext";
 import { globalContext } from "@/app/_context/store";
-// import postImage from "@/public/assets/post-img.svg"; // Post image
-// import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
 import toast from "react-hot-toast";
 import PublishPost from "../../_platform-post/PublishPost";
 
