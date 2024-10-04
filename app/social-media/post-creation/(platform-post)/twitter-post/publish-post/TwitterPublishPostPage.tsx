@@ -4,6 +4,7 @@ import { socialMediaPostCreationContext } from "@/app/social-media/post-creation
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import PublishPost from "../../_platform-post/PublishPost";
+import convertFileToBase64 from "@/app/_utils/convertFileToBase64";
 
 // Interface for the successful response
 interface IPublishPostResponseSuccess {
@@ -49,6 +50,18 @@ interface TwitterDataResponse {
     AccessToken: string;
     TokenSecret: string;
     BearerToken: string;
+  };
+}
+
+interface UploadTwitterImageResponse {
+  media_id: number;
+  media_id_string: string;
+  size: number;
+  expires_after_secs: number;
+  image: {
+    image_type: string;
+    w: number;
+    h: number;
   };
 }
 
@@ -177,23 +190,36 @@ const TwitterPublishPostPage = () => {
     setPageState((prev) => ({ ...prev, uploadedAsset: null }));
 
     try {
-      const formdata = new FormData();
-      formdata.append("media", file, "[PROXY]");
-      const requestOptions = {
-        method: "POST",
-        body: formdata,
-        redirect: "follow" as RequestRedirect,
-      };
+      const formData = new FormData();
+      formData.append("media", file);
+      // Convert twitterData object to a JSON string
+      formData.append("twitterData", JSON.stringify(twitterData));
       const response = await fetch(
-        "https://upload.twitter.com/1.1/media/upload.json?oauth_consumer_key=NxfNy5CBLLiQ4ZD26SvGcMEXe&oauth_token=1833043345876144128-kC6nw8jUtbF0q0VJEWO561YLLyNaZl&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1727964640&oauth_nonce=OUT1Icra4tJ&oauth_version=1.0&oauth_signature=QSLEb9PxkgtxDW5UJhxhrZ%2Fdj34%3D",
-        requestOptions
+        "/api/social-media/twitter/uploadTwitterImage",
+        {
+          method: "POST",
+          body: formData,
+        }
       );
-      if (response.ok) {
-        console.log("Upload successful");
-        setPageState((prev) => ({ ...prev, uploadedAsset: file }));
-      } else {
-        setPageState((prev) => ({ ...prev, uploadedAsset: null }));
-        toast.error(`Upload failed with status: ${response.status}`);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(`Upload failed: ${errorData.error || response.statusText}`);
+        return;
+      }
+
+      const data: UploadTwitterImageResponse = await response.json();
+
+      if (data && data.media_id_string) {
+        console.log("Upload successful:", data);
+
+        // Convert the file to a base64 string
+        const base64File = await convertFileToBase64(file);
+        setPageState((prev) => ({
+          ...prev,
+          uploadedAsset: base64File,
+          mediaId: data.media_id_string,
+        }));
       }
     } catch (error: any) {
       toast.error("Something went wrong!");
