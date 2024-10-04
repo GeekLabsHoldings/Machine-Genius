@@ -123,45 +123,62 @@ const MovieMythUploadPage = () => {
       ...prev,
       uploadVideoLoading: true,
       error: null,
+      uploadPercentage: 0, // Reset upload percentage
     }));
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/octet-stream");
 
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: file,
-      redirect: "follow" as RequestRedirect,
-    };
+    const xhr = new XMLHttpRequest();
 
-    try {
-      const response = await fetch(
-        getPresignedURLData.preSignedURL,
-        requestOptions
-      );
-      if (response.ok) {
-        console.log("Upload successful");
-        setPageState((prev) => ({ ...prev, triggerTranscriptAudio: true }));
-      } else {
-        const errorText = await response.text();
-        toast.error(
-          `Upload failed with status: ${response.status} - ${errorText}`
-        );
+    xhr.open("PUT", getPresignedURLData.preSignedURL, true);
+    xhr.setRequestHeader("Content-Type", "application/octet-stream");
+
+    // Listen to the upload progress
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentCompleted = (event.loaded / event.total) * 100;
         setPageState((prev) => ({
           ...prev,
-          error: `Upload failed with status: ${response.status}`,
+          uploadPercentage: percentCompleted,
         }));
       }
-    } catch (error: any) {
-      toast.error("Something went wrong!");
+    };
+
+    // Handle successful upload
+    xhr.onload = () => {
+      if (xhr.status === 200 || xhr.status === 204) {
+        console.log("Upload successful");
+        setPageState((prev) => ({
+          ...prev,
+          triggerTranscriptAudio: true,
+          uploadPercentage: 100, // Ensure it's set to 100% on success
+        }));
+      } else {
+        const errorText = xhr.statusText || "Unknown error";
+        toast.error(`Upload failed with status: ${xhr.status} - ${errorText}`);
+        setPageState((prev) => ({
+          ...prev,
+          error: `Upload failed with status: ${xhr.status}`,
+        }));
+      }
+
       setPageState((prev) => ({
         ...prev,
-        error: error?.message,
+        uploadVideoLoading: false,
       }));
-      console.error("Error in uploadVideo:", error);
-    } finally {
-      setPageState((prev) => ({ ...prev, uploadVideoLoading: false }));
-    }
+    };
+
+    // Handle network or other errors
+    xhr.onerror = () => {
+      toast.error("Something went wrong during the upload!");
+      setPageState((prev) => ({
+        ...prev,
+        error: "Network error during upload.",
+        uploadVideoLoading: false,
+      }));
+      console.error("Error in uploadVideo:", xhr.statusText);
+    };
+
+    // Send the request
+    xhr.send(file);
   }
 
   // ===== 03. transcript-audio =====
@@ -216,7 +233,6 @@ const MovieMythUploadPage = () => {
       <div className="flex flex-col justify-center items-center w-[40vw] min-w-[24rem] mx-auto h-[75vh] py-[1.5vw]">
         <LogoAndTitle
           needTxt={true}
-          textNeeded="Hold on tight..."
           title={
             pageState.uploadVideoLoading
               ? "Uploading video..."
@@ -225,11 +241,25 @@ const MovieMythUploadPage = () => {
         />
 
         {pageState.uploadPercentage > 0 && pageState.uploadVideoLoading && (
-          <div className="mt-4">
-            Upload Progress:{" "}
-            <span className="font-bold">
-              {pageState.uploadPercentage.toFixed(2)}%
-            </span>
+          <div className="mt-[--sy-10px] w-full max-w-md mx-auto overflow-hidden">
+            {/* Label and Percentage */}
+            <div className="flex justify-between mb-[--sy-8px]">
+              <span className="text-[--18px] font-medium text-gray-700">
+                Upload Progress
+              </span>
+              <span className="text-[--18px] font-semibold text-gray-700">
+                {pageState.uploadPercentage.toFixed(2)}%
+              </span>
+            </div>
+
+            {/* Progress Bar Container */}
+            <div className="w-full bg-gray-300 rounded-full h-[--16px] overflow-hidden">
+              {/* Progress Bar */}
+              <div
+                className="bg-[--dark] h-[--16px] rounded-full transition-all duration-300"
+                style={{ width: `${pageState.uploadPercentage}%` }}
+              ></div>
+            </div>
           </div>
         )}
       </div>
