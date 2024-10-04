@@ -10,6 +10,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostViewScreens";
 import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCreationContext";
 
+// todo: accept PostViewScreens as childern
 interface IProps {
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   uploadedAsset: string | null | File;
