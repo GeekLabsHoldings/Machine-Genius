@@ -11,17 +11,13 @@ import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCr
 
 interface IProps {
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  pageState: {
-    asset?: string | null;
-    mediaId?: string | null;
-    uploadedAsset: string | null | File;
-  };
+  uploadedAsset: string | null | File;
   handleAddPost: () => void;
 }
 
 export default function PublishPost({
   handleUploadImage,
-  pageState,
+  uploadedAsset,
   handleAddPost,
 }: IProps) {
   const { selectedPlatform } = useContext(socialMediaPostCreationContext);
@@ -82,13 +78,13 @@ export default function PublishPost({
                   />
                 </div>
 
-                {pageState.uploadedAsset && (
+                {uploadedAsset && (
                   <div
                     className="min-w-[23%] h-full aspect-square rounded-[--13px]
                border border-[--dark] overflow-hidden flex flex-col items-center justify-center"
                   >
                     <Image
-                      src={pageState.uploadedAsset as string}
+                      src={uploadedAsset as string}
                       alt="uploaded image"
                     />
                   </div>

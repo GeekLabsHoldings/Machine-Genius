@@ -182,7 +182,7 @@ const LinkedInPublishPostPage = () => {
   return (
     <PublishPost
       handleUploadImage={handleUploadImage}
-      pageState={pageState}
+      uploadedAsset={pageState.uploadedAsset}
       handleAddPost={handleAddPost}
     />
   );

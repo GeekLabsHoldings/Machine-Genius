@@ -159,41 +159,35 @@ const TwitterPublishPostPage = () => {
 
   // ===== 02. upload Image =====
   async function uploadImage(file: File) {
-  //   const twitterData: TwitterDataResponse | undefined = await getTwitterData();
-
-  //   if (!twitterData) {
-  //     toast.error("Failed to get Twitter data!");
-  //     return;
-  //   }
-
-  //   setPageState((prev) => ({ ...prev, uploadedAsset: null }));
-
-  //   try {
-  //     const formdata = new FormData();
-  //     formdata.append("media", file, "[PROXY]");
-
-  //     const requestOptions = {
-  //       method: "POST",
-  //       body: formdata,
-  //       redirect: "follow",
-  //     };
-
-  //     fetch(
-  //       "https://upload.twitter.com/1.1/media/upload.json?oauth_consumer_key=NxfNy5CBLLiQ4ZD26SvGcMEXe&oauth_token=1833043345876144128-kC6nw8jUtbF0q0VJEWO561YLLyNaZl&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1727964640&oauth_nonce=OUT1Icra4tJ&oauth_version=1.0&oauth_signature=QSLEb9PxkgtxDW5UJhxhrZ%2Fdj34%3D",
-  //       requestOptions
-  //     );
-
-  //     if (response.ok) {
-  //       console.log("Upload successful");
-  //       setPageState((prev) => ({ ...prev, uploadedAsset: file }));
-  //     } else {
-  //       setPageState((prev) => ({ ...prev, uploadedAsset: null }));
-  //       toast.error(`Upload failed with status: ${response.status}`);
-  //     }
-  //   } catch (error: any) {
-  //     toast.error("Something went wrong!");
-  //     console.error("Error in uploadImage:", error);
-  //   }
+    //   const twitterData: TwitterDataResponse | undefined = await getTwitterData();
+    //   if (!twitterData) {
+    //     toast.error("Failed to get Twitter data!");
+    //     return;
+    //   }
+    //   setPageState((prev) => ({ ...prev, uploadedAsset: null }));
+    //   try {
+    //     const formdata = new FormData();
+    //     formdata.append("media", file, "[PROXY]");
+    //     const requestOptions = {
+    //       method: "POST",
+    //       body: formdata,
+    //       redirect: "follow",
+    //     };
+    //     fetch(
+    //       "https://upload.twitter.com/1.1/media/upload.json?oauth_consumer_key=NxfNy5CBLLiQ4ZD26SvGcMEXe&oauth_token=1833043345876144128-kC6nw8jUtbF0q0VJEWO561YLLyNaZl&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1727964640&oauth_nonce=OUT1Icra4tJ&oauth_version=1.0&oauth_signature=QSLEb9PxkgtxDW5UJhxhrZ%2Fdj34%3D",
+    //       requestOptions
+    //     );
+    //     if (response.ok) {
+    //       console.log("Upload successful");
+    //       setPageState((prev) => ({ ...prev, uploadedAsset: file }));
+    //     } else {
+    //       setPageState((prev) => ({ ...prev, uploadedAsset: null }));
+    //       toast.error(`Upload failed with status: ${response.status}`);
+    //     }
+    //   } catch (error: any) {
+    //     toast.error("Something went wrong!");
+    //     console.error("Error in uploadImage:", error);
+    //   }
   }
 
   // ===== 00. handleFileChange =====
@@ -207,7 +201,7 @@ const TwitterPublishPostPage = () => {
   return (
     <PublishPost
       handleUploadImage={handleUploadImage}
-      pageState={pageState}
+      uploadedAsset={pageState.uploadedAsset}
       handleAddPost={handleAddPost}
     />
   );
