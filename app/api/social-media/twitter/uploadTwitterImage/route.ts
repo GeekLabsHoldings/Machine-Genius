@@ -3,6 +3,9 @@ import OAuth from "oauth-1.0a";
 import crypto from "crypto";
 
 // Disable Next.js's default body parsing (optional if not using middleware)
+// export const bodyParser = false;
+
+// deprecated
 // export const config = {
 //   api: {
 //     bodyParser: false,
