@@ -179,7 +179,6 @@ const LinkedInPublishPostPage = () => {
         setPageState((prev) => ({ ...prev, uploadedAsset: base64File }));
         toast.success("Image uploaded successfully!");
       } else {
-        setPageState((prev) => ({ ...prev, uploadedAsset: null }));
         toast.error(`Upload failed: ${result.message || "Unknown error"}`);
       }
     } catch (error: any) {
