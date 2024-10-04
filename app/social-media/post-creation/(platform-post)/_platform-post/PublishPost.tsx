@@ -5,7 +5,6 @@ import styles from "./PublishPost.module.css"; // CSS module for styling
 // import profileImg from "@/public/assets/post-profile.svg"; // Profile image
 // import postImage from "@/public/assets/post-img.svg"; // Post image
 // import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
-import Image from "next/image"; // Next.js Image component for optimized image loading
 import { reGenerateIcon } from "@/app/_utils/svgIcons";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostViewScreens";
@@ -61,8 +60,7 @@ export default function PublishPost({
                 {/* Image options */}
 
                 <div
-                  className="min-w-[23%] h-full aspect-square rounded-[--13px]
-                border border-[--dark] overflow-hidden flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                  className="min-w-[23%] h-full aspect-square rounded-[--13px] border border-[--dark] overflow-hidden flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
                   onClick={() => uploadImageRef.current?.click()}
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -81,11 +79,8 @@ export default function PublishPost({
                 </div>
 
                 {uploadedAsset && (
-                  <div
-                    className="min-w-[23%] h-full aspect-square rounded-[--13px]
-               border border-[--dark] overflow-hidden flex flex-col items-center justify-center"
-                  >
-                    <Image
+                  <div className="max-w-[23%] h-full aspect-square rounded-[--13px] border border-[--dark] overflow-hidden flex flex-col items-center justify-center">
+                    <img
                       src={uploadedAsset as string}
                       alt="uploaded image"
                     />
