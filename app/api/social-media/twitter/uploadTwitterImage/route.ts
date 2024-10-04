@@ -3,11 +3,11 @@ import OAuth from "oauth-1.0a";
 import crypto from "crypto";
 
 // Disable Next.js's default body parsing (optional if not using middleware)
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 // Define the shape of your Twitter data sent from the client
 interface TwitterAccount {
