@@ -49,9 +49,6 @@ const initialContextState = {
   selectedContentTitle: "",
   setSelectedContentTitle: (title: any) => {},
 
-  presignedURLData: null as any,
-  setPresignedURLData: (data: any) => {},
-
   editContentData: null as any,
   setEditContentData: (id: any) => {},
   // ===== 01. End Content Creator =====
@@ -664,20 +661,6 @@ export default function ContentCreatorContextProvider({
       JSON.stringify(videoTranscription)
     );
   }, [videoTranscription]);
-  // ===============================================================
-
-  // function presignedURLDataInit() {
-  //   if (typeof window !== "undefined") {
-  //     const presignedURLDataInitValue = sessionStorage.getItem("presignedURLData");
-  //     return presignedURLDataInitValue ? JSON.parse(presignedURLDataInitValue) : null;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  const [presignedURLData, setPresignedURLData] = useState<any>(null);
-  // useEffect(() => {
-  //   sessionStorage.setItem("presignedURLData", JSON.stringify(presignedURLData));
-  // }, [presignedURLData]);
 
   // ===== End videoTranscription =====
 
@@ -733,9 +716,6 @@ export default function ContentCreatorContextProvider({
     setSelectedContentThumbnail,
     selectedContentTitle,
     setSelectedContentTitle,
-
-    presignedURLData,
-    setPresignedURLData,
 
     editContentData,
     setEditContentData,
