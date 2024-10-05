@@ -5,7 +5,7 @@ const PlatformPost = dynamic(() => import("../_platform-post/PlatformPost"), {
 });
 
 const LinkedInPostPage = () => {
-  return <PlatformPost />;
+  return <PlatformPost postCaptionLimit={3000} />;
 };
 
 export default LinkedInPostPage;
