@@ -4,6 +4,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { useSelector } from "react-redux";
 import { useRef, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
@@ -11,16 +12,16 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
-// import VideoPlayer from "@/app/_components/VideoPlayer/VideoPlayer";
 
 const VideoPlayer = dynamic(
-  () => import("@/app/_components/VideoPlayer/VideoPlayer"),
+  () => import("@/app/_components/ContentCreator/VideoPlayer/VideoPlayer"),
   {
     ssr: false,
   }
 );
 
 const CreateMovie = () => {
+  const { handleSignOut } = useContext(globalContext);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -132,7 +133,7 @@ const CreateMovie = () => {
       while (attempts < maxRetries) {
         try {
           const res = await fetch(
-            `https://api.machinegenius.io/content-creation/${
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/${
               selectedContentType === "Script" ? "script" : "article"
             }/finalize-content`,
             {
@@ -156,7 +157,9 @@ const CreateMovie = () => {
               }),
             }
           );
-
+          if (res.status === 401) {
+            handleSignOut();
+          }
           json = await res.json();
 
           if (json && json?.articles[0]?.content) {
@@ -179,7 +182,7 @@ const CreateMovie = () => {
           articles: [
             {
               ...json.articles[0],
-              content: json.articles[0].content.replace(/<\/?[^>]+(>|$)/g, ""),
+              content: json.articles[0].content.replace(/<[^>]*>/g, ""),
             },
           ],
         };

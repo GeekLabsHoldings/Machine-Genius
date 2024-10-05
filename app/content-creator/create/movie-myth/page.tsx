@@ -10,8 +10,27 @@ import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 
+interface IPresignedURLData {
+  message: string;
+  preSignedURL: string;
+  movieUrl: string;
+  s3BucketURL: string;
+}
+
+interface ITranscriptionResult {
+  part: number;
+  timeDuration: string;
+  transcription: {
+    content: string;
+  };
+}
+
+interface ITranscriptAudioData {
+  transcriptionResults: ITranscriptionResult[];
+}
+
 const MovieMyth = () => {
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const dispatch = useDispatch();
   const router = useRouter();
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -44,7 +63,7 @@ const MovieMyth = () => {
   async function getPresignedURL() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-presignedURL`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/get-presignedURL`,
         {
           headers: {
             Authorization: `barrer ${
@@ -55,7 +74,10 @@ const MovieMyth = () => {
           },
         }
       );
-      const json = await res.json();
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IPresignedURLData = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
@@ -71,7 +93,14 @@ const MovieMyth = () => {
 
   // ===== 02. upload video =====
   async function uploadVideo(file: File) {
-    const getPresignedURLData = await getPresignedURL();
+    const getPresignedURLData: IPresignedURLData | undefined =
+      await getPresignedURL();
+
+    if (!getPresignedURLData) {
+      toast.error("Failed to getPresignedURLData!");
+      return;
+    }
+
     setPageState((prev) => ({ ...prev, uploadVideoLoading: true }));
     // setError(null);
     const myHeaders = new Headers();
@@ -113,7 +142,7 @@ const MovieMyth = () => {
     setPageState((prev) => ({ ...prev, transcriptAudioLoading: true }));
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/transcript-audio`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/transcript-audio`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -130,8 +159,10 @@ const MovieMyth = () => {
           redirect: "follow" as RequestRedirect,
         }
       );
-
-      const json = await res.json();
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: ITranscriptAudioData = await res.json();
 
       if (json && json?.transcriptionResults) {
         dispatch(contentCreatorActions.setVideoTranscription(json));

@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./templates.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import toast from "react-hot-toast";
 import Slider from "react-slick";
+import { globalContext } from "@/app/_context/store";
 
 const addIcon = (
   <svg
@@ -58,6 +59,7 @@ const tempOptions = {
 };
 
 const Page = () => {
+  const { handleSignOut } = useContext(globalContext);
   const [groupTemplates, setGroupTemplates] = useState<GroupTemplate[]>([]);
   const [unattchedTemplates, setUnattachedTemplates] = useState<
     unattchedTemplates[]
@@ -78,7 +80,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      "https://api.machinegenius.io/hr/group/groups-template",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups-template`,
       {
         method: "get",
         headers: {
@@ -86,6 +88,9 @@ const Page = () => {
         },
       }
     );
+    if (res.status === 401) {
+      handleSignOut();
+    }
     // The return value is *not* serialized
     // You can return Date, Map, Set, etc.
 
@@ -97,7 +102,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      "https://api.machinegenius.io/hr/template/un-attached",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/un-attached`,
       {
         method: "get",
         headers: {
@@ -105,6 +110,9 @@ const Page = () => {
         },
       }
     );
+    if (res.status === 401) {
+      handleSignOut();
+    }
     // The return value is *not* serialized
     // You can return Date, Map, Set, etc.
 
@@ -115,7 +123,7 @@ const Page = () => {
 
   async function createGroup() {
     try {
-      const res = await fetch("https://api.machinegenius.io/hr/group/create", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -129,7 +137,9 @@ const Page = () => {
           step: setp,
         }),
       });
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       console.log(data);
       if (res.ok) {

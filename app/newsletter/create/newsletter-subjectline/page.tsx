@@ -1,5 +1,10 @@
+"use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "@/app/newsletter/create/newsletter-subjectline/newsletter-subjectline.module.css";
+import { useContext, useEffect, useState } from "react";
+import { createNewsletterContext } from "../_context/createNewsletterContext";
+import toast from "react-hot-toast";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ReGenerateIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 13" fill="none">
@@ -10,7 +15,66 @@ const ReGenerateIcon = (
   </svg>
 );
 
+interface NewsLines {
+  subject_lines: string[];
+  opening_lines: string[];
+}
+
 function Page() {
+  const {
+    selectedContentTitle,
+    subjectLine,
+    openingLine,
+    setSubjectLine,
+    setOpeningLine,
+  } = useContext(createNewsletterContext);
+
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [newsLines, setNewsLines] = useState<NewsLines>({
+    subject_lines: [],
+    opening_lines: [],
+  });
+
+  useEffect(() => {
+    setIsHydrated(true);
+
+    const getSubjectAndOpeningLines = async () => {
+      // fetch data
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/generate-subject-line-opening-line`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: selectedContentTitle,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data?.opening_lines || data?.subject_lines) {
+        // set data to state
+        setNewsLines(data);
+      } else toast.error("An error occurred. Please try again later.");
+    };
+
+    try {
+      getSubjectAndOpeningLines();
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+    }
+  }, [isHydrated]);
+
+  if (!isHydrated) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle needTxt={false} title="Getting There..." />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col">
       {/* titles wrapper */}
@@ -29,51 +93,36 @@ function Page() {
             {/* topics container */}
             <div className={`flex flex-col gap-[0.2vw]`}>
               <label htmlFor="tiketDescription" className="font-bold text-xl">
-                Account Name*
+                Subject Line*
               </label>
               <input
                 type="text"
                 id="subjectLine"
                 required
                 className={`${styles.input}`}
+                value={subjectLine}
+                onChange={(e) => setSubjectLine(e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-6 mt-[2vw]">
               <span className="font-bold text-xl">Suggestions</span>
-              <div className="max-h-[50%]">
+              <div className="max-h-[60%] min-h-[30vh]">
                 <ul className="flex flex-col h-full max-h-[28vh] overflow-y-auto gap-5">
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
+                  {newsLines?.subject_lines?.map((line, index) => (
+                    <li
+                      className={`font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white
+                          ${
+                            line === subjectLine &&
+                            "bg-[var(--dark)] text-white"
+                          }
+                        `}
+                      onClick={() => {
+                        setSubjectLine(line);
+                      }}
+                    >
+                      {line}
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="flex justify-end mt-1">
@@ -104,44 +153,29 @@ function Page() {
                 id="subjectLine"
                 required
                 className={`${styles.input}`}
+                value={openingLine}
+                onChange={(e) => setOpeningLine(e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-6 mt-[2vw]">
               <span className="font-bold text-xl">Suggestions</span>
-              <div className="max-h-[50%]">
+              <div className="max-h-[60%] min-h-[30vh]">
                 <ul className="flex flex-col h-full max-h-[28vh] overflow-y-auto gap-5">
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
-                  <li className="font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white">
-                    Groundbreaking Results for Q4, 400M Profit Gain , 6B in
-                    Crypto
-                  </li>
+                  {newsLines?.opening_lines?.map((line, index) => (
+                    <li
+                      className={`font-bold border border-[var(--dark)] rounded-[10PX] p-3 cursor-pointer hover:bg-[var(--dark)] hover:text-white
+                          ${
+                            line === openingLine &&
+                            "bg-[var(--dark)] text-white"
+                          }
+                        `}
+                      onClick={() => {
+                        setOpeningLine(line);
+                      }}
+                    >
+                      {line}
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="flex justify-end mt-1">

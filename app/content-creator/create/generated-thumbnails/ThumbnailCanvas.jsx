@@ -5,9 +5,10 @@ import React, {
   useEffect,
   useState,
   useRef,
+  useMemo,
+  memo,
 } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
+import { useSelector } from "react-redux";
 import { globalContext } from "@/app/_context/store";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import "./thumbnailCanvas.css";
@@ -17,15 +18,24 @@ import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useRouter } from "next/navigation";
-import ImageCard from "./ImageCard";
-import MultipleSelectCheckmarks from "./MultipleSelectCheckmarks";
+import dynamic from "next/dynamic";
+const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
+const MultipleSelectCheckmarks = dynamic(
+  () => import("./MultipleSelectCheckmarks"),
+  { ssr: false }
+);
+
+const LoadingOverlay = memo(({ title }) => (
+  <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
+    <LogoAndTitle needTxt={false} title={title} />
+  </div>
+));
 
 export default function ThumbnailCanvas() {
-  const dispatch = useDispatch();
   const canvasEl = useRef(null);
   const fabricCanvasRef = useRef(null);
   const [canvasState, setCanvasState] = useState(null);
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     selectedBrand,
@@ -85,30 +95,35 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  function pageStateInit() {
-    return {
-      generateThumbnailsLoading: false,
-      thumbnailFontSize: selectedBrand.includes("Street Politics") ? 110 : 84,
-      selectedBgPath: selectedBrand.includes("Street Politics")
-        ? "/generated-thumbnails/sp/bg/bg-0.jpg"
-        : "/generated-thumbnails/inv/bg/bg-0.jpg",
-      selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
-      searchImgKeyword: "",
-      searchBgKeyword: "",
-      searchImgLoading: false,
-      searchBgLoading: false,
-      searchImgData: pageStateSearchImgDataInit(),
-      searchBgData: pageStateSearchBgDataInit(),
-      removeBgLoading: false,
-      isSendLoading: false,
-      triggerSendContent: false,
-      triggerSearchImg: false,
-      isLoadingFormatToHtml: false,
-      triggerFormatToHtml: false,
-      highlightedWords: [],
-    };
-  }
-
+  // Memoize complex calculations
+  const usePageStateInit = (selectedBrand) =>
+    useMemo(() => {
+      return {
+        generateThumbnailsLoading: false,
+        thumbnailFontSize: selectedBrand.includes("Street Politics")
+          ? 105.66
+          : 90,
+        selectedBgPath: selectedBrand.includes("Street Politics")
+          ? "/generated-thumbnails/sp/bg/bg-0.jpg"
+          : "/generated-thumbnails/inv/bg/bg-0.jpg",
+        selectedBg: null,
+        selectedIconPath: "/generated-thumbnails/sp/icons/illustration-0.png",
+        searchImgKeyword: "",
+        searchBgKeyword: "",
+        searchImgLoading: false,
+        searchBgLoading: false,
+        searchImgData: pageStateSearchImgDataInit(),
+        searchBgData: pageStateSearchBgDataInit(),
+        removeBgLoading: false,
+        isSendLoading: false,
+        triggerSendContent: false,
+        triggerSearchImg: false,
+        highlightedWords: [],
+        // showRecentBg: true,
+        // showRecentImg: true,
+      };
+    }, [selectedBrand]);
+  const pageStateInit = usePageStateInit(selectedBrand);
   const [pageState, setPageState] = useState(pageStateInit);
 
   useEffect(() => {
@@ -121,6 +136,17 @@ export default function ThumbnailCanvas() {
   const getSelectedContentThumbnailValue = useCallback((value) => {
     setSelectedContentThumbnail(value);
   }, []);
+
+  const loadingStates = useMemo(
+    () => [
+      { key: "generateThumbnailsLoading", title: "Generating Thumbnails..." },
+      { key: "isSendLoading", title: "Sending Content..." },
+      { key: "searchImgLoading", title: "searching for images..." },
+      { key: "searchBgLoading", title: "searching for backgrounds..." },
+      { key: "removeBgLoading", title: "removing image background..." },
+    ],
+    []
+  );
 
   const handleTriggerSearchImg = useCallback(() => {
     setPageState((prev) => ({
@@ -149,6 +175,10 @@ export default function ThumbnailCanvas() {
       highlightedWords: value,
     }));
   }, []);
+
+  // useEffect(() => {
+  //   console.log("pageState.highlightedWords", pageState.highlightedWords);
+  // }, [pageState.highlightedWords]);
 
   // ============= Start Canvas =================
   // ==============================================================
@@ -263,7 +293,7 @@ export default function ThumbnailCanvas() {
 
           img.set({
             crossOrigin: "anonymous", // Set crossOrigin attribute
-            left: -25,
+            left: -2,
             top: -2,
             selectable: false, // Make the image non-selectable (non-movable, non-resizable)
             evented: false, // Disable interaction events (prevents drag, resize)
@@ -334,7 +364,7 @@ export default function ThumbnailCanvas() {
     const objects = canvasState.getObjects();
     console.log("objects", objects);
     objects.forEach((obj) => {
-      if (obj.isText) {
+      if (obj.isText || obj.isTextGroup) {
         canvasState.remove(obj);
       }
     });
@@ -342,22 +372,22 @@ export default function ThumbnailCanvas() {
     // ===== Add text =====
     if (selectedBrand.includes("Street Politics")) {
       // Set the starting position (bottom-left corner)
-      let left = 15;
-      let top = canvasState.height - (pageState.thumbnailFontSize + 10); // Start near the bottom of the canvas
+      let left = 19.4;
+      let top = canvasState.height - (pageState.thumbnailFontSize + 11.8); // Start near the bottom of the canvas
 
       // Add each word as a separate text object
       for (let i = words.length - 1; i >= 0; i--) {
-        const text = new fabric.Text(words[i], {
+        const text = new fabric.Text(words[i].toUpperCase(), {
           left: left,
           top: top,
           fontSize: pageState.thumbnailFontSize,
           fill: pageState.highlightedWords.includes(words[i])
             ? "#ff0000"
             : "#ffffff",
-          fontFamily: "Hellix-Black",
-          fontWeight: "600",
+          fontFamily: "Hellix",
+          // fontWeight: "600",
           stroke: "black", // Set the stroke color to black
-          strokeWidth: 3, // Set the stroke width to 3px
+          strokeWidth: 2.266, // Set the stroke width to 3px
           shadow: {
             color: "rgba(0, 0, 0, 0.5)", // Shadow color with opacity
             blur: 5, // Blur level of the shadow
@@ -365,36 +395,89 @@ export default function ThumbnailCanvas() {
             offsetY: 3, // Vertical shadow offset
           },
           isText: true,
+          selectable: false, // Make the image non-selectable (non-movable, non-resizable)
+          lockMovementX: true, // Prevent horizontal movement
+          lockMovementY: true, // Prevent vertical movement
+          lockScalingX: true, // Prevent horizontal scaling
+          lockScalingY: true, // Prevent vertical scaling
+          lockRotation: true, // Prevent rotation
         });
         canvasState.add(text);
-        canvasState.renderAll();
         text.bringToFront();
-        top -= text.height * 0.7; // Move the next word up by the height of the text
+        canvasState.renderAll();
+        // top -= text.height * 0.7; // Move the next word up by the height of the text
+        top -= 83.3;
       }
     } else {
-      // Set the starting position (bottom-left corner)
-      let left = 40;
-      let top = canvasState.height - (pageState.thumbnailFontSize + 40); // Start near the bottom of the canvas
+      // Calculate the total height of all text objects
+      let totalHeight = 0;
 
-      // Add each word as a separate text object
-      for (let i = words.length - 1; i >= 0; i--) {
-        const text = new fabric.IText(`${words[i].toUpperCase()}`, {
-          left: left,
-          top: top,
+      const textGroups = words.map((word) => {
+        const text = new fabric.Text(word.toUpperCase().replace(/\+/g, " "), {
           fontSize: pageState.thumbnailFontSize,
-          fill: "#ffffff",
-          fontFamily: '"Acumin Pro Bold Italic", Arial, sans-serif',
+          fill: pageState.highlightedWords.includes(word)
+            ? "#C0FE15"
+            : "#ffffff",
+          fontFamily: "Acumin Pro Bold Italic",
           fontWeight: "800",
           fontStyle: "italic",
-          textBackgroundColor: "#1E2329",
           isText: true,
+          originX: "center",
+          originY: "center",
+          scaleY: 1.2,
         });
 
-        canvasState.add(text);
-        canvasState.renderAll();
-        text.bringToFront();
-        top -= text.height * 1.05; // Move the next word up by the height of the text
+        // Create a background rectangle
+        const padding = pageState.thumbnailFontSize / 3.5; // Adjust this value for more or less padding
+        const rect = new fabric.Rect({
+          fill: "#1E2329",
+          width: text.width + padding * 2,
+          height: text.height,
+        });
+
+        // Center the text within the rectangle
+        text.set({
+          left: rect.width / 2 - padding / 2,
+          top: rect.height / 2,
+        });
+
+        // Group the rectangle and text
+        const group = new fabric.Group([rect, text], {
+          originX: "center",
+          originY: "center",
+          isTextGroup: true,
+          scaleY: 1.2,
+        });
+
+        totalHeight += group.height * 1.05; // Include the spacing
+        return group;
+      });
+
+      // Calculate the starting top position to center vertically
+      let startTop = (canvasState.height - totalHeight) / 2;
+
+      // Set the starting position
+      let left = 79;
+      let top = startTop;
+
+      // Add each word group to the canvas
+      for (const group of textGroups) {
+        group.set({
+          left: left + group.width / 2,
+          top: top + group.height / 2,
+          selectable: false, // Make the image non-selectable (non-movable, non-resizable)
+          lockMovementX: true, // Prevent horizontal movement
+          lockMovementY: true, // Prevent vertical movement
+          lockScalingX: true, // Prevent horizontal scaling
+          lockScalingY: true, // Prevent vertical scaling
+          lockRotation: true, // Prevent rotation
+        });
+        canvasState.add(group);
+        group.bringToFront();
+        top += group.height * 1.05; // Move the next word down by the height of the group plus spacing
       }
+
+      canvasState.renderAll();
     }
   }
 
@@ -402,7 +485,7 @@ export default function ThumbnailCanvas() {
     function bringAllTextToFront() {
       const objects = canvasState.getObjects();
       objects.forEach((obj) => {
-        if (obj.isText) {
+        if (obj.isText || obj.isTextGroup) {
           obj.bringToFront();
         }
       });
@@ -464,9 +547,7 @@ export default function ThumbnailCanvas() {
 
   function handleSearchBgError() {
     // toast.error("Something went wrong!");
-    toast(
-      "Subscription expired. Please contact support to renew subscription!"
-    );
+    toast("Please update search-images key!");
     setPageState((prev) => ({
       ...prev,
       searchBgLoading: false,
@@ -486,24 +567,15 @@ export default function ThumbnailCanvas() {
         ...prev,
         searchBgLoading: true,
       }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            searchImgKeyword: keyword,
-            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
-          }),
-        }
-      );
+      const res = await fetch(`/api/get-images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchImgKeyword: keyword,
+        }),
+      });
       const json = await res.json();
       if (!json) {
         handleSearchBgError();
@@ -514,7 +586,7 @@ export default function ThumbnailCanvas() {
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
           ...prev,
-          searchBgData: json.images.map((img) => img.original),
+          searchBgData: json.images,
           searchBgLoading: false,
         }));
       } else {
@@ -553,31 +625,78 @@ export default function ThumbnailCanvas() {
     }
   }
 
+  const removeBgKeys = [
+    "TBgpp1op1vFqWXZT6apW2o7m",
+    "Xd8e5XD6GeJLhydu8Dv4YpVh",
+    "ezvNXhQ4ZxqybWynLTtt6ysG",
+    "SvJ2oUgreLTtiLk2TdAxYg1Y",
+    "8oYvEhDZrcpSFete1nVGwFJ7"
+  ];
+
   async function handleRemoveBg(img, type) {
+    if (removeBgKeys.length === 0) {
+      // toast("No remove-bg keys available. Please add keys!");
+      return;
+    }
+
+    function getKeyIndex() {
+      if (typeof window !== "undefined") {
+        const keyIndex = localStorage.getItem("removeBgKeyIndex");
+        const index = keyIndex ? parseInt(keyIndex) : 0;
+        // Ensure the index is within the bounds of the current array
+        return index < removeBgKeys.length ? index : 0;
+      }
+      return 0;
+    }
+
+    function incrementKeyIndex(currentIndex) {
+      const newIndex = (currentIndex + 1) % removeBgKeys.length;
+      localStorage.setItem("removeBgKeyIndex", newIndex.toString());
+      return newIndex;
+    }
+
     try {
       setPageState((prev) => ({
         ...prev,
         removeBgLoading: true,
       }));
-      const res = await fetch(`https://api.remove.bg/v1.0/removebg`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Api-Key": process.env.NEXT_PUBLIC_REMOVEBG_API_KEY,
-        },
-        body: JSON.stringify({
-          ...(type === "select" ? { image_url: img } : { image_file_b64: img }),
-          size: "auto",
-        }),
-      });
-      if (!res.ok) {
-        // toast.error("Something went wrong!");
-        toast(
-          "Subscription expired. Please contact support to renew subscription!"
-        );
-        console.error("Error handleRemoveBg:", res.status);
+
+      let keyIndex = getKeyIndex();
+      let res;
+      let attempts = 0;
+
+      while (attempts < removeBgKeys.length) {
+        res = await fetch(`https://api.remove.bg/v1.0/removebg`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Api-Key": removeBgKeys[keyIndex],
+          },
+          body: JSON.stringify({
+            ...(type === "select"
+              ? { image_url: img }
+              : { image_file_b64: img }),
+            size: "auto",
+          }),
+        });
+
+        if (res.ok) {
+          break;
+        }
+
+        // toast(`API key ${keyIndex + 1} failed. Trying next key...`);
+        keyIndex = incrementKeyIndex(keyIndex);
+        attempts++;
+      }
+
+      if (!res || !res.ok) {
+        localStorage.setItem("removeBgKeyIndex", "0");
+        // toast(
+        //   "All remove-bg keys have been exhausted. Please update the keys!"
+        // );
         return;
       }
+
       // Convert the response to a Blob
       const blob = await res.blob();
       // Create a URL for the Blob
@@ -585,10 +704,6 @@ export default function ThumbnailCanvas() {
       // Use the imageUrl in your application
       return imageUrl; // You can set this as the src of an img tag
     } catch (error) {
-      // toast.error("Something went wrong!");
-      toast(
-        "Subscription expired. Please contact support to renew subscription!"
-      );
       console.error("Error handleRemoveBg:", error);
     } finally {
       setPageState((prev) => ({
@@ -609,54 +724,37 @@ export default function ThumbnailCanvas() {
         searchImgLoading: true,
         triggerSearchImg: false,
       }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            searchImgKeyword: pageState.searchImgKeyword,
-            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
-          }),
-        }
-      );
+      const res = await fetch(`/api/get-images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchImgKeyword: pageState.searchImgKeyword,
+        }),
+      });
       const json = await res.json();
       if (!json) {
         // toast.error("Something went wrong!");
-        toast(
-          "Subscription expired. Please contact support to renew subscription!"
-        );
+        toast("Please update search-images key!");
         return;
       } else if (json && json.success === false) {
         // toast.error("Something went wrong!");
-        toast(
-          "Subscription expired. Please contact support to renew subscription!"
-        );
+        toast("Please update search-images key!");
         return;
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
           ...prev,
-          searchImgData: json.images.map((img) => img.original),
+          searchImgData: json.images,
         }));
       } else {
         // toast.error("Something went wrong!");
-        toast(
-          "Subscription expired. Please contact support to renew subscription!"
-        );
+        toast("Please update search-images key!");
         return;
       }
     } catch (error) {
       // toast.error("Something went wrong!");
-      toast(
-        "Subscription expired. Please contact support to renew subscription!"
-      );
+      toast("Please update search-images key!");
       console.error("Error generateThumbnails:", error);
     } finally {
       setPageState((prev) => ({
@@ -957,45 +1055,14 @@ export default function ThumbnailCanvas() {
     };
   }, [canvasState]);
 
-  const handleToggleHighlight = () => {
-    if (canvasState && selectedLayer && selectedLayer.type === "i-text") {
-      const iTextObject = selectedLayer;
-      const selectionStart = iTextObject.selectionStart;
-      const selectionEnd = iTextObject.selectionEnd;
-
-      if (
-        selectionStart !== undefined &&
-        selectionEnd !== undefined &&
-        selectionStart !== selectionEnd
-      ) {
-        if (
-          iTextObject.getSelectionStyles(selectionStart, selectionEnd)[0]
-            .fill === "#ffffff"
-        ) {
-          iTextObject.setSelectionStyles(
-            { fill: "#C0FE15" },
-            selectionStart,
-            selectionEnd
-          );
-        } else {
-          iTextObject.setSelectionStyles(
-            { fill: "#ffffff" },
-            selectionStart,
-            selectionEnd
-          );
-        }
-        canvasState.renderAll();
-      }
-    }
-  };
   // ============= End Layer Controls ==================
 
-  // ============= Start Format Content =================
+  // ============= Start Send Content =================
   function handleSelectThumbnail() {
     if (selectedContentThumbnail) {
       setPageState((prev) => ({
         ...prev,
-        triggerFormatToHtml: true,
+        triggerSendContent: true,
       }));
     } else {
       toast.error("Please select a thumbnail!");
@@ -1009,80 +1076,6 @@ export default function ThumbnailCanvas() {
     }
   }
 
-  async function formatToHtml() {
-    try {
-      setPageState((prev) => ({
-        ...prev,
-        isLoadingFormatToHtml: true,
-      }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/format-to-html`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            contentBody: finalArticle?.articles[0]?.content,
-          }),
-        }
-      );
-
-      const json = await res.json();
-
-      if (!json) {
-        toast.error("Something went wrong!");
-        return finalArticle?.articles[0]?.content || "";
-      } else if (json && json.success === false) {
-        toast.error("Something went wrong!");
-        return finalArticle?.articles[0]?.content || "";
-      } else if (json && json.success === true && json?.articles[0]?.content) {
-        const data = json?.articles[0]?.content
-          .replace(/\n/g, "")
-          .replace(/\bhtml\b/gi, "")
-          .replace(/[`]/g, "");
-        const updatedArticle = {
-          ...finalArticle,
-          articles: [
-            {
-              ...finalArticle.articles[0],
-              content: data,
-            },
-          ],
-        };
-
-        dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
-      } else {
-        toast.error("Something went wrong!");
-        return finalArticle?.articles[0]?.content || "";
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error formatToHtml:", error);
-      return finalArticle?.articles[0]?.content || "";
-    } finally {
-      setPageState((prev) => ({
-        ...prev,
-        isLoadingFormatToHtml: false,
-        triggerSendContent: true,
-      }));
-    }
-  }
-
-  useEffect(() => {
-    if (pageState.triggerFormatToHtml) {
-      formatToHtml();
-    }
-  }, [pageState.triggerFormatToHtml]);
-
-  // ============= End Format Content ==================
-
-  // ============= Start Send Content =================
   useEffect(() => {
     if (pageState.triggerSendContent) {
       handleSendContent();
@@ -1100,8 +1093,8 @@ export default function ThumbnailCanvas() {
 
   async function handleSendContent() {
     let endpoint = editContentData
-      ? `https://api.machinegenius.io/content-creation/content/${editContentData._id}`
-      : "https://api.machinegenius.io/content-creation/content";
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content/${editContentData._id}`
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content`;
     let method = editContentData ? "PATCH" : "POST";
     setPageState((prev) => ({
       ...prev,
@@ -1133,16 +1126,17 @@ export default function ThumbnailCanvas() {
           },
           body: JSON.stringify(postBody),
         });
+        if (res.status === 401) {
+          handleSignOut();
+        }
         json = await res.json();
-        if (json && json.message === "successfully") {
-          // If valid data is found, break the loop
+        if (json) {
           break;
         } else {
           setPageState((prev) => ({
             ...prev,
             isSendLoading: false,
             triggerSendContent: false,
-            triggerFormatToHtml: false,
           }));
           toast.error("Something went wrong!");
           return;
@@ -1153,7 +1147,6 @@ export default function ThumbnailCanvas() {
           ...prev,
           isSendLoading: false,
           triggerSendContent: false,
-          triggerFormatToHtml: false,
         }));
         console.error("Error handleSendContent:", error);
       } finally {
@@ -1161,8 +1154,18 @@ export default function ThumbnailCanvas() {
       }
     }
 
-    if (json && json.message === "successfully") {
-      // toast.success("Content sent successfully");
+    if (json.message === "Content already exists") {
+      toast.error("Content already exists");
+      setPageState((prev) => ({
+        ...prev,
+        isSendLoading: false,
+        triggerSendContent: false,
+      }));
+    } else if (
+      (method === "POST" && json.message === "successfully") ||
+      (method === "PATCH" && json.user_name)
+    ) {
+      toast.success("Content sent successfully");
       if (selectedBrand === "Movie Myth") {
         router.replace("/content-creator/create/movie-myth/article-ready");
       } else {
@@ -1207,55 +1210,9 @@ export default function ThumbnailCanvas() {
 
   return (
     <main className="relative">
-      {pageState.generateThumbnailsLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] py-[1.5vw] ">
-          <LogoAndTitle needTxt={false} title="Generating Thumbnails..." />
-        </div>
-      )}
-
-      {pageState.isSendLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] py-[1.5vw]">
-          <LogoAndTitle needTxt={false} title="Sending Content..." />
-        </div>
-      )}
-
-      {pageState.searchImgLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={true}
-            textNeeded="Hold on tight."
-            title={"Genius is searching for images..."}
-          />
-        </div>
-      )}
-
-      {pageState.searchBgLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={true}
-            textNeeded="Hold on tight."
-            title={"Genius is searching for backgrounds..."}
-          />
-        </div>
-      )}
-
-      {pageState.removeBgLoading && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col gap-8 justify-center items-center min-w-[24rem] mx-auto py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={true}
-            textNeeded="Hold on tight."
-            title={"Genius is removing image background..."}
-          />
-        </div>
-      )}
-
-      {pageState.isLoadingFormatToHtml && (
-        <div className="fixed top-0 left-0 w-full h-full z-[999999999] bg-white flex flex-col justify-center items-center min-w-[24rem] gap-[--sy-15px] py-[1.5vw]">
-          <LogoAndTitle
-            needTxt={false}
-            title="Genius is formatting your content..."
-          />
-        </div>
+      {loadingStates.map(
+        ({ key, title }) =>
+          pageState[key] && <LoadingOverlay key={key} title={title} />
       )}
 
       <nav className="my-[--sy-5px] w-4/5 max-w-3xl mx-auto">
@@ -1281,20 +1238,6 @@ export default function ThumbnailCanvas() {
           >
             Backwards
           </button>
-
-          {selectedBrand === "Investorcracy" && (
-            <button
-              className={
-                selectedLayer && selectedLayer.type !== "i-text"
-                  ? "px-3 py-2 rounded bg-gray-300 text-gray-500 cursor-not-allowed transition-colors duration-200 ease-in-out"
-                  : buttonClass
-              }
-              onClick={handleToggleHighlight}
-              disabled={!selectedLayer || selectedLayer.type !== "i-text"}
-            >
-              Toggle Highlight
-            </button>
-          )}
 
           <button
             className={buttonClass}
@@ -1324,8 +1267,7 @@ export default function ThumbnailCanvas() {
             pageState.isSendLoading ||
             pageState.searchImgLoading ||
             pageState.searchBgLoading ||
-            pageState.removeBgLoading ||
-            pageState.isLoadingFormatToHtml) &&
+            pageState.removeBgLoading) &&
           "!hidden"
         }`}
       >
@@ -1337,18 +1279,20 @@ export default function ThumbnailCanvas() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-[--17px]">Select Thumbnail</h3>
 
-                  <div className="w-[45%]" title="Font Size">
-                    <CustomSelectInput
-                      paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
-                      label={"Font Size"}
-                      options={Array.from({ length: 71 }, (_, i) => i + 60)}
-                      getValue={getThumbnailFontSizeValue}
-                    />
-                  </div>
+                  {selectedBrand === "Investorcracy" && (
+                    <div className="w-[45%]" title="Font Size">
+                      <CustomSelectInput
+                        paddingVal={"py-[0.2vw] pl-[0.3vw] pr-0"}
+                        label={"Font Size"}
+                        options={Array.from({ length: 41 }, (_, i) => i + 80)}
+                        getValue={getThumbnailFontSizeValue}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <CustomSelectInput
-                  label={"Select Thumbnail"}
+                  label={"Select Thumbnail Title"}
                   options={
                     generatedThumbnails && generatedThumbnails?.length > 0
                       ? generatedThumbnails?.map((e) => e.Thumbnail)
@@ -1357,27 +1301,36 @@ export default function ThumbnailCanvas() {
                   getValue={getSelectedContentThumbnailValue}
                 />
 
-                {selectedBrand !== "Investorcracy" && (
-                  <>
-                    <input
-                      className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
-                      type="text"
-                      name="thumbnail-title"
-                      id="thumbnail-title"
-                      placeholder="Edit thumbnail title ..."
-                      value={selectedContentThumbnail}
-                      onChange={(e) =>
-                        setSelectedContentThumbnail(e.target.value)
-                      }
-                      title="Edit thumbnail title ..."
-                    />
+                <div className="flex flex-col gap-[--5px]">
+                  <input
+                    className="flex-1 border-[--1px] border-[--gray-300] rounded-[--5px] p-[--5px]"
+                    type="text"
+                    name="thumbnail-title"
+                    id="thumbnail-title"
+                    placeholder="Edit thumbnail title ..."
+                    value={selectedContentThumbnail}
+                    onChange={(e) =>
+                      setSelectedContentThumbnail(e.target.value)
+                    }
+                    title="Edit thumbnail title ..."
+                  />
 
-                    <MultipleSelectCheckmarks
-                      words={words}
-                      getHighlightedWordsValue={getHighlightedWordsValue}
-                    />
-                  </>
-                )}
+                  {selectedBrand === "Investorcracy" && (
+                    <div className="flex flex-col gap-[--5px]">
+                      <span className="text-sm text-gray-500">
+                        Note: enter + to group words in one line
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        Note: enter space to break line
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <MultipleSelectCheckmarks
+                  words={words}
+                  getHighlightedWordsValue={getHighlightedWordsValue}
+                />
               </div>
 
               <hr className="border-[--1px] border-[--gray-300] overflow-hidden w-[calc(100%+20px)] my-[--sy-15px]" />
@@ -1385,7 +1338,27 @@ export default function ThumbnailCanvas() {
               {/* 02 Select Background */}
               <div className="flex flex-col gap-[--5px] w-full">
                 {/* 02-01 Select Background */}
-                <h3 className="font-bold text-[--17px]">Select Background</h3>
+
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-[--17px]">Select Background</h3>
+
+                  {/* <div className="form-control">
+                    <label className="cursor-pointer label">
+                      <input
+                        type="checkbox"
+                        checked={pageState.showRecentBg}
+                        className="checkbox checkbox-sm"
+                        onChange={(e) => {
+                          setPageState((prev) => ({
+                            ...prev,
+                            showRecentBg: e.target.checked,
+                          }));
+                        }}
+                      />
+                      <span className="label-text ml-[--5px]">Show Recent</span>
+                    </label>
+                  </div> */}
+                </div>
 
                 {/* 02-02 Search Background */}
                 <div className="flex gap-[--10px]">
@@ -1449,7 +1422,7 @@ export default function ThumbnailCanvas() {
                           inputName="select-bg"
                           imgSrc={`/generated-thumbnails/inv/bg/bg-${i}.jpg`}
                           checked={
-                            pageState.selectedBgPath ===
+                            pageState.selectedBg ===
                             `/generated-thumbnails/inv/bg/bg-${i}.jpg`
                           }
                           onChange={(e) => {
@@ -1457,6 +1430,7 @@ export default function ThumbnailCanvas() {
                             setPageState((prev) => ({
                               ...prev,
                               selectedBgPath: e.target.value,
+                              selectedBg: e.target.value,
                             }));
                           }}
                         />
@@ -1470,7 +1444,7 @@ export default function ThumbnailCanvas() {
                         inputName="select-bg"
                         imgSrc={`/generated-thumbnails/sp/bg/bg-0.jpg`}
                         checked={
-                          pageState.selectedBgPath ===
+                          pageState.selectedBg ===
                           `/generated-thumbnails/sp/bg/bg-0.jpg`
                         }
                         onChange={(e) => {
@@ -1478,6 +1452,7 @@ export default function ThumbnailCanvas() {
                           setPageState((prev) => ({
                             ...prev,
                             selectedBgPath: e.target.value,
+                            selectedBg: e.target.value,
                           }));
                         }}
                       />
@@ -1491,18 +1466,21 @@ export default function ThumbnailCanvas() {
                         <ImageCard
                           imgSrc={img}
                           inputType="radio"
-                          inputName={"select-bg"}
-                          checked={pageState.selectedBgPath === img}
+                          inputName="select-bg"
+                          checked={pageState.selectedBg === img}
                           onChange={async (e) => {
                             const url = await getProxiedImageUrl(
                               e.target.value
                             );
 
                             // console.log(`e.target.value`, e.target.value);
-                            setPageState((prev) => ({
-                              ...prev,
-                              selectedBgPath: url,
-                            }));
+                            if (url) {
+                              setPageState((prev) => ({
+                                ...prev,
+                                selectedBgPath: url,
+                                selectedBg: e.target.value,
+                              }));
+                            }
                           }}
                         />
                       </div>
@@ -1537,12 +1515,13 @@ export default function ThumbnailCanvas() {
                       />
                     </div>
 
-                    {Array.from({ length: 38 }, (_, i) => (
+                    {Array.from({ length: 39 }, (_, i) => (
                       <div className="!w-1/2" key={uuidv4()}>
                         <ImageCard
                           inputType="radio"
                           inputName="select-icon"
                           imgSrc={`/generated-thumbnails/sp/icons/illustration-${i}.png`}
+                          imgProps="!object-contain"
                           checked={
                             pageState.selectedIconPath ===
                             `/generated-thumbnails/sp/icons/illustration-${i}.png`
@@ -1568,7 +1547,25 @@ export default function ThumbnailCanvas() {
               <div className="flex flex-col gap-[--5px] w-full">
                 {/* 03-01 Select Image */}
 
-                <h3 className="font-bold text-[--17px]">Select Image</h3>
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-[--17px]">Select Image</h3>
+                  {/* <div className="form-control">
+                    <label className="cursor-pointer label">
+                      <input
+                        type="checkbox"
+                        checked={pageState.showRecentImg}
+                        onChange={(e) => {
+                          setPageState((prev) => ({
+                            ...prev,
+                            showRecentImg: e.target.checked,
+                          }));
+                        }}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span className="label-text ml-[--5px]">Show Recent</span>
+                    </label>
+                  </div> */}
+                </div>
 
                 {/* 03-02 Search Image */}
                 <div className="flex gap-[--10px]">

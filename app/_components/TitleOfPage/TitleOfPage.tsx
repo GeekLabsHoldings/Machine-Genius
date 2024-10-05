@@ -1,15 +1,9 @@
-'use client'
-import styles from './TitleOfPage.module.css'
+"use client";
+import { memo } from "react";
+import styles from "./TitleOfPage.module.css";
 
+const TitleOfPage = ({ title }: { title: string }) => {
+  return <h3 className={styles.title_of_page}>{title}</h3>;
+};
 
-const TitleOfPage = ({title}:{title:string}) => {
-
-
-    
-
-    return (
-        <h3 className={styles.title_of_page}>{title}</h3>
-    )
-}
-
-export default TitleOfPage
+export default memo(TitleOfPage);

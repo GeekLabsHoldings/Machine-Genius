@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./CandidateDatabaseTable.module.css";
 import { truncateText } from "../../../_utils/text";
 import Link from "next/link";
+import { globalContext } from "@/app/_context/store";
 
 interface Candidate {
   recommendation: null;
@@ -32,6 +33,7 @@ export default function CandidateDatabaseTable({
 }: {
   filter: { role: string };
 }) {
+  const { handleSignOut } = useContext(globalContext);
   // An array of objects representing the rows of the table body.
   const [candidates, setCandidates] = useState<Candidate[]>([
     {
@@ -56,7 +58,7 @@ export default function CandidateDatabaseTable({
   useEffect(() => {
     // Fetch the candidate data from the server.
     fetch(
-      `https://api.machinegenius.io/hr/candidate/all-candidate?role=${filter.role}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/all-candidate?role=${filter.role}`,
       {
         method: "GET",
         headers: {
@@ -65,7 +67,13 @@ export default function CandidateDatabaseTable({
         },
       }
     )
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 401) {
+          handleSignOut();
+        } else {
+          return response.json(); // Make sure to handle other status codes if needed
+        }
+      })
       .then((data) => {
         setCandidates(data);
       });

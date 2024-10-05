@@ -1,5 +1,12 @@
 "use client";
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  memo,
+  useMemo,
+} from "react";
 import styles from "./SideNav.module.css";
 import logo_image from "../../../public/assets/logo.svg";
 import logo_white_image from "../../../public/assets/logo white.svg";
@@ -75,22 +82,44 @@ const SideNav = ({
   setCurrentPage: any;
 }) => {
   const { authState } = useContext(globalContext);
-
   // current role
+
+  // Memoize the result of selectedRoleTitleInit
+  const SelectedRoleTitle = useMemo(() => {
+    if (typeof window !== "undefined") {
+      const selectedRoleInitValue = localStorage.getItem("selected-role");
+      return selectedRoleInitValue
+        ? selectedRoleInitValue
+        : authState.decodedToken?.department[0] || "";
+    } else {
+      return authState.decodedToken?.department[0] || "";
+    }
+  }, [authState.decodedToken?.department]);
+
   const [SelectedRole, setSelectedRole] = useState<string | number>("");
+
   const router = useRouter();
 
   // function that get role value from select option by send it as a prop
-  const getRole = (value: string | number) => {
+  const getRole = useCallback((value: string | number) => {
     setSelectedRole(value);
-  };
+  }, []);
+
+  const filteredRoles = useMemo(() => {
+    return authState.decodedToken?.department.includes("ceo")
+      ? rols
+      : rols.filter((role) => role === authState.decodedToken?.department[0]);
+  }, [authState.decodedToken?.department]);
 
   // function that get current
-  const handleCurrentPageTitle = (name: any) => {
-    setCurrentPage(name);
-  };
+  const handleCurrentPageTitle = useCallback(
+    (name: any) => {
+      setCurrentPage(name);
+    },
+    [setCurrentPage]
+  );
 
-  const handleToggleSubMenu = (e: any) => {
+  const handleToggleSubMenu = useCallback((e: any) => {
     console.log($(e.target).parents(`.${styles.has_sub_menu}`));
     $(`.${styles.has_sub_menu}`)
       .not($(e.target).parents(`.${styles.has_sub_menu}`))
@@ -98,45 +127,36 @@ const SideNav = ({
     $(e.target)
       .parents(`.${styles.has_sub_menu}`)
       .toggleClass(`${styles.open}`);
-  };
+  }, []);
 
   useEffect(() => {
-    if (SelectedRole === "ContentCreator") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/content-creator/dashboard");
+    if (SelectedRole && rols.includes(SelectedRole as string)) {
+      localStorage.setItem("selected-role", SelectedRole.toString());
+    }
+    if (SelectedRole === "ContentCreator" || SelectedRole === "CEO") {
+      router.replace("/content-creator/dashboard");
     } else if (SelectedRole === "Video Editing") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/video-editor/dashboard");
+      router.replace("/video-editor/dashboard");
     } else if (SelectedRole === "Social Media") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/social-media/dashboard");
+      router.replace("/social-media/dashboard");
     } else if (SelectedRole === "Administrative") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/administrative/dashboard");
+      router.replace("/administrative/dashboard");
     } else if (SelectedRole === "Customer Service") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/customer-service/dashboard");
+      router.replace("/customer-service/dashboard");
     } else if (SelectedRole === "Creative") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/creative/dashboard");
+      router.replace("/creative/dashboard");
     } else if (SelectedRole === "HR") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/hr/dashboard");
+      router.replace("/hr/dashboard");
     } else if (SelectedRole === "Accounting") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/accounting/dashboard");
+      router.replace("/accounting/dashboard");
     } else if (SelectedRole === "Newsletter") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/newsletter/dashboard");
+      router.replace("/newsletter/dashboard");
     } else if (SelectedRole === "Out Reach") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/outreach/dashboard");
+      router.replace("/outreach/dashboard");
     } else if (SelectedRole === "SEO") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/seo/dashboard");
+      router.replace("/seo/dashboard");
     } else if (SelectedRole === "OP") {
-      localStorage.setItem("selected-role", SelectedRole);
-      router.push("/op/dashboard");
+      router.replace("/op/dashboard");
     }
     // console.log(`SelectedRole:`, SelectedRole);
   }, [SelectedRole]);
@@ -151,6 +171,13 @@ const SideNav = ({
     debounce(() => setIsSideNavOpen(false), 100),
     []
   );
+
+  useEffect(() => {
+    return () => {
+      handleMouseEnter.clear();
+      handleMouseLeave.clear();
+    };
+  }, [handleMouseEnter, handleMouseLeave]);
 
   return (
     <div
@@ -168,12 +195,7 @@ const SideNav = ({
             <div className={styles.avatar + " " + styles.active}></div>
             <div className="flex flex-col">
               <h6>{authState.decodedToken?.email.split("@")[0]}</h6>
-              <p>
-                {typeof window !== "undefined"
-                  ? localStorage.getItem("selected-role") ??
-                    authState.decodedToken?.department[0]
-                  : authState.decodedToken?.department[0]}
-              </p>
+              <p>{SelectedRoleTitle}</p>
             </div>
           </div>
           <div className={styles.logo}>
@@ -197,29 +219,18 @@ const SideNav = ({
         <div className={styles.line}></div>
 
         <CustomSelectInput
-          options={
-            authState.decodedToken?.department.includes("CEO")
-              ? rols
-              : rols.filter(
-                  (role: any) => role === authState.decodedToken?.department[0]
-                )
-          }
+          options={filteredRoles}
           icon={rolsIcon}
           theme="dark"
           whenSideNavClosed={!isSideNavOpen}
           getValue={getRole}
-          label={
-            typeof window !== "undefined"
-              ? localStorage.getItem("selected-role") ??
-                authState.decodedToken?.department[0]
-              : authState.decodedToken?.department[0]
-          }
+          label={SelectedRoleTitle}
         />
 
         <div className={styles.line}></div>
         <ul className={styles.side_nav_links + " space-y-[0.4vw]"}>
           {sideNavLinks.slice(1).map((ele, index) => (
-            <>
+            <React.Fragment key={ele.name}>
               <li
                 key={ele.name}
                 className={ele.subLinks ? styles.has_sub_menu : ""}
@@ -295,7 +306,7 @@ const SideNav = ({
                   </Link>
                 </li>
               )}
-            </>
+            </React.Fragment>
           ))}
         </ul>
       </div>
@@ -312,4 +323,4 @@ const SideNav = ({
   );
 };
 
-export default SideNav;
+export default memo(SideNav);

@@ -30,7 +30,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/_components/CustomSelectInput/CustomSelectInput.tsx",
-    "app/video-editor/create/converted-article/page.tsx"
+    "app/video-editor/create/converted-script/ConvertedScriptPage.tsx"
 , "app/content-creator/create/show-errors/ShowErrorsPage.tsx", "app/content-creator/create/show-errors/page.tsx", "app/_components/ContentCreator/ShowErrorsPage.jsx"  ],
   "exclude": ["node_modules"]
 }

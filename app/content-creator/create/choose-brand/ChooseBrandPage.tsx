@@ -26,7 +26,7 @@ export default function ChooseBrandPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const abortControllerRef = useRef<AbortController | null>(null); // Store the AbortController in a ref
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     setSelectedBrand,
     collectedData,
@@ -170,7 +170,7 @@ export default function ChooseBrandPage() {
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/generate-content`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/generate-content`,
         {
           method: "POST",
           headers: {
@@ -185,6 +185,9 @@ export default function ChooseBrandPage() {
           signal, // Pass the signal to the fetch request
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         handleGetCollectedDataFailure();
@@ -213,7 +216,7 @@ export default function ChooseBrandPage() {
   // async function getTwitterData() {
   //   try {
   //     const res = await fetch(
-  //       `https://api.machinegenius.io/content-creation/collect/twitter/PLTR`
+  //       `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/collect/twitter/PLTR`
   //     );
 
   //     const json = await res.json();

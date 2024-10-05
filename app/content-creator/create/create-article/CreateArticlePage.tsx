@@ -13,6 +13,8 @@ import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { formatToText } from "@/app/_utils/contentFormatter";
+import { formatHtml } from "@/app/_utils/htmlFormatter";
+import { contentCleaner } from "@/app/_utils/contentCleaner";
 // import ArticleWithCheck from "../../../_components/ArticleWithCheck/ArticleWithCheck";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 // import { SelectArticleData } from "@/app/_data/data";
@@ -24,7 +26,7 @@ export default function CreateArticlePage() {
   // ===== End Hooks =====
 
   // ===== Start State =====
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const { selectedContentType, selectedBrand, choosedArticles } = useContext(
     contentCreatorContext
   );
@@ -259,7 +261,7 @@ export default function CreateArticlePage() {
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/${
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/${
           selectedContentType === "Script" ? "script" : "article"
         }/finalize-content`,
         {
@@ -282,7 +284,9 @@ export default function CreateArticlePage() {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         handleFinalizeContentFailure();
@@ -296,9 +300,7 @@ export default function CreateArticlePage() {
           articles: [
             {
               ...json.articles[0],
-              content: json.articles[0].content
-                .replace(/[`]/g, "")
-                .replace(/\bhtml\b/gi, ""),
+              content: formatHtml(json.articles[0].content),
             },
           ],
         };
@@ -357,7 +359,7 @@ export default function CreateArticlePage() {
       const selectedContent = choosedArticles.find(
         (item: any) => item.title === selectedArticle
       )?.content;
-      return selectedContent;
+      return contentCleaner(selectedContent);
     }
   }
 

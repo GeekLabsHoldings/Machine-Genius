@@ -10,6 +10,7 @@ import TemplateDetails from "../[templateId]/page";
 import { title } from "process";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -143,6 +144,7 @@ const templateContent: TemplateContent = {
 };
 
 const Page = () => {
+  const { handleSignOut } = useContext(globalContext);
   const [Templates, setTemplates] = useState<Template[]>([]);
   const [groups, setGroups] = useState<any>([]);
   const [groupID, setGroupID] = useState("");
@@ -218,7 +220,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/group/groups/${templates.key}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups/${templates.key}`,
         {
           method: "get",
           headers: {
@@ -226,6 +228,9 @@ const Page = () => {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       setGroups(data);
     } catch (error) {
@@ -242,7 +247,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        "https://api.machinegenius.io/hr/template/un-attached",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/un-attached`,
         {
           method: "get",
           headers: {
@@ -250,6 +255,9 @@ const Page = () => {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       console.log(data);
       setTempOptions(data);
@@ -260,7 +268,7 @@ const Page = () => {
   async function createGroup() {
     try {
       const res = await fetch(
-        "https://api.machinegenius.io/hr/group/create",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`,
         {
           method: "post",
           headers: {
@@ -276,7 +284,9 @@ const Page = () => {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       if (res.ok) {
         toast.success("Group Created Successfully");
@@ -309,7 +319,7 @@ const Page = () => {
 
     try {
       const res = await fetch(
-        "https://api.machinegenius.io/hr/template/create",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`,
         {
           method: "post",
           headers: {
@@ -319,6 +329,9 @@ const Page = () => {
           body: JSON.stringify(body),
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       if (res.ok) {
         toast.success("Template Created Successfully");

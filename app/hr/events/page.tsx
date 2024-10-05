@@ -1,20 +1,16 @@
 "use client"; // Indicates that this file is intended for use on the client side
-import "../../video-editor/calender/calender.css"; // Importing CSS styles for the calendar component
+import "@/app/_components/Calendar/calender.css"; // Importing CSS styles for the calendar component
 import FullCalendar from "@fullcalendar/react"; // Importing the FullCalendar component
 import dayGridPlugin from "@fullcalendar/daygrid"; // Importing the dayGridPlugin for FullCalendar
-import { useEffect, useState } from "react"; // Importing React hooks for state management
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput"; // Importing custom select input component
-import CustomBtn from "@/app/_components/Button/CustomBtn"; // Importing custom button component
+import { useContext, useEffect, useState } from "react"; // Importing React hooks for state management
 import eventContentImg from "../../../public/assets/calender event content img.png"; // Importing event content image
 import Image from "next/image"; // Importing Next.js Image component for optimized image loading
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-import { headers } from "next/headers";
-import { title } from "process";
-import { url } from "inspector";
-import { log } from "console";
+import { globalContext } from "@/app/_context/store";
 
 // Calendar component definition
 export default function Calendar() {
+  const { handleSignOut } = useContext(globalContext);
   // Options for brand and content type select inputs
   const eventsOptions: string[] = ["All", "Events", "Tasks"];
 
@@ -60,7 +56,7 @@ export default function Calendar() {
 
     const token = localStorage.getItem("token");
 
-    url = "https://api.machinegenius.io/hr/event/create";
+    url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/event/create`;
 
     try {
       const data = await fetch(`${url}`, {
@@ -77,11 +73,14 @@ export default function Calendar() {
           backgroundColor: bg,
         }),
       });
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       console.log(res);
       setCreateModal(false);
       getSchedule();
-      
+
       (document.getElementById("title") as HTMLInputElement).value = "";
       (document.getElementById("bg") as HTMLInputElement).value = "";
     } catch (error) {
@@ -91,16 +90,16 @@ export default function Calendar() {
   async function getSchedule() {
     const token = localStorage.getItem("token");
     try {
-      const data = await fetch(
-        "https://api.machinegenius.io/user/task/all",
-        {
-          method: "get",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/task/all`, {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       console.log(res);
 
@@ -113,7 +112,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        `https://api.machinegenius.io/hr/event/delete/${id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/event/delete/${id}`,
         {
           method: "delete",
           headers: {
@@ -122,6 +121,9 @@ export default function Calendar() {
           },
         }
       );
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       console.log(res);
 
@@ -140,7 +142,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        `https://api.machinegenius.io/hr/event/edit-event/${id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/event/edit-event/${id}`,
         {
           method: "put",
           headers: {
@@ -155,6 +157,9 @@ export default function Calendar() {
           }),
         }
       );
+      if (data.status === 401) {
+        handleSignOut();
+      }
       const res = await data.json();
       console.log(res);
       (document.getElementById("titleEdit") as HTMLInputElement).value = "";

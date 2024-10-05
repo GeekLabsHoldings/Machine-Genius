@@ -1,15 +1,25 @@
 "use client";
 import React, { useState } from "react";
-import styles from "../../_components/Administrative/03TicketingDatabase/CreateTicketModal.module.css";
+import styles from "../../_components/Accounting/CreateTicketModal.module.css";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import toast from "react-hot-toast";
+
+interface Subscription {
+  subscriptionName: string;
+  subscriptionPrice: number;
+  startDate: number; // Unix timestamp in milliseconds
+  endDate: number; // Unix timestamp in milliseconds
+}
+
 interface IProps {
   btnWord: string; // Button text.
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
+  setSubscriptions: (value: React.SetStateAction<Subscription[]>) => void; // Function to set the subscriptions state.
 }
 
 const ticketTypeOptions: string[] = ["IT", "System Issue", "Request"];
@@ -19,6 +29,7 @@ function SubscriptionsCreator({
   btnWord,
   btnColor,
   btnIcon,
+  setSubscriptions,
 }: IProps) {
   // State for controlling the modal open/close state
   const [open, setOpen] = useState(false);
@@ -27,7 +38,57 @@ function SubscriptionsCreator({
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
-  const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
+  const [subscriptionName, setSubscriptionName] = useState("");
+  const [subscriptionPrice, setSubscriptionPrice] = useState(0);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+
+  function clearFields() {
+    setSubscriptionName("");
+    setSubscriptionPrice(0);
+    setStartDate("");
+    setEndDate("");
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // check if the end date is greater than the start date
+    if (new Date(startDate) > new Date(endDate)) {
+      toast.error("End date must be greater than start date");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/subscriptions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            subscriptionName,
+            subscriptionPrice,
+            startDate: new Date(startDate).getTime(),
+            endDate: new Date(endDate).getTime(),
+          }),
+        }
+      );
+      const data: Subscription = await response.json();
+
+      // check if the data is of type Subscription
+      if (data.subscriptionName) {
+        toast.success("New Subscription Has Been Added");
+        handleClose();
+        setSubscriptions((prev: Subscription[]) => [...prev, data]);
+        clearFields();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -47,7 +108,7 @@ function SubscriptionsCreator({
         aria-describedby="modal-modal-description"
       >
         <Box>
-          <div className={`${styles.modalBox}`}>
+          <form className={`${styles.modalBox}`} onSubmit={handleSubmit}>
             {/* 1. Modal Head */}
             <div className={`flex justify-between ${styles.createTicket}`}>
               {/* Modal title */}
@@ -76,7 +137,6 @@ function SubscriptionsCreator({
 
             {/* 2. Modal Body */}
 
-
             <div className="flex flex-col gap-[0.7vw]">
               <div className="flex flex-col gap-[0.2vw]">
                 <label htmlFor="subjectLine" className="xl">
@@ -85,6 +145,8 @@ function SubscriptionsCreator({
                 <input
                   type="text"
                   id="subjectLine"
+                  value={subscriptionName}
+                  onChange={(e) => setSubscriptionName(e.target.value)}
                   required
                   className={`${styles.input}`}
                 />
@@ -96,6 +158,8 @@ function SubscriptionsCreator({
                 <input
                   type="text"
                   id="subjectLine"
+                  value={subscriptionPrice}
+                  onChange={(e) => setSubscriptionPrice(Number(e.target.value))}
                   required
                   className={`${styles.input}`}
                 />
@@ -111,6 +175,8 @@ function SubscriptionsCreator({
                   <input
                     type="date"
                     id="subjectLine"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
                     className="border border-[var(--dark)] grow rounded-[5px] px-3 py-2"
                     required
                   />
@@ -122,6 +188,8 @@ function SubscriptionsCreator({
                   <input
                     type="date"
                     id="subjectLine"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
                     className="border border-[var(--dark)] grow rounded-[5px] px-3 py-2"
                     required
                   />
@@ -152,9 +220,10 @@ function SubscriptionsCreator({
                 btnColor="black"
                 style={{ width: "max-content" }}
                 paddingVal="py-[0.5vw] px-[0.8vw]"
+                type="submit"
               />
             </div>
-          </div>
+          </form>
         </Box>
       </Modal>
     </>

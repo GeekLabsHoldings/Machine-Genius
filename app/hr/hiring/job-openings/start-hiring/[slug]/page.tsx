@@ -1,12 +1,14 @@
 "use client";
 import styles from "./new-template.module.css";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const { handleSignOut } = useContext(globalContext);
   const [data, setData] = useState<any>({});
   const [isEditing, setIsEditing] = useState(false);
   const textRef = useRef<(HTMLParagraphElement | null)[]>([]);
@@ -18,7 +20,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/hr/hiring/current-step-template/${params.slug}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/current-step-template/${params.slug}`,
           {
             method: "GET",
             headers: {
@@ -26,6 +28,9 @@ export default function Page({ params }: { params: { slug: string } }) {
             },
           }
         );
+        if (res.status === 401) {
+          handleSignOut();
+        }
         const result = await res.json();
         setData(result);
         console.log("result", result);
@@ -48,7 +53,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function publishJobPost() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/hiring/publish-job/${params.slug}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/publish-job/${params.slug}`,
         {
           method: "PUT",
           body: JSON.stringify({
@@ -63,6 +68,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const result = await res.json();
       console.log(result);
       // navigate to the next page
@@ -112,7 +120,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function updateNextStep() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/hiring/next-step/${data._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/next-step/${data._id}`,
         {
           method: "PUT",
           headers: {
@@ -121,6 +129,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const result = await res.json();
       console.log(result);
       // navigate to the next page

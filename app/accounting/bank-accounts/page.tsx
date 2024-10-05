@@ -4,154 +4,8 @@ import BankAccountCreator from "./BankAccountCreator";
 import styles from "./bank-accounts.module.css";
 import Link from "next/link";
 import { truncateText } from "@/app/_utils/text";
-
-const bodyRow = [
-  {
-    "Account Name": "John Doe",
-    "Account Number": "465601654865215",
-    "Bank Name": "HSBC",
-    Country: "Egypt",
-    "Login Link": "https://www.link1.com",
-    Brand: "PST USA",
-    Username: "John Doe",
-    Password: "dg5432lfdg57a",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "21548658745054",
-    "Bank Name": "NBE",
-    Country: "Egypt",
-    "Login Link": "https://www.link2.com",
-    Brand: "PST Asia",
-    Username: "John Doe",
-    Password: "sg5E7FSW6A8A",
-    IBAN: "21548658745054",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "436354378643456",
-    "Bank Name": "CIB",
-    Country: "USA",
-    "Login Link": "https://www.link3.com",
-    Brand: "Investocracy",
-    Username: "John Doe",
-    Password: "sfsdfwsf877afzfa",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "345678645621568",
-    "Bank Name": "QNB",
-    Country: "USA",
-    "Login Link": "https://www.link4.com",
-    Brand: "PST USA",
-    Username: "John Doe",
-    Password: "sdSVS68D6F48f",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "76534521598565111",
-    "Bank Name": "HSBC",
-    Country: "UK",
-    "Login Link": "https://www.link5.com",
-    Brand: "Canada",
-    Username: "John Doe",
-    Password: "dg5432lfdg57a",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "45248625985452",
-    "Bank Name": "HSBC",
-    Country: "UK",
-    "Login Link": "https://www.link6.com",
-    Brand: "Canada",
-    Username: "John Doe",
-    Password: "sfsdfwsf877afzfa",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "465601654865215",
-    "Bank Name": "QNB",
-    Country: "UK",
-    "Login Link": "https://www.link7.com",
-    Brand: "PST USA",
-    Username: "John Doe",
-    Password: "sdSVS68D6F48f",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "76534521598565111",
-    "Bank Name": "QNB",
-    Country: "USA",
-    "Login Link": "https://www.link8.com",
-    Brand: "Investocracy",
-    Username: "John Doe",
-    Password: "dg5432lfdg57a",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "465601654865215",
-    "Bank Name": "QNB",
-    Country: "Egypt",
-    "Login Link": "https://www.link9.com",
-    Brand: "Canada",
-    Username: "John Doe",
-    Password: "sdSVS68D6F48f",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "45248625985452",
-    "Bank Name": "NBE",
-    Country: "Egypt",
-    "Login Link": "https://www.link10.com",
-    Brand: "Investocracy",
-    Username: "John Doe",
-    Password: "sfsdfwsf877afzfa",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "76534521598565111",
-    "Bank Name": "NBE",
-    Country: "Egypt",
-    "Login Link": "https://www.link11.com",
-    Brand: "Street Politics",
-    Username: "John Doe",
-    Password: "sdSVS68D6F48f",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "45248625985452",
-    "Bank Name": "HSBC",
-    Country: "USA",
-    "Login Link": "https://www.link12.com",
-    Brand: "Canada",
-    Username: "John Doe",
-    Password: "dg5432lfdg57a",
-    IBAN: "465601654865215",
-  },
-  {
-    "Account Name": "John Doe",
-    "Account Number": "465601654865215",
-    "Bank Name": "CIB",
-    Country: "USA",
-    "Login Link": "https://www.link13.com",
-    Brand: "Street Politics",
-    Username: "John Doe",
-    Password: "sdSVS68D6F48f",
-    IBAN: "465601654865215",
-  },
-];
-
-
+import { globalContext } from "@/app/_context/store";
+import { useContext, useEffect, useState } from "react";
 
 const getRandomColor = () => {
   const colors = [
@@ -164,7 +18,32 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const BankAccountsTable = () => {
+interface BankAccount {
+  _id: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+  ApiConnect: string;
+  brand: string;
+  country: string;
+  IBANumber: string;
+  password: string;
+  SWIFTCode: string;
+  userName: string;
+  createdAt: number; // Unix timestamp in milliseconds
+}
+
+const BankAccountsTable = ({
+  bankAccounts,
+  accountNameFilter,
+  bankNameFilter,
+  countryFilter,
+}: {
+  bankAccounts: BankAccount[];
+  accountNameFilter: string;
+  bankNameFilter: string;
+  countryFilter: string;
+}) => {
   return (
     <div className={`${styles.tableContainer} mt-7 h-[68vh]`}>
       {/* Start Table */}
@@ -174,7 +53,7 @@ const BankAccountsTable = () => {
           <li className="w-[10%]">
             <span>Account Name</span>
           </li>
-          <li className="w-[10%]">
+          <li className="w-[20%]">
             <span>Account Number</span>
           </li>
           <li className="w-[10%]">
@@ -183,7 +62,7 @@ const BankAccountsTable = () => {
           <li className="w-[10%]">
             <span>Country</span>
           </li>
-          <li className="w-[10%]">
+          <li className="w-[20%]">
             <span>Login Link</span>
           </li>
           <li className="w-[10%]">
@@ -198,59 +77,59 @@ const BankAccountsTable = () => {
           <li className="w-[10%]">
             <span>IBAN</span>
           </li>
-          <li className="w-[10%]">
-            <span>Lorem</span>
-          </li>
-          <li className="w-[10%]">
-            <span>Lorem</span>
-          </li>
         </ul>
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
-            <ul key={idx}>
-              <li className="w-[10%]">
-                <span>{e["Account Name"]}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>{e["Account Number"]}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>{e["Bank Name"]}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>{e.Country}</span>
-              </li>
-              <li className="w-[10%]">
-                <Link href={e["Login Link"]} target="_blank">
-                  <span>{truncateText(e["Login Link"], 20)}</span>
-                </Link>
-              </li>
-              <li className="w-[10%]">
-                <span
+          {bankAccounts
+            .filter((e) => {
+              if (
+                (accountNameFilter === "All" ||
+                  e.accountName === accountNameFilter) &&
+                (bankNameFilter === "All" || e.bankName === bankNameFilter) &&
+                (countryFilter === "All" || e.country === countryFilter)
+              ) {
+                return e;
+              }
+            })
+            .map((e, idx) => (
+              <ul key={idx}>
+                <li className="w-[10%]">
+                  <span>{e.accountName}</span>
+                </li>
+                <li className="w-[20%]">
+                  <span>{e.accountNumber}</span>
+                </li>
+                <li className="w-[10%]">
+                  <span>{e.bankName}</span>
+                </li>
+                <li className="w-[10%]">
+                  <span>{e.country}</span>
+                </li>
+                <li className="w-[20%]">
+                  <Link href={e.ApiConnect} target="_blank">
+                    <span>{truncateText(e.ApiConnect, 25)}</span>
+                  </Link>
+                </li>
+                <li className="w-[10%]">
+                  <span
                     className="px-2 py-1 rounded-[3px]"
                     style={{ backgroundColor: getRandomColor() }}
                   >
-                  {e.Brand}</span>
-              </li>
-              <li className="w-[10%]">
-                  <span>{e.Username}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>{e.Password}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>{e.IBAN}</span>
-              </li>
-              <li className="w-[10%]">
-                <span>Lorem</span>
-              </li>
-              <li className="w-[10%]">
-                <span>Lorem</span>
-              </li>
-            </ul>
-          ))}
+                    {e.brand}
+                  </span>
+                </li>
+                <li className="w-[10%]">
+                  <span>{e.userName}</span>
+                </li>
+                <li className="w-[10%]">
+                  <span>{e.password}</span>
+                </li>
+                <li className="w-[10%]">
+                  <span>{e.IBANumber}</span>
+                </li>
+              </ul>
+            ))}
         </div>
       </div>
       {/* End Table */}
@@ -259,6 +138,60 @@ const BankAccountsTable = () => {
 };
 
 function Page() {
+  const { handleSignOut } = useContext(globalContext);
+
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
+  const [bankAccountNameOption, setBankAccountNameOption] = useState<string[]>(
+    []
+  );
+  const [bankNameOption, setBankNameOption] = useState<string[]>([]);
+  const [countryOption, setCountryOption] = useState<string[]>([]);
+
+  const [accountNameFilter, setAccountNameFilter] = useState<string>("All");
+  const [bankNameFilter, setBankNameFilter] = useState<string>("All");
+  const [countryFilter, setCountryFilter] = useState<string>("All");
+
+  useEffect(() => {
+    // Fetch data from API
+    const getBankAccounts = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/bank-accounts`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // check if the fetch request is an array of objects
+      if (response.status === 401) {
+        handleSignOut();
+      } else {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          console.log(data);
+          setBankAccounts(data);
+        }
+      }
+    };
+
+    try {
+      getBankAccounts();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    setBankAccountNameOption([
+      "All",
+      ...new Set(bankAccounts.map((e) => e.accountName)),
+    ]);
+    setBankNameOption(["All", ...new Set(bankAccounts.map((e) => e.bankName))]);
+    setCountryOption(["All", ...new Set(bankAccounts.map((e) => e.country))]);
+  }, [bankAccounts]);
+
   return (
     <div className="pageHeader">
       {/* filters options to filter and edit data in table */}
@@ -271,19 +204,31 @@ function Page() {
               className={`flex flex-col gap-[0.3vw] ${styles.accountName__filter}`}
             >
               <h5>Account Name</h5>
-              <CustomSelectInput label="All" options={[1, 2, 3]} />
+              <CustomSelectInput
+                label="All"
+                options={bankAccountNameOption}
+                getValue={(e: string) => setAccountNameFilter(e)}
+              />
             </div>
             <div
               className={`flex flex-col gap-[0.3vw] ${styles.bankName__filter}`}
             >
               <h5>Bank Name</h5>
-              <CustomSelectInput label="All" options={[1, 2, 3]} />
+              <CustomSelectInput
+                label="All"
+                options={bankNameOption}
+                getValue={(e: string) => setBankNameFilter(e)}
+              />
             </div>
             <div
               className={`flex flex-col gap-[0.3vw] ${styles.country__filter}`}
             >
               <h5>Country</h5>
-              <CustomSelectInput label="All" options={[1, 2, 3]} />
+              <CustomSelectInput
+                label="All"
+                options={countryOption}
+                getValue={(e: string) => setCountryFilter(e)}
+              />
             </div>
           </div>
 
@@ -311,12 +256,18 @@ function Page() {
               }
               btnColor={"black"}
               modalTitle={"Add Bank Account"}
+              setBankAccounts={setBankAccounts}
             />
           </div>
         </div>
       </div>
 
-      <BankAccountsTable />
+      <BankAccountsTable
+        bankAccounts={bankAccounts}
+        accountNameFilter={accountNameFilter}
+        bankNameFilter={bankNameFilter}
+        countryFilter={countryFilter}
+      />
     </div>
   );
 }

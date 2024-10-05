@@ -3,6 +3,8 @@ import { useState, useEffect, use, useRef } from "react";
 import styles from "./TitleCheckWithLock.module.css";
 import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
 import { useContext } from "react";
+import { createNewsletterContext } from "@/app/newsletter/create/_context/createNewsletterContext";
+import { usePathname } from "next/navigation";
 
 interface IProps {
   checkName?: string;
@@ -18,13 +20,19 @@ const TitleCheckWithLock = ({
   order,
   setAsLocked,
 }: IProps) => {
+  const path = usePathname();
+
+  //! Todo: Fix the type of the context
   const {
-    generatedTitles,
     lockedGeneratedTitles,
     setLockedGeneratedTitles,
     selectedContentTitle,
     setSelectedContentTitle,
-  } = useContext(contentCreatorContext);
+  } = useContext(
+    (path.includes("newsletter")
+      ? createNewsletterContext
+      : contentCreatorContext) as React.Context<any>
+  );
   const [isLocked, setIsLocked] = useState<boolean>();
 
   useEffect(() => {

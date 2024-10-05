@@ -10,7 +10,7 @@ export default function page() {
     title: "",
     level: "",
   });
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
 
   function getTitleValue(value: string) {
     setRequestHiringData({
@@ -33,7 +33,7 @@ export default function page() {
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/admin/hiring-request`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/admin/hiring-request`,
         {
           method: "POST",
           headers: {
@@ -50,7 +50,9 @@ export default function page() {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
 
       if (json) {

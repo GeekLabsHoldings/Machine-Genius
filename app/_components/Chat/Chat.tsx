@@ -4,9 +4,8 @@ import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
-import { TextareaAutosize, colors } from "@mui/material";
+import { TextareaAutosize } from "@mui/material";
 import {
-  Children,
   useCallback,
   useContext,
   useEffect,
@@ -17,7 +16,7 @@ import {
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 import debounce from "debounce";
-import { formatDate } from "@fullcalendar/core/index.js";
+// import { formatDate } from "@fullcalendar/core/index.js";
 
 const ExpandableCircleMenu = ({ isExpanded, handleFileUpload }: any) => {
   const menuItems = [
@@ -443,7 +442,7 @@ function Chat() {
   useEffect(() => {
     async function fetchEmployees() {
       const response = await fetch(
-        "https://api.machinegenius.io/user/employee/data",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/employee/data`,
         {
           method: "GET",
           headers: {
@@ -487,7 +486,7 @@ function Chat() {
     groupName?: string
   ) {
     const response = await fetch(
-      "https://api.machinegenius.io/user/conversation/create",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/create`,
       {
         method: "POST",
         headers: {
@@ -515,7 +514,7 @@ function Chat() {
   async function createGroup() {
     console.log(newGroupMembers);
     const response = await fetch(
-      "https://api.machinegenius.io/user/conversation/create",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/create`,
       {
         method: "POST",
         headers: {
@@ -558,7 +557,7 @@ function Chat() {
     */
     async function fetchMessages() {
       const response = await fetch(
-        `https://api.machinegenius.io/user/conversation/all-messages/${currentConversation?._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/all-messages/${currentConversation?._id}`,
         {
           method: "GET",
           headers: {
@@ -596,7 +595,7 @@ function Chat() {
   */
   async function fetchConversation() {
     const response = await fetch(
-      "https://api.machinegenius.io/user/conversation/all",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/all`,
       {
         method: "GET",
         headers: {
@@ -762,7 +761,7 @@ function Chat() {
   async function getPresignedURL() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/receipts/presigned-url`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/receipts/presigned-url`,
         {
           headers: {
             Authorization: `barrer ${

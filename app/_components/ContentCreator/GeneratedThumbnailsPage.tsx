@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 // import ArticlePreview from "@/app/_components/ArticlePreview/ArticlePreview";
 
 const GeneratedThumbnailsPage = () => {
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     selectedBrand,
@@ -106,8 +106,8 @@ const GeneratedThumbnailsPage = () => {
 
   async function handleSendContent() {
     let endpoint = editContentData
-      ? `https://api.machinegenius.io/content-creation/content/${editContentData._id}`
-      : "https://api.machinegenius.io/content-creation/content";
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content/${editContentData._id}`
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content`;
     let method = editContentData ? "PATCH" : "POST";
     setIsSendLoading(true);
     let postBody: any = {
@@ -136,6 +136,9 @@ const GeneratedThumbnailsPage = () => {
           },
           body: JSON.stringify(postBody),
         });
+        if (res.status === 401) {
+          handleSignOut();
+        }
         json = await res.json();
         if (json) {
           // If valid data is found, break the loop

@@ -1,8 +1,8 @@
+import styles from "./email-inbox.module.css";
 import CheckBox from "@/app/_components/CheckBox/CheckBox";
-import Dropdown from "@/app/_components/Dropdown/Dropdown";
-import styles from "@/app/customer-service/email-inbox/email-inbox.module.css";
-import { truncateText } from "@/app/_utils/text";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
+import { truncateText } from "@/app/_utils/text";
 import Link from "next/link";
 
 const table = [
@@ -147,20 +147,28 @@ function Page() {
         <span className="text-lg font-semibold [text-color:var(--dark)]">
           Brand
         </span>
-        <div className="flex items-center gap-5 mt-2 shrink-0 grow">
-          <div className={styles.dropdown__container}>
-            <Dropdown title="Filter by" items={["All", "Unread", "Read"]} />
+        <div className="flex items-center mt-2 shrink-0 grow">
+          <div className={`${styles.dropdown__container} mr-[--16px]`}>
+            <CustomSelectInput
+              label="Filter by"
+              options={["All", "Unread", "Read"]}
+              paddingVal="py-[0.2vw] px-[0.5vw]"
+              hoverColor="hover:bg-[#00B3BE]"
+            />
           </div>
-          <OptionsDropdown
-            icon={files}
-            options={["Mark as Read", "Mark as Unread", "Delete"]}
-          />
+          <div className="mr-[--8px]">
+            <OptionsDropdown
+              icon={files}
+              options={["Mark as Read", "Mark as Unread", "Delete"]}
+            />
+          </div>
           <OptionsDropdown
             icon={bin}
             options={["Mark as Read", "Mark as Unread", "Delete"]}
           />
         </div>
       </div>
+
       <div className="h-[75vh] py-[1.5vw] ">
         <div className={styles.database_table}>
           <ul className={styles.table_header}>
@@ -168,9 +176,9 @@ function Page() {
               <CheckBox />
             </li>
             <li className="w-[15%]">
-              <span>Content Name</span>
+              <span>Customer Name</span>
             </li>
-            <li className="w-[30%]">
+            <li className="w-[40%]">
               <span>Subject</span>
             </li>
             <li className="w-[20%]">
@@ -184,18 +192,20 @@ function Page() {
           <div className={styles.table_body}>
             {table.map((ele, idx) => (
               <ul className="w-[100%] group relative" key={idx}>
-                <Link href="/customer-service/email-inbox/email" className="absolute inset-0 z-[1]">
-                  </Link>
+                <Link
+                  href="/customer-service/email-inbox/email"
+                  className="absolute inset-0 z-[1]"
+                ></Link>
                 <li className="w-[5%]">
                   <CheckBox />
                 </li>
                 <li className="w-[15%]">{ele.customerName}</li>
-                <li className="w-[30%] font-bold">
-                  <p>{truncateText(ele.subject, 100)}</p>
+                <li className="w-[40%]">
+                  <p>{truncateText(ele.subject, 70)}</p>
                 </li>
                 <li className="w-[20%]">
                   <span
-                    className="p-2 rounded-[3px]"
+                    className="py-[--3px] px-[--6px] rounded-[--3px] font-medium"
                     style={{ backgroundColor: getRandomColor() }}
                   >
                     {ele.brand}

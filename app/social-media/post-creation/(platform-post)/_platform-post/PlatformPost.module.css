@@ -1,0 +1,79 @@
+.add_post_wrapper h6 {
+  font-family: "DM Sans";
+  font-size: clamp(16px, calc(1.2vw + 0.1rem), 1000px);
+  margin-bottom: var(--sy-10px);
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+/* ===== Start 01- Col (1) ===== */
+.post_content textarea {
+  width: 100%;
+  font-size: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  margin-bottom: clamp(8px, calc(0.4vw + 0.1rem), 1000px);
+  border-bottom: 1px solid var(--dark);
+  outline: none;
+  padding: 0 0 clamp(16px, calc(1vw + 0.1rem), 1000px) 0;
+  background-color: transparent;
+}
+
+.post_content a {
+  margin-left: auto;
+}
+
+.post_content a svg {
+  width: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+  height: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+}
+
+.post_content span {
+  font-size: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  display: block;
+  text-align: right;
+}
+
+.suggestions {
+  height: 100%;
+  margin-bottom: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+}
+/* ===== End 01- Col (1) ===== */
+
+/* ===== Start 02- Col (2) ===== */
+/* ===== Start Hashtags ===== */
+.hashtags {
+  width: 100%; /* Ensure it takes up the full width of its parent */
+  max-width: 100%; /* Prevent it from exceeding the parent's width */
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--10px);
+  justify-content: flex-start;
+  overflow-x: auto;
+  padding-bottom: var(--sy-6px);
+}
+
+.hashtags > button {
+  flex: 0 0 auto; /* Prevent shrinking */
+}
+
+.hashtags > button > div {
+  font-weight: 700;
+  padding: clamp(5px, calc(0.35vw + 0.1rem), 1000px)
+    clamp(20px, calc(1.5vw + 0.1rem), 1000px);
+  flex-direction: row-reverse;
+}
+
+.hashtags > button svg {
+  width: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+  height: clamp(10px, calc(0.6vw + 0.1rem), 1000px);
+}
+
+.hashtags + button {
+  margin-left: auto;
+}
+
+.hashtags + button svg {
+  width: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+  height: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+}
+/* ===== End Hashtags ===== */
+/* ===== End 02- Col (2) ===== */

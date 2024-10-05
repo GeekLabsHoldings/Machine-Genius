@@ -12,6 +12,7 @@ interface Iprops<T> {
   getValue?: (value: T) => void;
   paddingVal?: string;
   children?: React.ReactNode;
+  hoverColor?: string;
 }
 
 const CustomSelectInput = <T,>(props: Iprops<T>) => {
@@ -110,7 +111,9 @@ const CustomSelectInput = <T,>(props: Iprops<T>) => {
                 handleSelectedItem(e.target);
                 setIsActive(!isActive);
               }}
-              className={styles.item}
+              className={`${styles.item} ${
+                props.hoverColor ? props.hoverColor : "hover:bg-[--orange]"
+              }`}
               key={uuidv4()}
             >
               {ele}

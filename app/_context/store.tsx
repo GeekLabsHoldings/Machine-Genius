@@ -5,10 +5,21 @@ import {
   useEffect,
   useMemo,
   useState,
-  useRef,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
+import debounce from "debounce";
+
+const publicPaths = [
+  "/",
+  "/modules",
+  "/about-us",
+  "/contact-us",
+  "/blog",
+  "/privacy-security",
+  "/disclaimer",
+  "/careers",
+];
 
 // Define type for AuthState for better type safety
 type AuthStateType = {
@@ -23,6 +34,7 @@ const initialContextState = {
     decodedToken: null as any,
   },
   setAuthState: (authState: AuthStateType) => {},
+  handleSignOut: (message?: string) => {},
   // ===== 00. End Authentication =====
 };
 
@@ -37,7 +49,6 @@ export default function GlobalContextProvider({
 }) {
   const router = useRouter();
   const path = usePathname();
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ===== 00. Start Authentication =====
   const handleSetRouteToDirect = useCallback((role: string) => {
@@ -96,7 +107,7 @@ export default function GlobalContextProvider({
 
   const checkIfUserOnCorrespondingRoute = useCallback(() => {
     // if (!decodedToken) return;
-    if (authState.decodedToken?.department.includes("CEO")) {
+    if (authState.decodedToken?.department.includes("ceo")) {
       // console.log("CEO has access to all routes");
       return;
     }
@@ -113,63 +124,43 @@ export default function GlobalContextProvider({
     }
   }, [path, authState.decodedToken, router]);
 
-  const handleSignOut = useCallback(
-    (message = "Session expired, redirecting to signin...") => {
-      setAuthState({
-        token: "",
-        decodedToken: null,
-      });
-      localStorage.removeItem("token");
-      localStorage.removeItem("decodedToken");
-      toast.error(message);
-      router.replace("/");
-    },
-    [router]
-  );
-
-  const debouncedCheckAuth = useCallback(() => {
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
+  async function checkAuth() {
+    toast("Checking authentication...");
+    const authToken = authState.token || localStorage.getItem("token");
+    if (!authToken) {
+      handleSignOut("No token found, redirecting to signin...");
+      return;
     }
-    debounceTimer.current = setTimeout(async () => {
-      toast("Checking authentication...");
-      const authToken = authState.token || localStorage.getItem("token");
-      if (!authToken) {
-        handleSignOut("No token found, redirecting to signin...");
-        return;
-      }
-      try {
-        const res = await fetch(
-          "https://api.machinegenius.io/authentication/check-auth",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await res.json();
-        if (data.result) {
-          toast.success("Session is valid");
-        } else if (data.message && data.message.name === "TokenExpiredError") {
-          handleSignOut();
-        } else if (data.message === "USER_TOKEN_IS_INVALID") {
-          handleSignOut();
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/authentication/check-auth`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
         }
-      } catch (error) {
-        console.error("Error checking auth:", error);
+      );
+      if (res.status === 401) {
+        handleSignOut();
       }
-    }, 300); // Debounce delay in milliseconds
-  }, [authState.token, handleSignOut]);
+      const data = await res.json();
+      if (data.result) {
+        toast.success("Session is valid");
+      } else if (data.message && data.message.name === "TokenExpiredError") {
+        handleSignOut();
+      } else if (data.message === "USER_TOKEN_IS_INVALID") {
+        handleSignOut();
+      }
+    } catch (error) {
+      console.error("Error checking auth:", error);
+    }
+  }
 
-  // Clear timeout on component unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-    };
-  }, []);
+  const debouncedCheckAuth = useMemo(
+    () => debounce(checkAuth, 1000),
+    [checkAuth]
+  );
 
   useEffect(() => {
     if (authState.token) {
@@ -177,15 +168,40 @@ export default function GlobalContextProvider({
       debouncedCheckAuth();
     } else {
       console.log("=x==x==There is No Token==x==x=");
-      console.log("Redirecting to signin...");
-      router.replace("/");
+      const isPublicPath = publicPaths.some(
+        (publicPath) => path === publicPath || path.startsWith(`${publicPath}/`)
+      );
+      if (!isPublicPath) {
+        console.log("It's Not Public Path, Redirecting to signin...");
+        router.replace("/");
+      }
     }
-  }, [authState.token, debouncedCheckAuth, router]);
+    return () => {
+      debouncedCheckAuth.clear(); // Clear any pending auth checks on unmount
+    };
+  }, [authState.token]);
 
   useEffect(() => {
     console.log("---currentPath:", path);
     checkIfUserOnCorrespondingRoute();
   }, [path, checkIfUserOnCorrespondingRoute]);
+
+  const handleSignOut = useCallback(
+    (message = "Session expired, redirecting to signin...") => {
+      debouncedCheckAuth.clear(); // Clear any pending auth checks
+      setAuthState({
+        token: "",
+        decodedToken: null,
+      });
+      localStorage.removeItem("token");
+      localStorage.removeItem("decodedToken");
+      if (message !== "") {
+        toast.error(message);
+      }
+      router.replace("/");
+    },
+    [router]
+  );
 
   // ===== 00. End Authentication =====
 
@@ -195,9 +211,10 @@ export default function GlobalContextProvider({
       // ===== 00. Start Authentication =====
       authState,
       setAuthState,
+      handleSignOut,
       // ===== 00. End Authentication =====
     }),
-    [authState]
+    [authState, handleSignOut]
   );
 
   return (

@@ -915,6 +915,48 @@ export const Campaigns:ICampaigns[] = [
   date:'12 March  2024',
   shareBtn:'Share'
 },
+{
+  id:8,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:9,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:10,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:11,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:12,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
+{
+  id:13,
+  content:'Pacific Allies ABANDON USA For China!',
+  link:new URL("https://www.reddit.com/?rdt=45713").toString(),
+  date:'12 March  2024',
+  shareBtn:'Share'
+},
 ]
 // Array of brands
 export const Brands:TBrands[] =['PST USA' , 'PST Asia' , 'Investocracy' , 'Street Politics' , 'Canada']
