@@ -208,7 +208,12 @@ const MovieMythUploadPage = () => {
       }
       const json: ITranscriptAudioData = await res.json();
 
-      if (json && json?.transcriptionResults) {
+      if (
+        json &&
+        json?.transcriptionResults &&
+        Array.isArray(json?.transcriptionResults) &&
+        json?.transcriptionResults.length > 0
+      ) {
         dispatch(contentCreatorActions.setVideoTranscription(json));
         router.replace("/content-creator/create/movie-myth/create-movie");
       } else {
