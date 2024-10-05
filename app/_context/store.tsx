@@ -302,10 +302,10 @@ export default function GlobalContextProvider({
         });
         setGlobalBrands(brands);
       } else {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
       }
     } catch (error) {
-      toast.error("Something went wrong!");
+      // toast.error("Something went wrong!");
       console.error("Error getBrands:", error);
     }
   }
