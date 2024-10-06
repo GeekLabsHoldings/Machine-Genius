@@ -8,14 +8,10 @@ import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
-import { contentCreatorContext } from "@/app/_context/contentCreatorContext";
-
-interface IPresignedURLData {
-  message: string;
-  preSignedURL: string;
-  movieUrl: string;
-  s3BucketURL: string;
-}
+import {
+  contentCreatorContext,
+  IUploadMoviePresignedURLData,
+} from "@/app/_context/contentCreatorContext";
 
 interface ITranscriptionResult {
   part: number;
@@ -33,19 +29,21 @@ const MovieMythUploadPage = () => {
   const { authState, handleSignOut } = useContext(globalContext);
   const dispatch = useDispatch();
   const router = useRouter();
-  const { setEditContentData } = useContext(contentCreatorContext);
+  const {
+    setEditContentData,
+    uploadMoviePresignedURLData,
+    setUploadMoviePresignedURLData,
+  } = useContext(contentCreatorContext);
 
   const [pageState, setPageState] = useState<{
     uploadPercentage: number;
     error: string | null;
-    presignedURLData: IPresignedURLData | null;
     uploadVideoLoading: boolean;
     transcriptAudioLoading: boolean;
     triggerTranscriptAudio: boolean;
   }>({
     uploadPercentage: 0,
     error: null,
-    presignedURLData: null,
     uploadVideoLoading: false,
     transcriptAudioLoading: false,
     triggerTranscriptAudio: false,
@@ -53,9 +51,13 @@ const MovieMythUploadPage = () => {
 
   // reset all the data
   useEffect(() => {
+    setUploadMoviePresignedURLData(null);
     dispatch(contentCreatorActions.setVideoTranscription(null));
     setEditContentData(null);
     if (typeof window !== "undefined") {
+      sessionStorage.removeItem(
+        "ContentCreatorMovieMyth-uploadMoviePresignedURLData"
+      );
       sessionStorage.removeItem("videoTranscription");
       sessionStorage.removeItem("editContentData");
     }
@@ -95,12 +97,12 @@ const MovieMythUploadPage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: IPresignedURLData = await res.json();
+      const json: IUploadMoviePresignedURLData = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
       } else {
-        setPageState((prev) => ({ ...prev, presignedURLData: json }));
+        setUploadMoviePresignedURLData(json);
         return json;
       }
     } catch (error) {
@@ -111,7 +113,7 @@ const MovieMythUploadPage = () => {
 
   // ===== 02. upload video =====
   async function uploadVideo(file: File) {
-    const getPresignedURLData: IPresignedURLData | undefined =
+    const getPresignedURLData: IUploadMoviePresignedURLData | undefined =
       await getPresignedURL();
 
     if (!getPresignedURLData) {
@@ -190,7 +192,7 @@ const MovieMythUploadPage = () => {
         {
           method: "POST",
           body: JSON.stringify({
-            s3BucketURL: pageState.presignedURLData?.s3BucketURL,
+            s3BucketURL: uploadMoviePresignedURLData?.s3BucketURL,
           }),
           headers: {
             "Content-Type": "application/json",

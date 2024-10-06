@@ -29,9 +29,8 @@ const CreateMovie = () => {
     (state) => state.contentCreator.videoTranscription
   );
 
-  const { selectedContentType, selectedBrand, presignedURLData } = useContext(
-    contentCreatorContext
-  );
+  const { selectedContentType, selectedBrand, uploadMoviePresignedURLData } =
+    useContext(contentCreatorContext);
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {
@@ -334,7 +333,7 @@ const CreateMovie = () => {
             className={`${styles.box} flex justify-center items-center ${styles.movieWrapper}`}
           >
             <VideoPlayer
-              src={presignedURLData?.movieUrl}
+              src={uploadMoviePresignedURLData?.movieUrl}
               highlightTime={highlightTime}
               videoRef={videoRef}
             />
