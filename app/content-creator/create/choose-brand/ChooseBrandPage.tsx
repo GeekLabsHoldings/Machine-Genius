@@ -37,6 +37,7 @@ export default function ChooseBrandPage() {
     selectedBrand,
     setGeneratedTitles,
     setLockedGeneratedTitles,
+    setUploadMoviePresignedURLData,
     setEditContentData,
   } = useContext(contentCreatorContext);
 
@@ -58,6 +59,7 @@ export default function ChooseBrandPage() {
       dispatch(contentCreatorActions.setCheckAiResults([]));
       setGeneratedTitles([]);
       setLockedGeneratedTitles([]);
+      setUploadMoviePresignedURLData(null);
       dispatch(contentCreatorActions.setVideoTranscription(null));
       setEditContentData(null);
       if (typeof window !== "undefined") {
@@ -73,6 +75,7 @@ export default function ChooseBrandPage() {
           "generatedTitles",
           "lockedGeneratedTitles",
           "videoTranscription",
+          "ContentCreatorMovieMyth-uploadMoviePresignedURLData",
           "editContentData",
         ];
 
