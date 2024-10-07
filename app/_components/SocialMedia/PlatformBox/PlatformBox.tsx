@@ -5,8 +5,8 @@ import { addIcon } from "@/app/_utils/svgIcons";
 
 interface IPlatformCard {
   title: string;
-  subscribers?: string;
-  engagement?: string;
+  subscribers?: number;
+  engagement?: number;
 }
 
 interface IProps {
@@ -41,7 +41,7 @@ export default function PlatformBox({
       <div className="flex flex-col mt-[--sy-27px] gap-[--sy-27px] overflow-y-auto p-[--5px] pr-[--8px]">
         {platformCards.map((card, i) => (
           <div
-            className={`${styles.platformBox} h-[16vh] flex flex-col gap-[0.8vw] !pt-[--sy-18px]`}
+            className={`${styles.platformBox} flex flex-col gap-[0.8vw] !pt-[--sy-18px]`}
           >
             <div className={`${styles.platformBoxHeaderSm}`}>
               <h6 style={{ color: platformColor }} className="!mb-[--sy-14px]">
@@ -49,7 +49,7 @@ export default function PlatformBox({
               </h6>
             </div>
 
-            {card.subscribers && (
+            {card.subscribers !== undefined && (
               <div className="flex justify-between">
                 <div className="flex items-center gap-[1vw]">
                   <svg
@@ -96,7 +96,7 @@ export default function PlatformBox({
               </div>
             )}
 
-            {card.engagement && (
+            {card.engagement !== undefined && (
               <div className="flex justify-between">
                 <div className="flex items-center gap-[1vw]">
                   <svg
