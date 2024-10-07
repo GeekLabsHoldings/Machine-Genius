@@ -1,5 +1,4 @@
 "use client";
-import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
@@ -16,7 +15,6 @@ import {
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 import debounce from "debounce";
-// import { formatDate } from "@fullcalendar/core/index.js";
 
 const ExpandableCircleMenu = ({ isExpanded, handleFileUpload }: any) => {
   const menuItems = [
@@ -254,7 +252,10 @@ interface Employee {
 interface Message {
   _id?: string;
   text: string;
-  mediaUrl: string;
+  mediaUrl: {
+    url: string;
+    type: string;
+  };
   createdAt?: number;
   sender: {
     _id: string;
@@ -363,7 +364,7 @@ function Chat() {
   // const { sendMessage } = useChat();
 
   const AddMessage = (message: Message) => {
-    if (message.text.trim() === "") return;
+    if (message.text.trim() === "" && !message?.mediaUrl?.url) return;
     setMessages((prev) => [...prev, message]);
     setInQueueAttachments([]);
   };
@@ -813,7 +814,7 @@ function Chat() {
         setReceiptUrl(receiptUrl);
         setInQueueAttachments((prev) => [
           ...prev,
-          { name: file.name, receiptUrl },
+          { url: receiptUrl, type: "img" },
         ]);
 
         // AddMessage({
@@ -843,10 +844,7 @@ function Chat() {
   }
 
   return (
-    <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
-      {/* 
-        chat aside menu 
-      */}
+    <div className="flex gap-[--22px] h-[85vh] py-[1.5vw]">
       <div
         className={`flex flex-col h-full ${styles.chat__chat__aside} ${
           toggleCreateGroup ? styles.chat__chat__aside__create_group : ""
@@ -973,16 +971,16 @@ function Chat() {
                           {/* {truncateText(message.lastMessage || "Message", 60)} */}
                         </p>
                       </div>
-                      <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
-                        {/* {message.lastSeen < message.updatedAt &&
+                      {/* <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
+                        {message.lastSeen < message.updatedAt &&
                         message?._id !== currentConversation?._id &&
                         userId !==
                           message.members[
                             userId === message.members[0]?._id ? 1 : 0
                           ]._id ? (
                           <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
-                        ) : null} */}
-                      </div>
+                        ) : null} 
+                      </div> */}
                     </div>
                   </li>
                 ))
@@ -1134,9 +1132,9 @@ function Chat() {
                           </p>
                         )}
                       <p>
-                        {message.mediaUrl ? (
+                        {message?.mediaUrl?.url ? (
                           <img
-                            src={message.mediaUrl}
+                            src={message?.mediaUrl?.url}
                             alt="media"
                             className="w-full h-full object-cover rounded-[20px]"
                           />
@@ -1242,13 +1240,20 @@ function Chat() {
                 sendMessage({
                   conversationId: currentConversation?._id,
                   text: message,
-                  mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                  mediaUrl: {
+                    url: inQueueAttachments[0]?.url,
+                    type: inQueueAttachments[0]?.type,
+                  },
                 });
                 AddMessage({
                   text: message,
-                  mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                  mediaUrl: {
+                    url: inQueueAttachments[0]?.url,
+                    type: inQueueAttachments[0]?.type,
+                  },
                   //! Need sender data
                   sender: { _id: userId },
+                  createdAt: new Date().getTime(),
                 });
                 setMessage("");
               }
@@ -1284,12 +1289,19 @@ function Chat() {
               sendMessage({
                 conversationId: currentConversation?._id,
                 text: message,
-                mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                mediaUrl: {
+                  url: inQueueAttachments[0]?.url,
+                  type: inQueueAttachments[0]?.type,
+                },
               });
               AddMessage({
                 text: message,
-                mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                mediaUrl: {
+                  url: inQueueAttachments[0]?.url,
+                  type: inQueueAttachments[0]?.type,
+                },
                 sender: { _id: userId },
+                createdAt: new Date().getTime(),
               });
               setMessage("");
             }}
