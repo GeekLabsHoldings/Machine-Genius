@@ -16,14 +16,11 @@ interface IProps {
   forWhat: string; //Purpose of the modal
 }
 
-// Regular expression to match URL patterns.
-const urlRegex =
-  /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
-
 // Rendering list of accounts to remove.
 const renderAccountsToRemove = AccountsData.map((account) => (
   <li>{account.account_name}</li>
 ));
+
 // Rendering list of users to remove.
 const renderUsersToRemove = AccountsData.map((account) => (
   <li>{account.user_name}</li>
@@ -43,36 +40,22 @@ export default function BasicModal({
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
-  // State to track URL validation result.
-  const [matchResult, setMatchResult] = React.useState<boolean>(true);
-
   return (
     <div>
       {/* 01- Conditional rendering of different buttons based on 'forWhat' prop */}
-      {forWhat === "add_to_list" ? (
+      {
         <CustomBtn
           word={btnWord}
-          icon={btnIcon}
+          {...(forWhat === "add_to_list" ||
+          forWhat === "add_account" ||
+          forWhat === "add_account1"
+            ? { icon: btnIcon }
+            : {})}
           btnColor={btnColor}
           onClick={handleOpen}
           paddingVal="py-[--10px] px-[--22px]"
         />
-      ) : forWhat === "add_account" ? (
-        <CustomBtn
-          word={btnWord}
-          icon={btnIcon}
-          btnColor={btnColor}
-          onClick={handleOpen}
-          paddingVal="py-[--10px] px-[--22px]"
-        />
-      ) : (
-        <CustomBtn
-          word={btnWord}
-          btnColor={btnColor}
-          onClick={handleOpen}
-          paddingVal="py-[--10px] px-[--22px]"
-        />
-      )}
+      }
 
       {/* 02- Modal */}
       <Modal
@@ -97,6 +80,7 @@ export default function BasicModal({
                 {closeIcon}
               </div>
             </div>
+
             {/* Conditional rendering based on 'forWhat' prop */}
             {forWhat === "add_to_list" ? (
               <>
@@ -121,14 +105,9 @@ export default function BasicModal({
                         id="subredditLink"
                         required
                         className={`${styles.subredditInput}`}
-                        onKeyUp={(e: any) => {
-                          setMatchResult(urlRegex.test(e.target.value));
-                        }}
                       />
                       {chainIcon}
                     </div>
-                    {/* Display error message if URL validation fails */}
-                    {matchResult ? null : <span>Oops</span>}
                   </div>
                 </div>
                 {/* Subreddit Details section */}
@@ -171,14 +150,59 @@ export default function BasicModal({
                       id="subredditLink"
                       required
                       className={`${styles.subredditInput}`}
-                      onKeyUp={(e: any) => {
-                        setMatchResult(urlRegex.test(e.target.value));
-                      }}
                     />
                     {chainIcon}
                   </div>
-                  {/* Display error message if URL validation fails */}
-                  {matchResult ? null : <span>Oops</span>}
+                </div>
+                <div className="flex gap-[0.5vw]">
+                  <CustomBtn
+                    btnColor="white"
+                    word="Cancel"
+                    paddingVal="px-[3vw] py-[0.5vw]"
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  />
+                  <CustomBtn
+                    btnColor="black"
+                    /* SVG icon for 'Add Account' button */
+                    icon={
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="12"
+                        height="11"
+                        viewBox="0 0 12 11"
+                        fill="none"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M5.08333 10.0833C5.08333 10.5896 5.49373 11 6 11C6.50628 11 6.91667 10.5896 6.91667 10.0833V6.41667H10.5833C11.0896 6.41667 11.5 6.00628 11.5 5.5C11.5 4.99373 11.0896 4.58333 10.5833 4.58333H6.91667V0.916667C6.91667 0.410401 6.50628 0 6 0C5.49373 0 5.08333 0.410401 5.08333 0.916667V4.58333H1.41667C0.91041 4.58333 0.5 4.99373 0.5 5.5C0.5 6.00628 0.91041 6.41667 1.41667 6.41667H5.08333V10.0833Z"
+                          fill="#FFFFFB"
+                        />
+                      </svg>
+                    }
+                    word="Add Account"
+                    paddingVal="px-[1.3vw] py-[0.5vw]"
+                  />
+                </div>
+              </>
+            ) : forWhat === "add_account1" ? (
+              <>
+                {/* Form fields for adding an account */}
+                <div
+                  className={`flex flex-col gap-[0.2vw] ${styles.linkValidation}`}
+                >
+                  <label htmlFor="subredditLink">Account Link*</label>
+                  <div className={`${styles.linkInput}`}>
+                    <input
+                      type="text"
+                      id="subredditLink"
+                      required
+                      className={`${styles.subredditInput}`}
+                    />
+                    {chainIcon}
+                  </div>
                 </div>
                 <div className="flex gap-[0.5vw]">
                   <CustomBtn
