@@ -3,47 +3,121 @@ import styles from "./reddit.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { ArticleNames, Brands, Posts } from "@/app/_data/data";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
 import { addIcon, backIcon, redditIcon } from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
 
-const renderBodyRows = Posts.map((onePost, idx) => (
-  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
-    <li className="w-2/12">{onePost.subReddit}</li>
-    <li className="w-3/12 ">
-      <a href={onePost.link}>{onePost.link}</a>
-    </li>
-    <li className={`w-2/12 `}>
-      {onePost.subscribers > 999
-        ? onePost.subscribers / 100 / 10.0 + "k"
-        : onePost.subscribers}
-    </li>
-    <li className="w-1/12 ">{onePost.niche}</li>
-    <li className="w-2/12  ">
-      <span
-        className={
-          onePost.brand === "PST USA"
-            ? "bg-[#31B2E9B2]"
-            : onePost.brand === "Canada"
-            ? "bg-[#E9313EB2]"
-            : onePost.brand === "PST Asia"
-            ? "bg-[#E1C655B2]"
-            : onePost.brand === "Investocracy"
-            ? "bg-[#5FA85BB5]"
-            : "bg-[#F36F24B2]"
-        }
-      >
-        {onePost.brand}
-      </span>
-    </li>
-    <li className="w-2/12 ">{onePost.engagement}</li>
-  </ul>
-));
+interface IRedditGroup {
+  _id: string;
+  group_name: string;
+  link: string;
+  group_id: string;
+  subscribers: number;
+  niche: string;
+  platform: "REDDIT";
+  brand: string;
+  engagement: number;
+  __v: number;
+}
 
-const Reddit = () => {
+interface IBrandDetails {
+  groups: IRedditGroup[];
+}
+
+const Reddit = ({ params }: { params: { brandId: string } }) => {
+  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
+  const brandId = params.brandId;
+  const [pageState, setPageState] = useState<{
+    brandDetails: IRedditGroup[] | null;
+  }>({
+    brandDetails: null,
+  });
   // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+
+  const renderBodyRows =
+    Array.isArray(pageState.brandDetails) &&
+    pageState.brandDetails.length > 0 ? (
+      pageState.brandDetails?.map((onePost, idx) => (
+        <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
+          <li className="w-2/12">{onePost.group_name}</li>
+          <li className="w-3/12 ">
+            <a href={onePost.link}>{onePost.link}</a>
+          </li>
+          <li className={`w-2/12 `}>
+            {onePost.subscribers > 999
+              ? onePost.subscribers / 100 / 10.0 + "k"
+              : onePost.subscribers}
+          </li>
+          <li className="w-1/12 ">{onePost.niche}</li>
+          <li className="w-2/12  ">
+            <span
+              className={
+                brandIdMap[onePost.brand] === "Street Polotics"
+                  ? "bg-[#31B2E9B2]"
+                  : brandIdMap[onePost.brand] === "Movie Myth"
+                  ? "bg-[#E9313EB2]"
+                  : brandIdMap[onePost.brand] === "Investocracy"
+                  ? "bg-[#5FA85BB5]"
+                  : "bg-[#F36F24B2]"
+              }
+            >
+              {brandIdMap[onePost.brand]}
+            </span>
+          </li>
+          <li className="w-2/12 ">{onePost.engagement}</li>
+        </ul>
+      ))
+    ) : (
+      <div className="flex justify-center items-center h-full">
+        <span className="custom-loader"></span>
+      </div>
+    );
+
+  async function getBrandDetails(brandId: string) {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/reddit/subreddits-brand/${brandId}`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IBrandDetails = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (
+        json &&
+        json.groups &&
+        Array.isArray(json.groups) &&
+        json.groups.length > 0
+      ) {
+        setPageState((prev) => ({ ...prev, brandDetails: json.groups }));
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getBrandDetails:", error);
+    }
+  }
+
+  useEffect(() => {
+    getBrandDetails(brandId);
+  }, []);
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>

@@ -34,6 +34,21 @@ const postSharingPage = () => {
     redditSubscribers: null,
   });
 
+  const platforms = [
+    {
+      icon: telegramIcon,
+      name: "Telegram",
+      color: "#31B2E9",
+      subscribers: pageState.telegramSubscribers,
+    },
+    {
+      icon: redditIcon,
+      name: "Reddit",
+      color: "#FC471E",
+      subscribers: pageState.redditSubscribers,
+    },
+  ];
+
   async function getTelegramSubscribers() {
     try {
       const res = await fetch(
@@ -57,7 +72,6 @@ const postSharingPage = () => {
         return;
       } else if (json && Array.isArray(json) && json.length > 0) {
         setPageState((prev) => ({ ...prev, telegramSubscribers: json }));
-        return json;
       } else {
         toast.error("Something went wrong!");
         return;
@@ -91,7 +105,6 @@ const postSharingPage = () => {
         return;
       } else if (json && Array.isArray(json) && json.length > 0) {
         setPageState((prev) => ({ ...prev, redditSubscribers: json }));
-        return json;
       } else {
         toast.error("Something went wrong!");
         return;
@@ -152,39 +165,27 @@ const postSharingPage = () => {
 
             {/* Tab(1)-02 Platforms Cards */}
             <div className="h-full p-[--5px] pb-[--sy-12px] flex gap-[2.5vw] overflow-x-auto">
-              <PlatformBox
-                platformIcon={telegramIcon}
-                platformName={"Telegram"}
-                platformRoute={"/social-media/post-sharing/telegram"}
-                platformColor={"#31B2E9"}
-                platformCards={
-                  Array.isArray(pageState.telegramSubscribers) &&
-                  pageState.telegramSubscribers.length > 0
-                    ? pageState.telegramSubscribers.map((ele, i) => ({
-                        title: ele.description,
-                        subscribers: ele.subscribers,
-                        engagement: ele.engagement,
-                      }))
-                    : [{ title: "No Data Found!" }] // Empty array as fallback
-                }
-              />
-
-              <PlatformBox
-                platformIcon={redditIcon}
-                platformName={"Reddit"}
-                platformRoute={"/social-media/post-sharing/reddit"}
-                platformColor={"#FC471E"}
-                platformCards={
-                  Array.isArray(pageState.redditSubscribers) &&
-                  pageState.redditSubscribers.length > 0
-                    ? pageState.redditSubscribers.map((ele, i) => ({
-                        title: ele.description,
-                        subscribers: ele.subscribers,
-                        engagement: ele.engagement,
-                      }))
-                    : [{ title: "No Data Found!" }] // Empty array as fallback
-                }
-              />
+              {platforms.map((platform, i) => {
+                return (
+                  <PlatformBox
+                    key={i}
+                    platformIcon={platform.icon}
+                    platformName={platform.name}
+                    platformColor={platform.color}
+                    platformCards={
+                      platform.subscribers &&
+                      Array.isArray(platform.subscribers) &&
+                      platform.subscribers.length > 0
+                        ? platform.subscribers.map((ele, i) => ({
+                            title: ele.description,
+                            subscribers: ele.subscribers,
+                            engagement: ele.engagement,
+                          }))
+                        : undefined
+                    }
+                  />
+                );
+              })}
             </div>
           </div>
         )}

@@ -40,6 +40,7 @@ interface ContextState {
   globalBrands: GlobalBrands[];
   setGlobalBrands: (brands: GlobalBrands[]) => void;
   brandMap: { [key: string]: string };
+  brandIdMap: { [key: string]: string };
   brandOptions: string[];
   selectedBrandId: string;
   setSelectedBrandId: (brandId: string) => void;
@@ -76,6 +77,7 @@ const initialContextState: ContextState = {
   globalBrands: [],
   setGlobalBrands: (brands: GlobalBrands[]) => {},
   brandMap: {},
+  brandIdMap: {},
   brandOptions: [],
   selectedBrandId: "",
   setSelectedBrandId: (brandId: string) => {},
@@ -253,10 +255,21 @@ export default function GlobalContextProvider({
     { brandId: string; brandName: string }[]
   >("MG-globalBrands", []);
 
+  // Lookup for brandId by brandName
   const brandMap = useMemo(
     () =>
       globalBrands.reduce((map: { [key: string]: string }, brand) => {
         map[brand.brandName] = brand.brandId;
+        return map;
+      }, {}),
+    [globalBrands]
+  );
+
+  // Lookup for brandName by brandId
+  const brandIdMap = useMemo(
+    () =>
+      globalBrands.reduce((map: { [key: string]: string }, brand) => {
+        map[brand.brandId] = brand.brandName;
         return map;
       }, {}),
     [globalBrands]
@@ -328,6 +341,7 @@ export default function GlobalContextProvider({
     globalBrands,
     setGlobalBrands,
     brandMap,
+    brandIdMap,
     brandOptions,
     selectedBrandId,
     setSelectedBrandId,
