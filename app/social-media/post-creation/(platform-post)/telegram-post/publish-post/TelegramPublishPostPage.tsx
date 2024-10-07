@@ -6,20 +6,22 @@ import toast from "react-hot-toast";
 import PublishPost from "../../_platform-post/PublishPost";
 import convertFileToBase64 from "@/app/_utils/convertFileToBase64";
 
+interface ChatGroup {
+  _id: string;
+  group_name: string;
+  link: string;
+  group_id: string;
+  subscribers: number;
+  niche: string;
+  platform: "TELEGRAM";
+  brand: string;
+  engagement: number;
+  __v: number;
+}
+
 interface IPublishPostResponse {
-  result?: {
-    platform: string;
-    brand: string;
-    content: string;
-    postId: string;
-    employeeId: string;
-    _id: string;
-    __v: number;
-  };
-  linkedinPost?: {
-    id: string;
-  };
-  message?: string;
+  message: string;
+  chatIds: ChatGroup[];
 }
 
 interface LinkedInDataResponse {
@@ -54,12 +56,12 @@ const TelegramPublishPostPage = () => {
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/add-post/${selectedBrandId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/telegram/campaign-brand/${selectedBrandId}`,
         {
           method: "POST",
           body: JSON.stringify({
-            content: postCaption,
-            ...(pageState.assetId !== null && { asset: pageState.assetId }),
+            message: postCaption,
+            // ...(pageState.assetId !== null && { asset: pageState.assetId }),
           }),
           headers: {
             "Content-Type": "application/json",
@@ -75,10 +77,8 @@ const TelegramPublishPostPage = () => {
         handleSignOut();
       }
       const json: IPublishPostResponse = await res.json();
-      if (json && json.message && json.message.includes("duplicate")) {
-        toast.error("Post is a duplicate!");
-      } else if (json && json.result && json.linkedinPost) {
-        toast.success("Post is published!");
+      if (json && json.message) {
+        toast.success("Message is sent!");
       } else {
         toast.error("Something went wrong!");
       }
