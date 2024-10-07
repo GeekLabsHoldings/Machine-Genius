@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 
 const platformOptions = ["Reddit", "Telegram", "Facebook"];
 
-interface ITelegramSubscribers {
+interface ISubscribers {
   id: string;
   description: string;
   date: string; // ISO 8601 date string
@@ -22,14 +22,16 @@ interface ITelegramSubscribers {
 }
 
 // display all platforms
-const Share = () => {
+const postSharingPage = () => {
   const { authState, handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     activeTab: number;
-    telegramSubscribers: ITelegramSubscribers[] | null;
+    telegramSubscribers: ISubscribers[] | null;
+    redditSubscribers: ISubscribers[] | null;
   }>({
     activeTab: 1,
     telegramSubscribers: null,
+    redditSubscribers: null,
   });
 
   async function getTelegramSubscribers() {
@@ -49,7 +51,7 @@ const Share = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json = await res.json();
+      const json: ISubscribers = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
@@ -66,8 +68,43 @@ const Share = () => {
     }
   }
 
+  async function getRedditSubscribers() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/reddit/brand-subs/`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: ISubscribers = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (json && Array.isArray(json) && json.length > 0) {
+        setPageState((prev) => ({ ...prev, redditSubscribers: json }));
+        return json;
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getTelegramSubscribers:", error);
+    }
+  }
+
   useEffect(() => {
     getTelegramSubscribers();
+    getRedditSubscribers();
   }, []);
 
   return (
@@ -128,7 +165,24 @@ const Share = () => {
                         subscribers: ele.subscribers,
                         engagement: ele.engagement,
                       }))
-                    : [{ title: "No Subscribers Found!" }] // Empty array as fallback
+                    : [{ title: "No Data Found!" }] // Empty array as fallback
+                }
+              />
+
+              <PlatformBox
+                platformIcon={redditIcon}
+                platformName={"Reddit"}
+                platformRoute={"/social-media/post-sharing/reddit"}
+                platformColor={"#FC471E"}
+                platformCards={
+                  Array.isArray(pageState.redditSubscribers) &&
+                  pageState.redditSubscribers.length > 0
+                    ? pageState.redditSubscribers.map((ele, i) => ({
+                        title: ele.description,
+                        subscribers: ele.subscribers,
+                        engagement: ele.engagement,
+                      }))
+                    : [{ title: "No Data Found!" }] // Empty array as fallback
                 }
               />
             </div>
@@ -145,4 +199,4 @@ const Share = () => {
   );
 };
 
-export default Share;
+export default postSharingPage;
