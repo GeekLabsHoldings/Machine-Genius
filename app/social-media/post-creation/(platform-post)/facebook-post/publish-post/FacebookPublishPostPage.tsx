@@ -7,19 +7,19 @@ import PublishPost from "../../_platform-post/PublishPost";
 import convertFileToBase64 from "@/app/_utils/convertFileToBase64";
 
 interface IPublishPostResponse {
-  result?: {
-    platform: string;
-    brand: string;
+  result: {
+    platform: "FACEBOOK";
+    brandId: string;
     content: string;
     postId: string;
     employeeId: string;
     _id: string;
     __v: number;
   };
-  linkedinPost?: {
+  facebookPost: {
     id: string;
+    post_id?: string;
   };
-  message?: string;
 }
 
 interface LinkedInDataResponse {
@@ -54,12 +54,16 @@ const FacebookPublishPostPage = () => {
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/add-post/${selectedBrandId}`,
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/social-media/facebook/add-post/${
+          pageState.assetId !== null ? "photos" : "text"
+        }/${selectedBrandId}`,
         {
           method: "POST",
           body: JSON.stringify({
             content: postCaption,
-            ...(pageState.assetId !== null && { asset: pageState.assetId }),
+            ...(pageState.assetId !== null && { url: pageState.assetId }),
           }),
           headers: {
             "Content-Type": "application/json",
@@ -75,9 +79,7 @@ const FacebookPublishPostPage = () => {
         handleSignOut();
       }
       const json: IPublishPostResponse = await res.json();
-      if (json && json.message && json.message.includes("duplicate")) {
-        toast.error("Post is a duplicate!");
-      } else if (json && json.result && json.linkedinPost) {
+      if (json && json.result && json.facebookPost) {
         toast.success("Post is published!");
       } else {
         toast.error("Something went wrong!");
