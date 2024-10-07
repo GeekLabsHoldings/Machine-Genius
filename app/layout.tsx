@@ -2,7 +2,6 @@
 // import type { Metadata } from "next"; // Importing Metadata type from Next.js
 // import { Inter } from "next/font/google"; // Importing Inter font from Google Fonts
 import "./globals.css"; // Importing global styles
-import styles from "./mainLayout.module.css"; // Importing styles for the main layout
 import GlobalContextProvider from "./_context/store";
 import { Provider } from "react-redux";
 import { store } from "./_redux/store";
@@ -35,18 +34,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* <!-- Preload Acumin Pro Bold Italic --> */}
         <link
           rel="preload"
           href="/fonts/Acumin-BdItPro.woff"
           as="font"
-          type="font/woff"
           crossOrigin="anonymous"
         />
+
+        {/* <!-- Preload Hellix Black --> */}
         <link
           rel="preload"
           href="/fonts/Hellix-Black.woff2"
           as="font"
-          type="font/woff2"
           crossOrigin="anonymous"
         />
       </head>
@@ -54,8 +54,10 @@ export default function RootLayout({
         <Provider store={store}>
           <GlobalContextProvider>
             <SocketProvider>
-              <div className={styles.main_wrapper}>
-                <div className="w-full h-100vh p-0 flex">{children}</div>
+              <div className="main_wrapper overflow-hidden bg-[--dark]">
+                <div className="w-full h-100vh p-0 overflow-hidden">
+                  {children}
+                </div>
               </div>
             </SocketProvider>
           </GlobalContextProvider>

@@ -1,39 +1,44 @@
 "use client";
 import ComplaintDetailsCard from "@/app/_components/HR/03Personnel/03Complaints/ComplaintDetailsCard";
 import { Link } from "@mui/material";
-import React, { useEffect, useState } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
+import { globalContext } from "@/app/_context/store";
 /**
  * Renders the HR personnel complaint details page.
  *
  * @return {JSX.Element} The JSX element representing the HR personnel complaint details page.
  */
-export default function Page({params}:any) {
+export default function Page({ params }: any) {
+  const { handleSignOut } = useContext(globalContext);
+
   console.log(params);
-  const [details,setDetails] = useState({})
+  const [details, setDetails] = useState({});
 
   async function getDetails() {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     try {
-      const data = await fetch(`https://api.machinegenius.io/hr/complaint/get-one/${params.complaintsDetails}`,{
-        headers:{
-          Authorization:
-            `Bearer ${token}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/complaint/get-one/${params.complaintsDetails}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
-      const res = await data.json()
-      console.log(res);
-      setDetails(res)
-      
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const data = await res.json();
+      console.log(data);
+      setDetails(data);
     } catch (error) {
       console.log(error);
-      
     }
   }
-  useEffect(()=>{
-getDetails()
-  },[])
-  
+  useEffect(() => {
+    getDetails();
+  }, []);
+
   return (
     <>
       {/* Back To Complaint Table Button */}
@@ -61,7 +66,7 @@ getDetails()
       {/* Title for Complaint Details */}
       <h2 className="text-[32px] font-bold mb-[30px]">Complaint Details</h2>
       {/* Component to display Complaint Details */}
-      <ComplaintDetailsCard details={details}/>
+      <ComplaintDetailsCard details={details} />
     </>
   );
 }

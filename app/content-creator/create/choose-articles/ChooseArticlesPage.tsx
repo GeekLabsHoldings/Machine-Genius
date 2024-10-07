@@ -8,6 +8,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { contentCleaner } from "@/app/_utils/contentCleaner";
 
 export default function ChooseArticlesPage() {
   const router = useRouter();
@@ -126,7 +127,8 @@ export default function ChooseArticlesPage() {
   );
 
   const handleLabelClick = useCallback((content: any) => {
-    setPreviewText(content);
+    const filteredContent = contentCleaner(content);
+    setPreviewText(filteredContent);
   }, []);
 
   return (

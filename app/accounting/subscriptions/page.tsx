@@ -1,106 +1,52 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import tableStyles from "./TicketingDatabaseTable.module.css";
 import styles from "./subscriptions.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import SubscriptionsCreator from "./SubscriptionsCreator";
+import { globalContext } from "@/app/_context/store";
 
-const subscriptions = [
-  {
-    Subscription: "Figma",
-    Price: "12,000 EGP",
-    Duration: "1 Month",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Photoshop",
-    Price: "12,000 EGP",
-    Duration: "3 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Git Hub",
-    Price: "12,000 EGP",
-    Duration: "12 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "We Internet",
-    Price: "12,000 EGP",
-    Duration: "6 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Vodaphone Net",
-    Price: "12,000 EGP",
-    Duration: "1 Month",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Figma",
-    Price: "12,000 EGP",
-    Duration: "3 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "We Internet",
-    Price: "12,000 EGP",
-    Duration: "6 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Git Hub",
-    Price: "12,000 EGP",
-    Duration: "12 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Figma",
-    Price: "12,000 EGP",
-    Duration: "6 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Figma",
-    Price: "12,000 EGP",
-    Duration: "12 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "We Internet",
-    Price: "12,000 EGP",
-    Duration: "6 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Git Hub",
-    Price: "12,000 EGP",
-    Duration: "6 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-  {
-    Subscription: "Figma",
-    Price: "12,000 EGP",
-    Duration: "12 Months",
-    "Start Date": "12 March 2024",
-    "End Date": "12 March 2024",
-  },
-];
+interface Subscription {
+  subscriptionName: string;
+  subscriptionPrice: number;
+  startDate: number; // Unix timestamp in milliseconds
+  endDate: number; // Unix timestamp in milliseconds
+}
+type sort = "asc" | "desc";
 
-function SubscriptionsTable() {
+function calculateDuration(startDate: number, endDate: number): string {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
 
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+  let days = end.getDate() - start.getDate();
+
+  // Adjust for negative values in months and days
+  if (days < 0) {
+    months--;
+    // Get the number of days in the previous month
+    const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+  const Year = years ? `${years} Year${years !== 1 ? "s" : ""}` : null;
+  const Month = months ? `${months} Month${months !== 1 ? "s" : ""}` : null;
+  const Day = days ? `${days} Day${days !== 1 ? "s" : ""}` : null;
+  return [Year, Month, Day].filter((e) => e).join(", ");
+}
+
+function SubscriptionsTable({
+  subscriptions,
+  subscriptionsNameFilter,
+}: {
+  subscriptions: Subscription[];
+  subscriptionsNameFilter: string;
+}) {
   const newRibbon = (
     <svg
       width="40"
@@ -141,15 +87,27 @@ function SubscriptionsTable() {
 
         {/* Table Body */}
         <div className={tableStyles.table_body}>
-          {subscriptions.map((e, idx) => (
-            <ul className="w-[100%] relative" key={idx}>
-              <li className="w-[20%]">{e.Subscription}</li>
-              <li className="w-[20%]">{e.Price}</li>
-              <li className="w-[20%]">{e.Duration}</li>
-              <li className="w-[20%]">{e["Start Date"]}</li>
-              <li className="w-[20%]">{e["End Date"]}</li>
-            </ul>
-          ))}
+          {subscriptions
+            .filter(
+              (e) =>
+                e.subscriptionName === subscriptionsNameFilter ||
+                subscriptionsNameFilter === "All"
+            )
+            .map((e, idx) => (
+              <ul className="w-[100%] relative" key={idx}>
+                <li className="w-[20%]">{e.subscriptionName}</li>
+                <li className="w-[20%]">{e.subscriptionPrice}</li>
+                <li className="w-[20%]">
+                  {calculateDuration(e.startDate, e.endDate)}
+                </li>
+                <li className="w-[20%]">
+                  {new Date(e.startDate).toLocaleString()}
+                </li>
+                <li className="w-[20%]">
+                  {new Date(e.endDate).toLocaleString()}
+                </li>
+              </ul>
+            ))}
         </div>
       </div>
       {/* End Table */}
@@ -157,18 +115,25 @@ function SubscriptionsTable() {
   );
 }
 
-function SortContainer({ title }: { title: string }) {
-  const [toggleSort, settoggleSort] = useState(true);
+function SortContainer({
+  title,
+  sort,
+  setSort,
+}: {
+  title: string;
+  sort: sort;
+  setSort: (sort: sort) => void;
+}) {
   return (
     <div className="flex flex-col w-[25%] gap-[0.3vw]">
       <h5>{title}</h5>
       <div
         className={`${styles.changeOrder} `}
         onClick={() => {
-          settoggleSort(!toggleSort);
+          setSort(sort === "asc" ? "desc" : "asc");
         }}
       >
-        <p>{toggleSort ? "Ascend" : "Decend"}</p>
+        <p>{sort === "asc" ? "Ascend" : "Decend"}</p>
         <svg
           width="16"
           height="16"
@@ -189,7 +154,108 @@ function SortContainer({ title }: { title: string }) {
 }
 
 function Page() {
-  const subscriptionOptions = [ ...new Set(subscriptions.map((e) => e.Subscription))];
+  const [subscriptionsNameOption, setSubscriptionsNameOption] = useState<
+    string[]
+  >([]);
+
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [subscriptionNameFilter, setSubscriptionNameFilter] =
+    useState<string>("All");
+
+  const [sortPrice, setSortPrice] = useState<sort>("asc");
+  const [sortDuration, setSortDuration] = useState<sort>("asc");
+  const [sortStartDate, setSortStartDate] = useState<sort>("asc");
+  const [sortEndDate, setSortEndDate] = useState<sort>("asc");
+
+  const { handleSignOut } = useContext(globalContext);
+
+  useEffect(() => {
+    function dynamicSort(
+      property: string
+    ): (a: Subscription, b: Subscription) => number {
+      let sortOrder = 1;
+      if (property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+      }
+      return function (a: Subscription, b: Subscription): number {
+        const result =
+          a[property as keyof Subscription] < b[property as keyof Subscription]
+            ? -1
+            : a[property as keyof Subscription] >
+              b[property as keyof Subscription]
+            ? 1
+            : 0;
+        return result * sortOrder;
+      };
+    }
+
+    function dynamicSortMultiple(...props: string[]) {
+      return function (obj1: Subscription, obj2: Subscription): number {
+        var i = 0,
+          result = 0,
+          numberOfProperties = props.length;
+        /* try getting a different result from 0 (equal)
+         * as long as we have extra properties to compare
+         */
+        while (result === 0 && i < numberOfProperties) {
+          result = dynamicSort(props[i])(obj1, obj2);
+          i++;
+        }
+        return result;
+      };
+    }
+
+    setSubscriptions((prevSubscriptions) =>
+      [...prevSubscriptions].sort(
+        dynamicSortMultiple(
+          `${sortPrice === "asc" ? "" : "-"}subscriptionPrice`,
+          `${sortDuration === "asc" ? "" : "-"}endDate`,
+          `${sortStartDate === "asc" ? "" : "-"}startDate`,
+          `${sortEndDate === "asc" ? "" : "-"}endDate`
+        )
+      )
+    );
+  }, [sortPrice, sortDuration, sortStartDate, sortEndDate]);
+
+  useEffect(() => {
+    // Fetch data from API
+    const getSUbscriptionsData = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/subscriptions`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // check if the fetch request is an array of objects
+      if (response.status === 401) {
+        handleSignOut();
+      } else {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          console.log(data);
+          setSubscriptions(data);
+        }
+      }
+    };
+
+    try {
+      getSUbscriptionsData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    setSubscriptionsNameOption([
+      "All",
+      ...new Set(subscriptions?.map((e) => e.subscriptionName)),
+    ]);
+  }, [subscriptions]);
 
   return (
     <div className="pageHeader">
@@ -201,12 +267,32 @@ function Page() {
           >
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
               <h5>Subscription</h5>
-              <CustomSelectInput label="All" options={subscriptionOptions} />
+              <CustomSelectInput
+                label="All"
+                options={subscriptionsNameOption}
+                getValue={(e: string) => setSubscriptionNameFilter(e)}
+              />
             </div>
-            <SortContainer title="Price" />
-            <SortContainer title="Duration" />
-            <SortContainer title="Start Date" />
-            <SortContainer title="End Date" />
+            <SortContainer
+              title="Price"
+              sort={sortPrice}
+              setSort={setSortPrice}
+            />
+            <SortContainer
+              title="Duration"
+              sort={sortDuration}
+              setSort={setSortDuration}
+            />
+            <SortContainer
+              title="Start Date"
+              sort={sortStartDate}
+              setSort={setSortStartDate}
+            />
+            <SortContainer
+              title="End Date"
+              sort={sortEndDate}
+              setSort={setSortEndDate}
+            />
           </div>
 
           {/* BUTTON MODALS HERE */}
@@ -233,12 +319,16 @@ function Page() {
               }
               btnColor={"black"}
               modalTitle={"Add Subscription"}
+              setSubscriptions={setSubscriptions}
             />
           </div>
         </div>
       </div>
 
-      <SubscriptionsTable />
+      <SubscriptionsTable
+        subscriptions={subscriptions}
+        subscriptionsNameFilter={subscriptionNameFilter}
+      />
     </div>
   );
 }

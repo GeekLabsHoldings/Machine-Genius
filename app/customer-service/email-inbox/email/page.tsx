@@ -26,9 +26,7 @@ function Page() {
   return (
     <div className="h-[85vh] py-[1.5vw]">
       <header>
-        <div
-          className={`flex items-center justify-between ${styles.email__title}`}
-        >
+        <div className={`flex items-center gap-[--50px] ${styles.email__title}`}>
           <div
             className="flex items-center space-x-4 cursor-pointer"
             onClick={() => router.back()}
@@ -45,7 +43,8 @@ function Page() {
                 fill="#2A2B2A"
               />
             </svg>
-            <h2 className="text-[2rem] w-max font-bold"> Issues with Brand </h2>
+
+            <h2 className="text-[2rem] w-max font-bold">Issues with Brand</h2>
           </div>
           <OptionsDropdown
             icon={files}
@@ -54,7 +53,12 @@ function Page() {
         </div>
       </header>
       <div className="w-full flex justify-end mt-4">
-        <CustomBtn word="Reply" btnColor="black" href="/customer-service/email-inbox/email/reply" />
+        <CustomBtn
+          word="Reply"
+          btnColor="black"
+          href="/customer-service/email-inbox/email/reply"
+          paddingVal="py-[--10px] px-[--42px]"
+        />
       </div>
       <div className="p-8 text-xl">
         <div className="mb-11">
@@ -76,21 +80,16 @@ function Page() {
             Here are my account details for your reference:
           </p>
           <ul className="list-disc list-inside ml-4 mt-2">
-            <li>
-              Username: JohnDoe123
-            </li>
-            <li>
-              Email associated with the account:
-              johndoe@email.com
-            </li>
+            <li>Username: JohnDoe123</li>
+            <li>Email associated with the account: johndoe@email.com</li>
           </ul>
 
           <p className="mt-4">
             I haven't made any recent transactions or changes to my account, and
             this issue has left me unable to access important features and
-            information on your platform. <br /> I appreciate your prompt attention to
-            this matter. If you require any further information from my end,
-            please do not hesitate to ask.
+            information on your platform. <br /> I appreciate your prompt
+            attention to this matter. If you require any further information
+            from my end, please do not hesitate to ask.
           </p>
 
           <p className="mt-4">Thank you for your assistance and support.</p>

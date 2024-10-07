@@ -4,10 +4,10 @@
   border-radius: 20px;
   box-shadow: 1px 3px 6.6px 0px #00000026;
   padding: 32px;
-  min-height: 50vh;
-  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
   max-height: 60vh;
-  overflow: hidden;
 }
 
 .cardItem {
@@ -21,12 +21,12 @@
   border: none;
   height: 1px;
   background-color: #2a2b2a !important;
-  margin: 20px 0 25px;
+  margin: var(--sy-20px) 0 var(--sy-20px);
 }
 
 .cardBody {
-  overflow-y: scroll;
-  max-height: 632px;
+  overflow-y: auto;
+  flex-grow: 1; /* Allow the card body to grow and fill available space */
 }
 
 .cardBody::-webkit-scrollbar {
@@ -35,19 +35,24 @@
 }
 
 .cardBody .cardItem:not(:first-child) {
-  margin-top: 25px;
+  margin-top: var(--sy-20px);
 }
 
-.cardItem {
+.cardBody .cardItem {
   font-size: 16px;
   font-weight: 900;
+  cursor: pointer;
 }
 
-.cardItem:last-child {
-  margin-bottom: 25px;
+.cardBody .cardItem:last-child {
+  margin-bottom: var(--sy-20px);
 }
 
 .cardTitle {
-  font-size: 24px;
+  font-size: var(--24px);
   font-weight: 700;
+}
+.cardBody .cardItem.undraggable {
+  cursor: default !important;
+  /* Add any other styles to visually indicate the item is not draggable */
 }

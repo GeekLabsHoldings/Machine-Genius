@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import EmployeeDatabaseTable from "@/app/_components/HR/03Personnel/01EmployeeDatabase/EmployeeDatabaseTable";
 import { headers } from "next/headers";
+import { globalContext } from "@/app/_context/store";
 
 export default function Page() {
+  const { handleSignOut } = useContext(globalContext);
   // options for roles
   const rolesOptions: string[] = [
     "Video Editor",
@@ -113,8 +115,8 @@ export default function Page() {
     try {
       console.log("xzcasdqe");
 
-      const data = await fetch(
-        "https://api.machinegenius.io/hr/employee/data?name=&department=&limit&skip",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/employee/data?name=&department=&limit&skip`,
         {
           method: "get",
           headers: {
@@ -122,11 +124,14 @@ export default function Page() {
           },
         }
       );
-      const res = await data.json();
-      setEmployees(res);
-      setShownEmployees(res);
-      console.log(res);
-      setRoles([...new Set(res.map((e: any) => e.role))]);
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const data = await res.json();
+      setEmployees(data);
+      setShownEmployees(data);
+      console.log(data);
+      setRoles([...new Set(data.map((e: any) => e.role))]);
     } catch (error) {
       console.log(error);
     }

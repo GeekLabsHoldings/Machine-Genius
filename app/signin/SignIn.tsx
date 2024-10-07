@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 // SignIn component
 const SignIn = () => {
-  const { authState, setAuthState } = useContext(globalContext);
+  const { authState, setAuthState, handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState({
     loader: false,
     showWelcomeMessage: false,
@@ -61,7 +61,7 @@ const SignIn = () => {
     if (!authState.decodedToken) return "/";
     if (
       authState.decodedToken.department.includes("content-creation") ||
-      authState.decodedToken.department.includes("CEO")
+      authState.decodedToken.department.includes("ceo")
     ) {
       return "/content-creator/dashboard";
     } else if (authState.decodedToken.department.includes("Video Editing")) {
@@ -119,13 +119,16 @@ const SignIn = () => {
       loader: true,
     }));
     try {
-      const res = await fetch(`https://api.machinegenius.io/authentication`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/authentication`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
       });
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       // console.log(`json`, json.message);
       if (json.message === "invalid credentials") {

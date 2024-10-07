@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { memo } from "react";
 import styles from "./dashboard.module.css";
 import { Positions, TasksInDashboard } from "@/app/_data/data";
 import { SimplePagination } from "@/app/_components/Pagination/pagination";
@@ -224,4 +224,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default memo(Dashboard);

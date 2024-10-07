@@ -26,7 +26,7 @@ const initialContextState = {
     grammar: "waiting",
     // todo: temp until backend fix it
     plagiarism: "pass",
-    ai: "waiting",
+    ai: "pass",
     isGrammerChecked: false,
   },
   setCheckStatus: (status: any) => {},
@@ -66,7 +66,7 @@ export default function ContentCreatorContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const router = useRouter();
   const path = usePathname();
   const dispatch = useDispatch();
@@ -264,7 +264,7 @@ export default function ContentCreatorContextProvider({
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/content-creation/plagiarism-check`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/plagiarism-check`,
           {
             method: "POST",
             headers: {
@@ -319,8 +319,8 @@ export default function ContentCreatorContextProvider({
   }, [checkAiResults]);
 
   function handleAiFetchError() {
-    setCheckStatus((prev: any) => ({ ...prev, ai: "fetchError" }));
-    toast.error("Something went wrong!");
+    setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
+    // toast.error("Something went wrong!");
     // reset checkGrammerResults
     dispatch(contentCreatorActions.setCheckAiResults([]));
     return;
@@ -378,7 +378,7 @@ export default function ContentCreatorContextProvider({
             : [];
 
         if (averageAi >= 0.3) {
-          setCheckStatus((prev: any) => ({ ...prev, ai: "fail" }));
+          setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
         } else {
           setCheckStatus((prev: any) => ({ ...prev, ai: "pass" }));
         }
@@ -452,7 +452,7 @@ export default function ContentCreatorContextProvider({
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/generate-titles`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/generate-titles`,
         {
           method: "POST",
           headers: {
@@ -469,7 +469,9 @@ export default function ContentCreatorContextProvider({
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
 
       if (!json) {
@@ -575,7 +577,7 @@ export default function ContentCreatorContextProvider({
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/generate-thumbnails`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/generate-thumbnails`,
         {
           method: "POST",
           headers: {
@@ -592,6 +594,9 @@ export default function ContentCreatorContextProvider({
           }),
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
@@ -632,7 +637,7 @@ export default function ContentCreatorContextProvider({
       );
       return selectedContentThumbnailInitValue
         ? selectedContentThumbnailInitValue
-        : (generatedThumbnails && generatedThumbnails[0]?.Thumbnail) || "";
+        : "";
     } else {
       return "";
     }

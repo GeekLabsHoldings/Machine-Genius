@@ -3,7 +3,14 @@
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./show-errors.module.css";
 import ErrorCollapse from "@/app/_components/ErrorCollapse/ErrorCollapse";
-import { useEffect, useRef, useState, useContext } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import SpecificChecker from "@/app/_components/SpecificChecker/SpecificChecker";
 // import HighlightedContent from "@/app/_components/HighlightedContent/HighlightedContent";
@@ -92,11 +99,13 @@ import {
 import "ckeditor5/ckeditor5.css";
 import "./CKEDITOR.css";
 import { formatToText } from "@/app/_utils/contentFormatter";
+import { formatHtml } from "@/app/_utils/htmlFormatter";
+import debounce from "debounce";
 
 export default function ShowErrorsPage() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const {
     selectedContentType,
     checkStatus,
@@ -120,6 +129,7 @@ export default function ShowErrorsPage() {
     isLoadingParaphrase: false,
     isLoadingFormatToHtml: false,
     triggerStartChecks: false,
+    wordCount: "Loading ...",
   });
 
   useEffect(() => {
@@ -168,6 +178,8 @@ export default function ShowErrorsPage() {
       });
     }
   }, [pageState.isLoading]);
+
+  const triggerGenerateTitles = useRef(false);
 
   // =======================================
   async function handleFixAndCheck() {
@@ -298,6 +310,56 @@ export default function ShowErrorsPage() {
     });
   }
 
+  // ================================
+  const countWords = useCallback((text) => {
+    if (text) {
+      // Remove HTML tags and trim whitespace
+      const plainText = text.replace(/<[^>]*>/g, " ").trim();
+      // Split by whitespace and filter out empty strings
+      const words = plainText.split(/\s+/).filter((word) => word.length > 0);
+      return words.length;
+    } else {
+      return 0;
+    }
+  }, []);
+
+  const updateWordCount = useCallback(
+    (editor) => {
+      if (editor) {
+        const data = editor.getData();
+        setPageState((prevState) => ({
+          ...prevState,
+          wordCount: countWords(data),
+        }));
+      }
+    },
+    [countWords, setPageState]
+  );
+
+  const debouncedUpdateWordCount = useMemo(
+    () => debounce(updateWordCount, 100),
+    [updateWordCount]
+  );
+
+  const handleEditorOnChange = useCallback(
+    (event, editor) => {
+      const data = editor.getData();
+
+      const updatedArticle = {
+        ...finalArticle,
+        articles: [
+          {
+            ...finalArticle.articles[0],
+            content: data,
+          },
+        ],
+      };
+      dispatch(contentCreatorActions.setFinalArticle(updatedArticle));
+      // updateWordCount(editor);
+      debouncedUpdateWordCount(editor);
+    },
+    [finalArticle, dispatch, updateWordCount, debouncedUpdateWordCount]
+  );
   // ========================
   async function formatToHtml() {
     try {
@@ -307,7 +369,7 @@ export default function ShowErrorsPage() {
         isLoadingFormatToHtml: true,
       }));
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/format-to-html`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/format-to-html`,
         {
           method: "POST",
           headers: {
@@ -323,7 +385,9 @@ export default function ShowErrorsPage() {
           }),
         }
       );
-
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const json = await res.json();
 
       if (!json) {
@@ -333,10 +397,7 @@ export default function ShowErrorsPage() {
         toast.error("Something went wrong!");
         return finalArticle?.articles[0]?.content || "";
       } else if (json && json.success === true && json?.articles[0]?.content) {
-        const data = json?.articles[0]?.content
-          .replace(/\n/g, "")
-          .replace(/\bhtml\b/gi, "")
-          .replace(/[`]/g, "");
+        const data = formatHtml(json?.articles[0]?.content);
         const updatedArticle = {
           ...finalArticle,
           articles: [
@@ -357,13 +418,21 @@ export default function ShowErrorsPage() {
       console.error("Error formatToHtml:", error);
       return finalArticle?.articles[0]?.content || "";
     } finally {
-      setPageState((prev) => ({
-        ...prev,
-        // isLayoutReady: true,
-        isLoadingFormatToHtml: false,
-        isLoading: false,
-      }));
+      if (!triggerGenerateTitles.current) {
+        setPageState((prev) => ({
+          ...prev,
+          // isLayoutReady: true,
+          isLoadingFormatToHtml: false,
+          isLoading: false,
+        }));
+      }
     }
+  }
+
+  async function handleFormatToHtmlAndNavToGenerateTitles(path) {
+    triggerGenerateTitles.current = true;
+    await formatToHtml();
+    router.replace(path);
   }
 
   const editorContainerRef = useRef(null);
@@ -642,6 +711,7 @@ export default function ShowErrorsPage() {
               btnColor="black"
               onClick={() => {
                 formatToHtml();
+                // Moved inside formatToHtml:
                 // setPageState({
                 //   ...pageState,
                 //   isLoading: false,
@@ -659,13 +729,23 @@ export default function ShowErrorsPage() {
               <CustomBtn
                 word={"Generate Titles"}
                 btnColor="black"
-                href="/content-creator/create/movie-myth/generated-titles"
+                // href="/content-creator/create/movie-myth/generated-titles"
+                onClick={() => {
+                  handleFormatToHtmlAndNavToGenerateTitles(
+                    "/content-creator/create/movie-myth/generated-titles"
+                  );
+                }}
               />
             ) : (
               <CustomBtn
                 word={"Generate Titles"}
                 btnColor="black"
-                href="/content-creator/create/generated-titles"
+                // href="/content-creator/create/generated-titles"
+                onClick={() => {
+                  handleFormatToHtmlAndNavToGenerateTitles(
+                    "/content-creator/create/generated-titles"
+                  );
+                }}
               />
             ))}
         </div>
@@ -708,45 +788,39 @@ export default function ShowErrorsPage() {
                   <div className="editor-container__editor">
                     <div ref={editorRef}>
                       {pageState.isLayoutReady && (
-                        <DynamicCKEditor
-                          onReady={(editor) => {
-                            editorToolbarRef.current.appendChild(
-                              editor.ui.view.toolbar.element
-                            );
-                            editorMenuBarRef.current.appendChild(
-                              editor.ui.view.menuBarView.element
-                            );
-                          }}
-                          onAfterDestroy={() => {
-                            Array.from(
-                              editorToolbarRef.current?.children || []
-                            ).forEach((child) => child.remove());
-                            Array.from(
-                              editorMenuBarRef.current?.children || []
-                            ).forEach((child) => child.remove());
-                          }}
-                          onChange={(event, editor) => {
-                            const data = editor.getData();
+                        <>
+                          <p className="ml-[72px] font-semibold !my-[--sy-5px]">
+                            Word Count:
+                            <span className="text-[--17px] ml-[3px]">
+                              {pageState.wordCount}
+                            </span>
+                          </p>
 
-                            const updatedArticle = {
-                              ...finalArticle,
-                              articles: [
-                                {
-                                  ...finalArticle.articles[0],
-                                  content: data,
-                                },
-                              ],
-                            };
-
-                            dispatch(
-                              contentCreatorActions.setFinalArticle(
-                                updatedArticle
-                              )
-                            );
-                          }}
-                          editor={DecoupledEditor}
-                          config={editorConfig}
-                        />
+                          <DynamicCKEditor
+                            onReady={(editor) => {
+                              editorToolbarRef.current.appendChild(
+                                editor.ui.view.toolbar.element
+                              );
+                              editorMenuBarRef.current.appendChild(
+                                editor.ui.view.menuBarView.element
+                              );
+                              updateWordCount(editor);
+                            }}
+                            onAfterDestroy={() => {
+                              Array.from(
+                                editorToolbarRef.current?.children || []
+                              ).forEach((child) => child.remove());
+                              Array.from(
+                                editorMenuBarRef.current?.children || []
+                              ).forEach((child) => child.remove());
+                            }}
+                            onChange={(event, editor) => {
+                              handleEditorOnChange(event, editor);
+                            }}
+                            editor={DecoupledEditor}
+                            config={editorConfig}
+                          />
+                        </>
                       )}
                     </div>
                   </div>

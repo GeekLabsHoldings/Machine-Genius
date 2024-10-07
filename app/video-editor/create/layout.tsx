@@ -1,12 +1,6 @@
+"use client";
+const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  return <>{children}</>;
+};
 
-const layout = ({ children }: Readonly<{ children: React.ReactNode; }>) => {
-
-  
-  return (
-<>
-    {children}
-</>
-  )
-}
-
-export default layout
+export default layout;

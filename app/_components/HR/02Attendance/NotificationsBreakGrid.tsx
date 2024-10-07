@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NotificationsCard from "@/app/_components/HR/02Attendance/NotificationsCard";
 import styles from "./NotificationsBreakGrid.module.css";
+import { globalContext } from "@/app/_context/store";
 
 interface INotification {
   employee: {
@@ -25,6 +26,8 @@ const degreeMap: { [key: number]: string[] } = {
  * @return {JSX.Element} The rendered break notifications grid.
  */
 export default function NotificationsBreakGrid() {
+  const { handleSignOut } = useContext(globalContext);
+
   const [notifications, setNotifications] = useState<
     Record<string, INotification[]>
   >({}); // State variable to store the notifications data
@@ -33,7 +36,7 @@ export default function NotificationsBreakGrid() {
     const getNotifications = async () => {
       try {
         const response = await fetch(
-          "https://api.machinegenius.io/hr/attendance/warning-notification",
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/attendance/warning-notification`,
           {
             method: "GET",
             headers: {
@@ -42,6 +45,9 @@ export default function NotificationsBreakGrid() {
             },
           }
         );
+        if (response.status === 401) {
+          handleSignOut();
+        }
         const data = await response.json();
         setNotifications(data);
         console.log(data);

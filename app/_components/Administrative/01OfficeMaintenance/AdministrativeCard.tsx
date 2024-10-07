@@ -4,11 +4,14 @@
 import React from "react";
 // Import CSS module styles for the AdministrativeCard component
 import styles from "./AdministrativeCard.module.css";
+import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
 
 // Define the Item interface specifying the structure of an item object
 interface Item {
+  id: string;
   title: string; // The title of the item
   info?: any; // Optional additional information about the item
+  isDraggable?: boolean; // Add this line
 }
 
 // Define the props interface for the AdministrativeCard component
@@ -17,6 +20,7 @@ interface AdministrativeCardProps {
   addIcon: boolean; // Flag indicating whether to add an icon to the card header
   title: string; // The title of the card
   items: Item[]; // The list of items to be displayed in the card body
+  onDrop: (item: Item) => void;
 }
 
 /**
@@ -36,16 +40,26 @@ export default function AdministrativeCard({
   addIcon,
   title,
   items,
+  onDrop,
 }: AdministrativeCardProps) {
+  const [, drop] = useDrop<Item, void, { isOver: boolean }>({
+    accept: "ROOM_ITEM",
+    drop: (item: Item) => onDrop(item),
+    collect: (monitor: DropTargetMonitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  });
+
   return (
-    <div className={styles.card}>
+    // @ts-ignore
+    <div className={styles.card} ref={drop}>
       {/* Card header containing the title and optional icon */}
-      <div className="card-head flex justify-between">
-        <div className={`${styles.cardTitle} flex gap-3`}>
+      <div className="card-head flex justify-between items-center">
+        <div className={`flex gap-3 items-center`}>
           {/* Display the provided icon */}
           {icon}
           {/* Display the card title */}
-          <div>{title}</div>
+          <div className={`${styles.cardTitle}`}>{title}</div>
         </div>
         {/* Conditionally render an additional icon in the header if addIcon is true */}
         {addIcon && (
@@ -93,17 +107,41 @@ export default function AdministrativeCard({
       {/* Card body containing the list of items */}
       <div className={styles.cardBody}>
         {items.map((item, index) => (
-          <div
-            key={index} // Unique key for each item
-            className={`${styles.cardItem} flex justify-between`}
-          >
-            {/* Display the item's title */}
-            {item.title}
-            {/* Display additional information about the item if available */}
-            <span>{item?.info}</span>
-          </div>
+          <DraggableItem key={item.id || index} item={item} />
         ))}
       </div>
+    </div>
+  );
+}
+
+interface DraggableItemProps {
+  item: Item;
+}
+
+function DraggableItem({ item }: DraggableItemProps) {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "ROOM_ITEM",
+    item: { id: item.id, title: item.title },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+    // Add this line to disable dragging based on the isDraggable property
+    canDrag: () => item.isDraggable !== false,
+  }));
+
+  return (
+    <div
+      // @ts-ignore
+      ref={item.isDraggable !== false ? drag : null} // Only apply drag ref if item is draggable
+      className={`${styles.cardItem} flex justify-between ${
+        item.isDraggable === false ? styles.undraggable : ""
+      }`}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+    >
+      {/* Display the item's title */}
+      {item.title}
+      {/* Display additional information about the item if available */}
+      {item?.info && <span>{item?.info}</span>}
     </div>
   );
 }

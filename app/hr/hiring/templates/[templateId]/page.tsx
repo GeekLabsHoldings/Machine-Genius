@@ -8,6 +8,7 @@ import { templatesContext } from "../_context/templatesContext";
 import { Box, Modal } from "@mui/material";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { globalContext } from "@/app/_context/store";
 
 const editIcon = (
   <svg
@@ -184,6 +185,7 @@ export default function TemplateDetails({
 }: {
   params: { templateId: string };
 }) {
+  const { handleSignOut } = useContext(globalContext);
   const [position, setPosition] = useState("");
   const [level, setLevel] = useState("");
   const templateContentRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -211,7 +213,7 @@ export default function TemplateDetails({
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      `https://api.machinegenius.io/hr/template/one-template/${params.templateId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/one-template/${params.templateId}`,
       {
         method: "get",
         headers: {
@@ -219,6 +221,9 @@ export default function TemplateDetails({
         },
       }
     );
+    if (res.status === 401) {
+      handleSignOut();
+    }
     const data = await res.json();
     setTemplateDet(data);
   }
@@ -261,7 +266,7 @@ export default function TemplateDetails({
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/group/groups/${step}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups/${step}`,
         {
           method: "get",
           headers: {
@@ -269,6 +274,9 @@ export default function TemplateDetails({
           },
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       setGroups(data);
     } catch (error) {
@@ -280,24 +288,23 @@ export default function TemplateDetails({
     const step =
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
-      const res = await fetch(
-        "https://api.machinegenius.io/hr/group/create",
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            title: newGroup.title,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: newGroup.title,
 
-            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-            description: newGroup.description,
-            step: step,
-          }),
-        }
-      );
-
+          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+          description: newGroup.description,
+          step: step,
+        }),
+      });
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       if (res.ok) {
         toast.success("Group Created Successfully");
@@ -319,7 +326,7 @@ export default function TemplateDetails({
     console.log(templateDet);
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/template/${params.templateId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/${params.templateId}`,
         {
           method: "put",
           headers: {
@@ -339,6 +346,9 @@ export default function TemplateDetails({
           }),
         }
       );
+      if (res.status === 401) {
+        handleSignOut();
+      }
       const data = await res.json();
       if (res.ok) {
         toast.success("Template Updated Successfully");

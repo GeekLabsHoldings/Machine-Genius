@@ -1,146 +1,129 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./payroll.module.css";
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
+// import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+
+interface Employee {
+  _id: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface SalaryRecord {
+  _id: string;
+  employee: Employee;
+  socialInsurance: number;
+  medicalInsurance: number;
+  netSalary: number;
+  grossSalary: number;
+  createdAt: number; // Unix timestamp in milliseconds
+  __v: number;
+}
 
 const Page = () => {
+  const [sorting1, setSorting1] = useState("Ascend");
+  const [sorting2, setSorting2] = useState("Ascend");
+  const [sorting3, setSorting3] = useState("Ascend");
+  const [payrollData, setPayrollData] = useState<SalaryRecord[]>([]);
 
-  const [sorting1,setSorting1] = useState("Ascend") 
-  const [sorting2,setSorting2] = useState("Ascend") 
-  const [sorting3,setSorting3] = useState("Ascend") 
+  const { handleSignOut } = useContext(globalContext);
 
-  const bodyRow = [
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 620,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 2004,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 63,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 357,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 345,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 123,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 63,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 357,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 345,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 123,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 63,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 357,
-      dateJoined: "12 March 2024",
-    },
-    {
-      employeeName: "John Doe",
-      socialInsurance: "867 871 121",
-      medicalInsurance: "867 871 121",
-      netSalary: "12,000 EGP",
-      grossSalary: "12,000 EGP",
-      pointsGained: 345,
-      dateJoined: "12 March 2024",
-    },
-  ];
+  useEffect(() => {
+    function dynamicSort(
+      property: string
+    ): (a: SalaryRecord, b: SalaryRecord) => number {
+      let sortOrder = 1;
+      if (property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+      }
+      return function (a: SalaryRecord, b: SalaryRecord): number {
+        const result =
+          a[property as keyof SalaryRecord] < b[property as keyof SalaryRecord]
+            ? -1
+            : a[property as keyof SalaryRecord] >
+              b[property as keyof SalaryRecord]
+            ? 1
+            : 0;
+        return result * sortOrder;
+      };
+    }
+
+    function dynamicSortMultiple(...props: string[]) {
+      return function (obj1: SalaryRecord, obj2: SalaryRecord): number {
+        var i = 0,
+          result = 0,
+          numberOfProperties = props.length;
+        /* try getting a different result from 0 (equal)
+         * as long as we have extra properties to compare
+         */
+        while (result === 0 && i < numberOfProperties) {
+          result = dynamicSort(props[i])(obj1, obj2);
+          i++;
+        }
+        return result;
+      };
+    }
+    setPayrollData((prevPayrollData) =>
+      [...prevPayrollData].sort(
+        dynamicSortMultiple(
+          `${sorting1 === "Ascend" ? "" : "-"}netSalary`,
+          `${sorting2 === "Ascend" ? "" : "-"}grossSalary`,
+          `${sorting3 === "Ascend" ? "" : "-"}createdAt`
+        )
+      )
+    );
+  }, [sorting1, sorting2, sorting3]);
+
+  useEffect(() => {
+    // Fetch data from API
+    const getPayrollData = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/payroll`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      // check if the fetch request is an array of objects
+      if (response.status === 401) {
+        handleSignOut();
+      } else {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          console.log(data);
+          setPayrollData((prevPayrollData) => [...prevPayrollData, ...data]);
+        }
+      }
+    };
+
+    try {
+      getPayrollData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
     <div className={`${styles.payroll} pt-[1.9vw] `}>
-      <div className={`${styles.dataSort} flex gap-[0.938vw] mb-[1.372vw] w-full overflow-hidden`}>
+      <div
+        className={`${styles.dataSort} flex gap-[0.938vw] mb-[1.372vw] w-full overflow-hidden`}
+      >
         <div className="mb-[3vh]">
           <h5 className=" mb-[1vh] font-semibold">Net Salary</h5>
           <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
             <span>{sorting1}</span>
             <svg
-            onClick={()=>{
-              sorting1 == "Ascend" ? setSorting1("Descend") : setSorting1("Ascend")
-            }}
-            className="cursor-pointer"
+              onClick={() => {
+                sorting1 == "Ascend"
+                  ? setSorting1("Descend")
+                  : setSorting1("Ascend");
+              }}
+              className="cursor-pointer"
               width="16"
               height="16"
               viewBox="0 0 16 16"
@@ -161,10 +144,12 @@ const Page = () => {
           <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
             <span>{sorting2}</span>
             <svg
-            onClick={()=>{
-              sorting2 == "Ascend" ? setSorting2("Descend") : setSorting2("Ascend")
-            }}
-            className="cursor-pointer"
+              onClick={() => {
+                sorting2 == "Ascend"
+                  ? setSorting2("Descend")
+                  : setSorting2("Ascend");
+              }}
+              className="cursor-pointer"
               width="16"
               height="16"
               viewBox="0 0 16 16"
@@ -185,15 +170,15 @@ const Page = () => {
           <div className="border-[var(--dark)] border-[1px] rounded-md flex justify-between items-center px-[0.677vw] w-[11.927vw] py-[0.3vw]">
             <span>{sorting3}</span>
             <svg
-            onClick={()=>{
-              sorting3 == "Ascend" ? setSorting3("Descend") : setSorting3("Ascend")
-            }}
-            className="cursor-pointer"
-              width="16"
-              height="16"
+              onClick={() => {
+                sorting3 == "Ascend"
+                  ? setSorting3("Descend")
+                  : setSorting3("Ascend");
+              }}
               viewBox="0 0 16 16"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              className="w-[--16px] h-[--16px] cursor-pointer"
             >
               <path
                 fill-rule="evenodd"
@@ -209,59 +194,54 @@ const Page = () => {
         {/* Start Table */}
         <div className={`${styles.table} overflow-auto w-full`}>
           {/* Table Header */}
-          <ul className={`${styles.table_header} w-fit`}>
-            <li className="w-[14.2857%] min-w-[230px] ">
+          <ul className={`${styles.table_header} w-full`}>
+            <li className="w-[16.6667%] min-w-[230px] ">
               <span>Employee Name</span>
             </li>
-            <li className="w-[14.2857%] min-w-[230px] ">
+            <li className="w-[16.6667%] min-w-[230px] ">
               <span>Social Insurance</span>
             </li>
-            <li className="w-[14.2857%] min-w-[230px] ">
+            <li className="w-[16.6667%] min-w-[230px] ">
               <span>Medical Insurance</span>
             </li>
-            <li className="w-[14.2857%] min-w-[230px] ">
+            <li className="w-[16.6667%] min-w-[230px] ">
               <span>Net Salary</span>
             </li>
-            <li className="w-[14.2857%] min-w-[230px] ">
+            <li className="w-[16.6667%] min-w-[230px] ">
               <span>Gross Salary</span>
             </li>
-            <li className="w-[14.2857%] min-w-[230px] ">
-              <span>Points Gained</span>
-            </li>
-            <li className="w-[14.2857%] min-w-[230px] ">
+
+            <li className="w-[16.6667%] min-w-[230px] ">
               <span>Date Joined</span>
             </li>
           </ul>
 
           {/* Table Body */}
-          <div className={`${styles.table_body} w-fit overflow-hidden`}>
-            {bodyRow.map((e, idx) => (
+          <div className={`${styles.table_body} w-full overflow-hidden`}>
+            {payrollData?.map((e, idx) => (
               <ul className="w-[100%]" key={idx}>
-                <li className="w-[14.2857%] min-w-[230px] ">{e.employeeName}</li>
-                <li className="w-[14.2857%] min-w-[230px] ">
+                <li className="w-[16.6667%] min-w-[230px] ">
+                  {e.employee.firstName} {e.employee.lastName}
+                </li>
+                <li className="w-[16.6667%] min-w-[230px] ">
                   <span className={`p-[0.417vw] rounded-md`}>
                     {e.socialInsurance}
                   </span>
                 </li>
-                <li className="w-[14.2857%] min-w-[230px] ">
+                <li className="w-[16.6667%] min-w-[230px] ">
                   <span className="p-[0.417vw] rounded-md w-fit">
                     {e.medicalInsurance}
                   </span>
                 </li>
-                <li className="w-[14.2857%] min-w-[230px] ">{e.netSalary}</li>
-                <li className="w-[14.2857%] min-w-[230px]">
+                <li className="w-[16.6667%] min-w-[230px] ">{e.netSalary}</li>
+                <li className="w-[16.6667%] min-w-[230px]">
                   <span className="p-[0.417vw] rounded-md flex items-center">
                     {e.grossSalary}
                   </span>
                 </li>
-                <li className="w-[14.2857%] min-w-[230px] ">
+                <li className="w-[16.6667%] min-w-[230px] ">
                   <span className="p-[0.417vw] rounded-md flex items-center">
-                    {e.pointsGained}
-                  </span>
-                </li>
-                <li className="w-[14.2857%] min-w-[230px] ">
-                  <span className="p-[0.417vw] rounded-md flex items-center">
-                    {e.dateJoined}
+                    {new Date(e.createdAt).toLocaleDateString()}
                   </span>
                 </li>
               </ul>

@@ -8,9 +8,9 @@
   gap: clamp(18px, calc(1vw + 0.1rem), 100px);
 }
 .box {
-  box-shadow: 0px 0px 14px 0px rgba(42, 43, 42, 0.25) inset;
-  border: 1px solid transparent;
-  border-radius: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+  border: 2px solid #dbdbd7;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  border-radius: var(--20px);
 }
 .tableBodyWrapper {
   overflow-y: auto;

@@ -44,7 +44,7 @@
 .preview_wrapper .selected_article_container p {
   text-align: justify;
   /* margin-top: var(--12px); */
-  margin-bottom: var(--12px);
+  margin-bottom: var(--10px);
 }
 
 .preview_wrapper .selected_article_container p:last-child {
@@ -55,9 +55,10 @@
   width: 65% !important;
   text-align: center;
   margin: 0 auto;
+  margin-top: var(--sy-10px);
+  margin-bottom: var(--sy-10px);
   border-radius: var(--20px);
   display: block;
-  margin-bottom: var(--5px);
 }
 /* ===== Start ArticleWithCheck ===== */
 .article_with_check {

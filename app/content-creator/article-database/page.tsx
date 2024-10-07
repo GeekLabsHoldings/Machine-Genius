@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 const ContentDatabase = () => {
   const router = useRouter();
-  const { authState } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const [contentDatabase, setContentDatabase] = useState<any>([]);
   const [filteredContentDatabase, setFilteredContentDatabase] = useState<any>(
     []
@@ -27,14 +27,14 @@ const ContentDatabase = () => {
   });
 
   async function getContentDatabase() {
-    const maxRetries = 2; // Define the maximum number of retries
+    const maxRetries = 1; // Define the maximum number of retries
     let attempts = 0;
     let json = null;
 
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/content-creation/content`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content`,
           {
             headers: {
               Authorization: `barrer ${
@@ -45,6 +45,9 @@ const ContentDatabase = () => {
             },
           }
         );
+        if (res.status === 401) {
+          handleSignOut();
+        }
         json = await res.json();
         if (json && json.content) {
           // If valid data is found, break the loop
@@ -109,8 +112,8 @@ const ContentDatabase = () => {
         // onClick={(e)=>{handleSelectedBg(e)}}
       >
         <li className="w-[5%]">{idx + 1}</li>
-        <li className="w-[60%]">{oneArticle?.content_title}</li>
-        <li className="w-[10%]">
+        <li className="w-[55%]">{oneArticle?.content_title}</li>
+        <li className="w-[15%]">
           <span
             className={
               oneArticle?.brand === "Street Politics Canada"
@@ -248,8 +251,8 @@ const ContentDatabase = () => {
             className={`${styles.tableHeader} flex justify-center items-center py-[2vh]`}
           >
             <li className="w-[5%]">#</li>
-            <li className="w-[60%] ">Content Title</li>
-            <li className="w-[10%] ">Brand</li>
+            <li className="w-[55%] ">Content Title</li>
+            <li className="w-[15%] ">Brand</li>
             <li className="w-[10%] ">Content Type</li>
             <li className="w-[10%] ">Date</li>
             <li className="w-[5%]">Edit</li>
