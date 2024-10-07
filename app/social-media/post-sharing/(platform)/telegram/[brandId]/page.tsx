@@ -5,32 +5,30 @@ import { ArticleNames, Brands, Posts } from "@/app/_data/data";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import { useEffect, useState, useContext } from "react";
 import Link from "next/link";
-import { addIcon, backIcon, redditIcon } from "@/app/_utils/svgIcons";
+import { addIcon, backIcon, telegramIcon } from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 
-interface IRedditGroup {
+interface ITelegramGroup {
   _id: string;
   group_name: string;
   link: string;
   group_id: string;
   subscribers: number;
   niche: string;
-  platform: "REDDIT";
+  platform: "TELEGRAM";
   brand: string;
   engagement: number;
   __v: number;
 }
 
-interface IBrandDetails {
-  groups: IRedditGroup[];
-}
+type IBrandDetails = ITelegramGroup[];
 
 const Reddit = ({ params }: { params: { brandId: string } }) => {
   const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
   const brandId = params.brandId;
   const [pageState, setPageState] = useState<{
-    brandDetails: IRedditGroup[] | null;
+    brandDetails: ITelegramGroup[] | null;
   }>({
     brandDetails: null,
   });
@@ -80,7 +78,7 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
   async function getBrandDetails(brandId: string) {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/reddit/subreddits-brand/${brandId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/telegram/list-telegram-channels-brand/${brandId}`,
         {
           headers: {
             Authorization: `barrer ${
@@ -100,11 +98,10 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
         return;
       } else if (
         json &&
-        json.groups &&
-        Array.isArray(json.groups) &&
-        json.groups.length > 0
+        Array.isArray(json) &&
+        json.length > 0
       ) {
-        setPageState((prev) => ({ ...prev, brandDetails: json.groups }));
+        setPageState((prev) => ({ ...prev, brandDetails: json }));
       } else {
         // toast.error("Something went wrong!");
         return;
@@ -129,15 +126,15 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
           className={` flex items-center gap-[1vw] w-fit`}
         >
           {backIcon}
-          <h3>Reddit</h3>
-          {redditIcon}
+          <h3>Telegram</h3>
+          {telegramIcon}
         </Link>
 
         {/* 01-2 Filters options & Add to list */}
         <div className="flex justify-between items-end">
           <div className={`${styles.filters} w-8/12 flex gap-[1vw]`}>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Sub Reddit</h5>
+              <h5>Group Name</h5>
               <CustomSelectInput
                 label="All"
                 options={ArticleNames}
@@ -248,7 +245,7 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
                       fill="#2A2B2A"
                     />
                   </svg>
-                  <p>SubReddit</p>
+                  <p>Group Name</p>
                 </div>
               </li>
               <li className="w-3/12 flex justify-center">
