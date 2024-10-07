@@ -1,7 +1,6 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./VideoCreatePage.module.css";
-import { AssignedVideos } from "@/app/_data/data";
 import { globalContext } from "@/app/_context/store";
 import { videoEditingContext } from "@/app/_context/videoEditingContext";
 import { useContext, useEffect, useState } from "react";
@@ -9,6 +8,7 @@ import { formatToText } from "@/app/_utils/contentFormatter";
 import toast from "react-hot-toast";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import { useRouter } from "next/navigation";
+import { truncateText } from "@/app/_utils/text";
 
 interface AssignedVideo {
   _id: string;
@@ -60,7 +60,7 @@ const VideoCreatePage = () => {
     setSelectedContent("");
     const fetchAssignedVideos = async () => {
       const res = await fetch(
-        "http://api.machinegenius.io/VideoEditing/get-all-content",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/get-all-content`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -119,7 +119,7 @@ const VideoCreatePage = () => {
       // router.replace("/video-editor/create/converted-script");
       setPageState((prev) => ({ ...prev, createVideoLoading: true }));
       const res = await fetch(
-        `http://api.machinegenius.io/VideoEditing/split-content`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/split-content`,
         {
           method: "POST",
           body: JSON.stringify(parseParagraph(selectedContent)),
@@ -168,10 +168,10 @@ const VideoCreatePage = () => {
       key={idx}
       className="borderBottom w-full flex justify-between  items-center py-[0.5vh] text-center"
     >
-      <li className="w-[5%]">{video._id}</li>
-      <li className="w-[45%]">{video.content_title}</li>
-      <li className="w-[15%]">{new Date(video.date).toLocaleDateString()}</li>
-      <li className="w-[15%]">
+      <li className="w-[10%]">{video._id}</li>
+      <li className="w-[40%]">{truncateText(video.content_title, 100)}</li>
+      <li className="w-[10%]">{new Date(video.date).toLocaleDateString()}</li>
+      <li className="w-[25%]">
         <span
           className={
             // video.assignedTo === "Sherry"
@@ -188,7 +188,7 @@ const VideoCreatePage = () => {
         </span>
       </li>
       {/* lead user to convert article to video or disply it after conversion */}
-      <li className="w-[20%]">
+      <li className="w-[15%]">
         <CustomBtn
           class="videoStatusBtn"
           width="w-full"
@@ -222,11 +222,11 @@ const VideoCreatePage = () => {
           <ul
             className={`${styles.tableHeader} w-full flex justify-between items-center text-center py-[2vh]`}
           >
-            <li className="w-[5%]">#</li>
-            <li className="w-[45%]">Script Title</li>
+            <li className="w-[10%]">#</li>
+            <li className="w-[40%]">Script Title</li>
             <li className="w-[15%]">Date</li>
-            <li className="w-[15%]">Assigned To</li>
-            <li className="w-[20%]">Edit</li>
+            <li className="w-[25%]">Assigned To</li>
+            <li className="w-[15%]">Edit</li>
           </ul>
           {/* table body */}
           <div className={`${styles.tableBody} flex flex-col`}>

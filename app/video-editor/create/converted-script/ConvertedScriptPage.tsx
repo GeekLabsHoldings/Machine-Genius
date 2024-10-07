@@ -104,7 +104,7 @@ const ConvertedScriptPage = () => {
     return new Promise((resolve) => {
       const audio = new Audio(audioPath);
       audio.addEventListener("loadedmetadata", () => {
-        resolve(audio.duration);
+        resolve(Math.round(audio.duration));
       });
       audio.addEventListener("error", () => {
         console.error("Error loading audio:", audio.error);
@@ -174,7 +174,7 @@ const ConvertedScriptPage = () => {
     console.log(updatedSplitedContent);
 
     const response = await fetch(
-      "http://api.machinegenius.io/VideoEditing/regenrate-audio",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/regenrate-audio`,
       {
         method: "POST",
         headers: {
@@ -222,6 +222,7 @@ const ConvertedScriptPage = () => {
         }
         return prevState;
       });
+      // @ts-ignore
       setSplitedContent((prevState: ScriptSegment[]) => {
         return prevState.map((segment: ScriptSegment) => {
           if (
@@ -268,7 +269,7 @@ const ConvertedScriptPage = () => {
     }
     setLoadingUpdateDatabase(true);
     const response = await fetch(
-      "http://api.machinegenius.io/VideoEditing/replace-words",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/replace-words`,
       {
         method: "POST",
         headers: {

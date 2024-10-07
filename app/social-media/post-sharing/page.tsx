@@ -1,20 +1,74 @@
 "use client";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./share.module.css";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PlatformBox from "@/app/_components/SocialMedia/PlatformBox/PlatformBox";
-import { redditIcon } from "@/app/_utils/svgIcons";
+import { redditIcon, telegramIcon } from "@/app/_utils/svgIcons";
 // Tab (2): Sharing Campaign
 import SharingCampaign from "./_sharingCampaign/SharingCampaign";
 import AllCampaigns from "./_allCampaigns/AllCampaigns";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
 
 const platformOptions = ["Reddit", "Telegram", "Facebook"];
 
+interface ITelegramSubscribers {
+  id: string;
+  description: string;
+  date: string; // ISO 8601 date string
+  niche: string;
+  subscribers: number;
+  engagement: number;
+}
+
 // display all platforms
 const Share = () => {
-  const [pageState, setPageState] = useState({
+  const { authState, handleSignOut } = useContext(globalContext);
+  const [pageState, setPageState] = useState<{
+    activeTab: number;
+    telegramSubscribers: ITelegramSubscribers[] | null;
+  }>({
     activeTab: 1,
+    telegramSubscribers: null,
   });
+
+  async function getTelegramSubscribers() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/telegram/subscripers/`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (json && Array.isArray(json) && json.length > 0) {
+        setPageState((prev) => ({ ...prev, telegramSubscribers: json }));
+        return json;
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getTelegramSubscribers:", error);
+    }
+  }
+
+  useEffect(() => {
+    getTelegramSubscribers();
+  }, []);
 
   return (
     <div className="flex flex-col h-full">
@@ -61,20 +115,22 @@ const Share = () => {
 
             {/* Tab(1)-02 Platforms Cards */}
             <div className="h-full p-[--5px] pb-[--sy-12px] flex gap-[2.5vw] overflow-x-auto">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <PlatformBox
-                  key={i}
-                  platformIcon={redditIcon}
-                  platformName={"Reddit"}
-                  platformRoute={"/social-media/post-sharing/reddit"}
-                  platformColor={"#fc471e"}
-                  platformCards={Array.from({ length: 4 }).map((_, i) => ({
-                    title: "Wall Street Bets",
-                    subscribers: "300K",
-                    engagement: "26%",
-                  }))}
-                />
-              ))}
+              <PlatformBox
+                platformIcon={telegramIcon}
+                platformName={"Telegram"}
+                platformRoute={"/social-media/post-sharing/telegram"}
+                platformColor={"#31B2E9"}
+                platformCards={
+                  Array.isArray(pageState.telegramSubscribers) &&
+                  pageState.telegramSubscribers.length > 0
+                    ? pageState.telegramSubscribers.map((ele, i) => ({
+                        title: ele.description,
+                        subscribers: ele.subscribers,
+                        engagement: ele.engagement,
+                      }))
+                    : [{ title: "No Subscribers Found!" }] // Empty array as fallback
+                }
+              />
             </div>
           </div>
         )}
