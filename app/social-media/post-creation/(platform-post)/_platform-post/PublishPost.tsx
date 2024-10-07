@@ -16,7 +16,7 @@ interface IProps {
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   uploadedAsset: string | null | File;
   handleAddPost: () => void;
-  setPageState: React.Dispatch<React.SetStateAction<any>>;
+  setPageState?: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export default function PublishPost({
@@ -29,7 +29,9 @@ export default function PublishPost({
   const uploadImageRef = useRef<HTMLInputElement>(null);
 
   function getDateTimeValue(value: any) {
-    setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+    if (setPageState) {
+      setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+    }
   }
 
   return (
