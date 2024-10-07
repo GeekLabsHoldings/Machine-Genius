@@ -30,6 +30,7 @@ const VideoCreatePage = () => {
     setSelectedContent,
     splitedContent,
     setSplitedContent,
+    setTotalIntroSlides,
   } = useContext(videoEditingContext);
 
   function parseParagraph(paragraph: string) {
@@ -46,7 +47,7 @@ const VideoCreatePage = () => {
     }
 
     if (bodyMatch) {
-      result.selectedContent = bodyMatch[1].trim().slice(0, 1500);
+      result.selectedContent = bodyMatch[1].trim();
     }
 
     return result;
@@ -76,9 +77,9 @@ const VideoCreatePage = () => {
         return;
       }
 
-      const json = await res.json();
-      if (json.message === "successfully") {
-        setAssignedVideos(json.content);
+      const data = await res.json();
+      if (data.message === "successfully") {
+        setAssignedVideos(data.content);
       } else {
         toast.error("Failed to fetch assigned videos");
       }
@@ -91,6 +92,23 @@ const VideoCreatePage = () => {
   }>({
     createVideoLoading: false,
   });
+
+  function handleSetSplitedContent(content: any) {
+    const introSlides = content.slideJson;
+    const body = content.paragraphJson;
+
+    // get all the keys in the intros object
+    const introKeys = Object.keys(introSlides);
+
+    const intro = introKeys.map((key) => introSlides[key][0]);
+
+    // sort the intro slides by the index
+    intro.sort((a: any, b: any) => a.index - b.index);
+
+    setTotalIntroSlides(intro.length);
+
+    return [...intro, ...body];
+  }
 
   async function handleCreateVideo() {
     if (!selectedContent) {
@@ -118,9 +136,9 @@ const VideoCreatePage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json = await res.json();
-      if (json && json.success === true) {
-        setSplitedContent(json.paragraphJson);
+      const data = await res.json();
+      if (data && data.success === true) {
+        setSplitedContent(handleSetSplitedContent(data));
       } else {
         toast.error("Something went wrong!");
         setPageState((prev) => ({ ...prev, createVideoLoading: false }));
@@ -171,7 +189,6 @@ const VideoCreatePage = () => {
       </li>
       {/* lead user to convert article to video or disply it after conversion */}
       <li className="w-[20%]">
-        {" "}
         <CustomBtn
           class="videoStatusBtn"
           width="w-full"
@@ -180,7 +197,7 @@ const VideoCreatePage = () => {
             setSelectedContent(formatToText(video.content));
           }}
           btnColor="black"
-        />{" "}
+        />
       </li>
     </ul>
   ));

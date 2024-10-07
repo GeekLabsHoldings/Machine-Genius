@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
 
@@ -36,13 +37,16 @@ const ChooseFootagePage = () => {
   const { handleSignOut } = useContext(globalContext);
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
-  const { splitedContent, setSplitedContent } = useContext(videoEditingContext);
+  const { splitedContent, setSplitedContent, totalIntroSlides } =
+    useContext(videoEditingContext);
   const [pageState, setPageState] = useState<{
     selectedScriptSegment: ScriptSegment | null;
     selectedScriptSegmentIndex: number | null;
+    createVideoLoading: boolean;
   }>({
     selectedScriptSegment: null,
     selectedScriptSegmentIndex: null,
+    createVideoLoading: false,
   });
   const [searchFootage, setSearchFootage] = useState<string[]>([]);
 
@@ -76,7 +80,8 @@ const ChooseFootagePage = () => {
     if (pageState.selectedScriptSegment !== null) {
       setPageState((prev) => ({
         ...prev,
-        selectedScriptSegmentIndex: pageState.selectedScriptSegment!.index,
+        selectedScriptSegmentIndex:
+          pageState.selectedScriptSegment!.audioPath.index,
       }));
     }
   }, [pageState.selectedScriptSegment]);
@@ -87,10 +92,13 @@ const ChooseFootagePage = () => {
 
   // Define selectedSegment using type guards
   const selectedSegment =
-    splitedContent !== null &&
-    pageState.selectedScriptSegmentIndex !== null &&
-    pageState.selectedScriptSegmentIndex < splitedContent.length
-      ? splitedContent[pageState.selectedScriptSegmentIndex]
+    splitedContent !== null && pageState.selectedScriptSegmentIndex !== null
+      ? splitedContent[
+          splitedContent.findIndex(
+            (segment) =>
+              segment.audioPath.index === pageState.selectedScriptSegmentIndex
+          )
+        ]
       : null;
 
   // Function to handle selecting footage
@@ -145,59 +153,166 @@ const ChooseFootagePage = () => {
     });
   };
 
+  async function handleCreateVideo() {
+    setPageState((prev) => ({ ...prev, createVideoLoading: true }));
+
+    if (!splitedContent) {
+      toast.error("No data available!");
+      setPageState((prev) => ({ ...prev, createVideoLoading: false }));
+      return;
+    }
+
+    let introSlides = splitedContent?.slice(0, totalIntroSlides);
+    let bodySlides = splitedContent?.slice(totalIntroSlides);
+
+    console.log(`introSlides`, introSlides);
+    console.log(`bodySlides`, bodySlides);
+
+    // check if the imageUrl includes the imageUrl from selectedFootage don't use index
+    introSlides = introSlides?.map((slide) => {
+      const selectedFootageItem = selectedFootage.find((sf) =>
+        sf.imageUrl.some((url) =>
+          slide.keywordsAndImages[0].imageUrl.includes(url)
+        )
+      );
+      return {
+        ...slide,
+        keywordsAndImages: [
+          {
+            ...slide.keywordsAndImages[0],
+            imageUrl: selectedFootageItem?.imageUrl || [],
+          },
+        ],
+      };
+    });
+
+    bodySlides = bodySlides?.map((slide) => {
+      const selectedFootageItem = selectedFootage.find((sf) =>
+        sf.imageUrl.some((url) =>
+          slide.keywordsAndImages[0].imageUrl.includes(url)
+        )
+      );
+      return {
+        ...slide,
+        keywordsAndImages: [
+          {
+            ...slide.keywordsAndImages[0],
+            imageUrl: selectedFootageItem?.imageUrl || [],
+          },
+        ],
+      };
+    });
+
+    console.log(`introSlides`, introSlides);
+    console.log(`bodySlides`, bodySlides);
+
+    const introSlidesJson = introSlides?.reduce<Record<string, any[]>>(
+      (acc, slide, index) => {
+        acc[`slide${index + 1}Json`] = [slide];
+        return acc;
+      },
+      {}
+    );
+
+    // console.log("introSlidesJson", introSlidesJson);
+
+    const requestBody = {
+      paragraphJson: bodySlides,
+      slideJson: { ...introSlidesJson },
+    };
+
+    console.log("requestBody", requestBody);
+
+    try {
+      const response = await fetch(
+        "http://api.machinegenius.io/VideoEditing/render-video",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (response.status === 401) {
+        handleSignOut();
+      }
+
+      if (!response.ok) {
+        toast.error("Failed to create video");
+        setPageState((prev) => ({ ...prev, createVideoLoading: false }));
+        return;
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        toast.success("Video created successfully");
+        router.replace("/video-editor/create/video-preview");
+      } else {
+        toast.error("Failed to create video");
+        setPageState((prev) => ({ ...prev, createVideoLoading: false }));
+      }
+    } catch (error) {
+      console.error(`Error creating video:`, error);
+      toast.error("Failed to create video");
+      setPageState((prev) => ({ ...prev, createVideoLoading: false }));
+    }
+  }
   useEffect(() => {
     console.log(`selectedFootage`, selectedFootage);
   }, [selectedFootage]);
 
   // Function to handle navigating to the next page
-  const handleNextPage = () => {
-    if (splitedContent) {
-      const updatedParagraphJson: ScriptSegment[] = splitedContent.map(
-        (paragraph) => {
-          const selectedFootageItem = selectedFootage.find(
-            (sf) => sf.index === paragraph.index
-          );
+  // const handleNextPage = () => {
+  //   if (splitedContent) {
+  //     const updatedParagraphJson: ScriptSegment[] = splitedContent.map(
+  //       (paragraph) => {
+  //         const selectedFootageItem = selectedFootage.find(
+  //           (sf) => sf.index === paragraph.index
+  //         );
 
-          // Copy the existing keywordsAndImages
-          let updatedKeywordsAndImages = [...paragraph.keywordsAndImages];
+  //         // Copy the existing keywordsAndImages
+  //         let updatedKeywordsAndImages = [...paragraph.keywordsAndImages];
 
-          if (selectedFootageItem) {
-            // Update the imageUrl of the first keyword
-            updatedKeywordsAndImages = updatedKeywordsAndImages.map(
-              (kwi, idx) => {
-                if (idx === 0) {
-                  return {
-                    ...kwi,
-                    imageUrl: selectedFootageItem.imageUrl,
-                  };
-                }
-                return kwi;
-              }
-            );
-          }
+  //         if (selectedFootageItem) {
+  //           // Update the imageUrl of the first keyword
+  //           updatedKeywordsAndImages = updatedKeywordsAndImages.map(
+  //             (kwi, idx) => {
+  //               if (idx === 0) {
+  //                 return {
+  //                   ...kwi,
+  //                   imageUrl: selectedFootageItem.imageUrl,
+  //                 };
+  //               }
+  //               return kwi;
+  //             }
+  //           );
+  //         }
 
-          return {
-            ...paragraph,
-            keywordsAndImages: updatedKeywordsAndImages,
-          };
-        }
-      );
+  //         return {
+  //           ...paragraph,
+  //           keywordsAndImages: updatedKeywordsAndImages,
+  //         };
+  //       }
+  //     );
 
-      // Update the context with the new content including selected images
-      // setSplitedContent(updatedParagraphJson);
-      console.log(`updatedParagraphJson`, updatedParagraphJson);
+  // Update the context with the new content including selected images
+  // setSplitedContent(updatedParagraphJson);
+  //     console.log(`updatedParagraphJson`, updatedParagraphJson);
 
-      // Navigate to the next page
-      // router.push("/video-editor/create/video-preview");
-      sessionStorage.setItem(
-        "VideoEditing-splitedContent",
-        JSON.stringify(updatedParagraphJson)
-      );
-      router.replace("/video-editor/create/video-preview");
-    } else {
-      toast.error("No data available!");
-    }
-  };
+  //     // Navigate to the next page
+  //     // router.push("/video-editor/create/video-preview");
+  //     sessionStorage.setItem(
+  //       "VideoEditing-splitedContent",
+  //       JSON.stringify(updatedParagraphJson)
+  //     );
+  //     router.replace("/video-editor/create/video-preview");
+  //   } else {
+  //     toast.error("No data available!");
+  //   }
+  // };
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -270,6 +385,14 @@ const ChooseFootagePage = () => {
     );
   };
 
+  if (pageState.createVideoLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle needTxt={false} title="Converting Script To Audio..." />
+      </div>
+    );
+  }
+
   return (
     <div className={`w-full h-full flex flex-col ${styles.footagePreview}`}>
       <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
@@ -293,8 +416,8 @@ const ChooseFootagePage = () => {
                   >
                     <p
                       className={`${
-                        pageState.selectedScriptSegment?.index ===
-                        scriptSegment.index
+                        pageState.selectedScriptSegment?.audioPath.index ===
+                        scriptSegment.audioPath.index
                           ? styles.active
                           : ""
                       }`}
@@ -556,7 +679,7 @@ const ChooseFootagePage = () => {
           disabled={selectedFootage.length === 0}
           onClick={() => {
             console.log(`selectedFootage`, selectedFootage);
-            handleNextPage();
+            handleCreateVideo();
           }}
         />
       </div>
