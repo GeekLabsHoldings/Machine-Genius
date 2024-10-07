@@ -1,11 +1,6 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext } from "react";
 import useSessionStorage from "../_hooks/useSessionStorage";
-// import { useRouter } from "next/navigation";
-// import toast from "react-hot-toast";
-// import { v4 as uuidv4 } from "uuid";
-// import { formatToText } from "@/app/_utils/contentFormatter";
-// import { globalContext } from "./store";
 
 // Define your interfaces
 interface KeywordsAndImage {
@@ -37,7 +32,7 @@ const initialContextState: VideoEditingContextType = {
   selectedContent: "",
   setSelectedContent: () => {},
   splitedContent: null,
-  setSplitedContent: () => {},
+  setSplitedContent: (content: ScriptSegment[] | null) => {},
   totalIntroSlides: 0,
   setTotalIntroSlides: () => {},
 };

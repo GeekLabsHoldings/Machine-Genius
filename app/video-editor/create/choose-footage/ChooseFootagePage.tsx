@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
 
@@ -39,15 +40,19 @@ const ChooseFootagePage = () => {
   const [search, setSearch] = useState<string>("");
   const { splitedContent, setSplitedContent, totalIntroSlides } =
     useContext(videoEditingContext);
-  const [pageState, setPageState] = useState<{
+  const [pageState, setPageState] = useSessionStorage<{
     selectedScriptSegment: ScriptSegment | null;
     selectedScriptSegmentIndex: number | null;
     createVideoLoading: boolean;
-  }>({
-    selectedScriptSegment: null,
-    selectedScriptSegmentIndex: null,
-    createVideoLoading: false,
-  });
+  }>(
+    "VideoEditing-pageState",
+    {
+      selectedScriptSegment: null,
+      selectedScriptSegmentIndex: null,
+      createVideoLoading: false,
+    },
+    {}
+  );
   const [searchFootage, setSearchFootage] = useState<string[]>([]);
 
   // State to hold selected footage
@@ -225,7 +230,7 @@ const ChooseFootagePage = () => {
 
     try {
       const response = await fetch(
-        "http://api.machinegenius.io/VideoEditing/render-video",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/render-video`,
         {
           method: "POST",
           headers: {
@@ -322,7 +327,7 @@ const ChooseFootagePage = () => {
 
     const fetchFootage = async (search: string) => {
       const response = await fetch(
-        "http://api.machinegenius.io/VideoEditing/get-img",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/get-img`,
         {
           method: "POST",
           headers: {
@@ -346,7 +351,7 @@ const ChooseFootagePage = () => {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && data.images.length > 0) {
         console.log(`data`, data);
         setSearchFootage(data.images);
       } else {
@@ -388,7 +393,7 @@ const ChooseFootagePage = () => {
   if (pageState.createVideoLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle needTxt={false} title="Converting Script To Audio..." />
+        <LogoAndTitle needTxt={false} title="Generating Video..." />
       </div>
     );
   }
@@ -595,9 +600,18 @@ const ChooseFootagePage = () => {
               className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
             >
               <div className="flex gap-[1.25vw] pb-[--sy-5px]">
-                {selectedFootage.length > 0 ? (
-                  selectedFootage.map((sf, idx) =>
-                    sf.imageUrl.map((imageUrl, idx) => (
+                {selectedSegment?.keywordsAndImages[0].imageUrl &&
+                selectedSegment?.keywordsAndImages[0].imageUrl?.filter(
+                  (imageUrl) =>
+                    selectedFootage.some((sf) => sf.imageUrl.includes(imageUrl))
+                ).length > 0 ? (
+                  selectedSegment?.keywordsAndImages[0].imageUrl
+                    ?.filter((imageUrl) =>
+                      selectedFootage.some((sf) =>
+                        sf.imageUrl.includes(imageUrl)
+                      )
+                    )
+                    .map((imageUrl, idx) => (
                       <div
                         className="!w-[194px] h-[--102px] flex-shrink-0 relative rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden"
                         key={uuidv4()}
@@ -644,7 +658,6 @@ const ChooseFootagePage = () => {
                         </div>
                       </div>
                     ))
-                  )
                 ) : (
                   <div>
                     <p className="pl-[--30px]">No footage selected!</p>
