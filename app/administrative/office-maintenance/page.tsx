@@ -138,7 +138,7 @@ export default function Page() {
   async function getRooms() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/rooms/get-rooms?limit=1000`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/rooms/get-rooms?limit=1000`,
         {
           headers: {
             Authorization: `barrer ${
@@ -170,7 +170,7 @@ export default function Page() {
   async function getCleaningAndFoodSupplies() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/supplies?type=${
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/supplies?type=${
           activeTab === 2 ? "Cleaning" : "Food"
         }`,
         {
@@ -220,7 +220,7 @@ export default function Page() {
   async function updateRoom(roomId: string, roomStatus: RoomStatus) {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/rooms/update-room/${roomId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/rooms/update-room/${roomId}`,
         {
           method: "PUT",
           body: JSON.stringify({ typeStatus: roomStatus }),
@@ -252,7 +252,7 @@ export default function Page() {
   async function updateSupply(supplyId: string, supplyStatus: SupplyStatus) {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/supplies/${supplyId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/supplies/${supplyId}`,
         {
           method: "PUT",
           body: JSON.stringify({ supplyStatus: supplyStatus }),

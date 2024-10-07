@@ -80,7 +80,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      "https://api.machinegenius.io/hr/group/groups-template",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups-template`,
       {
         method: "get",
         headers: {
@@ -102,7 +102,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      "https://api.machinegenius.io/hr/template/un-attached",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/un-attached`,
       {
         method: "get",
         headers: {
@@ -123,7 +123,7 @@ const Page = () => {
 
   async function createGroup() {
     try {
-      const res = await fetch("https://api.machinegenius.io/hr/group/create", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",

@@ -21,7 +21,7 @@ export default function Page() {
   async function getSupplies() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/supplies/all?limit=1000`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/supplies/all?limit=1000`,
         {
           headers: {
             Authorization: `barrer ${
@@ -53,7 +53,7 @@ export default function Page() {
   async function getReceipts() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/receipts?limit=1000`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/receipts?limit=1000`,
         {
           headers: {
             Authorization: `barrer ${

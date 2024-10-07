@@ -261,7 +261,7 @@ export default function CreateArticlePage() {
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/content-creation/${
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/${
           selectedContentType === "Script" ? "script" : "article"
         }/finalize-content`,
         {

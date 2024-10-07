@@ -9,6 +9,7 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import debounce from "debounce";
+import useSessionStorage from "../_hooks/useSessionStorage";
 
 const publicPaths = [
   "/",
@@ -21,13 +22,48 @@ const publicPaths = [
   "/careers",
 ];
 
+// ===== 00. Start Authentication =====
 // Define type for AuthState for better type safety
 type AuthStateType = {
   token: string;
   decodedToken: any;
 };
+// ===== 00. End Authentication =====
 
-const initialContextState = {
+interface ContextState {
+  // ===== 00. Start Authentication =====
+  authState: AuthStateType;
+  setAuthState: (authState: AuthStateType) => void;
+  handleSignOut: (message?: string) => void;
+  // ===== 00. End Authentication =====
+  // ===== 01. Start Global Brands =====
+  globalBrands: GlobalBrands[];
+  setGlobalBrands: (brands: GlobalBrands[]) => void;
+  brandMap: { [key: string]: string };
+  brandOptions: string[];
+  selectedBrandId: string;
+  setSelectedBrandId: (brandId: string) => void;
+  // ===== 01. End Global Brands =====
+}
+
+// ===== 01. Start Global Brands =====
+// Define interface for Brand
+interface Brand {
+  _id: string;
+  brand_name: string;
+  description: string;
+  aquisition_date: string; // ISO date string
+  niche: string;
+  __v: number;
+}
+
+interface GlobalBrands {
+  brandId: string;
+  brandName: string;
+}
+// ===== 01. End Global Brands =====
+
+const initialContextState: ContextState = {
   // ===== 00. Start Authentication =====
   authState: {
     token: "" as string,
@@ -36,10 +72,18 @@ const initialContextState = {
   setAuthState: (authState: AuthStateType) => {},
   handleSignOut: (message?: string) => {},
   // ===== 00. End Authentication =====
+  // ===== 01. Start Global Brands =====
+  globalBrands: [],
+  setGlobalBrands: (brands: GlobalBrands[]) => {},
+  brandMap: {},
+  brandOptions: [],
+  selectedBrandId: "",
+  setSelectedBrandId: (brandId: string) => {},
+  // ===== 01. End Global Brands =====
 };
 
 // 1- create context, export it
-export const globalContext = createContext(initialContextState);
+export const globalContext = createContext<ContextState>(initialContextState);
 
 // 2- provide context, export it
 export default function GlobalContextProvider({
@@ -107,7 +151,7 @@ export default function GlobalContextProvider({
 
   const checkIfUserOnCorrespondingRoute = useCallback(() => {
     // if (!decodedToken) return;
-    if (authState.decodedToken?.department.includes("CEO")) {
+    if (authState.decodedToken?.department.includes("ceo")) {
       // console.log("CEO has access to all routes");
       return;
     }
@@ -133,7 +177,7 @@ export default function GlobalContextProvider({
     }
     try {
       const res = await fetch(
-        "https://api.machinegenius.io/authentication/check-auth",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/authentication/check-auth`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -202,20 +246,93 @@ export default function GlobalContextProvider({
     },
     [router]
   );
-
   // ===== 00. End Authentication =====
 
-  // Create a context value object
-  const contextValue = useMemo(
-    () => ({
-      // ===== 00. Start Authentication =====
-      authState,
-      setAuthState,
-      handleSignOut,
-      // ===== 00. End Authentication =====
-    }),
-    [authState, handleSignOut]
+  // ===== 01. Start Global Brands =====
+  const [globalBrands, setGlobalBrands] = useSessionStorage<
+    { brandId: string; brandName: string }[]
+  >("MG-globalBrands", []);
+
+  const brandMap = useMemo(
+    () =>
+      globalBrands.reduce((map: { [key: string]: string }, brand) => {
+        map[brand.brandName] = brand.brandId;
+        return map;
+      }, {}),
+    [globalBrands]
   );
+
+  const brandOptions = useMemo(() => {
+    return globalBrands.map((brand) => brand.brandName);
+  }, [globalBrands]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const brands = sessionStorage.getItem("MG-globalBrands");
+      if (!brands) {
+        getBrands();
+      }
+    }
+  }, []);
+
+  async function getBrands() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/get-all-brands?limit=9999`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: Brand[] = await res.json();
+      if (json && json.length > 0) {
+        const brands: GlobalBrands[] = json.map((ele) => {
+          return {
+            brandId: ele._id,
+            brandName: ele.brand_name,
+          };
+        });
+        setGlobalBrands(brands);
+      } else {
+        // toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      // toast.error("Something went wrong!");
+      console.error("Error getBrands:", error);
+    }
+  }
+
+  const [selectedBrandId, setSelectedBrandId] = useSessionStorage<string>(
+    "MG-selectedBrandId",
+    "",
+    { isSerializable: false }
+  );
+  // ===== 01. End Global Brands =====
+
+  // Create a context value object
+  const contextValue: ContextState = {
+    // ===== 00. Start Authentication =====
+    authState,
+    setAuthState,
+    handleSignOut,
+    // ===== 00. End Authentication =====
+    // ===== 01. Start Global Brands =====
+    globalBrands,
+    setGlobalBrands,
+    brandMap,
+    brandOptions,
+    selectedBrandId,
+    setSelectedBrandId,
+    // ===== 01. End Global Brands =====
+  };
 
   return (
     // to provide what i created

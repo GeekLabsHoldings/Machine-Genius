@@ -77,7 +77,7 @@ export default function AddNewProductModal({
     }
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/supplies`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/supplies`,
         {
           method: "POST",
           body: JSON.stringify({

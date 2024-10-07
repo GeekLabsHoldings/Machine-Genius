@@ -1,4 +1,4 @@
-/* ===== Start Imports ==== */
+/* ===== Start Imports ===== */
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 
 @tailwind base;
@@ -41,7 +41,7 @@
 }
 /* ===== End Imports ==== */
 
-/* ===== Start Variables ===== */
+/* ===== Start Variables ====== */
 :root {
   /* ===== Colors ===== */
   --dark: #2a2b2a;
@@ -239,10 +239,6 @@
 
 /* ===== Start Global Styles ===== */
 * {
-  font-family: "DM Sans", sans-serif;
-  padding: 0;
-  margin: 0;
-  line-height: normal;
   transition: all 0.3s;
 }
 
@@ -263,15 +259,12 @@
   cursor: pointer;
 }
 
-/* Handle on hover */
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--dark);
-}
-
 body {
   background-color: #2a2b2a;
   color: #000;
   font-size: var(--16px);
+  font-family: "DM Sans", sans-serif;
+  line-height: normal;
 }
 
 input,
@@ -287,6 +280,34 @@ img {
   width: 100%;
 }
 /* ===== End Global Styles ===== */
+
+/* ===== Start Module Layout ===== */
+.module-layout {
+  display: flex;
+}
+.module-layout .Side_Nav_Wrapper {
+  width: clamp(300px, calc(18vw + 0.1rem), 400px); /* Reduced max width */
+  height: 100vh;
+  background: transparent;
+  flex-shrink: 0; /* Prevents shrinking in flex container */
+}
+.module-layout .Side_Nav_Wrapper.close {
+  width: clamp(70px, calc(6vw + 0.1rem), 200px); /* Reduced max width */
+}
+
+.module-layout .Page_Wrapper {
+  flex: 1; /* Allows the wrapper to grow and fill remaining space */
+  width: auto; /* Adjust width */
+  height: 100vh;
+  background: #fffffb;
+  border-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 100px) 0 0 0;
+  padding: var(--sy-20px) clamp(20px, calc(3.5vw + 0.1rem), 100px); /* Reduced max padding */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden; /* Prevents content overflow */
+}
+/* ===== End Module Layout ===== */
 
 /* 
 =====

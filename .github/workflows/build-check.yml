@@ -11,21 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      # 1. Checkout Repository
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18.x'
+      # 2. Setup Node.js Environment
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
 
-    - name: Clean npm cache
-      run: npm cache clean --force
+      # 3. Cache Node.js Modules
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    - name: Remove node_modules and package-lock.json
-      run: rm -rf node_modules package-lock.json
+      # 4. Install Dependencies
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build Next.js app
-      run: npm run build
+      # 5. Build Next.js App
+      - name: Build Next.js app
+        run: npm run build

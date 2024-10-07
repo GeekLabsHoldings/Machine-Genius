@@ -4,7 +4,6 @@ import { io, Socket } from "socket.io-client";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import styles from "@/app/_components/Chat/Chat.module.css";
-import { data } from "jquery";
 
 const SocketContext = createContext<Socket | null>(null);
 

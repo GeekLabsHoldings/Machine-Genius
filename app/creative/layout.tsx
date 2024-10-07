@@ -2,8 +2,7 @@
 
 // Import React and useState from React library
 import React, { useState } from "react";
-// Import CSS styles
-import styles from "./creative.module.css";
+
 // Import components
 import dynamic from "next/dynamic";
 const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
@@ -134,13 +133,9 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
   // Return the layout component
   return (
-    <>
+    <div className="module-layout">
       {/* Side nav wrapper */}
-      <div
-        className={`${styles.Side_Nav_Wrapper} ${
-          isSideNavOpen ? "" : styles.close
-        }`}
-      >
+      <div className={`Side_Nav_Wrapper ${isSideNavOpen ? "" : "close"}`}>
         <SideNav
           isSideNavOpen={isSideNavOpen}
           setIsSideNavOpen={setIsSideNavOpen}
@@ -149,13 +144,13 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page wrapper */}
-      <div className={styles.Page_Wrapper}>
+      <div className="Page_Wrapper">
         {/* Title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Children components */}
         <div className="h-full">{children}</div>
       </div>
-    </>
+    </div>
   );
 };
 

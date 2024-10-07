@@ -1,13 +1,58 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./boards.module.css"; // Importing CSS module for styling
-import Slider from "react-slick"; // Importing Slider component from react-slick
+import Slider, { Settings } from "react-slick"; // Importing Slider component and Settings type from react-slick
 import Link from "next/link"; // Next.js Link component for client-side navigation
 import QuarterCircles from "@/app/_components/Creative/QuarterCircles/QuarterCircles"; // Custom component import
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom button component import
 
-// Variable to track the current position of the slider
-let position = 0;
+// Define an interface for arrow props
+interface ArrowProps {
+  onClick?: () => void;
+  isDisabled: boolean;
+}
+
+// Define NextArrow component
+const NextArrow: React.FC<ArrowProps> = ({ onClick, isDisabled }) => {
+  return (
+    <svg
+      onClick={isDisabled ? undefined : onClick}
+      viewBox="0 0 29 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`w-[--30px] h-[--30px] cursor-pointer`}
+      style={{ pointerEvents: isDisabled ? "none" : "auto" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.6413 19.7181C14.2991 19.3768 14.2991 18.823 14.6413 18.4808L18.2471 14.875L8.98438 14.875C8.50313 14.875 8.10938 14.483 8.10938 14C8.10938 13.5161 8.50313 13.125 8.98438 13.125L18.2471 13.125L14.6413 9.51915C14.2991 9.17702 14.2991 8.62227 14.6413 8.2819C14.9816 7.93977 15.5364 7.93977 15.8785 8.2819L20.8275 13.2308C21.0375 13.4408 21.1031 13.7279 21.055 14C21.1031 14.2721 21.0375 14.5591 20.8275 14.7691L15.8785 19.7181C15.5364 20.0602 14.9816 20.0602 14.6413 19.7181ZM28.2344 24.5L28.2344 3.5C28.2344 1.56712 26.6673 -6.85012e-08 24.7344 -1.5299e-07L3.73438 -1.07093e-06C1.80063 -1.15546e-06 0.234377 1.56712 0.234377 3.5L0.234376 24.5C0.234376 26.4329 1.80063 28 3.73438 28L24.7344 28C26.6672 28 28.2344 26.4329 28.2344 24.5Z"
+        fill={isDisabled ? "#D9D9D9" : "#2A2B2A"}
+      />
+    </svg>
+  );
+};
+
+// Define PrevArrow component
+const PrevArrow: React.FC<ArrowProps> = ({ onClick, isDisabled }) => {
+  return (
+    <svg
+      onClick={isDisabled ? undefined : onClick}
+      viewBox="0 0 29 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`w-[--30px] h-[--30px] cursor-pointer`}
+      style={{ pointerEvents: isDisabled ? "none" : "auto" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.3587 19.7181C14.7009 19.3768 14.7009 18.823 14.3587 18.4808L10.7529 14.875L20.0156 14.875C20.4969 14.875 20.8906 14.483 20.8906 14C20.8906 13.5161 20.4969 13.125 20.0156 13.125L10.7529 13.125L14.3587 9.51915C14.7009 9.17702 14.7009 8.62227 14.3587 8.2819C14.0184 7.93977 13.4636 7.93977 13.1215 8.2819L8.17252 13.2308C7.96252 13.4408 7.89689 13.7279 7.94502 14C7.89689 14.2721 7.96252 14.5591 8.17252 14.7691L13.1215 19.7181C13.4636 20.0602 14.0184 20.0602 14.3587 19.7181ZM0.765626 24.5L0.765625 3.5C0.765625 1.56712 2.33275 -6.85012e-08 4.26562 -1.5299e-07L25.2656 -1.07093e-06C27.1994 -1.15546e-06 28.7656 1.56712 28.7656 3.5L28.7656 24.5C28.7656 26.4329 27.1994 28 25.2656 28L4.26563 28C2.33275 28 0.765626 26.4329 0.765626 24.5Z"
+        fill={isDisabled ? "#D9D9D9" : "#2A2B2A"}
+      />
+    </svg>
+  );
+};
 
 const inProgressIcon = (
   <svg
@@ -70,83 +115,20 @@ const stateIcons = {
 
 // Data for the projects to be displayed in the slider
 const project = [
-  {
-    name: "ST Suite",
-    state: "In progress",
-  },
-  {
-    name: "ST Suite",
-    state: "In progress",
-  },
-  {
-    name: "Juice Box",
-    state: "Finished",
-  },
-  {
-    name: "Juice Box",
-    state: "Finished",
-  },
-  {
-    name: "Build Fire",
-    state: "Paused",
-  },
-  {
-    name: "Build Fire",
-    state: "Paused",
-  },
-  {
-    name: "Juice Box",
-    state: "Finished",
-  },
-  {
-    name: "Juice Box",
-    state: "Finished",
-  },
-  {
-    name: "Juice Box",
-    state: "Finished",
-  },
-  {
-    name: "Juice Box",
-    state: "Finished",
-  },
+  { name: "ST Suite", state: "In progress" },
+  { name: "ST Suite", state: "In progress" },
+  { name: "Juice Box", state: "Finished" },
+  { name: "Juice Box", state: "Finished" },
+  { name: "Build Fire", state: "Paused" },
+  { name: "Build Fire", state: "Paused" },
+  { name: "Juice Box", state: "Finished" },
+  { name: "Juice Box", state: "Finished" },
+  { name: "Juice Box", state: "Finished" },
+  { name: "Juice Box", state: "Finished" },
 ];
-
-const settings = {
-  infinite: false,
-  speed: 600,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  rows: 2,
-  centerPadding: "60px",
-  swipeToSlide: false,
-  responsive: [
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        speed: 600,
-        rows: 2,
-        centerPadding: "60px",
-      },
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        speed: 600,
-        rows: 2,
-        centerPadding: "60px",
-      },
-    },
-  ],
-};
 
 const plusIcon = (
   <svg
-    className="me-[0.61vw]"
     width="12"
     height="12"
     viewBox="0 0 12 12"
@@ -166,65 +148,68 @@ const Page = () => {
   // References to HTML elements and components
   const sliderRef = useRef<Slider>(null); // Reference for the slider component
 
-  // Function to navigate to the next slide in the slider
-  const next = () => {
-    if (sliderRef.current) {
-      position++;
-      sliderRef.current.slickNext(); // Move to the next slide
-      console.log(sliderRef.current); // Log the current state of the slider
-    }
-  };
-  const nextArrow = (
-    <svg
-      onClick={() => next()}
-      width="28"
-      height="28"
-      viewBox="0 0 29 28"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className=" cursor-pointer"
-    >
-      {/* SVG path for next button */}
-      <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M14.6413 19.7181C14.2991 19.3768 14.2991 18.823 14.6413 18.4808L18.2471 14.875L8.98438 14.875C8.50313 14.875 8.10938 14.483 8.10938 14C8.10938 13.5161 8.50313 13.125 8.98438 13.125L18.2471 13.125L14.6413 9.51915C14.2991 9.17702 14.2991 8.62227 14.6413 8.2819C14.9816 7.93977 15.5364 7.93977 15.8785 8.2819L20.8275 13.2308C21.0375 13.4408 21.1031 13.7279 21.055 14C21.1031 14.2721 21.0375 14.5591 20.8275 14.7691L15.8785 19.7181C15.5364 20.0602 14.9816 20.0602 14.6413 19.7181ZM28.2344 24.5L28.2344 3.5C28.2344 1.56712 26.6673 -6.85012e-08 24.7344 -1.5299e-07L3.73438 -1.07093e-06C1.80063 -1.15546e-06 0.234377 1.56712 0.234377 3.5L0.234376 24.5C0.234376 26.4329 1.80063 28 3.73438 28L24.7344 28C26.6672 28 28.2344 26.4329 28.2344 24.5Z"
-        fill="#2A2B2A"
-      />
-    </svg>
-  );
+  // State variables to manage slider state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideCount, setSlideCount] = useState(0);
 
-  // Function to navigate to the previous slide in the slider
-  const previous = () => {
-    if (sliderRef.current) {
-      if (position !== 0) {
-        sliderRef.current.slickPrev(); // Move to the previous slide
-        position--;
-      }
+  // Fetch the total number of slides after the first render
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (slider && (slider as any).innerSlider) {
+      setSlideCount((slider as any).innerSlider.state.slideCount);
     }
+  }, []);
+
+  // Function to get the current slidesToShow value considering responsive settings
+  const getSlidesToShow = (): number => {
+    const slider = sliderRef.current;
+    if (slider && (slider as any).innerSlider) {
+      return (slider as any).innerSlider.props.slidesToShow || 1;
+    }
+    return 1;
   };
 
-  const prevArrow = (
-    <svg
-      onClick={() => {
-        previous();
-      }}
-      width="29"
-      height="28"
-      viewBox="0 0 29 28"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className=" cursor-pointer"
-    >
-      {/* SVG path for previous button */}
-      <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M14.3587 19.7181C14.7009 19.3768 14.7009 18.823 14.3587 18.4808L10.7529 14.875L20.0156 14.875C20.4969 14.875 20.8906 14.483 20.8906 14C20.8906 13.5161 20.4969 13.125 20.0156 13.125L10.7529 13.125L14.3587 9.51915C14.7009 9.17702 14.7009 8.62227 14.3587 8.2819C14.0184 7.93977 13.4636 7.93977 13.1215 8.2819L8.17252 13.2308C7.96252 13.4408 7.89689 13.7279 7.94502 14C7.89689 14.2721 7.96252 14.5591 8.17252 14.7691L13.1215 19.7181C13.4636 20.0602 14.0184 20.0602 14.3587 19.7181ZM0.765626 24.5L0.765625 3.5C0.765625 1.56712 2.33275 -6.85012e-08 4.26562 -1.5299e-07L25.2656 -1.07093e-06C27.1994 -1.15546e-06 28.7656 1.56712 28.7656 3.5L28.7656 24.5C28.7656 26.4329 27.1994 28 25.2656 28L4.26563 28C2.33275 28 0.765626 26.4329 0.765626 24.5Z"
-        fill="#D9D9D9"
-      />
-    </svg>
-  );
+  // Slider settings with arrows disabled
+  const settings: Settings = {
+    infinite: false,
+    speed: 600,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    rows: 2,
+    centerPadding: "60px",
+    swipeToSlide: false,
+    arrows: false, // Disable default arrows
+    afterChange: (index) => setCurrentSlide(index), // Update current slide index
+    responsive: [
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          speed: 600,
+          rows: 2,
+          centerPadding: "60px",
+          arrows: false, // Disable default arrows for responsive settings
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          speed: 600,
+          rows: 2,
+          centerPadding: "60px",
+          arrows: false, // Disable default arrows for responsive settings
+        },
+      },
+    ],
+  };
+
+  // Determine if previous and next arrows should be disabled
+  const slidesToShow = getSlidesToShow();
+  const canGoPrev = currentSlide > 0;
+  const canGoNext = currentSlide < slideCount - slidesToShow;
 
   return (
     <section className={`${styles.boards} boards`}>
@@ -235,7 +220,7 @@ const Page = () => {
           <h3 className="!text-[--32px]">All Projects</h3>
 
           <div
-            className={`bg-[--dark] ${styles.members} h-fit rounded-md flex items-center py-[0.3vw] px-[0.328vw]`}
+            className={`bg-[--dark]  h-fit rounded-md flex items-center py-[0.3vw] px-[0.328vw]`}
           >
             <p className="text-white text-[--12px] font-medium mr-2 whitespace-nowrap">
               Members (4)
@@ -254,9 +239,16 @@ const Page = () => {
           {/* Container for project title and navigation buttons */}
           <div className="flex items-center gap-[--30px]">
             <h4>Current Projects</h4>
-            <div className=" flex items-center gap-[--15px]">
-              {prevArrow}
-              {nextArrow}
+            <div className="flex items-center gap-[--15px]">
+              {/* Arrows are shown here */}
+              <PrevArrow
+                onClick={() => sliderRef.current?.slickPrev()}
+                isDisabled={!canGoPrev}
+              />
+              <NextArrow
+                onClick={() => sliderRef.current?.slickNext()}
+                isDisabled={!canGoNext}
+              />
             </div>
           </div>
 
@@ -314,7 +306,12 @@ const Page = () => {
 
         {/* 01-4 Container for Create New Board button */}
         <div className="w-fit ml-auto">
-          <CustomBtn btnColor="black" word="Create New Board" icon={plusIcon} />
+          <CustomBtn
+            btnColor="black"
+            word="Create New Board"
+            icon={plusIcon}
+            paddingVal="px-[--20px] py-[--10px]"
+          />
         </div>
       </div>
 
@@ -324,29 +321,34 @@ const Page = () => {
         {/* 02-1 Container for Templates */}
         <div className="flex gap-[0.946vw] mb-[1.6vw]">
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Design Sprint</h4>
           </div>
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Application Design Project</h4>
           </div>
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Saas Product</h4>
           </div>
           <div
-            className={`${styles.templateCards} rounded-xl p-4 flex items-center ${styles.templateCards}`}
+            className={`rounded-xl p-4 flex items-center ${styles.templateCards}`}
           >
             <h4>Research Project</h4>
           </div>
         </div>
         {/* 02-2 Container for New Template button */}
         <div className="w-fit ml-auto">
-          <CustomBtn btnColor="black" word="New Template" icon={plusIcon} />
+          <CustomBtn
+            btnColor="black"
+            word="New Template"
+            icon={plusIcon}
+            paddingVal="px-[--20px] py-[--10px]"
+          />
         </div>
       </div>
     </section>

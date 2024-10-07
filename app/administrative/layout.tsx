@@ -3,9 +3,6 @@
 // Import React and useState from React library
 import React, { useState } from "react";
 
-// Import CSS styles
-import styles from "./administrative.module.css";
-
 // Import components
 import dynamic from "next/dynamic";
 const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
@@ -13,12 +10,6 @@ const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
 });
 import TitleOfPage from "../_components/TitleOfPage/TitleOfPage";
 // import { usePathname } from 'next/navigation';
-
-// Define the layout component
-const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  // State variables to manage side nav and current page
-  const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>("Administrative");
 
   // Array of side nav links
   const sideNavLinks = [
@@ -93,15 +84,19 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     },
   ];
 
+// Define the layout component
+const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  // State variables to manage side nav and current page
+  const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
+  const [CurrentPage, setCurrentPage] = useState<string>("Administrative");
+
+
+
   // Return the layout component
   return (
-    <>
+    <div className="module-layout">
       {/* Side nav wrapper */}
-      <div
-        className={`${styles.Side_Nav_Wrapper} ${
-          isSideNavOpen ? "" : styles.close
-        }`}
-      >
+      <div className={`Side_Nav_Wrapper ${isSideNavOpen ? "" : "close"}`}>
         <SideNav
           isSideNavOpen={isSideNavOpen}
           setIsSideNavOpen={setIsSideNavOpen}
@@ -110,13 +105,13 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page wrapper */}
-      <div className={styles.Page_Wrapper}>
+      <div className="Page_Wrapper">
         {/* Title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Children components */}
         <div className="h-full">{children}</div>
       </div>
-    </>
+    </div>
   );
 };
 

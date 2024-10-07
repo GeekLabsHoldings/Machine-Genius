@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/hr/hiring/current-step-template/${params.slug}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/current-step-template/${params.slug}`,
           {
             method: "GET",
             headers: {
@@ -53,7 +53,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function publishJobPost() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/hiring/publish-job/${params.slug}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/publish-job/${params.slug}`,
         {
           method: "PUT",
           body: JSON.stringify({
@@ -120,7 +120,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   async function updateNextStep() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/hiring/next-step/${data._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/next-step/${data._id}`,
         {
           method: "PUT",
           headers: {
