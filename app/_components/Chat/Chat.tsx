@@ -1007,11 +1007,11 @@ function Chat() {
                             ? message.groupName
                             : message.members[
                                 userId === message.members[0]?._id ? 1 : 0
-                              ].firstName +
+                              ]?.firstName +
                               " " +
                               message.members[
                                 userId === message.members[0]?._id ? 1 : 0
-                              ].lastName}
+                              ]?.lastName}
                         </h3>
                         <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
                           {truncateText(message.lastMessage || "Message", 60)}
@@ -1046,11 +1046,11 @@ function Chat() {
                   ? currentConversation?.groupName
                   : currentConversation?.members[
                       userId === currentConversation?.members[0]?._id ? 1 : 0
-                    ].firstName +
+                    ]?.firstName +
                     " " +
                     currentConversation?.members[
                       userId === currentConversation?.members[0]?._id ? 1 : 0
-                    ].lastName}
+                    ]?.lastName}
               </h3>
               <button>
                 <svg
@@ -1108,24 +1108,24 @@ function Chat() {
                   </div> */}
                   <div
                     className={`flex gap-5 whitespace-pre-wrap ${
-                      message.sender._id == userId
+                      message?.sender?._id == userId
                         ? "items-end flex-row-reverse"
                         : ""
                     }`}
                   >
-                    {message.sender._id == userId ? (
+                    {message?.sender?._id == userId ? (
                       <ProfileImageFrame reversed />
                     ) : (
                       <ProfileImageFrame />
                     )}
                     <div
                       className={`p-[--15px] rounded-[20px] max-w-[60%] flex flex-col gap-[--10px] ${
-                        message.sender._id == userId
+                        message?.sender?._id == userId
                           ? "bg-[#CEEAE9] self-end"
                           : "self-start"
                       } ${styles.chat__box__message__container}`}
                     >
-                      {currentConversation.type === "group" &&
+                      {currentConversation?.type === "group" &&
                         message.sender._id !== userId && (
                           <p className="text-[#2A2B2A] font-semibold text-[--16px]">
                             {message.sender.firstName +
@@ -1165,9 +1165,9 @@ function Chat() {
           {/* ... existing message rendering code ... */}
           {isTyping && isTyping[currentConversation._id] && (
             <TypingIndicator
-              firstName={isTyping[currentConversation._id].user.firstName}
-              lastName={isTyping[currentConversation._id].user.lastName}
-              theme={isTyping[currentConversation._id].user.theme}
+              firstName={isTyping[currentConversation._id]?.user?.firstName}
+              lastName={isTyping[currentConversation._id]?.user?.lastName}
+              theme={isTyping[currentConversation._id]?.user?.theme}
             />
           )}
         </div>

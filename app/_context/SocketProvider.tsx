@@ -29,7 +29,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       }
     }
     console.log("getToken", getToken());
-    const newSocket = io("wss://api.machinegenius.io", {
+    const newSocket = io(`${process.env.NEXT_PUBLIC_SOCKET_URL}`, {
       reconnectionAttempts: 5, // optional, manage reconnection logic
       auth: {
         token: getToken(),
