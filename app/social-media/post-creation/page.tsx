@@ -16,8 +16,8 @@ const platformsOptions = [
   "Telegram",
   "Twitter",
   "LinkedIn",
-  "Youtube",
-  "Instagram",
+  // "Youtube",
+  // "Instagram",
 ];
 
 // Post component
