@@ -44,6 +44,7 @@ interface ContextState {
   brandOptions: string[];
   selectedBrandId: string;
   setSelectedBrandId: (brandId: string) => void;
+  getBrandsPlatform: (platform: string) => void;
   // ===== 01. End Global Brands =====
 }
 
@@ -83,6 +84,7 @@ const initialContextState: ContextState = {
   brandOptions: [],
   selectedBrandId: "",
   setSelectedBrandId: (brandId: string) => {},
+  getBrandsPlatform: (platform: string) => {},
   // ===== 01. End Global Brands =====
 };
 
@@ -392,6 +394,7 @@ export default function GlobalContextProvider({
     brandOptions,
     selectedBrandId,
     setSelectedBrandId,
+    getBrandsPlatform,
     // ===== 01. End Global Brands =====
   };
 
