@@ -180,7 +180,7 @@ export default function BasicModal({
       forWhat === "add_account1" &&
       (!addAccount1State.userName ||
         !addAccount1State.accountName ||
-        !addAccount1State.accountLink ||
+        // !addAccount1State.accountLink ||
         !addAccount1State.campaignType ||
         !addAccount1State.brand)
     ) {
@@ -201,9 +201,13 @@ export default function BasicModal({
             : "POST",
         body: JSON.stringify({
           sharingList: "TWITTER",
-          userName: addAccount1State.userName,
+          userName: addAccount1State.userName.replace("@", ""),
           accountName: addAccount1State.accountName,
-          accountLink: addAccount1State.accountLink,
+          // accountLink: addAccount1State.accountLink,
+          accountLink: `https://x.com/${addAccount1State.userName.replace(
+            "@",
+            ""
+          )}`,
           campaignType: addAccount1State.campaignType,
           delayBetweenPosts: addAccount1State.delayBetweenPosts,
           delayBetweenGroups: addAccount1State.delayBetweenGroups,
@@ -464,7 +468,7 @@ export default function BasicModal({
                       </div>
                     </div>
                     {/* Account Link* */}
-                    <div>
+                    {/* <div>
                       <label htmlFor="account-link">Account Link*</label>
                       <div className={`${styles.inputWrapper}`}>
                         <input
@@ -482,7 +486,7 @@ export default function BasicModal({
                         />
                         {chainIcon}
                       </div>
-                    </div>
+                    </div> */}
                     {/* Brand */}
                     <div>
                       <label htmlFor="brand">Brand</label>
