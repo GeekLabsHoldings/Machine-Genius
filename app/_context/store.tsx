@@ -340,12 +340,15 @@ export default function GlobalContextProvider({
     }
   }
 
-  async function getBrandsPlatform(platform: string) {
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("platform", platform.toUpperCase());
+  async function getBrandsPlatform(
+    platform: string
+  ): Promise<string[] | undefined> {
+    const params = new URLSearchParams({ platform: platform.toUpperCase() });
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/get-brands-platform`,
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/brand/get-brands-platform?${params.toString()}`,
         {
           headers: {
             Authorization: `barrer ${
@@ -354,16 +357,16 @@ export default function GlobalContextProvider({
                 : authState.token
             }`,
           },
-          body: urlencoded,
         }
       );
       if (res.status === 401) {
         handleSignOut();
       }
       const json: IBrand[] = await res.json();
-      if (json && json.length > 0) {
+      if (json && Array.isArray(json) && json.length > 0) {
         return json.map((e) => e.brand_name);
       } else {
+        return ["No Brands Found!"];
         // toast.error("Something went wrong!");
       }
     } catch (error) {
