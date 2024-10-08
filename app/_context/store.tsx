@@ -40,6 +40,7 @@ interface ContextState {
   globalBrands: GlobalBrands[];
   setGlobalBrands: (brands: GlobalBrands[]) => void;
   brandMap: { [key: string]: string };
+  brandIdMap: { [key: string]: string };
   brandOptions: string[];
   selectedBrandId: string;
   setSelectedBrandId: (brandId: string) => void;
@@ -76,6 +77,7 @@ const initialContextState: ContextState = {
   globalBrands: [],
   setGlobalBrands: (brands: GlobalBrands[]) => {},
   brandMap: {},
+  brandIdMap: {},
   brandOptions: [],
   selectedBrandId: "",
   setSelectedBrandId: (brandId: string) => {},
@@ -251,12 +253,25 @@ export default function GlobalContextProvider({
   // ===== 01. Start Global Brands =====
   const [globalBrands, setGlobalBrands] = useSessionStorage<
     { brandId: string; brandName: string }[]
-  >("MG-globalBrands", []);
+  >("MG-globalBrands", 
+    [{"brandId":"66fcfb7157531aaf2dca2685","brandName":"Street Politics"},{"brandId":"66fcfb8c57531aaf2dca2686","brandName":"Investorcracy"},{"brandId":"66fcfbf557531aaf2dca2688","brandName":"Movie Myth"},{"brandId":"66fcfc3057531aaf2dca2689","brandName":"Street Politics Canada"},{"brandId":"66fcfc5c57531aaf2dca268a","brandName":"Street Politics UK"},{"brandId":"66fcfc7957531aaf2dca268b","brandName":"Street Politics Africa"}]
+  );
 
+  // Lookup for brandId by brandName
   const brandMap = useMemo(
     () =>
       globalBrands.reduce((map: { [key: string]: string }, brand) => {
         map[brand.brandName] = brand.brandId;
+        return map;
+      }, {}),
+    [globalBrands]
+  );
+
+  // Lookup for brandName by brandId
+  const brandIdMap = useMemo(
+    () =>
+      globalBrands.reduce((map: { [key: string]: string }, brand) => {
+        map[brand.brandId] = brand.brandName;
         return map;
       }, {}),
     [globalBrands]
@@ -328,6 +343,7 @@ export default function GlobalContextProvider({
     globalBrands,
     setGlobalBrands,
     brandMap,
+    brandIdMap,
     brandOptions,
     selectedBrandId,
     setSelectedBrandId,

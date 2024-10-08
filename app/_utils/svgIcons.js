@@ -89,6 +89,38 @@ export const redditIconSm = (
 );
 
 // SVG icon for telegram
+export const telegramIcon = (
+  <svg
+    width="30"
+    height="30"
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15 30C23.2843 30 30 23.2843 30 15C30 6.71573 23.2843 0 15 0C6.71573 0 0 6.71573 0 15C0 23.2843 6.71573 30 15 30Z"
+      fill="url(#paint0_linear_926_2480)"
+    />
+    <path
+      d="M22.484 8.79514C22.6175 7.93213 21.797 7.25094 21.0296 7.58786L5.74634 14.298C5.19607 14.5396 5.23632 15.3732 5.80704 15.5549L8.95879 16.5586C9.56039 16.7502 10.2117 16.6511 10.737 16.2882L17.843 11.3789C18.0573 11.2308 18.2908 11.5355 18.1077 11.7242L12.9927 16.9978C12.4965 17.5094 12.595 18.3763 13.1919 18.7505L18.9187 22.3418C19.561 22.7445 20.3873 22.3399 20.5074 21.5637L22.484 8.79514Z"
+      fill="white"
+    />
+    <defs>
+      <linearGradient
+        id="paint0_linear_926_2480"
+        x1="15"
+        y1="0"
+        x2="15"
+        y2="30"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="#37BBFE" />
+        <stop offset="1" stop-color="#007DBB" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 export const telegramIconSm = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
