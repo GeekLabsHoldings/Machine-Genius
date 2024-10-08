@@ -59,7 +59,7 @@ const TwitterCommentsList = () => {
   const renderAccounts =
     Array.isArray(pageState.twitterAccountsData) &&
     pageState.twitterAccountsData.length > 0 ? (
-      pageState.twitterAccountsData.map((oneAccount, idx) => (
+      [...pageState.twitterAccountsData].reverse().map((oneAccount, idx) => (
         <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
           <li className="w-[16%] flex justify-center text-center gap-[1vw]">
             <p>{oneAccount.accountName}</p>
@@ -266,6 +266,7 @@ const TwitterCommentsList = () => {
               btnColor={"black"}
               modalTitle={"Add Account"}
               forWhat={"add_account1"}
+              getData={getTwitterAccountsData}
             />
           </div>
         </div>
