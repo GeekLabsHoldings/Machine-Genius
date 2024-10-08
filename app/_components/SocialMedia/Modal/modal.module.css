@@ -34,18 +34,18 @@
   padding-bottom: clamp(10px, calc(0.5vw + 0.1rem), 60px);
   border-bottom: 1px solid var(--dark);
 }
-.subredditInput {
+.customInput {
   padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
   border-bottom: 1px solid var(--dark);
   color: var(--dark);
 }
-.linkInput {
+.inputWrapper {
   position: relative;
 }
-.linkInput input {
+.inputWrapper input {
   width: 100%;
 }
-.linkInput svg {
+.inputWrapper svg {
   position: absolute;
   top: 50%;
   right: 0;
@@ -53,13 +53,12 @@
   width: clamp(14px, calc(1.1vw + 0.1rem), 70px);
   height: clamp(10px, calc(0.7vw + 0.1rem), 60px);
 }
-.subredditInput:focus {
+.customInput:focus {
   outline: none;
 }
 .linkValidation span {
   font-size: clamp(10px, calc(0.7vw + 0.1rem), 60px);
   font-weight: 400;
-  color: red;
 }
 .removeSec {
   padding-bottom: clamp(5px, calc(0.8vw + 0.1rem), 60px);
@@ -72,4 +71,11 @@
   font-size: clamp(10px, calc(0.7vw + 0.1rem), 60px);
   font-weight: 700;
   padding-bottom: 0.8vw;
+}
+/* 01- Campaign Details */
+.campaignDetails label {
+  display: block;
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 1000px);
+  font-weight: 700;
+  margin-bottom: clamp(5px, calc(0.5vw + 0.1rem), 1000px);
 }
