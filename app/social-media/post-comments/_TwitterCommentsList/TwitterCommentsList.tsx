@@ -50,8 +50,10 @@ const TwitterCommentsList = () => {
   // for storing the order of subscribers and engagement (descending or ascending)
   const [pageState, setPageState] = useState<{
     twitterAccountsData: TwitterSharingAccount[] | null;
+    isDropdownOpen: boolean;
   }>({
     twitterAccountsData: null,
+    isDropdownOpen: false,
   });
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
@@ -97,7 +99,50 @@ const TwitterCommentsList = () => {
               <p>{oneAccount.campaignType}</p>
             </span>
           </li>
-          <li className="w-[4%] flex justify-center">{verticalDots}</li>
+          <li className="w-[4%] flex justify-center">
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className=""
+                onClick={() => {
+                  setPageState((prev) => ({
+                    ...prev,
+                    isDropdownOpen: !prev.isDropdownOpen,
+                  }));
+                }}
+              >
+                {verticalDots}
+              </div>
+              {pageState.isDropdownOpen && (
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content bg-white menu rounded-[--16px] z-[1] w-fit p-[--8px] shadow-md"
+                >
+                  <li
+                    onClick={() => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        isDropdownOpen: false,
+                      }));
+                    }}
+                  >
+                    <a>Edit</a>
+                  </li>
+                  <li
+                    onClick={() => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        isDropdownOpen: false,
+                      }));
+                    }}
+                  >
+                    <a>Delete</a>
+                  </li>
+                </ul>
+              )}
+            </div>
+          </li>
         </ul>
       ))
     ) : (
