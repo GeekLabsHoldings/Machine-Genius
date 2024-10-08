@@ -49,13 +49,15 @@ interface ContextState {
 
 // ===== 01. Start Global Brands =====
 // Define interface for Brand
-interface Brand {
+interface IBrand {
   _id: string;
   brand_name: string;
   description: string;
   aquisition_date: string; // ISO date string
   niche: string;
   __v: number;
+  type?: string;
+  parentId?: string;
 }
 
 interface GlobalBrands {
@@ -253,9 +255,20 @@ export default function GlobalContextProvider({
   // ===== 01. Start Global Brands =====
   const [globalBrands, setGlobalBrands] = useSessionStorage<
     { brandId: string; brandName: string }[]
-  >("MG-globalBrands", 
-    [{"brandId":"66fcfb7157531aaf2dca2685","brandName":"Street Politics"},{"brandId":"66fcfb8c57531aaf2dca2686","brandName":"Investorcracy"},{"brandId":"66fcfbf557531aaf2dca2688","brandName":"Movie Myth"},{"brandId":"66fcfc3057531aaf2dca2689","brandName":"Street Politics Canada"},{"brandId":"66fcfc5c57531aaf2dca268a","brandName":"Street Politics UK"},{"brandId":"66fcfc7957531aaf2dca268b","brandName":"Street Politics Africa"}]
-  );
+  >("MG-globalBrands", [
+    { brandId: "66fcfb7157531aaf2dca2685", brandName: "Street Politics" },
+    { brandId: "66fcfb8c57531aaf2dca2686", brandName: "Investorcracy" },
+    { brandId: "66fcfbf557531aaf2dca2688", brandName: "Movie Myth" },
+    {
+      brandId: "66fcfc3057531aaf2dca2689",
+      brandName: "Street Politics Canada",
+    },
+    { brandId: "66fcfc5c57531aaf2dca268a", brandName: "Street Politics UK" },
+    {
+      brandId: "66fcfc7957531aaf2dca268b",
+      brandName: "Street Politics Africa",
+    },
+  ]);
 
   // Lookup for brandId by brandName
   const brandMap = useMemo(
@@ -307,7 +320,7 @@ export default function GlobalContextProvider({
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: Brand[] = await res.json();
+      const json: IBrand[] = await res.json();
       if (json && json.length > 0) {
         const brands: GlobalBrands[] = json.map((ele) => {
           return {
@@ -322,6 +335,38 @@ export default function GlobalContextProvider({
     } catch (error) {
       // toast.error("Something went wrong!");
       console.error("Error getBrands:", error);
+    }
+  }
+
+  async function getBrandsPlatform(platform: string) {
+    const urlencoded = new URLSearchParams();
+    urlencoded.append("platform", platform.toUpperCase());
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/get-brands-platform`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+          body: urlencoded,
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IBrand[] = await res.json();
+      if (json && json.length > 0) {
+        return json.map((e) => e.brand_name);
+      } else {
+        // toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      // toast.error("Something went wrong!");
+      console.error("Error getBrandsPlatform:", error);
     }
   }
 
