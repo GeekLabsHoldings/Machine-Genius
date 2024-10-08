@@ -366,7 +366,7 @@ export default function GlobalContextProvider({
       if (json && Array.isArray(json) && json.length > 0) {
         return json.map((e) => e.brand_name);
       } else {
-        return ["No Brands Found!"];
+        return [];
         // toast.error("Something went wrong!");
       }
     } catch (error) {
