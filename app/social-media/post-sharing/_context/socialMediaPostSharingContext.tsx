@@ -8,20 +8,20 @@ import useSessionStorage from "@/app/_hooks/useSessionStorage";
 import toast from "react-hot-toast";
 
 interface ContextState {
-  selectedContent: "";
-  setSelectedContent: (content: ScriptSegment[] | null) => void;
-  handleGenerateHashtags: () => Promise<string[] | void>;
+  selectedContent: string;
+  setSelectedContent: (content: string) => void;
+  handleGeneratePosts: () => Promise<string[] | void>;
 }
 
-interface GenerateHashtagsResponse {
-  hashTags: string;
+interface IGeneratePostsResponse {
+  posts: string[];
 }
 
 const initialContextState: ContextState = {
   // ===== 01. Start =====
   selectedContent: "",
   setSelectedContent: () => {},
-  handleGenerateHashtags: async () => {},
+  handleGeneratePosts: async () => {},
   // ===== 01. End =====
 };
 
@@ -40,22 +40,24 @@ export default function SocialMediaPostSharingContextProvider({
   //   const path = usePathname();
 
   // ===== 01. Start =====
-  const [selectedContent, setSelectedContent] = useSessionStorage<
-    ScriptSegment[] | null
-  >("SocialMediaPostSharing-selectedContent", null);
+  const [selectedContent, setSelectedContent] = useSessionStorage<string>(
+    "SocialMediaPostSharing-selectedContent",
+    "",
+    { isSerializable: false }
+  );
 
-  async function handleGenerateHashtags(): Promise<string[] | void> {
-    if (!postCaption) {
-      toast.error("No post caption provided!");
+  async function handleGeneratePosts(): Promise<string[] | void> {
+    if (!selectedContent) {
+      toast.error("No content provided!");
       return;
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/generate-hashtags`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/generate-posts`,
         {
           method: "POST",
           body: JSON.stringify({
-            content: postCaption,
+            content: selectedContent,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -70,15 +72,20 @@ export default function SocialMediaPostSharingContextProvider({
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: GenerateHashtagsResponse = await res.json();
-      if (json && json.hashTags) {
-        return json.hashTags.match(/#\w+/g) || [];
+      const json: IGeneratePostsResponse = await res.json();
+      if (
+        json &&
+        json.posts &&
+        Array.isArray(json.posts) &&
+        json.posts.length > 0
+      ) {
+        return json.posts;
       } else {
         toast.error("Something went wrong!");
       }
     } catch (error) {
       toast.error("Something went wrong!");
-      console.error("Error handleGenerateHashtags:", error);
+      console.error("Error handleGeneratePosts:", error);
     }
   }
   // ===== 01. End =====
@@ -88,7 +95,7 @@ export default function SocialMediaPostSharingContextProvider({
     // ===== 01. Start =====
     selectedContent,
     setSelectedContent,
-    handleGenerateHashtags,
+    handleGeneratePosts,
     // ===== 01. End =====
   };
 
