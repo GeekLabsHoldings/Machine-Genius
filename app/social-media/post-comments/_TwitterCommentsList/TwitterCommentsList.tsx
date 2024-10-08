@@ -3,31 +3,8 @@ import { useState, useContext, useEffect } from "react";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import styles from "./TwitterCommentsList.module.css";
 import { globalContext } from "@/app/_context/store";
-import toast from "react-hot-toast";
 import { addIcon } from "@/app/_utils/svgIcons";
-
-export interface TwitterSharingAccount {
-  _id: string;
-  sharingList: "TWITTER";
-  brand: string;
-  userName: string;
-  accountName: string;
-  accountLink: string;
-  account_id: string;
-  employeeId: string;
-  delayBetweenPosts: number;
-  delayBetweenGroups: number;
-  longPauseAfterCount: number;
-  niche: string;
-  campaignType: "Must Approve" | "Auto Comment";
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-interface TwitterSharingAccountResponse {
-  result: TwitterSharingAccount[];
-}
+import { TwitterSharingAccount } from "../page";
 
 const verticalDots = (
   <svg
@@ -45,21 +22,21 @@ const verticalDots = (
   </svg>
 );
 
-const TwitterCommentsList = () => {
-  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
+const TwitterCommentsList = ({
+  twitterAccountsData,
+  getTwitterAccountsData,
+}: {
+  twitterAccountsData: TwitterSharingAccount[] | null;
+  getTwitterAccountsData: () => void;
+}) => {
+  const { brandIdMap } = useContext(globalContext);
   // for storing the order of subscribers and engagement (descending or ascending)
-  const [pageState, setPageState] = useState<{
-    twitterAccountsData: TwitterSharingAccount[] | null;
-  }>({
-    twitterAccountsData: null,
-  });
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
 
   const renderAccounts =
-    Array.isArray(pageState.twitterAccountsData) &&
-    pageState.twitterAccountsData.length > 0 ? (
-      [...pageState.twitterAccountsData].reverse().map((oneAccount) => (
+    Array.isArray(twitterAccountsData) && twitterAccountsData.length > 0 ? (
+      [...twitterAccountsData].reverse().map((oneAccount) => (
         <ul
           key={oneAccount._id}
           className={`${styles.tableBody} borderBottom articleRow`}
@@ -141,48 +118,6 @@ const TwitterCommentsList = () => {
         <span className="custom-loader"></span>
       </div>
     );
-
-  async function getTwitterAccountsData() {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/get-all-accounts`,
-        {
-          headers: {
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
-      const json: TwitterSharingAccountResponse = await res.json();
-      if (!json) {
-        toast.error("Something went wrong!");
-        return;
-      } else if (
-        json &&
-        json.result &&
-        Array.isArray(json.result) &&
-        json.result.length > 0
-      ) {
-        setPageState((prev) => ({ ...prev, twitterAccountsData: json.result }));
-      } else {
-        // toast.error("Something went wrong!");
-        return;
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error getTwitterAccountsData:", error);
-    }
-  }
-
-  useEffect(() => {
-    getTwitterAccountsData();
-  }, []);
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>

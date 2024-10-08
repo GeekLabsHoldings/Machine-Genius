@@ -1,13 +1,91 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import TwitterCommentsList from "./_TwitterCommentsList/TwitterCommentsList";
 import TwitterCommentCampaign from "./_TwitterCommentCampaign/TwitterCommentCampaign";
 import AutoPostNotifications from "./_AutoPostNotifications/AutoPostNotifications";
 import styles from "./PostComments.module.css";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
+
+export interface TwitterSharingAccount {
+  _id: string;
+  sharingList: "TWITTER";
+  brand: string;
+  userName: string;
+  accountName: string;
+  accountLink: string;
+  account_id: string;
+  employeeId: string;
+  delayBetweenPosts: number;
+  delayBetweenGroups: number;
+  longPauseAfterCount: number;
+  niche: string;
+  campaignType: "Must Approve" | "Auto Comment";
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  followers: string;
+  status: string;
+  comments: number;
+}
+
+interface TwitterSharingAccountResponse {
+  result: TwitterSharingAccount[];
+}
+
 const Comments = () => {
-  const [pageState, setPageState] = useState({
-    activeTab: 1,
+  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
+  const [pageState, setPageState] = useState<{
+    twitterAccountsData: TwitterSharingAccount[] | null;
+    activeTab: number;
+  }>({
+    activeTab: 3,
+    twitterAccountsData: null,
   });
+
+  async function getTwitterAccountsData() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/get-all-accounts`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: TwitterSharingAccountResponse = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (
+        json &&
+        json.result &&
+        Array.isArray(json.result) &&
+        json.result.length > 0
+      ) {
+        setPageState((prev) => ({ ...prev, twitterAccountsData: json.result }));
+      } else {
+        // toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getTwitterAccountsData:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (pageState.activeTab === 1 || pageState.activeTab === 2) {
+      getTwitterAccountsData();
+    }
+  }, [pageState.activeTab]);
 
   return (
     <div className="flex flex-col h-full">
@@ -46,14 +124,19 @@ const Comments = () => {
         {/* Tab (1): Twitter Comments List */}
         {pageState.activeTab === 1 && (
           <div className="h-[75vh]">
-            <TwitterCommentsList />
+            <TwitterCommentsList
+              twitterAccountsData={pageState.twitterAccountsData}
+              getTwitterAccountsData={getTwitterAccountsData}
+            />
           </div>
         )}
 
         {/* Tab (2): Twitter Comment Campaign */}
         {pageState.activeTab === 2 && (
           <div className="h-[75vh]">
-            <TwitterCommentCampaign />
+            <TwitterCommentCampaign
+              twitterAccountsData={pageState.twitterAccountsData}
+            />
           </div>
         )}
 
