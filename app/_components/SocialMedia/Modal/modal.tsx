@@ -9,6 +9,7 @@ import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
 import { addIcon, chainIcon, closeIcon } from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
+import { TwitterSharingAccount } from "@/app/social-media/post-comments/_TwitterCommentsList/TwitterCommentsList";
 
 interface IProps {
   btnWord: string; // Button text.
@@ -17,6 +18,7 @@ interface IProps {
   modalTitle?: string; // Modal title text.
   forWhat: string; //Purpose of the modal
   getData?: () => void; // Function to fetch data
+  dataToEdit?: TwitterSharingAccount; // Data to edit
 }
 
 // ===== Start add_account1 Types =====
@@ -96,6 +98,7 @@ export default function BasicModal({
   modalTitle,
   forWhat,
   getData,
+  dataToEdit,
 }: IProps) {
   const {
     brandMap,
@@ -130,7 +133,10 @@ export default function BasicModal({
   }
 
   useEffect(() => {
-    if (open === true && forWhat === "add_account1") {
+    if (
+      (open === true && forWhat === "add_account1") ||
+      forWhat === "edit_account1"
+    ) {
       handleGetBrandsPlatform("TWITTER");
     }
   }, [forWhat, open]);
@@ -148,42 +154,70 @@ export default function BasicModal({
     longPauseAfterCount: 1,
   });
 
-  async function addAccount1() {
+  useEffect(() => {
     if (
-      !addAccount1State.userName ||
-      !addAccount1State.accountName ||
-      !addAccount1State.accountLink ||
-      !addAccount1State.campaignType ||
-      !addAccount1State.brand
+      open === true &&
+      forWhat === "edit_account1" &&
+      dataToEdit !== undefined
+    ) {
+      setAddAccount1State((prev: any) => ({
+        ...prev,
+        sharingList: "TWITTER",
+        userName: dataToEdit.userName,
+        accountName: dataToEdit.accountName,
+        accountLink: dataToEdit.accountLink,
+        brand: dataToEdit.brand,
+        campaignType: dataToEdit.campaignType,
+        delayBetweenPosts: dataToEdit.delayBetweenPosts,
+        delayBetweenGroups: dataToEdit.delayBetweenGroups,
+        longPauseAfterCount: dataToEdit.longPauseAfterCount,
+      }));
+    }
+  }, [forWhat, open, dataToEdit]);
+
+  async function handleTwitterAccount() {
+    if (
+      forWhat === "add_account1" &&
+      (!addAccount1State.userName ||
+        !addAccount1State.accountName ||
+        !addAccount1State.accountLink ||
+        !addAccount1State.campaignType ||
+        !addAccount1State.brand)
     ) {
       toast.error("Please fill in all fields.");
       return;
     }
+
+    const fetchUrl =
+      dataToEdit !== undefined && forWhat === "edit_account1"
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/edit-account/${dataToEdit?._id}/${addAccount1State.brand}`
+        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/add-account/${addAccount1State.brand}`;
+
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/add-account/${addAccount1State.brand}`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            sharingList: "TWITTER",
-            userName: addAccount1State.userName,
-            accountName: addAccount1State.accountName,
-            accountLink: addAccount1State.accountLink,
-            campaignType: addAccount1State.campaignType,
-            delayBetweenPosts: addAccount1State.delayBetweenPosts,
-            delayBetweenGroups: addAccount1State.delayBetweenGroups,
-            longPauseAfterCount: addAccount1State.longPauseAfterCount,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-        }
-      );
+      const res = await fetch(fetchUrl, {
+        method:
+          dataToEdit !== undefined && forWhat === "edit_account1"
+            ? "PUT"
+            : "POST",
+        body: JSON.stringify({
+          sharingList: "TWITTER",
+          userName: addAccount1State.userName,
+          accountName: addAccount1State.accountName,
+          accountLink: addAccount1State.accountLink,
+          campaignType: addAccount1State.campaignType,
+          delayBetweenPosts: addAccount1State.delayBetweenPosts,
+          delayBetweenGroups: addAccount1State.delayBetweenGroups,
+          longPauseAfterCount: addAccount1State.longPauseAfterCount,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `barrer ${
+            typeof window !== "undefined"
+              ? localStorage.getItem("token")
+              : authState.token
+          }`,
+        },
+      });
       if (res.status === 401) {
         handleSignOut();
       }
@@ -203,7 +237,11 @@ export default function BasicModal({
         toast.error("Account already exist in brand!");
         console.warn("Duplicate account:", json.message);
       } else if (json && "result" in json) {
-        toast.success("Account added successfully!");
+        toast.success(
+          dataToEdit !== undefined && forWhat === "edit_account1"
+            ? "Account edited successfully!"
+            : "Account added successfully!"
+        );
         handleClose();
         // reset the form
         setAddAccount1State({
@@ -233,7 +271,9 @@ export default function BasicModal({
   return (
     <div>
       {/* 01- Conditional rendering of different buttons based on 'forWhat' prop */}
-      {
+      {forWhat === "edit_account1" || forWhat === "delete_account1" ? (
+        <span onClick={handleOpen}>{btnWord}</span>
+      ) : (
         <CustomBtn
           word={btnWord}
           {...(forWhat === "add_to_list" ||
@@ -245,7 +285,7 @@ export default function BasicModal({
           onClick={handleOpen}
           paddingVal="py-[--10px] px-[--22px]"
         />
-      }
+      )}
 
       {/* 02- Modal */}
       <Modal
@@ -377,7 +417,7 @@ export default function BasicModal({
                   />
                 </div>
               </>
-            ) : forWhat === "add_account1" ? (
+            ) : forWhat === "add_account1" || forWhat === "edit_account1" ? (
               <>
                 {/* Form fields for adding an account */}
                 <div
@@ -589,7 +629,7 @@ export default function BasicModal({
                     icon={addIcon}
                     word="Add Account"
                     paddingVal="px-[1.3vw] py-[0.5vw]"
-                    onClick={addAccount1}
+                    onClick={handleTwitterAccount}
                   />
                 </div>
               </>

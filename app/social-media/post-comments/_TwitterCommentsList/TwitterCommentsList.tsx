@@ -6,7 +6,7 @@ import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import { addIcon } from "@/app/_utils/svgIcons";
 
-interface TwitterSharingAccount {
+export interface TwitterSharingAccount {
   _id: string;
   sharingList: "TWITTER";
   brand: string;
@@ -50,10 +50,8 @@ const TwitterCommentsList = () => {
   // for storing the order of subscribers and engagement (descending or ascending)
   const [pageState, setPageState] = useState<{
     twitterAccountsData: TwitterSharingAccount[] | null;
-    isDropdownOpen: boolean;
   }>({
     twitterAccountsData: null,
-    isDropdownOpen: false,
   });
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
@@ -61,8 +59,11 @@ const TwitterCommentsList = () => {
   const renderAccounts =
     Array.isArray(pageState.twitterAccountsData) &&
     pageState.twitterAccountsData.length > 0 ? (
-      [...pageState.twitterAccountsData].reverse().map((oneAccount, idx) => (
-        <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
+      [...pageState.twitterAccountsData].reverse().map((oneAccount) => (
+        <ul
+          key={oneAccount._id}
+          className={`${styles.tableBody} borderBottom articleRow`}
+        >
           <li className="w-[16%] flex justify-center text-center gap-[1vw]">
             <p>{oneAccount.accountName}</p>
           </li>
@@ -101,46 +102,36 @@ const TwitterCommentsList = () => {
           </li>
           <li className="w-[4%] flex justify-center">
             <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className=""
-                onClick={() => {
-                  setPageState((prev) => ({
-                    ...prev,
-                    isDropdownOpen: !prev.isDropdownOpen,
-                  }));
-                }}
-              >
+              <div tabIndex={0} role="button">
                 {verticalDots}
               </div>
-              {pageState.isDropdownOpen && (
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content bg-white menu rounded-[--16px] z-[1] w-fit p-[--8px] shadow-md"
-                >
-                  <li
-                    onClick={() => {
-                      setPageState((prev) => ({
-                        ...prev,
-                        isDropdownOpen: false,
-                      }));
-                    }}
-                  >
-                    <a>Edit</a>
-                  </li>
-                  <li
-                    onClick={() => {
-                      setPageState((prev) => ({
-                        ...prev,
-                        isDropdownOpen: false,
-                      }));
-                    }}
-                  >
-                    <a>Delete</a>
-                  </li>
-                </ul>
-              )}
+              <ul
+                tabIndex={0}
+                className="dropdown-content bg-white menu rounded-[--16px] z-[1] w-fit p-[--8px] shadow-md"
+              >
+                <li>
+                  <a>
+                    <BasicModal
+                      btnWord={"Edit"}
+                      btnColor={"black"}
+                      modalTitle={"Edit Account"}
+                      forWhat={"edit_account1"}
+                      dataToEdit={oneAccount}
+                      getData={getTwitterAccountsData}
+                    />
+                  </a>
+                </li>
+                {/* <li>
+                  <BasicModal
+                    btnWord={"Delete"}
+                    btnColor={"black"}
+                    modalTitle={"Delete Account"}
+                    forWhat={"delete_account1"}
+                    dataToEdit={oneAccount}
+                    getData={getTwitterAccountsData}
+                  />
+                </li> */}
+              </ul>
             </div>
           </li>
         </ul>
