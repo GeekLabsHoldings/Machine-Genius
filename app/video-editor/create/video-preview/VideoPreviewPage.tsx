@@ -3,8 +3,11 @@ import CustomVideoPlayer from "@/app/_components/VideoEditing/CustomVideoPlayer/
 import styles from "./VideoPreviewPage.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
-import { ScriptSegment } from "@/app/_context/videoEditingContext";
-import { useEffect } from "react";
+import {
+  ScriptSegment,
+  videoEditingContext,
+} from "@/app/_context/videoEditingContext";
+import { useContext, useEffect } from "react";
 
 const VideoPreviewPage = () => {
   const [pageState, setPageState] = useSessionStorage<{
@@ -25,6 +28,8 @@ const VideoPreviewPage = () => {
     setPageState((prev) => ({ ...prev, createVideoLoading: false }));
   }, []);
 
+  const { videoUrl } = useContext(videoEditingContext);
+
   return (
     <div className={`w-full h-full py-[1vw] pageHeader `}>
       <h3 className="pb-[0.8vw]">Your video is all done!</h3>
@@ -41,7 +46,7 @@ const VideoPreviewPage = () => {
             <div
               className={`${styles.videoHolder} flex justify-center items-center `}
             >
-              <CustomVideoPlayer videoUrl="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" />
+              <CustomVideoPlayer videoUrl={videoUrl} />
             </div>
           </div>
         </div>
