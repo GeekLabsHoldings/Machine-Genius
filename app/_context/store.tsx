@@ -105,7 +105,7 @@ export default function GlobalContextProvider({
     switch (role) {
       case "content-creation":
         return "/content-creator/dashboard";
-      case "Video Editing":
+      case "video-editing":
         return "/video-editor/dashboard";
       case "Social Media":
         return "/social-media/dashboard";

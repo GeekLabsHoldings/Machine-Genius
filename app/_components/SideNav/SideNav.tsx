@@ -51,8 +51,8 @@ const rolsIcon = (
 );
 
 const rols = [
-  "ContentCreator",
-  "Video Editing",
+  "content-creation",
+  "video-editing",
   "Social Media",
   "Administrative",
   "Customer Service",
@@ -133,9 +133,9 @@ const SideNav = ({
     if (SelectedRole && rols.includes(SelectedRole as string)) {
       localStorage.setItem("selected-role", SelectedRole.toString());
     }
-    if (SelectedRole === "ContentCreator" || SelectedRole === "CEO") {
+    if (SelectedRole === "content-creation" || SelectedRole === "ceo") {
       router.replace("/content-creator/dashboard");
-    } else if (SelectedRole === "Video Editing") {
+    } else if (SelectedRole === "video-editing") {
       router.replace("/video-editor/dashboard");
     } else if (SelectedRole === "Social Media") {
       router.replace("/social-media/dashboard");

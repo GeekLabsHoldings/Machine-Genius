@@ -64,7 +64,7 @@ const SignIn = () => {
       authState.decodedToken.department.includes("ceo")
     ) {
       return "/content-creator/dashboard";
-    } else if (authState.decodedToken.department.includes("Video Editing")) {
+    } else if (authState.decodedToken.department.includes("video-editing")) {
       return "/video-editor/dashboard";
     } else if (authState.decodedToken.department.includes("Social Media")) {
       return "/social-media/dashboard";

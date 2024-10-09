@@ -58,6 +58,8 @@ const Post = () => {
             onClick={() => {
               if (!selectedPlatform) {
                 toast.error("Please select a platform!");
+              } else if (selectedPlatform === PlatformEnum.REDDIT) {
+                toast.error("Reddit account got banned!");
               } else {
                 router.replace("/social-media/post-creation/select-brand");
               }
