@@ -34,12 +34,12 @@ interface TwitterSharingAccountResponse {
 }
 
 const Comments = () => {
-  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
+  const { authState, handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     twitterAccountsData: TwitterSharingAccount[] | null;
     activeTab: number;
   }>({
-    activeTab: 3,
+    activeTab: 1,
     twitterAccountsData: null,
   });
 
