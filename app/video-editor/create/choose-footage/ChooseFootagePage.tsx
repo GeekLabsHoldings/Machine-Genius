@@ -196,7 +196,7 @@ const ChooseFootagePage = () => {
         // replce the imageUrl with the new data.imgurl
         const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
           (kwi) => {
-            if (selectedSegment!.index === pageState.index) {
+            if (index === pageState.selectedScriptSegmentIndex) {
               if (kwi.imageUrl.includes(imageUrl)) {
                 return {
                   ...kwi,
