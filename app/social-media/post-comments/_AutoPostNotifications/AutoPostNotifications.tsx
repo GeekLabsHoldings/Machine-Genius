@@ -227,6 +227,9 @@ const AutoPostNotifications = () => {
             : "Something went wrong!"
         );
         console.error("Error:", json?.message);
+      } else if ("message" in json) {
+        toast.error(json.message);
+        console.error("Error:", json?.message);
       } else if (
         json &&
         "result" in json &&
@@ -239,7 +242,6 @@ const AutoPostNotifications = () => {
           postText: "",
           commentsSuggestions: null,
           selectedTweet: null,
-          selectedBrandId: "",
         }));
       } else {
         toast.error("Something went wrong!");
