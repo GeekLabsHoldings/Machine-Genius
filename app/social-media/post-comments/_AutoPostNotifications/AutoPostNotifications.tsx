@@ -50,18 +50,23 @@ type IHandleAddReplyToTweet =
   | IHandleAddReplyToTweetSuccessResponse;
 
 const AutoPostNotifications = () => {
-  const { authState, handleSignOut } = useContext(globalContext);
+  const { authState, handleSignOut, getBrandsPlatform, brandMap } =
+    useContext(globalContext);
   const [pageState, setPageState] = useState<{
     tweetsMustApprove: ITweet[] | null;
     selectedTweet: ITweet | null;
     commentsSuggestions: string | null;
     postText: string;
+    brandsOptions: string[];
+    isLoading: boolean;
     selectedBrandId: string;
   }>({
     tweetsMustApprove: null,
     selectedTweet: null,
     commentsSuggestions: null,
     postText: "",
+    brandsOptions: [],
+    isLoading: false,
     selectedBrandId: "",
   });
 
@@ -106,8 +111,20 @@ const AutoPostNotifications = () => {
     }
   }
 
+  async function handleGetBrandsPlatform(platform: string) {
+    setPageState((prev) => ({ ...prev, isLoading: true }));
+    const result = await getBrandsPlatform(platform);
+    const brands: string[] = Array.isArray(result) ? result : [];
+    setPageState((prev) => ({
+      ...prev,
+      brandsOptions: brands,
+      isLoading: false,
+    }));
+  }
+
   useEffect(() => {
     getTweetsMustApprove();
+    handleGetBrandsPlatform("TWITTER");
   }, []);
 
   async function handleGenerateCommentsSuggestions() {
@@ -172,13 +189,10 @@ const AutoPostNotifications = () => {
     if (!pageState.postText) {
       toast.error("No post caption provided!");
       return;
-    }
-    // todo:
-    // else if (!selectedBrandId) {
-    //   toast.error("No brand selected!");
-    //   return;
-    // }
-    else if (!pageState.selectedTweet) {
+    } else if (!pageState.selectedBrandId) {
+      toast.error("No brand selected!");
+      return;
+    } else if (!pageState.selectedTweet) {
       toast.error("No tweet selected!");
       return;
     }
@@ -225,6 +239,7 @@ const AutoPostNotifications = () => {
           postText: "",
           commentsSuggestions: null,
           selectedTweet: null,
+          selectedBrandId: "",
         }));
       } else {
         toast.error("Something went wrong!");
@@ -309,7 +324,7 @@ const AutoPostNotifications = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-[--sy-12px] overflow-y-auto max-h-[40vh] pr-[--6px]">
+          <div className="flex flex-col gap-[--sy-12px] overflow-y-auto min-h-[20vh] max-h-[40vh] pr-[--6px]">
             {/* {SuggetionPosts.map((ele) => (              
             ))} */}
             {pageState.selectedTweet === null ? (
@@ -331,12 +346,30 @@ const AutoPostNotifications = () => {
           </div>
         </div>
 
-        <CustomBtn
-          btnColor="black"
-          word="Post"
-          style={{ marginLeft: "auto" }}
-          onClick={handleAddReplyToTweet}
-        />
+        <div className="w-full flex justify-between items-center">
+          <div className="w-1/2">
+            {!pageState.isLoading ? (
+              <CustomSelectInput
+                label={"Select Brand"}
+                options={pageState.brandsOptions}
+                getValue={(value: string) => {
+                  setPageState((prev) => ({
+                    ...prev,
+                    selectedBrandId: brandMap[value],
+                  }));
+                }}
+              />
+            ) : (
+              <span className="custom-loader"></span>
+            )}
+          </div>
+
+          <CustomBtn
+            btnColor="black"
+            word="Post"
+            onClick={handleAddReplyToTweet}
+          />
+        </div>
       </div>
     </div>
   );
