@@ -800,7 +800,16 @@ const ChooseFootagePage = () => {
             ) : null}
           </div>
           <div className="flex w-full flex-col gap-[--sy-10px] mt-[--sy-10px]">
-            <h3 className="font-bold text-[--24px]">Selected Footage</h3>
+            <div className="flex justify-between">
+              <h3 className="font-bold text-[--24px]">Selected Footage</h3>
+
+              <div className="rounded-full bg-[--dark] text-[--white] font-bold text-[--16px] px-[--10px] py-[--5px]">
+                {selectedFootage.length > 0 &&
+                selectedFootage[pageState.index!]?.imageUrl.length > 0
+                  ? selectedFootage[pageState.index!]?.imageUrl.length
+                  : 0}
+              </div>
+            </div>
             <div
               className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
             >
