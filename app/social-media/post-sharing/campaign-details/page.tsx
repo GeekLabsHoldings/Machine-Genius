@@ -10,12 +10,7 @@ import DateAndTimePicker from "@/app/_components/DateAndTimePicker/DateAndTimePi
 import { socialMediaPostSharingContext } from "../_context/socialMediaPostSharingContext";
 import { globalContext } from "@/app/_context/store";
 
-const sharingListOptions = [
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-];
+const sharingListOptions = ["Reddit", "Telegram", "Facebook"];
 
 const ShareCampaign = () => {
   const { authState, handleSignOut } = useContext(globalContext);
