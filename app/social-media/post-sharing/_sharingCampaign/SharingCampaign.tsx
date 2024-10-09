@@ -39,7 +39,7 @@ const SharingCampaign = () => {
 
   const getAllContent = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/get-all-content`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/get-all-content`,
       {
         headers: {
           Authorization: `barrer ${
@@ -115,7 +115,9 @@ const SharingCampaign = () => {
         </ul>
       ))
     ) : (
-      <ul className={`${styles.tableBody} borderBottom articleRow flex justify-center items-center h-full`}>
+      <ul
+        className={`${styles.tableBody} borderBottom articleRow flex justify-center items-center h-full`}
+      >
         <span className="custom-loader"></span>
       </ul>
     );

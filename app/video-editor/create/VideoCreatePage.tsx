@@ -60,7 +60,7 @@ const VideoCreatePage = () => {
     setSelectedContent("");
     const fetchAssignedVideos = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/get-all-content`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/get-all-content`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -119,7 +119,7 @@ const VideoCreatePage = () => {
       // router.replace("/video-editor/create/converted-script");
       setPageState((prev) => ({ ...prev, createVideoLoading: true }));
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/split-content`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/split-content`,
         {
           method: "POST",
           body: JSON.stringify(parseParagraph(selectedContent)),

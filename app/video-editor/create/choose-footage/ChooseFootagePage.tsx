@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
-import { log } from "node:console";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
 
@@ -127,7 +126,7 @@ const ChooseFootagePage = () => {
       // call endpoint to check if the image is enhancable
       setEnhancableLoading(true);
       const isEnhancable = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/enhance-img`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/enhance-img`,
         {
           method: "POST",
           headers: {
@@ -408,7 +407,7 @@ const ChooseFootagePage = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/render-video`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/render-video`,
         {
           method: "POST",
           headers: {
@@ -512,7 +511,7 @@ const ChooseFootagePage = () => {
 
     const fetchFootage = async (search: string) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/get-img`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/get-img`,
         {
           method: "POST",
           headers: {
