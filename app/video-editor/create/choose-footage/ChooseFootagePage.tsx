@@ -40,8 +40,13 @@ const ChooseFootagePage = () => {
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const [enhancableLoading, setEnhancableLoading] = useState<boolean>(false);
-  const { splitedContent, setSplitedContent, totalIntroSlides } =
-    useContext(videoEditingContext);
+  const {
+    splitedContent,
+    setSplitedContent,
+    totalIntroSlides,
+    setVideoUrl,
+    videoUrl,
+  } = useContext(videoEditingContext);
   const [pageState, setPageState] = useSessionStorage<{
     selectedScriptSegment: ScriptSegment | null;
     selectedScriptSegmentIndex: number | null;
@@ -408,8 +413,7 @@ const ChooseFootagePage = () => {
 
       const data = await response.json();
       if (data.success) {
-        toast.success("Video created successfully");
-        router.replace("/video-editor/create/video-preview");
+        setVideoUrl(data.videoUrl);
       } else {
         toast.error("Failed to create video");
         setPageState((prev) => ({ ...prev, createVideoLoading: false }));
@@ -420,6 +424,14 @@ const ChooseFootagePage = () => {
       setPageState((prev) => ({ ...prev, createVideoLoading: false }));
     }
   }
+
+  useEffect(() => {
+    if (videoUrl && pageState.createVideoLoading) {
+      toast.success("Video created successfully");
+      router.replace("/video-editor/create/video-preview");
+    }
+  }, [videoUrl]);
+
   useEffect(() => {
     console.log(`selectedFootage`, selectedFootage);
   }, [selectedFootage]);

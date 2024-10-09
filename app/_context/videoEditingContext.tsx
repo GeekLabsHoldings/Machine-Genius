@@ -26,6 +26,8 @@ interface VideoEditingContextType {
   setSplitedContent: (content: ScriptSegment[] | null) => void;
   totalIntroSlides: number;
   setTotalIntroSlides: (total: number) => void;
+  videoUrl: string;
+  setVideoUrl: (url: string) => void;
 }
 
 const initialContextState: VideoEditingContextType = {
@@ -35,6 +37,8 @@ const initialContextState: VideoEditingContextType = {
   setSplitedContent: (content: ScriptSegment[] | null) => {},
   totalIntroSlides: 0,
   setTotalIntroSlides: () => {},
+  videoUrl: "",
+  setVideoUrl: () => {},
 };
 
 // 1- create context, export it
@@ -60,6 +64,10 @@ export default function VideoEditingContextProvider({
     "VideoEditing-totalIntroSlides",
     0
   );
+  const [videoUrl, setVideoUrl] = useSessionStorage<string>(
+    "VideoEditing-videoUrl",
+    ""
+  );
 
   // Create a context value object
   const contextValue: VideoEditingContextType = {
@@ -69,6 +77,8 @@ export default function VideoEditingContextProvider({
     setSplitedContent,
     totalIntroSlides,
     setTotalIntroSlides,
+    videoUrl,
+    setVideoUrl,
   };
 
   return (
