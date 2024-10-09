@@ -326,19 +326,19 @@ export default function BasicModal({
                       type="text"
                       id="subreddit"
                       required
-                      className={`${styles.subredditInput}`}
+                      className={`${styles.customInput}`}
                     />
                   </div>
                   <div
                     className={`flex flex-col gap-[0.2vw] ${styles.linkValidation}`}
                   >
                     <label htmlFor="subredditLink">Subreddit Link*</label>
-                    <div className={`${styles.linkInput}`}>
+                    <div className={`${styles.inputWrapper}`}>
                       <input
                         type="text"
                         id="subredditLink"
                         required
-                        className={`${styles.subredditInput}`}
+                        className={`${styles.customInput}`}
                       />
                       {chainIcon}
                     </div>
@@ -378,12 +378,12 @@ export default function BasicModal({
                   className={`flex flex-col gap-[0.2vw] ${styles.linkValidation}`}
                 >
                   <label htmlFor="subredditLink">Account Link*</label>
-                  <div className={`${styles.linkInput}`}>
+                  <div className={`${styles.inputWrapper}`}>
                     <input
                       type="text"
                       id="subredditLink"
                       required
-                      className={`${styles.subredditInput}`}
+                      className={`${styles.customInput}`}
                     />
                     {chainIcon}
                   </div>
