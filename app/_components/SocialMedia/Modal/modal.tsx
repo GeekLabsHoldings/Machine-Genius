@@ -21,6 +21,16 @@ interface IProps {
   dataToEdit?: TwitterSharingAccount; // Data to edit
 }
 
+const platformsOptions = [
+  "Facebook",
+  "Reddit",
+  "Telegram",
+  "Twitter",
+  "LinkedIn",
+  // "Youtube",
+  // "Instagram",
+];
+
 // ===== Start add_account1 Types =====
 enum CampaignType {
   MUST_APPROVE = "Must Approve",
@@ -78,7 +88,6 @@ type IAddAccountResponse =
   | DataErrorResponse
   | SuccessResponse
   | DuplicateAccountResponse;
-
 // ===== End add_account1 Types =====
 
 // Rendering list of accounts to remove.
@@ -102,13 +111,13 @@ export default function BasicModal({
 }: IProps) {
   const {
     brandMap,
-    // brandOptions,
+    brandOptions,
     authState,
     handleSignOut,
     getBrandsPlatform,
   } = useContext(globalContext);
   // State for controlling the modal open/close state
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [pageState, setPageState] = useState<{
     brandsOptions: string[];
     isLoading: boolean;
@@ -270,7 +279,78 @@ export default function BasicModal({
       console.error("Error addAccount1:", error);
     }
   }
-  // ===== Start add_account1 State =====
+  // ===== End add_account1 State =====
+
+  // ===== Start add_account State =====
+  const [addAccountState, setAddAccountState] = useState<any>({
+    accountId: "",
+    accountName: "",
+    accountLink: "",
+    platform: "",
+    brand: "",
+  });
+
+  async function handleAddAccount() {
+    if (
+      forWhat === "add_account" &&
+      (!addAccountState.accountId ||
+        !addAccountState.accountName ||
+        !addAccountState.accountLink ||
+        !addAccountState.platform)
+    ) {
+      toast.error("Please fill in all fields!");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/${addAccountState.brand}/add-group`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            group_id: addAccountState.accountId,
+            group_name: addAccountState.accountName,
+            link: addAccountState.accountLink,
+            platform: addAccountState.platform,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+
+      if (json) {
+        toast.success("Account added successfully!");
+        handleClose();
+        // reset the form
+        setAddAccountState({
+          accountId: "",
+          accountName: "",
+          accountLink: "",
+          platform: "",
+          brand: "",
+        });
+        if (getData) {
+          getData();
+        }
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error addAccount:", error);
+    }
+  }
+  // ===== End add_account State =====
 
   return (
     <div>
@@ -374,21 +454,104 @@ export default function BasicModal({
             ) : forWhat === "add_account" ? (
               <>
                 {/* Form fields for adding an account */}
-                <div
-                  className={`flex flex-col gap-[0.2vw] ${styles.linkValidation}`}
-                >
-                  <label htmlFor="subredditLink">Account Link*</label>
-                  <div className={`${styles.inputWrapper}`}>
-                    <input
-                      type="text"
-                      id="subredditLink"
-                      required
-                      className={`${styles.customInput}`}
-                    />
-                    {chainIcon}
+                <div className={`${styles.linkValidation}`}>
+                  {/* ===== Start Col (1) ===== */}
+                  <div className="flex flex-col gap-[1vw]">
+                    {/* Account Id* */}
+                    <div>
+                      <label htmlFor="account-id">Account Id*</label>
+                      <div className={`${styles.inputWrapper}`}>
+                        <input
+                          type="text"
+                          id="account-id"
+                          required
+                          className={`${styles.customInput}`}
+                          value={addAccountState.accountId}
+                          onChange={(e) => {
+                            setAddAccountState((prev: any) => ({
+                              ...prev,
+                              accountId: e.target.value,
+                            }));
+                          }}
+                        />
+                      </div>
+                    </div>
+                    {/* Account Name* */}
+                    <div>
+                      <label htmlFor="account-name">Account Name*</label>
+                      <div className={`${styles.inputWrapper}`}>
+                        <input
+                          type="text"
+                          id="account-name"
+                          required
+                          className={`${styles.customInput}`}
+                          value={addAccountState.accountName}
+                          onChange={(e) => {
+                            setAddAccountState((prev: any) => ({
+                              ...prev,
+                              accountName: e.target.value,
+                            }));
+                          }}
+                        />
+                      </div>
+                    </div>
+                    {/* Account Link* */}
+                    <div>
+                      <label htmlFor="account-link">Account Link*</label>
+                      <div className={`${styles.inputWrapper}`}>
+                        <input
+                          type="text"
+                          id="account-link"
+                          required
+                          className={`${styles.customInput}`}
+                          value={addAccountState.accountLink}
+                          onChange={(e) => {
+                            setAddAccountState((prev: any) => ({
+                              ...prev,
+                              accountLink: e.target.value,
+                            }));
+                          }}
+                        />
+                        {chainIcon}
+                      </div>
+                    </div>
+                    {/* Platform */}
+                    <div>
+                      <label htmlFor="platform">Platform</label>
+                      <div className={`${styles.inputWrapper}`}>
+                        <CustomSelectInput
+                          label={"Select Platform"}
+                          options={platformsOptions}
+                          getValue={(value: string) => {
+                            setAddAccountState((prev: any) => ({
+                              ...prev,
+                              platform: value.toUpperCase(),
+                            }));
+                          }}
+                        />
+                      </div>
+                    </div>
+                    {/* Brand */}
+                    <div>
+                      <label htmlFor="brand">Brand</label>
+                      <div className={`${styles.inputWrapper}`}>
+                        <CustomSelectInput
+                          label={"Select Brand"}
+                          options={brandOptions}
+                          getValue={(value: string) => {
+                            setAddAccountState((prev: any) => ({
+                              ...prev,
+                              brand: brandMap[value],
+                            }));
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
+                  {/* ===== End Col (1) ===== */}
                 </div>
-                <div className="flex gap-[0.5vw]">
+
+                <div className="flex justify-between w-full">
                   <CustomBtn
                     btnColor="white"
                     word="Cancel"
@@ -400,24 +563,10 @@ export default function BasicModal({
                   <CustomBtn
                     btnColor="black"
                     /* SVG icon for 'Add Account' button */
-                    icon={
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="11"
-                        viewBox="0 0 12 11"
-                        fill="none"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M5.08333 10.0833C5.08333 10.5896 5.49373 11 6 11C6.50628 11 6.91667 10.5896 6.91667 10.0833V6.41667H10.5833C11.0896 6.41667 11.5 6.00628 11.5 5.5C11.5 4.99373 11.0896 4.58333 10.5833 4.58333H6.91667V0.916667C6.91667 0.410401 6.50628 0 6 0C5.49373 0 5.08333 0.410401 5.08333 0.916667V4.58333H1.41667C0.91041 4.58333 0.5 4.99373 0.5 5.5C0.5 6.00628 0.91041 6.41667 1.41667 6.41667H5.08333V10.0833Z"
-                          fill="#FFFFFB"
-                        />
-                      </svg>
-                    }
+                    icon={addIcon}
                     word="Add Account"
                     paddingVal="px-[1.3vw] py-[0.5vw]"
+                    onClick={handleAddAccount}
                   />
                 </div>
               </>
