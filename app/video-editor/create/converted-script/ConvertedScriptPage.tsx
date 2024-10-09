@@ -174,7 +174,7 @@ const ConvertedScriptPage = () => {
     console.log(updatedSplitedContent);
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/regenrate-audio`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/regenrate-audio`,
       {
         method: "POST",
         headers: {
@@ -269,7 +269,7 @@ const ConvertedScriptPage = () => {
     }
     setLoadingUpdateDatabase(true);
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/replace-words`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/replace-words`,
       {
         method: "POST",
         headers: {
@@ -321,7 +321,7 @@ const ConvertedScriptPage = () => {
   async function testAudio(word: string) {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/test-audio`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/test-audio`,
         {
           method: "POST",
           headers: {
