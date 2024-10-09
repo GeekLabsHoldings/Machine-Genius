@@ -132,7 +132,7 @@ const AutoPostNotifications = () => {
       ...prev,
       commentsSuggestions: null,
     }));
-    if (!pageState.selectedTweet?.comment) {
+    if (!pageState.selectedTweet?.content) {
       toast.error("No content provided!");
       return;
     }
@@ -143,7 +143,7 @@ const AutoPostNotifications = () => {
           method: "POST",
           body: JSON.stringify({
             platform: "TWITTER",
-            content: pageState.selectedTweet?.comment,
+            content: pageState.selectedTweet?.content,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -181,7 +181,11 @@ const AutoPostNotifications = () => {
 
   useEffect(() => {
     if (pageState.selectedTweet && pageState.selectedTweet.comment) {
-      handleGenerateCommentsSuggestions();
+      // handleGenerateCommentsSuggestions();
+      setPageState((prev: any) => ({
+        ...prev,
+        commentsSuggestions: pageState.selectedTweet?.comment,
+      }));
     }
   }, [pageState.selectedTweet]);
 
@@ -249,6 +253,8 @@ const AutoPostNotifications = () => {
     } catch (error) {
       toast.error("Something went wrong!");
       console.error("Error handleAddReplyToTweet:", error);
+    } finally {
+      getTweetsMustApprove();
     }
   }
 
@@ -336,7 +342,7 @@ const AutoPostNotifications = () => {
                 text={pageState.commentsSuggestions || ""}
                 icon={editPenIcon}
                 onClick={() => {
-                  setPageState((prev) => ({
+                  setPageState((prev: any) => ({
                     ...prev,
                     postText: pageState.commentsSuggestions || "",
                   }));
