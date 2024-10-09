@@ -270,7 +270,7 @@ const AutoPostNotifications = () => {
                   key={ele._id}
                   name={ele.accountName}
                   username={ele.accountName}
-                  text={ele.comment}
+                  text={ele.content}
                   isActive={pageState.selectedTweet?._id === ele._id}
                   onClick={() =>
                     setPageState((prev) => ({
