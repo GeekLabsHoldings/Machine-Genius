@@ -63,8 +63,9 @@
 .removeSec {
   padding-bottom: clamp(5px, calc(0.8vw + 0.1rem), 60px);
   border-bottom: 1px solid var(--dark);
-  height: 15vh;
-  overflow-y: auto;
+  /* min-height: 15vh;
+  max-height: 25vh; */
+  /* overflow-y: auto; */
 }
 .removeSec h4 {
   text-decoration: underline;

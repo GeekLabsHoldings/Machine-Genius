@@ -19,6 +19,9 @@ interface IProps {
   forWhat: string; //Purpose of the modal
   getData?: () => void; // Function to fetch data
   dataToEdit?: TwitterSharingAccount; // Data to edit
+  dataToRemove?: any; // Data to remove
+  selectedAccounts?: any; // Array of selected account objects
+  onRemoveSuccess?: () => void; // Callback after successful removal
 }
 
 const platformsOptions = [
@@ -90,16 +93,6 @@ type IAddAccountResponse =
   | DuplicateAccountResponse;
 // ===== End add_account1 Types =====
 
-// Rendering list of accounts to remove.
-const renderAccountsToRemove = AccountsData.map((account) => (
-  <li>{account.account_name}</li>
-));
-
-// Rendering list of users to remove.
-const renderUsersToRemove = AccountsData.map((account) => (
-  <li>{account.user_name}</li>
-));
-
 export default function BasicModal({
   btnWord,
   btnIcon,
@@ -108,6 +101,9 @@ export default function BasicModal({
   forWhat,
   getData,
   dataToEdit,
+  dataToRemove,
+  selectedAccounts,
+  onRemoveSuccess,
 }: IProps) {
   const {
     brandMap,
@@ -117,7 +113,7 @@ export default function BasicModal({
     getBrandsPlatform,
   } = useContext(globalContext);
   // State for controlling the modal open/close state
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [pageState, setPageState] = useState<{
     brandsOptions: string[];
     isLoading: boolean;
@@ -351,6 +347,65 @@ export default function BasicModal({
     }
   }
   // ===== End add_account State =====
+
+  // ===== Start remove_account State =====
+
+  async function handleRemoveAccount() {
+    if (
+      forWhat !== "remove_account" ||
+      !dataToRemove ||
+      dataToRemove.length === 0
+    ) {
+      toast.error("No accounts selected!");
+      return;
+    }
+
+    try {
+      await Promise.all(
+        dataToRemove.map(async (id: string) => {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/${id}/delete`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `barrer ${
+                  typeof window !== "undefined"
+                    ? localStorage.getItem("token")
+                    : authState.token
+                }`,
+              },
+            }
+          );
+
+          if (res.status === 401) {
+            handleSignOut();
+          }
+
+          const json = await res.json();
+
+          if (!json) {
+            throw new Error("Failed to delete account with ID: " + id);
+          }
+        })
+      );
+
+      toast.success("Account(s) removed successfully!");
+      handleClose();
+
+      if (getData) {
+        getData();
+      }
+      if (onRemoveSuccess) {
+        onRemoveSuccess();
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+
+      console.error("Error handleRemoveAccount:", error);
+    }
+  }
+  // ===== End remove_account State =====
 
   return (
     <div>
@@ -789,21 +844,19 @@ export default function BasicModal({
             ) : (
               <>
                 {/* List of accounts to remove */}
-                <div className={`flex ${styles.removeSec}`}>
-                  <div className="w-1/2 text-center">
-                    <h4>Accounts</h4>
-                    <ul className="flex flex-col gap-[0.4vw]">
-                      {renderAccountsToRemove}
-                    </ul>
-                  </div>
-                  {/* List of users to remove */}
-                  <div className="w-1/2 text-center">
-                    <h4>Username</h4>
-                    <ul className="flex flex-col gap-[0.4vw]">
-                      {renderUsersToRemove}
+                <div
+                  className={`flex justify-center items-center ${styles.removeSec}`}
+                >
+                  <div className="text-center">
+                    <h4 className="pr-[--20px]">Accounts</h4>
+                    <ul className="flex flex-col gap-[0.4vw] overflow-y-auto h-[20vh] pr-[--20px]">
+                      {selectedAccounts.map((account: any) => (
+                        <li key={account._id}>{account.group_name}</li>
+                      ))}
                     </ul>
                   </div>
                 </div>
+
                 {/* Action buttons */}
                 <div className="flex gap-[0.5vw] w-full">
                   <CustomBtn
@@ -811,12 +864,17 @@ export default function BasicModal({
                     word="Cancel"
                     width="w-full"
                     paddingVal="px-[0.5vw] py-[0.7vw]"
+                    onClick={() => {
+                      handleClose();
+                    }}
                   />
+
                   <CustomBtn
                     btnColor={"black"}
                     word="Remove Accounts"
                     width="w-full"
                     paddingVal="px-[0.5vw] py-[0.7vw]"
+                    onClick={handleRemoveAccount}
                   />
                 </div>
               </>

@@ -1,5 +1,5 @@
 "use client";
-import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
+import { ArticleNames, Brands } from "@/app/_data/data";
 // import { useRouter } from "next/navigation";
 import { useState, useContext, useEffect } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
@@ -9,23 +9,6 @@ import styles from "./setting.module.css";
 import { addIcon } from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
-
-// set all checkboxes to checked when click on select all
-const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
-  // Get all checkbox elements
-  var checkboxes = document.querySelectorAll('input[name="test"]');
-  if (e.target.checked) {
-    // Loop through each checkbox and set checked property to true
-    checkboxes.forEach(function (checkbox: any) {
-      checkbox.checked = true;
-    });
-  } else {
-    // Loop through each checkbox and set checked property to false
-    checkboxes.forEach(function (checkbox: any) {
-      checkbox.checked = false;
-    });
-  }
-};
 
 //
 interface IBrand {
@@ -59,6 +42,7 @@ interface IBrandWithGroups {
 
 const Setting = () => {
   const { authState, handleSignOut } = useContext(globalContext);
+  const [selectedAccountIds, setSelectedAccountIds] = useState<string[]>([]);
   // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
@@ -110,10 +94,18 @@ const Setting = () => {
   const renderAccounts =
     Array.isArray(pageState.fetchedAccounts) &&
     pageState.fetchedAccounts.length > 0 ? (
-      pageState.fetchedAccounts.map((oneAccount, idx) => (
-        <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
+      pageState.fetchedAccounts.map((oneAccount) => (
+        <ul
+          key={oneAccount._id}
+          className={`${styles.tableBody} borderBottom articleRow`}
+        >
           <li className="w-[5%] flex justify-center items-center">
-            <CustomCheckBox name="test" />
+            <CustomCheckBox
+              name="test"
+              value={oneAccount._id}
+              checked={selectedAccountIds.includes(oneAccount._id)}
+              onChange={(e) => handleCheckboxChange(e, oneAccount._id)}
+            />
           </li>
           <li className="w-[22%]">
             <p>{oneAccount.group_name}</p>
@@ -147,6 +139,32 @@ const Setting = () => {
         <span className="custom-loader w-fit m-auto"></span>
       </ul>
     );
+
+  // Function to handle individual checkbox change
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    accountId: string
+  ) => {
+    if (e.target.checked) {
+      setSelectedAccountIds((prev) => [...prev, accountId]);
+    } else {
+      setSelectedAccountIds((prev) => prev.filter((id) => id !== accountId));
+    }
+  };
+
+  // Function to handle "Select All" checkbox
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const allIds = pageState.fetchedAccounts.map((account) => account._id);
+      setSelectedAccountIds(allIds);
+    } else {
+      setSelectedAccountIds([]);
+    }
+  };
+
+  const selectedAccounts = pageState.fetchedAccounts.filter((account) =>
+    selectedAccountIds.includes(account._id)
+  );
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
@@ -232,6 +250,10 @@ const Setting = () => {
               btnColor={"white"}
               modalTitle={"Remove Accounts?"}
               forWhat={"remove_account"}
+              getData={getAccounts}
+              dataToRemove={selectedAccountIds}
+              selectedAccounts={selectedAccounts}
+              onRemoveSuccess={() => setSelectedAccountIds([])} // Callback to clear selection
             />
           </div>
         </div>
@@ -246,9 +268,16 @@ const Setting = () => {
             >
               <li className="w-[5%] flex justify-center items-center">
                 <CustomCheckBox
-                  onChange={(e) => {
-                    handleCheckAllSelectedText(e);
-                  }}
+                  onChange={handleSelectAll}
+                  checked={
+                    selectedAccountIds.length ===
+                      pageState.fetchedAccounts.length &&
+                    pageState.fetchedAccounts.length > 0
+                  }
+                  indeterminate={
+                    selectedAccountIds.length > 0 &&
+                    selectedAccountIds.length < pageState.fetchedAccounts.length
+                  }
                 />
               </li>
 
