@@ -18,7 +18,7 @@ export default function DateAndTimePicker({ getDateTimeValue }) {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={["DateTimePicker"]}>
         <DateTimePicker
-          label="Upload Time"
+          label="Posting Time"
           value={value}
           onChange={(newValue) => {
             const milliseconds = new Date(newValue).getTime();

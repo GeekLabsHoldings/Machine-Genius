@@ -1,5 +1,5 @@
 "use client"; //Indicates that this component is meant for client-side rendering.
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
@@ -8,6 +8,8 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
 import { addIcon, chainIcon, closeIcon } from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
+import { TwitterSharingAccount } from "@/app/social-media/post-comments/page";
 
 interface IProps {
   btnWord: string; // Button text.
@@ -15,7 +17,69 @@ interface IProps {
   btnColor: "black" | "white"; // Button color.
   modalTitle?: string; // Modal title text.
   forWhat: string; //Purpose of the modal
+  getData?: () => void; // Function to fetch data
+  dataToEdit?: TwitterSharingAccount; // Data to edit
 }
+
+// ===== Start add_account1 Types =====
+enum CampaignType {
+  MUST_APPROVE = "Must Approve",
+  AUTO_APPROVE = "Auto Approve",
+}
+
+interface ICampaignSettings {
+  sharingList: "TWITTER";
+  userName: string;
+  accountName: string;
+  accountLink: string;
+  campaignType: CampaignType | "";
+  brand: string;
+  delayBetweenPosts: number;
+  delayBetweenGroups: number;
+  longPauseAfterCount: number;
+}
+
+// IAddAccountResponse: Define interfaces for each possible response type
+interface DataErrorResponse {
+  status: 400;
+  message: "DATA_IS_REQUIRED";
+  data: Record<string, unknown>;
+}
+
+interface SuccessResult {
+  sharingList: string;
+  brand: string;
+  userName: string;
+  accountName: string;
+  accountLink: string;
+  account_id: string;
+  employeeId: string;
+  delayBetweenPosts: number;
+  delayBetweenGroups: number;
+  longPauseAfterCount: number;
+  niche: string;
+  campaignType: string;
+  _id: string;
+  createdAt: string; // Consider using Date if parsed
+  updatedAt: string; // Consider using Date if parsed
+  __v: number;
+}
+
+interface SuccessResponse {
+  result: SuccessResult;
+}
+
+interface DuplicateAccountResponse {
+  message: "ACCOUNT_ALREADY_EXIST_IN_BRAND";
+}
+
+// Union type for all possible responses
+type IAddAccountResponse =
+  | DataErrorResponse
+  | SuccessResponse
+  | DuplicateAccountResponse;
+
+// ===== End add_account1 Types =====
 
 // Rendering list of accounts to remove.
 const renderAccountsToRemove = AccountsData.map((account) => (
@@ -27,39 +91,193 @@ const renderUsersToRemove = AccountsData.map((account) => (
   <li>{account.user_name}</li>
 ));
 
-const TimeRange = ["1 min", "5 min", "10 min", "15 min", "20 min"];
-
-const sharingListOptions = [
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-];
-
 export default function BasicModal({
   btnWord,
   btnIcon,
   btnColor,
   modalTitle,
   forWhat,
+  getData,
+  dataToEdit,
 }: IProps) {
-  const { brandMap, brandOptions, selectedBrandId, setSelectedBrandId } =
-    useContext(globalContext);
+  const {
+    brandMap,
+    // brandOptions,
+    authState,
+    handleSignOut,
+    getBrandsPlatform,
+  } = useContext(globalContext);
   // State for controlling the modal open/close state
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [pageState, setPageState] = useState<{
+    brandsOptions: string[];
+    isLoading: boolean;
+  }>({
+    brandsOptions: [],
+    isLoading: false,
+  });
   // Function to handle modal open.
   const handleOpen = () => setOpen(true);
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
 
-  const getValue = useCallback((value: string) => {
-    setSelectedBrandId(brandMap[value]);
-  }, []); // No dependencies, function reference is stable
+  async function handleGetBrandsPlatform(platform: string) {
+    setPageState((prev) => ({ ...prev, isLoading: true }));
+    const result = await getBrandsPlatform(platform);
+    const brands: string[] = Array.isArray(result) ? result : [];
+    setPageState((prev) => ({
+      ...prev,
+      brandsOptions: brands,
+      isLoading: false,
+    }));
+  }
+
+  useEffect(() => {
+    if (
+      (open === true && forWhat === "add_account1") ||
+      forWhat === "edit_account1"
+    ) {
+      handleGetBrandsPlatform("TWITTER");
+    }
+  }, [forWhat, open]);
+
+  // ===== Start add_account1 State =====
+  const [addAccount1State, setAddAccount1State] = useState<ICampaignSettings>({
+    sharingList: "TWITTER",
+    userName: "",
+    accountName: "",
+    accountLink: "",
+    campaignType: "",
+    brand: "",
+    delayBetweenPosts: 1,
+    delayBetweenGroups: 1,
+    longPauseAfterCount: 1,
+  });
+
+  useEffect(() => {
+    if (
+      open === true &&
+      forWhat === "edit_account1" &&
+      dataToEdit !== undefined
+    ) {
+      setAddAccount1State((prev: any) => ({
+        ...prev,
+        sharingList: "TWITTER",
+        userName: dataToEdit.userName,
+        accountName: dataToEdit.accountName,
+        accountLink: dataToEdit.accountLink,
+        brand: dataToEdit.brand,
+        campaignType: dataToEdit.campaignType,
+        delayBetweenPosts: dataToEdit.delayBetweenPosts,
+        delayBetweenGroups: dataToEdit.delayBetweenGroups,
+        longPauseAfterCount: dataToEdit.longPauseAfterCount,
+      }));
+    }
+  }, [forWhat, open, dataToEdit]);
+
+  async function handleTwitterAccount() {
+    if (
+      forWhat === "add_account1" &&
+      (!addAccount1State.userName ||
+        !addAccount1State.accountName ||
+        // !addAccount1State.accountLink ||
+        !addAccount1State.campaignType ||
+        !addAccount1State.brand)
+    ) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    const fetchUrl =
+      dataToEdit !== undefined && forWhat === "edit_account1"
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/edit-account/${dataToEdit?._id}/${addAccount1State.brand}`
+        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/add-account/${addAccount1State.brand}`;
+
+    try {
+      const res = await fetch(fetchUrl, {
+        method:
+          dataToEdit !== undefined && forWhat === "edit_account1"
+            ? "PUT"
+            : "POST",
+        body: JSON.stringify({
+          sharingList: "TWITTER",
+          userName: addAccount1State.userName.replace("@", ""),
+          accountName: addAccount1State.accountName,
+          // accountLink: addAccount1State.accountLink,
+          accountLink: `https://x.com/${addAccount1State.userName.replace(
+            "@",
+            ""
+          )}`,
+          campaignType: addAccount1State.campaignType,
+          delayBetweenPosts: addAccount1State.delayBetweenPosts,
+          delayBetweenGroups: addAccount1State.delayBetweenGroups,
+          longPauseAfterCount: addAccount1State.longPauseAfterCount,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `barrer ${
+            typeof window !== "undefined"
+              ? localStorage.getItem("token")
+              : authState.token
+          }`,
+        },
+      });
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IAddAccountResponse = await res.json();
+
+      if ("status" in json && json.status === 400) {
+        toast.error(
+          json.message === "DATA_IS_REQUIRED"
+            ? "Please fill in all fields!"
+            : "Something went wrong!"
+        );
+        console.error("Error:", json.message);
+      } else if (
+        "message" in json &&
+        json.message === "ACCOUNT_ALREADY_EXIST_IN_BRAND"
+      ) {
+        toast.error("Account already exist in brand!");
+        console.warn("Duplicate account:", json.message);
+      } else if (json && "result" in json) {
+        toast.success(
+          dataToEdit !== undefined && forWhat === "edit_account1"
+            ? "Account edited successfully!"
+            : "Account added successfully!"
+        );
+        handleClose();
+        // reset the form
+        setAddAccount1State({
+          sharingList: "TWITTER",
+          userName: "",
+          accountName: "",
+          accountLink: "",
+          campaignType: "",
+          brand: "",
+          delayBetweenPosts: 1,
+          delayBetweenGroups: 1,
+          longPauseAfterCount: 1,
+        });
+        if (getData) {
+          getData();
+        }
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error addAccount1:", error);
+    }
+  }
+  // ===== Start add_account1 State =====
 
   return (
     <div>
       {/* 01- Conditional rendering of different buttons based on 'forWhat' prop */}
-      {
+      {forWhat === "edit_account1" || forWhat === "delete_account1" ? (
+        <span onClick={handleOpen}>{btnWord}</span>
+      ) : (
         <CustomBtn
           word={btnWord}
           {...(forWhat === "add_to_list" ||
@@ -71,7 +289,7 @@ export default function BasicModal({
           onClick={handleOpen}
           paddingVal="py-[--10px] px-[--22px]"
         />
-      }
+      )}
 
       {/* 02- Modal */}
       <Modal
@@ -108,19 +326,19 @@ export default function BasicModal({
                       type="text"
                       id="subreddit"
                       required
-                      className={`${styles.subredditInput}`}
+                      className={`${styles.customInput}`}
                     />
                   </div>
                   <div
                     className={`flex flex-col gap-[0.2vw] ${styles.linkValidation}`}
                   >
                     <label htmlFor="subredditLink">Subreddit Link*</label>
-                    <div className={`${styles.linkInput}`}>
+                    <div className={`${styles.inputWrapper}`}>
                       <input
                         type="text"
                         id="subredditLink"
                         required
-                        className={`${styles.subredditInput}`}
+                        className={`${styles.customInput}`}
                       />
                       {chainIcon}
                     </div>
@@ -160,12 +378,12 @@ export default function BasicModal({
                   className={`flex flex-col gap-[0.2vw] ${styles.linkValidation}`}
                 >
                   <label htmlFor="subredditLink">Account Link*</label>
-                  <div className={`${styles.linkInput}`}>
+                  <div className={`${styles.inputWrapper}`}>
                     <input
                       type="text"
                       id="subredditLink"
                       required
-                      className={`${styles.subredditInput}`}
+                      className={`${styles.customInput}`}
                     />
                     {chainIcon}
                   </div>
@@ -203,7 +421,7 @@ export default function BasicModal({
                   />
                 </div>
               </>
-            ) : forWhat === "add_account1" ? (
+            ) : forWhat === "add_account1" || forWhat === "edit_account1" ? (
               <>
                 {/* Form fields for adding an account */}
                 <div
@@ -220,6 +438,13 @@ export default function BasicModal({
                           id="account-name"
                           required
                           className={`${styles.customInput}`}
+                          value={addAccount1State.accountName}
+                          onChange={(e) => {
+                            setAddAccount1State((prev) => ({
+                              ...prev,
+                              accountName: e.target.value,
+                            }));
+                          }}
                         />
                       </div>
                     </div>
@@ -232,11 +457,18 @@ export default function BasicModal({
                           id="username"
                           required
                           className={`${styles.customInput}`}
+                          value={addAccount1State.userName}
+                          onChange={(e) => {
+                            setAddAccount1State((prev) => ({
+                              ...prev,
+                              userName: e.target.value,
+                            }));
+                          }}
                         />
                       </div>
                     </div>
                     {/* Account Link* */}
-                    <div>
+                    {/* <div>
                       <label htmlFor="account-link">Account Link*</label>
                       <div className={`${styles.inputWrapper}`}>
                         <input
@@ -244,19 +476,35 @@ export default function BasicModal({
                           id="account-link"
                           required
                           className={`${styles.customInput}`}
+                          value={addAccount1State.accountLink}
+                          onChange={(e) => {
+                            setAddAccount1State((prev) => ({
+                              ...prev,
+                              accountLink: e.target.value,
+                            }));
+                          }}
                         />
                         {chainIcon}
                       </div>
-                    </div>
+                    </div> */}
                     {/* Brand */}
                     <div>
                       <label htmlFor="brand">Brand</label>
                       <div className={`${styles.inputWrapper}`}>
-                        <CustomSelectInput
-                          label={"Select Brand"}
-                          options={brandOptions}
-                          getValue={getValue}
-                        />
+                        {!pageState.isLoading ? (
+                          <CustomSelectInput
+                            label={"Select Brand"}
+                            options={pageState.brandsOptions}
+                            getValue={(value: string) => {
+                              setAddAccount1State((prev) => ({
+                                ...prev,
+                                brand: brandMap[value],
+                              }));
+                            }}
+                          />
+                        ) : (
+                          <span className="custom-loader"></span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -278,14 +526,21 @@ export default function BasicModal({
                       <div>
                         <label htmlFor="">Campaign Type</label>
                         <CustomSelectInput
+                          label={"Select Campaign Type"}
                           options={["Must Approve", "Auto Comment"]}
+                          getValue={(value: CampaignType) => {
+                            setAddAccount1State((prev) => ({
+                              ...prev,
+                              campaignType: value,
+                            }));
+                          }}
                         />
                       </div>
 
                       {/* Sharing List */}
                       <div>
                         <label htmlFor="">Sharing List</label>
-                        <CustomSelectInput options={sharingListOptions} />
+                        <CustomSelectInput options={["TWITTER"]} />
                       </div>
 
                       {/* Settings */}
@@ -299,8 +554,20 @@ export default function BasicModal({
                             <h5 className="text-[--20px] font-medium">
                               Time between posts
                             </h5>
-                            <div className="w-[40%]">
-                              <CustomSelectInput options={TimeRange} />
+                            <div className="w-[40%] flex items-center gap-[--4px]">
+                              <CustomSelectInput
+                                options={Array.from(
+                                  { length: 20 },
+                                  (_, index) => index + 1
+                                )}
+                                getValue={(value: number) => {
+                                  setAddAccount1State((prev) => ({
+                                    ...prev,
+                                    delayBetweenPosts: value,
+                                  }));
+                                }}
+                              />
+                              <span>min.</span>
                             </div>
                           </div>
 
@@ -308,8 +575,20 @@ export default function BasicModal({
                             <h5 className="text-[--20px] font-medium">
                               Time between batches
                             </h5>
-                            <div className="w-[40%]">
-                              <CustomSelectInput options={TimeRange} />
+                            <div className="w-[40%] flex items-center gap-[--4px]">
+                              <CustomSelectInput
+                                options={Array.from(
+                                  { length: 20 },
+                                  (_, index) => index + 1
+                                )}
+                                getValue={(value: number) => {
+                                  setAddAccount1State((prev) => ({
+                                    ...prev,
+                                    delayBetweenGroups: value,
+                                  }));
+                                }}
+                              />
+                              <span>min.</span>
                             </div>
                           </div>
 
@@ -323,6 +602,12 @@ export default function BasicModal({
                                   { length: 20 },
                                   (_, index) => index + 1
                                 )}
+                                getValue={(value: number) => {
+                                  setAddAccount1State((prev) => ({
+                                    ...prev,
+                                    longPauseAfterCount: value,
+                                  }));
+                                }}
                               />
                             </div>
                           </div>
@@ -348,6 +633,7 @@ export default function BasicModal({
                     icon={addIcon}
                     word="Add Account"
                     paddingVal="px-[1.3vw] py-[0.5vw]"
+                    onClick={handleTwitterAccount}
                   />
                 </div>
               </>

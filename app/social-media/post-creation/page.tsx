@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 const platformsOptions = [
   "Facebook",
   "Reddit",
-  "Telegram",
+  // "Telegram",
   "Twitter",
   "LinkedIn",
   // "Youtube",

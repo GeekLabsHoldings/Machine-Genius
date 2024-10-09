@@ -7,7 +7,9 @@
   -moz-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
   -ms-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
   -o-border-radius: clamp(10px, calc(0.5vw + 0.1rem), 1000px);
+  cursor: pointer;
 }
+
 .item p {
   color: var(--dark);
   font-size: clamp(12px, calc(0.75vw + 0.1rem), 1000px);
@@ -61,27 +63,32 @@
   line-height: normal;
 }
 
-.item:hover {
+.item:hover,
+.item.active {
   background-color: #192734;
-  cursor: pointer;
 }
 
-.item:hover p {
+.item:hover p,
+.item.active p {
   color: var(--white);
 }
 
-.item:hover p > a {
+.item:hover p > a,
+.item.active p > a {
   color: var(--white);
 }
 
-.item:hover .avatar {
+.item:hover .avatar,
+.item.active .avatar {
   border-bottom: solid 1px var(--white);
 }
 
-.item:hover .avatar_info p {
+.item:hover .avatar_info p,
+.item.active .avatar_info p {
   color: var(--white);
 }
 
-.item:hover .avatar_info span {
+.item:hover .avatar_info span,
+.item.active .avatar_info span {
   color: var(--white);
 }

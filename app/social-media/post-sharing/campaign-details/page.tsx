@@ -1,11 +1,14 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./ShareCampaign.module.css";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { backIcon, editPenIcon, reGenerateIcon } from "@/app/_utils/svgIcons";
 import SuggestionCard from "@/app/_components/SocialMedia/SuggestionCard/SuggestionCard";
+import DateAndTimePicker from "@/app/_components/DateAndTimePicker/DateAndTimePicker";
+import { socialMediaPostSharingContext } from "../_context/socialMediaPostSharingContext";
+import { globalContext } from "@/app/_context/store";
 
 const sharingListOptions = [
   "Subreddit | Mega Projects",
@@ -14,10 +17,28 @@ const sharingListOptions = [
   "Subreddit | Mega Projects",
 ];
 
-const TimeRange = ["1 min", "5 min", "10 min", "15 min", "20 min"];
-
 const ShareCampaign = () => {
-  const [PostText, setPostText] = useState<string>("");
+  const { authState, handleSignOut } = useContext(globalContext);
+  const { handleGeneratePosts } = useContext(socialMediaPostSharingContext);
+  const [pageState, setPageState] = useState<any>({
+    scheduledTime: null,
+    postText: "",
+    generatedPosts: [],
+  });
+
+  function getDateTimeValue(value: any) {
+    setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+  }
+
+  useEffect(() => {
+    if (pageState.generatedPosts.length === 0) {
+      handleGeneratePosts().then((posts) => {
+        if (posts) {
+          setPageState((prev: any) => ({ ...prev, generatedPosts: posts }));
+        }
+      });
+    }
+  }, [pageState.generatedPosts]);
 
   return (
     <div
@@ -42,10 +63,15 @@ const ShareCampaign = () => {
               id=""
               maxLength={500}
               rows={2}
-              value={PostText}
-              onChange={(e) => setPostText(e.target.value)}
+              value={pageState.postText}
+              onChange={(e) =>
+                setPageState((prev: any) => ({
+                  ...prev,
+                  postText: e.target.value,
+                }))
+              }
             ></textarea>
-            <span>{PostText?.length}/500</span>
+            <span>{pageState.postText?.length}/500</span>
           </div>
 
           <div
@@ -62,17 +88,39 @@ const ShareCampaign = () => {
                   word="Re-Generate"
                   icon={reGenerateIcon}
                   paddingVal="py-[--10px] px-[--22px]"
+                  onClick={() => {
+                    setPageState((prev: any) => ({
+                      ...prev,
+                      generatedPosts: [],
+                    }));
+                  }}
                 />
               </div>
 
               <div className="space-y-[--sy-14px] overflow-y-auto max-h-[45vh] pr-[--6px] pb-[--5px]">
-                {Array.from({ length: 8 }).map((_, index) => (
-                  <SuggestionCard
-                    icon={editPenIcon}
-                    key={index}
-                    text={`Stocks, the heartbeat of the market! Whether you're a seasoned investor or just getting started, understanding trends and staying informed is key to navigating this thrilling financial landscape. `}
-                  />
-                ))}
+                {pageState.generatedPosts &&
+                Array.isArray(pageState.generatedPosts) &&
+                pageState.generatedPosts.length > 0 ? (
+                  pageState.generatedPosts.map(
+                    (post: string, index: number) => (
+                      <SuggestionCard
+                        icon={editPenIcon}
+                        key={index}
+                        text={post}
+                        onClick={() => {
+                          setPageState((prev: any) => ({
+                            ...prev,
+                            postText: post,
+                          }));
+                        }}
+                      />
+                    )
+                  )
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <span className="custom-loader"></span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -106,8 +154,14 @@ const ShareCampaign = () => {
                     <h5 className="text-[--20px] font-medium">
                       Time between posts
                     </h5>
-                    <div className="w-[20%]">
-                      <CustomSelectInput options={TimeRange} />
+                    <div className="w-[40%] flex items-center gap-[--4px]">
+                      <CustomSelectInput
+                        options={Array.from(
+                          { length: 20 },
+                          (_, index) => index + 1
+                        )}
+                      />
+                      <span>min.</span>
                     </div>
                   </div>
 
@@ -115,8 +169,14 @@ const ShareCampaign = () => {
                     <h5 className="text-[--20px] font-medium">
                       Time between batches
                     </h5>
-                    <div className="w-[20%]">
-                      <CustomSelectInput options={TimeRange} />
+                    <div className="w-[40%] flex items-center gap-[--4px]">
+                      <CustomSelectInput
+                        options={Array.from(
+                          { length: 20 },
+                          (_, index) => index + 1
+                        )}
+                      />
+                      <span>min.</span>
                     </div>
                   </div>
 
@@ -124,7 +184,7 @@ const ShareCampaign = () => {
                     <h5 className="text-[--20px] font-medium">
                       Number of batches
                     </h5>
-                    <div className="w-[20%]">
+                    <div className="w-[40%]">
                       <CustomSelectInput
                         options={Array.from(
                           { length: 20 },
@@ -150,10 +210,7 @@ const ShareCampaign = () => {
               {/* Sharing List */}
               <div>
                 <label htmlFor="">Posting Time</label>
-                <CustomSelectInput
-                  options={["10:00 AM", "11:00 AM"]}
-                  label={"8:30 PM GMT"}
-                />
+                <DateAndTimePicker getDateTimeValue={getDateTimeValue} />
               </div>
             </div>
           </div>
