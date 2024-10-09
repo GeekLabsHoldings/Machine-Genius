@@ -318,6 +318,49 @@ const ConvertedScriptPage = () => {
     }
   }, [splitedContent, selectedContent]);
 
+  async function testAudio(word: string) {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/test-audio`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ selectedContent: word }),
+        }
+      );
+
+      if (!response.ok) {
+        toast.error("Failed to test audio");
+        return;
+      }
+
+      if (response.status === 401) {
+        toast.error("Session expired");
+        handleSignOut();
+        return;
+      }
+
+      const data = await response.json();
+
+      console.log(data);
+
+      if (data.success) {
+        const audio = new Audio(
+          `${data.audioPath.url}?t=${new Date().getTime()}`
+        );
+        audio.play();
+      } else {
+        toast.error("Failed to test audio");
+      }
+    } catch (error) {
+      toast.error("Error playing audio:" + error);
+      console.error("Error playing audio:", error);
+    }
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-center h-[80vh] py-[1.5vw] w-full gap-[2vw]">
@@ -435,7 +478,12 @@ const ConvertedScriptPage = () => {
                   <span className="text-nowrap overflow-hidden w-[80%]">
                     {pageState.selectedIncorrectWord}
                   </span>
-                  {audioIcon}
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => testAudio(pageState.selectedIncorrectWord!)}
+                  >
+                    {audioIcon}
+                  </div>
                 </div>
               </div>
 
@@ -460,7 +508,14 @@ const ConvertedScriptPage = () => {
                       }));
                     }}
                   />
-                  {audioIcon}
+                  <div
+                    className="cursor-pointer"
+                    onClick={() =>
+                      testAudio(pageState.selectedToBeCorrectedWord!)
+                    }
+                  >
+                    {audioIcon}
+                  </div>
                 </div>
               </div>
             </div>
