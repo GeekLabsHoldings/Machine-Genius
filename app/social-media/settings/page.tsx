@@ -1,7 +1,7 @@
 "use client";
 import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
 // import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
@@ -11,6 +11,8 @@ import {
   redditIconSm,
   telegramIconSm,
 } from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
 
 // set all checkboxes to checked when click on select all
 const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,37 +31,126 @@ const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
   }
 };
 
-// return all accounts
-const renderAccounts = AccountsData.map((oneAccount, idx) => (
-  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
-    <li className="w-[5%] flex justify-center items-center">
-      <CustomCheckBox name="test" />
-    </li>
-    <li className="w-[22%] flex justify-center text-center gap-[1vw]">
-      <p>{oneAccount.account_name}</p>
-      {oneAccount.account_type === "facebook"
-        ? facebookIconSm
-        : oneAccount.account_type === "reddit"
-        ? redditIconSm
-        : telegramIconSm}
-    </li>
-    <li className={`w-[22%] `}>{oneAccount.user_name}</li>
-    <li className="w-[22%] ">
-      <a href="#">{oneAccount.link}</a>
-    </li>
-    <li className="w-[22%]  ">
-      {oneAccount.followers > 999
-        ? oneAccount.followers / 100 / 10.0 + "k"
-        : oneAccount.followers}
-    </li>
-    <li className="w-[22%] ">{oneAccount.engagement}</li>
-  </ul>
-));
+//
+interface IBrand {
+  _id: string;
+  brand_name: string;
+  description: string;
+  aquisition_date: string;
+  niche: string;
+  type?: string;
+  parentId?: string;
+  __v: number;
+}
+
+interface IGroup {
+  _id: string;
+  group_name: string;
+  link: string;
+  group_id: string;
+  subscribers: number;
+  niche?: string;
+  platform: string;
+  brand: string;
+  engagement: number;
+  __v: number;
+}
+
+interface IBrandWithGroups {
+  brand: IBrand;
+  groups: IGroup[];
+}
 
 const Setting = () => {
+  const { authState, handleSignOut } = useContext(globalContext);
   // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+  const [pageState, setPageState] = useState<{
+    fetchedAccounts: IGroup[];
+  }>({ fetchedAccounts: [] });
+
+  async function getAccounts() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-groups`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IBrandWithGroups[] = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (json && Array.isArray(json) && json.length > 0) {
+        setPageState((prev) => ({
+          ...prev,
+          fetchedAccounts: json.flatMap((brand) => brand?.groups),
+        }));
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getAccounts:", error);
+    }
+  }
+
+  useEffect(() => {
+    getAccounts();
+  }, []);
+
+  // return all accounts
+  const renderAccounts =
+    Array.isArray(pageState.fetchedAccounts) &&
+    pageState.fetchedAccounts.length > 0 ? (
+      pageState.fetchedAccounts.map((oneAccount, idx) => (
+        <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
+          <li className="w-[5%] flex justify-center items-center">
+            <CustomCheckBox name="test" />
+          </li>
+          <li className="w-[22%]">
+            <p>{oneAccount.group_name}</p>
+          </li>
+          <li className={`w-[22%] flex justify-center text-center gap-[1vw]`}>
+            {oneAccount.platform[0] +
+              oneAccount.platform.toLowerCase().slice(1)}
+            {/* <span>
+            {oneAccount.platform === "facebook"
+              ? facebookIconSm
+              : oneAccount.platform === "reddit"
+              ? redditIconSm
+              : telegramIconSm}
+            </span> */}
+          </li>
+          <li className="w-[22%]">
+            <a href={oneAccount.link} target="_blank">
+              {oneAccount.link}
+            </a>
+          </li>
+          <li className="w-[22%]">
+            {oneAccount.subscribers > 999
+              ? oneAccount.subscribers / 100 / 10.0 + "k"
+              : oneAccount.subscribers}
+          </li>
+          <li className="w-[22%]">{oneAccount.engagement}</li>
+        </ul>
+      ))
+    ) : (
+      <ul className={`${styles.tableBody} borderBottom articleRow h-full`}>
+        <span className="custom-loader w-fit m-auto"></span>
+      </ul>
+    );
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
@@ -73,7 +164,7 @@ const Setting = () => {
               <CustomSelectInput label="All" options={ArticleNames} />
             </div>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Username</h5>
+              <h5>Platform</h5>
               <CustomSelectInput label="All" options={Brands} />
             </div>
             <div className="flex flex-col w-[25%] gap-[0.3vw]">
@@ -211,7 +302,7 @@ const Setting = () => {
                       fill="black"
                     />
                   </svg>
-                  <p>Username</p>
+                  <p>Platform</p>
                 </div>
               </li>
 
