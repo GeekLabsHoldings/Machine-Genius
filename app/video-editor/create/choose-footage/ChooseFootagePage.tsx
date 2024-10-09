@@ -183,18 +183,36 @@ const ChooseFootagePage = () => {
 
       const data = await isEnhancable.json();
       if (data.imgurl) {
+        if (searchFootage.length > 0) {
+          console.log(`searchFootage`, searchFootage);
+          setSearchFootage((prev) =>
+            prev.map((url) => {
+              if (url === imageUrl) {
+                return data.imgurl;
+              }
+              return url;
+            })
+          );
+        }
         // replce the imageUrl with the new data.imgurl
         const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
           (kwi) => {
-            if (kwi.imageUrl.includes(imageUrl)) {
+            if (selectedSegment!.index === pageState.index) {
+              if (kwi.imageUrl.includes(imageUrl)) {
+                return {
+                  ...kwi,
+                  imageUrl: kwi.imageUrl.map((url) => {
+                    if (url === imageUrl) {
+                      return data.imgurl;
+                    }
+                    return url;
+                  }),
+                };
+              }
+
               return {
                 ...kwi,
-                imageUrl: kwi.imageUrl.map((url) => {
-                  if (url === imageUrl) {
-                    return data.imgurl;
-                  }
-                  return url;
-                }),
+                imageUrl: [...kwi.imageUrl, data.imgurl],
               };
             }
             return kwi;
@@ -684,14 +702,18 @@ const ChooseFootagePage = () => {
               <div className="flex gap-[1.25vw] pb-[--sy-5px]">
                 {selectedSegment ? (
                   searchFootage.length > 0 ? (
-                    searchFootage.map((imageUrl: string) => (
+                    searchFootage.map((imageUrl: string, idx) => (
                       <div className="!w-[194px]" key={uuidv4()}>
                         <ImageCard
                           inputName="select-footage"
                           imgSrc={imageUrl}
-                          checked={selectedFootage.some((sf) =>
-                            sf.imageUrl.includes(imageUrl)
-                          )}
+                          checked={selectedFootage.some((sf) => {
+                            return (
+                              sf.index ===
+                                pageState.selectedScriptSegmentIndex &&
+                              sf.imageUrl.includes(imageUrl)
+                            );
+                          })}
                           onChange={(e) => {
                             if (pageState.selectedScriptSegmentIndex !== null) {
                               handleSelectFootage(
@@ -744,9 +766,12 @@ const ChooseFootagePage = () => {
                       <ImageCard
                         inputName="select-footage"
                         imgSrc={imageUrl}
-                        checked={selectedFootage.some((sf) =>
-                          sf.imageUrl.includes(imageUrl)
-                        )}
+                        checked={selectedFootage.some((sf) => {
+                          return (
+                            sf.index === pageState.selectedScriptSegmentIndex &&
+                            sf.imageUrl.includes(imageUrl)
+                          );
+                        })}
                         onChange={(e) => {
                           if (pageState.selectedScriptSegmentIndex !== null) {
                             handleSelectFootage(
