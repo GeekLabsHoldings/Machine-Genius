@@ -219,7 +219,7 @@ const Facebook = ({ params }: { params: { brandId: string } }) => {
               btnIcon={addIcon}
               btnColor={"black"}
               modalTitle="Add To List"
-              forWhat={"add_to_list"}
+              forWhat={"add_account"}
             />
           </div>
         </div>
