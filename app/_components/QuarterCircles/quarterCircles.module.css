@@ -1,0 +1,14 @@
+.circle:nth-child(3) {
+transform: translateX(-40%);
+}
+.circle:nth-child(4) {
+    transform: translateX(-80%);
+}
+.circle:nth-child(5) {
+    transform: translateX(-120%);
+}
+    
+
+.circle:nth-child(1) {
+    transform: translateX(-60%);
+}

@@ -28,7 +28,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       }
     }
     console.log("getToken", getToken());
-    const newSocket = io("wss://api.machinegenius.io", {
+    const newSocket = io(`${process.env.NEXT_PUBLIC_SOCKET_URL}`, {
       reconnectionAttempts: 5, // optional, manage reconnection logic
       auth: {
         token: getToken(),
@@ -65,13 +65,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Disconnected from Socket.IO server");
     });
 
-    // setTimeout(() => {
-    //   newSocket.disconnect(); // Clean up on unmount
-    // }, 15000);
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [authState]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

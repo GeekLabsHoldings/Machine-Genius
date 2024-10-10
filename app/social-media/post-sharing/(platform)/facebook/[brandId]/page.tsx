@@ -81,7 +81,7 @@ const Facebook = ({ params }: { params: { brandId: string } }) => {
   async function getBrandDetails(brandId: string) {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/reddit/subreddits-brand/${brandId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/${brandId}/get-groups-brand`,
         {
           headers: {
             Authorization: `barrer ${
@@ -95,7 +95,7 @@ const Facebook = ({ params }: { params: { brandId: string } }) => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: IBrandDetails = await res.json();
+      const json: any = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
@@ -105,7 +105,10 @@ const Facebook = ({ params }: { params: { brandId: string } }) => {
         Array.isArray(json.groups) &&
         json.groups.length > 0
       ) {
-        setPageState((prev) => ({ ...prev, brandDetails: json.groups }));
+        setPageState((prev) => ({
+          ...prev,
+          brandDetails: json.groups.filter((e:any) => e.platform === "FACEBOOK"),
+        }));
       } else {
         // toast.error("Something went wrong!");
         return;
@@ -219,7 +222,7 @@ const Facebook = ({ params }: { params: { brandId: string } }) => {
               btnIcon={addIcon}
               btnColor={"black"}
               modalTitle="Add To List"
-              forWhat={"add_to_list"}
+              forWhat={"add_account"}
             />
           </div>
         </div>

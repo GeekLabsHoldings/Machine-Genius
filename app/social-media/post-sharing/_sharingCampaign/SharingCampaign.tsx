@@ -74,12 +74,12 @@ const SharingCampaign = () => {
 
   useEffect(() => {
     // reset data
-    setSelectedContent("");
+    setSelectedContent(null);
     getAllContent();
   }, []);
 
   useEffect(() => {
-    if (selectedContent !== "") {
+    if (selectedContent !== null) {
       router.replace("/social-media/post-sharing/campaign-details");
     }
   }, [selectedContent]);
@@ -105,7 +105,7 @@ const SharingCampaign = () => {
           <li className={` w-[20%] flex justify-center`}>
             <CustomBtn
               onClick={() => {
-                setSelectedContent(oneCampaign.content);
+                setSelectedContent(oneCampaign);
               }}
               class="videoStatusBtn"
               word={"Start Campaign"}

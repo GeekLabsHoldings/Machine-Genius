@@ -8,8 +8,8 @@ import useSessionStorage from "@/app/_hooks/useSessionStorage";
 import toast from "react-hot-toast";
 
 interface ContextState {
-  selectedContent: string;
-  setSelectedContent: (content: string) => void;
+  selectedContent: any;
+  setSelectedContent: (content: any) => void;
   handleGeneratePosts: () => Promise<string[] | void>;
 }
 
@@ -19,7 +19,7 @@ interface IGeneratePostsResponse {
 
 const initialContextState: ContextState = {
   // ===== 01. Start =====
-  selectedContent: "",
+  selectedContent: null,
   setSelectedContent: () => {},
   handleGeneratePosts: async () => {},
   // ===== 01. End =====
@@ -40,15 +40,14 @@ export default function SocialMediaPostSharingContextProvider({
   //   const path = usePathname();
 
   // ===== 01. Start =====
-  const [selectedContent, setSelectedContent] = useSessionStorage<string>(
+  const [selectedContent, setSelectedContent] = useSessionStorage<any>(
     "SocialMediaPostSharing-selectedContent",
-    "",
-    { isSerializable: false }
+    null
   );
 
   async function handleGeneratePosts(): Promise<string[] | void> {
     if (!selectedContent) {
-      toast.error("No content provided!");
+      // toast.error("No content provided!");
       return;
     }
     try {
@@ -57,7 +56,7 @@ export default function SocialMediaPostSharingContextProvider({
         {
           method: "POST",
           body: JSON.stringify({
-            content: selectedContent,
+            content: selectedContent.content,
           }),
           headers: {
             "Content-Type": "application/json",

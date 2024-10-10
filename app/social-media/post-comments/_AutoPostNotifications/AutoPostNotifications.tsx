@@ -102,7 +102,7 @@ const AutoPostNotifications = () => {
           tweetsMustApprove: json.result,
         }));
       } else {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
         return;
       }
     } catch (error) {

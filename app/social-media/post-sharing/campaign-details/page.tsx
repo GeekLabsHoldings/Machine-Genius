@@ -10,18 +10,20 @@ import DateAndTimePicker from "@/app/_components/DateAndTimePicker/DateAndTimePi
 import { socialMediaPostSharingContext } from "../_context/socialMediaPostSharingContext";
 import { globalContext } from "@/app/_context/store";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const sharingListOptions = ["Reddit", "Telegram", "Facebook"];
 
 const ShareCampaign = () => {
   const router = useRouter();
-  const { authState, handleSignOut } = useContext(globalContext);
+  const { authState, handleSignOut, brandMap } = useContext(globalContext);
   const { handleGeneratePosts, selectedContent, setSelectedContent } =
     useContext(socialMediaPostSharingContext);
   const [pageState, setPageState] = useState<any>({
     scheduledTime: null,
     postText: "",
     generatedPosts: [],
+    sharingList: "",
   });
 
   function getDateTimeValue(value: any) {
@@ -39,10 +41,122 @@ const ShareCampaign = () => {
   }, [pageState.generatedPosts]);
 
   useEffect(() => {
-    if (selectedContent === "") {
+    if (selectedContent === null) {
       router.replace("/social-media/post-sharing");
     }
   }, [selectedContent]);
+
+  async function handleAddFacebookPost() {
+    if (!pageState.postText) {
+      toast.error("No post caption provided!");
+      return;
+    } else if (!selectedContent.brand) {
+      toast.error("No brand selected!");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/social-media/facebook/add-post/text/${
+          brandMap[selectedContent.brand]
+        }`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            content: pageState.postText,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (
+        json &&
+        json.message.toLowerCase() === "facebook token expired" &&
+        json.status === 400
+      ) {
+        toast.error("Facebook token expired!");
+      } else if (json && json.result && json.facebookPost) {
+        toast.success("Post is published!");
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleAddFacebookPost:", error);
+    }
+  }
+
+  async function handleAddTelegramPost() {
+    if (!pageState.postText) {
+      toast.error("No post caption provided!");
+      return;
+    } else if (!selectedContent.brand) {
+      toast.error("No brand selected!");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/social-media/telegram/campaign-brand/${
+          brandMap[selectedContent.brand]
+        }`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            message: pageState.postText,
+            // ...(pageState.scheduledTime !== null && {
+            //   starttime: pageState.scheduledTime,
+            // }),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.chatIds) {
+        toast.success("Message is sent!");
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleAddTelegramPost:", error);
+    }
+  }
+
+  async function handlePublishCampaign() {
+    if (pageState.sharingList === "") {
+      toast.error("Please select a sharing list!");
+      return;
+    } else if (pageState.sharingList === "Facebook") {
+      await handleAddFacebookPost();
+    } else if (pageState.sharingList === "Telegram") {
+      await handleAddTelegramPost();
+    } else if (pageState.sharingList === "Reddit") {
+      toast.error("Reddit account is not available!");
+    }
+  }
 
   return (
     <div
@@ -54,7 +168,7 @@ const ShareCampaign = () => {
         <h6 className="flex items-center gap-[0.5vw] !mb-[--sy-20px]">
           <span
             onClick={() => {
-              setSelectedContent("");
+              setSelectedContent(null);
             }}
           >
             {backIcon}
@@ -150,7 +264,16 @@ const ShareCampaign = () => {
               {/* Sharing List */}
               <div>
                 <label htmlFor="">Sharing List</label>
-                <CustomSelectInput options={sharingListOptions} />
+                <CustomSelectInput
+                  label="Select Sharing List"
+                  options={sharingListOptions}
+                  getValue={(value: string) => {
+                    setPageState((prev: any) => ({
+                      ...prev,
+                      sharingList: value,
+                    }));
+                  }}
+                />
               </div>
 
               {/* Settings */}
@@ -227,15 +350,16 @@ const ShareCampaign = () => {
 
           {/* 03- Buttons */}
           <div className="flex justify-end gap-[--20px]">
-            <CustomBtn
+            {/* <CustomBtn
               word="Schadule"
               btnColor="black"
               paddingVal="py-[--10px] px-[--22px]"
-            />
+            /> */}
             <CustomBtn
               btnColor="black"
-              word="Publish Now"
+              word="Publish"
               paddingVal="py-[--10px] px-[--22px]"
+              onClick={handlePublishCampaign}
             />
           </div>
         </div>
