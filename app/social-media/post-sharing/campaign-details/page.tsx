@@ -9,12 +9,15 @@ import SuggestionCard from "@/app/_components/SocialMedia/SuggestionCard/Suggest
 import DateAndTimePicker from "@/app/_components/DateAndTimePicker/DateAndTimePicker";
 import { socialMediaPostSharingContext } from "../_context/socialMediaPostSharingContext";
 import { globalContext } from "@/app/_context/store";
+import { useRouter } from "next/navigation";
 
 const sharingListOptions = ["Reddit", "Telegram", "Facebook"];
 
 const ShareCampaign = () => {
+  const router = useRouter();
   const { authState, handleSignOut } = useContext(globalContext);
-  const { handleGeneratePosts } = useContext(socialMediaPostSharingContext);
+  const { handleGeneratePosts, selectedContent, setSelectedContent } =
+    useContext(socialMediaPostSharingContext);
   const [pageState, setPageState] = useState<any>({
     scheduledTime: null,
     postText: "",
@@ -35,18 +38,30 @@ const ShareCampaign = () => {
     }
   }, [pageState.generatedPosts]);
 
+  useEffect(() => {
+    if (selectedContent === "") {
+      router.replace("/social-media/post-sharing");
+    }
+  }, [selectedContent]);
+
   return (
     <div
       className={
         "flex flex-col w-full h-[80vh] py-[1vw] " + styles.add_post_wrapper
       }
     >
-      <Link href={"/social-media/post-sharing"}>
+      <div>
         <h6 className="flex items-center gap-[0.5vw] !mb-[--sy-20px]">
-          {backIcon}
+          <span
+            onClick={() => {
+              setSelectedContent("");
+            }}
+          >
+            {backIcon}
+          </span>
           Pacific Allies ABANDO...
         </h6>
-      </Link>
+      </div>
 
       <div className="grid grid-cols-2 gap-[5vw] w-full h-full">
         {/* Col (1) */}

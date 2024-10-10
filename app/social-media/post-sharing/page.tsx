@@ -3,7 +3,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import styles from "./share.module.css";
 import { useContext, useEffect, useState } from "react";
 import PlatformBox from "@/app/_components/SocialMedia/PlatformBox/PlatformBox";
-import { redditIcon, telegramIcon } from "@/app/_utils/svgIcons";
+import { facebookIcon, redditIcon, telegramIcon } from "@/app/_utils/svgIcons";
 // Tab (2): Sharing Campaign
 import SharingCampaign from "./_sharingCampaign/SharingCampaign";
 import AllCampaigns from "./_allCampaigns/AllCampaigns";
@@ -28,10 +28,12 @@ const postSharingPage = () => {
     activeTab: number;
     telegramSubscribers: ISubscribers[] | null;
     redditSubscribers: ISubscribers[] | null;
+    facebookSubscribers: ISubscribers[] | null;
   }>({
     activeTab: 1,
     telegramSubscribers: null,
     redditSubscribers: null,
+    facebookSubscribers: null,
   });
 
   const platforms = [
@@ -40,6 +42,12 @@ const postSharingPage = () => {
       name: "Telegram",
       color: "#31B2E9",
       subscribers: pageState.telegramSubscribers,
+    },
+    {
+      icon: facebookIcon,
+      name: "Facebook",
+      color: "#1877F2",
+      subscribers: pageState.facebookSubscribers,
     },
     {
       icon: redditIcon,
@@ -115,9 +123,43 @@ const postSharingPage = () => {
     }
   }
 
+  async function getFacebookSubscribers() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/facebook/get-subs`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: ISubscribers = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (json && Array.isArray(json) && json.length > 0) {
+        setPageState((prev) => ({ ...prev, facebookSubscribers: json }));
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getFacebookSubscribers:", error);
+    }
+  }
+
   useEffect(() => {
     getTelegramSubscribers();
     getRedditSubscribers();
+    getFacebookSubscribers();
   }, []);
 
   return (

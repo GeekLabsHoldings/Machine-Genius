@@ -132,7 +132,7 @@ const AutoPostNotifications = () => {
       ...prev,
       commentsSuggestions: null,
     }));
-    if (!pageState.selectedTweet?.comment) {
+    if (!pageState.selectedTweet?.content) {
       toast.error("No content provided!");
       return;
     }
@@ -143,7 +143,7 @@ const AutoPostNotifications = () => {
           method: "POST",
           body: JSON.stringify({
             platform: "TWITTER",
-            content: pageState.selectedTweet?.comment,
+            content: pageState.selectedTweet?.content,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -181,7 +181,11 @@ const AutoPostNotifications = () => {
 
   useEffect(() => {
     if (pageState.selectedTweet && pageState.selectedTweet.comment) {
-      handleGenerateCommentsSuggestions();
+      // handleGenerateCommentsSuggestions();
+      setPageState((prev: any) => ({
+        ...prev,
+        commentsSuggestions: pageState.selectedTweet?.comment,
+      }));
     }
   }, [pageState.selectedTweet]);
 
@@ -236,19 +240,21 @@ const AutoPostNotifications = () => {
         json.result.message === "Reply posted successfully"
       ) {
         toast.success("Reply posted successfully");
-        // reset the form
-        setPageState((prev) => ({
-          ...prev,
-          postText: "",
-          commentsSuggestions: null,
-          selectedTweet: null,
-        }));
       } else {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
       }
     } catch (error) {
       toast.error("Something went wrong!");
       console.error("Error handleAddReplyToTweet:", error);
+    } finally {
+      // reset the form
+      setPageState((prev) => ({
+        ...prev,
+        postText: "",
+        commentsSuggestions: null,
+        selectedTweet: null,
+      }));
+      getTweetsMustApprove();
     }
   }
 
@@ -281,8 +287,9 @@ const AutoPostNotifications = () => {
                 />
               ))
             ) : (
-              <div className="flex justify-center items-center h-full">
+              <div className="flex justify-center items-center h-full gap-[--10px]">
                 <span className="custom-loader"></span>
+                <span>No notifications found!</span>
               </div>
             )}
           </div>
@@ -336,7 +343,7 @@ const AutoPostNotifications = () => {
                 text={pageState.commentsSuggestions || ""}
                 icon={editPenIcon}
                 onClick={() => {
-                  setPageState((prev) => ({
+                  setPageState((prev: any) => ({
                     ...prev,
                     postText: pageState.commentsSuggestions || "",
                   }));
