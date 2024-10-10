@@ -2,12 +2,11 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
-    const { code, state } = await request.json();
+    const { code, state, clientId, clientSecret } = await request.json();
 
     // TODO: Validate the 'state' parameter to protect against CSRF attacks
-
-    const clientId = "1189755995636220";
-    const clientSecret = "12354d026d96b0c7ee6ca1d68b4f5ad2"; // Store your client secret in an environment variable
+    // const clientId = "1189755995636220";
+    // const clientSecret = "12354d026d96b0c7ee6ca1d68b4f5ad2"; // Store your client secret in an environment variable
     const redirectUri = `/`;
 
     const tokenUrl =
