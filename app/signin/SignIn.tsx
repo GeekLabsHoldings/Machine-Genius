@@ -66,7 +66,7 @@ const SignIn = () => {
       return "/content-creator/dashboard";
     } else if (authState.decodedToken.department.includes("video-editing")) {
       return "/video-editor/dashboard";
-    } else if (authState.decodedToken.department.includes("Social Media")) {
+    } else if (authState.decodedToken.department.includes("social-media")) {
       return "/social-media/dashboard";
     } else if (authState.decodedToken.department.includes("Administrative")) {
       return "/administrative/dashboard";

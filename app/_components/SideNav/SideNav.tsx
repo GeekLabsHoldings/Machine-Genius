@@ -53,7 +53,7 @@ const rolsIcon = (
 const rols = [
   "content-creation",
   "video-editing",
-  "Social Media",
+  "social-media",
   "Administrative",
   "Customer Service",
   "Creative",
@@ -137,7 +137,7 @@ const SideNav = ({
       router.replace("/content-creator/dashboard");
     } else if (SelectedRole === "video-editing") {
       router.replace("/video-editor/dashboard");
-    } else if (SelectedRole === "Social Media") {
+    } else if (SelectedRole === "social-media") {
       router.replace("/social-media/dashboard");
     } else if (SelectedRole === "Administrative") {
       router.replace("/administrative/dashboard");

@@ -107,7 +107,7 @@ export default function GlobalContextProvider({
         return "/content-creator/dashboard";
       case "video-editing":
         return "/video-editor/dashboard";
-      case "Social Media":
+      case "social-media":
         return "/social-media/dashboard";
       case "Administrative":
         return "/administrative/dashboard";
