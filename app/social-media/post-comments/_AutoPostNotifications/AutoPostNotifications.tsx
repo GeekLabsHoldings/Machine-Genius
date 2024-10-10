@@ -240,13 +240,6 @@ const AutoPostNotifications = () => {
         json.result.message === "Reply posted successfully"
       ) {
         toast.success("Reply posted successfully");
-        // reset the form
-        setPageState((prev) => ({
-          ...prev,
-          postText: "",
-          commentsSuggestions: null,
-          selectedTweet: null,
-        }));
       } else {
         toast.error("Something went wrong!");
       }
@@ -254,6 +247,13 @@ const AutoPostNotifications = () => {
       toast.error("Something went wrong!");
       console.error("Error handleAddReplyToTweet:", error);
     } finally {
+      // reset the form
+      setPageState((prev) => ({
+        ...prev,
+        postText: "",
+        commentsSuggestions: null,
+        selectedTweet: null,
+      }));
       getTweetsMustApprove();
     }
   }
