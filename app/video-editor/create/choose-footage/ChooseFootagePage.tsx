@@ -600,29 +600,45 @@ const ChooseFootagePage = () => {
               {Array.isArray(splitedContent) && splitedContent.length > 0 ? (
                 splitedContent.map(
                   (scriptSegment: ScriptSegment, index: number) => (
-                    <div
-                      className={`${styles.articleContent} cursor-pointer`}
-                      key={scriptSegment.index}
-                    >
-                      <p
-                        className={`${
-                          pageState.selectedScriptSegment?.audioPath.index ===
-                          scriptSegment.audioPath.index
-                            ? styles.active
-                            : ""
-                        }`}
-                        onClick={() => {
-                          setPageState((prevState) => ({
-                            ...prevState,
-                            index,
-                            selectedScriptSegment: scriptSegment,
-                          }));
-                          setSearchFootage([]);
-                        }}
+                    <>
+                      {index === 0 && (
+                        <div>
+                          <h1 className="text-[--24px] font-bold">Intro</h1>
+                        </div>
+                      )}
+                      {index === totalIntroSlides && (
+                        <div>
+                          <hr />
+                          <h1 className="mt-[--sy-20px] text-[--24px] font-bold">
+                            Body
+                          </h1>
+                        </div>
+                      )}
+
+                      <div
+                        className={`${styles.articleContent} cursor-pointer`}
+                        key={scriptSegment.index}
                       >
-                        {scriptSegment.text}
-                      </p>
-                    </div>
+                        <p
+                          className={`${
+                            pageState.selectedScriptSegment?.audioPath.index ===
+                            scriptSegment.audioPath.index
+                              ? styles.active
+                              : ""
+                          }`}
+                          onClick={() => {
+                            setPageState((prevState) => ({
+                              ...prevState,
+                              index,
+                              selectedScriptSegment: scriptSegment,
+                            }));
+                            setSearchFootage([]);
+                          }}
+                        >
+                          {scriptSegment.text}
+                        </p>
+                      </div>
+                    </>
                   )
                 )
               ) : (
