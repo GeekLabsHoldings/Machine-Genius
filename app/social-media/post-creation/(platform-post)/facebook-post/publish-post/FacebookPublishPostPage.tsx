@@ -98,6 +98,7 @@ const FacebookPublishPostPage = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
+            setTokenState(null);
             // Access token received and stored successfully
             // You can redirect or update the UI as needed
             handleUpdateToken(data?.access_token);
