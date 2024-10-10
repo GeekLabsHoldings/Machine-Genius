@@ -105,7 +105,7 @@ const VideoCreatePage = () => {
     // sort the intro slides by the index
     intro.sort((a: any, b: any) => a.index - b.index);
 
-    setTotalIntroSlides(intro.length);
+    setTotalIntroSlides(intro.length || 4);
 
     return [...intro, ...body];
   }

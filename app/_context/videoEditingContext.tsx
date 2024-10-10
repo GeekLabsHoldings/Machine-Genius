@@ -35,7 +35,7 @@ const initialContextState: VideoEditingContextType = {
   setSelectedContent: () => {},
   splitedContent: null,
   setSplitedContent: (content: ScriptSegment[] | null) => {},
-  totalIntroSlides: 0,
+  totalIntroSlides: 4,
   setTotalIntroSlides: () => {},
   videoUrl: "",
   setVideoUrl: () => {},
@@ -62,7 +62,7 @@ export default function VideoEditingContextProvider({
 
   const [totalIntroSlides, setTotalIntroSlides] = useSessionStorage<number>(
     "VideoEditing-totalIntroSlides",
-    0
+    4
   );
   const [videoUrl, setVideoUrl] = useSessionStorage<string>(
     "VideoEditing-videoUrl",
