@@ -150,9 +150,9 @@ const ShareCampaign = () => {
       toast.error("Please select a sharing list!");
       return;
     } else if (pageState.sharingList === "Facebook") {
-      handleAddFacebookPost();
+      await handleAddFacebookPost();
     } else if (pageState.sharingList === "Telegram") {
-      handleAddTelegramPost();
+      await handleAddTelegramPost();
     } else if (pageState.sharingList === "Reddit") {
       toast.error("Reddit account is not available!");
     }
