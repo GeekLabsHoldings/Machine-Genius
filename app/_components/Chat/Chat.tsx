@@ -1168,7 +1168,7 @@ function Chat() {
                               message.sender.lastName}
                           </p>
                         )}
-                      <p>
+                      <p className="break-words">
                         {message?.mediaUrl?.url ? (
                           <img
                             src={message?.mediaUrl?.url}
