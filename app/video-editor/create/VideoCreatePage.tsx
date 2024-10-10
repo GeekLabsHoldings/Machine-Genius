@@ -163,7 +163,7 @@ const VideoCreatePage = () => {
   }, [selectedContent]);
 
   // render assigned videos to every one and its status of completetion
-  const renderVideosData = assignedVideos.map((video, idx) => (
+  const renderVideosData = [...assignedVideos].reverse().map((video, idx) => (
     <ul
       key={idx}
       className="borderBottom w-full flex justify-between  items-center py-[0.5vh] text-center"
