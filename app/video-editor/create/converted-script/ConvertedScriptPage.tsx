@@ -84,6 +84,7 @@ const ConvertedScriptPage = () => {
     setSplitedContent,
     setSelectedContent,
     selectedContent,
+    totalIntroSlides,
   } = useContext(videoEditingContext);
   const { handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
@@ -98,6 +99,9 @@ const ConvertedScriptPage = () => {
 
   const [loadingReplaceWord, setLoadingReplaceWord] = useState(false);
   const [loadingUpdateDatabase, setLoadingUpdateDatabase] = useState(false);
+  const [loadingCorrectWord, setLoadingCorrectWord] = useState(false);
+  const [loadingToBeCorrectedWord, setLoadingToBeCorrectedWord] =
+    useState(false);
 
   const router = useRouter();
   function getAudioDuration(audioPath: string): Promise<number> {
@@ -318,8 +322,12 @@ const ConvertedScriptPage = () => {
     }
   }, [splitedContent, selectedContent]);
 
-  async function testAudio(word: string) {
+  async function testAudio(
+    word: string,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
     try {
+      setLoading(true);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/test-audio`,
         {
@@ -334,12 +342,14 @@ const ConvertedScriptPage = () => {
 
       if (!response.ok) {
         toast.error("Failed to test audio");
+        setLoading(false);
         return;
       }
 
       if (response.status === 401) {
         toast.error("Session expired");
         handleSignOut();
+        setLoading(false);
         return;
       }
 
@@ -355,9 +365,11 @@ const ConvertedScriptPage = () => {
       } else {
         toast.error("Failed to test audio");
       }
+      setLoading(false);
     } catch (error) {
       toast.error("Error playing audio:" + error);
       console.error("Error playing audio:", error);
+      setLoading(false);
     }
   }
 
@@ -375,31 +387,50 @@ const ConvertedScriptPage = () => {
                   <div className="cursor-pointer h-max"></div>
                 </div>
                 {Array.isArray(splitedContent) && splitedContent.length > 0 ? (
-                  splitedContent.map((scriptSegment: ScriptSegment) => (
-                    <div
-                      className={`${styles.articleContent} cursor-pointer`}
-                      key={scriptSegment.audioPath.index}
-                    >
-                      <p
-                        className={`${
-                          pageState.selectedScriptSegment?.audioPath.index ===
-                          scriptSegment.audioPath.index
-                            ? styles.active
-                            : ""
-                        }`}
-                        onClick={() =>
-                          setPageState((prevState) => ({
-                            ...prevState,
-                            selectedScriptSegment: scriptSegment,
-                            selectedIncorrectWord: null,
-                            selectedToBeCorrectedWord: "",
-                          }))
-                        }
-                      >
-                        {scriptSegment.text}
-                      </p>
-                    </div>
-                  ))
+                  splitedContent.map(
+                    (scriptSegment: ScriptSegment, index: number) => (
+                      // display intro header word
+                      <>
+                        {index === 0 && (
+                          <div>
+                            <h1 className="text-[--24px] font-bold">Intro</h1>
+                          </div>
+                        )}
+                        {index === totalIntroSlides && (
+                          <div>
+                            <hr />
+                            <h1 className="mt-[--sy-20px] text-[--24px] font-bold">
+                              Body
+                            </h1>
+                          </div>
+                        )}
+
+                        <div
+                          className={`${styles.articleContent} cursor-pointer`}
+                          key={scriptSegment.audioPath.index}
+                        >
+                          <p
+                            className={`${
+                              pageState.selectedScriptSegment?.audioPath
+                                .index === scriptSegment.audioPath.index
+                                ? styles.active
+                                : ""
+                            }`}
+                            onClick={() =>
+                              setPageState((prevState) => ({
+                                ...prevState,
+                                selectedScriptSegment: scriptSegment,
+                                selectedIncorrectWord: null,
+                                selectedToBeCorrectedWord: "",
+                              }))
+                            }
+                          >
+                            {scriptSegment.text}
+                          </p>
+                        </div>
+                      </>
+                    )
+                  )
                 ) : (
                   <div>
                     <p>No data available!</p>
@@ -478,12 +509,21 @@ const ConvertedScriptPage = () => {
                   <span className="text-nowrap overflow-hidden w-[80%]">
                     {pageState.selectedIncorrectWord}
                   </span>
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => testAudio(pageState.selectedIncorrectWord!)}
-                  >
-                    {audioIcon}
-                  </div>
+                  {loadingCorrectWord ? (
+                    <LoadingSpinner />
+                  ) : (
+                    <div
+                      className="cursor-pointer"
+                      onClick={() =>
+                        testAudio(
+                          pageState.selectedIncorrectWord!,
+                          setLoadingCorrectWord
+                        )
+                      }
+                    >
+                      {audioIcon}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -508,14 +548,21 @@ const ConvertedScriptPage = () => {
                       }));
                     }}
                   />
-                  <div
-                    className="cursor-pointer"
-                    onClick={() =>
-                      testAudio(pageState.selectedToBeCorrectedWord!)
-                    }
-                  >
-                    {audioIcon}
-                  </div>
+                  {loadingToBeCorrectedWord ? (
+                    <LoadingSpinner />
+                  ) : (
+                    <div
+                      className="cursor-pointer"
+                      onClick={() =>
+                        testAudio(
+                          pageState.selectedToBeCorrectedWord!,
+                          setLoadingToBeCorrectedWord
+                        )
+                      }
+                    >
+                      {audioIcon}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
