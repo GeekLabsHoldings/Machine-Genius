@@ -109,14 +109,9 @@ const TwitterPublishPostPage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: IPublishPostResponse = await res.json();
-
-      if ("message" in json && json.message.includes("duplicate")) {
-        toast.error("Post is a duplicate!");
-      } else if ("response" in json && "result" in json) {
-        toast.success("Post is published!");
-      } else {
-        toast.error("Something went wrong!");
+      const json: any = await res.json();
+      if (json && json.message) {
+        toast(json.message);
       }
     } catch (error) {
       toast.error("Something went wrong!");

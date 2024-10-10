@@ -80,16 +80,8 @@ const ShareCampaign = () => {
         handleSignOut();
       }
       const json = await res.json();
-      if (
-        json &&
-        json.message.toLowerCase() === "facebook token expired" &&
-        json.status === 400
-      ) {
-        toast.error("Facebook token expired!");
-      } else if (json && json.result && json.facebookPost) {
-        toast.success("Post is published!");
-      } else {
-        toast.error("Something went wrong!");
+      if (json && json.message) {
+        toast(json.message);
       }
     } catch (error) {
       toast.error("Something went wrong!");
