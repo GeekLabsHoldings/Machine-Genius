@@ -48,6 +48,7 @@ const SharingCampaign = () => {
               : authState.token
           }`,
         },
+        cache: "force-cache",
       }
     );
 
