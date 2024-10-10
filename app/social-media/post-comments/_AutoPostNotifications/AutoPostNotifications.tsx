@@ -241,7 +241,7 @@ const AutoPostNotifications = () => {
       ) {
         toast.success("Reply posted successfully");
       } else {
-        toast.error("Something went wrong!");
+        // toast.error("Something went wrong!");
       }
     } catch (error) {
       toast.error("Something went wrong!");
@@ -287,8 +287,9 @@ const AutoPostNotifications = () => {
                 />
               ))
             ) : (
-              <div className="flex justify-center items-center h-full">
+              <div className="flex justify-center items-center h-full gap-[--10px]">
                 <span className="custom-loader"></span>
+                <span>No notifications found!</span>
               </div>
             )}
           </div>
