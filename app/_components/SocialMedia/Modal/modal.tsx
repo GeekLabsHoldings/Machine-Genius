@@ -9,7 +9,7 @@ import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
 import { addIcon, chainIcon, closeIcon } from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
-import { TwitterSharingAccount } from "@/app/social-media/post-comments/page";
+import { TwitterSharingAccount } from "@/app/social-media/post-comments/PostCommentsPage";
 
 interface IProps {
   btnWord: string; // Button text.
