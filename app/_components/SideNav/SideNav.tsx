@@ -54,12 +54,12 @@ const rols = [
   "content-creation",
   "video-editing",
   "social-media",
-  "Administrative",
-  "Customer Service",
-  "Creative",
-  "HR",
-  "Accounting",
-  "Newsletter",
+  "administrative",
+  "customer-service",
+  "creative",
+  "hr",
+  "accounting",
+  "news-letter",
   "Out Reach",
   "SEO",
   "OP",
@@ -108,7 +108,9 @@ const SideNav = ({
   const filteredRoles = useMemo(() => {
     return authState.decodedToken?.department.includes("ceo")
       ? rols
-      : rols.filter((role) => role === authState.decodedToken?.department[0]);
+      : rols.filter((role) =>
+          authState.decodedToken?.department.includes(role)
+        );
   }, [authState.decodedToken?.department]);
 
   // function that get current
@@ -139,17 +141,17 @@ const SideNav = ({
       router.replace("/video-editor/dashboard");
     } else if (SelectedRole === "social-media") {
       router.replace("/social-media/dashboard");
-    } else if (SelectedRole === "Administrative") {
+    } else if (SelectedRole === "administrative") {
       router.replace("/administrative/dashboard");
-    } else if (SelectedRole === "Customer Service") {
+    } else if (SelectedRole === "customer-service") {
       router.replace("/customer-service/dashboard");
-    } else if (SelectedRole === "Creative") {
+    } else if (SelectedRole === "creative") {
       router.replace("/creative/dashboard");
-    } else if (SelectedRole === "HR") {
+    } else if (SelectedRole === "hr") {
       router.replace("/hr/dashboard");
-    } else if (SelectedRole === "Accounting") {
+    } else if (SelectedRole === "accounting") {
       router.replace("/accounting/dashboard");
-    } else if (SelectedRole === "Newsletter") {
+    } else if (SelectedRole === "news-letter") {
       router.replace("/newsletter/dashboard");
     } else if (SelectedRole === "Out Reach") {
       router.replace("/outreach/dashboard");
