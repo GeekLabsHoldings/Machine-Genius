@@ -22,6 +22,7 @@ interface IProps {
   dataToRemove?: any; // Data to remove
   selectedAccounts?: any; // Array of selected account objects
   onRemoveSuccess?: () => void; // Callback after successful removal
+  brandsOptions?: string[];
 }
 
 const platformsOptions = [
@@ -104,47 +105,21 @@ export default function BasicModal({
   dataToRemove,
   selectedAccounts,
   onRemoveSuccess,
+  brandsOptions,
 }: IProps) {
-  const {
-    brandMap,
-    brandOptions,
-    authState,
-    handleSignOut,
-    getBrandsPlatform,
-  } = useContext(globalContext);
+  const { brandMap, brandOptions, authState, handleSignOut } =
+    useContext(globalContext);
   // State for controlling the modal open/close state
   const [open, setOpen] = useState(false);
   const [pageState, setPageState] = useState<{
-    brandsOptions: string[];
     isLoading: boolean;
   }>({
-    brandsOptions: [],
     isLoading: false,
   });
   // Function to handle modal open.
   const handleOpen = () => setOpen(true);
   // Function to handle modal close.
   const handleClose = () => setOpen(false);
-
-  async function handleGetBrandsPlatform(platform: string) {
-    setPageState((prev) => ({ ...prev, isLoading: true }));
-    const result = await getBrandsPlatform(platform);
-    const brands: string[] = Array.isArray(result) ? result : [];
-    setPageState((prev) => ({
-      ...prev,
-      brandsOptions: brands,
-      isLoading: false,
-    }));
-  }
-
-  useEffect(() => {
-    if (
-      (open === true && forWhat === "add_account1") ||
-      forWhat === "edit_account1"
-    ) {
-      handleGetBrandsPlatform("TWITTER");
-    }
-  }, [forWhat, open]);
 
   // ===== Start add_account1 State =====
   const [addAccount1State, setAddAccount1State] = useState<ICampaignSettings>({
@@ -695,10 +670,11 @@ export default function BasicModal({
                     <div>
                       <label htmlFor="brand">Brand</label>
                       <div className={`${styles.inputWrapper}`}>
-                        {!pageState.isLoading ? (
+                        {Array.isArray(brandsOptions) &&
+                        brandsOptions.length > 0 ? (
                           <CustomSelectInput
                             label={"Select Brand"}
-                            options={pageState.brandsOptions}
+                            options={brandsOptions || []}
                             getValue={(value: string) => {
                               setAddAccount1State((prev) => ({
                                 ...prev,

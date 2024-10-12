@@ -34,13 +34,15 @@ interface TwitterSharingAccountResponse {
 }
 
 const Comments = () => {
-  const { authState, handleSignOut } = useContext(globalContext);
+  const { authState, handleSignOut, getBrandsPlatform } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     twitterAccountsData: TwitterSharingAccount[] | null;
     activeTab: number;
+    brandsOptions: string[];
   }>({
     activeTab: 1,
     twitterAccountsData: null,
+    brandsOptions: [],
   });
 
   async function getTwitterAccountsData() {
@@ -81,10 +83,20 @@ const Comments = () => {
     }
   }
 
+  async function handleGetBrandsPlatform(platform: string) {
+    const result = await getBrandsPlatform(platform);
+    const brands: string[] = Array.isArray(result) ? result : [];
+    setPageState((prev) => ({
+      ...prev,
+      brandsOptions: brands,
+    }));
+  }
+
   useEffect(() => {
     if (pageState.activeTab === 1 || pageState.activeTab === 2) {
       getTwitterAccountsData();
     }
+    handleGetBrandsPlatform("TWITTER");
   }, [pageState.activeTab]);
 
   return (
@@ -127,6 +139,7 @@ const Comments = () => {
             <TwitterCommentsList
               twitterAccountsData={pageState.twitterAccountsData}
               getTwitterAccountsData={getTwitterAccountsData}
+              brandsOptions={pageState.brandsOptions}
             />
           </div>
         )}
@@ -143,7 +156,7 @@ const Comments = () => {
         {/* Tab (3): Auto Post Notifications */}
         {pageState.activeTab === 3 && (
           <div className="h-[75vh]">
-            <AutoPostNotifications />
+            <AutoPostNotifications brandsOptions={pageState.brandsOptions} />
           </div>
         )}
       </div>

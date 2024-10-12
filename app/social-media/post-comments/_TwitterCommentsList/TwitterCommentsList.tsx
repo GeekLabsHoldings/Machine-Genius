@@ -25,9 +25,11 @@ const verticalDots = (
 const TwitterCommentsList = ({
   twitterAccountsData,
   getTwitterAccountsData,
+  brandsOptions,
 }: {
   twitterAccountsData: TwitterSharingAccount[] | null;
   getTwitterAccountsData: () => void;
+  brandsOptions: string[];
 }) => {
   const { brandIdMap } = useContext(globalContext);
   // for storing the order of subscribers and engagement (descending or ascending)
@@ -238,6 +240,7 @@ const TwitterCommentsList = ({
               modalTitle={"Add Account"}
               forWhat={"add_account1"}
               getData={getTwitterAccountsData}
+              brandsOptions={brandsOptions}
             />
           </div>
         </div>
