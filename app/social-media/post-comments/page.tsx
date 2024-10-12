@@ -6,6 +6,8 @@ import AutoPostNotifications from "./_AutoPostNotifications/AutoPostNotification
 import styles from "./PostComments.module.css";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
+import { useSearchParams } from "next/navigation"; // Import useSearchParams
+
 
 export interface TwitterSharingAccount {
   _id: string;
@@ -34,16 +36,28 @@ interface TwitterSharingAccountResponse {
 }
 
 const Comments = () => {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const initialActiveTab = tabParam ? parseInt(tabParam) : 1;
   const { authState, handleSignOut, getBrandsPlatform } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     twitterAccountsData: TwitterSharingAccount[] | null;
     activeTab: number;
     brandsOptions: string[];
   }>({
-    activeTab: 1,
+    activeTab: initialActiveTab,
     twitterAccountsData: null,
     brandsOptions: [],
   });
+
+  useEffect(() => {
+    if (tabParam && parseInt(tabParam) !== pageState.activeTab) {
+      setPageState((prev) => ({
+        ...prev,
+        activeTab: parseInt(tabParam),
+      }));
+    }
+  }, [tabParam]);
 
   async function getTwitterAccountsData() {
     try {

@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 // import { usePathname } from "next/navigation";
 // import { v4 as uuidv4 } from "uuid";
 import { globalContext } from "@/app/_context/store";
@@ -21,7 +21,7 @@ export const socialMediaContext = createContext(initialContextState);
 // 2- provide context, export it
 export default function SocialMediaContextProvider({ children }) {
   const { authState, handleSignOut } = useContext(globalContext);
-  //   const router = useRouter();
+    const router = useRouter();
   //   const path = usePathname();
 
   const [socket, setSocket] = useState(null);
@@ -71,7 +71,13 @@ export default function SocialMediaContextProvider({ children }) {
               t.visible ? "animate-enter" : "animate-leave"
             } w-1/3 bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
-            <div className="flex-1 w-0 p-4">
+            <div
+              className="flex-1 w-0 p-4 cursor-pointer"
+              onClick={() => {
+                toast.dismiss(t.id); // Dismiss the toast
+                router.push("/social-media/post-comments?tab=3"); // Navigate to the route with query parameter
+              }}
+            >
               <div className="flex items-start">
                 <div className="flex-shrink-0 pt-0.5">
                   <img
