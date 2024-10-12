@@ -8,6 +8,7 @@ import { useContext, useState, useEffect } from "react";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
+import { useQueryClient } from "react-query";
 
 interface ITweet {
   _id: string;
@@ -55,6 +56,7 @@ const AutoPostNotifications = ({
 }: {
   brandsOptions: string[];
 }) => {
+  const queryClient = useQueryClient();
   const { authState, handleSignOut, brandMap } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     // tweetsMustApprove: ITweet[] | null;
@@ -196,6 +198,15 @@ const AutoPostNotifications = ({
       toast.error("No tweet selected!");
       return;
     }
+    // Optimistically remove the tweet from the cache
+    queryClient.setQueryData<ITweet[] | undefined>(
+      "tweetsMustApprove",
+      (oldData) =>
+        oldData?.filter(
+          (tweet: ITweet) => tweet._id !== pageState.selectedTweet?._id
+        )
+    );
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/add-reply-to-tweet/${pageState.selectedTweet?._id}/${pageState.selectedBrandId}`,
@@ -243,6 +254,8 @@ const AutoPostNotifications = ({
       toast.error("Something went wrong!");
       console.error("Error handleAddReplyToTweet:", error);
     } finally {
+      // Re-fetch to ensure data consistency
+      queryClient.invalidateQueries("tweetsMustApprove");
       // reset the form
       setPageState((prev) => ({
         ...prev,
@@ -250,7 +263,6 @@ const AutoPostNotifications = ({
         commentsSuggestions: null,
         selectedTweet: null,
       }));
-      // getTweetsMustApprove();
     }
   }
 
@@ -264,7 +276,7 @@ const AutoPostNotifications = ({
 
         <div className={styles.recent_notification}>
           <div className={"h-[65vh] space-y-[1vw] overflow-y-auto pr-[--8px]"}>
-            {tweetsMustApproveRefetching || tweetsMustApproveLoading ? (
+            {tweetsMustApproveLoading ? (
               <div className="flex justify-center items-center h-full">
                 <span className="custom-loader"></span>
               </div>
