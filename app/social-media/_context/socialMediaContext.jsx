@@ -101,7 +101,7 @@ export default function SocialMediaContextProvider({ children }) {
           </div>
         ),
         {
-          duration: Infinity,
+          duration: 10000,
           position: "top-right",
         }
       );
