@@ -4,7 +4,7 @@ import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import styles from "./TwitterCommentsList.module.css";
 import { globalContext } from "@/app/_context/store";
 import { addIcon } from "@/app/_utils/svgIcons";
-import { TwitterSharingAccount } from "../page";
+import { TwitterSharingAccount } from "../PostCommentsPage";
 
 const verticalDots = (
   <svg
