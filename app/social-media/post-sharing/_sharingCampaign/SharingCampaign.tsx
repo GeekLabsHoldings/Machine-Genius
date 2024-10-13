@@ -1,29 +1,127 @@
 "use client";
-import { Campaigns } from "@/app/_data/data";
 import styles from "./SharingCampaign.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { socialMediaPostSharingContext } from "../_context/socialMediaPostSharingContext";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
+import { truncateText } from "@/app/_utils/text";
+import { useRouter } from "next/navigation";
+
+interface Content {
+  _id: string;
+  user_id: string;
+  content_title: string;
+  content: string;
+  brand: string;
+  content_type: string;
+  date: string;
+  approvals: string;
+}
+
+interface IGetAllContentResponse {
+  message: string;
+  content: Content[];
+}
 
 // topics about campaigns
 const SharingCampaign = () => {
-  // return campaigns topics
-  const renderTopics = Campaigns.map((oneCampaign, idx) => (
-    <ul key={idx} className={`${styles.tableBody} borderBottom articleRow `}>
-      <li className="w-[5%]">{oneCampaign.id}</li>
-      <li className="w-[30%] ">{oneCampaign.content}</li>
-      <li className={`w-[25%]  ${styles.contentType}`}>{oneCampaign.link}</li>
+  const router = useRouter();
+  const { authState, handleSignOut } = useContext(globalContext);
+  const { selectedContent, setSelectedContent } = useContext(
+    socialMediaPostSharingContext
+  );
+  const [pageState, setPageState] = useState<{
+    fetchedContent: Content[];
+  }>({
+    fetchedContent: [],
+  });
 
-      <li className="w-[20%] ">{oneCampaign.date}</li>
-      <li className={` w-[20%] flex justify-center`}>
-        <CustomBtn
-          href="/social-media/post-sharing/campaign-details"
-          class="videoStatusBtn"
-          word={"Start Campaign"}
-          btnColor="black"
-          paddingVal="py-[--6px] px-[--20px]"
-        />
-      </li>
-    </ul>
-  ));
+  const getAllContent = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/get-all-content`,
+      {
+        headers: {
+          Authorization: `barrer ${
+            typeof window !== "undefined"
+              ? localStorage.getItem("token")
+              : authState.token
+          }`,
+        },
+        cache: "force-cache",
+      }
+    );
+
+    if (res.status === 401) {
+      handleSignOut();
+    }
+
+    if (!res.ok) {
+      toast.error("Failed to fetch content");
+      return;
+    }
+
+    const data: IGetAllContentResponse = await res.json();
+    if (data && data.message === "successfully" && data.content.length > 0) {
+      setPageState((prevState) => ({
+        ...prevState,
+        fetchedContent: data.content,
+      }));
+    } else {
+      toast.error("Failed to fetch content");
+    }
+  };
+
+  useEffect(() => {
+    // reset data
+    setSelectedContent(null);
+    getAllContent();
+  }, []);
+
+  useEffect(() => {
+    if (selectedContent !== null) {
+      router.replace("/social-media/post-sharing/campaign-details");
+    }
+  }, [selectedContent]);
+
+  // return campaigns topics
+  const renderTopics =
+    Array.isArray(pageState.fetchedContent) &&
+    pageState.fetchedContent.length > 0 ? (
+      [...pageState.fetchedContent].reverse().map((oneCampaign, idx) => (
+        <ul
+          key={oneCampaign._id}
+          className={`${styles.tableBody} borderBottom articleRow`}
+        >
+          <li className="w-[5%]">{idx + 1}</li>
+          <li className="w-[30%] ">
+            {truncateText(oneCampaign.content_title, 50)}
+          </li>
+          <li className={`w-[25%]  ${styles.contentType}`}>
+            {oneCampaign.brand}
+          </li>
+
+          <li className="w-[20%] ">{oneCampaign.date.split("T")[0]}</li>
+          <li className={` w-[20%] flex justify-center`}>
+            <CustomBtn
+              onClick={() => {
+                setSelectedContent(oneCampaign);
+              }}
+              class="videoStatusBtn"
+              word={"Start Campaign"}
+              btnColor="black"
+              paddingVal="py-[--6px] px-[--20px]"
+            />
+          </li>
+        </ul>
+      ))
+    ) : (
+      <ul
+        className={`${styles.tableBody} borderBottom articleRow flex justify-center items-center h-full`}
+      >
+        <span className="custom-loader"></span>
+      </ul>
+    );
 
   return (
     <div className={`${styles.box} w-full px-[0.5vw] !h-full`}>
@@ -68,7 +166,7 @@ const SharingCampaign = () => {
                 fill="black"
               />
             </svg>
-            <p>Link</p>
+            <p>Brand</p>
           </li>
           <li className="w-[20%] flex items-center justify-center gap-[0.7vw]">
             <svg

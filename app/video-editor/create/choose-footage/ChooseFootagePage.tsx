@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
 
@@ -37,17 +38,29 @@ const ChooseFootagePage = () => {
   const { handleSignOut } = useContext(globalContext);
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
-  const { splitedContent, setSplitedContent, totalIntroSlides } =
-    useContext(videoEditingContext);
-  const [pageState, setPageState] = useState<{
+  const [enhancableLoading, setEnhancableLoading] = useState<boolean>(false);
+  const {
+    splitedContent,
+    setSplitedContent,
+    totalIntroSlides,
+    setVideoUrl,
+    videoUrl,
+  } = useContext(videoEditingContext);
+  const [pageState, setPageState] = useSessionStorage<{
     selectedScriptSegment: ScriptSegment | null;
     selectedScriptSegmentIndex: number | null;
     createVideoLoading: boolean;
-  }>({
-    selectedScriptSegment: null,
-    selectedScriptSegmentIndex: null,
-    createVideoLoading: false,
-  });
+    index: number | null;
+  }>(
+    "VideoEditing-pageState",
+    {
+      selectedScriptSegment: null,
+      selectedScriptSegmentIndex: null,
+      createVideoLoading: false,
+      index: null,
+    },
+    {}
+  );
   const [searchFootage, setSearchFootage] = useState<string[]>([]);
 
   // State to hold selected footage
@@ -102,55 +115,224 @@ const ChooseFootagePage = () => {
       : null;
 
   // Function to handle selecting footage
-  const handleSelectFootage = (
+  const handleSelectFootage = async (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
     const imageUrl = e.target.value;
     const isChecked = e.target.checked;
 
-    setSelectedFootage((prevSelectedFootage) => {
-      // Find if there is already an entry for this index
-      const existingIndex = prevSelectedFootage.findIndex(
-        (sf) => sf.index === index
+    if (isChecked) {
+      // call endpoint to check if the image is enhancable
+      setEnhancableLoading(true);
+      const isEnhancable = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/enhance-img`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ input: imageUrl }),
+        }
       );
 
-      if (existingIndex !== -1) {
-        const existing = prevSelectedFootage[existingIndex];
-        let updatedImageUrls: string[];
+      if (isEnhancable.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!isEnhancable.ok) {
+        // remove the image from selectedSegment.keywordsAndImages
+        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
+          (kwi) => {
+            if (kwi.imageUrl.includes(imageUrl)) {
+              return {
+                ...kwi,
+                imageUrl: kwi.imageUrl.filter((url) => url !== imageUrl),
+              };
+            }
+            return kwi;
+          }
+        );
+        console.log(`
+                  -------------------------------------
+                  -------------------------------------
+                  -------------------------------------
+                  -------------------------------------
+                  -------------------------------------
+                  ${updatedKeywordsAndImages}
+                  -------------------------------------
+                  -------------------------------------
+                  -------------------------------------
+                  -------------------------------------
+                `);
+        console.log(updatedKeywordsAndImages);
+        // @ts-ignore
+        // setSplitedContent((prev) => {
+        //   const updatedContent = [...prev];
+        //   updatedContent[
+        //     pageState.selectedScriptSegmentIndex!
+        //   ].keywordsAndImages = updatedKeywordsAndImages;
+        //   return updatedContent;
+        // });
+        setEnhancableLoading(false);
+        toast.error("Image is not enhancable");
+        return;
+      }
 
-        if (isChecked) {
+      const data = await isEnhancable.json();
+      if (data.imgurl) {
+        if (searchFootage.length > 0) {
+          console.log(`searchFootage`, searchFootage);
+          setSearchFootage((prev) =>
+            prev.map((url) => {
+              if (url === imageUrl) {
+                return data.imgurl;
+              }
+              return url;
+            })
+          );
+        }
+        // replce the imageUrl with the new data.imgurl
+        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
+          (kwi) => {
+            if (index === pageState.selectedScriptSegmentIndex) {
+              if (kwi.imageUrl.includes(imageUrl)) {
+                return {
+                  ...kwi,
+                  imageUrl: kwi.imageUrl.map((url) => {
+                    if (url === imageUrl) {
+                      return data.imgurl;
+                    }
+                    return url;
+                  }),
+                };
+              }
+
+              return {
+                ...kwi,
+                imageUrl: [...kwi.imageUrl, data.imgurl],
+              };
+            }
+            return kwi;
+          }
+        );
+
+        console.log(`
+          -------------------------------------
+          -------------------------------------
+          -------------------------------------
+          -------------------------------------
+          -------------------------------------
+          ${updatedKeywordsAndImages}
+          -------------------------------------
+          -------------------------------------
+          -------------------------------------
+          `);
+        console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
+        // @ts-ignore
+        setSplitedContent((prev) => {
+          const updatedContent = [...prev];
+          // console.log("pageState.selectedScriptSegmentIndex", pageState
+
+          console.log(`updatedContent`, updatedContent[pageState.index!]);
+          updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
+            updatedKeywordsAndImages[0].imageUrl;
+
+          console.log(`updatedContent`, updatedContent);
+
+          // setPageState((prev) => {
+          //   return {
+          //     ...prev,
+          //     selectedScriptSegment:
+          //       updatedContent[pageState.selectedScriptSegment?.index!],
+          //   };
+          // });
+          return updatedContent;
+        });
+      } else {
+        // remove the image from selectedSegment.keywordsAndImages
+        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
+          (kwi) => {
+            if (kwi.imageUrl.includes(imageUrl)) {
+              return {
+                ...kwi,
+                imageUrl: kwi.imageUrl.filter((url) => url !== imageUrl),
+              };
+            }
+            return kwi;
+          }
+        );
+        console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
+        // @ts-ignore
+        setSplitedContent((prev) => {
+          const updatedContent = [...prev];
+          updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
+            updatedKeywordsAndImages[0].imageUrl;
+          return updatedContent;
+        });
+        setEnhancableLoading(false);
+        toast.error("Image is not enhancable");
+        return;
+      }
+
+      setSelectedFootage((prevSelectedFootage) => {
+        // Find if there is already an entry for this index
+        const existingIndex = prevSelectedFootage.findIndex(
+          (sf) => sf.index === index
+        );
+
+        if (existingIndex !== -1) {
+          const existing = prevSelectedFootage[existingIndex];
+          let updatedImageUrls: string[];
           // Add imageUrl if not already included
-          if (!existing.imageUrl.includes(imageUrl)) {
-            updatedImageUrls = [...existing.imageUrl, imageUrl];
+          if (!existing.imageUrl.includes(imageUrl || data.imgurl)) {
+            updatedImageUrls = [...existing.imageUrl, data.imgurl];
           } else {
             updatedImageUrls = existing.imageUrl;
           }
+
+          const updatedFootage = { ...existing, imageUrl: updatedImageUrls };
+          const newSelectedFootage = [...prevSelectedFootage];
+          newSelectedFootage[existingIndex] = updatedFootage;
+          return newSelectedFootage;
         } else {
+          // Create new SelectedFootage for this index
+          const newSelectedFootageItem: SelectedFootage = {
+            index,
+            imageUrl: [data.imgurl],
+          };
+          return [...prevSelectedFootage, newSelectedFootageItem];
+        }
+      });
+
+      setEnhancableLoading(false);
+    } else {
+      setSelectedFootage((prevSelectedFootage) => {
+        // Find if there is already an entry for this index
+        const existingIndex = prevSelectedFootage.findIndex(
+          (sf) => sf.index === index
+        );
+
+        if (existingIndex !== -1) {
+          const existing = prevSelectedFootage[existingIndex];
+          let updatedImageUrls: string[];
+
           // Remove imageUrl
           updatedImageUrls = existing.imageUrl.filter(
             (url) => url !== imageUrl
           );
-        }
 
-        const updatedFootage = { ...existing, imageUrl: updatedImageUrls };
-        const newSelectedFootage = [...prevSelectedFootage];
-        newSelectedFootage[existingIndex] = updatedFootage;
-        return newSelectedFootage;
-      } else {
-        if (isChecked) {
-          // Create new SelectedFootage for this index
-          const newSelectedFootageItem: SelectedFootage = {
-            index,
-            imageUrl: [imageUrl],
-          };
-          return [...prevSelectedFootage, newSelectedFootageItem];
+          const updatedFootage = { ...existing, imageUrl: updatedImageUrls };
+          const newSelectedFootage = [...prevSelectedFootage];
+          newSelectedFootage[existingIndex] = updatedFootage;
+          return newSelectedFootage;
         } else {
           // Cannot uncheck when it was not checked before
           return prevSelectedFootage;
         }
-      }
-    });
+      });
+    }
   };
 
   async function handleCreateVideo() {
@@ -225,7 +407,7 @@ const ChooseFootagePage = () => {
 
     try {
       const response = await fetch(
-        "http://api.machinegenius.io/VideoEditing/render-video",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/render-video`,
         {
           method: "POST",
           headers: {
@@ -248,8 +430,7 @@ const ChooseFootagePage = () => {
 
       const data = await response.json();
       if (data.success) {
-        toast.success("Video created successfully");
-        router.replace("/video-editor/create/video-preview");
+        setVideoUrl(data.videoUrl);
       } else {
         toast.error("Failed to create video");
         setPageState((prev) => ({ ...prev, createVideoLoading: false }));
@@ -260,6 +441,14 @@ const ChooseFootagePage = () => {
       setPageState((prev) => ({ ...prev, createVideoLoading: false }));
     }
   }
+
+  useEffect(() => {
+    if (videoUrl && pageState.createVideoLoading) {
+      toast.success("Video created successfully");
+      router.replace("/video-editor/create/video-preview");
+    }
+  }, [videoUrl]);
+
   useEffect(() => {
     console.log(`selectedFootage`, selectedFootage);
   }, [selectedFootage]);
@@ -322,7 +511,7 @@ const ChooseFootagePage = () => {
 
     const fetchFootage = async (search: string) => {
       const response = await fetch(
-        "http://api.machinegenius.io/VideoEditing/get-img",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/get-img`,
         {
           method: "POST",
           headers: {
@@ -346,7 +535,7 @@ const ChooseFootagePage = () => {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && data.images.length > 0) {
         console.log(`data`, data);
         setSearchFootage(data.images);
       } else {
@@ -388,7 +577,7 @@ const ChooseFootagePage = () => {
   if (pageState.createVideoLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle needTxt={false} title="Converting Script To Audio..." />
+        <LogoAndTitle needTxt={false} title="Generating Video..." />
       </div>
     );
   }
@@ -409,30 +598,49 @@ const ChooseFootagePage = () => {
                 <div className="cursor-pointer h-max"></div>
               </div>
               {Array.isArray(splitedContent) && splitedContent.length > 0 ? (
-                splitedContent.map((scriptSegment: ScriptSegment) => (
-                  <div
-                    className={`${styles.articleContent} cursor-pointer`}
-                    key={scriptSegment.index}
-                  >
-                    <p
-                      className={`${
-                        pageState.selectedScriptSegment?.audioPath.index ===
-                        scriptSegment.audioPath.index
-                          ? styles.active
-                          : ""
-                      }`}
-                      onClick={() => {
-                        setPageState((prevState) => ({
-                          ...prevState,
-                          selectedScriptSegment: scriptSegment,
-                        }));
-                        setSearchFootage([]);
-                      }}
-                    >
-                      {scriptSegment.text}
-                    </p>
-                  </div>
-                ))
+                splitedContent.map(
+                  (scriptSegment: ScriptSegment, index: number) => (
+                    <>
+                      {index === 0 && (
+                        <div>
+                          <h1 className="text-[--24px] font-bold">Intro</h1>
+                        </div>
+                      )}
+                      {index === totalIntroSlides && (
+                        <div>
+                          <hr />
+                          <h1 className="mt-[--sy-20px] text-[--24px] font-bold">
+                            Body
+                          </h1>
+                        </div>
+                      )}
+
+                      <div
+                        className={`${styles.articleContent} cursor-pointer`}
+                        key={scriptSegment.index}
+                      >
+                        <p
+                          className={`${
+                            pageState.selectedScriptSegment?.audioPath.index ===
+                            scriptSegment.audioPath.index
+                              ? styles.active
+                              : ""
+                          }`}
+                          onClick={() => {
+                            setPageState((prevState) => ({
+                              ...prevState,
+                              index,
+                              selectedScriptSegment: scriptSegment,
+                            }));
+                            setSearchFootage([]);
+                          }}
+                        >
+                          {scriptSegment.text}
+                        </p>
+                      </div>
+                    </>
+                  )
+                )
               ) : (
                 <div>
                   <p>No data available!</p>
@@ -502,20 +710,83 @@ const ChooseFootagePage = () => {
             />
           </form>
 
-          <div
-            className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
-          >
-            <div className="flex gap-[1.25vw] pb-[--sy-5px]">
-              {selectedSegment ? (
-                searchFootage.length > 0 ? (
+          <div className="relative">
+            <div
+              className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
+            >
+              <div className="flex gap-[1.25vw] pb-[--sy-5px]">
+                {selectedSegment ? (
+                  searchFootage.length > 0 ? (
+                    searchFootage.map((imageUrl: string, idx) => (
+                      <div className="!w-[194px]" key={uuidv4()}>
+                        <ImageCard
+                          inputName="select-footage"
+                          imgSrc={imageUrl}
+                          checked={selectedFootage.some((sf) => {
+                            return (
+                              sf.index ===
+                                pageState.selectedScriptSegmentIndex &&
+                              sf.imageUrl.includes(imageUrl)
+                            );
+                          })}
+                          onChange={(e) => {
+                            if (pageState.selectedScriptSegmentIndex !== null) {
+                              handleSelectFootage(
+                                e,
+                                pageState.selectedScriptSegmentIndex
+                              );
+                            } else {
+                              toast.error("Please select a paragraph!");
+                            }
+                          }}
+                        />
+                      </div>
+                    ))
+                  ) : selectedSegment.keywordsAndImages.length > 0 &&
+                    selectedSegment.keywordsAndImages[0].imageUrl.length > 0 ? (
+                    selectedSegment.keywordsAndImages[0].imageUrl.map(
+                      (imageUrl: string) => (
+                        <div className="!w-[194px]" key={uuidv4()}>
+                          <ImageCard
+                            inputName="select-footage"
+                            imgSrc={imageUrl}
+                            checked={selectedFootage.some(
+                              (sf) =>
+                                sf.index ===
+                                  pageState.selectedScriptSegmentIndex &&
+                                sf.imageUrl.includes(imageUrl)
+                            )}
+                            onChange={(e) => {
+                              if (
+                                pageState.selectedScriptSegmentIndex !== null
+                              ) {
+                                handleSelectFootage(
+                                  e,
+                                  pageState.selectedScriptSegmentIndex
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                      )
+                    )
+                  ) : (
+                    <div>
+                      <p>No footage found!</p>
+                    </div>
+                  )
+                ) : searchFootage.length > 0 ? (
                   searchFootage.map((imageUrl: string) => (
                     <div className="!w-[194px]" key={uuidv4()}>
                       <ImageCard
                         inputName="select-footage"
                         imgSrc={imageUrl}
-                        checked={selectedFootage.some((sf) =>
-                          sf.imageUrl.includes(imageUrl)
-                        )}
+                        checked={selectedFootage.some((sf) => {
+                          return (
+                            sf.index === pageState.selectedScriptSegmentIndex &&
+                            sf.imageUrl.includes(imageUrl)
+                          );
+                        })}
                         onChange={(e) => {
                           if (pageState.selectedScriptSegmentIndex !== null) {
                             handleSelectFootage(
@@ -529,75 +800,48 @@ const ChooseFootagePage = () => {
                       />
                     </div>
                   ))
-                ) : selectedSegment.keywordsAndImages.length > 0 &&
-                  selectedSegment.keywordsAndImages[0].imageUrl.length > 0 ? (
-                  selectedSegment.keywordsAndImages[0].imageUrl.map(
-                    (imageUrl: string) => (
-                      <div className="!w-[194px]" key={uuidv4()}>
-                        <ImageCard
-                          inputName="select-footage"
-                          imgSrc={imageUrl}
-                          checked={selectedFootage.some(
-                            (sf) =>
-                              sf.index ===
-                                pageState.selectedScriptSegmentIndex &&
-                              sf.imageUrl.includes(imageUrl)
-                          )}
-                          onChange={(e) => {
-                            if (pageState.selectedScriptSegmentIndex !== null) {
-                              handleSelectFootage(
-                                e,
-                                pageState.selectedScriptSegmentIndex
-                              );
-                            }
-                          }}
-                        />
-                      </div>
-                    )
-                  )
                 ) : (
                   <div>
-                    <p>No footage found!</p>
+                    <p>Please select a paragraph!</p>
                   </div>
-                )
-              ) : searchFootage.length > 0 ? (
-                searchFootage.map((imageUrl: string) => (
-                  <div className="!w-[194px]" key={uuidv4()}>
-                    <ImageCard
-                      inputName="select-footage"
-                      imgSrc={imageUrl}
-                      checked={selectedFootage.some((sf) =>
-                        sf.imageUrl.includes(imageUrl)
-                      )}
-                      onChange={(e) => {
-                        if (pageState.selectedScriptSegmentIndex !== null) {
-                          handleSelectFootage(
-                            e,
-                            pageState.selectedScriptSegmentIndex
-                          );
-                        } else {
-                          toast.error("Please select a paragraph!");
-                        }
-                      }}
-                    />
-                  </div>
-                ))
-              ) : (
-                <div>
-                  <p>Please select a paragraph!</p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
+            {enhancableLoading ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-[#000000ab] z-30 rounded-[--10px]">
+                <p className="text-[--20px] text-white font-bold text-shadow-lg">
+                  Enhancing...
+                </p>
+              </div>
+            ) : null}
           </div>
           <div className="flex w-full flex-col gap-[--sy-10px] mt-[--sy-10px]">
-            <h3 className="font-bold text-[--24px]">Selected Footage</h3>
+            <div className="flex justify-between">
+              <h3 className="font-bold text-[--24px]">Selected Footage</h3>
+
+              <div className="rounded-full bg-[--dark] text-[--white] font-bold text-[--16px] px-[--10px] py-[--5px]">
+                {selectedFootage.length > 0 &&
+                selectedFootage[pageState.index!]?.imageUrl.length > 0
+                  ? selectedFootage[pageState.index!]?.imageUrl.length
+                  : 0}
+              </div>
+            </div>
             <div
               className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
             >
               <div className="flex gap-[1.25vw] pb-[--sy-5px]">
-                {selectedFootage.length > 0 ? (
-                  selectedFootage.map((sf, idx) =>
-                    sf.imageUrl.map((imageUrl, idx) => (
+                {selectedSegment?.keywordsAndImages[0].imageUrl &&
+                selectedSegment?.keywordsAndImages[0].imageUrl?.filter(
+                  (imageUrl) =>
+                    selectedFootage.some((sf) => sf.imageUrl.includes(imageUrl))
+                ).length > 0 ? (
+                  selectedSegment?.keywordsAndImages[0].imageUrl
+                    ?.filter((imageUrl) =>
+                      selectedFootage.some((sf) =>
+                        sf.imageUrl.includes(imageUrl)
+                      )
+                    )
+                    .map((imageUrl, idx) => (
                       <div
                         className="!w-[194px] h-[--102px] flex-shrink-0 relative rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden"
                         key={uuidv4()}
@@ -644,7 +888,6 @@ const ChooseFootagePage = () => {
                         </div>
                       </div>
                     ))
-                  )
                 ) : (
                   <div>
                     <p className="pl-[--30px]">No footage selected!</p>

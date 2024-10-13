@@ -1,18 +1,31 @@
 "use client";
+import React, { useEffect, useRef } from "react";
 import styles from "./CustomCheckBox.module.css";
 
-type IProps = React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
-> & {
+interface CustomCheckBoxProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   value?: string;
   accentColor?: string;
-};
+  indeterminate?: boolean; // Added indeterminate prop
+}
 
-const CustomCheckBox = (props: IProps) => {
+const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({
+  indeterminate = false, // Default to false
+  className,
+  ...props
+}) => {
+  const checkboxRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (checkboxRef.current) {
+      checkboxRef.current.indeterminate = indeterminate;
+    }
+  }, [indeterminate]);
+
   return (
     <input
-      className={`${styles.custom_checkbox} `}
+      ref={checkboxRef}
+      className={`${styles.custom_checkbox} ${className ?? ""}`}
       type="checkbox"
       style={
         {

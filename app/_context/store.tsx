@@ -40,21 +40,25 @@ interface ContextState {
   globalBrands: GlobalBrands[];
   setGlobalBrands: (brands: GlobalBrands[]) => void;
   brandMap: { [key: string]: string };
+  brandIdMap: { [key: string]: string };
   brandOptions: string[];
   selectedBrandId: string;
   setSelectedBrandId: (brandId: string) => void;
+  getBrandsPlatform: (platform: string) => void;
   // ===== 01. End Global Brands =====
 }
 
 // ===== 01. Start Global Brands =====
 // Define interface for Brand
-interface Brand {
+interface IBrand {
   _id: string;
   brand_name: string;
   description: string;
   aquisition_date: string; // ISO date string
   niche: string;
   __v: number;
+  type?: string;
+  parentId?: string;
 }
 
 interface GlobalBrands {
@@ -76,9 +80,11 @@ const initialContextState: ContextState = {
   globalBrands: [],
   setGlobalBrands: (brands: GlobalBrands[]) => {},
   brandMap: {},
+  brandIdMap: {},
   brandOptions: [],
   selectedBrandId: "",
   setSelectedBrandId: (brandId: string) => {},
+  getBrandsPlatform: (platform: string) => {},
   // ===== 01. End Global Brands =====
 };
 
@@ -99,21 +105,21 @@ export default function GlobalContextProvider({
     switch (role) {
       case "content-creation":
         return "/content-creator/dashboard";
-      case "Video Editing":
+      case "video-editing":
         return "/video-editor/dashboard";
-      case "Social Media":
+      case "social-media":
         return "/social-media/dashboard";
-      case "Administrative":
+      case "administrative":
         return "/administrative/dashboard";
-      case "Customer Service":
+      case "customer-service":
         return "/customer-service/dashboard";
-      case "Creative":
+      case "creative":
         return "/creative/dashboard";
       case "hr":
         return "/hr/dashboard";
-      case "Accounting":
+      case "accounting":
         return "/accounting/dashboard";
-      case "Newsletter":
+      case "news-letter":
         return "/newsletter/dashboard";
       case "Out Reach":
         return "/outreach/dashboard";
@@ -150,21 +156,45 @@ export default function GlobalContextProvider({
   }));
 
   const checkIfUserOnCorrespondingRoute = useCallback(() => {
-    // if (!decodedToken) return;
-    if (authState.decodedToken?.department.includes("ceo")) {
+    const decodedToken = authState.decodedToken;
+    if (!decodedToken) return;
+    if (decodedToken?.department.includes("ceo")) {
       // console.log("CEO has access to all routes");
       return;
     }
-    const role = authState.decodedToken?.department[0];
-    const route = handleSetRouteToDirect(role);
-    const correspondingRoutePath = route.split("/")[1];
-    // console.log(`correspondingRoutePath:`, correspondingRoutePath);
+    const departments = decodedToken?.department;
+
+    // Get all allowed route paths for the user's departments
+    const allowedRoutePaths = departments.map((role: string) => {
+      const route = handleSetRouteToDirect(role);
+      return route.split("/")[1]; // Extract the path segment
+    });
+    // console.log(`allowedRoutePaths:`, allowedRoutePaths);
     // console.log(`currentpath:`, path);
-    if (!path.includes(correspondingRoutePath)) {
-      router.replace(route);
-      console.log("~~~---***INvalid path***---~~~", path);
+    // Check if the current path includes any of the allowed paths
+    const isValidPath = allowedRoutePaths.some((routePath: string) =>
+      path.includes(routePath)
+    );
+    if (!isValidPath) {
+      if (departments.length > 0) {
+        // Redirect to the first department's dashboard or implement a different logic as needed
+        const redirectRoute = handleSetRouteToDirect(departments[0]);
+        router.replace(redirectRoute);
+        console.log(
+          "~~~---***Invalid path***---~~~",
+          path,
+          "Redirecting to:",
+          redirectRoute
+        );
+      } else {
+        // Handle case where no departments are assigned
+        router.replace("/");
+        console.log(
+          "~~~---***No department assigned***---~~~ Redirecting to home"
+        );
+      }
     } else {
-      console.log("~~~---valid path---~~~");
+      console.log("~~~---Valid path---~~~");
     }
   }, [path, authState.decodedToken, router]);
 
@@ -251,12 +281,36 @@ export default function GlobalContextProvider({
   // ===== 01. Start Global Brands =====
   const [globalBrands, setGlobalBrands] = useSessionStorage<
     { brandId: string; brandName: string }[]
-  >("MG-globalBrands", []);
+  >("MG-globalBrands", [
+    { brandId: "66fcfb7157531aaf2dca2685", brandName: "Street Politics" },
+    { brandId: "66fcfb8c57531aaf2dca2686", brandName: "Investorcracy" },
+    { brandId: "66fcfbf557531aaf2dca2688", brandName: "Movie Myth" },
+    {
+      brandId: "66fcfc3057531aaf2dca2689",
+      brandName: "Street Politics Canada",
+    },
+    { brandId: "66fcfc5c57531aaf2dca268a", brandName: "Street Politics UK" },
+    {
+      brandId: "66fcfc7957531aaf2dca268b",
+      brandName: "Street Politics Africa",
+    },
+  ]);
 
+  // Lookup for brandId by brandName
   const brandMap = useMemo(
     () =>
       globalBrands.reduce((map: { [key: string]: string }, brand) => {
         map[brand.brandName] = brand.brandId;
+        return map;
+      }, {}),
+    [globalBrands]
+  );
+
+  // Lookup for brandName by brandId
+  const brandIdMap = useMemo(
+    () =>
+      globalBrands.reduce((map: { [key: string]: string }, brand) => {
+        map[brand.brandId] = brand.brandName;
         return map;
       }, {}),
     [globalBrands]
@@ -278,7 +332,7 @@ export default function GlobalContextProvider({
   async function getBrands() {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/get-all-brands?limit=9999`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/brand/get-all-brands?limit=9999`,
         {
           headers: {
             Authorization: `barrer ${
@@ -292,7 +346,7 @@ export default function GlobalContextProvider({
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: Brand[] = await res.json();
+      const json: IBrand[] = await res.json();
       if (json && json.length > 0) {
         const brands: GlobalBrands[] = json.map((ele) => {
           return {
@@ -307,6 +361,41 @@ export default function GlobalContextProvider({
     } catch (error) {
       // toast.error("Something went wrong!");
       console.error("Error getBrands:", error);
+    }
+  }
+
+  async function getBrandsPlatform(
+    platform: string
+  ): Promise<string[] | undefined> {
+    const params = new URLSearchParams({ platform: platform.toUpperCase() });
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/user/brand/get-brands-platform?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IBrand[] = await res.json();
+      if (json && Array.isArray(json) && json.length > 0) {
+        return json.map((e) => e.brand_name);
+      } else {
+        return [];
+        // toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      // toast.error("Something went wrong!");
+      console.error("Error getBrandsPlatform:", error);
     }
   }
 
@@ -328,9 +417,11 @@ export default function GlobalContextProvider({
     globalBrands,
     setGlobalBrands,
     brandMap,
+    brandIdMap,
     brandOptions,
     selectedBrandId,
     setSelectedBrandId,
+    getBrandsPlatform,
     // ===== 01. End Global Brands =====
   };
 

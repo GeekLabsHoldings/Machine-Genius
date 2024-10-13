@@ -1,9 +1,14 @@
+"use client";
+
 import styles from "./email-inbox.module.css";
 import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
+import { globalContext } from "@/app/_context/store";
 import { truncateText } from "@/app/_utils/text";
 import Link from "next/link";
+import { useContext, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 const table = [
   {
@@ -141,6 +146,108 @@ const bin = (
 );
 
 function Page() {
+  const { brandMap, brandOptions } = useContext(globalContext);
+
+  console.log(brandMap, brandOptions);
+  const brandNames = Object.keys(brandMap);
+  const [brand, setBrand] = useState(brandNames[0]);
+
+  const [emails, setEmails] = useState<any[]>([]);
+  const [brandParam, setBrandParam] = useState<string>("");
+
+  // Format the date (e.g., 12 March 2024)
+  const formattedDate = (date: any) => {
+    const dateTime = new Date(date);
+    const formattedDate = dateTime.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    return formattedDate;
+  };
+
+  console.log(new Date(1728401405000));
+
+  // Refs to store checkbox states
+  const checkboxRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  useEffect(() => {
+    // Clear all checkboxes when new emails are fetched
+    document.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
+      (checkbox as HTMLInputElement).checked = false;
+    });
+    checkboxRefs.current.forEach((checkbox: HTMLInputElement | null) => {
+      if (checkbox) checkbox.checked = false;
+    });
+  }, [emails]);
+
+  const deleteEmail = async () => {
+    // Find the index of the checked email
+    const deletedIdx = checkboxRefs.current.findIndex(
+      (checkbox) => checkbox && checkbox.checked
+    );
+    console.log(deletedIdx);
+
+    console.log(emails[deletedIdx]?.messageId, emails[deletedIdx]?.folderId);
+
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_API_BASE_URL
+      }/customer-service/email/delete-email/${emails[deletedIdx]?.messageId}/${
+        emails[deletedIdx]?.folderId
+      }?brand=${brandParam ? brandParam : brandMap[`${brand}`]}`,
+      {
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+    if (data == "success") {
+      toast.success("Email deleted successfully");
+    } else {
+      toast.error("Failed to delete email");
+    }
+    document.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
+      (checkbox as HTMLInputElement).checked = false;
+    });
+    getEmailInbox();
+  };
+
+  const getEmailInbox = async () => {
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_API_BASE_URL
+      }/customer-service/email/all-emails?brand=${
+        brandParam ? brandParam : brandMap[`${brand}`]
+      }`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+    setEmails(data?.data);
+    document.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
+      (checkbox as HTMLInputElement).checked = false;
+    });
+  };
+
+  useEffect(() => {
+    console.log(brandParam);
+
+    getEmailInbox();
+  }, [brandParam]);
+
+  useEffect(() => {
+    setBrandParam(brandMap[`${brand}`]);
+  }, [brand]);
+
   return (
     <div className="flex flex-col h-full py-[1.5vw]">
       <div>
@@ -150,10 +257,10 @@ function Page() {
         <div className="flex items-center mt-2 shrink-0 grow">
           <div className={`${styles.dropdown__container} mr-[--16px]`}>
             <CustomSelectInput
-              label="Filter by"
-              options={["All", "Unread", "Read"]}
+              options={brandNames}
               paddingVal="py-[0.2vw] px-[0.5vw]"
               hoverColor="hover:bg-[#00B3BE]"
+              getValue={(value: any) => setBrand(value)}
             />
           </div>
           <div className="mr-[--8px]">
@@ -162,19 +269,16 @@ function Page() {
               options={["Mark as Read", "Mark as Unread", "Delete"]}
             />
           </div>
-          <OptionsDropdown
-            icon={bin}
-            options={["Mark as Read", "Mark as Unread", "Delete"]}
-          />
+          <button className="cursor-pointer" onClick={deleteEmail}>
+            {bin}
+          </button>
         </div>
       </div>
 
       <div className="h-[75vh] py-[1.5vw] ">
         <div className={styles.database_table}>
           <ul className={styles.table_header}>
-            <li className="w-[5%]">
-              <CheckBox />
-            </li>
+            <li className="w-[5%]"></li>
             <li className="w-[15%]">
               <span>Customer Name</span>
             </li>
@@ -190,30 +294,40 @@ function Page() {
           </ul>
 
           <div className={styles.table_body}>
-            {table.map((ele, idx) => (
-              <ul className="w-[100%] group relative" key={idx}>
-                <Link
-                  href="/customer-service/email-inbox/email"
-                  className="absolute inset-0 z-[1]"
-                ></Link>
-                <li className="w-[5%]">
-                  <CheckBox />
-                </li>
-                <li className="w-[15%]">{ele.customerName}</li>
-                <li className="w-[40%]">
-                  <p>{truncateText(ele.subject, 70)}</p>
-                </li>
-                <li className="w-[20%]">
-                  <span
-                    className="py-[--3px] px-[--6px] rounded-[--3px] font-medium"
-                    style={{ backgroundColor: getRandomColor() }}
-                  >
-                    {ele.brand}
-                  </span>
-                </li>
-                <li className="w-[20%]">{ele.dateSent}</li>
-              </ul>
-            ))}
+            {Array.isArray(emails) && emails.length > 0 ? (
+              emails.map((ele, idx) => (
+                <ul className="w-[100%] group relative" key={idx}>
+                  <Link
+                    href={`/customer-service/email-inbox/${ele.messageId}/${ele.folderId}?brand=${brandParam}`}
+                    className="absolute inset-0 z-[1]"
+                  ></Link>
+                  <li className="w-[5%]">
+                    <CheckBox
+                      ref={(el: HTMLInputElement | null) => {
+                        if (el) checkboxRefs.current[idx] = el;
+                      }}
+                    />
+                  </li>
+                  <li className="w-[15%] truncate">{ele.fromAddress}</li>
+                  <li className="w-[40%]">
+                    <p>{truncateText(ele.subject, 70)}</p>
+                  </li>
+                  <li className="w-[20%]">
+                    <span
+                      className="py-[--3px] px-[--6px] rounded-[--3px] font-medium"
+                      style={{ backgroundColor: getRandomColor() }}
+                    >
+                      {brand}
+                    </span>
+                  </li>
+                  <li className="w-[20%]">
+                    {formattedDate(Number(ele?.receivedTime))}
+                  </li>
+                </ul>
+              ))
+            ) : (
+              <p className="p-[--20px] text-[--24px]">No emails available</p>
+            )}
           </div>
         </div>
       </div>

@@ -8,11 +8,12 @@
   -moz-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
   -ms-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
   -o-border-radius: clamp(20px, calc(0.6vw + 0.1rem), 1000px);
+  overflow: hidden;
 }
-.recent_notification::-webkit-scrollbar {
+/* .recent_notification::-webkit-scrollbar {
   width: 0;
   display: none;
-}
+} */
 /* ===== End Col (1) ===== */
 
 /* ===== Start Col (2) ===== */

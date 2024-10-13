@@ -9,21 +9,32 @@ import { reGenerateIcon } from "@/app/_utils/svgIcons";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostViewScreens";
 import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCreationContext";
+import DateAndTimePicker from "@/app/_components/DateAndTimePicker/DateAndTimePicker";
 
 // todo: accept PostViewScreens as childern
 interface IProps {
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   uploadedAsset: string | null | File;
   handleAddPost: () => void;
+  setPageState?: React.Dispatch<React.SetStateAction<any>>;
+  handleFacebookLogin?: () => void;
 }
 
 export default function PublishPost({
   handleUploadImage,
   uploadedAsset,
   handleAddPost,
+  setPageState,
+  handleFacebookLogin,
 }: IProps) {
   const { selectedPlatform } = useContext(socialMediaPostCreationContext);
   const uploadImageRef = useRef<HTMLInputElement>(null);
+
+  function getDateTimeValue(value: any) {
+    if (setPageState) {
+      setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+    }
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -81,10 +92,7 @@ export default function PublishPost({
 
                 {uploadedAsset && (
                   <div className="max-w-[23%] h-full aspect-square rounded-[--13px] border border-[--dark] overflow-hidden flex flex-col items-center justify-center">
-                    <img
-                      src={uploadedAsset as string}
-                      alt="uploaded image"
-                    />
+                    <img src={uploadedAsset as string} alt="uploaded image" />
                   </div>
                 )}
 
@@ -125,11 +133,8 @@ export default function PublishPost({
                   <h4 className="text-[--20px] font-semibold mb-[--sy-10px]">
                     Upload Time
                   </h4>
-                  <CustomSelectInput
-                    label={"Upload Time"}
-                    hoverColor="hover:bg-[#E1C655]"
-                    options={[]}
-                  />
+
+                  <DateAndTimePicker getDateTimeValue={getDateTimeValue} />
                 </div>
               </div>
             </div>
@@ -147,7 +152,18 @@ export default function PublishPost({
           btnColor="white"
           href="/social-media/post-creation/linkedin-post/"
         />
-        <CustomBtn word="Publish" btnColor="black" onClick={handleAddPost} />
+
+        <div className="flex gap-[--20px]">
+          {selectedPlatform === "FACEBOOK" && (
+            <CustomBtn
+              word="Update Access Token"
+              btnColor="black"
+              onClick={handleFacebookLogin}
+              paddingVal="py-[--10px] px-[--18px]"
+            />
+          )}
+          <CustomBtn word="Publish" btnColor="black" onClick={handleAddPost} />
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,6 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext } from "react";
 import useSessionStorage from "../_hooks/useSessionStorage";
-// import { useRouter } from "next/navigation";
-// import toast from "react-hot-toast";
-// import { v4 as uuidv4 } from "uuid";
-// import { formatToText } from "@/app/_utils/contentFormatter";
-// import { globalContext } from "./store";
 
 // Define your interfaces
 interface KeywordsAndImage {
@@ -31,15 +26,19 @@ interface VideoEditingContextType {
   setSplitedContent: (content: ScriptSegment[] | null) => void;
   totalIntroSlides: number;
   setTotalIntroSlides: (total: number) => void;
+  videoUrl: string;
+  setVideoUrl: (url: string) => void;
 }
 
 const initialContextState: VideoEditingContextType = {
   selectedContent: "",
   setSelectedContent: () => {},
   splitedContent: null,
-  setSplitedContent: () => {},
-  totalIntroSlides: 0,
+  setSplitedContent: (content: ScriptSegment[] | null) => {},
+  totalIntroSlides: 4,
   setTotalIntroSlides: () => {},
+  videoUrl: "",
+  setVideoUrl: () => {},
 };
 
 // 1- create context, export it
@@ -63,7 +62,11 @@ export default function VideoEditingContextProvider({
 
   const [totalIntroSlides, setTotalIntroSlides] = useSessionStorage<number>(
     "VideoEditing-totalIntroSlides",
-    0
+    4
+  );
+  const [videoUrl, setVideoUrl] = useSessionStorage<string>(
+    "VideoEditing-videoUrl",
+    ""
   );
 
   // Create a context value object
@@ -74,6 +77,8 @@ export default function VideoEditingContextProvider({
     setSplitedContent,
     totalIntroSlides,
     setTotalIntroSlides,
+    videoUrl,
+    setVideoUrl,
   };
 
   return (
