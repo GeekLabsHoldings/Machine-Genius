@@ -186,13 +186,21 @@ const TwitterPublishPostPage = () => {
 
     try {
       const formData = new FormData();
-      formData.append("media", file);
+      formData.append("image", file);
       // Convert twitterData object to a JSON string
       formData.append("twitterData", JSON.stringify(twitterData));
+
       const response = await fetch(
-        "/api/social-media/twitter/uploadTwitterImage",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/upload-image`,
         {
           method: "POST",
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
           body: formData,
         }
       );
