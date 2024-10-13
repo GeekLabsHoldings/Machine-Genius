@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { useSearchParams } from "next/navigation"; // Import useSearchParams
 
-
 export interface TwitterSharingAccount {
   _id: string;
   sharingList: "TWITTER";
@@ -39,7 +38,8 @@ const Comments = () => {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   const initialActiveTab = tabParam ? parseInt(tabParam) : 1;
-  const { authState, handleSignOut, getBrandsPlatform } = useContext(globalContext);
+  const { authState, handleSignOut, getBrandsPlatform } =
+    useContext(globalContext);
   const [pageState, setPageState] = useState<{
     twitterAccountsData: TwitterSharingAccount[] | null;
     activeTab: number;

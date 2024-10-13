@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 // import { usePathname } from "next/navigation";
 // import { v4 as uuidv4 } from "uuid";
@@ -21,44 +21,46 @@ export const socialMediaContext = createContext(initialContextState);
 // 2- provide context, export it
 export default function SocialMediaContextProvider({ children }) {
   const { authState, handleSignOut } = useContext(globalContext);
-    const router = useRouter();
+  const router = useRouter();
   //   const path = usePathname();
+  const socketRef = useRef(null);
 
-  const [socket, setSocket] = useState(null);
+  // Function to retrieve the token
+  function getToken() {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      return token ? `Bearer ${token}` : null;
+    } else {
+      return `Bearer ${authState?.token}` || null;
+    }
+  }
 
   useEffect(() => {
-    function getToken() {
-      if (typeof window !== "undefined") {
-        const token = localStorage.getItem("token");
-        return token ? `Bearer ${token}` : null;
-      } else {
-        return `Bearer ${authState?.token}` || null;
-      }
+    if (!authState.token) return; // Wait until the token is available
+
+    if (socketRef.current) {
+      // If the socket is already initialized, do nothing
+      console.log("Socket already initialized");
+      return;
     }
-    // Connect to the Socket.IO server
+
+    // Establish a new socket connection
     // todo: change to .env
-    const newSocket = io("wss://api-development.machinegenius.io", {
-      reconnectionAttempts: 5, // optional, manage reconnection logic
+    const socket = io("wss://api-development.machinegenius.io", {
+      // reconnectionAttempts: 5,
       auth: {
-        token: getToken(), // Pass your authorization token here
+        token: getToken(),
       },
-      // transports: ["websocket"], // Use WebSocket transport
+      transports: ["websocket"], // Use WebSocket transport
     });
 
-    setSocket(newSocket);
+    // Store the socket instance in the ref
+    socketRef.current = socket;
 
-    return () => {
-      // Disconnect socket on cleanup
-      newSocket.disconnect();
-    };
-  }, [authState.token]);
-
-  useEffect(() => {
-    if (!socket) return;
-
+    // Set up event listeners
     socket.on("connect", () => {
       console.log("Connected to socket server");
-      // toast.success("Connected to socket server");
+      toast.success("Connected to socket server");
     });
 
     socket.on("NewTweets", (data) => {
@@ -115,16 +117,20 @@ export default function SocialMediaContextProvider({ children }) {
 
     socket.on("disconnect", () => {
       console.log("Disconnected from socket server");
-      // toast.error("Disconnected from socket server");
+      toast.error("Disconnected from socket server");
     });
 
-    // Clean up event listeners on component unmount
+    // Clean up the socket connection and event listeners on unmount
     return () => {
-      socket.off("connect");
-      socket.off("NewTweets");
-      socket.off("disconnect");
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current.off("connect");
+        socketRef.current.off("NewTweets");
+        socketRef.current.off("disconnect");
+        socketRef.current = null;
+      }
     };
-  }, [socket]);
+  }, []);
 
   // Create a context value object
   const contextValue = {
