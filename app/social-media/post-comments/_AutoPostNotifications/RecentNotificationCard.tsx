@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./RecentNotificationCard.module.css";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 import profileImg1 from "@/public/assets/profile_avatar_placeholder.png";
 
 interface IRecentNotificationCard {
@@ -34,9 +34,12 @@ export default function RecentNotificationCard({
   onClick,
 }: IRecentNotificationCard) {
   return (
-    <div className={`${styles.item} ${isActive ? styles.active : ""}`} onClick={onClick}>
+    <div
+      className={`${styles.item} ${isActive ? styles.active : ""}`}
+      onClick={onClick}
+    >
       <div className={styles.avatar}>
-        <Image src={profileImg} alt="avatar" />
+        <img src={typeof profileImg === "string" ? profileImg : profileImg.src} alt="avatar" />
         <div className={styles.avatar_info}>
           <p>
             {name}
