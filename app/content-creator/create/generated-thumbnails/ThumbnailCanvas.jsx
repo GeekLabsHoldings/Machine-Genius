@@ -119,8 +119,8 @@ export default function ThumbnailCanvas() {
         triggerSendContent: false,
         triggerSearchImg: false,
         highlightedWords: [],
-        showRecentBg: true,
-        showRecentImg: true,
+        // showRecentBg: true,
+        // showRecentImg: true,
       };
     }, [selectedBrand]);
   const pageStateInit = usePageStateInit(selectedBrand);
@@ -567,27 +567,15 @@ export default function ThumbnailCanvas() {
         ...prev,
         searchBgLoading: true,
       }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            searchImgKeyword: keyword,
-            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
-          }),
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
+      const res = await fetch(`/api/get-images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchImgKeyword: keyword,
+        }),
+      });
       const json = await res.json();
       if (!json) {
         handleSearchBgError();
@@ -598,7 +586,7 @@ export default function ThumbnailCanvas() {
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
           ...prev,
-          searchBgData: json.images.map((img) => img.original),
+          searchBgData: json.images,
           searchBgLoading: false,
         }));
       } else {
@@ -638,15 +626,13 @@ export default function ThumbnailCanvas() {
   }
 
   const removeBgKeys = [
-    "mswBGVPPK8gQmebR2a4AXv8G",
-    "avYD913vYZCsgzGU81rGfsCs",
-    "pPzPf7Euze5DE6GKjatd6Mpz",
-    "cXasYbxVHaKbYxyeVh5szu6p",
-    "2BsGqFyNaiaQfnv4GbNGr2su",
-    "iKuc4SqkXrEL9wJVkmra1LE1",
     "TBgpp1op1vFqWXZT6apW2o7m",
     "Xd8e5XD6GeJLhydu8Dv4YpVh",
-    "ezvNXhQ4ZxqybWynLTtt6ysG"
+    "ezvNXhQ4ZxqybWynLTtt6ysG",
+    "SvJ2oUgreLTtiLk2TdAxYg1Y",
+    "8oYvEhDZrcpSFete1nVGwFJ7",
+    "YyyZpAY5PMeLUgPeurEVBVRx",
+    "u1tFJKSGvnJMbVyEgC3Axy22"
   ];
 
   async function handleRemoveBg(img, type) {
@@ -740,27 +726,15 @@ export default function ThumbnailCanvas() {
         searchImgLoading: true,
         triggerSearchImg: false,
       }));
-      const res = await fetch(
-        `https://api.machinegenius.io/content-creation/get-images`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-          body: JSON.stringify({
-            searchImgKeyword: pageState.searchImgKeyword,
-            api_key: process.env.NEXT_PUBLIC_SERPAPI_API_KEY,
-          }),
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
+      const res = await fetch(`/api/get-images`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchImgKeyword: pageState.searchImgKeyword,
+        }),
+      });
       const json = await res.json();
       if (!json) {
         // toast.error("Something went wrong!");
@@ -773,7 +747,7 @@ export default function ThumbnailCanvas() {
       } else if (json && json.success === true && json.images) {
         setPageState((prev) => ({
           ...prev,
-          searchImgData: json.images.map((img) => img.original),
+          searchImgData: json.images,
         }));
       } else {
         // toast.error("Something went wrong!");
@@ -1121,8 +1095,8 @@ export default function ThumbnailCanvas() {
 
   async function handleSendContent() {
     let endpoint = editContentData
-      ? `https://api.machinegenius.io/content-creation/content/${editContentData._id}`
-      : "https://api.machinegenius.io/content-creation/content";
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content/${editContentData._id}`
+      : `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content`;
     let method = editContentData ? "PATCH" : "POST";
     setPageState((prev) => ({
       ...prev,
@@ -1370,7 +1344,7 @@ export default function ThumbnailCanvas() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-[--17px]">Select Background</h3>
 
-                  <div className="form-control">
+                  {/* <div className="form-control">
                     <label className="cursor-pointer label">
                       <input
                         type="checkbox"
@@ -1385,7 +1359,7 @@ export default function ThumbnailCanvas() {
                       />
                       <span className="label-text ml-[--5px]">Show Recent</span>
                     </label>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* 02-02 Search Background */}
@@ -1577,7 +1551,7 @@ export default function ThumbnailCanvas() {
 
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-[--17px]">Select Image</h3>
-                  <div className="form-control">
+                  {/* <div className="form-control">
                     <label className="cursor-pointer label">
                       <input
                         type="checkbox"
@@ -1592,7 +1566,7 @@ export default function ThumbnailCanvas() {
                       />
                       <span className="label-text ml-[--5px]">Show Recent</span>
                     </label>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* 03-02 Search Image */}

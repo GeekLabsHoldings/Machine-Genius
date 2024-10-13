@@ -1,12 +1,12 @@
 "use client";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext } from "react";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { v4 as uuidv4 } from "uuid";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
 const initialContextState = {
-  // ===== 01. Start Content Creator =====
+  // ===== 01. Start Newsletter =====
 
   selectedBrand: "" as any,
   setSelectedBrand: (brand: any) => {},
@@ -30,7 +30,7 @@ const initialContextState = {
   setSubjectLine: (lines: any) => {},
   openingLine: [] as any,
   setOpeningLine: (lines: any) => {},
-  // ===== 01. End Content Creator =====
+  // ===== 01. End Newsletter =====
 };
 
 // 1- create context, export it
@@ -51,16 +51,19 @@ export default function CreateNewsletterContextProvider({
 
   const [subjectLine, setSubjectLine] = useSessionStorage(
     "Newsletter-subjectLine",
-    ""
+    "",
+    { isSerializable: false }
   );
   const [openingLine, setOpeningLine] = useSessionStorage(
     "Newsletter-openingLine",
-    ""
+    "",
+    { isSerializable: false }
   );
 
   const [selectedBrand, setSelectedBrand] = useSessionStorage(
     "Newsletter-selectedBrand",
-    ""
+    "",
+    { isSerializable: false }
   );
 
   const [collectedData, setCollectedData] = useSessionStorage(
@@ -102,7 +105,7 @@ export default function CreateNewsletterContextProvider({
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/social-media/news-letter/generate-titles`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/generate-titles`,
         {
           method: "POST",
           headers: {
@@ -148,7 +151,8 @@ export default function CreateNewsletterContextProvider({
 
   const [selectedContentTitle, setSelectedContentTitle] = useSessionStorage(
     "Newsletter-selectedContentTitle",
-    ""
+    "",
+    { isSerializable: false }
   );
 
   const [lockedGeneratedTitles, setLockedGeneratedTitles] = useSessionStorage(
@@ -158,7 +162,7 @@ export default function CreateNewsletterContextProvider({
 
   // Create a context value object
   const contextValue = {
-    // ===== 01. Start Content Creator =====
+    // ===== 01. Start Newsletter =====
     selectedBrand,
     setSelectedBrand,
     collectedData,
@@ -181,7 +185,7 @@ export default function CreateNewsletterContextProvider({
     setSubjectLine,
     openingLine,
     setOpeningLine,
-    // ===== 01. End Content Creator =====
+    // ===== 01. End Newsletter =====
   };
 
   return (

@@ -61,24 +61,24 @@ const SignIn = () => {
     if (!authState.decodedToken) return "/";
     if (
       authState.decodedToken.department.includes("content-creation") ||
-      authState.decodedToken.department.includes("CEO")
+      authState.decodedToken.department.includes("ceo")
     ) {
       return "/content-creator/dashboard";
-    } else if (authState.decodedToken.department.includes("Video Editing")) {
+    } else if (authState.decodedToken.department.includes("video-editing")) {
       return "/video-editor/dashboard";
-    } else if (authState.decodedToken.department.includes("Social Media")) {
+    } else if (authState.decodedToken.department.includes("social-media")) {
       return "/social-media/dashboard";
-    } else if (authState.decodedToken.department.includes("Administrative")) {
+    } else if (authState.decodedToken.department.includes("administrative")) {
       return "/administrative/dashboard";
-    } else if (authState.decodedToken.department.includes("Customer Service")) {
+    } else if (authState.decodedToken.department.includes("customer-service")) {
       return "/customer-service/dashboard";
-    } else if (authState.decodedToken.department.includes("Creative")) {
+    } else if (authState.decodedToken.department.includes("creative")) {
       return "/creative/dashboard";
     } else if (authState.decodedToken.department.includes("hr")) {
       return "/hr/dashboard";
-    } else if (authState.decodedToken.department.includes("Accounting")) {
+    } else if (authState.decodedToken.department.includes("accounting")) {
       return "/accounting/dashboard";
-    } else if (authState.decodedToken.department.includes("Newsletter")) {
+    } else if (authState.decodedToken.department.includes("news-letter")) {
       return "/newsletter/dashboard";
     } else if (authState.decodedToken.department.includes("Out Reach")) {
       return "/outreach/dashboard";
@@ -119,7 +119,7 @@ const SignIn = () => {
       loader: true,
     }));
     try {
-      const res = await fetch(`https://api.machinegenius.io/authentication`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/authentication`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

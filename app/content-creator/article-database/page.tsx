@@ -34,7 +34,7 @@ const ContentDatabase = () => {
     while (attempts < maxRetries) {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/content-creation/content`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/content-creation/content`,
           {
             headers: {
               Authorization: `barrer ${

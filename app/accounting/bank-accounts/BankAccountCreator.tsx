@@ -5,8 +5,6 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import Dropdown from "@/app/_components/Dropdown/Dropdown";
-import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import toast from "react-hot-toast";
 
 interface BankAccount {
@@ -111,7 +109,7 @@ function BankAccountCreator({
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api.machinegenius.io/accounting/bank-accounts",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/bank-accounts`,
         {
           method: "POST",
           headers: {

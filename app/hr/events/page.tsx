@@ -1,5 +1,5 @@
 "use client"; // Indicates that this file is intended for use on the client side
-import "../../video-editor/calender/calender.css"; // Importing CSS styles for the calendar component
+import "@/app/_components/Calendar/calender.css"; // Importing CSS styles for the calendar component
 import FullCalendar from "@fullcalendar/react"; // Importing the FullCalendar component
 import dayGridPlugin from "@fullcalendar/daygrid"; // Importing the dayGridPlugin for FullCalendar
 import { useContext, useEffect, useState } from "react"; // Importing React hooks for state management
@@ -56,7 +56,7 @@ export default function Calendar() {
 
     const token = localStorage.getItem("token");
 
-    url = "https://api.machinegenius.io/hr/event/create";
+    url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/event/create`;
 
     try {
       const data = await fetch(`${url}`, {
@@ -90,7 +90,7 @@ export default function Calendar() {
   async function getSchedule() {
     const token = localStorage.getItem("token");
     try {
-      const data = await fetch("https://api.machinegenius.io/user/task/all", {
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/task/all`, {
         method: "get",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        `https://api.machinegenius.io/hr/event/delete/${id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/event/delete/${id}`,
         {
           method: "delete",
           headers: {
@@ -142,7 +142,7 @@ export default function Calendar() {
     const token = localStorage.getItem("token");
     try {
       const data = await fetch(
-        `https://api.machinegenius.io/hr/event/edit-event/${id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/event/edit-event/${id}`,
         {
           method: "put",
           headers: {

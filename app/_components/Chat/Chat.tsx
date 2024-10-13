@@ -1,12 +1,11 @@
+// @ts-nocheck
 "use client";
-import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import OptionsDropdown from "@/app/_components/OptionsDropdown/OptionsDropdown";
 import { truncateText } from "@/app/_utils/text";
 import styles from "@/app/_components/Chat/Chat.module.css";
-import { TextareaAutosize, colors } from "@mui/material";
+import { TextareaAutosize } from "@mui/material";
 import {
-  Children,
   useCallback,
   useContext,
   useEffect,
@@ -17,7 +16,6 @@ import {
 import { globalContext } from "@/app/_context/store";
 import useChat from "@/app/_hooks/useChat";
 import debounce from "debounce";
-import { formatDate } from "@fullcalendar/core/index.js";
 
 const ExpandableCircleMenu = ({ isExpanded, handleFileUpload }: any) => {
   const menuItems = [
@@ -252,10 +250,41 @@ interface Employee {
   lastName: string;
 }
 
+/*
+{
+    "sender": {
+        "_id": "66a8cefa890901b1d41b323b",
+        "firstName": "Andrew",
+        "lastName": "Haliem",
+        "theme": "#00FFFF"
+    },
+    "text": "Hello test media message",
+    "media": [
+        {
+            "url": "https://machine-genius.s3.us-east-1.amazonaws.com/receipts/1726557818176",
+            "type": "image",
+            "_id": "66ea82092499af59b40044c4"
+        }
+    ],
+    "chat": {
+        "_id": "66e192b4d17a588344a94284",
+        "type": "oneToOne"
+    },
+    "createdAt": 1726644745282,
+    "_id": "66ea82092499af59b40044c3",
+    "__v": 0
+}
+  */
+
 interface Message {
   _id?: string;
   text: string;
-  mediaUrl: string;
+  mediaUrl: [
+    {
+      url: string;
+      type: string;
+    }
+  ];
   createdAt?: number;
   sender: {
     _id: string;
@@ -324,19 +353,19 @@ function Chat() {
   const ref = useRef<any>(null);
   const [scrolled, setScrolled] = useState(false);
   // const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<Message>();
   const [toggleCreateGroup, setToggleCreateGroup] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // const [currentConversation, setCurrentConversation] = useState(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [searchBarFocus, setSearchBarFocus] = useState(false);
 
-  const [userId, setUserId] = useState<string>(() => {
+  const [user, setUser] = useState<any>(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("decodedToken");
-      return token ? JSON.parse(token)._id : "";
+      return token ? JSON.parse(token) : "";
     } else {
-      return authState?.decodedToken?._id || "";
+      return authState?.decodedToken || "";
     }
   });
 
@@ -364,7 +393,7 @@ function Chat() {
   // const { sendMessage } = useChat();
 
   const AddMessage = (message: Message) => {
-    if (message.text.trim() === "") return;
+    if (message.text.trim() === "" && !message?.mediaUrl?.length) return;
     setMessages((prev) => [...prev, message]);
     setInQueueAttachments([]);
   };
@@ -443,7 +472,7 @@ function Chat() {
   useEffect(() => {
     async function fetchEmployees() {
       const response = await fetch(
-        "https://api.machinegenius.io/user/employee/data",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/employee/data`,
         {
           method: "GET",
           headers: {
@@ -487,7 +516,7 @@ function Chat() {
     groupName?: string
   ) {
     const response = await fetch(
-      "https://api.machinegenius.io/user/conversation/create",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/create`,
       {
         method: "POST",
         headers: {
@@ -515,7 +544,7 @@ function Chat() {
   async function createGroup() {
     console.log(newGroupMembers);
     const response = await fetch(
-      "https://api.machinegenius.io/user/conversation/create",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/create`,
       {
         method: "POST",
         headers: {
@@ -524,7 +553,7 @@ function Chat() {
         },
         body: JSON.stringify({
           type: "group",
-          members: [userId, ...newGroupMembers],
+          members: [user._id, ...newGroupMembers],
           groupName: "New Group",
         }),
       }
@@ -558,7 +587,7 @@ function Chat() {
     */
     async function fetchMessages() {
       const response = await fetch(
-        `https://api.machinegenius.io/user/conversation/all-messages/${currentConversation?._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/all-messages/${currentConversation?._id}`,
         {
           method: "GET",
           headers: {
@@ -596,7 +625,7 @@ function Chat() {
   */
   async function fetchConversation() {
     const response = await fetch(
-      "https://api.machinegenius.io/user/conversation/all",
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/conversation/all`,
       {
         method: "GET",
         headers: {
@@ -749,20 +778,20 @@ function Chat() {
   const debouncedHandleUserTyping = useCallback(
     debounce(() => {
       handleUserTyping({
-        _id: userId,
+        _id: user._id,
         firstName: "John",
         lastName: "Doe",
         theme: "#FF0000",
       });
     }, 500),
-    [userId, handleUserTyping]
+    [user._id, handleUserTyping]
   );
 
   // ===== 01. get Presigned URL =====
   async function getPresignedURL() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/administrative/receipts/presigned-url`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/administrative/receipts/presigned-url`,
         {
           headers: {
             Authorization: `barrer ${
@@ -793,7 +822,12 @@ function Chat() {
   const [receiptUrl, setReceiptUrl] = useState<string>("");
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [inQueueAttachments, setInQueueAttachments] = useState<any[]>([]);
+  const [inQueueAttachments, setInQueueAttachments] = useState<
+    {
+      url: string;
+      type: string;
+    }[]
+  >([]);
 
   const handleFileUpload = async (e: any) => {
     const file = e.target.files[0];
@@ -814,7 +848,7 @@ function Chat() {
         setReceiptUrl(receiptUrl);
         setInQueueAttachments((prev) => [
           ...prev,
-          { name: file.name, receiptUrl },
+          { url: receiptUrl, type: "img" },
         ]);
 
         // AddMessage({
@@ -844,10 +878,7 @@ function Chat() {
   }
 
   return (
-    <div className="flex gap-[22px] h-[85vh] py-[1.5vw]">
-      {/* 
-        chat aside menu 
-      */}
+    <div className="flex gap-[--22px] h-[85vh] py-[1.5vw]">
       <div
         className={`flex flex-col h-full ${styles.chat__chat__aside} ${
           toggleCreateGroup ? styles.chat__chat__aside__create_group : ""
@@ -948,7 +979,10 @@ function Chat() {
                     // ref={(el) => (unreadRef.current = el)}
                     onClick={() => {
                       if (!toggleCreateGroup)
-                        createConversation("oneToOne", [userId, employee._id]);
+                        createConversation("oneToOne", [
+                          user._id,
+                          employee._id,
+                        ]);
                       else {
                         // create group
                         if (newGroupMembers.includes(employee._id)) {
@@ -974,16 +1008,16 @@ function Chat() {
                           {/* {truncateText(message.lastMessage || "Message", 60)} */}
                         </p>
                       </div>
-                      <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
-                        {/* {message.lastSeen < message.updatedAt &&
+                      {/* <div className="absolute flex justify-center items-center right-4 top-0 bottom-0">
+                        {message.lastSeen < message.updatedAt &&
                         message?._id !== currentConversation?._id &&
-                        userId !==
+                        user._id !==
                           message.members[
-                            userId === message.members[0]?._id ? 1 : 0
+                            user._id === message.members[0]?._id ? 1 : 0
                           ]._id ? (
                           <div className="w-3 h-3 rounded-full bg-[#E9313E]"></div>
-                        ) : null} */}
-                      </div>
+                        ) : null} 
+                      </div> */}
                     </div>
                   </li>
                 ))
@@ -1007,12 +1041,12 @@ function Chat() {
                           {message.type === "group"
                             ? message.groupName
                             : message.members[
-                                userId === message.members[0]?._id ? 1 : 0
-                              ].firstName +
+                                user._id === message.members[0]?._id ? 1 : 0
+                              ]?.firstName +
                               " " +
                               message.members[
-                                userId === message.members[0]?._id ? 1 : 0
-                              ].lastName}
+                                user._id === message.members[0]?._id ? 1 : 0
+                              ]?.lastName}
                         </h3>
                         <p className="text-base [color:#828282] overflow-hidden whitespace-nowrap text-ellipsis">
                           {truncateText(message.lastMessage || "Message", 60)}
@@ -1046,12 +1080,12 @@ function Chat() {
                 {currentConversation?.type === "group"
                   ? currentConversation?.groupName
                   : currentConversation?.members[
-                      userId === currentConversation?.members[0]?._id ? 1 : 0
-                    ].firstName +
+                      user._id === currentConversation?.members[0]?._id ? 1 : 0
+                    ]?.firstName +
                     " " +
                     currentConversation?.members[
-                      userId === currentConversation?.members[0]?._id ? 1 : 0
-                    ].lastName}
+                      user._id === currentConversation?.members[0]?._id ? 1 : 0
+                    ]?.lastName}
               </h3>
               <button>
                 <svg
@@ -1097,7 +1131,7 @@ function Chat() {
                           (unreadRef.current[
                             conversation.indexOf(currentConversation)
                           ] || 0) &&
-                        userId !== message.sender._id ? (
+                        user._id !== message.sender._id ? (
                           <div className="text-center text-[#FFFFFB] font-bold  text-[--16px] bg-[--dark] p-[--10px] my-[--10px]">
                             New Message
                           </div>
@@ -1109,34 +1143,35 @@ function Chat() {
                   </div> */}
                   <div
                     className={`flex gap-5 whitespace-pre-wrap ${
-                      message.sender._id == userId
+                      message?.sender?._id == user._id
                         ? "items-end flex-row-reverse"
                         : ""
                     }`}
                   >
-                    {message.sender._id == userId ? (
+                    {message?.sender?._id == user._id ? (
                       <ProfileImageFrame reversed />
                     ) : (
                       <ProfileImageFrame />
                     )}
                     <div
                       className={`p-[--15px] rounded-[20px] max-w-[60%] flex flex-col gap-[--10px] ${
-                        message.sender._id == userId
+                        message?.sender?._id == user._id
                           ? "bg-[#CEEAE9] self-end"
                           : "self-start"
                       } ${styles.chat__box__message__container}`}
                     >
-                      {currentConversation.type === "group" && (
-                        <p className="text-[#2A2B2A] font-semibold text-[--16px]">
-                          {message.sender.firstName +
-                            " " +
-                            message.sender.lastName}
-                        </p>
-                      )}
-                      <p>
-                        {message.mediaUrl ? (
+                      {currentConversation?.type === "group" &&
+                        message.sender._id !== user._id && (
+                          <p className="text-[#2A2B2A] font-semibold text-[--16px]">
+                            {message.sender.firstName +
+                              " " +
+                              message.sender.lastName}
+                          </p>
+                        )}
+                      <p className="break-words">
+                        {message?.mediaUrl?.url ? (
                           <img
-                            src={message.mediaUrl}
+                            src={message?.mediaUrl?.url}
                             alt="media"
                             className="w-full h-full object-cover rounded-[20px]"
                           />
@@ -1165,9 +1200,9 @@ function Chat() {
           {/* ... existing message rendering code ... */}
           {isTyping && isTyping[currentConversation._id] && (
             <TypingIndicator
-              firstName={isTyping[currentConversation._id].user.firstName}
-              lastName={isTyping[currentConversation._id].user.lastName}
-              theme={isTyping[currentConversation._id].user.theme}
+              firstName={isTyping[currentConversation._id]?.user?.firstName}
+              lastName={isTyping[currentConversation._id]?.user?.lastName}
+              theme={isTyping[currentConversation._id]?.user?.theme}
             />
           )}
         </div>
@@ -1242,13 +1277,20 @@ function Chat() {
                 sendMessage({
                   conversationId: currentConversation?._id,
                   text: message,
-                  mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                  mediaUrl: {
+                    url: inQueueAttachments[0]?.url,
+                    type: inQueueAttachments[0]?.type,
+                  },
                 });
                 AddMessage({
                   text: message,
-                  mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                  mediaUrl: {
+                    url: inQueueAttachments[0]?.url,
+                    type: inQueueAttachments[0]?.type,
+                  },
                   //! Need sender data
-                  sender: { _id: userId },
+                  sender: { _id: user._id },
+                  createdAt: new Date().getTime(),
                 });
                 setMessage("");
               }
@@ -1284,12 +1326,18 @@ function Chat() {
               sendMessage({
                 conversationId: currentConversation?._id,
                 text: message,
-                mediaUrl: inQueueAttachments[0]?.receiptUrl,
+                mediaUrl: inQueueAttachments,
               });
               AddMessage({
                 text: message,
-                mediaUrl: inQueueAttachments[0]?.receiptUrl,
-                sender: { _id: userId },
+                mediaUrl: inQueueAttachments,
+                sender: {
+                  _id: user._id,
+                  firstName: "You",
+                  lastName: "You",
+                  theme: "light",
+                },
+                createdAt: new Date().getTime(),
               });
               setMessage("");
             }}

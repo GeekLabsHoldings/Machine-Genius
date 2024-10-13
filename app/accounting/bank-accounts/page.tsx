@@ -155,7 +155,7 @@ function Page() {
     // Fetch data from API
     const getBankAccounts = async () => {
       const response = await fetch(
-        "https://api.machinegenius.io/accounting/bank-accounts",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/bank-accounts`,
         {
           method: "GET",
           headers: {

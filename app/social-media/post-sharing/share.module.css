@@ -1,0 +1,34 @@
+/* ===== Start Tabs ===== */
+.tab {
+  font-size: var(--24px);
+  font-weight: 700;
+  color: #acacac;
+  cursor: pointer;
+  margin-left: 0 !important;
+}
+.activeTab {
+  color: #2a2b2a;
+}
+
+/* Tabs */
+.tabs {
+  margin-top: var(--sy-20px);
+  margin-bottom: var(--sy-20px);
+}
+.tabs .tab:not(:last-child) {
+  border-right: 1px solid #2a2b2a;
+  padding-right: 10px;
+}
+.tabs .tab:not(:first-child) {
+  padding-left: 10px;
+}
+/* ===== End Tabs ===== */
+
+.wrapper h6 {
+  font-family: "DM Sans";
+  font-size: clamp(16px, calc(1.1vw + 0.1rem), 1000px);
+  margin-bottom: clamp(14px, calc(1vw + 0.1rem), 1000px);
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}

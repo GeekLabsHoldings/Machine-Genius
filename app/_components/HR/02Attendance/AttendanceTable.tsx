@@ -46,7 +46,7 @@ export default function AttendanceTable({
     // Fetch the attendance data from the server.
     try {
       fetch(
-        `https://api.machinegenius.io/hr/attendance/today-attendance?name=${filter.name}&day=${filter.date}&department=${filter.department}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/attendance/today-attendance?name=${filter.name}&day=${filter.date}&department=${filter.department}`,
         {
           method: "GET",
           headers: {

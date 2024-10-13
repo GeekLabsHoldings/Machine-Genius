@@ -144,7 +144,15 @@ export default function ChooseBrandPage() {
 
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/social-media/news-letter/get-generated-news-letter?brand=${postBody.brandName}&stockName=${stockNameValue}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/get-generated-news-letter?brand=${
+          postBody.brandName
+        }${
+          selectedBrand === "Investorcracy"
+            ? `&stockName=${stockNameValue}`
+            : ""
+        }
+      
+        `,
         {
           method: "GET",
           headers: {

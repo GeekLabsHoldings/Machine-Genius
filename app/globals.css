@@ -1,4 +1,4 @@
-/* ===== Start Imports ==== */
+/* ===== Start Imports ===== */
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 
 @tailwind base;
@@ -39,10 +39,9 @@
   font-weight: normal;
   src: local("LT Saeada Bold"), url("/fonts/LTSaeada-Bold.woff") format("woff");
 }
-
 /* ===== End Imports ==== */
 
-/* ===== Start Variables ===== */
+/* ===== Start Variables ====== */
 :root {
   /* ===== Colors ===== */
   --dark: #2a2b2a;
@@ -238,11 +237,8 @@
 }
 /* ===== End Variables ===== */
 
+/* ===== Start Global Styles ===== */
 * {
-  font-family: "DM Sans", sans-serif;
-  padding: 0;
-  margin: 0;
-  line-height: normal;
   transition: all 0.3s;
 }
 
@@ -260,17 +256,15 @@
 *::-webkit-scrollbar-thumb {
   background: var(--dark);
   border-radius: 20px;
-}
-
-/* Handle on hover */
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--dark);
+  cursor: pointer;
 }
 
 body {
   background-color: #2a2b2a;
   color: #000;
   font-size: var(--16px);
+  font-family: "DM Sans", sans-serif;
+  line-height: normal;
 }
 
 input,
@@ -285,26 +279,78 @@ textarea {
 img {
   width: 100%;
 }
-.articleRow.selected,
-.assignedVideo.selected {
-  background-color: #2a2b2a;
-  color: var(--white);
+/* ===== End Global Styles ===== */
+
+/* ===== Start Module Layout ===== */
+.module-layout {
+  display: flex;
 }
+.module-layout .Side_Nav_Wrapper {
+  width: clamp(300px, calc(18vw + 0.1rem), 400px); /* Reduced max width */
+  height: 100vh;
+  background: transparent;
+  flex-shrink: 0; /* Prevents shrinking in flex container */
+}
+.module-layout .Side_Nav_Wrapper.close {
+  width: clamp(70px, calc(6vw + 0.1rem), 200px); /* Reduced max width */
+}
+
+.module-layout .Page_Wrapper {
+  flex: 1; /* Allows the wrapper to grow and fill remaining space */
+  width: auto; /* Adjust width */
+  height: 100vh;
+  background: #fffffb;
+  border-radius: clamp(0.5rem, calc(4.3vw + 0.1rem), 100px) 0 0 0;
+  padding: var(--sy-20px) clamp(20px, calc(3.5vw + 0.1rem), 100px); /* Reduced max padding */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden; /* Prevents content overflow */
+}
+/* ===== End Module Layout ===== */
+
+/* 
+=====
+Start Edit btn in video-editor/create & social-media/campaigns/_sharing
+=====
+*/
 .videoStatusBtn.clicked {
   color: rgba(42, 43, 42, 1);
   background-color: rgba(255, 255, 251, 1);
 }
+/* 
+=====
+End Edit btn in video-editor/create & social-media/campaigns/_sharing
+=====
+*/
 
+/* ===== Start Edit pageHeader globally ===== */
 .pageHeader h3 {
   font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
   font-weight: 700;
 }
+/* ===== End Edit pageHeader globally ===== */
+
+/* ===== Start Edit calendar globally ===== */
 .css-1tkx1wf-MuiSvgIcon-root-MuiPickersCalendarHeader-switchViewIcon {
   visibility: hidden;
+}
+
+.css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root {
+  color: #acacac;
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 500;
+  width: clamp(16px, calc(1.5vw + 0.1rem), 80px);
+  height: clamp(16px, calc(1.5vw + 0.1rem), 80px);
+}
+.css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root:hover {
+  background-color: #dfdfdf;
 }
 .css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
   background-color: var(--dark) !important;
 }
+
 .css-i5q14k-MuiDayCalendar-header {
   display: flex;
   gap: 0.6vw;
@@ -325,17 +371,7 @@ img {
   height: clamp(16px, calc(1.6vw + 0.1rem), 80px);
   font-weight: 700;
 }
-.css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root {
-  color: #acacac;
-  font-family: "DM Sans", sans-serif;
-  font-size: clamp(10px, calc(0.7vw + 0.1rem), 100px);
-  font-weight: 500;
-  width: clamp(16px, calc(1.5vw + 0.1rem), 80px);
-  height: clamp(16px, calc(1.5vw + 0.1rem), 80px);
-}
-.css-1wy8uaa-MuiButtonBase-root-MuiPickersDay-root:hover {
-  background-color: #dfdfdf;
-}
+
 .css-1rtg91x-MuiDateCalendar-root {
   box-shadow: 2px 2px 4px 3px #dfdfdf;
   border: 1px solid transparent;
@@ -381,37 +417,47 @@ img {
 .css-xb7uwb-MuiPickersArrowSwitcher-spacer {
   width: clamp(24px, calc(2vw + 0.1rem), 140px);
 }
+
 .pagination_iconButton__7wOJj {
   width: clamp(16px, calc(1.5vw + 0.1rem), 80px);
   height: clamp(16px, calc(1.5vw + 0.1rem), 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .css-23p0if-MuiButtonBase-root-MuiPickersDay-root:not(.Mui-selected) {
   width: clamp(16px, calc(1.5vw + 0.1rem), 80px);
   height: clamp(16px, calc(1.5vw + 0.1rem), 80px);
 }
 
-.pagination_iconButton__7wOJj {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.css-1wuw8dw-MuiBreadcrumbs-separator {
+  color: #f36f24;
+}
+/* ===== End Edit calendar globally ===== */
+
+/* ===== Start Edit svg in tableBody articleRow ===== */
+.articleRow.changeSvgBg li span svg path {
+  fill: #fffffb;
 }
 .borderBottom:not(:last-child) {
   border-bottom: 1px solid rgba(42, 43, 42, 0.29);
 }
-.css-1wuw8dw-MuiBreadcrumbs-separator {
-  color: #f36f24;
+.articleRow.selected {
+  background-color: #2a2b2a;
+  color: var(--white);
 }
+/* ===== End Edit svg in tableBody articleRow ===== */
 
-.articleRow.changeSvgBg li span svg path {
-  fill: #fffffb;
-}
-
+/* ===== Start Slick-Slider in creative/boards & creative/handover ===== */
 .boards .slick-initialized .slick-slide {
   display: flex;
   flex-direction: column;
   gap: 1vh;
 }
+/* ===== Start Slick-Slider in creative/boards & creative/handover ===== */
 
+/* ===== Start fillBtn in creative/boards & creative/handover ===== */
 .fillBtn::before {
   content: "";
   position: absolute; /* Positioning properties */
@@ -438,8 +484,9 @@ img {
 .fillBtn:hover svg path {
   fill: #2a2b2a;
 }
+/* ===== End fillBtn in creative/boards & creative/handover ===== */
 
-/* edit calendar in boards  */
+/* ===== Start Edit calendar in creative/boards/projectDetails  ===== */
 .board-add-calendar-card .css-1rtg91x-MuiDateCalendar-root {
   box-shadow: none;
   border: none;
@@ -450,7 +497,9 @@ img {
   box-shadow: 0.7px 2.09px 4.61px 0px #00000026;
   border: 0.7px solid #dfdfdf;
 }
+/* ===== End Edit calendar in creative/boards/projectDetails  ===== */
 
+/* ===== Start Edit calendar in newsletter/analytics  ===== */
 .analyticsChart .apexcharts-legend {
   left: 50% !important;
   gap: 3vw;
@@ -459,15 +508,39 @@ img {
   border-radius: 0 !important;
   margin-right: 0.5vw;
 }
+/* ===== End Edit calendar in newsletter/analytics  ===== */
+
+/* 
+===== Start Edit Slick-Slider in
+newsletter/email-list
+& op/analytics 
+& op/brands 
+& outreach/email-outreach/preview-sequence
+& outreach/templates/template-title
+===== 
+*/
 .sliderAudience .slick-slide > div {
   margin: 0 10px; /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
+/* 
+===== End Edit Slick-Slider in
+newsletter/email-list
+& op/analytics 
+& op/brands 
+& outreach/email-outreach/preview-sequence
+& outreach/templates/template-title
+=====
+*/
+
+/* ===== Start op/brands ===== */
 .brands .slick-slide > div {
   margin: 0 clamp(10px, calc(1.2vw + 0.1rem), 60px); /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
+/* ===== End op/brands ===== */
 
+/* ===== Start Slick-Slider Custom Arrows ===== */
 .custom_arrows.slick-arrow {
   width: unset !important;
   height: unset !important;
@@ -503,25 +576,17 @@ img {
 .custom_arrows.slick-arrow.slick-prev.slick-disabled > svg > path {
   fill: #d9d9d9;
 }
+/* ===== End Slick-Slider Custom Arrows ===== */
 
-/* Start Offline Message */
-.offlineMsg {
-  position: fixed !important;
-  bottom: var(--15px);
-  right: var(--15px);
-  border-radius: var(--5px);
-  background-color: #2a2b2a;
-  color: white;
-  padding: var(--12px);
-}
-/* End Offline Message */
-
+/* ===== Start full-calender ===== */
 .eventsCalendar.full-calender
   .fc
   .fc-event.fc-event-start.fc-event-end.fc-event-past.fc-daygrid-event.fc-daygrid-block-event.fc-h-event {
   width: 100% !important;
 }
+/* ===== End full-calender ===== */
 
+/* ===== Start hr/hiring/templates ===== */
 .templates-container .slick-slider.slick-initialized {
   width: 100%;
   position: relative;
@@ -540,7 +605,9 @@ img {
 .templates-container #unattached-template .slick-slide > div {
   height: 100%;
 }
+/* ===== End hr/hiring/templates ===== */
 
+/* ===== Start HomePage & LandingPage ===== */
 .cont {
   width: 100%;
   height: 100vh;
@@ -591,3 +658,26 @@ img {
   flex-direction: column;
   padding: 1rem 2rem;
 }
+/* ===== End HomePage & LandingPage ===== */
+
+/* ===== Start loader ===== */
+.custom-loader {
+  width: 24px;
+  height: 24px;
+  border: 5px solid #1c1c1c;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* ===== End loader ===== */

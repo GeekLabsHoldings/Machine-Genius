@@ -1,0 +1,25 @@
+.platformBox {
+  min-width: calc(33.3% + 2 * 2.5vw);
+  flex-shrink: 1;
+  padding: var(--30px);
+  border-radius: 1vw;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15); */
+}
+.platformBox h3 {
+  font-weight: 700;
+  font-size: clamp(16px, calc(1.6vw + 0.1rem), 80px);
+}
+.platformBox h6 {
+  font-weight: 900;
+  font-size: clamp(10px, calc(0.7vw + 0.1rem), 60px);
+}
+/* ===== Start 01- Header =====*/
+.platformBoxHeader {
+  padding-bottom: 0.6vw;
+  border-bottom: 1px solid var(--dark);
+}
+/* ===== End 01- Header =====*/
+.platformBoxHeaderSm {
+  border-bottom: 1px solid var(--dark);
+}

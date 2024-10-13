@@ -14,7 +14,7 @@ export default function InProcessHiringTable() {
   async function updateNextStep() {
     try {
       const res = await fetch(
-        `https://api.machinegenius.io/hr/hiring/next-step/${data[0]._id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/next-step/${data[0]._id}`,
         {
           method: "PUT",
           headers: {
@@ -39,7 +39,7 @@ export default function InProcessHiringTable() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `https://api.machinegenius.io/hr/hiring/hiring?limit=10&skip=${skip}&type=Opening`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/hiring?limit=10&skip=${skip}&type=Opening`,
           {
             method: "GET",
             headers: {

@@ -1,9 +1,6 @@
-import { useState, useEffect, useCallback, useContext, use } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useSocket } from "@/app/_context/SocketProvider";
 import { globalContext } from "@/app/_context/store";
-import { flexibleCompare } from "@fullcalendar/core/internal";
-import { first } from "ckeditor5";
-import theme from "@material-tailwind/react/theme";
 
 interface Conversation {
   _id: string;
@@ -192,9 +189,10 @@ const useChat = () => {
     const handleMessage = (event: { [key: string]: any }) => {
       console.log("Hellllooooo");
       let data = null;
-      if (event[0]) {
+      console.log("Event", event);
+      if (event.chat) {
         console.log(event);
-        data = event[0];
+        data = event;
       }
       if (!data) return;
       console.log("User", getUserId());
@@ -226,6 +224,7 @@ const useChat = () => {
           sender: {
             _id: data.sender,
           },
+          createdAt: data.createdAt,
         },
       ]);
     };

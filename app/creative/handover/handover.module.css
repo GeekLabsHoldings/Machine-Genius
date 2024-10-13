@@ -1,47 +1,39 @@
-.members {
-    padding: 0.3vw 0.328vw;
-}
-.members p {
-    font-size: clamp(10px, calc( 0.6vw + 0.1rem), 100px);
-}
 .handover h3 {
-    font-weight: 700;
-    font-size: clamp(16px, calc(1.3vw + 0.1rem), 80px);}
+  font-weight: 700;
+}
 .handover h4 {
-    font-weight: 700;
-    font-size: clamp(14px, calc(1.2vw + 0.1rem), 80px);}
-.handover .state p {
-    font-size: clamp(12px, calc(1vw + 0.1rem), 70px);
+  font-weight: 700;
+  font-size: clamp(14px, calc(1.2vw + 0.1rem), 80px);
 }
-
-.handover .lastUpdate {
-    font-size: clamp(10px, calc(0.57vw + 0.1rem), 70px);
-    text-align: end;
-}
-.handover .cards{
-    box-shadow: 1px 3px 6.6px 0px rgba(0, 0, 0, 0.15);
-    border: 2px solid rgba(234, 234, 234, 1);
-
-}
-
 .handover button {
-    font-size: 0.757;
-    font-size: clamp(10px, calc(0.757vw + 0.1rem), 70px);
+  font-size: clamp(10px, calc(0.757vw + 0.1rem), 70px);
 }
 
+/* 01-3 Container for Current Projects slider */
+.handover .lastUpdate {
+  font-size: clamp(10px, calc(0.57vw + 0.1rem), 70px);
+  text-align: end;
+}
+
+/* Project Cards & Template Cards */
+.handover .cards {
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  border: 2px solid #eaeaea;
+}
+
+/* Project Cards & Template Cards Hover States */
 .handover .cards:hover {
- 
- transition: transform 0.5s;
- background: var(--dark);
+  transition: transform 0.5s;
+  background: var(--dark);
 }
-.handover .cards:hover h3 ,.handover .cards:hover .state p {
-    color: white;
+.handover .cards:hover h3,
+.handover .cards:hover .state p {
+  color: white;
 }
-
 
 .handover .sliderCard:hover {
-    transform: translateY(-0.378vw);
+  transform: translateY(-0.378vw);
 }
 .handover .cards:hover svg path {
-    fill : white
+  fill: white;
 }

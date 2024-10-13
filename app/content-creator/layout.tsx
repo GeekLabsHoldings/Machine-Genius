@@ -1,7 +1,6 @@
 "use client";
 // Import necessary dependencies
 import React, { useState } from "react";
-import styles from "./contentCreator.module.css";
 import dynamic from "next/dynamic";
 const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
   ssr: false,
@@ -16,17 +15,6 @@ const TitleOfPage = dynamic(
 
 import ContentCreatorContextProvider from "../_context/contentCreatorContext";
 // import { usePathname } from 'next/navigation';
-
-// Define a layout component
-const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  // get path from usePathname hook from next/navigation
-  // const path = usePathname();
-
-  // State variables to manage side nav and current page
-  const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>("Content Creator");
-
-  // path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1)
 
   // Array containing navigation links for the side navigation bar
   const sideNavLinks = [
@@ -95,15 +83,24 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     },
   ];
 
+// Define a layout component
+const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  // get path from usePathname hook from next/navigation
+  // const path = usePathname();
+
+  // State variables to manage side nav and current page
+  const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
+  const [CurrentPage, setCurrentPage] = useState<string>("Content Creator");
+
+  // path.split('/')[2].charAt(0).toUpperCase() + path.split('/')[2].slice(1)
+
+
+
   // Return the layout structure
   return (
-    <>
+    <div className="module-layout">
       {/* Side navigation wrapper */}
-      <div
-        className={`${styles.Side_Nav_Wrapper} ${
-          isSideNavOpen ? "" : styles.close
-        }`}
-      >
+      <div className={`Side_Nav_Wrapper ${isSideNavOpen ? "" : "close"}`}>
         {/* Render the SideNav component */}
         <SideNav
           isSideNavOpen={isSideNavOpen}
@@ -113,9 +110,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page wrapper */}
-      <div
-        className={`${styles.Page_Wrapper} ${!isSideNavOpen && styles.close}`}
-      >
+      <div className="Page_Wrapper">
         {/* Render the title of the current page */}
         <TitleOfPage title={CurrentPage} />
         {/* Render the children components */}
@@ -125,7 +120,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
           </ContentCreatorContextProvider>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

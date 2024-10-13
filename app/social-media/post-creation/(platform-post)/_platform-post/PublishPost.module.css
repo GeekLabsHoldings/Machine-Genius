@@ -1,0 +1,37 @@
+.add_post_wrapper h6 {
+  font-family: "DM Sans";
+  font-size: clamp(16px, calc(1.2vw + 0.1rem), 1000px);
+  margin-bottom: var(--sy-10px);
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+/* ===== Start 01- Col (1) ===== */
+.post_content a {
+  margin-left: auto;
+}
+
+.post_content a svg {
+  width: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+  height: clamp(12px, calc(0.8vw + 0.1rem), 1000px);
+}
+
+.post_content span {
+  font-size: clamp(10px, calc(0.8vw + 0.1rem), 1000px);
+  display: block;
+  text-align: right;
+}
+/* ===== End 01- Col (1) ===== */
+
+/* ===== Start 02- Col (2) ===== */
+.image_selection {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; /* Changed from space-between */
+  gap: var(--10px);
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping */
+  padding-bottom: 8px;
+}
+
+/* ===== End 02- Col (2) ===== */

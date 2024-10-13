@@ -31,9 +31,7 @@ const TitleCheckWithLock = ({
   } = useContext(
     (path.includes("newsletter")
       ? createNewsletterContext
-      : contentCreatorContext) as React.ContextType<
-      typeof createNewsletterContext | typeof contentCreatorContext
-    >
+      : contentCreatorContext) as React.Context<any>
   );
   const [isLocked, setIsLocked] = useState<boolean>();
 

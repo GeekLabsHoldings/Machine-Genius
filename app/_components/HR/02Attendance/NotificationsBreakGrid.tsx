@@ -36,7 +36,7 @@ export default function NotificationsBreakGrid() {
     const getNotifications = async () => {
       try {
         const response = await fetch(
-          "https://api.machinegenius.io/hr/attendance/warning-notification",
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/attendance/warning-notification`,
           {
             method: "GET",
             headers: {

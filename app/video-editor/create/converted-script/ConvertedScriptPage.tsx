@@ -1,9 +1,15 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./ConvertedScriptPage.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomAudioPlayer from "@/app/_components/VideoEditing/CustomAudioPlayer/CustomAudioPlayer";
-import { videoEditingContext } from "@/app/_context/videoEditingContext";
+import {
+  ScriptSegment,
+  videoEditingContext,
+} from "@/app/_context/videoEditingContext";
+import toast from "react-hot-toast";
+import { globalContext } from "@/app/_context/store";
+import { useRouter } from "next/navigation";
 
 const audioIcon = (
   <svg
@@ -50,29 +56,322 @@ const arrowIcon = (
   </svg>
 );
 
-interface ScriptSegment {
-  index: number;
-  text: string;
-  keywordsAndImages: {
-    keyword: string;
-    imageUrl: string[];
-  }[];
-  audioPath: {
-    index: number;
-    url: string;
-    duration: number;
-  };
-}
+// interface ScriptSegment {
+//   index: number;
+//   text: string;
+//   keywordsAndImages: {
+//     keyword: string;
+//     imageUrl: string[];
+//   }[];
+//   audioPath: {
+//     index: number;
+//     url: string;
+//     duration: number;
+//   };
+// }
+
+const LoadingSpinner = () => {
+  return (
+    <div className="flex justify-center items-center">
+      <div className="animate-spin rounded-full h-[--15px] w-[--15px] border-t-2 border-b-2 border-gray-900"></div>
+    </div>
+  );
+};
 
 const ConvertedScriptPage = () => {
-  const { splitedContent, setSplitedContent } = useContext(videoEditingContext);
+  const {
+    splitedContent,
+    setSplitedContent,
+    setSelectedContent,
+    selectedContent,
+    totalIntroSlides,
+  } = useContext(videoEditingContext);
+  const { handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     selectedScriptSegment: ScriptSegment | null;
     selectedIncorrectWord: string | null;
+    selectedToBeCorrectedWord: string;
   }>({
     selectedScriptSegment: null,
     selectedIncorrectWord: null,
+    selectedToBeCorrectedWord: "",
   });
+
+  const [loadingReplaceWord, setLoadingReplaceWord] = useState(false);
+  const [loadingUpdateDatabase, setLoadingUpdateDatabase] = useState(false);
+  const [loadingCorrectWord, setLoadingCorrectWord] = useState(false);
+  const [loadingToBeCorrectedWord, setLoadingToBeCorrectedWord] =
+    useState(false);
+
+  const router = useRouter();
+  function getAudioDuration(audioPath: string): Promise<number> {
+    return new Promise((resolve) => {
+      const audio = new Audio(audioPath);
+      audio.addEventListener("loadedmetadata", () => {
+        resolve(Math.round(audio.duration));
+      });
+      audio.addEventListener("error", () => {
+        console.error("Error loading audio:", audio.error);
+        resolve(0);
+      });
+    });
+  }
+
+  useEffect(() => {
+    const fetchAudioDurations = async () => {
+      if (!splitedContent) return;
+
+      const updatedSplitedContent = await Promise.all(
+        splitedContent.map(async (segment) => {
+          console.log(segment.audioPath.url);
+          const duration = await getAudioDuration(segment.audioPath.url);
+          console.log(duration);
+          return {
+            ...segment,
+            audioPath: {
+              ...segment.audioPath,
+              duration,
+            },
+          };
+        })
+      );
+
+      setSplitedContent(updatedSplitedContent);
+    };
+
+    fetchAudioDurations();
+  }, []);
+
+  const regenerateAudio = async () => {
+    if (
+      !pageState.selectedIncorrectWord ||
+      !pageState.selectedToBeCorrectedWord
+    ) {
+      toast.error("Please select a word to replace");
+      return;
+    }
+    // else if (
+    //   pageState.selectedIncorrectWord === pageState.selectedToBeCorrectedWord
+    // ) {
+    //   toast.error("The incorrect word and the correct word are the same");
+    //   return;
+    // }
+
+    setLoadingReplaceWord(true);
+    const updatedSplitedContent = splitedContent
+      ?.map((segment) => {
+        if (
+          segment.audioPath.index ===
+          pageState.selectedScriptSegment?.audioPath.index
+        ) {
+          return {
+            index: segment.audioPath.index,
+            selectedContent: segment.text.replace(
+              pageState.selectedIncorrectWord ?? "",
+              pageState.selectedToBeCorrectedWord
+            ),
+          };
+        }
+      })
+      .filter((segment) => segment !== undefined)[0];
+
+    console.log(updatedSplitedContent);
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/regenrate-audio`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(updatedSplitedContent),
+      }
+    );
+    if (response.status === 401) {
+      toast.error("Session expired");
+      handleSignOut();
+      return;
+    }
+
+    if (!response.ok) {
+      toast.error("Failed to regenerate audio");
+      setLoadingReplaceWord(false);
+      return;
+    }
+
+    let data = await response.json();
+
+    const { index, url, duration } = data.audioPath;
+
+    data = {
+      ...data,
+      audioPath: {
+        index,
+        url: `${url}?t=${new Date().getTime()}`,
+        duration: await getAudioDuration(`${url}?t=${new Date().getTime()}`),
+      },
+    };
+
+    if (data.success) {
+      setPageState((prevState) => {
+        if (prevState.selectedScriptSegment?.audioPath.index === index) {
+          return {
+            ...prevState,
+            selectedScriptSegment: {
+              ...prevState.selectedScriptSegment!,
+              audioPath: data.audioPath,
+            },
+          };
+        }
+        return prevState;
+      });
+      // @ts-ignore
+      setSplitedContent((prevState: ScriptSegment[]) => {
+        return prevState.map((segment: ScriptSegment) => {
+          if (
+            segment.audioPath.index ===
+            pageState.selectedScriptSegment?.audioPath.index
+          ) {
+            return {
+              ...segment,
+              audioPath: data.audioPath,
+            };
+          }
+          return segment;
+        });
+      });
+      toast.success("Audio regenerated successfully");
+    }
+
+    console.log(data);
+  };
+
+  useEffect(() => {
+    if (loadingReplaceWord) {
+      setLoadingReplaceWord(false);
+      console.log(pageState.selectedScriptSegment);
+    }
+  }, [splitedContent]);
+
+  useEffect(() => {
+    console.log(pageState.selectedScriptSegment);
+  }, [pageState.selectedScriptSegment]);
+
+  const updateDatabase = async () => {
+    if (
+      !pageState.selectedIncorrectWord ||
+      !pageState.selectedToBeCorrectedWord
+    ) {
+      toast.error("Please select a word to replace");
+      return;
+    } else if (
+      pageState.selectedIncorrectWord === pageState.selectedToBeCorrectedWord
+    ) {
+      toast.error("The incorrect word and the correct word are the same");
+      return;
+    }
+    setLoadingUpdateDatabase(true);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/replace-words`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          original_word: pageState.selectedIncorrectWord,
+          replacement_word: pageState.selectedToBeCorrectedWord,
+        }),
+      }
+    );
+
+    if (response.status === 401) {
+      toast.error("Session expired");
+      handleSignOut();
+      return;
+    }
+
+    if (!response.ok) {
+      toast.error("Failed to update database");
+      setLoadingUpdateDatabase(false);
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success("Database updated successfully");
+      setLoadingUpdateDatabase(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log(splitedContent);
+  }, [splitedContent]);
+
+  const backBTN = () => {
+    setSplitedContent(null);
+    setSelectedContent("");
+  };
+
+  useEffect(() => {
+    if (!splitedContent && !selectedContent) {
+      router.replace("/video-editor/create");
+    }
+  }, [splitedContent, selectedContent]);
+
+  async function testAudio(
+    word: string,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/test-audio`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ selectedContent: word }),
+        }
+      );
+
+      if (!response.ok) {
+        toast.error("Failed to test audio");
+        setLoading(false);
+        return;
+      }
+
+      if (response.status === 401) {
+        toast.error("Session expired");
+        handleSignOut();
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+
+      console.log(data);
+
+      if (data.success) {
+        const audio = new Audio(
+          `${data.audioPath.url}?t=${new Date().getTime()}`
+        );
+        audio.play();
+      } else {
+        toast.error("Failed to test audio");
+      }
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error playing audio:" + error);
+      console.error("Error playing audio:", error);
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="flex flex-col">
@@ -88,30 +387,50 @@ const ConvertedScriptPage = () => {
                   <div className="cursor-pointer h-max"></div>
                 </div>
                 {Array.isArray(splitedContent) && splitedContent.length > 0 ? (
-                  splitedContent.map((scriptSegment: ScriptSegment) => (
-                    <div
-                      className={`${styles.articleContent} cursor-pointer`}
-                      key={scriptSegment.index}
-                    >
-                      <p
-                        className={`${
-                          pageState.selectedScriptSegment?.index ===
-                          scriptSegment.index
-                            ? styles.active
-                            : ""
-                        }`}
-                        onClick={() =>
-                          setPageState((prevState) => ({
-                            ...prevState,
-                            selectedScriptSegment: scriptSegment,
-                            selectedIncorrectWord: null,
-                          }))
-                        }
-                      >
-                        {scriptSegment.text}
-                      </p>
-                    </div>
-                  ))
+                  splitedContent.map(
+                    (scriptSegment: ScriptSegment, index: number) => (
+                      // display intro header word
+                      <>
+                        {index === 0 && (
+                          <div>
+                            <h1 className="text-[--24px] font-bold">Intro</h1>
+                          </div>
+                        )}
+                        {index === totalIntroSlides && (
+                          <div>
+                            <hr />
+                            <h1 className="mt-[--sy-20px] text-[--24px] font-bold">
+                              Body
+                            </h1>
+                          </div>
+                        )}
+
+                        <div
+                          className={`${styles.articleContent} cursor-pointer`}
+                          key={scriptSegment.audioPath.index}
+                        >
+                          <p
+                            className={`${
+                              pageState.selectedScriptSegment?.audioPath
+                                .index === scriptSegment.audioPath.index
+                                ? styles.active
+                                : ""
+                            }`}
+                            onClick={() =>
+                              setPageState((prevState) => ({
+                                ...prevState,
+                                selectedScriptSegment: scriptSegment,
+                                selectedIncorrectWord: null,
+                                selectedToBeCorrectedWord: "",
+                              }))
+                            }
+                          >
+                            {scriptSegment.text}
+                          </p>
+                        </div>
+                      </>
+                    )
+                  )
                 ) : (
                   <div>
                     <p>No data available!</p>
@@ -157,7 +476,7 @@ const ConvertedScriptPage = () => {
                     .split(" ")
                     .map((word, index) => (
                       <span
-                        className={`${
+                        className={`h-fit ${
                           pageState.selectedIncorrectWord === word
                             ? styles.active
                             : ""
@@ -167,6 +486,7 @@ const ConvertedScriptPage = () => {
                           setPageState((prevState) => ({
                             ...prevState,
                             selectedIncorrectWord: word,
+                            selectedToBeCorrectedWord: word,
                           }))
                         }
                       >
@@ -185,13 +505,30 @@ const ConvertedScriptPage = () => {
                   <span className="font-semibold">Word Correction</span>
                   <span className="text-[#ACACAC]">Mispronounced word</span>
                 </div>
-
                 <div className="border border-solid border-[#2A2B2A] rounded-[--5px] py-[--10px] px-[--20px] flex items-center justify-between">
-                  <span>{pageState.selectedIncorrectWord}</span>
-                  {audioIcon}
+                  <span className="text-nowrap overflow-hidden w-[80%]">
+                    {pageState.selectedIncorrectWord}
+                  </span>
+                  {loadingCorrectWord ? (
+                    <LoadingSpinner />
+                  ) : (
+                    <div
+                      className="cursor-pointer"
+                      onClick={() =>
+                        testAudio(
+                          pageState.selectedIncorrectWord!,
+                          setLoadingCorrectWord
+                        )
+                      }
+                    >
+                      {audioIcon}
+                    </div>
+                  )}
                 </div>
               </div>
+
               {arrowIcon}
+
               <div className="w-[40%]">
                 <div className="flex flex-col gap-[--sy-2px] mb-[--sy-16px]">
                   <span className="font-semibold">Word Correction</span>
@@ -199,25 +536,58 @@ const ConvertedScriptPage = () => {
                     Write the correct pronunciation
                   </span>
                 </div>
-
                 <div className="border border-solid border-[#2A2B2A] rounded-[--5px] py-[--10px] px-[--20px] flex items-center justify-between">
-                  <span>{pageState.selectedIncorrectWord}</span>
-                  {audioIcon}
+                  <input
+                    className="outline-none"
+                    type="text"
+                    value={pageState.selectedToBeCorrectedWord}
+                    onChange={(e) => {
+                      setPageState((prevState) => ({
+                        ...prevState,
+                        selectedToBeCorrectedWord: e.target.value,
+                      }));
+                    }}
+                  />
+                  {loadingToBeCorrectedWord ? (
+                    <LoadingSpinner />
+                  ) : (
+                    <div
+                      className="cursor-pointer"
+                      onClick={() =>
+                        testAudio(
+                          pageState.selectedToBeCorrectedWord!,
+                          setLoadingToBeCorrectedWord
+                        )
+                      }
+                    >
+                      {audioIcon}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
             <div className="flex justify-end gap-[1.5vw]">
-              <CustomBtn
-                btnColor="white"
-                word="Replace Word"
-                paddingVal="py-[--8px] px-[--24px]"
-              />
-              <CustomBtn
-                btnColor="black"
-                word="Update Database"
-                paddingVal="py-[--8px] px-[--24px]"
-              />
+              {loadingReplaceWord ? (
+                <LoadingSpinner />
+              ) : (
+                <CustomBtn
+                  btnColor="white"
+                  word="Replace Word"
+                  paddingVal="py-[--8px] px-[--24px]"
+                  onClick={regenerateAudio}
+                />
+              )}
+              {loadingUpdateDatabase ? (
+                <LoadingSpinner />
+              ) : (
+                <CustomBtn
+                  btnColor="black"
+                  word="Update Database"
+                  paddingVal="py-[--8px] px-[--24px]"
+                  onClick={updateDatabase}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -225,15 +595,11 @@ const ConvertedScriptPage = () => {
 
       {/* buttons to move to last or next page */}
       <div className="flex justify-between items-center">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          href={"/video-editor/create"}
-        />
+        <CustomBtn word={"Back"} btnColor="white" onClick={backBTN} />
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href={"/video-editor/create/choose-footage"}
+          href="/video-editor/create/choose-footage"
         />
       </div>
     </div>

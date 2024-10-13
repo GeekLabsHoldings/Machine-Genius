@@ -1,33 +1,108 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./details.module.css";
-import QuarterCircles from "@/app/_components/QuarterCircles/QuarterCircles";
+import QuarterCircles from "@/app/_components/Creative/QuarterCircles/QuarterCircles";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { useRouter } from "next/navigation";
 
+const plusIcon = (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
+      fill="#FFFFFB"
+    />
+  </svg>
+);
+
+const verticalDots = (
+  <svg
+    width="6"
+    height="21"
+    viewBox="0 0 6 21"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
+    <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
+    <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
+  </svg>
+);
+
+const checkIcon = (
+  <svg
+    className=" me-[0.433vw]"
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1.02344 1.98438C1.02344 1.43209 1.47115 0.984375 2.02344 0.984375H10.3264C10.8787 0.984375 11.3264 1.43209 11.3264 1.98437V9.99949C11.3264 10.7107 10.7498 11.2874 10.0385 11.2874H2.31131C1.60004 11.2874 1.02344 10.7107 1.02344 9.99949V1.98438Z"
+      stroke="#595958"
+      strokeWidth="0.801342"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M8.1058 4.84766L6.23717 6.71629C5.84664 7.10682 5.21348 7.10682 4.82295 6.71629L4.24219 6.13553"
+      stroke="#595958"
+      strokeWidth="0.801342"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
+const checkboxIcon = (
+  <svg
+    width="13"
+    height="13"
+    viewBox="0 0 13 13"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect x="0.5" y="0.5" width="12" height="12" rx="0.5" stroke="#2A2B2A" />
+  </svg>
+);
+
 const Page = () => {
   const router = useRouter();
 
-  const [startDate,setStartDate] = useState("2024-04-04")
-  const [dueDate,setDueDate] = useState("2024-04-04")
-  const [counter,setCounter] = useState(0)
+  const [startDate, setStartDate] = useState("2024-04-04");
+  const [dueDate, setDueDate] = useState("2024-04-04");
+  const [counter, setCounter] = useState(0);
 
   // handle change in date input
 
-  function handleDateInput(e:any) {
-    setCounter((prev:number)=>prev+1)
-    
-    if (counter % 2 == 0 ) {      
-      setStartDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
-    console.log(counter);
+  function handleDateInput(e: any) {
+    setCounter((prev: number) => prev + 1);
 
-    } else if (counter % 2 != 0 ) {
-      setDueDate(`${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${e.$D < 10 ? `0${e.$D}` : e.$D}`);
-    console.log(counter);
-
+    if (counter % 2 == 0) {
+      setStartDate(
+        `${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${
+          e.$D < 10 ? `0${e.$D}` : e.$D
+        }`
+      );
+      console.log(counter);
+    } else if (counter % 2 != 0) {
+      setDueDate(
+        `${e.$y}-${e.$M + 1 < 10 ? `0${e.$M + 1}` : e.$M + 1}-${
+          e.$D < 10 ? `0${e.$D}` : e.$D
+        }`
+      );
+      console.log(counter);
     }
   }
 
@@ -64,12 +139,11 @@ const Page = () => {
           <p className=" text-white text-[0.568vw] font-medium me-2">
             Members (4)
           </p>{" "}
-          <div className=" flex items-center">
-            <QuarterCircles color={"#EAD787"} translate={0} />{" "}
-            <QuarterCircles color={"#6FC9EE"} translate={-40} />{" "}
-            <QuarterCircles color={"#8DC189"} translate={-80} />{" "}
-            <QuarterCircles color={"#F06F77"} translate={-120} />{" "}
-          </div>{" "}
+          <div className="flex-shrink-0">
+            <QuarterCircles
+              colors={["#EAD787", "#6FC9EE", "#8DC189", "#F06F77"]}
+            />
+          </div>
           <div></div>
         </div>
       </div>
@@ -83,17 +157,7 @@ const Page = () => {
           <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A]">
             <h5>On Boarding</h5>
             {/* Dummy icon */}
-            <svg
-              width="6"
-              height="21"
-              viewBox="0 0 6 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
-            </svg>
+            {verticalDots}
           </div>
           {/* Sub-cards */}
           <div className="my-[2.1vh]">
@@ -110,34 +174,14 @@ const Page = () => {
                     May 9
                   </span>
                   <p className="text-[#595958] flex items-center">
-                    <svg
-                      className=" me-[0.433vw]"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1.02344 1.98438C1.02344 1.43209 1.47115 0.984375 2.02344 0.984375H10.3264C10.8787 0.984375 11.3264 1.43209 11.3264 1.98437V9.99949C11.3264 10.7107 10.7498 11.2874 10.0385 11.2874H2.31131C1.60004 11.2874 1.02344 10.7107 1.02344 9.99949V1.98438Z"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M8.1058 4.84766L6.23717 6.71629C5.84664 7.10682 5.21348 7.10682 4.82295 6.71629L4.24219 6.13553"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                    {checkIcon}
                     0/4 Tasks
                   </p>
                 </div>
                 {/* Quarter Circles */}
-                <QuarterCircles color="#6FC9EE" translate={0} />
+                <div className="flex-shrink-0">
+                  <QuarterCircles colors={["#6FC9EE"]} />
+                </div>
               </div>
             </div>
             <div
@@ -150,37 +194,19 @@ const Page = () => {
               className={`${styles.smallCard} py-[1.6vh] px-[0.649vw] flex justify-between`}
             >
               <h6>Brief</h6>
-              <div>
-                <QuarterCircles color="#6FC9EE" translate={0} />
-                <QuarterCircles color="#8DC189" translate={-35} />
-                <QuarterCircles color="#F06F77" translate={-80} />
+              <div className="flex-shrink-0">
+                <QuarterCircles colors={["#6FC9EE", "#8DC189", "#F06F77"]} />
               </div>
             </div>
           </div>
           <CustomBtn
-          onClick={() => {
-            setIsOpen(true);
-          }}
-            width="100%"
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            width="w-full"
             btnColor="white"
             word="Add Card"
-            icon={
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-            }
+            icon={plusIcon}
           />
         </div>
         {/* Card */}
@@ -189,17 +215,7 @@ const Page = () => {
         >
           <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A]">
             <h5>UX Research</h5>
-            <svg
-              width="6"
-              height="21"
-              viewBox="0 0 6 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
-            </svg>
+            {verticalDots}
           </div>
           <div className="my-[2.1vh]">
             {/* UX Research details */}
@@ -210,33 +226,11 @@ const Page = () => {
               <div className=" flex justify-between items-center">
                 <div className="flex items-center">
                   <p className="text-[#595958] flex items-center">
-                    <svg
-                      className=" me-[0.433vw]"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1.02344 1.98438C1.02344 1.43209 1.47115 0.984375 2.02344 0.984375H10.3264C10.8787 0.984375 11.3264 1.43209 11.3264 1.98437V9.99949C11.3264 10.7107 10.7498 11.2874 10.0385 11.2874H2.31131C1.60004 11.2874 1.02344 10.7107 1.02344 9.99949V1.98438Z"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M8.1058 4.84766L6.23717 6.71629C5.84664 7.10682 5.21348 7.10682 4.82295 6.71629L4.24219 6.13553"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                    {checkIcon}
                     0/4 Tasks
                   </p>
                 </div>
-                <QuarterCircles color="#6FC9EE" translate={0} />
+                <QuarterCircles colors={["#6FC9EE"]} />
               </div>
             </div>
             <div
@@ -249,33 +243,11 @@ const Page = () => {
                     June 20
                   </span>
                   <p className="text-[#595958] flex items-center">
-                    <svg
-                      className=" me-[0.433vw]"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1.02344 1.98438C1.02344 1.43209 1.47115 0.984375 2.02344 0.984375H10.3264C10.8787 0.984375 11.3264 1.43209 11.3264 1.98437V9.99949C11.3264 10.7107 10.7498 11.2874 10.0385 11.2874H2.31131C1.60004 11.2874 1.02344 10.7107 1.02344 9.99949V1.98438Z"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M8.1058 4.84766L6.23717 6.71629C5.84664 7.10682 5.21348 7.10682 4.82295 6.71629L4.24219 6.13553"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                    {checkIcon}
                     0/4 Tasks
                   </p>
                 </div>
-                <QuarterCircles color="#6FC9EE" translate={0} />
+                <QuarterCircles colors={["#6FC9EE"]} />
               </div>
             </div>
             <div
@@ -288,64 +260,24 @@ const Page = () => {
                     2 Days
                   </span>
                   <p className="text-[#595958] flex items-center">
-                    <svg
-                      className=" me-[0.433vw]"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1.02344 1.98438C1.02344 1.43209 1.47115 0.984375 2.02344 0.984375H10.3264C10.8787 0.984375 11.3264 1.43209 11.3264 1.98437V9.99949C11.3264 10.7107 10.7498 11.2874 10.0385 11.2874H2.31131C1.60004 11.2874 1.02344 10.7107 1.02344 9.99949V1.98438Z"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M8.1058 4.84766L6.23717 6.71629C5.84664 7.10682 5.21348 7.10682 4.82295 6.71629L4.24219 6.13553"
-                        stroke="#595958"
-                        strokeWidth="0.801342"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                    {checkIcon}
                     0/4 Tasks
                   </p>
                 </div>
-                <div>
-                  <QuarterCircles color="#6FC9EE" translate={70} />
-                  <QuarterCircles color="#8DC189" translate={35} />
-                  <QuarterCircles color="#F06F77" translate={0} />
+                <div className="flex-shrink-0">
+                  <QuarterCircles colors={["#6FC9EE", "#8DC189", "#F06F77"]} />
                 </div>
               </div>
             </div>
           </div>
           <CustomBtn
-          onClick={() => {
-            setIsOpen(true);
-          }}
-            width="100%"
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            width="w-full"
             btnColor="white"
             word="Add Card"
-            icon={
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-            }
+            icon={plusIcon}
           />
         </div>
         {/* Card */}
@@ -354,74 +286,34 @@ const Page = () => {
         >
           <div className=" flex justify-between items-center pb-[2.1vh] border-b-2 border-[#2A2B2A] mb-[2.1vh]">
             <h5>List Title</h5>
-            <svg
-              width="6"
-              height="21"
-              viewBox="0 0 6 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="2.98486" cy="2.28955" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="10.3032" r="2.28955" fill="#ACACAC" />
-              <circle cx="2.98486" cy="18.3169" r="2.28955" fill="#ACACAC" />
-            </svg>
+            {verticalDots}
           </div>
 
           <CustomBtn
             onClick={() => {
               setIsOpen(true);
             }}
-            width="100%"
+            width="w-full"
             btnColor="white"
             word="Add Card"
-            icon={
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-            }
+            icon={plusIcon}
           />
         </div>
         <div
-          className={`${styles.card} md:col-span-1 col-span-2 md:self-start self-stretch`}
+          className={`md:col-span-1 col-span-2 md:self-start self-stretch`}
         >
           <CustomBtn
-            width="100%"
+            width="w-full"
             btnColor="white"
             word="Add Another List"
-            icon={
-              <svg
-                className="me-[0.61vw]"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                  fill="#FFFFFB"
-                />
-              </svg>
-            }
+            icon={plusIcon}
           />
         </div>
       </div>
       <div
-        className={` ${styles.overlay}  absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
+        className={` ${
+          styles.overlay
+        }  absolute left-0 right-0 top-0 bottom-0 justify-center items-center bg-[#FFFFFB] bg-opacity-[58%] z-20 ${
           isOpen ? "flex" : "hidden" // Conditional rendering based on isOpen state
         }`}
       >
@@ -468,7 +360,11 @@ const Page = () => {
                 <div className="flex justify-end items-end pb-[0.2vw] w-full">
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <div className="board-add-calendar-card rounded-2xl">
-                      <DateCalendar onChange={(e)=>{handleDateInput(e)}} />
+                      <DateCalendar
+                        onChange={(e) => {
+                          handleDateInput(e);
+                        }}
+                      />
                       <div className=" flex gap-[1.188vw] mb-[2.2vh] px-[1.615vw]">
                         <div>
                           {/* <p className=" mb-[1.2vh] font-semibold">Start Date</p>
@@ -477,7 +373,7 @@ const Page = () => {
                             Start Date
                           </p>
                           <input
-                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
                             type="text"
                             name=""
                             id="myDateInput1"
@@ -488,7 +384,7 @@ const Page = () => {
                         <div>
                           <p className=" mb-[1.2vh] font-semibold">Due Date</p>
                           <input
-                          className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
+                            className="py-[0.8vh] px-[0.4vw] bg-[#F8F8F8] rounded-md w-[7.76vw] border-[1px] border-[#DFDFDF] focus-visible:outline-none"
                             type="text"
                             readOnly
                             name=""
@@ -509,22 +405,7 @@ const Page = () => {
                   <ul className=" max-h-[11vh] overflow-scroll">
                     {checkListData.map((e, i) => (
                       <li className=" flex gap-[0.473vw] items-center mb-[1.4vh]">
-                        <svg
-                          width="13"
-                          height="13"
-                          viewBox="0 0 13 13"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <rect
-                            x="0.5"
-                            y="0.5"
-                            width="12"
-                            height="12"
-                            rx="0.5"
-                            stroke="#2A2B2A"
-                          />
-                        </svg>
+                        {checkboxIcon}
                         <p className={`${styles.pChecked}`}>{e}</p>
                       </li>
                     ))}
@@ -547,23 +428,7 @@ const Page = () => {
                       paddingVal="py-[0.5vh] px-[0.7vw]"
                       btnColor="black"
                       word="Add"
-                      icon={
-                        <svg
-                          className="me-[0.61vw]"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M5.31852 10.3277C5.31348 10.834 5.71976 11.2485 6.22601 11.2535C6.73226 11.2585 7.14672 10.8523 7.15177 10.346L7.18832 6.67953L10.8548 6.71609C11.3611 6.72113 11.7755 6.31485 11.7806 5.8086C11.7856 5.30235 11.3793 4.88789 10.8731 4.88284L7.20659 4.84629L7.24315 1.17981C7.24819 0.673567 6.84191 0.259095 6.33566 0.254048C5.82941 0.249001 5.41495 0.65529 5.4099 1.16153L5.37335 4.82802L1.70687 4.79146C1.20064 4.78642 0.786155 5.1927 0.781108 5.69895C0.776061 6.2052 1.18236 6.61966 1.68859 6.6247L5.35508 6.66126L5.31852 10.3277Z"
-                            fill="#FFFFFB"
-                          />
-                        </svg>
-                      }
+                      icon={plusIcon}
                     />
                   </div>
                 </div>
@@ -578,19 +443,19 @@ const Page = () => {
                 <h6 className=" mb-[1.7vh]">Board Members</h6>
                 <ul>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--dark)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#6FC9EE" translate={0} />
+                    <QuarterCircles colors={["#6FC9EE"]} />
                     <p className=" text-white">Shahenda El Naggar</p>
                   </li>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--white)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#F36F24B3" translate={0} />
+                    <QuarterCircles colors={["#F36F24B3"]} />
                     <p className="  text-[var(--dark)]">Yara Hesham</p>
                   </li>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--dark)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#E1C655FF" translate={0} />
+                    <QuarterCircles colors={["#E1C655FF"]} />
                     <p className=" text-white">Mostafa Sakr</p>
                   </li>
                   <li className=" mb-[0.9vh] flex gap-[1.4vw] items-center bg-[var(--white)] px-[0.677vw] py-[0.9vh] rounded-md border-[0.74px] border-[#DBDBD7] w-fit">
-                    <QuarterCircles color="#9B5FBFFF" translate={0} />
+                    <QuarterCircles colors={["#9B5FBFFF"]} />
                     <p className="  text-[var(--dark)]">Sherry Magdi</p>
                   </li>
                 </ul>
