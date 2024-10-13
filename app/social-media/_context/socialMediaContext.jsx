@@ -96,7 +96,7 @@ export default function SocialMediaContextProvider({ children }) {
                 <div className="flex-shrink-0 pt-0.5">
                   <img
                     className="h-10 w-10 rounded-full"
-                    src={profileImg1.src}
+                    src={data?.profile_image_url || profileImg1.src}
                     alt=""
                   />
                 </div>

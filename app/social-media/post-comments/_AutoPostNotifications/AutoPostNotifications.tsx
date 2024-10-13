@@ -9,6 +9,7 @@ import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { useQueryClient } from "react-query";
+import profileImg1 from "@/public/assets/profile_avatar_placeholder.png";
 
 interface ITweet {
   _id: string;
@@ -22,6 +23,10 @@ interface ITweet {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  accountId: {
+    _id?: string;
+    profile_image_url?: string;
+  };
 }
 
 interface IGetTweetsMustApprove {
@@ -285,6 +290,7 @@ const AutoPostNotifications = ({
               tweetsMustApprove.length > 0 ? (
               tweetsMustApprove.map((ele) => (
                 <RecentNotificationCard
+                  profileImg={ele?.accountId.profile_image_url || profileImg1}
                   key={ele._id}
                   name={ele.accountName}
                   username={ele.accountName}
