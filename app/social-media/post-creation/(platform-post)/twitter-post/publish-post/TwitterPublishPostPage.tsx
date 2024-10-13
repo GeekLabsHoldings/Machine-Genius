@@ -109,14 +109,9 @@ const TwitterPublishPostPage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: IPublishPostResponse = await res.json();
-
-      if ("message" in json && json.message.includes("duplicate")) {
-        toast.error("Post is a duplicate!");
-      } else if ("response" in json && "result" in json) {
-        toast.success("Post is published!");
-      } else {
-        toast.error("Something went wrong!");
+      const json: any = await res.json();
+      if (json && json.message) {
+        toast(json.message);
       }
     } catch (error) {
       toast.error("Something went wrong!");
@@ -149,7 +144,7 @@ const TwitterPublishPostPage = () => {
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/${selectedBrandId}/get-account?platform=TWITTER`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/brand/${selectedBrandId}/get-account?platform=TWITTER`,
         {
           headers: {
             Authorization: `barrer ${
@@ -191,13 +186,21 @@ const TwitterPublishPostPage = () => {
 
     try {
       const formData = new FormData();
-      formData.append("media", file);
+      formData.append("image", file);
       // Convert twitterData object to a JSON string
       formData.append("twitterData", JSON.stringify(twitterData));
+
       const response = await fetch(
-        "/api/social-media/twitter/uploadTwitterImage",
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/upload-image`,
         {
           method: "POST",
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
           body: formData,
         }
       );

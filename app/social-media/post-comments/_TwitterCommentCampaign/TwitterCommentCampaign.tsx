@@ -2,66 +2,69 @@
 import { AccountsData } from "@/app/_data/data";
 import styles from "./TwitterCommentCampaign.module.css";
 import {
-  facebookIconSm,
-  redditIconSm,
-  telegramIconSm,
   runningClockIcon,
   finishedCheckIcon,
   pausedIcon,
 } from "@/app/_utils/svgIcons";
 import { useState } from "react";
+import { TwitterSharingAccount } from "../PostCommentsPage";
 
-
-//   return data about account , number of comments and campaign type
-const renderAccounts = AccountsData.map((oneAccount, idx) => (
-  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
-    <li className="w-[20%] flex justify-center text-center gap-[1vw]">
-      <p>{oneAccount.account_name}</p>
-      {oneAccount.account_type === "facebook"
-        ? facebookIconSm
-        : oneAccount.account_type === "reddit"
-        ? redditIconSm
-        : telegramIconSm}
-    </li>
-    <li className={`w-[20%] `}>{oneAccount.user_name}</li>
-
-    <li className="w-[20%]">{oneAccount.comments + " " + "comments"}</li>
-    <li className="w-[20%] flex justify-center items-center">
-      <span
-        className={`flex gap-[0.5vw] items-center w-fit ${
-          oneAccount.status === "Finished"
-            ? "bg-[#5FA85BB5]"
-            : oneAccount.status === "Running"
-            ? "bg-[#E9313EB2]"
-            : "bg-[#E1C655B2]"
-        }`}
-      >
-        {oneAccount.status === "Finished"
-          ? finishedCheckIcon
-          : oneAccount.status === "Paused"
-          ? pausedIcon
-          : runningClockIcon}
-        <p>{oneAccount.status}</p>
-      </span>
-    </li>
-    <li className="w-[20%] flex justify-center">
-      <span
-        className={`flex gap-[0.5vw] items-center w-fit ${
-          oneAccount.Campaign_type === "Auto Comment"
-            ? "bg-[#5FA85BB5]"
-            : "bg-[#E1C655B2]"
-        }`}
-      >
-        <p>{oneAccount.Campaign_type}</p>
-      </span>
-    </li>
-  </ul>
-));
-
-const TwitterCommentCampaign = () => {
+const TwitterCommentCampaign = ({
+  twitterAccountsData,
+}: {
+  twitterAccountsData: TwitterSharingAccount[] | null;
+}) => {
   // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+
+  //   return data about account , number of comments and campaign type
+  const renderAccounts =
+    Array.isArray(twitterAccountsData) && twitterAccountsData.length > 0 ? (
+      [...twitterAccountsData].reverse().map((oneAccount, idx) => (
+        <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
+          <li className="w-[20%] flex justify-center text-center gap-[1vw]">
+            <p>{oneAccount.accountName}</p>
+          </li>
+          <li className={`w-[20%] `}>{oneAccount.userName}</li>
+
+          <li className="w-[20%]">{oneAccount.comments + " " + "comments"}</li>
+          <li className="w-[20%] flex justify-center items-center">
+            <span
+              className={`flex gap-[0.5vw] items-center w-fit ${
+                oneAccount.status === "Finished"
+                  ? "bg-[#5FA85BB5]"
+                  : oneAccount.status === "Running"
+                  ? "bg-[#E9313EB2]"
+                  : "bg-[#E1C655B2]"
+              }`}
+            >
+              {oneAccount.status === "Finished"
+                ? finishedCheckIcon
+                : oneAccount.status === "Paused"
+                ? pausedIcon
+                : runningClockIcon}
+              <p>{oneAccount.status}</p>
+            </span>
+          </li>
+          <li className="w-[20%] flex justify-center">
+            <span
+              className={`flex gap-[0.5vw] items-center w-fit ${
+                oneAccount.campaignType === "Auto Comment"
+                  ? "bg-[#5FA85BB5]"
+                  : "bg-[#E1C655B2]"
+              }`}
+            >
+              <p>{oneAccount.campaignType}</p>
+            </span>
+          </li>
+        </ul>
+      ))
+    ) : (
+      <div className="flex justify-center items-center h-full">
+        <span className="custom-loader"></span>
+      </div>
+    );
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>

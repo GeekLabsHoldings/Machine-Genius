@@ -1,93 +1,71 @@
+"use client";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./DataBase.module.css";
-import {
-  runningClockIcon,
-  pausedIcon,
-  finishedCheckIcon,
-} from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import convertTimestampToDate from "@/app/_utils/convertTimestampToDate";
 
-const taleData = [
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "12 March  2024",
-    post: "4",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "16 March  2024",
-    post: "7",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "19 March  2024",
-    post: "3",
-    status: "Finished",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "1 March  2024",
-    post: "5",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "12 March  2024",
-    post: "9",
-    status: "Finished",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "30 March  2024",
-    post: "8",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-];
+interface IPost {
+  _id: string;
+  post_id: string;
+  content: string;
+  group_id: string;
+  timestamp: number;
+  platform: string;
+  brand?: string;
+  brandId?: string;
+  __v: number;
+  //
+  engagement?: number;
+}
 
 const Page = () => {
+  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
+  const [pageState, setPageState] = useState<{
+    fetchedPosts: IPost[];
+  }>({
+    fetchedPosts: [],
+  });
+
+  const getPosts = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-posts?limit=9999`,
+      {
+        headers: {
+          Authorization: `barrer ${
+            typeof window !== "undefined"
+              ? localStorage.getItem("token")
+              : authState.token
+          }`,
+        },
+      }
+    );
+
+    if (res.status === 401) {
+      handleSignOut();
+    }
+
+    if (!res.ok) {
+      toast.error("Failed to fetch posts!");
+      return;
+    }
+
+    const data: IPost[] = await res.json();
+    if (data && Array.isArray(data) && data.length > 0) {
+      setPageState((prevState) => ({
+        ...prevState,
+        fetchedPosts: data.filter((post) => post.content),
+      }));
+    } else {
+      toast.error("Failed to fetch posts!");
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
   return (
     <>
       <div className={`${styles.filters} flex gap-[1vw] my-[--sy-17px]`}>
@@ -102,12 +80,12 @@ const Page = () => {
         </div>
 
         <div className="flex flex-col w-[13%] gap-[0.3vw]">
-          <h5>Posts Shared</h5>
+          <h5>Platofrm</h5>
           <CustomSelectInput options={["All"]} />
         </div>
 
         <div className="flex flex-col w-[13%] gap-[0.3vw]">
-          <h5>Status</h5>
+          <h5>Brand</h5>
           <CustomSelectInput options={["All"]} />
         </div>
 
@@ -175,7 +153,7 @@ const Page = () => {
                   fill="#2A2B2A"
                 />
               </svg>
-              <span>Posts Shared</span>
+              <span>Platform</span>
             </li>
             <li className="w-[10%]">
               <svg
@@ -188,7 +166,7 @@ const Page = () => {
                   fill="black"
                 />
               </svg>
-              <span>Status</span>
+              <span>Brand</span>
             </li>
             <li className="w-[20%]">
               <svg
@@ -217,37 +195,27 @@ const Page = () => {
           </ul>
 
           <div className={styles.table_body}>
-            {taleData.map((ele, idx) => (
-              <ul className="w-[100%]">
-                <li className="w-[30%]">{ele.content_name}</li>
-                <li className="w-[20%]">{ele.date}</li>
-                <li className="w-[20%]">{ele.post}</li>
-                <li className="w-[10%]">
-                  <span
-                    className={`${styles.status_page} ${
-                      ele.status === "Running"
-                        ? styles.running
-                        : ele.status === "Paused"
-                        ? styles.paused
-                        : ele.status === "Finished"
-                        ? styles.finished
-                        : ""
-                    }`}
-                  >
-                    {ele.status === "Running"
-                      ? runningClockIcon
-                      : ele.status === "Paused"
-                      ? pausedIcon
-                      : ele.status === "Finished"
-                      ? finishedCheckIcon
-                      : ""}
-
-                    {ele.status}
-                  </span>
-                </li>
-                <li className="w-[20%]">{idx}</li>
-              </ul>
-            ))}
+            {Array.isArray(pageState.fetchedPosts) &&
+            pageState.fetchedPosts.length > 0 ? (
+              pageState.fetchedPosts.map((ele) => (
+                <ul className="w-[100%]" key={ele._id}>
+                  <li className="w-[30%]">{ele.content}</li>
+                  <li className="w-[20%]">
+                    {convertTimestampToDate(ele.timestamp)}
+                  </li>
+                  <li className="w-[20%]">
+                    {ele.platform[0] + ele.platform.toLowerCase().slice(1)}
+                  </li>
+                  <li className="w-[10%]">
+                    {(ele.brand && brandIdMap[ele.brand]) ||
+                      (ele.brandId && brandIdMap[ele.brandId])}
+                  </li>
+                  <li className="w-[20%]">{ele?.engagement || 0}</li>
+                </ul>
+              ))
+            ) : (
+              <span className="custom-loader w-fit m-auto"></span>
+            )}
           </div>
         </div>
       </div>

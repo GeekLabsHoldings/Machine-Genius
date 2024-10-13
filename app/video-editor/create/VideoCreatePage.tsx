@@ -60,7 +60,7 @@ const VideoCreatePage = () => {
     setSelectedContent("");
     const fetchAssignedVideos = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/get-all-content`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/get-all-content`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -105,7 +105,7 @@ const VideoCreatePage = () => {
     // sort the intro slides by the index
     intro.sort((a: any, b: any) => a.index - b.index);
 
-    setTotalIntroSlides(intro.length);
+    setTotalIntroSlides(intro.length || 4);
 
     return [...intro, ...body];
   }
@@ -119,7 +119,7 @@ const VideoCreatePage = () => {
       // router.replace("/video-editor/create/converted-script");
       setPageState((prev) => ({ ...prev, createVideoLoading: true }));
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/VideoEditing/split-content`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/split-content`,
         {
           method: "POST",
           body: JSON.stringify(parseParagraph(selectedContent)),
@@ -163,7 +163,7 @@ const VideoCreatePage = () => {
   }, [selectedContent]);
 
   // render assigned videos to every one and its status of completetion
-  const renderVideosData = assignedVideos.map((video, idx) => (
+  const renderVideosData = [...assignedVideos].reverse().map((video, idx) => (
     <ul
       key={idx}
       className="borderBottom w-full flex justify-between  items-center py-[0.5vh] text-center"

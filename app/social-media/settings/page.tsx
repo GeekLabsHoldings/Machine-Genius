@@ -1,65 +1,170 @@
 "use client";
-import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
+import { ArticleNames, Brands } from "@/app/_data/data";
 // import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import styles from "./setting.module.css";
-import {
-  facebookIconSm,
-  redditIconSm,
-  telegramIconSm,
-} from "@/app/_utils/svgIcons";
+import { addIcon } from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
 
-// set all checkboxes to checked when click on select all
-const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
-  // Get all checkbox elements
-  var checkboxes = document.querySelectorAll('input[name="test"]');
-  if (e.target.checked) {
-    // Loop through each checkbox and set checked property to true
-    checkboxes.forEach(function (checkbox: any) {
-      checkbox.checked = true;
-    });
-  } else {
-    // Loop through each checkbox and set checked property to false
-    checkboxes.forEach(function (checkbox: any) {
-      checkbox.checked = false;
-    });
-  }
-};
+//
+interface IBrand {
+  _id: string;
+  brand_name: string;
+  description: string;
+  aquisition_date: string;
+  niche: string;
+  type?: string;
+  parentId?: string;
+  __v: number;
+}
 
-// return all accounts
-const renderAccounts = AccountsData.map((oneAccount, idx) => (
-  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
-    <li className="w-[5%] flex justify-center items-center">
-      <CustomCheckBox name="test" />
-    </li>
-    <li className="w-[22%] flex justify-center text-center gap-[1vw]">
-      <p>{oneAccount.account_name}</p>
-      {oneAccount.account_type === "facebook"
-        ? facebookIconSm
-        : oneAccount.account_type === "reddit"
-        ? redditIconSm
-        : telegramIconSm}
-    </li>
-    <li className={`w-[22%] `}>{oneAccount.user_name}</li>
-    <li className="w-[22%] ">
-      <a href="#">{oneAccount.link}</a>
-    </li>
-    <li className="w-[22%]  ">
-      {oneAccount.followers > 999
-        ? oneAccount.followers / 100 / 10.0 + "k"
-        : oneAccount.followers}
-    </li>
-    <li className="w-[22%] ">{oneAccount.engagement}</li>
-  </ul>
-));
+interface IGroup {
+  _id: string;
+  group_name: string;
+  link: string;
+  group_id: string;
+  subscribers: number;
+  niche?: string;
+  platform: string;
+  brand: string;
+  engagement: number;
+  __v: number;
+}
+
+interface IBrandWithGroups {
+  brand: IBrand;
+  groups: IGroup[];
+}
 
 const Setting = () => {
+  const { authState, handleSignOut } = useContext(globalContext);
+  const [selectedAccountIds, setSelectedAccountIds] = useState<string[]>([]);
   // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+  const [pageState, setPageState] = useState<{
+    fetchedAccounts: IGroup[];
+  }>({ fetchedAccounts: [] });
+
+  async function getAccounts() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-groups`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IBrandWithGroups[] = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (json && Array.isArray(json) && json.length > 0) {
+        setPageState((prev) => ({
+          ...prev,
+          fetchedAccounts: json.flatMap((brand) => brand?.groups),
+        }));
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getAccounts:", error);
+    }
+  }
+
+  useEffect(() => {
+    getAccounts();
+  }, []);
+
+  // return all accounts
+  const renderAccounts =
+    Array.isArray(pageState.fetchedAccounts) &&
+    pageState.fetchedAccounts.length > 0 ? (
+      pageState.fetchedAccounts.map((oneAccount) => (
+        <ul
+          key={oneAccount._id}
+          className={`${styles.tableBody} borderBottom articleRow`}
+        >
+          <li className="w-[5%] flex justify-center items-center">
+            <CustomCheckBox
+              name="test"
+              value={oneAccount._id}
+              checked={selectedAccountIds.includes(oneAccount._id)}
+              onChange={(e) => handleCheckboxChange(e, oneAccount._id)}
+            />
+          </li>
+          <li className="w-[22%]">
+            <p>{oneAccount.group_name}</p>
+          </li>
+          <li className={`w-[22%] flex justify-center text-center gap-[1vw]`}>
+            {oneAccount.platform[0] +
+              oneAccount.platform.toLowerCase().slice(1)}
+            {/* <span>
+            {oneAccount.platform === "facebook"
+              ? facebookIconSm
+              : oneAccount.platform === "reddit"
+              ? redditIconSm
+              : telegramIconSm}
+            </span> */}
+          </li>
+          <li className="w-[22%]">
+            <a href={oneAccount.link} target="_blank">
+              {oneAccount.link}
+            </a>
+          </li>
+          <li className="w-[22%]">
+            {oneAccount.subscribers > 999
+              ? oneAccount.subscribers / 100 / 10.0 + "k"
+              : oneAccount.subscribers}
+          </li>
+          <li className="w-[22%]">{oneAccount.engagement}</li>
+        </ul>
+      ))
+    ) : (
+      <ul className={`${styles.tableBody} borderBottom articleRow h-full`}>
+        <span className="custom-loader w-fit m-auto"></span>
+      </ul>
+    );
+
+  // Function to handle individual checkbox change
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    accountId: string
+  ) => {
+    if (e.target.checked) {
+      setSelectedAccountIds((prev) => [...prev, accountId]);
+    } else {
+      setSelectedAccountIds((prev) => prev.filter((id) => id !== accountId));
+    }
+  };
+
+  // Function to handle "Select All" checkbox
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const allIds = pageState.fetchedAccounts.map((account) => account._id);
+      setSelectedAccountIds(allIds);
+    } else {
+      setSelectedAccountIds([]);
+    }
+  };
+
+  const selectedAccounts = pageState.fetchedAccounts.filter((account) =>
+    selectedAccountIds.includes(account._id)
+  );
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
@@ -73,7 +178,7 @@ const Setting = () => {
               <CustomSelectInput label="All" options={ArticleNames} />
             </div>
             <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Username</h5>
+              <h5>Platform</h5>
               <CustomSelectInput label="All" options={Brands} />
             </div>
             <div className="flex flex-col w-[25%] gap-[0.3vw]">
@@ -133,25 +238,11 @@ const Setting = () => {
             {/* open modal to enable you to add account  */}
             <BasicModal
               btnWord={"Add Account"}
-              btnIcon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="11"
-                  viewBox="0 0 11 11"
-                  fill="none"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
-                    fill="#FFFFFB"
-                  />
-                </svg>
-              }
+              btnIcon={addIcon}
               btnColor={"black"}
               modalTitle={"Add Account"}
               forWhat={"add_account"}
+              getData={getAccounts}
             />
             {/* open modal to enable you to remove selected accounts  */}
             <BasicModal
@@ -159,6 +250,10 @@ const Setting = () => {
               btnColor={"white"}
               modalTitle={"Remove Accounts?"}
               forWhat={"remove_account"}
+              getData={getAccounts}
+              dataToRemove={selectedAccountIds}
+              selectedAccounts={selectedAccounts}
+              onRemoveSuccess={() => setSelectedAccountIds([])} // Callback to clear selection
             />
           </div>
         </div>
@@ -173,9 +268,16 @@ const Setting = () => {
             >
               <li className="w-[5%] flex justify-center items-center">
                 <CustomCheckBox
-                  onChange={(e) => {
-                    handleCheckAllSelectedText(e);
-                  }}
+                  onChange={handleSelectAll}
+                  checked={
+                    selectedAccountIds.length ===
+                      pageState.fetchedAccounts.length &&
+                    pageState.fetchedAccounts.length > 0
+                  }
+                  indeterminate={
+                    selectedAccountIds.length > 0 &&
+                    selectedAccountIds.length < pageState.fetchedAccounts.length
+                  }
                 />
               </li>
 
@@ -211,7 +313,7 @@ const Setting = () => {
                       fill="black"
                     />
                   </svg>
-                  <p>Username</p>
+                  <p>Platform</p>
                 </div>
               </li>
 

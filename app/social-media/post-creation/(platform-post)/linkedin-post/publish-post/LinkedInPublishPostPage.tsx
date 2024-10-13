@@ -74,13 +74,9 @@ const LinkedInPublishPostPage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: IPublishPostResponse = await res.json();
-      if (json && json.message && json.message.includes("duplicate")) {
-        toast.error("Post is a duplicate!");
-      } else if (json && json.result && json.linkedinPost) {
-        toast.success("Post is published!");
-      } else {
-        toast.error("Something went wrong!");
+      const json: any = await res.json();
+      if (json && json.message) {
+        toast(json.message);
       }
     } catch (error) {
       toast.error("Something went wrong!");
