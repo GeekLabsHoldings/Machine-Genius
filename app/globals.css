@@ -681,3 +681,8 @@ newsletter/email-list
   }
 }
 /* ===== End loader ===== */
+
+.ql-formats {
+  display: none;
+}
+
