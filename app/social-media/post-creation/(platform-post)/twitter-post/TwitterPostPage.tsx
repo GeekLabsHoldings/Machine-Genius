@@ -4,8 +4,8 @@ const PlatformPost = dynamic(() => import("../_platform-post/PlatformPost"), {
   ssr: false,
 });
 
-const TwitterPost = () => {
-  return <PlatformPost />;
+const TwitterPostPage = () => {
+  return <PlatformPost postCaptionLimit={280} />;
 };
 
-export default TwitterPost;
+export default TwitterPostPage;

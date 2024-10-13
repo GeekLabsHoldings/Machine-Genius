@@ -1,14 +1,16 @@
 import React from "react";
 import styles from "./RecentNotificationCard.module.css";
-import Image from "next/image";
-import profileImg1 from "@/public/assets/man-img.svg";
+import Image, { StaticImageData } from "next/image";
+import profileImg1 from "@/public/assets/profile_avatar_placeholder.png";
 
 interface IRecentNotificationCard {
-  profileImg?: string;
+  profileImg?: string | StaticImageData;
   name: string;
   username: string;
   text: string;
   isVerified?: boolean;
+  isActive?: boolean;
+  onClick?: () => void;
 }
 
 const VerifiedIcon = (
@@ -28,9 +30,11 @@ export default function RecentNotificationCard({
   username,
   text,
   isVerified,
+  isActive,
+  onClick,
 }: IRecentNotificationCard) {
   return (
-    <div className={styles.item}>
+    <div className={`${styles.item} ${isActive ? styles.active : ""}`} onClick={onClick}>
       <div className={styles.avatar}>
         <Image src={profileImg} alt="avatar" />
         <div className={styles.avatar_info}>

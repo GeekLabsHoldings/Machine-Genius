@@ -8,6 +8,14 @@ import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { formatToText } from "@/app/_utils/contentFormatter";
 import { globalContext } from "./store";
+import useSessionStorage from "../_hooks/useSessionStorage";
+
+export interface IUploadMoviePresignedURLData {
+  message: string;
+  preSignedURL: string;
+  movieUrl: string;
+  s3BucketURL: string;
+}
 
 const initialContextState = {
   // ===== 01. Start Content Creator =====
@@ -49,8 +57,10 @@ const initialContextState = {
   selectedContentTitle: "",
   setSelectedContentTitle: (title: any) => {},
 
-  presignedURLData: null as any,
-  setPresignedURLData: (data: any) => {},
+  uploadMoviePresignedURLData: null as IUploadMoviePresignedURLData | null,
+  setUploadMoviePresignedURLData: (
+    data: IUploadMoviePresignedURLData | null
+  ) => {},
 
   editContentData: null as any,
   setEditContentData: (id: any) => {},
@@ -654,7 +664,7 @@ export default function ContentCreatorContextProvider({
 
   // ===== End generatedThumbnails =====
 
-  // ===== Start videoTranscription =====
+  // ===== Start MovieMyth/videoTranscription =====
   const videoTranscription = useSelector(
     (state: any) => state.contentCreator.videoTranscription
   );
@@ -664,22 +674,16 @@ export default function ContentCreatorContextProvider({
       JSON.stringify(videoTranscription)
     );
   }, [videoTranscription]);
-  // ===============================================================
 
-  // function presignedURLDataInit() {
-  //   if (typeof window !== "undefined") {
-  //     const presignedURLDataInitValue = sessionStorage.getItem("presignedURLData");
-  //     return presignedURLDataInitValue ? JSON.parse(presignedURLDataInitValue) : null;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  const [presignedURLData, setPresignedURLData] = useState<any>(null);
-  // useEffect(() => {
-  //   sessionStorage.setItem("presignedURLData", JSON.stringify(presignedURLData));
-  // }, [presignedURLData]);
+  // ===== End MovieMyth/videoTranscription =====
 
-  // ===== End videoTranscription =====
+  // ===== Start MovieMyth/uploadMoviePresignedURLData =====
+  const [uploadMoviePresignedURLData, setUploadMoviePresignedURLData] =
+    useSessionStorage<IUploadMoviePresignedURLData | null>(
+      "ContentCreatorMovieMyth-uploadMoviePresignedURLData",
+      null
+    );
+  // ===== End MovieMyth/uploadMoviePresignedURLData =====
 
   // ===== Start editContentData =====
   function editContentDataInit() {
@@ -734,8 +738,8 @@ export default function ContentCreatorContextProvider({
     selectedContentTitle,
     setSelectedContentTitle,
 
-    presignedURLData,
-    setPresignedURLData,
+    uploadMoviePresignedURLData,
+    setUploadMoviePresignedURLData,
 
     editContentData,
     setEditContentData,

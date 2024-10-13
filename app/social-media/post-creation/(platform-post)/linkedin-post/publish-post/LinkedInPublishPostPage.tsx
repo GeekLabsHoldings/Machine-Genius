@@ -1,11 +1,10 @@
 "use client";
-import { useContext, useRef, useState } from "react"; // React's useState hook
+import { useContext, useState } from "react"; // React's useState hook
 import { socialMediaPostCreationContext } from "@/app/social-media/post-creation/_context/socialMediaPostCreationContext";
 import { globalContext } from "@/app/_context/store";
-// import postImage from "@/public/assets/post-img.svg"; // Post image
-// import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
 import toast from "react-hot-toast";
 import PublishPost from "../../_platform-post/PublishPost";
+import convertFileToBase64 from "@/app/_utils/convertFileToBase64";
 
 interface IPublishPostResponse {
   result?: {
@@ -29,19 +28,19 @@ interface LinkedInDataResponse {
   data: {
     asset: string;
     uploadUrl: string;
-    linkedIn_Access_Token: string;
+    LinkedIn_Token: string;
   };
 }
 
-const LinkedInPublishPost = () => {
-  const { authState, handleSignOut } = useContext(globalContext);
+const LinkedInPublishPostPage = () => {
+  const { authState, handleSignOut, selectedBrandId } =
+    useContext(globalContext);
   const { postCaption } = useContext(socialMediaPostCreationContext);
-  const uploadImageRef = useRef<HTMLInputElement>(null);
   const [pageState, setPageState] = useState<{
-    asset: string | null;
+    assetId: string | null;
     uploadedAsset: string | null | File;
   }>({
-    asset: null,
+    assetId: null,
     uploadedAsset: null,
   });
 
@@ -49,16 +48,18 @@ const LinkedInPublishPost = () => {
     if (!postCaption) {
       toast.error("No post caption provided!");
       return;
+    } else if (!selectedBrandId) {
+      toast.error("No brand selected!");
+      return;
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/add-post`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/add-post/${selectedBrandId}`,
         {
           method: "POST",
           body: JSON.stringify({
-            brand: "Geek Labs Holdings",
             content: postCaption,
-            ...(pageState.asset !== null && { asset: pageState.asset }),
+            ...(pageState.assetId !== null && { asset: pageState.assetId }),
           }),
           headers: {
             "Content-Type": "application/json",
@@ -73,13 +74,9 @@ const LinkedInPublishPost = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: IPublishPostResponse = await res.json();
-      if (json && json.message && json.message.includes("duplicate")) {
-        toast.error("Post is a duplicate!");
-      } else if (json && json.result && json.linkedinPost) {
-        toast.success("Post is published!");
-      } else {
-        toast.error("Something went wrong!");
+      const json: any = await res.json();
+      if (json && json.message) {
+        toast(json.message);
       }
     } catch (error) {
       toast.error("Something went wrong!");
@@ -87,11 +84,29 @@ const LinkedInPublishPost = () => {
     }
   }
 
+  // ===== 00. handleFileChange =====
+  async function handleUploadImage(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (files && files[0]) {
+      const file = files[0];
+      // Validate file type on client-side before uploading
+      if (!file.type.includes("image")) {
+        toast.error("Unsupported file type. Please upload image.");
+        return;
+      }
+      await uploadImage(file);
+    }
+  }
+
   // ===== 01. get LinkedIn Data =====
   async function getLinkedInData() {
+    if (!selectedBrandId) {
+      toast.error("No brand selected!");
+      return;
+    }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/get`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/linkedin/get/${selectedBrandId}`,
         {
           headers: {
             Authorization: `barrer ${
@@ -110,7 +125,7 @@ const LinkedInPublishPost = () => {
         toast.error("Something went wrong!");
         return;
       } else if (json && json.success === true) {
-        setPageState((prev) => ({ ...prev, asset: json.data.asset }));
+        setPageState((prev) => ({ ...prev, assetId: json.data.asset }));
         return json;
       } else {
         toast.error("Something went wrong!");
@@ -118,7 +133,7 @@ const LinkedInPublishPost = () => {
       }
     } catch (error) {
       toast.error("Something went wrong!");
-      console.error("Error getPresignedURL:", error);
+      console.error("Error getLinkedInData:", error);
     }
   }
 
@@ -134,30 +149,33 @@ const LinkedInPublishPost = () => {
 
     setPageState((prev) => ({ ...prev, uploadedAsset: null }));
 
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "image/jpeg");
-    myHeaders.append("media-type-family", "STILLIMAGE");
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${LinkedInData.data.linkedIn_Access_Token}`
-    );
-
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: file,
-      redirect: "follow" as RequestRedirect,
-    };
+    // Convert the file to a base64 string
+    const base64File = await convertFileToBase64(file);
 
     try {
-      const response = await fetch(LinkedInData.data.uploadUrl, requestOptions);
+      const response = await fetch(
+        "/api/social-media/linkedin/uploadLinkedInImage",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uploadUrl: LinkedInData.data.uploadUrl,
+            token: LinkedInData.data.LinkedIn_Token,
+            file: base64File.split(",")[1], // Remove the data URL prefix if present
+          }),
+        }
+      );
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (result.success) {
         console.log("Upload successful");
-        setPageState((prev) => ({ ...prev, uploadedAsset: file }));
+        setPageState((prev) => ({ ...prev, uploadedAsset: base64File }));
+        toast.success("Image uploaded successfully!");
       } else {
-        setPageState((prev) => ({ ...prev, uploadedAsset: null }));
-        toast.error(`Upload failed with status: ${response.status}`);
+        toast.error(`Upload failed: ${result.message || "Unknown error"}`);
       }
     } catch (error: any) {
       toast.error("Something went wrong!");
@@ -165,22 +183,13 @@ const LinkedInPublishPost = () => {
     }
   }
 
-  // ===== 00. handleFileChange =====
-  async function handleUploadImage(event: React.ChangeEvent<HTMLInputElement>) {
-    const files = event.target.files;
-    if (files && files[0]) {
-      uploadImage(files[0]);
-    }
-  }
-
   return (
     <PublishPost
-      uploadImageRef={uploadImageRef}
       handleUploadImage={handleUploadImage}
-      pageState={pageState}
+      uploadedAsset={pageState.uploadedAsset}
       handleAddPost={handleAddPost}
     />
   );
 };
 
-export default LinkedInPublishPost;
+export default LinkedInPublishPostPage;

@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+import { useState, useEffect, useRef } from "react";
 
 function useSessionStorage<T>(
   key: string,
@@ -7,44 +8,56 @@ function useSessionStorage<T>(
 ) {
   const { isSerializable = true } = options || {};
 
-  const [storedValue, setStoredValue] = useState<T>(() => {
-    if (typeof window === "undefined") {
-      return initialValue;
-    }
+  // Use a ref to hold the initial mount state
+  const isInitialMount = useRef(true);
 
-    try {
-      const item = window.sessionStorage.getItem(key);
+  // Use a state to hold the value
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
 
-      if (!item) {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const getStoredItem = () => {
+      try {
+        const item = window.sessionStorage.getItem(key);
+        if (item) {
+          return isSerializable ? JSON.parse(item) : (item as unknown as T);
+        }
+        return initialValue;
+      } catch (error) {
+        console.error("Error reading from sessionStorage", error);
         return initialValue;
       }
+    };
 
-      if (isSerializable) {
-        return JSON.parse(item);
-      } else {
-        return item as unknown as T;
+    if (isInitialMount.current) {
+      const storedItem = getStoredItem();
+      if (storedItem !== initialValue) {
+        setStoredValue(storedItem);
       }
-    } catch (error) {
-      console.error("Error reading sessionStorage key", key, error);
-      return initialValue;
+      isInitialMount.current = false;
+    } else {
+      // Update sessionStorage when storedValue changes
+      try {
+        window.sessionStorage.setItem(
+          key,
+          isSerializable
+            ? JSON.stringify(storedValue)
+            : (storedValue as unknown as string)
+        );
+      } catch (error) {
+        console.error("Error setting sessionStorage key", key, error);
+      }
     }
-  });
+  }, [key, storedValue, initialValue, isSerializable]);
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {
       const valueToStore =
         value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
-
-      if (typeof window !== "undefined") {
-        if (isSerializable) {
-          window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
-        } else {
-          window.sessionStorage.setItem(key, valueToStore as unknown as string);
-        }
-      }
     } catch (error) {
-      console.error("Error setting sessionStorage key", key, error);
+      console.error("Error setting value", error);
     }
   };
 

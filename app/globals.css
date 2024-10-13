@@ -659,3 +659,25 @@ newsletter/email-list
   padding: 1rem 2rem;
 }
 /* ===== End HomePage & LandingPage ===== */
+
+/* ===== Start loader ===== */
+.custom-loader {
+  width: 24px;
+  height: 24px;
+  border: 5px solid #1c1c1c;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* ===== End loader ===== */

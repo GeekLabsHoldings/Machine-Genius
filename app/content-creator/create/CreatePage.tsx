@@ -24,6 +24,7 @@ export default function CreatePage() {
     setGeneratedTitles,
     setLockedGeneratedTitles,
     setSelectedContentTitle,
+    setUploadMoviePresignedURLData,
     setEditContentData,
   } = useContext(contentCreatorContext);
 
@@ -47,6 +48,7 @@ export default function CreatePage() {
       setGeneratedTitles([]);
       setLockedGeneratedTitles([]);
       setSelectedContentTitle("");
+      setUploadMoviePresignedURLData(null);
       dispatch(contentCreatorActions.setVideoTranscription(null));
       setEditContentData(null);
       if (typeof window !== "undefined") {
@@ -82,6 +84,8 @@ export default function CreatePage() {
             onClick={() => {
               if (!selectedContentType) {
                 toast.error("Please select a content type!");
+              } else if (selectedContentType === "Article") {
+                toast.error("Please update AI prompt for creating article!");
               } else {
                 router.replace("/content-creator/create/choose-brand");
               }

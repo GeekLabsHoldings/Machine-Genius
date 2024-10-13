@@ -1,65 +1,126 @@
 "use client";
-import { AccountsData } from "@/app/_data/data";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import styles from "./TwitterCommentsList.module.css";
-import {
-  facebookIconSm,
-  redditIconSm,
-  telegramIconSm,
-} from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import { addIcon } from "@/app/_utils/svgIcons";
+import { TwitterSharingAccount } from "../PostCommentsPage";
 
-// return all accounts
-const renderAccounts = AccountsData.map((oneAccount, idx) => (
-  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
-    <li className="w-[16%] flex justify-center text-center gap-[1vw]">
-      <p>{oneAccount.account_name}</p>
-      {oneAccount.account_type === "facebook"
-        ? facebookIconSm
-        : oneAccount.account_type === "reddit"
-        ? redditIconSm
-        : telegramIconSm}
-    </li>
-    <li className={`w-[16%] `}>{oneAccount.user_name}</li>
-    <li className="w-[16%] ">
-      <a href="#">{oneAccount.link}</a>
-    </li>
-    <li className="w-[16%]  ">
-      <span
-        className={
-          oneAccount.brand === "PST USA"
-            ? "bg-[#31B2E9B2]"
-            : oneAccount.brand === "Canada"
-            ? "bg-[#E9313EB2]"
-            : oneAccount.brand === "PST Asia"
-            ? "bg-[#E1C655B2]"
-            : oneAccount.brand === "Investocracy"
-            ? "bg-[#5FA85BB5]"
-            : "bg-[#F36F24B2]"
-        }
-      >
-        {oneAccount.brand}
-      </span>
-    </li>
-    <li className="w-[16%] ">{oneAccount.niche}</li>
-    <li className="w-[16%] flex justify-center">
-      <span
-        className={`flex gap-[0.5vw] items-center w-fit ${
-          oneAccount.Campaign_type === "Auto Comment"
-            ? "bg-[#5FA85BB5]"
-            : "bg-[#E1C655B2]"
-        }`}
-      >
-        <p>{oneAccount.Campaign_type}</p>
-      </span>
-    </li>
-  </ul>
-));
+const verticalDots = (
+  <svg
+    className="cursor-pointe w-[--7px] h-[--25px]"
+    viewBox="0 0 7 25"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M6.41797 2.77778C6.41797 2.04107 6.1019 1.33453 5.53929 0.813592C4.97668 0.292658 4.21362 0 3.41797 0C2.62232 0 1.85926 0.292658 1.29665 0.813592C0.73404 1.33453 0.417969 2.04107 0.417969 2.77778C0.417969 3.51449 0.73404 4.22103 1.29665 4.74196C1.85926 5.2629 2.62232 5.55556 3.41797 5.55556C4.21362 5.55556 4.97668 5.2629 5.53929 4.74196C6.1019 4.22103 6.41797 3.51449 6.41797 2.77778ZM3.41797 9.72222C4.21362 9.72222 4.97668 10.0149 5.53929 10.5358C6.1019 11.0567 6.41797 11.7633 6.41797 12.5C6.41797 13.2367 6.1019 13.9433 5.53929 14.4642C4.97668 14.9851 4.21362 15.2778 3.41797 15.2778C2.62232 15.2778 1.85926 14.9851 1.29665 14.4642C0.73404 13.9433 0.417969 13.2367 0.417969 12.5C0.417969 11.7633 0.73404 11.0567 1.29665 10.5358C1.85926 10.0149 2.62232 9.72222 3.41797 9.72222ZM3.41797 19.4444C4.21362 19.4444 4.97668 19.7371 5.53929 20.258C6.1019 20.779 6.41797 21.4855 6.41797 22.2222C6.41797 22.9589 6.1019 23.6655 5.53929 24.1864C4.97668 24.7073 4.21362 25 3.41797 25C2.62232 25 1.85926 24.7073 1.29665 24.1864C0.73404 23.6655 0.417969 22.9589 0.417969 22.2222C0.417969 21.4855 0.73404 20.779 1.29665 20.258C1.85926 19.7371 2.62232 19.4444 3.41797 19.4444Z"
+      fill="#2A2B2A"
+    />
+  </svg>
+);
 
-const TwitterCommentsList = () => {
+const TwitterCommentsList = ({
+  twitterAccountsData,
+  getTwitterAccountsData,
+  brandsOptions,
+}: {
+  twitterAccountsData: TwitterSharingAccount[] | null;
+  getTwitterAccountsData: () => void;
+  brandsOptions: string[];
+}) => {
+  const { brandIdMap } = useContext(globalContext);
   // for storing the order of subscribers and engagement (descending or ascending)
   const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
   const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+
+  const renderAccounts =
+    Array.isArray(twitterAccountsData) && twitterAccountsData.length > 0 ? (
+      [...twitterAccountsData].reverse().map((oneAccount) => (
+        <ul
+          key={oneAccount._id}
+          className={`${styles.tableBody} borderBottom articleRow`}
+        >
+          <li className="w-[16%] flex justify-center text-center gap-[1vw]">
+            <p>{oneAccount.accountName}</p>
+          </li>
+          <li className={`w-[16%] `}>{oneAccount.userName}</li>
+          <li className="w-[16%]">
+            <a href={oneAccount.accountLink} target="_blank">
+              {oneAccount.accountLink}
+            </a>
+          </li>
+          <li className="w-[16%]">
+            <span
+              className={
+                brandIdMap[oneAccount.brand] === "Street Polotics"
+                  ? "bg-[#31B2E9B2]"
+                  : brandIdMap[oneAccount.brand] === "Movie Myth"
+                  ? "bg-[#E9313EB2]"
+                  : brandIdMap[oneAccount.brand] === "Investocracy"
+                  ? "bg-[#5FA85BB5]"
+                  : "bg-[#F36F24B2]"
+              }
+            >
+              {brandIdMap[oneAccount.brand]}
+            </span>
+          </li>
+          <li className="w-[16%]">{oneAccount.niche}</li>
+          <li className="w-[16%] flex justify-center">
+            <span
+              className={`flex gap-[0.5vw] items-center w-fit ${
+                oneAccount.campaignType === "Auto Comment"
+                  ? "bg-[#5FA85BB5]"
+                  : "bg-[#E1C655B2]"
+              }`}
+            >
+              <p>{oneAccount.campaignType}</p>
+            </span>
+          </li>
+          <li className="w-[4%] flex justify-center">
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button">
+                {verticalDots}
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content bg-white menu rounded-[--16px] z-[1] w-fit p-[--8px] shadow-md"
+              >
+                <li>
+                  <a>
+                    <BasicModal
+                      btnWord={"Edit"}
+                      btnColor={"black"}
+                      modalTitle={"Edit Account"}
+                      forWhat={"edit_account1"}
+                      dataToEdit={oneAccount}
+                      getData={getTwitterAccountsData}
+                    />
+                  </a>
+                </li>
+                {/* <li>
+                  <BasicModal
+                    btnWord={"Delete"}
+                    btnColor={"black"}
+                    modalTitle={"Delete Account"}
+                    forWhat={"delete_account1"}
+                    dataToEdit={oneAccount}
+                    getData={getTwitterAccountsData}
+                  />
+                </li> */}
+              </ul>
+            </div>
+          </li>
+        </ul>
+      ))
+    ) : (
+      <div className="flex justify-center items-center h-full">
+        <span className="custom-loader"></span>
+      </div>
+    );
+
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
       {/* filters options to filter and edit data in table */}
@@ -174,25 +235,12 @@ const TwitterCommentsList = () => {
           <div className="flex gap-[0.5vw] items-end">
             <BasicModal
               btnWord={"Add Account"}
-              btnIcon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="11"
-                  viewBox="0 0 11 11"
-                  fill="none"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
-                    fill="#FFFFFB"
-                  />
-                </svg>
-              }
+              btnIcon={addIcon}
               btnColor={"black"}
               modalTitle={"Add Account"}
-              forWhat={"add_account"}
+              forWhat={"add_account1"}
+              getData={getTwitterAccountsData}
+              brandsOptions={brandsOptions}
             />
           </div>
         </div>
@@ -314,6 +362,8 @@ const TwitterCommentsList = () => {
                   <p>Campaign Type</p>
                 </div>
               </li>
+
+              <li className="w-[4%] flex justify-center"></li>
             </ul>
             <div className={styles.tableBodyWrapper}>{renderAccounts}</div>
           </div>
@@ -322,4 +372,5 @@ const TwitterCommentsList = () => {
     </div>
   );
 };
+
 export default TwitterCommentsList;

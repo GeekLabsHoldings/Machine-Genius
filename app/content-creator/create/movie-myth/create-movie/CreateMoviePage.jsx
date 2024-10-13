@@ -29,9 +29,8 @@ const CreateMovie = () => {
     (state) => state.contentCreator.videoTranscription
   );
 
-  const { selectedContentType, selectedBrand, presignedURLData } = useContext(
-    contentCreatorContext
-  );
+  const { selectedContentType, selectedBrand, uploadMoviePresignedURLData } =
+    useContext(contentCreatorContext);
   const [IsLoading, setIsLoading] = useState(false);
 
   function selectedTextInit() {
@@ -283,6 +282,8 @@ const CreateMovie = () => {
             className={`${styles.box} flex flex-col px-[1.5vw] pt-[4vw] pb-[1.5vw] gap-[1vw] relative`}
           >
             {videoTranscription &&
+            Array.isArray(videoTranscription?.transcriptionResults) &&
+            videoTranscription?.transcriptionResults.length > 0 ? (
               [...videoTranscription?.transcriptionResults]
                 .sort((a, b) => a.part - b.part)
                 .map((transcript) => {
@@ -301,12 +302,19 @@ const CreateMovie = () => {
                       }
                     >
                       <p className={isActive ? styles.highlight : ""}>
-                        {transcript.transcription.content}
+                        {transcript.transcription?.content &&
+                        typeof transcript.transcription?.content === "string"
+                          ? transcript.transcription.content
+                          : "No content received from transcription!"}
                       </p>
                       <span className="self-end">{formatted}</span>
                     </div>
                   );
-                })}
+                })
+            ) : (
+              <div>No content received from transcription!</div>
+            )}
+
             <button
               id="highlight-btn"
               className={`${styles.highlightBtn}`}
@@ -325,7 +333,7 @@ const CreateMovie = () => {
             className={`${styles.box} flex justify-center items-center ${styles.movieWrapper}`}
           >
             <VideoPlayer
-              src={presignedURLData?.movieUrl}
+              src={uploadMoviePresignedURLData?.movieUrl}
               highlightTime={highlightTime}
               videoRef={videoRef}
             />

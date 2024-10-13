@@ -1,31 +1,40 @@
-import React, { RefObject, useContext } from "react";
+import React, { useContext, useRef } from "react";
 // Import necessary modules and components
 import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom Button component
 import styles from "./PublishPost.module.css"; // CSS module for styling
 // import profileImg from "@/public/assets/post-profile.svg"; // Profile image
-import Image from "next/image"; // Next.js Image component for optimized image loading
+// import postImage from "@/public/assets/post-img.svg"; // Post image
+// import ImageOption from "@/app/_components/SocialMedia/ImageOption/ImageOption";
 import { reGenerateIcon } from "@/app/_utils/svgIcons";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostViewScreens";
 import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCreationContext";
+import DateAndTimePicker from "@/app/_components/DateAndTimePicker/DateAndTimePicker";
 
+// todo: accept PostViewScreens as childern
 interface IProps {
-  uploadImageRef: RefObject<HTMLInputElement>;
   handleUploadImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  pageState: {
-    asset: string | null;
-    uploadedAsset: string | null | File;
-  };
+  uploadedAsset: string | null | File;
   handleAddPost: () => void;
+  setPageState?: React.Dispatch<React.SetStateAction<any>>;
+  handleFacebookLogin?: () => void;
 }
 
 export default function PublishPost({
-  uploadImageRef,
   handleUploadImage,
-  pageState,
+  uploadedAsset,
   handleAddPost,
+  setPageState,
+  handleFacebookLogin,
 }: IProps) {
   const { selectedPlatform } = useContext(socialMediaPostCreationContext);
+  const uploadImageRef = useRef<HTMLInputElement>(null);
+
+  function getDateTimeValue(value: any) {
+    if (setPageState) {
+      setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+    }
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -63,8 +72,7 @@ export default function PublishPost({
                 {/* Image options */}
 
                 <div
-                  className="min-w-[23%] h-full aspect-square rounded-[--13px]
-                border border-[--dark] overflow-hidden flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                  className="min-w-[23%] h-full aspect-square rounded-[--13px] border border-[--dark] overflow-hidden flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
                   onClick={() => uploadImageRef.current?.click()}
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -82,15 +90,9 @@ export default function PublishPost({
                   />
                 </div>
 
-                {pageState.uploadedAsset && (
-                  <div
-                    className="min-w-[23%] h-full aspect-square rounded-[--13px]
-               border border-[--dark] overflow-hidden flex flex-col items-center justify-center"
-                  >
-                    <Image
-                      src={pageState.uploadedAsset as string}
-                      alt="uploaded image"
-                    />
+                {uploadedAsset && (
+                  <div className="max-w-[23%] h-full aspect-square rounded-[--13px] border border-[--dark] overflow-hidden flex flex-col items-center justify-center">
+                    <img src={uploadedAsset as string} alt="uploaded image" />
                   </div>
                 )}
 
@@ -131,11 +133,8 @@ export default function PublishPost({
                   <h4 className="text-[--20px] font-semibold mb-[--sy-10px]">
                     Upload Time
                   </h4>
-                  <CustomSelectInput
-                    label={"Upload Time"}
-                    hoverColor="hover:bg-[#E1C655]"
-                    options={[]}
-                  />
+
+                  <DateAndTimePicker getDateTimeValue={getDateTimeValue} />
                 </div>
               </div>
             </div>
@@ -153,7 +152,18 @@ export default function PublishPost({
           btnColor="white"
           href="/social-media/post-creation/linkedin-post/"
         />
-        <CustomBtn word="Publish" btnColor="black" onClick={handleAddPost} />
+
+        <div className="flex gap-[--20px]">
+          {selectedPlatform === "FACEBOOK" && (
+            <CustomBtn
+              word="Update Access Token"
+              btnColor="black"
+              onClick={handleFacebookLogin}
+              paddingVal="py-[--10px] px-[--18px]"
+            />
+          )}
+          <CustomBtn word="Publish" btnColor="black" onClick={handleAddPost} />
+        </div>
       </div>
     </div>
   );

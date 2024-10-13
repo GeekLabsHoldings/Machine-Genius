@@ -8,6 +8,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn"; // Custom Button com
 import { useContext, useState } from "react"; // React's useState hook
 import { socialMediaPostCreationContext } from "../../_context/socialMediaPostCreationContext";
 import PostViewScreens from "@/app/_components/SocialMedia/PostViewScreens/PostViewScreens";
+import toast from "react-hot-toast";
 
 // Array of suggested post contents
 const SuggetionPosts = [
@@ -22,7 +23,11 @@ const SuggetionPosts = [
   "Stocks, the heartbeat of the marketStocks, the heartbeat of the market!",
 ];
 
-export default function PlatformPost() {
+interface IProps {
+  postCaptionLimit: number;
+}
+
+export default function PlatformPost({ postCaptionLimit }: IProps) {
   const {
     selectedPlatform,
     postCaption,
@@ -60,8 +65,16 @@ export default function PlatformPost() {
   // Function to handle adding hashtags to post text
   const handleAddHashTags = (e: React.MouseEvent<HTMLButtonElement>) => {
     const hashtag = (e.target as HTMLButtonElement).innerText;
-    setPostCaption((prev: string) => `${prev} ${hashtag}`);
+    if (
+      postCaption &&
+      postCaption.length + hashtag.length + 1 <= postCaptionLimit
+    ) {
+      setPostCaption((prev: string) => `${prev} ${hashtag}`);
+    } else {
+      toast.error("Post character limit reached!");
+    }
   };
+
   return (
     <div className="flex flex-col h-full">
       {/* Wrapper for adding a post */}
@@ -89,12 +102,14 @@ export default function PlatformPost() {
               <textarea
                 name=""
                 id=""
-                maxLength={280}
+                maxLength={postCaptionLimit}
                 rows={2}
                 value={postCaption}
                 onChange={(e) => setPostCaption(e.target.value)}
               ></textarea>
-              <span>{postCaption?.length}/280</span>
+              <span>
+                {postCaption?.length}/{postCaptionLimit}
+              </span>
             </div>
 
             {/* Section for tweet content suggestions */}

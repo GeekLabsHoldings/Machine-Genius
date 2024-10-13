@@ -19,17 +19,6 @@
   padding-bottom: 0.6vw;
   border-bottom: 1px solid var(--dark);
 }
-.platformBoxHeader > a > div {
-  padding: 0;
-}
-
-.platformBoxHeader > a {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 /* ===== End 01- Header =====*/
 .platformBoxHeaderSm {
   border-bottom: 1px solid var(--dark);
