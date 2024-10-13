@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
+import { on } from "node:events";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
 
@@ -20,6 +21,7 @@ interface KeywordsAndImage {
 
 interface ScriptSegment {
   index: number;
+  title?: string;
   text: string;
   keywordsAndImages: KeywordsAndImage[];
   audioPath: {
@@ -32,6 +34,76 @@ interface ScriptSegment {
 interface SelectedFootage {
   index: number;
   imageUrl: string[];
+}
+
+function TitleEdit({
+  title,
+  onSubmit,
+}: {
+  title: string;
+  onSubmit: (title: string) => void;
+}) {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [textValue, setTextValue] = useState<string>(title);
+
+  useEffect(() => {
+    setTextValue(title);
+  }, [title]);
+
+  useEffect(() => {
+    if (!isEditing) {
+      inputRef.current?.blur();
+    } else {
+      inputRef.current?.focus();
+    }
+  }, [isEditing]);
+
+  return (
+    <form
+      className="flex items-center gap-[--10px]"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setIsEditing(false);
+        onSubmit(textValue);
+      }}
+    >
+      <span className="font-bold text-[--15px] text-[#1e40af]">Title:</span>
+      <div
+        className={`w-fit grow-0 border group-hover:opacity-100
+                          aborder-indigo-300 gap-[--5px] bg-[#dbeafe] flex justify-center items-center rounded-md px-[--8px] py-[--4px]`}
+        onClick={() => {
+          setIsEditing(true);
+        }}
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          value={textValue}
+          onChange={(e) => setTextValue(e.target.value)}
+          placeholder="Add keyword"
+          className={`outline-none bg-transparent text-[--15px] text-[#2563eb] transform transition-all duration-300`}
+          onBlur={() => {
+            setIsEditing(false);
+            onSubmit(textValue);
+          }}
+        />
+        <svg
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          className="w-[--14px] h-[--14px] stroke-[#1e40af]"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+        </svg>
+      </div>
+    </form>
+  );
 }
 
 function AddChips({
@@ -653,12 +725,12 @@ const ChooseFootagePage = () => {
                   (scriptSegment: ScriptSegment, index: number) => (
                     <>
                       {index === 0 && (
-                        <div>
+                        <div className="mb-[--10px]">
                           <h1 className="text-[--24px] font-bold">Intro</h1>
                         </div>
                       )}
                       {index === totalIntroSlides && (
-                        <div>
+                        <div className="mb-[--10px]">
                           <hr />
                           <h1 className="mt-[--sy-20px] text-[--24px] font-bold">
                             Body
@@ -701,18 +773,42 @@ const ChooseFootagePage = () => {
                           {scriptSegment.text}
                         </p>
                         <div
-                          className={`flex items-center gap-[--10px] w-[95%] group-hover:h-[--50px]
+                          className={`flex flex-col justify-center gap-[--10px] w-[95%] ${
+                            totalIntroSlides > index
+                              ? "group-hover:h-[--120px]"
+                              : "group-hover:h-[--50px]"
+                          }
                             px-[--10px] rounded-b-md bg-gray-100 shadow-md overflow-clip
                             ${
                               pageState.selectedScriptSegment?.audioPath
                                 .index === scriptSegment.audioPath.index
-                                ? "h-[--50px]"
+                                ? totalIntroSlides > index
+                                  ? "h-[--120px]"
+                                  : "h-[--50px]"
                                 : "h-0"
                             }`}
                         >
+                          {totalIntroSlides > index ? (
+                            <>
+                              <TitleEdit
+                                title={scriptSegment?.title!}
+                                onSubmit={(title: string) => {
+                                  // @ts-ignore
+                                  setSplitedContent((prev) => {
+                                    const updatedContent = [...prev];
+                                    updatedContent[index].title = title;
+                                    return updatedContent;
+                                  });
+                                }}
+                              />
+                              <hr className="w-full" />
+                            </>
+                          ) : null}
+
                           {/* add chips */}
-                          <div
-                            className={`w-fit grow-0 border group-hover:opacity-100
+                          <div className="flex gap-[--10px]">
+                            <div
+                              className={`w-fit grow-0 border group-hover:opacity-100
                           ${
                             pageState.selectedScriptSegment?.audioPath.index ===
                             scriptSegment.audioPath.index
@@ -720,34 +816,35 @@ const ChooseFootagePage = () => {
                               : "opacity-0"
                           }
                           aborder-indigo-300 bg-[#dbeafe] flex justify-center items-center gap-[--10px] rounded-md px-[--8px] py-[--4px]`}
-                          >
-                            <span className="font-semibold text-[--15px] text-[#1e40af]">
-                              {scriptSegment.keywordsAndImages[0].keyword}
-                            </span>
-                            <span>
-                              {/* close / x icon */}
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                className="w-[--14px] h-[--14px] stroke-[#1e40af]"
-                              >
-                                <path d="M18 6 6 18"></path>
-                                <path d="m6 6 12 12"></path>
-                              </svg>
-                            </span>
+                            >
+                              <span className="font-semibold text-[--15px] text-[#1e40af]">
+                                {scriptSegment.keywordsAndImages[0].keyword}
+                              </span>
+                              <span>
+                                {/* close / x icon */}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  className="w-[--14px] h-[--14px] stroke-[#1e40af]"
+                                >
+                                  <path d="M18 6 6 18"></path>
+                                  <path d="m6 6 12 12"></path>
+                                </svg>
+                              </span>
+                            </div>
+                            <AddChips
+                              currentIndex={
+                                pageState.selectedScriptSegment?.audioPath
+                                  .index as number
+                              }
+                              index={scriptSegment.audioPath.index! as number}
+                            />
                           </div>
-                          <AddChips
-                            currentIndex={
-                              pageState.selectedScriptSegment?.audioPath
-                                .index as number
-                            }
-                            index={scriptSegment.audioPath.index! as number}
-                          />
                         </div>
                       </div>
                     </>
