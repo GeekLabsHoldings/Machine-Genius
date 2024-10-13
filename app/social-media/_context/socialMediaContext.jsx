@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState, useRef } from "react";
+import { createContext, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 // import { usePathname } from "next/navigation";
 // import { v4 as uuidv4 } from "uuid";
@@ -24,6 +24,7 @@ export default function SocialMediaContextProvider({ children }) {
   const router = useRouter();
   //   const path = usePathname();
   const socketRef = useRef(null);
+  const processedTweetIdsRef = useRef(new Set());
 
   // Function to retrieve the token
   function getToken() {
@@ -61,10 +62,21 @@ export default function SocialMediaContextProvider({ children }) {
     socket.on("connect", () => {
       console.log("Connected to socket server");
       toast.success("Connected to socket server");
+      // Clear the processedTweetIds set
+      processedTweetIdsRef.current.clear();
     });
 
     socket.on("NewTweets", (data) => {
       console.log("Received NewTweets data:", data);
+
+      // Check if we've already processed this tweetId
+      if (processedTweetIdsRef.current.has(data.tweetId)) {
+        console.log(`Tweet ${data.tweetId} already processed, skipping.`);
+        return;
+      }
+
+      // Mark this tweetId as processed
+      processedTweetIdsRef.current.add(data.tweetId);
 
       toast.custom(
         (t) => (

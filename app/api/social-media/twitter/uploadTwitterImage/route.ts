@@ -2,17 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import OAuth from "oauth-1.0a";
 import crypto from "crypto";
 
-// Disable Next.js's default body parsing (optional if not using middleware)
-// export const bodyParser = false;
-
-// deprecated
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
-
-// Define the shape of your Twitter data sent from the client
 interface TwitterAccount {
   ConsumerKey: string;
   ConsumerSecret: string;
@@ -28,12 +17,20 @@ interface TwitterDataResponse {
 
 export async function POST(req: NextRequest) {
   try {
-    // Parse the incoming form data using NextRequest's formData API
-    const formData = await req.formData();
+    console.log("Starting Twitter image upload process");
 
-    // Extract and validate twitterData
+    // Log the content type of the request
+    console.log("Request Content-Type:", req.headers.get("content-type"));
+
+    const formData = await req.formData();
+    console.log("Form data received");
+
+    // Log all keys in the formData
+    console.log("FormData keys:", Array.from(formData.keys()));
+
     const rawTwitterData = formData.get("twitterData");
     if (!rawTwitterData || typeof rawTwitterData !== "string") {
+      console.error("Missing or invalid twitterData");
       return NextResponse.json(
         { error: "Missing or invalid twitterData" },
         { status: 400 }
@@ -43,14 +40,16 @@ export async function POST(req: NextRequest) {
     let twitterData: TwitterDataResponse;
     try {
       twitterData = JSON.parse(rawTwitterData);
+      console.log("Twitter data parsed successfully");
     } catch (e) {
+      console.error("Failed to parse twitterData:", e);
       return NextResponse.json(
         { error: "twitterData must be a valid JSON string" },
         { status: 400 }
       );
     }
 
-    // Validate the structure of twitterData
+    // Validate Twitter data structure
     if (
       !twitterData.platform ||
       twitterData.platform !== "TWITTER" ||
@@ -61,6 +60,7 @@ export async function POST(req: NextRequest) {
       typeof twitterData.account.TokenSecret !== "string" ||
       typeof twitterData.account.BearerToken !== "string"
     ) {
+      console.error("Invalid twitterData structure:", JSON.stringify(twitterData));
       return NextResponse.json(
         { error: "Invalid twitterData structure" },
         { status: 400 }
@@ -70,27 +70,46 @@ export async function POST(req: NextRequest) {
     const { ConsumerKey, ConsumerSecret, AccessToken, TokenSecret } =
       twitterData.account;
 
-    // Extract and validate the file from the parsed form
+    // Check for file in formData
     const file = formData.get("media");
-    if (!file || !(file instanceof File)) {
+    console.log("File object type:", file ? typeof file : "undefined");
+    console.log("Is File instance:", file instanceof File);
+
+    if (!file) {
+      console.error("No file found in form data");
       return NextResponse.json(
-        { error: "No file uploaded or invalid file format" },
+        { error: "No file uploaded" },
         { status: 400 }
       );
     }
 
-    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
-    const arrayBuffer = await file.arrayBuffer();
-    if (arrayBuffer.byteLength > maxSizeInBytes) {
+    if (!(file instanceof File)) {
+      console.error("Uploaded item is not a File instance");
       return NextResponse.json(
-        { error: "File size exceeds the 5MB limit." },
+        { error: "Invalid file format" },
         { status: 400 }
+      );
+    }
+
+    console.log("File received:", file.name, "Size:", file.size, "bytes");
+
+    // Read file as ArrayBuffer
+    let arrayBuffer: ArrayBuffer;
+    try {
+      arrayBuffer = await file.arrayBuffer();
+      console.log("File successfully read as ArrayBuffer");
+    } catch (error) {
+      console.error("Error reading file as ArrayBuffer:", error);
+      return NextResponse.json(
+        { error: "Failed to read uploaded file" },
+        { status: 500 }
       );
     }
 
     const fileBuffer = Buffer.from(arrayBuffer);
+    console.log("File buffer created, size:", fileBuffer.length, "bytes");
 
-    // Initialize OAuth 1.0a
+    // Create OAuth object and prepare request
     const oauth = new OAuth({
       consumer: { key: ConsumerKey, secret: ConsumerSecret },
       signature_method: "HMAC-SHA1",
@@ -106,20 +125,22 @@ export async function POST(req: NextRequest) {
       url: "https://upload.twitter.com/1.1/media/upload.json",
       method: "POST",
       data: {
-        media: fileBuffer.toString("base64"), // Twitter expects media as base64-encoded string for simple uploads
+        media: fileBuffer.toString("base64"),
       },
     };
 
-    // Generate headers
     const headers = oauth.toHeader(
       oauth.authorize(requestData, { key: AccessToken, secret: TokenSecret })
     );
 
-    // Prepare URL-encoded body for Twitter
+    console.log("OAuth headers generated");
+
     const body = new URLSearchParams();
     body.append("media", requestData.data.media);
 
-    // Make the request to Twitter
+    console.log("Sending request to Twitter API");
+
+    // Make request to Twitter API
     const response = await fetch(requestData.url, {
       method: requestData.method,
       headers: {
@@ -128,6 +149,8 @@ export async function POST(req: NextRequest) {
       },
       body: body.toString(),
     });
+
+    console.log("Response received from Twitter API. Status:", response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -139,13 +162,13 @@ export async function POST(req: NextRequest) {
     }
 
     const twitterResponse = await response.json();
+    console.log("Twitter upload successful:", JSON.stringify(twitterResponse));
 
-    // Optionally, return the Twitter media ID or other relevant info
     return NextResponse.json(twitterResponse, { status: 200 });
   } catch (error: any) {
-    console.error("Error in upload-image API:", error);
+    console.error("Unhandled error in upload-image API:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: error.message },
       { status: 500 }
     );
   }

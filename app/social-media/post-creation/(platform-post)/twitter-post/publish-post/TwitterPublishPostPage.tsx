@@ -144,7 +144,7 @@ const TwitterPublishPostPage = () => {
     }
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/${selectedBrandId}/get-account?platform=TWITTER`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/brand/${selectedBrandId}/get-account?platform=TWITTER`,
         {
           headers: {
             Authorization: `barrer ${

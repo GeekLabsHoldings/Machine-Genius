@@ -13,7 +13,8 @@ interface IPost {
   group_id: string;
   timestamp: number;
   platform: string;
-  brand: string;
+  brand?: string;
+  brandId?: string;
   __v: number;
   //
   engagement?: number;
@@ -29,7 +30,7 @@ const Page = () => {
 
   const getPosts = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-posts`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-posts?limit=9999`,
       {
         headers: {
           Authorization: `barrer ${
@@ -205,7 +206,10 @@ const Page = () => {
                   <li className="w-[20%]">
                     {ele.platform[0] + ele.platform.toLowerCase().slice(1)}
                   </li>
-                  <li className="w-[10%]">{brandIdMap[ele.brand]}</li>
+                  <li className="w-[10%]">
+                    {(ele.brand && brandIdMap[ele.brand]) ||
+                      (ele.brandId && brandIdMap[ele.brandId])}
+                  </li>
                   <li className="w-[20%]">{ele?.engagement || 0}</li>
                 </ul>
               ))

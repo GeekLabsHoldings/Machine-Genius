@@ -332,7 +332,7 @@ export default function GlobalContextProvider({
   async function getBrands() {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/get-all-brands?limit=9999`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/brand/get-all-brands?limit=9999`,
         {
           headers: {
             Authorization: `barrer ${
@@ -372,7 +372,7 @@ export default function GlobalContextProvider({
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_BASE_URL
-        }/ceo/brand/get-brands-platform?${params.toString()}`,
+        }/user/brand/get-brands-platform?${params.toString()}`,
         {
           headers: {
             Authorization: `barrer ${
