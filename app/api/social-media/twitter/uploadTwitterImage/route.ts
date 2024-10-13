@@ -79,14 +79,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    // const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
     const arrayBuffer = await file.arrayBuffer();
-    if (arrayBuffer.byteLength > maxSizeInBytes) {
-      return NextResponse.json(
-        { error: "File size exceeds the 5MB limit." },
-        { status: 400 }
-      );
-    }
+    // if (arrayBuffer.byteLength > maxSizeInBytes) {
+    //   return NextResponse.json(
+    //     { error: "File size exceeds the 5MB limit." },
+    //     { status: 400 }
+    //   );
+    // }
 
     const fileBuffer = Buffer.from(arrayBuffer);
 
