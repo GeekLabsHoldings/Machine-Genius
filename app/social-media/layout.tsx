@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
   ssr: false,
 });
+import SocialMediaContextProvider from "./_context/socialMediaContext";
 
 // import { usePathname } from 'next/navigation';
 
@@ -137,13 +138,15 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         />
       </div>
       {/* Main page content */}
-      <div className="Page_Wrapper">
-        <TitleOfPage title={CurrentPage} />
-        <div className="h-full">
-          {/* Render children components */}
-          {children}
+      <SocialMediaContextProvider>
+        <div className="Page_Wrapper">
+          <TitleOfPage title={CurrentPage} />
+          <div className="h-full">
+            {/* Render children components */}
+            {children}
+          </div>
         </div>
-      </div>
+      </SocialMediaContextProvider>
     </div>
   );
 };

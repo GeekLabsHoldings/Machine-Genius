@@ -7,7 +7,7 @@ import {
   pausedIcon,
 } from "@/app/_utils/svgIcons";
 import { useState } from "react";
-import { TwitterSharingAccount } from "../page";
+import { TwitterSharingAccount } from "../PostCommentsPage";
 
 const TwitterCommentCampaign = ({
   twitterAccountsData,

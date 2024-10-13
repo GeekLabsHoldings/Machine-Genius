@@ -56,15 +56,15 @@ const ShareCampaign = () => {
     }
     try {
       const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_BASE_URL
-        }/social-media/facebook/add-post/text/${
-          brandMap[selectedContent.brand]
-        }`,
+        `https://facebook-api.machinegenius.io/api/v1/groups/create-post`,
         {
           method: "POST",
           body: JSON.stringify({
-            content: pageState.postText,
+            brandId: brandMap[selectedContent.brand],
+            postContent: pageState.postText,
+            // "scheduleDate": "1728562848870"
+            // "delayTime": 5,
+            // "numberOfJobsPerDelay": 1
           }),
           headers: {
             "Content-Type": "application/json",

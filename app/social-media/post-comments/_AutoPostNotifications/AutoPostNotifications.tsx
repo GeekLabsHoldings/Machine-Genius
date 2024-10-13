@@ -7,6 +7,8 @@ import { editPenIcon, reGenerateIcon } from "@/app/_utils/svgIcons";
 import { useContext, useState, useEffect } from "react";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
+import { useQuery } from "react-query";
+import { useQueryClient } from "react-query";
 
 interface ITweet {
   _id: string;
@@ -49,24 +51,24 @@ type IHandleAddReplyToTweet =
   | IHandleAddReplyToTweetErrorResponse
   | IHandleAddReplyToTweetSuccessResponse;
 
-const AutoPostNotifications = () => {
-  const { authState, handleSignOut, getBrandsPlatform, brandMap } =
-    useContext(globalContext);
+const AutoPostNotifications = ({
+  brandsOptions,
+}: {
+  brandsOptions: string[];
+}) => {
+  const queryClient = useQueryClient();
+  const { authState, handleSignOut, brandMap } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
-    tweetsMustApprove: ITweet[] | null;
+    // tweetsMustApprove: ITweet[] | null;
     selectedTweet: ITweet | null;
     commentsSuggestions: string | null;
     postText: string;
-    brandsOptions: string[];
-    isLoading: boolean;
     selectedBrandId: string;
   }>({
-    tweetsMustApprove: null,
+    // tweetsMustApprove: null,
     selectedTweet: null,
     commentsSuggestions: null,
     postText: "",
-    brandsOptions: [],
-    isLoading: false,
     selectedBrandId: "",
   });
 
@@ -97,10 +99,11 @@ const AutoPostNotifications = () => {
         Array.isArray(json.result) &&
         json.result.length > 0
       ) {
-        setPageState((prev: any) => ({
-          ...prev,
-          tweetsMustApprove: json.result,
-        }));
+        // setPageState((prev: any) => ({
+        //   ...prev,
+        //   tweetsMustApprove: json.result,
+        // }));
+        return json.result;
       } else {
         // toast.error("Something went wrong!");
         return;
@@ -111,21 +114,17 @@ const AutoPostNotifications = () => {
     }
   }
 
-  async function handleGetBrandsPlatform(platform: string) {
-    setPageState((prev) => ({ ...prev, isLoading: true }));
-    const result = await getBrandsPlatform(platform);
-    const brands: string[] = Array.isArray(result) ? result : [];
-    setPageState((prev) => ({
-      ...prev,
-      brandsOptions: brands,
-      isLoading: false,
-    }));
-  }
-
-  useEffect(() => {
-    getTweetsMustApprove();
-    handleGetBrandsPlatform("TWITTER");
-  }, []);
+  const {
+    data: tweetsMustApprove,
+    isLoading: tweetsMustApproveLoading,
+    isRefetching: tweetsMustApproveRefetching,
+  } = useQuery({
+    queryKey: ["tweetsMustApprove"],
+    queryFn: getTweetsMustApprove,
+    staleTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
 
   async function handleGenerateCommentsSuggestions() {
     setPageState((prev) => ({
@@ -181,7 +180,6 @@ const AutoPostNotifications = () => {
 
   useEffect(() => {
     if (pageState.selectedTweet && pageState.selectedTweet.comment) {
-      // handleGenerateCommentsSuggestions();
       setPageState((prev: any) => ({
         ...prev,
         commentsSuggestions: pageState.selectedTweet?.comment,
@@ -200,6 +198,15 @@ const AutoPostNotifications = () => {
       toast.error("No tweet selected!");
       return;
     }
+    // Optimistically remove the tweet from the cache
+    queryClient.setQueryData<ITweet[] | undefined>(
+      "tweetsMustApprove",
+      (oldData) =>
+        oldData?.filter(
+          (tweet: ITweet) => tweet._id !== pageState.selectedTweet?._id
+        )
+    );
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/twitter/add-reply-to-tweet/${pageState.selectedTweet?._id}/${pageState.selectedBrandId}`,
@@ -247,6 +254,8 @@ const AutoPostNotifications = () => {
       toast.error("Something went wrong!");
       console.error("Error handleAddReplyToTweet:", error);
     } finally {
+      // Re-fetch to ensure data consistency
+      queryClient.invalidateQueries("tweetsMustApprove");
       // reset the form
       setPageState((prev) => ({
         ...prev,
@@ -254,7 +263,6 @@ const AutoPostNotifications = () => {
         commentsSuggestions: null,
         selectedTweet: null,
       }));
-      getTweetsMustApprove();
     }
   }
 
@@ -268,10 +276,14 @@ const AutoPostNotifications = () => {
 
         <div className={styles.recent_notification}>
           <div className={"h-[65vh] space-y-[1vw] overflow-y-auto pr-[--8px]"}>
-            {pageState.tweetsMustApprove &&
-            Array.isArray(pageState.tweetsMustApprove) &&
-            pageState.tweetsMustApprove.length > 0 ? (
-              pageState.tweetsMustApprove.map((ele) => (
+            {tweetsMustApproveLoading ? (
+              <div className="flex justify-center items-center h-full">
+                <span className="custom-loader"></span>
+              </div>
+            ) : tweetsMustApprove &&
+              Array.isArray(tweetsMustApprove) &&
+              tweetsMustApprove.length > 0 ? (
+              tweetsMustApprove.map((ele) => (
                 <RecentNotificationCard
                   key={ele._id}
                   name={ele.accountName}
@@ -287,8 +299,7 @@ const AutoPostNotifications = () => {
                 />
               ))
             ) : (
-              <div className="flex justify-center items-center h-full gap-[--10px]">
-                <span className="custom-loader"></span>
+              <div className="flex justify-center items-center h-full">
                 <span>No notifications found!</span>
               </div>
             )}
@@ -357,10 +368,10 @@ const AutoPostNotifications = () => {
 
         <div className="w-full flex justify-between items-center">
           <div className="w-1/2">
-            {!pageState.isLoading ? (
+            {Array.isArray(brandsOptions) && brandsOptions.length > 0 ? (
               <CustomSelectInput
                 label={"Select Brand"}
-                options={pageState.brandsOptions}
+                options={brandsOptions || []}
                 getValue={(value: string) => {
                   setPageState((prev) => ({
                     ...prev,

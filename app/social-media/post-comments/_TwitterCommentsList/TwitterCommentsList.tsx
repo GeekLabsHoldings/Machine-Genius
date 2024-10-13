@@ -4,7 +4,7 @@ import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import styles from "./TwitterCommentsList.module.css";
 import { globalContext } from "@/app/_context/store";
 import { addIcon } from "@/app/_utils/svgIcons";
-import { TwitterSharingAccount } from "../page";
+import { TwitterSharingAccount } from "../PostCommentsPage";
 
 const verticalDots = (
   <svg
@@ -25,9 +25,11 @@ const verticalDots = (
 const TwitterCommentsList = ({
   twitterAccountsData,
   getTwitterAccountsData,
+  brandsOptions,
 }: {
   twitterAccountsData: TwitterSharingAccount[] | null;
   getTwitterAccountsData: () => void;
+  brandsOptions: string[];
 }) => {
   const { brandIdMap } = useContext(globalContext);
   // for storing the order of subscribers and engagement (descending or ascending)
@@ -238,6 +240,7 @@ const TwitterCommentsList = ({
               modalTitle={"Add Account"}
               forWhat={"add_account1"}
               getData={getTwitterAccountsData}
+              brandsOptions={brandsOptions}
             />
           </div>
         </div>
