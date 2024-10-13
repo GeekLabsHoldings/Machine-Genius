@@ -19,8 +19,14 @@ export async function POST(req: NextRequest) {
   try {
     console.log("Starting Twitter image upload process");
 
+    // Log the content type of the request
+    console.log("Request Content-Type:", req.headers.get("content-type"));
+
     const formData = await req.formData();
     console.log("Form data received");
+
+    // Log all keys in the formData
+    console.log("FormData keys:", Array.from(formData.keys()));
 
     const rawTwitterData = formData.get("twitterData");
     if (!rawTwitterData || typeof rawTwitterData !== "string") {
@@ -43,6 +49,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate Twitter data structure
     if (
       !twitterData.platform ||
       twitterData.platform !== "TWITTER" ||
@@ -63,22 +70,46 @@ export async function POST(req: NextRequest) {
     const { ConsumerKey, ConsumerSecret, AccessToken, TokenSecret } =
       twitterData.account;
 
+    // Check for file in formData
     const file = formData.get("media");
-    if (!file || !(file instanceof File)) {
-      console.error("No file uploaded or invalid file format");
+    console.log("File object type:", file ? typeof file : "undefined");
+    console.log("Is File instance:", file instanceof File);
+
+    if (!file) {
+      console.error("No file found in form data");
       return NextResponse.json(
-        { error: "No file uploaded or invalid file format" },
+        { error: "No file uploaded" },
+        { status: 400 }
+      );
+    }
+
+    if (!(file instanceof File)) {
+      console.error("Uploaded item is not a File instance");
+      return NextResponse.json(
+        { error: "Invalid file format" },
         { status: 400 }
       );
     }
 
     console.log("File received:", file.name, "Size:", file.size, "bytes");
 
-    const arrayBuffer = await file.arrayBuffer();
+    // Read file as ArrayBuffer
+    let arrayBuffer: ArrayBuffer;
+    try {
+      arrayBuffer = await file.arrayBuffer();
+      console.log("File successfully read as ArrayBuffer");
+    } catch (error) {
+      console.error("Error reading file as ArrayBuffer:", error);
+      return NextResponse.json(
+        { error: "Failed to read uploaded file" },
+        { status: 500 }
+      );
+    }
+
     const fileBuffer = Buffer.from(arrayBuffer);
+    console.log("File buffer created, size:", fileBuffer.length, "bytes");
 
-    console.log("File buffer created");
-
+    // Create OAuth object and prepare request
     const oauth = new OAuth({
       consumer: { key: ConsumerKey, secret: ConsumerSecret },
       signature_method: "HMAC-SHA1",
@@ -89,8 +120,6 @@ export async function POST(req: NextRequest) {
           .digest("base64");
       },
     });
-
-    console.log("OAuth object created");
 
     const requestData = {
       url: "https://upload.twitter.com/1.1/media/upload.json",
@@ -111,6 +140,7 @@ export async function POST(req: NextRequest) {
 
     console.log("Sending request to Twitter API");
 
+    // Make request to Twitter API
     const response = await fetch(requestData.url, {
       method: requestData.method,
       headers: {
