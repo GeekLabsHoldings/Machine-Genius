@@ -101,7 +101,8 @@
   text-align: justify;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, calc(0.7vw + 0.1rem), 100px);
+  align-items: center;
+  /* gap: clamp(10px, calc(0.7vw + 0.1rem), 100px); */
 }
 
 .articleContent p {
@@ -112,12 +113,12 @@
   font-weight: 400;
   user-select: none;
 }
-.articleContent p:hover, .articleContent p.active {
+.articleContent:hover p,
+.articleContent p.active {
   font-weight: 700;
   background-color: #2a2b2a;
   color: white;
 }
-
 
 /* Track */
 .articlePreviewData::-webkit-scrollbar-track {

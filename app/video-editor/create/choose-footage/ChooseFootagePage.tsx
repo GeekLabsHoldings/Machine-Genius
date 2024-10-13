@@ -1,7 +1,7 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./ChooseFootagePage.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { videoEditingContext } from "@/app/_context/videoEditingContext";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
@@ -32,6 +32,57 @@ interface ScriptSegment {
 interface SelectedFootage {
   index: number;
   imageUrl: string[];
+}
+
+function AddChips({
+  currentIndex,
+  index,
+}: {
+  currentIndex: number;
+  index: number;
+}) {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <form
+      className={`w-fit grow-0 border group-hover:opacity-100
+                          ${currentIndex == index ? "opacity-100" : "opacity-0"}
+                          ${isEditing ? "gap-[--10px]" : "gap-0"}
+                          aborder-indigo-300 bg-[#dbeafe] flex justify-center items-center rounded-md px-[--8px] py-[--4px]`}
+      onClick={() => {
+        setIsEditing(true);
+        inputRef.current?.focus();
+      }}
+    >
+      <span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="w-[--14px] h-[--14px] stroke-[#2563eb]"
+        >
+          <path d="M5 12h14"></path>
+          <path d="M12 5v14"></path>
+        </svg>
+      </span>
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder="Add keyword"
+        className={`outline-none bg-[#dbeafe] text-[--15px] text-[#2563eb] 
+        ${
+          isEditing ? "w-[--100px]" : "w-0"
+        } transform transition-all duration-300`}
+        onBlur={() => setIsEditing(false)}
+      />
+    </form>
+  );
 }
 
 const ChooseFootagePage = () => {
@@ -616,11 +667,11 @@ const ChooseFootagePage = () => {
                       )}
 
                       <div
-                        className={`${styles.articleContent} cursor-pointer`}
+                        className={`${styles.articleContent} cursor-pointer mb-[--10px] group`}
                         key={scriptSegment.index}
                       >
                         <p
-                          className={`${
+                          className={`transition-none ${
                             pageState.selectedScriptSegment?.audioPath.index ===
                             scriptSegment.audioPath.index
                               ? styles.active
@@ -635,8 +686,69 @@ const ChooseFootagePage = () => {
                             setSearchFootage([]);
                           }}
                         >
+                          {/* {scriptSegment.text.split(" ").map((word, idx) => (
+                            <span key={idx}>
+                              {scriptSegment.keywordsAndImages[0].keyword ===
+                              word ? (
+                                <span className="text-[#1e40af] group-hover:text-[#6077c2]">
+                                  {word}{" "}
+                                </span>
+                              ) : (
+                                <span>{word} </span>
+                              )}
+                            </span>
+                          ))} */}
                           {scriptSegment.text}
                         </p>
+                        <div
+                          className={`flex items-center gap-[--10px] w-[95%] group-hover:h-[--50px]
+                            px-[--10px] rounded-b-md bg-gray-100 shadow-md overflow-clip
+                            ${
+                              pageState.selectedScriptSegment?.audioPath
+                                .index === scriptSegment.audioPath.index
+                                ? "h-[--50px]"
+                                : "h-0"
+                            }`}
+                        >
+                          {/* add chips */}
+                          <div
+                            className={`w-fit grow-0 border group-hover:opacity-100
+                          ${
+                            pageState.selectedScriptSegment?.audioPath.index ===
+                            scriptSegment.audioPath.index
+                              ? "opacity-100"
+                              : "opacity-0"
+                          }
+                          aborder-indigo-300 bg-[#dbeafe] flex justify-center items-center gap-[--10px] rounded-md px-[--8px] py-[--4px]`}
+                          >
+                            <span className="font-semibold text-[--15px] text-[#1e40af]">
+                              {scriptSegment.keywordsAndImages[0].keyword}
+                            </span>
+                            <span>
+                              {/* close / x icon */}
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                className="w-[--14px] h-[--14px] stroke-[#1e40af]"
+                              >
+                                <path d="M18 6 6 18"></path>
+                                <path d="m6 6 12 12"></path>
+                              </svg>
+                            </span>
+                          </div>
+                          <AddChips
+                            currentIndex={
+                              pageState.selectedScriptSegment?.audioPath
+                                .index as number
+                            }
+                            index={scriptSegment.audioPath.index! as number}
+                          />
+                        </div>
                       </div>
                     </>
                   )
