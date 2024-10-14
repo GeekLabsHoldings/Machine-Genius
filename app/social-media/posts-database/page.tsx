@@ -2,10 +2,11 @@
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./DataBase.module.css";
 import { globalContext } from "@/app/_context/store";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import convertTimestampToDate from "@/app/_utils/convertTimestampToDate";
 import { truncateText } from "@/app/_utils/text";
+import { sortIcon } from "@/app/_utils/svgIcons";
 
 interface IPost {
   _id: string;
@@ -67,32 +68,147 @@ const Page = () => {
     getPosts();
   }, []);
 
+  const [filterBy, setFilterBy] = useState({
+    datePublished: "none",
+    platform: "",
+    brand: "",
+    engagement: "none",
+  });
+
+  const filteredAndSortedPosts = useMemo(() => {
+    if (
+      !Array.isArray(pageState.fetchedPosts) ||
+      pageState.fetchedPosts.length === 0
+    ) {
+      return [];
+    }
+
+    return pageState.fetchedPosts
+      .filter((item) => {
+        return (
+          (filterBy.platform === "" ||
+            item.platform.toLowerCase() === filterBy.platform.toLowerCase()) &&
+          (filterBy.brand === "" ||
+            ((item.brand || item.brandId) &&
+              brandIdMap[(item.brand || item.brandId) as string] ===
+                filterBy.brand))
+        );
+      })
+      .sort((a, b) => {
+        if (filterBy.datePublished === "asc") {
+          return a.timestamp - b.timestamp;
+        }
+        if (filterBy.datePublished === "desc") {
+          return b.timestamp - a.timestamp;
+        }
+        if (filterBy.engagement === "asc") {
+          return (a.engagement || 0) - (b.engagement || 0);
+        }
+        if (filterBy.engagement === "desc") {
+          return (b.engagement || 0) - (a.engagement || 0);
+        }
+        return 0;
+      });
+  }, [pageState.fetchedPosts, filterBy]);
+
+  const handleSortChange = (field: "datePublished" | "engagement") => {
+    setFilterBy((prev) => {
+      // Determine the next sort order for the selected field
+      let newSortOrder: "asc" | "desc" | "none" = "asc";
+      if (prev[field] === "asc") newSortOrder = "desc";
+      else if (prev[field] === "desc") newSortOrder = "none";
+
+      // Reset all sort fields except the one being toggled
+      return {
+        ...prev,
+        datePublished: field === "datePublished" ? newSortOrder : "none",
+        engagement: field === "engagement" ? newSortOrder : "none",
+      };
+    });
+  };
+
+  // Helper function to get sort label
+  const getSortLabel = (field: "datePublished" | "engagement") => {
+    switch (filterBy[field]) {
+      case "asc":
+        return "Ascending";
+      case "desc":
+        return "Descending";
+      default:
+        return "Not sorted";
+    }
+  };
+
   return (
     <>
-      <div className={`${styles.filters} flex gap-[1vw] my-[--sy-17px]`}>
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
-          <h5>Content Name</h5>
-          <CustomSelectInput options={["All"]} />
-        </div>
-
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+      <div
+        className={`${styles.filters} flex items-center gap-[1vw] my-[--sy-17px]`}
+      >
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
           <h5>Date Published</h5>
-          <CustomSelectInput options={["All"]} />
+          <div
+            className={`${styles.changeOrder} `}
+            onClick={() => {
+              handleSortChange("datePublished");
+            }}
+          >
+            <p>{getSortLabel("datePublished")}</p>
+            {sortIcon}
+          </div>
         </div>
 
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
-          <h5>Platofrm</h5>
-          <CustomSelectInput options={["All"]} />
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
+          <h5>Platform</h5>
+          <CustomSelectInput
+            label="All"
+            options={[
+              "All",
+              ...new Set(
+                pageState.fetchedPosts?.map((item) => item.platform) || []
+              ),
+            ]}
+            getValue={(value: string) =>
+              setFilterBy((prev) => ({
+                ...prev,
+                platform: value === "All" ? "" : value,
+              }))
+            }
+          />
         </div>
 
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
           <h5>Brand</h5>
-          <CustomSelectInput options={["All"]} />
+          <CustomSelectInput
+            label="All"
+            options={[
+              "All",
+              ...new Set(
+                pageState.fetchedPosts?.map((item) => {
+                  const brandKey = item.brand || item.brandId;
+                  return brandKey ? brandIdMap[brandKey] || "" : "";
+                }) || []
+              ),
+            ]}
+            getValue={(value: string) =>
+              setFilterBy((prev) => ({
+                ...prev,
+                brand: value === "All" ? "" : value,
+              }))
+            }
+          />
         </div>
 
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
           <h5>Engagement</h5>
-          <CustomSelectInput options={["All"]} />
+          <div
+            className={`${styles.changeOrder} `}
+            onClick={() => {
+              handleSortChange("engagement");
+            }}
+          >
+            <p>{getSortLabel("engagement")}</p>
+            {sortIcon}
+          </div>
         </div>
       </div>
 
@@ -196,9 +312,9 @@ const Page = () => {
           </ul>
 
           <div className={styles.table_body}>
-            {Array.isArray(pageState.fetchedPosts) &&
-            pageState.fetchedPosts.length > 0 ? (
-              pageState.fetchedPosts.map((ele) => (
+            {Array.isArray(filteredAndSortedPosts) &&
+            filteredAndSortedPosts.length > 0 ? (
+              filteredAndSortedPosts.map((ele) => (
                 <ul className="w-[100%]" key={ele._id}>
                   <li className="w-[30%]">{truncateText(ele.content, 100)}</li>
                   <li className="w-[20%]">
