@@ -11,6 +11,7 @@ import { title } from "process";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
+import { Editor } from "primereact/editor";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -73,21 +74,8 @@ interface TemplateContent {
 const templateContent: TemplateContent = {
   Job_Listings: [
     {
-      title: "Responsibilities",
-      description: "kjhklhgkjhgkjhgkjhgkjhkjhg khg kjhg kjhg kjhkjhg kj",
-    },
-    {
-      title: "Qualifications",
-      description:
-        "Collaborate with team members to meet project requirements.",
-    },
-    {
-      title: "Job Description",
-      description: "Stay updated on industry trends and techniques.",
-    },
-    {
-      title: "Benefits",
-      description: "Contribute creative ideas to enhance the overall quality.",
+      title: "",
+      description: "",
     },
   ],
   Schedule_Interview_Call: [
@@ -144,6 +132,19 @@ const templateContent: TemplateContent = {
 };
 
 const Page = () => {
+  const [inputs, setInputs] = useState<any>({
+    jobDescription: "",
+    responsibilities: "",
+    benefits: "",
+    qualifications: "",
+  });
+  const [questions, setQuestions] = useState<any[]>([]);
+  const questionsRef = useRef<any>([]);
+  const typesRef = useRef<any>([]);
+  const answersRef = useRef<any>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [newSkill, setNewSkill] = useState("");
+  const [editorVal, setEditorVal] = useState("");
   const { handleSignOut } = useContext(globalContext);
   const [Templates, setTemplates] = useState<Template[]>([]);
   const [groups, setGroups] = useState<any>([]);
@@ -151,8 +152,8 @@ const Page = () => {
   const [tempOptions, setTempOptions] = useState<any>([]);
   const { templates } = useContext(templatesContext);
   const templateContentRef = useRef<(HTMLDivElement | null)[]>([]);
-  const [position, setPosition] = useState("");
-  const [level, setLevel] = useState("");
+  const [position, setPosition] = useState("Backend");
+  const [level, setLevel] = useState("FreshGraduation");
   const [tempDetails, setTempDetails] = useState<any>([]);
   const [tempKey, setTempKey] = useState<TemplateKey>("Job_Listings");
   const [newGroup, setNewGroup] = useState<any>({
@@ -160,6 +161,7 @@ const Page = () => {
     description: "",
   });
   const router = useRouter();
+  const toolbarOptions = [[{ list: "ordered" }, { list: "bullet" }], ["bold"]];
 
   const handleDelete = (index: any) => {
     setTemplates(Templates.filter((_, i) => i !== index));
@@ -220,7 +222,7 @@ const Page = () => {
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups/${templates.key}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups/${tempKey}`,
         {
           method: "get",
           headers: {
@@ -232,6 +234,7 @@ const Page = () => {
         handleSignOut();
       }
       const data = await res.json();
+      console.log(data);
       setGroups(data);
     } catch (error) {
       console.log(error);
@@ -317,30 +320,136 @@ const Page = () => {
       level: level,
     };
 
-    try {
+    if (tempKey == "Job_Listings") {
+      if (inputs.jobDescription == "") {
+        toast.error("Job Description is required");
+        return;
+      }
+      if (inputs.responsibilities == "") {
+        toast.error("Responsibilities are required");
+        return;
+      }
+      if (inputs.benefits == "") {
+        toast.error("Benefits are required");
+        return;
+      }
+      if (inputs.qualifications == "") {
+        toast.error("Qualifications are required");
+        return;
+      }
+      if (questions.length == 0) {
+        toast.error("Questions are required");
+        return;
+      }
+      if (skills.length == 0) {
+        toast.error("Skills are required");
+        return;
+      }
+      if (
+        questions.some(
+          (_, i) => !questionsRef.current[i] || !answersRef.current[i]
+        )
+      ) {
+        toast.error("Complete your questions");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      console.log(inputs);
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`,
         {
           method: "post",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(body),
+          body: JSON.stringify({
+            title: templates.value,
+            level: level,
+            role: position,
+            group_id: groupID,
+            details: [
+              {
+                title: "Job Description",
+                description: inputs.jobDescription,
+              },
+              {
+                title: "Responsibilities",
+                description: inputs.responsibilities,
+              },
+              {
+                title: "Benefits",
+                description: inputs.benefits,
+              },
+              {
+                title: "Qualifications",
+                description: inputs.qualifications,
+              },
+              {
+                title: "Questions",
+                description: questions.map((q, i) => ({
+                  question: questionsRef.current[i],
+                  type: typesRef.current[i] == "Yes or No" ? "0" : "1",
+                  answer: answersRef.current[i],
+                })),
+              },
+              {
+                title: "Skills",
+                description: skills,
+              },
+            ],
+          }),
         }
       );
-      if (res.status === 401) {
-        handleSignOut();
-      }
       const data = await res.json();
-      if (res.ok) {
+      console.log(data);
+      if (data) {
         toast.success("Template Created Successfully");
-        router.push("/hr/hiring/templates");
-      } else {
-        toast.error("Failed to create template");
+        router.replace("/hr/hiring/templates");
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      if (!editorVal) {
+        toast.error("Enter your template details");
+        return;
+      } else {
+        const token = localStorage.getItem("token");
+        console.log(inputs);
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`,
+          {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              title: templates.value,
+              level:
+                templatesWithPositionAndLevel.includes(String(tempKey)) &&
+                level,
+              role:
+                templatesWithPositionAndLevel.includes(String(tempKey)) &&
+                position,
+              group_id: groupID,
+              details: [
+                {
+                  title: templateContent[tempKey][0].title,
+                  description: editorVal,
+                },
+              ],
+            }),
+          }
+        );
+        const data = await res.json();
+        console.log(data);
+        if (data) {
+          toast.success("Template Created Successfully");
+          router.replace("/hr/hiring/templates");
+        }
+      }
     }
   }
 
@@ -417,7 +526,7 @@ const Page = () => {
             </div>
           </div>
 
-          <div className={styles.choose_group}>
+          {templatesWithPositionAndLevel.includes(String(tempKey)) && <div className={styles.choose_group}>
             Add to{" "}
             <CustomSelectInput
               getValue={(val: string) =>
@@ -434,170 +543,327 @@ const Page = () => {
               />
             </CustomSelectInput>{" "}
             group
-          </div>
+          </div>}
         </div>
 
         <div className="flex flex-col flex-wrap gap-[1.5vw] w-full h-full overflow-auto">
           {/* Job position & Level */}
-          {templatesWithPositionAndLevel.includes(String(tempKey)) && (
-            <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
-              <div className={`${styles.card} h-fit`}>
-                <div className={styles.card_header}>
-                  <h6 className="text-[--20px] font-bold">Job Position</h6>
-                  <span className="text-[--16px] text-[#878787] font-medium">
-                    (Title)
-                  </span>
-                </div>
-                <div className={styles.card_body}>
-                  {/* <p>{templateDet.role}</p> */}
-                  <CustomSelectInput
-                    getValue={(val: string) => setPosition(val)}
-                    options={Object.values(positions)}
-                    // label={templateDet.role}
-                  />
-                </div>
-              </div>
-              <div className={`${styles.card} h-fit`}>
-                <div className={styles.card_header}>
-                  <h6 className="text-[--20px] font-bold">
-                    Level of Expertise
-                  </h6>
-                </div>
-                <div className={styles.card_body}>
-                  {/* <p>{templateDet.level}</p> */}
-                  <CustomSelectInput
-                    getValue={(val: string) => setLevel(val)}
-                    options={Object.values(levels)}
-                    // label={templateDet.level}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+
           {"Job_Listings" === tempKey
             ? templateContent[tempKey]?.map((e, i) => {
                 return (
-                  <div
-                    className={`${styles.card} min-h-[--167px] w-[49%]`}
-                    key={i}
-                  >
-                    <div className={styles.card_header}>
-                      <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                  <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+                    <div className="flex flex-col gap-[1.5vw]">
+                      {templatesWithPositionAndLevel.includes(
+                        String(tempKey)
+                      ) && (
+                        <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+                          <div className={`${styles.card} h-fit`}>
+                            <div className={styles.card_header}>
+                              <h6 className="text-[--20px] font-bold">
+                                Job Position
+                              </h6>
+                              <span className="text-[--16px] text-[#878787] font-medium">
+                                (Title)
+                              </span>
+                            </div>
+                            <div className={styles.card_body}>
+                              {/* <p>{templateDet.role}</p> */}
+                              <CustomSelectInput
+                                getValue={(val: string) => setPosition(val)}
+                                options={Object.values(positions)}
+                                // label={templateDet.role}
+                              />
+                            </div>
+                          </div>
+                          <div className={`${styles.card} h-fit`}>
+                            <div className={styles.card_header}>
+                              <h6 className="text-[--20px] font-bold">
+                                Level of Expertise
+                              </h6>
+                            </div>
+                            <div className={styles.card_body}>
+                              {/* <p>{templateDet.level}</p> */}
+                              <CustomSelectInput
+                                getValue={(val: string) => setLevel(val)}
+                                options={Object.values(levels)}
+                                // label={templateDet.level}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <div className={`${styles.card} h-fit`}>
+                        <div className={styles.card_header}>
+                          <h6 className="text-[--20px] font-bold">
+                            Job Description
+                          </h6>
+                        </div>
+                        <div className={styles.card_body}>
+                          <Editor
+                            value={inputs.jobDescription}
+                            onTextChange={(e: any) =>
+                              setInputs({
+                                ...inputs,
+                                jobDescription: e.htmlValue,
+                              })
+                            }
+                            style={{ height: "320px" }}
+                            formats={["list", "bold"]} // Allowed formats
+                            modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                          />
+                        </div>
+                      </div>
+                      <div className={`${styles.card} h-fit`}>
+                        <div className={styles.card_header}>
+                          <h6 className="text-[--20px] font-bold">
+                            Responsibilities
+                          </h6>
+                        </div>
+                        <div className={styles.card_body}>
+                          <Editor
+                            value={inputs.responsibilities}
+                            onTextChange={(e: any) =>
+                              setInputs({
+                                ...inputs,
+                                responsibilities: e.htmlValue,
+                              })
+                            }
+                            style={{ height: "320px" }}
+                            formats={["list", "bold"]} // Allowed formats
+                            modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                          />
+                        </div>
+                      </div>
+                      <div className={`${styles.card} h-fit`}>
+                        <div className={styles.card_header}>
+                          <div className="flex justify-between w-full items-center">
+                            <h6 className="text-[--20px] font-bold">
+                              Questions
+                            </h6>
+                            <button
+                              className="bg-black text-white px-[--12px] py-[--6px] rounded-[--8px]"
+                              onClick={() => {
+                                setQuestions([...questions, {}]);
+                              }}
+                            >
+                              Add Question
+                            </button>
+                          </div>
+                        </div>
+                        <div className={styles.card_body}>
+                          {questions.map((q, i) => {
+                            return (
+                              <div className="p-[--12px] border-[--1px] border-[#878787] rounded-[--8px] mb-[--sy-12px]">
+                                <input
+                                  ref={(el) => {
+                                    if (el) questionsRef.current[i] = el?.value;
+                                  }}
+                                  onChange={(e: any) => {
+                                    if (questionsRef.current) {
+                                      questionsRef.current[i] = e.target.value;
+                                      console.log(questionsRef.current);
+                                    }
+                                  }}
+                                  type="text"
+                                  className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--sy-12px]"
+                                  placeholder="Question"
+                                />
+                                <div className="mb-[--sy-12px]">
+                                  <CustomSelectInput
+                                    getValue={(val: string) => {
+                                      if (typesRef.current) {
+                                        typesRef.current[i] = val;
+                                        console.log(typesRef.current);
+                                      }
+                                    }}
+                                    options={["Numeric", "Yes or No"]}
+                                    label={"Numeric"}
+                                  />
+                                </div>
+                                <label
+                                  htmlFor="answer"
+                                  className="text-[--16px] text-[#878787] font-medium mb-[--sy-8px] inline-block"
+                                >
+                                  Answer
+                                </label>
+                                <input
+                                  onChange={(e: any) => {
+                                    if (answersRef.current) {
+                                      answersRef.current[i] = e.target.value;
+                                      console.log(answersRef.current);
+                                    }
+                                  }}
+                                  type="text"
+                                  id="answer"
+                                  ref={(el) => {
+                                    if (el) {
+                                      answersRef.current[i] = el?.value;
+                                    }
+                                  }}
+                                  className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--12px]"
+                                  placeholder="Answer"
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <div
-                      className={`${styles.card_body} text-[--16px] outline-none`}
-                      dangerouslySetInnerHTML={{
-                        __html: tempDetails[i],
-                      }}
-                      contentEditable
-                      // onClick={(e) => {
-                      //   // check if the description is empty
-                      //   const description = e.currentTarget.textContent;
-                      //   if (description === "") {
-                      //     document.execCommand("insertHTML", false, "<li>");
-                      //     return;
-                      //   }
-                      // }}
-                      onKeyDownCapture={(
-                        e: React.KeyboardEvent<HTMLDivElement>
-                      ) => {
-                        // check if the cursor is at the start or in the middle of the line
-
-                        const target = e.target as HTMLDivElement; // Type assertion
-
-                        if (
-                          target.textContent === "" &&
-                          target.nodeName === "DIV" &&
-                          target.childNodes.length === 0
-                        ) {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                          }
-                          document.execCommand("insertHTML", false, "<li>");
-                        }
-
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          // chwck if previous line is empty
-                          const selection = window.getSelection();
-                          console.log(selection);
-                          const range = selection?.getRangeAt(0);
-                          console.log(range);
-                          const start = range?.startContainer;
-                          if (
-                            start?.nodeName === "LI" &&
-                            start?.textContent === ""
-                          ) {
-                          } else {
-                            document.execCommand("insertHTML", false, "<li>");
-                          }
-                        }
-                      }}
-                      onInput={(e) => handleOnChange(e, i)}
-                      onBlur={handleBlur}
-                    ></div>
+                    <div className="flex flex-col gap-[1.5vw]">
+                      <div className={`${styles.card} h-fit`}>
+                        <div className={styles.card_header}>
+                          <h6 className="text-[--20px] font-bold">
+                            Qualifications
+                          </h6>
+                        </div>
+                        <div className={styles.card_body}>
+                          <Editor
+                            value={inputs.qualifications}
+                            onTextChange={(e: any) =>
+                              setInputs({
+                                ...inputs,
+                                qualifications: e.htmlValue,
+                              })
+                            }
+                            style={{ height: "320px" }}
+                            formats={["list", "bold"]} // Allowed formats
+                            modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                          />
+                        </div>
+                      </div>
+                      <div className={`${styles.card} h-fit`}>
+                        <div className={styles.card_header}>
+                          <h6 className="text-[--20px] font-bold">Benefits</h6>
+                        </div>
+                        <div className={styles.card_body}>
+                          <Editor
+                            value={inputs.benefits}
+                            onTextChange={(e: any) =>
+                              setInputs({ ...inputs, benefits: e.htmlValue })
+                            }
+                            style={{ height: "320px" }}
+                            formats={["list", "bold"]} // Allowed formats
+                            modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                          />
+                        </div>
+                      </div>
+                      <div className={`${styles.card} h-fit`}>
+                        <div className={styles.card_header}>
+                          <h6 className="text-[--20px] font-bold">Skills</h6>
+                        </div>
+                        <div className={styles.card_body}>
+                          <div className=" w-full flex gap-[--sy-12px] mb-[--sy-12px]">
+                            <input
+                              type="text"
+                              value={newSkill}
+                              onChange={(e) => setNewSkill(e.target.value)}
+                              name="skill"
+                              id="skill"
+                              className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787]"
+                              placeholder="Skill"
+                            />
+                            <button
+                              className="bg-black text-white px-[--12px]  rounded-[--8px]"
+                              onClick={() => {
+                                setSkills([...skills, newSkill]);
+                                setNewSkill("");
+                              }}
+                            >
+                              Add
+                            </button>
+                          </div>
+                          <div className="flex flex-wrap gap-[--sy-12px]">
+                            {skills.map((e: string, i: number) => (
+                              <div
+                                key={i}
+                                className="bg-black text-white flex flex-nowrap gap-[--sy-8px] items-center px-[--10px] py-[--6px] rounded-[--8px]"
+                              >
+                                {e}{" "}
+                                <div
+                                  className="cursor-pointer flex justify-center w-[--16px] h-[--16px] rounded-full bg-white text-black"
+                                  onClick={() =>
+                                    setSkills(
+                                      skills.filter(
+                                        (el: string, index: number) =>
+                                          index !== i
+                                      )
+                                    )
+                                  }
+                                >
+                                  <span className="text-[--12px]">x</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 );
               })
             : templateContent[tempKey]?.map((e, i) => {
                 return (
-                  <div
-                    className={`${styles.card} min-h-[--167px] w-[49%]`}
-                    key={i}
-                  >
-                    <div className={styles.card_header}>
-                      <h6 className="text-[--20px] font-bold">{e.title}</h6>
-                    </div>
+                  <>
+                    {templatesWithPositionAndLevel.includes(
+                      String(tempKey)
+                    ) && (
+                      <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+                        <div className={`${styles.card} h-fit`}>
+                          <div className={styles.card_header}>
+                            <h6 className="text-[--20px] font-bold">
+                              Job Position
+                            </h6>
+                            <span className="text-[--16px] text-[#878787] font-medium">
+                              (Title)
+                            </span>
+                          </div>
+                          <div className={styles.card_body}>
+                            {/* <p>{templateDet.role}</p> */}
+                            <CustomSelectInput
+                              getValue={(val: string) => setPosition(val)}
+                              options={Object.values(positions)}
+                              // label={templateDet.role}
+                            />
+                          </div>
+                        </div>
+                        <div className={`${styles.card} h-fit`}>
+                          <div className={styles.card_header}>
+                            <h6 className="text-[--20px] font-bold">
+                              Level of Expertise
+                            </h6>
+                          </div>
+                          <div className={styles.card_body}>
+                            {/* <p>{templateDet.level}</p> */}
+                            <CustomSelectInput
+                              getValue={(val: string) => setLevel(val)}
+                              options={Object.values(levels)}
+                              // label={templateDet.level}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <div
-                      className={`${styles.card_body} text-[--16px] outline-none`}
-                      dangerouslySetInnerHTML={{
-                        __html: tempDetails[i],
-                      }}
-                      contentEditable
-                      // onClick={(e) => {
-                      //   // check if the description is empty
-                      //   const description = e.currentTarget.textContent;
-                      //   if (description === "") {
-                      //     document.execCommand("insertHTML", false, "<li>");
-                      //     return;
-                      //   }
-                      // }}
-                      onKeyDownCapture={(
-                        e: React.KeyboardEvent<HTMLDivElement>
-                      ) => {
-                        // check if the cursor is at the start or in the middle of the line
-                        // const target = e.target as HTMLDivElement; // Type assertion
-                        // if (
-                        //   target.textContent === "" &&
-                        //   target.nodeName === "DIV" &&
-                        //   target.childNodes.length === 0
-                        // ) {
-                        //   if (e.key === "Enter") {
-                        //     e.preventDefault();
-                        //   }
-                        //   document.execCommand("insertHTML", false, "<li>");
-                        // }
-                        // if (e.key === "Enter") {
-                        //   e.preventDefault();
-                        //   // chwck if previous line is empty
-                        //   const selection = window.getSelection();
-                        //   console.log(selection);
-                        //   const range = selection?.getRangeAt(0);
-                        //   console.log(range);
-                        //   const start = range?.startContainer;
-                        //   if (
-                        //     start?.nodeName === "LI" &&
-                        //     start?.textContent === ""
-                        //   ) {
-                        //   } else {
-                        //     document.execCommand("insertHTML", false, "<li>");
-                        //   }
-                        // }
-                      }}
-                      onInput={(e) => handleOnChange(e, i)}
-                      onBlur={handleBlur}
-                    ></div>
-                  </div>
+                      className={`${styles.card} min-h-[--167px] w-[49%]`}
+                      key={i}
+                    >
+                      <div className={styles.card_header}>
+                        <h6 className="text-[--20px] font-bold">{e.title}</h6>
+                      </div>
+                      <div
+                        className={`${styles.card_body} text-[--16px] outline-none`}
+                      >
+                        <Editor
+                          value={editorVal}
+                          onTextChange={(e: any) => setEditorVal(e.htmlValue)}
+                          style={{ height: "320px" }}
+                          formats={["list", "bold"]} // Allowed formats
+                          modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                        />
+                      </div>
+                    </div>
+                  </>
                 );
               })}
         </div>
