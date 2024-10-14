@@ -94,7 +94,14 @@ export default function TemplateDetails({
 }: {
   params: { templateId: string };
 }) {
-  const [changed, setChanged] = useState(false);
+  const [inputs, setInputs] = useState<any>({
+    jobDescription: "",
+    responsibilities: "",
+    benefits: "",
+    qualifications: "",
+  });
+  const [editorVal, setEditorVal] = useState("");
+
   const [questions, setQuestions] = useState<any[]>([]);
   const questionsRef = useRef<any>([]);
   const typesRef = useRef<any>([]);
@@ -146,10 +153,152 @@ export default function TemplateDetails({
     console.log(data);
 
     setTemplateDet(data);
+    setInputs({
+      jobDescription: data?.details[0]?.description,
+      responsibilities: data?.details[1]?.description,
+      benefits: data?.details[2]?.description,
+      qualifications: data?.details[3]?.description,
+    });
+    setSkills(data?.details[5]?.description);
+    if (templateDet?.title.split(" ").join("_") != "Job_Listings") {
+      setEditorVal(data?.details[0]?.description);
+    }
   }
   useEffect(() => {
     getTemplate();
   }, []);
+
+  async function createTemplate() {
+    if (tempKey === "") return;
+
+    if (templateDet?.title.split(" ").join("_") == "Job_Listings") {
+      if (inputs.jobDescription == "") {
+        toast.error("Job Description is required");
+        return;
+      }
+      if (inputs.responsibilities == "") {
+        toast.error("Responsibilities are required");
+        return;
+      }
+      if (inputs.benefits == "") {
+        toast.error("Benefits are required");
+        return;
+      }
+      if (inputs.qualifications == "") {
+        toast.error("Qualifications are required");
+        return;
+      }
+      if (questions.length == 0) {
+        toast.error("Questions are required");
+        return;
+      }
+      if (skills.length == 0) {
+        toast.error("Skills are required");
+        return;
+      }
+      if (
+        questions.some(
+          (_, i) => !questionsRef.current[i] || !answersRef.current[i]
+        )
+      ) {
+        toast.error("Complete your questions");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      console.log(inputs);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/${params.templateId}`,
+        {
+          method: "put",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: templateDet?.title,
+            level: level,
+            role: position,
+            group_id: templateDet?.group_id?._id,
+            details: [
+              {
+                title: "Job Description",
+                description: inputs.jobDescription,
+              },
+              {
+                title: "Responsibilities",
+                description: inputs.responsibilities,
+              },
+              {
+                title: "Benefits",
+                description: inputs.benefits,
+              },
+              {
+                title: "Qualifications",
+                description: inputs.qualifications,
+              },
+              {
+                title: "Questions",
+                description: questions.map((q, i) => ({
+                  question: questionsRef.current[i],
+                  type: typesRef.current[i] == "Yes or No" ? "0" : "1",
+                  answer: answersRef.current[i],
+                })),
+              },
+              {
+                title: "Skills",
+                description: skills,
+              },
+            ],
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if (data) {
+        toast.success("Template Updated Successfully");
+        router.replace("/hr/hiring/templates");
+      }
+    } else {
+      if (!editorVal) {
+        toast.error("Enter your template details");
+        return;
+      } else {
+        const token = localStorage.getItem("token");
+        console.log(inputs);
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/${params.templateId}`,
+          {
+            method: "put",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              title: templateDet?.title,
+              level: level,
+              role: position,
+              group_id: templateDet?.group_id?._id,
+              details: [
+                {
+                  title: templateDet?.title.replaceAll(/_/gi, " "),
+                  description: editorVal,
+                },
+              ],
+            }),
+          }
+        );
+        const data = await res.json();
+        console.log(data);
+        if (data) {
+          toast.success("Template Updated Successfully");
+          router.replace("/hr/hiring/templates");
+        }
+      }
+    }
+  }
 
   useEffect(() => {
     console.log(templateDet);
@@ -160,35 +309,45 @@ export default function TemplateDetails({
     setPosition(templateDet.role);
     getGroups();
     if (templateDet?.group_id) {
+      console.log(templateDet?.group_id);
+      
       setGroupID(templateDet.group_id._id);
       setTempKey(templateDet?.group_id?.step);
+      console.log(templateDet?.group_id?._id);
     } else {
       setTempKey(templateDet.title.replace(" ", "_"));
-    }
+    }    
   }, [templateDet]);
 
   async function getGroups() {
     const token = localStorage.getItem("token");
     console.log(templateDet);
+    console.log(templateDet?.group_id?.step);
+
+    // const step = templateDet?.title.replace(" ", "_");
     const step =
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups/${step}`,
-        {
-          method: "get",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    if (step) {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/groups/${step}`,
+          {
+            method: "get",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.status === 401) {
+          handleSignOut();
         }
-      );
-      if (res.status === 401) {
-        handleSignOut();
+        const data = await res.json();
+        console.log(data);
+
+        setGroups(data);
+      } catch (error) {
+        console.log(error);
       }
-      const data = await res.json();
-      setGroups(data);
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -235,7 +394,11 @@ export default function TemplateDetails({
 
   useEffect(() => {
     console.log(tempKey);
+    console.log(templateDet?.title);
+    console.log(templatesWithPositionAndLevel);
+    console.log(tempKey);
   }, [tempKey]);
+  
 
   return (
     <div className="flex flex-col h-full">
@@ -277,9 +440,12 @@ export default function TemplateDetails({
           <div className={styles.choose_group}>
             Add to{" "}
             <CustomSelectInput
-              getValue={(val: string) =>
-                setGroupID(groups.find((e: any) => e.title === val)?._id)
-              }
+              getValue={(val: string) => {
+                console.log(val);
+                console.log(groups.find((e: any) => e.title === val)?._id);
+
+                setGroupID(groups.find((e: any) => e.title === val)?._id);
+              }}
               options={groups.map((e: any, i: any) => e.title)}
               label={groups.find((e: any) => e._id === groupID)?.title}
             >
@@ -297,48 +463,59 @@ export default function TemplateDetails({
 
         <div className="flex flex-col flex-wrap gap-[1.5vw] w-full h-full overflow-auto">
           {/* Job position & Level */}
-          {templatesWithPositionAndLevel.includes(tempKey) && (
+          {templateDet?.title.split(" ").join("_") == "Job_Listings" ? (
             <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
               <div className="flex flex-col gap-[1.5vw]">
-                <div className="flex gap-[--20px]">
-                  <div className={`${styles.card} h-fit w-1/2`}>
-                    <div className={styles.card_header}>
-                      <h6 className="text-[--20px] font-bold">Job Position</h6>
-                      <span className="text-[--16px] text-[#878787] font-medium">
-                        (Title)
-                      </span>
+                {templatesWithPositionAndLevel.includes(tempKey) && (
+                  <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+                    <div className={`${styles.card} h-fit`}>
+                      <div className={styles.card_header}>
+                        <h6 className="text-[--20px] font-bold">
+                          Job Position
+                        </h6>
+                        <span className="text-[--16px] text-[#878787] font-medium">
+                          (Title)
+                        </span>
+                      </div>
+                      <div className={styles.card_body}>
+                        {/* <p>{templateDet.role}</p> */}
+                        <CustomSelectInput
+                          getValue={(val: string) => setPosition(val)}
+                          options={Object.values(positions)}
+                          label={templateDet?.role}
+                        />
+                      </div>
                     </div>
-                    <div className={styles.card_body}>
-                      {/* <p>{templateDet.role}</p> */}
-                      <CustomSelectInput
-                        getValue={(val: string) => setPosition(val)}
-                        options={Object.values(positions)}
-                        label={position}
-                      />
+                    <div className={`${styles.card} h-fit`}>
+                      <div className={styles.card_header}>
+                        <h6 className="text-[--20px] font-bold">
+                          Level of Expertise
+                        </h6>
+                      </div>
+                      <div className={styles.card_body}>
+                        {/* <p>{templateDet.level}</p> */}
+                        <CustomSelectInput
+                          getValue={(val: string) => setLevel(val)}
+                          options={Object.values(levels)}
+                          label={templateDet?.level}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className={`${styles.card} h-fit w-1/2`}>
-                    <div className={styles.card_header}>
-                      <h6 className="text-[--20px] font-bold">
-                        Level of Expertise
-                      </h6>
-                    </div>
-                    <div className={styles.card_body}>
-                      {/* <p>{templateDet.level}</p> */}
-                      <CustomSelectInput
-                        getValue={(val: string) => setLevel(val)}
-                        options={Object.values(levels)}
-                        label={level}
-                      />
-                    </div>
-                  </div>
-                </div>
+                )}
                 <div className={`${styles.card} h-fit`}>
                   <div className={styles.card_header}>
                     <h6 className="text-[--20px] font-bold">Job Description</h6>
                   </div>
                   <div className={styles.card_body}>
                     <Editor
+                      value={inputs.jobDescription}
+                      onTextChange={(e: any) =>
+                        setInputs({
+                          ...inputs,
+                          jobDescription: e.htmlValue,
+                        })
+                      }
                       style={{ height: "320px" }}
                       formats={["list", "bold"]} // Allowed formats
                       modules={{ toolbar: toolbarOptions }} // Toolbar configuration
@@ -353,6 +530,13 @@ export default function TemplateDetails({
                   </div>
                   <div className={styles.card_body}>
                     <Editor
+                      value={inputs.responsibilities}
+                      onTextChange={(e: any) =>
+                        setInputs({
+                          ...inputs,
+                          responsibilities: e.htmlValue,
+                        })
+                      }
                       style={{ height: "320px" }}
                       formats={["list", "bold"]} // Allowed formats
                       modules={{ toolbar: toolbarOptions }} // Toolbar configuration
@@ -360,154 +544,219 @@ export default function TemplateDetails({
                   </div>
                 </div>
                 <div className={`${styles.card} h-fit`}>
-                <div className={styles.card_header}>
-                  <div className="flex justify-between w-full items-center">
-                    <h6 className="text-[--20px] font-bold">Questions</h6>
-                    <button
-                      className="bg-black text-white px-[--12px] py-[--6px] rounded-[--8px]"
-                      onClick={() => {
-                        setQuestions([...questions, {}]);
-                      }}
-                    >
-                      Add Question
-                    </button>
+                  <div className={styles.card_header}>
+                    <div className="flex justify-between w-full items-center">
+                      <h6 className="text-[--20px] font-bold">Questions</h6>
+                      <button
+                        className="bg-black text-white px-[--12px] py-[--6px] rounded-[--8px]"
+                        onClick={() => {
+                          setQuestions([...questions, {}]);
+                        }}
+                      >
+                        Add Question
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className={styles.card_body}>
-                  {questions.map((q, i) => {
-                    return (
-                      <div className="p-[--12px] border-[--1px] border-[#878787] rounded-[--8px] mb-[--sy-12px]">
-                        <input
-                          ref={(el) => {
-                            if (el) questionsRef.current[i] = el?.value;
-                          }}
-                          onChange={(e: any) => {
-                            if (questionsRef.current) {
-                              questionsRef.current[i] = e.target.value;
-                              console.log(questionsRef.current);
-                            }
-                          }}
-                          type="text"
-                          className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--sy-12px]"
-                          placeholder="Question"
-                        />
-                        <div className="mb-[--sy-12px]">
-                          <CustomSelectInput
-                            getValue={(val: string) => {
-                              if (typesRef.current) {
-                                typesRef.current[i] = val;
-                                console.log(typesRef.current);
+                  <div className={styles.card_body}>
+                    {questions.map((q, i) => {
+                      return (
+                        <div className="p-[--12px] border-[--1px] border-[#878787] rounded-[--8px] mb-[--sy-12px]">
+                          <input
+                            ref={(el) => {
+                              if (el) questionsRef.current[i] = el?.value;
+                            }}
+                            onChange={(e: any) => {
+                              if (questionsRef.current) {
+                                questionsRef.current[i] = e.target.value;
+                                console.log(questionsRef.current);
                               }
                             }}
-                            options={["Numeric", "Yes or No"]}
-                            label={"Numeric"}
+                            type="text"
+                            className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--sy-12px]"
+                            placeholder="Question"
+                          />
+                          <div className="mb-[--sy-12px]">
+                            <CustomSelectInput
+                              getValue={(val: string) => {
+                                if (typesRef.current) {
+                                  typesRef.current[i] = val;
+                                  console.log(typesRef.current);
+                                }
+                              }}
+                              options={["Numeric", "Yes or No"]}
+                              label={"Numeric"}
+                            />
+                          </div>
+                          <label
+                            htmlFor="answer"
+                            className="text-[--16px] text-[#878787] font-medium mb-[--sy-8px] inline-block"
+                          >
+                            Answer
+                          </label>
+                          <input
+                            onChange={(e: any) => {
+                              if (answersRef.current) {
+                                answersRef.current[i] = e.target.value;
+                                console.log(answersRef.current);
+                              }
+                            }}
+                            type="text"
+                            id="answer"
+                            ref={(el) => {
+                              if (el) {
+                                answersRef.current[i] = el?.value;
+                              }
+                            }}
+                            className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--12px]"
+                            placeholder="Answer"
                           />
                         </div>
-                        <label
-                          htmlFor="answer"
-                          className="text-[--16px] text-[#878787] font-medium mb-[--sy-8px] inline-block"
-                        >
-                          Answer
-                        </label>
-                        <input
-                          onChange={(e: any) => {
-                            if (answersRef.current) {
-                              answersRef.current[i] = e.target.value;
-                              console.log(answersRef.current);
-                            }
-                          }}
-                          type="text"
-                          id="answer"
-                          ref={(el) => {
-                            if (el) {
-                              answersRef.current[i] = el?.value;
-                            }
-                          }}
-                          className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--12px]"
-                          placeholder="Answer"
-                        />
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
               </div>
               <div className="flex flex-col gap-[1.5vw]">
-              <div className={`${styles.card} h-fit`}>
-                <div className={styles.card_header}>
-                  <h6 className="text-[--20px] font-bold">Qualifications</h6>
-                </div>
-                <div className={styles.card_body}>
-                  <Editor
-                    style={{ height: "320px" }}
-                    formats={["list", "bold"]} // Allowed formats
-                    modules={{ toolbar: toolbarOptions }} // Toolbar configuration
-                  />
-                </div>
-              </div>
-              <div className={`${styles.card} h-fit`}>
-                <div className={styles.card_header}>
-                  <h6 className="text-[--20px] font-bold">Benefits</h6>
-                </div>
-                <div className={styles.card_body}>
-                  <Editor
-                    style={{ height: "320px" }}
-                    formats={["list", "bold"]} // Allowed formats
-                    modules={{ toolbar: toolbarOptions }} // Toolbar configuration
-                  />
-                </div>
-              </div>
-              <div className={`${styles.card} h-fit`}>
-                <div className={styles.card_header}>
-                  <h6 className="text-[--20px] font-bold">Skills</h6>
-                </div>
-                <div className={styles.card_body}>
-                  <div className=" w-full flex gap-[--sy-12px] mb-[--sy-12px]">
-                    <input
-                      type="text"
-                      value={newSkill}
-                      onChange={(e) => setNewSkill(e.target.value)}
-                      name="skill"
-                      id="skill"
-                      className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787]"
-                      placeholder="Skill"
+                <div className={`${styles.card} h-fit`}>
+                  <div className={styles.card_header}>
+                    <h6 className="text-[--20px] font-bold">Qualifications</h6>
+                  </div>
+                  <div className={styles.card_body}>
+                    <Editor
+                      value={inputs.qualifications}
+                      onTextChange={(e: any) =>
+                        setInputs({
+                          ...inputs,
+                          qualifications: e.htmlValue,
+                        })
+                      }
+                      style={{ height: "320px" }}
+                      formats={["list", "bold"]} // Allowed formats
+                      modules={{ toolbar: toolbarOptions }} // Toolbar configuration
                     />
-                    <button
-                      className="bg-black text-white px-[--12px]  rounded-[--8px]"
-                      onClick={() => {
-                        setSkills([...skills, newSkill]);
-                        setNewSkill("");
-                      }}
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-[--sy-12px]">
-                    {skills.map((e: string, i: number) => (
-                      <div
-                        key={i}
-                        className="bg-black text-white flex flex-nowrap gap-[--sy-8px] items-center px-[--10px] py-[--6px] rounded-[--8px]"
-                      >
-                        {e}{" "}
-                        <div
-                          className="cursor-pointer flex justify-center w-[--16px] h-[--16px] rounded-full bg-white text-black"
-                          onClick={() =>
-                            setSkills(
-                              skills.filter(
-                                (el: string, index: number) => index !== i
-                              )
-                            )
-                          }
-                        >
-                          <span className="text-[--12px]">x</span>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </div>
-              </div>
+                <div className={`${styles.card} h-fit`}>
+                  <div className={styles.card_header}>
+                    <h6 className="text-[--20px] font-bold">Benefits</h6>
+                  </div>
+                  <div className={styles.card_body}>
+                    <Editor
+                      value={inputs.benefits}
+                      onTextChange={(e: any) =>
+                        setInputs({ ...inputs, benefits: e.htmlValue })
+                      }
+                      style={{ height: "320px" }}
+                      formats={["list", "bold"]} // Allowed formats
+                      modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                    />
+                  </div>
+                </div>
+                <div className={`${styles.card} h-fit`}>
+                  <div className={styles.card_header}>
+                    <h6 className="text-[--20px] font-bold">Skills</h6>
+                  </div>
+                  <div className={styles.card_body}>
+                    <div className=" w-full flex gap-[--sy-12px] mb-[--sy-12px]">
+                      <input
+                        type="text"
+                        value={newSkill}
+                        onChange={(e) => setNewSkill(e.target.value)}
+                        name="skill"
+                        id="skill"
+                        className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787]"
+                        placeholder="Skill"
+                      />
+                      <button
+                        className="bg-black text-white px-[--12px]  rounded-[--8px]"
+                        onClick={() => {
+                          setSkills([...skills, newSkill]);
+                          setNewSkill("");
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-[--sy-12px]">
+                      {skills?.map((e: string, i: number) => (
+                        <div
+                          key={i}
+                          className="bg-black text-white flex flex-nowrap gap-[--sy-8px] items-center px-[--10px] py-[--6px] rounded-[--8px]"
+                        >
+                          {e}
+                          <div
+                            className="cursor-pointer flex justify-center w-[--16px] h-[--16px] rounded-full bg-white text-black"
+                            onClick={() =>
+                              setSkills(
+                                skills?.filter(
+                                  (el: string, index: number) => index !== i
+                                )
+                              )
+                            }
+                          >
+                            <span className="text-[--12px]">x</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          ) : (
+            <>
+              {templatesWithPositionAndLevel.includes(tempKey) && (
+                <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
+                  <div className={`${styles.card} h-fit`}>
+                    <div className={styles.card_header}>
+                      <h6 className="text-[--20px] font-bold">Job Position</h6>
+                      <span className="text-[--16px] text-[#878787] font-medium">
+                        (Title)
+                      </span>
+                    </div>
+                    <div className={styles.card_body}>
+                      {/* <p>{templateDet.role}</p> */}
+                      <CustomSelectInput
+                        getValue={(val: string) => setPosition(val)}
+                        options={Object.values(positions)}
+                        label={templateDet?.role}
+                      />
+                    </div>
+                  </div>
+                  <div className={`${styles.card} h-fit`}>
+                    <div className={styles.card_header}>
+                      <h6 className="text-[--20px] font-bold">
+                        Level of Expertise
+                      </h6>
+                    </div>
+                    <div className={styles.card_body}>
+                      {/* <p>{templateDet.level}</p> */}
+                      <CustomSelectInput
+                        getValue={(val: string) => setLevel(val)}
+                        options={Object.values(levels)}
+                        label={templateDet?.level}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className={`${styles.card} min-h-[--167px] w-[49%]`}>
+                <div className={styles.card_header}>
+                  <h6 className="text-[--20px] font-bold">{templateDet?.title}</h6>
+                </div>
+                <div
+                  className={`${styles.card_body} text-[--16px] outline-none`}
+                >
+                  <Editor
+                    value={editorVal}
+                    onTextChange={(e: any) => setEditorVal(e.htmlValue)}
+                    style={{ height: "320px" }}
+                    formats={["list", "bold"]} // Allowed formats
+                    modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                  />
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -518,7 +767,7 @@ export default function TemplateDetails({
           btnColor="black"
           paddingVal="p-[0.5vw]"
           width="w-[9vw]"
-          // onClick={updateTemplate}
+          onClick={createTemplate}
         />
       </div>
       <Modal

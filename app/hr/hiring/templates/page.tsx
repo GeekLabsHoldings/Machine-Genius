@@ -7,6 +7,7 @@ import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import toast from "react-hot-toast";
 import Slider from "react-slick";
 import { globalContext } from "@/app/_context/store";
+import "./templates.css";
 
 const addIcon = (
   <svg
@@ -148,6 +149,7 @@ const Page = () => {
           title: "",
           description: "",
         });
+        setStep("");
         handleClose();
         toast.success("Group Created Successfully");
       } else {
@@ -195,7 +197,7 @@ const Page = () => {
   const settings: any = {
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 3.5,
     slidesToScroll: 3,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -268,7 +270,7 @@ const Page = () => {
               groupTemplates.length &&
               groupTemplates?.map((e, i) => {
                 return (
-                  <div className={` ${styles.box} !w-[400px] shrink-0`} key={i}>
+                  <div className={` ${styles.box} max-w-[400px] shrink-0`} key={i}>
                     <div className={`${styles.header}`}>
                       <div className="flex items-center gap-[1vw]">
                         <img
