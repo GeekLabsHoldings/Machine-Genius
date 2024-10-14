@@ -1,5 +1,5 @@
 "use client";
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useContext, useMemo } from "react";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import styles from "./TwitterCommentsList.module.css";
 import { globalContext } from "@/app/_context/store";
@@ -50,28 +50,30 @@ const TwitterCommentsList = ({
     }
 
     return twitterAccountsData
-    .filter((item) => {
-      return (
-        (filterBy.brand === "" || brandIdMap[item.brand] === filterBy.brand) &&
-        (filterBy.niche === "" || item.niche === filterBy.niche) &&
-        (filterBy.campaignType === "" || item.campaignType === filterBy.campaignType)
-      );
-    })
-    .sort((a, b) => {
-      if (filterBy.accountName === "asc") {
-        return a.accountName.localeCompare(b.accountName);
-      }
-      if (filterBy.accountName === "desc") {
-        return b.accountName.localeCompare(a.accountName);
-      }
-      if (filterBy.userName === "asc") {
-        return a.userName.localeCompare(b.userName);
-      }
-      if (filterBy.userName === "desc") {
-        return b.userName.localeCompare(a.userName);
-      }
-      return 0;
-    });
+      .filter((item) => {
+        return (
+          (filterBy.brand === "" ||
+            brandIdMap[item.brand] === filterBy.brand) &&
+          (filterBy.niche === "" || item.niche === filterBy.niche) &&
+          (filterBy.campaignType === "" ||
+            item.campaignType === filterBy.campaignType)
+        );
+      })
+      .sort((a, b) => {
+        if (filterBy.accountName === "asc") {
+          return a.accountName.localeCompare(b.accountName);
+        }
+        if (filterBy.accountName === "desc") {
+          return b.accountName.localeCompare(a.accountName);
+        }
+        if (filterBy.userName === "asc") {
+          return a.userName.localeCompare(b.userName);
+        }
+        if (filterBy.userName === "desc") {
+          return b.userName.localeCompare(a.userName);
+        }
+        return 0;
+      });
   }, [twitterAccountsData, filterBy]);
 
   const handleSortChange = (field: "accountName" | "userName") => {
@@ -178,7 +180,11 @@ const TwitterCommentsList = ({
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
       {/* filters options to filter and edit data in table */}
       <div className={`flex justify-between w-full pageHeader`}>
-        <div className="flex-grow flex items-center gap-[0.75vw]">
+        <div
+          className={
+            `${styles.filters}` + " flex-grow flex items-center gap-[0.75vw]"
+          }
+        >
           <div className="flex flex-col w-[15%] gap-[0.3vw]">
             <h5>Account Name</h5>
             <div
