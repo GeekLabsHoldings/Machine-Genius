@@ -94,6 +94,7 @@ export default function TemplateDetails({
 }: {
   params: { templateId: string };
 }) {
+
   const [inputs, setInputs] = useState<any>({
     jobDescription: "",
     responsibilities: "",
@@ -101,6 +102,7 @@ export default function TemplateDetails({
     qualifications: "",
   });
   const [editorVal, setEditorVal] = useState("");
+
 
   const [questions, setQuestions] = useState<any[]>([]);
   const questionsRef = useRef<any>([]);
@@ -466,6 +468,7 @@ export default function TemplateDetails({
           {templateDet?.title.split(" ").join("_") == "Job_Listings" ? (
             <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
               <div className="flex flex-col gap-[1.5vw]">
+
                 {templatesWithPositionAndLevel.includes(tempKey) && (
                   <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
                     <div className={`${styles.card} h-fit`}>
@@ -509,6 +512,7 @@ export default function TemplateDetails({
                   </div>
                   <div className={styles.card_body}>
                     <Editor
+
                       value={inputs.jobDescription}
                       onTextChange={(e: any) =>
                         setInputs({
@@ -516,6 +520,7 @@ export default function TemplateDetails({
                           jobDescription: e.htmlValue,
                         })
                       }
+
                       style={{ height: "320px" }}
                       formats={["list", "bold"]} // Allowed formats
                       modules={{ toolbar: toolbarOptions }} // Toolbar configuration
@@ -757,6 +762,7 @@ export default function TemplateDetails({
                 </div>
               </div>
             </>
+
           )}
         </div>
       </div>
@@ -767,7 +773,9 @@ export default function TemplateDetails({
           btnColor="black"
           paddingVal="p-[0.5vw]"
           width="w-[9vw]"
+
           onClick={createTemplate}
+
         />
       </div>
       <Modal

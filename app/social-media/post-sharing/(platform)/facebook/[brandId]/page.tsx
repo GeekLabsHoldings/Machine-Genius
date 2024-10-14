@@ -4,35 +4,87 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import { useEffect, useState, useContext, useMemo } from "react";
 import Link from "next/link";
-import { addIcon, backIcon, redditIcon, sortIcon } from "@/app/_utils/svgIcons";
+import {
+  addIcon,
+  backIcon,
+  facebookIcon,
+  sortIcon,
+} from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 
-interface IRedditGroup {
+interface IFacebookGroup {
   _id: string;
   group_name: string;
   link: string;
   group_id: string;
   subscribers: number;
   niche: string;
-  platform: "REDDIT";
+  platform: "FACEBOOK";
   brand: string;
   engagement: number;
   __v: number;
 }
 
 interface IBrandDetails {
-  groups: IRedditGroup[];
+  groups: IFacebookGroup[];
 }
 
-const Reddit = ({ params }: { params: { brandId: string } }) => {
+const Facebook = ({ params }: { params: { brandId: string } }) => {
   const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
   const brandId = params.brandId;
   const [pageState, setPageState] = useState<{
-    brandDetails: IRedditGroup[] | null;
+    brandDetails: IFacebookGroup[] | null;
   }>({
     brandDetails: null,
   });
+
+  async function getBrandDetails(brandId: string) {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/${brandId}/get-groups-brand`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: any = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (
+        json &&
+        json.groups &&
+        Array.isArray(json.groups) &&
+        json.groups.length > 0
+      ) {
+        setPageState((prev) => ({
+          ...prev,
+          brandDetails: json.groups.filter(
+            (e: any) => e.platform === "FACEBOOK"
+          ),
+        }));
+      } else {
+        // toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getBrandDetails:", error);
+    }
+  }
+
+  useEffect(() => {
+    getBrandDetails(brandId);
+  }, []);
 
   const [filterBy, setFilterBy] = useState({
     groupName: "none",
@@ -147,52 +199,11 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
         </ul>
       ))
     ) : (
-      <div className="flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-full gap-[--10px]">
         <span className="custom-loader"></span>
+        <span>No data found!</span>
       </div>
     );
-
-  async function getBrandDetails(brandId: string) {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/reddit/subreddits-brand/${brandId}`,
-        {
-          headers: {
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
-      const json: IBrandDetails = await res.json();
-      if (!json) {
-        toast.error("Something went wrong!");
-        return;
-      } else if (
-        json &&
-        json.groups &&
-        Array.isArray(json.groups) &&
-        json.groups.length > 0
-      ) {
-        setPageState((prev) => ({ ...prev, brandDetails: json.groups }));
-      } else {
-        // toast.error("Something went wrong!");
-        return;
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error getBrandDetails:", error);
-    }
-  }
-
-  useEffect(() => {
-    getBrandDetails(brandId);
-  }, []);
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
@@ -204,8 +215,8 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
           className={` flex items-center gap-[1vw] w-fit`}
         >
           {backIcon}
-          <h3>Reddit</h3>
-          {redditIcon}
+          <h3>Facebook</h3>
+          {facebookIcon}
         </Link>
 
         {/* 01-2 Filters options & Add to list */}
@@ -214,7 +225,7 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
             className={`${styles.filters} flex-grow flex items-center gap-[1vw]`}
           >
             <div className="flex flex-col w-[15%] gap-[0.3vw]">
-              <h5>SubReddit</h5>
+              <h5>Group Name</h5>
               <div
                 className={`${styles.changeOrder} `}
                 onClick={() => {
@@ -293,6 +304,7 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
               </div>
             </div>
           </div>
+
           <div>
             <BasicModal
               btnWord="Add To List"
@@ -329,7 +341,7 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
                       fill="#2A2B2A"
                     />
                   </svg>
-                  <p>SubReddit</p>
+                  <p>Group Name</p>
                 </div>
               </li>
               <li className="w-3/12 flex justify-center">
@@ -459,4 +471,4 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
   );
 };
 
-export default Reddit;
+export default Facebook;

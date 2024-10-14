@@ -1,119 +1,214 @@
+"use client";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./DataBase.module.css";
-import {
-  runningClockIcon,
-  pausedIcon,
-  finishedCheckIcon,
-} from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import { useContext, useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import convertTimestampToDate from "@/app/_utils/convertTimestampToDate";
+import { truncateText } from "@/app/_utils/text";
+import { sortIcon } from "@/app/_utils/svgIcons";
 
-const taleData = [
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "12 March  2024",
-    post: "4",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "16 March  2024",
-    post: "7",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "19 March  2024",
-    post: "3",
-    status: "Finished",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "1 March  2024",
-    post: "5",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "12 March  2024",
-    post: "9",
-    status: "Finished",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "30 March  2024",
-    post: "8",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-];
+interface IPost {
+  _id: string;
+  post_id: string;
+  content: string;
+  group_id: string;
+  timestamp: number;
+  platform: string;
+  brand?: string;
+  brandId?: string;
+  __v: number;
+  //
+  engagement?: number;
+}
 
 const Page = () => {
+  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
+  const [pageState, setPageState] = useState<{
+    fetchedPosts: IPost[];
+  }>({
+    fetchedPosts: [],
+  });
+
+  const getPosts = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-posts?limit=9999`,
+      {
+        headers: {
+          Authorization: `barrer ${
+            typeof window !== "undefined"
+              ? localStorage.getItem("token")
+              : authState.token
+          }`,
+        },
+      }
+    );
+
+    if (res.status === 401) {
+      handleSignOut();
+    }
+
+    if (!res.ok) {
+      toast.error("Failed to fetch posts!");
+      return;
+    }
+
+    const data: IPost[] = await res.json();
+    if (data && Array.isArray(data) && data.length > 0) {
+      setPageState((prevState) => ({
+        ...prevState,
+        fetchedPosts: data.filter((post) => post.content),
+      }));
+    } else {
+      toast.error("Failed to fetch posts!");
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  const [filterBy, setFilterBy] = useState({
+    datePublished: "none",
+    platform: "",
+    brand: "",
+    engagement: "none",
+  });
+
+  const filteredAndSortedPosts = useMemo(() => {
+    if (
+      !Array.isArray(pageState.fetchedPosts) ||
+      pageState.fetchedPosts.length === 0
+    ) {
+      return [];
+    }
+
+    return pageState.fetchedPosts
+      .filter((item) => {
+        return (
+          (filterBy.platform === "" ||
+            item.platform.toLowerCase() === filterBy.platform.toLowerCase()) &&
+          (filterBy.brand === "" ||
+            ((item.brand || item.brandId) &&
+              brandIdMap[(item.brand || item.brandId) as string] ===
+                filterBy.brand))
+        );
+      })
+      .sort((a, b) => {
+        if (filterBy.datePublished === "asc") {
+          return a.timestamp - b.timestamp;
+        }
+        if (filterBy.datePublished === "desc") {
+          return b.timestamp - a.timestamp;
+        }
+        if (filterBy.engagement === "asc") {
+          return (a.engagement || 0) - (b.engagement || 0);
+        }
+        if (filterBy.engagement === "desc") {
+          return (b.engagement || 0) - (a.engagement || 0);
+        }
+        return 0;
+      });
+  }, [pageState.fetchedPosts, filterBy]);
+
+  const handleSortChange = (field: "datePublished" | "engagement") => {
+    setFilterBy((prev) => {
+      // Determine the next sort order for the selected field
+      let newSortOrder: "asc" | "desc" | "none" = "asc";
+      if (prev[field] === "asc") newSortOrder = "desc";
+      else if (prev[field] === "desc") newSortOrder = "none";
+
+      // Reset all sort fields except the one being toggled
+      return {
+        ...prev,
+        datePublished: field === "datePublished" ? newSortOrder : "none",
+        engagement: field === "engagement" ? newSortOrder : "none",
+      };
+    });
+  };
+
+  // Helper function to get sort label
+  const getSortLabel = (field: "datePublished" | "engagement") => {
+    switch (filterBy[field]) {
+      case "asc":
+        return "Ascending";
+      case "desc":
+        return "Descending";
+      default:
+        return "Not sorted";
+    }
+  };
+
   return (
     <>
-      <div className={`${styles.filters} flex gap-[1vw] my-[--sy-17px]`}>
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
-          <h5>Content Name</h5>
-          <CustomSelectInput options={["All"]} />
-        </div>
-
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+      <div
+        className={`${styles.filters} flex items-center gap-[1vw] my-[--sy-17px]`}
+      >
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
           <h5>Date Published</h5>
-          <CustomSelectInput options={["All"]} />
+          <div
+            className={`${styles.changeOrder} `}
+            onClick={() => {
+              handleSortChange("datePublished");
+            }}
+          >
+            <p>{getSortLabel("datePublished")}</p>
+            {sortIcon}
+          </div>
         </div>
 
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
-          <h5>Posts Shared</h5>
-          <CustomSelectInput options={["All"]} />
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
+          <h5>Platform</h5>
+          <CustomSelectInput
+            label="All"
+            options={[
+              "All",
+              ...new Set(
+                pageState.fetchedPosts?.map((item) => item.platform) || []
+              ),
+            ]}
+            getValue={(value: string) =>
+              setFilterBy((prev) => ({
+                ...prev,
+                platform: value === "All" ? "" : value,
+              }))
+            }
+          />
         </div>
 
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
-          <h5>Status</h5>
-          <CustomSelectInput options={["All"]} />
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
+          <h5>Brand</h5>
+          <CustomSelectInput
+            label="All"
+            options={[
+              "All",
+              ...new Set(
+                pageState.fetchedPosts?.map((item) => {
+                  const brandKey = item.brand || item.brandId;
+                  return brandKey ? brandIdMap[brandKey] || "" : "";
+                }) || []
+              ),
+            ]}
+            getValue={(value: string) =>
+              setFilterBy((prev) => ({
+                ...prev,
+                brand: value === "All" ? "" : value,
+              }))
+            }
+          />
         </div>
 
-        <div className="flex flex-col w-[13%] gap-[0.3vw]">
+        <div className="flex flex-col w-[15%] gap-[0.3vw]">
           <h5>Engagement</h5>
-          <CustomSelectInput options={["All"]} />
+          <div
+            className={`${styles.changeOrder} `}
+            onClick={() => {
+              handleSortChange("engagement");
+            }}
+          >
+            <p>{getSortLabel("engagement")}</p>
+            {sortIcon}
+          </div>
         </div>
       </div>
 
@@ -175,7 +270,7 @@ const Page = () => {
                   fill="#2A2B2A"
                 />
               </svg>
-              <span>Posts Shared</span>
+              <span>Platform</span>
             </li>
             <li className="w-[10%]">
               <svg
@@ -188,7 +283,7 @@ const Page = () => {
                   fill="black"
                 />
               </svg>
-              <span>Status</span>
+              <span>Brand</span>
             </li>
             <li className="w-[20%]">
               <svg
@@ -217,37 +312,27 @@ const Page = () => {
           </ul>
 
           <div className={styles.table_body}>
-            {taleData.map((ele, idx) => (
-              <ul className="w-[100%]">
-                <li className="w-[30%]">{ele.content_name}</li>
-                <li className="w-[20%]">{ele.date}</li>
-                <li className="w-[20%]">{ele.post}</li>
-                <li className="w-[10%]">
-                  <span
-                    className={`${styles.status_page} ${
-                      ele.status === "Running"
-                        ? styles.running
-                        : ele.status === "Paused"
-                        ? styles.paused
-                        : ele.status === "Finished"
-                        ? styles.finished
-                        : ""
-                    }`}
-                  >
-                    {ele.status === "Running"
-                      ? runningClockIcon
-                      : ele.status === "Paused"
-                      ? pausedIcon
-                      : ele.status === "Finished"
-                      ? finishedCheckIcon
-                      : ""}
-
-                    {ele.status}
-                  </span>
-                </li>
-                <li className="w-[20%]">{idx}</li>
-              </ul>
-            ))}
+            {Array.isArray(filteredAndSortedPosts) &&
+            filteredAndSortedPosts.length > 0 ? (
+              filteredAndSortedPosts.map((ele) => (
+                <ul className="w-[100%]" key={ele._id}>
+                  <li className="w-[30%]">{truncateText(ele.content, 100)}</li>
+                  <li className="w-[20%]">
+                    {convertTimestampToDate(ele.timestamp)}
+                  </li>
+                  <li className="w-[20%]">
+                    {ele.platform[0] + ele.platform.toLowerCase().slice(1)}
+                  </li>
+                  <li className="w-[10%]">
+                    {(ele.brand && brandIdMap[ele.brand]) ||
+                      (ele.brandId && brandIdMap[ele.brandId])}
+                  </li>
+                  <li className="w-[20%]">{ele?.engagement || 0}</li>
+                </ul>
+              ))
+            ) : (
+              <span className="custom-loader w-fit m-auto"></span>
+            )}
           </div>
         </div>
       </div>

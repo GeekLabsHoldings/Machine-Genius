@@ -1,18 +1,18 @@
 "use client";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import styles from "./share.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import PlatformBox from "@/app/_components/SocialMedia/PlatformBox/PlatformBox";
-import { redditIcon, telegramIcon } from "@/app/_utils/svgIcons";
+import { facebookIcon, redditIcon, telegramIcon } from "@/app/_utils/svgIcons";
 // Tab (2): Sharing Campaign
 import SharingCampaign from "./_sharingCampaign/SharingCampaign";
 import AllCampaigns from "./_allCampaigns/AllCampaigns";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 
-const platformOptions = ["Reddit", "Telegram", "Facebook"];
+const platformOptions = ["All", "Reddit", "Telegram", "Facebook"];
 
-interface ISubscribers {
+interface ISubscriber {
   id: string;
   description: string;
   date: string; // ISO 8601 date string
@@ -21,33 +21,60 @@ interface ISubscribers {
   engagement: number;
 }
 
+interface PageState {
+  activeTab: number;
+  telegramSubscribers: ISubscriber[] | null;
+  redditSubscribers: ISubscriber[] | null;
+  facebookSubscribers: ISubscriber[] | null;
+}
+
 // display all platforms
 const postSharingPage = () => {
   const { authState, handleSignOut } = useContext(globalContext);
-  const [pageState, setPageState] = useState<{
-    activeTab: number;
-    telegramSubscribers: ISubscribers[] | null;
-    redditSubscribers: ISubscribers[] | null;
-  }>({
+  const [pageState, setPageState] = useState<PageState>({
     activeTab: 1,
     telegramSubscribers: null,
     redditSubscribers: null,
+    facebookSubscribers: null,
   });
 
-  const platforms = [
-    {
-      icon: telegramIcon,
-      name: "Telegram",
-      color: "#31B2E9",
-      subscribers: pageState.telegramSubscribers,
-    },
-    {
-      icon: redditIcon,
-      name: "Reddit",
-      color: "#FC471E",
-      subscribers: pageState.redditSubscribers,
-    },
-  ];
+  const [filterBy, setFilterBy] = useState({
+    platform: "",
+  });
+
+  const platforms = useMemo(
+    () => [
+      {
+        icon: telegramIcon,
+        name: "Telegram",
+        color: "#31B2E9",
+        subscribers: pageState.telegramSubscribers,
+      },
+      {
+        icon: facebookIcon,
+        name: "Facebook",
+        color: "#1877F2",
+        subscribers: pageState.facebookSubscribers,
+      },
+      {
+        icon: redditIcon,
+        name: "Reddit",
+        color: "#FC471E",
+        subscribers: pageState.redditSubscribers,
+      },
+    ],
+    [
+      pageState.telegramSubscribers,
+      pageState.facebookSubscribers,
+      pageState.redditSubscribers,
+    ]
+  );
+
+  const filteredPlatforms = useMemo(() => {
+    return platforms.filter((item) =>
+      filterBy.platform ? item.name === filterBy.platform : true
+    );
+  }, [filterBy.platform, platforms]);
 
   async function getTelegramSubscribers() {
     try {
@@ -66,7 +93,7 @@ const postSharingPage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: ISubscribers = await res.json();
+      const json: ISubscriber[] = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
@@ -99,7 +126,7 @@ const postSharingPage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: ISubscribers = await res.json();
+      const json: ISubscriber[] = await res.json();
       if (!json) {
         toast.error("Something went wrong!");
         return;
@@ -115,9 +142,43 @@ const postSharingPage = () => {
     }
   }
 
+  async function getFacebookSubscribers() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/facebook/get-subs`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: ISubscriber[] = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (json && Array.isArray(json) && json.length > 0) {
+        setPageState((prev) => ({ ...prev, facebookSubscribers: json }));
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getFacebookSubscribers:", error);
+    }
+  }
+
   useEffect(() => {
     getTelegramSubscribers();
     getRedditSubscribers();
+    getFacebookSubscribers();
   }, []);
 
   return (
@@ -160,32 +221,48 @@ const postSharingPage = () => {
             {/* Tab(1)-01- dropdown selection to select specific platform */}
             <div className={`w-1/3 flex flex-col gap-[0.5vw]`}>
               <h5 className="font-semibold text-[--19px]">Platforms</h5>
-              <CustomSelectInput options={platformOptions} label={"All"} />
+              <CustomSelectInput
+                options={platformOptions}
+                label={"All"}
+                getValue={(value: string) =>
+                  setFilterBy({
+                    platform: value === "All" ? "" : value,
+                  })
+                }
+              />
             </div>
 
             {/* Tab(1)-02 Platforms Cards */}
             <div className="h-full p-[--5px] pb-[--sy-12px] flex gap-[2.5vw] overflow-x-auto">
-              {platforms.map((platform, i) => {
-                return (
-                  <PlatformBox
-                    key={i}
-                    platformIcon={platform.icon}
-                    platformName={platform.name}
-                    platformColor={platform.color}
-                    platformCards={
-                      platform.subscribers &&
-                      Array.isArray(platform.subscribers) &&
-                      platform.subscribers.length > 0
-                        ? platform.subscribers.map((ele, i) => ({
-                            title: ele.description,
-                            subscribers: ele.subscribers,
-                            engagement: ele.engagement,
-                          }))
-                        : undefined
-                    }
-                  />
-                );
-              })}
+              {Array.isArray(filteredPlatforms) &&
+              filteredPlatforms.length > 0 ? (
+                filteredPlatforms.map((platform, i) => {
+                  return (
+                    <PlatformBox
+                      key={i}
+                      platformIcon={platform.icon}
+                      platformName={platform.name}
+                      platformColor={platform.color}
+                      platformCards={
+                        platform.subscribers &&
+                        Array.isArray(platform.subscribers) &&
+                        platform.subscribers.length > 0
+                          ? platform.subscribers.map((ele, i) => ({
+                              title: ele.description,
+                              subscribers: ele.subscribers,
+                              engagement: ele.engagement,
+                            }))
+                          : undefined
+                      }
+                    />
+                  );
+                })
+              ) : (
+                <div className="flex justify-center items-center h-full w-full gap-[--10px]">
+                  <span className="custom-loader"></span>
+                  <p>No platforms found!</p>
+                </div>
+              )}
             </div>
           </div>
         )}

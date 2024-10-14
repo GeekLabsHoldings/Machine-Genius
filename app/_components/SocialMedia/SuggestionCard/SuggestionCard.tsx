@@ -6,6 +6,7 @@ interface SuggestionCardProps {
   icon?: JSX.Element;
   text: string;
   title?: string;
+  onClick?: () => void;
 }
 
 const defaultIcon = (
@@ -27,9 +28,10 @@ export default function SuggestionCard({
   icon = defaultIcon,
   text,
   title,
+  onClick,
 }: SuggestionCardProps) {
   return (
-    <div className={styles.item + " group"}>
+    <div className={styles.item + " group"} onClick={onClick}>
       <div className="flex-grow flex flex-col gap-[--sy-8px]">
         {title && (
           <h4 className="font-black group-hover:text-white">{title}</h4>

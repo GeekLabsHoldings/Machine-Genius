@@ -1,92 +1,72 @@
+import { useContext, useEffect, useState } from "react";
 import styles from "./AllCampaigns.module.css";
 import {
   runningClockIcon,
   pausedIcon,
   finishedCheckIcon,
 } from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
+import convertTimestampToDate from "@/app/_utils/convertTimestampToDate";
 
-const taleData = [
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "12 March  2024",
-    post: "4",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "16 March  2024",
-    post: "7",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "19 March  2024",
-    post: "3",
-    status: "Finished",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "1 March  2024",
-    post: "5",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "12 March  2024",
-    post: "9",
-    status: "Finished",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "30 March  2024",
-    post: "8",
-    status: "Running",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-  {
-    content_name: "Pacific Allies ABANDON USA For China!",
-    date: "5 March  2024",
-    post: "12",
-    status: "Paused",
-  },
-];
+interface ICampaign {
+  _id: string;
+  content: string;
+  platform: string;
+  timestamp: number;
+  engagment: number;
+  posts_shared: number;
+  brand: string;
+  status: string;
+  __v: number;
+}
 
 const AllCampaigns = () => {
+  const { authState, handleSignOut } = useContext(globalContext);
+  const [pageState, setPageState] = useState<{
+    fetchedCampaigns: ICampaign[];
+  }>({
+    fetchedCampaigns: [],
+  });
+
+  const getCampaigns = async () => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-campaigns`,
+      {
+        headers: {
+          Authorization: `barrer ${
+            typeof window !== "undefined"
+              ? localStorage.getItem("token")
+              : authState.token
+          }`,
+        },
+      }
+    );
+
+    if (res.status === 401) {
+      handleSignOut();
+    }
+
+    if (!res.ok) {
+      toast.error("Failed to fetch campaigns!");
+      return;
+    }
+
+    const data: ICampaign[] = await res.json();
+    if (data && Array.isArray(data) && data.length > 0) {
+      setPageState((prevState) => ({
+        ...prevState,
+        fetchedCampaigns: data,
+      }));
+    } else {
+      toast.error("Failed to fetch campaigns!");
+    }
+  };
+
+  useEffect(() => {
+    getCampaigns();
+  }, []);
+
   return (
     <div className="h-[77vh]">
       <div className={styles.database_table}>
@@ -167,37 +147,44 @@ const AllCampaigns = () => {
         </ul>
 
         <div className={styles.table_body}>
-          {taleData.map((ele, idx) => (
-            <ul className="w-[100%]">
-              <li className="w-[5%]">{idx}</li>
-              <li className="w-[35%]">{ele.content_name}</li>
-              <li className="w-[20%]">{ele.date}</li>
-              <li className="w-[20%]">{ele.post}</li>
-              <li className="w-[20%]">
-                <span
-                  className={`${styles.status_page} ${
-                    ele.status === "Running"
-                      ? styles.running
+          {Array.isArray(pageState.fetchedCampaigns) &&
+          pageState.fetchedCampaigns.length > 0 ? (
+            pageState.fetchedCampaigns.map((ele, idx) => (
+              <ul className="w-[100%]">
+                <li className="w-[5%]">{idx + 1}</li>
+                <li className="w-[35%]">{ele.content}</li>
+                <li className="w-[20%]">
+                  {convertTimestampToDate(ele.timestamp)}
+                </li>
+                <li className="w-[20%]">{ele.posts_shared}</li>
+                <li className="w-[20%]">
+                  <span
+                    className={`${styles.status_page} ${
+                      ele.status === "Running"
+                        ? styles.running
+                        : ele.status === "Paused"
+                        ? styles.paused
+                        : ele.status === "Finished"
+                        ? styles.finished
+                        : ""
+                    }`}
+                  >
+                    {ele.status === "Running"
+                      ? runningClockIcon
                       : ele.status === "Paused"
-                      ? styles.paused
+                      ? pausedIcon
                       : ele.status === "Finished"
-                      ? styles.finished
-                      : ""
-                  }`}
-                >
-                  {ele.status === "Running"
-                    ? runningClockIcon
-                    : ele.status === "Paused"
-                    ? pausedIcon
-                    : ele.status === "Finished"
-                    ? finishedCheckIcon
-                    : ""}
+                      ? finishedCheckIcon
+                      : ""}
 
-                  {ele.status}
-                </span>
-              </li>
-            </ul>
-          ))}
+                    {ele.status}
+                  </span>
+                </li>
+              </ul>
+            ))
+          ) : (
+            <span className="custom-loader w-fit m-auto"></span>
+          )}
         </div>
       </div>
     </div>

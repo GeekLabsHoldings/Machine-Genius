@@ -1,130 +1,307 @@
 "use client";
-import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
 // import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import styles from "./setting.module.css";
-import {
-  facebookIconSm,
-  redditIconSm,
-  telegramIconSm,
-} from "@/app/_utils/svgIcons";
+import { addIcon, sortIcon } from "@/app/_utils/svgIcons";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
 
-// set all checkboxes to checked when click on select all
-const handleCheckAllSelectedText = (e: React.ChangeEvent<HTMLInputElement>) => {
-  // Get all checkbox elements
-  var checkboxes = document.querySelectorAll('input[name="test"]');
-  if (e.target.checked) {
-    // Loop through each checkbox and set checked property to true
-    checkboxes.forEach(function (checkbox: any) {
-      checkbox.checked = true;
-    });
-  } else {
-    // Loop through each checkbox and set checked property to false
-    checkboxes.forEach(function (checkbox: any) {
-      checkbox.checked = false;
-    });
-  }
-};
+//
+interface IBrand {
+  _id: string;
+  brand_name: string;
+  description: string;
+  aquisition_date: string;
+  niche: string;
+  type?: string;
+  parentId?: string;
+  __v: number;
+}
 
-// return all accounts
-const renderAccounts = AccountsData.map((oneAccount, idx) => (
-  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
-    <li className="w-[5%] flex justify-center items-center">
-      <CustomCheckBox name="test" />
-    </li>
-    <li className="w-[22%] flex justify-center text-center gap-[1vw]">
-      <p>{oneAccount.account_name}</p>
-      {oneAccount.account_type === "facebook"
-        ? facebookIconSm
-        : oneAccount.account_type === "reddit"
-        ? redditIconSm
-        : telegramIconSm}
-    </li>
-    <li className={`w-[22%] `}>{oneAccount.user_name}</li>
-    <li className="w-[22%] ">
-      <a href="#">{oneAccount.link}</a>
-    </li>
-    <li className="w-[22%]  ">
-      {oneAccount.followers > 999
-        ? oneAccount.followers / 100 / 10.0 + "k"
-        : oneAccount.followers}
-    </li>
-    <li className="w-[22%] ">{oneAccount.engagement}</li>
-  </ul>
-));
+interface IGroup {
+  _id: string;
+  group_name: string;
+  link: string;
+  group_id: string;
+  subscribers: number;
+  niche?: string;
+  platform: string;
+  brand: string;
+  engagement: number;
+  __v: number;
+}
+
+interface IBrandWithGroups {
+  brand: IBrand;
+  groups: IGroup[];
+}
 
 const Setting = () => {
-  // for storing the order of subscribers and engagement (descending or ascending)
-  const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
-  const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+  const { authState, handleSignOut } = useContext(globalContext);
+  const [selectedAccountIds, setSelectedAccountIds] = useState<string[]>([]);
+  const [pageState, setPageState] = useState<{
+    fetchedAccounts: IGroup[];
+  }>({ fetchedAccounts: [] });
+
+  async function getAccounts() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-groups`,
+        {
+          headers: {
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: IBrandWithGroups[] = await res.json();
+      if (!json) {
+        toast.error("Something went wrong!");
+        return;
+      } else if (json && Array.isArray(json) && json.length > 0) {
+        setPageState((prev) => ({
+          ...prev,
+          fetchedAccounts: json.flatMap((brand) => brand?.groups),
+        }));
+      } else {
+        toast.error("Something went wrong!");
+        return;
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error getAccounts:", error);
+    }
+  }
+
+  useEffect(() => {
+    getAccounts();
+  }, []);
+
+  // Function to handle individual checkbox change
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    accountId: string
+  ) => {
+    if (e.target.checked) {
+      setSelectedAccountIds((prev) => [...prev, accountId]);
+    } else {
+      setSelectedAccountIds((prev) => prev.filter((id) => id !== accountId));
+    }
+  };
+
+  // Function to handle "Select All" checkbox
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      const allIds = pageState.fetchedAccounts.map((account) => account._id);
+      setSelectedAccountIds(allIds);
+    } else {
+      setSelectedAccountIds([]);
+    }
+  };
+
+  const selectedAccounts = pageState.fetchedAccounts.filter((account) =>
+    selectedAccountIds.includes(account._id)
+  );
+
+  const [filterBy, setFilterBy] = useState({
+    accountName: "none",
+    platform: "",
+    followers: "none",
+    engagement: "none",
+  });
+
+  const filteredAndSortedAccounts = useMemo(() => {
+    if (
+      !Array.isArray(pageState.fetchedAccounts) ||
+      pageState.fetchedAccounts.length === 0
+    ) {
+      return [];
+    }
+
+    return pageState.fetchedAccounts
+      .filter((item) => {
+        return (
+          filterBy.platform === "" ||
+          item.platform.toLowerCase() === filterBy.platform.toLowerCase()
+        );
+      })
+      .sort((a, b) => {
+        if (filterBy.accountName === "asc") {
+          return a.group_name.localeCompare(b.group_name);
+        }
+        if (filterBy.accountName === "desc") {
+          return b.group_name.localeCompare(a.group_name);
+        }
+        if (filterBy.followers === "asc") {
+          return (a.subscribers || 0) - (b.subscribers || 0);
+        }
+        if (filterBy.followers === "desc") {
+          return (b.subscribers || 0) - (a.subscribers || 0);
+        }
+        if (filterBy.engagement === "asc") {
+          return (a.engagement || 0) - (b.engagement || 0);
+        }
+        if (filterBy.engagement === "desc") {
+          return (b.engagement || 0) - (a.engagement || 0);
+        }
+        return 0;
+      });
+  }, [pageState.fetchedAccounts, filterBy]);
+
+  const handleSortChange = (
+    field: "accountName" | "followers" | "engagement"
+  ) => {
+    setFilterBy((prev) => {
+      // Determine the next sort order for the selected field
+      let newSortOrder: "asc" | "desc" | "none" = "asc";
+      if (prev[field] === "asc") newSortOrder = "desc";
+      else if (prev[field] === "desc") newSortOrder = "none";
+
+      // Reset all sort fields except the one being toggled
+      return {
+        ...prev,
+        accountName: field === "accountName" ? newSortOrder : "none",
+        followers: field === "followers" ? newSortOrder : "none",
+        engagement: field === "engagement" ? newSortOrder : "none",
+      };
+    });
+  };
+
+  // Helper function to get sort label
+  const getSortLabel = (field: "accountName" | "followers" | "engagement") => {
+    switch (filterBy[field]) {
+      case "asc":
+        return "Ascending";
+      case "desc":
+        return "Descending";
+      default:
+        return "Not sorted";
+    }
+  };
+
+  // return all accounts
+  const renderAccounts =
+    Array.isArray(filteredAndSortedAccounts) &&
+    filteredAndSortedAccounts.length > 0 ? (
+      filteredAndSortedAccounts.map((oneAccount) => (
+        <ul
+          key={oneAccount._id}
+          className={`${styles.tableBody} borderBottom articleRow`}
+        >
+          <li className="w-[5%] flex justify-center items-center">
+            <CustomCheckBox
+              name="test"
+              value={oneAccount._id}
+              checked={selectedAccountIds.includes(oneAccount._id)}
+              onChange={(e) => handleCheckboxChange(e, oneAccount._id)}
+            />
+          </li>
+          <li className="w-[22%]">
+            <p>{oneAccount.group_name}</p>
+          </li>
+          <li className={`w-[22%] flex justify-center text-center gap-[1vw]`}>
+            {oneAccount.platform[0] +
+              oneAccount.platform.toLowerCase().slice(1)}
+            {/* <span>
+            {oneAccount.platform === "facebook"
+              ? facebookIconSm
+              : oneAccount.platform === "reddit"
+              ? redditIconSm
+              : telegramIconSm}
+            </span> */}
+          </li>
+          <li className="w-[38%]">
+            <a href={oneAccount.link} target="_blank">
+              {oneAccount.link}
+            </a>
+          </li>
+          <li className="w-[14%]">
+            {oneAccount.subscribers > 999
+              ? oneAccount.subscribers / 100 / 10.0 + "k"
+              : oneAccount.subscribers}
+          </li>
+          <li className="w-[14%]">{oneAccount.engagement}</li>
+        </ul>
+      ))
+    ) : (
+      <ul className={`${styles.tableBody} borderBottom articleRow h-full`}>
+        <span className="custom-loader w-fit m-auto"></span>
+      </ul>
+    );
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
       {/* filters options to filter and edit data in table */}
       <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
         <h3>Accounts</h3>
-        <div className="flex justify-between items-end">
-          <div className={`${styles.filters} w-8/12 flex gap-[1vw]`}>
-            <div className="flex flex-col w-1/3 gap-[0.3vw]">
+        <div className="flex justify-between items-end gap-[1vw]">
+          <div
+            className={`${styles.filters} flex-grow flex items-center gap-[1vw]`}
+          >
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
               <h5>Account Name</h5>
-              <CustomSelectInput label="All" options={ArticleNames} />
+              <div
+                className={`${styles.changeOrder} `}
+                onClick={() => {
+                  handleSortChange("accountName");
+                }}
+              >
+                <p>{getSortLabel("accountName")}</p>
+                {sortIcon}
+              </div>
             </div>
-            <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Username</h5>
-              <CustomSelectInput label="All" options={Brands} />
+
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
+              <h5>Platform</h5>
+              <CustomSelectInput
+                label="All"
+                options={[
+                  "All",
+                  ...new Set(
+                    pageState.fetchedAccounts?.map((item) => item.platform) || []
+                  ),
+                ]}
+                getValue={(value: string) =>
+                  setFilterBy((prev) => ({
+                    ...prev,
+                    platform: value === "All" ? "" : value,
+                  }))
+                }
+              />
             </div>
-            <div className="flex flex-col w-[25%] gap-[0.3vw]">
+
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
               <h5>Followers</h5>
               <div
                 className={`${styles.changeOrder} `}
                 onClick={() => {
-                  setengagementOrder(!engagementOrder);
+                  handleSortChange("followers");
                 }}
               >
-                <p>{engagementOrder ? "Ascend" : "Descend"}</p>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721067 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139324 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139324 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
-                    fill="#2A2B2A"
-                  />
-                </svg>
+                <p>{getSortLabel("followers")}</p>
+                {sortIcon}
               </div>
             </div>
 
-            <div className={`flex flex-col w-[25%] gap-[0.3vw] `}>
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
               <h5>Engagement</h5>
               <div
                 className={`${styles.changeOrder} `}
                 onClick={() => {
-                  setsubscriberOrder(!subscriberOrder);
+                  handleSortChange("engagement");
                 }}
               >
-                <p>{subscriberOrder ? "Ascend" : "Descend"}</p>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721067 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139324 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139324 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
-                    fill="#2A2B2A"
-                  />
-                </svg>
+                <p>{getSortLabel("engagement")}</p>
+                {sortIcon}
               </div>
             </div>
           </div>
@@ -133,25 +310,11 @@ const Setting = () => {
             {/* open modal to enable you to add account  */}
             <BasicModal
               btnWord={"Add Account"}
-              btnIcon={
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="11"
-                  viewBox="0 0 11 11"
-                  fill="none"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
-                    fill="#FFFFFB"
-                  />
-                </svg>
-              }
+              btnIcon={addIcon}
               btnColor={"black"}
               modalTitle={"Add Account"}
               forWhat={"add_account"}
+              getData={getAccounts}
             />
             {/* open modal to enable you to remove selected accounts  */}
             <BasicModal
@@ -159,6 +322,10 @@ const Setting = () => {
               btnColor={"white"}
               modalTitle={"Remove Accounts?"}
               forWhat={"remove_account"}
+              getData={getAccounts}
+              dataToRemove={selectedAccountIds}
+              selectedAccounts={selectedAccounts}
+              onRemoveSuccess={() => setSelectedAccountIds([])} // Callback to clear selection
             />
           </div>
         </div>
@@ -173,9 +340,16 @@ const Setting = () => {
             >
               <li className="w-[5%] flex justify-center items-center">
                 <CustomCheckBox
-                  onChange={(e) => {
-                    handleCheckAllSelectedText(e);
-                  }}
+                  onChange={handleSelectAll}
+                  checked={
+                    selectedAccountIds.length ===
+                      pageState.fetchedAccounts.length &&
+                    pageState.fetchedAccounts.length > 0
+                  }
+                  indeterminate={
+                    selectedAccountIds.length > 0 &&
+                    selectedAccountIds.length < pageState.fetchedAccounts.length
+                  }
                 />
               </li>
 
@@ -211,11 +385,11 @@ const Setting = () => {
                       fill="black"
                     />
                   </svg>
-                  <p>Username</p>
+                  <p>Platform</p>
                 </div>
               </li>
 
-              <li className="w-[22%] flex justify-center">
+              <li className="w-[38%] flex justify-center">
                 <div className="flex items-center gap-[0.7vw]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +407,7 @@ const Setting = () => {
                 </div>
               </li>
 
-              <li className="w-[22%] flex justify-center">
+              <li className="w-[14%] flex justify-center">
                 <div className="flex items-center gap-[0.7vw]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -251,7 +425,7 @@ const Setting = () => {
                 </div>
               </li>
 
-              <li className="w-[22%] flex justify-center">
+              <li className="w-[14%] flex justify-center">
                 <div className="flex items-center gap-[0.7vw]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

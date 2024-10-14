@@ -1,177 +1,228 @@
 "use client";
-import { AccountsData } from "@/app/_data/data";
 import styles from "./TwitterCommentCampaign.module.css";
 import {
-  facebookIconSm,
-  redditIconSm,
-  telegramIconSm,
   runningClockIcon,
   finishedCheckIcon,
   pausedIcon,
+  sortIcon,
 } from "@/app/_utils/svgIcons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { TwitterSharingAccount } from "../PostCommentsPage";
 
+const TwitterCommentCampaign = ({
+  twitterAccountsData,
+}: {
+  twitterAccountsData: TwitterSharingAccount[] | null;
+}) => {
+  const [filterBy, setFilterBy] = useState({
+    accountName: "none",
+    userName: "none",
+    comments: "none",
+    status: "",
+    campaignType: "",
+  });
 
-//   return data about account , number of comments and campaign type
-const renderAccounts = AccountsData.map((oneAccount, idx) => (
-  <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
-    <li className="w-[20%] flex justify-center text-center gap-[1vw]">
-      <p>{oneAccount.account_name}</p>
-      {oneAccount.account_type === "facebook"
-        ? facebookIconSm
-        : oneAccount.account_type === "reddit"
-        ? redditIconSm
-        : telegramIconSm}
-    </li>
-    <li className={`w-[20%] `}>{oneAccount.user_name}</li>
+  const filteredAndSortedAccounts = useMemo(() => {
+    if (
+      !Array.isArray(twitterAccountsData) ||
+      twitterAccountsData.length === 0
+    ) {
+      return [];
+    }
 
-    <li className="w-[20%]">{oneAccount.comments + " " + "comments"}</li>
-    <li className="w-[20%] flex justify-center items-center">
-      <span
-        className={`flex gap-[0.5vw] items-center w-fit ${
-          oneAccount.status === "Finished"
-            ? "bg-[#5FA85BB5]"
-            : oneAccount.status === "Running"
-            ? "bg-[#E9313EB2]"
-            : "bg-[#E1C655B2]"
-        }`}
-      >
-        {oneAccount.status === "Finished"
-          ? finishedCheckIcon
-          : oneAccount.status === "Paused"
-          ? pausedIcon
-          : runningClockIcon}
-        <p>{oneAccount.status}</p>
-      </span>
-    </li>
-    <li className="w-[20%] flex justify-center">
-      <span
-        className={`flex gap-[0.5vw] items-center w-fit ${
-          oneAccount.Campaign_type === "Auto Comment"
-            ? "bg-[#5FA85BB5]"
-            : "bg-[#E1C655B2]"
-        }`}
-      >
-        <p>{oneAccount.Campaign_type}</p>
-      </span>
-    </li>
-  </ul>
-));
+    return twitterAccountsData
+      .filter((item) => {
+        return (
+          (filterBy.status === "" || item.status === filterBy.status) &&
+          (filterBy.campaignType === "" ||
+            item.campaignType === filterBy.campaignType)
+        );
+      })
+      .sort((a, b) => {
+        if (filterBy.accountName === "asc") {
+          return a.accountName.localeCompare(b.accountName);
+        }
+        if (filterBy.accountName === "desc") {
+          return b.accountName.localeCompare(a.accountName);
+        }
+        if (filterBy.userName === "asc") {
+          return a.userName.localeCompare(b.userName);
+        }
+        if (filterBy.userName === "desc") {
+          return b.userName.localeCompare(a.userName);
+        }
+        if (filterBy.comments === "asc") {
+          return a.comments - b.comments;
+        }
+        if (filterBy.comments === "desc") {
+          return b.comments - a.comments;
+        }
+        return 0;
+      });
+  }, [twitterAccountsData, filterBy]);
 
-const TwitterCommentCampaign = () => {
-  // for storing the order of subscribers and engagement (descending or ascending)
-  const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
-  const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+  const handleSortChange = (field: "accountName" | "userName" | "comments") => {
+    setFilterBy((prev) => {
+      // Determine the next sort order for the selected field
+      let newSortOrder: "asc" | "desc" | "none" = "asc";
+      if (prev[field] === "asc") newSortOrder = "desc";
+      else if (prev[field] === "desc") newSortOrder = "none";
+
+      // Reset all sort fields except the one being toggled
+      return {
+        ...prev,
+        accountName: field === "accountName" ? newSortOrder : "none",
+        userName: field === "userName" ? newSortOrder : "none",
+        comments: field === "comments" ? newSortOrder : "none",
+      };
+    });
+  };
+
+  // Helper function to get sort label
+  const getSortLabel = (field: "accountName" | "userName" | "comments") => {
+    switch (filterBy[field]) {
+      case "asc":
+        return "Ascending";
+      case "desc":
+        return "Descending";
+      default:
+        return "Not sorted";
+    }
+  };
+
+  //   return data about account , number of comments and campaign type
+  const renderAccounts =
+    Array.isArray(filteredAndSortedAccounts) &&
+    filteredAndSortedAccounts.length > 0 ? (
+      filteredAndSortedAccounts.map((oneAccount, idx) => (
+        <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
+          <li className="w-[20%] flex justify-center text-center gap-[1vw]">
+            <p>{oneAccount.accountName}</p>
+          </li>
+          <li className={`w-[20%] `}>{oneAccount.userName}</li>
+
+          <li className="w-[20%]">{oneAccount.comments + " " + "comments"}</li>
+          <li className="w-[20%] flex justify-center items-center">
+            <span
+              className={`flex gap-[0.5vw] items-center w-fit ${
+                oneAccount.status === "Finished"
+                  ? "bg-[#5FA85BB5]"
+                  : oneAccount.status === "Running"
+                  ? "bg-[#E9313EB2]"
+                  : "bg-[#E1C655B2]"
+              }`}
+            >
+              {oneAccount.status === "Finished"
+                ? finishedCheckIcon
+                : oneAccount.status === "Paused"
+                ? pausedIcon
+                : runningClockIcon}
+              <p>{oneAccount.status}</p>
+            </span>
+          </li>
+          <li className="w-[20%] flex justify-center">
+            <span
+              className={`flex gap-[0.5vw] items-center w-fit ${
+                oneAccount.campaignType === "Auto Comment"
+                  ? "bg-[#5FA85BB5]"
+                  : "bg-[#E1C655B2]"
+              }`}
+            >
+              <p>{oneAccount.campaignType}</p>
+            </span>
+          </li>
+        </ul>
+      ))
+    ) : (
+      <div className="flex justify-center items-center h-full">
+        <span className="custom-loader"></span>
+      </div>
+    );
 
   return (
     <div className={`${styles.wrapper} w-full h-full pt-[0.5vw]`}>
       {/* filters options to filter and edit data in table */}
-      <div className={`flex flex-col gap-[0.7vw] w-full pageHeader`}>
-        <div className="flex justify-between">
-          <div className={`${styles.filters} w-8/12 flex gap-[1vw]`}>
-            <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Account Name</h5>
-              <div className={`${styles.changeOrder} `}>
-                <p>Account Name</p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="17"
-                  viewBox="0 0 16 17"
-                  fill="none"
-                >
-                  <path
-                    d="M9.3793 11.8304H7.80262V0.332387C7.80265 0.14886 7.65379 0 7.47026 0H2.33924C2.15571 0 2.00688 0.14886 2.00688 0.332387V11.8304H0.430167C-0.0286343 11.8304 -0.137701 12.0934 0.186816 12.418L4.31725 16.5484C4.64177 16.8729 5.1677 16.8729 5.49224 16.5484L9.62265 12.418C9.9472 12.0934 9.83831 11.8304 9.3793 11.8304Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M14.1666 7.304C14.1389 7.23488 14.0718 7.18945 13.9973 7.18945H13.0255C12.9504 7.18945 12.8829 7.2356 12.8555 7.30564L11.0828 11.8571C11.0609 11.9133 11.0682 11.9766 11.1021 12.0262C11.136 12.076 11.1924 12.1058 11.2526 12.1058H12.2275C12.3043 12.1058 12.3727 12.0578 12.3989 11.9856L12.731 11.0718H14.2971L14.6495 11.9887C14.6765 12.0591 14.7444 12.1056 14.8197 12.1056H15.8194C15.8799 12.1056 15.9365 12.0755 15.9704 12.0253C16.0044 11.9752 16.0113 11.9115 15.9886 11.8553L14.1666 7.304ZM13.8653 9.9402H13.1464L13.5023 8.96239L13.8653 9.9402Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M11.5039 4.28387V5.1128C11.5039 5.21349 11.5856 5.29522 11.6863 5.29522H15.3841C15.4848 5.29522 15.5665 5.21349 15.5665 5.1128V4.34588C15.5665 4.24518 15.4848 4.16345 15.3841 4.16345H13.1778L15.4295 1.39022C15.4559 1.35776 15.4703 1.31708 15.4703 1.27532V0.56133C15.4703 0.460639 15.3886 0.378906 15.2879 0.378906H11.9565C11.8558 0.378906 11.7741 0.460639 11.7741 0.56133V1.33135C11.7741 1.43204 11.8558 1.51378 11.9565 1.51378H13.6947L11.5446 4.16914C11.5184 4.20161 11.5039 4.24211 11.5039 4.28387Z"
-                    fill="black"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Username</h5>
-              <div className={`${styles.changeOrder} `}>
-                <p>Username</p>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="17"
-                  viewBox="0 0 16 17"
-                  fill="none"
-                >
-                  <path
-                    d="M9.3793 11.8304H7.80262V0.332387C7.80265 0.14886 7.65379 0 7.47026 0H2.33924C2.15571 0 2.00688 0.14886 2.00688 0.332387V11.8304H0.430167C-0.0286343 11.8304 -0.137701 12.0934 0.186816 12.418L4.31725 16.5484C4.64177 16.8729 5.1677 16.8729 5.49224 16.5484L9.62265 12.418C9.9472 12.0934 9.83831 11.8304 9.3793 11.8304Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M14.1666 7.304C14.1389 7.23488 14.0718 7.18945 13.9973 7.18945H13.0255C12.9504 7.18945 12.8829 7.2356 12.8555 7.30564L11.0828 11.8571C11.0609 11.9133 11.0682 11.9766 11.1021 12.0262C11.136 12.076 11.1924 12.1058 11.2526 12.1058H12.2275C12.3043 12.1058 12.3727 12.0578 12.3989 11.9856L12.731 11.0718H14.2971L14.6495 11.9887C14.6765 12.0591 14.7444 12.1056 14.8197 12.1056H15.8194C15.8799 12.1056 15.9365 12.0755 15.9704 12.0253C16.0044 11.9752 16.0113 11.9115 15.9886 11.8553L14.1666 7.304ZM13.8653 9.9402H13.1464L13.5023 8.96239L13.8653 9.9402Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M11.5039 4.28387V5.1128C11.5039 5.21349 11.5856 5.29522 11.6863 5.29522H15.3841C15.4848 5.29522 15.5665 5.21349 15.5665 5.1128V4.34588C15.5665 4.24518 15.4848 4.16345 15.3841 4.16345H13.1778L15.4295 1.39022C15.4559 1.35776 15.4703 1.31708 15.4703 1.27532V0.56133C15.4703 0.460639 15.3886 0.378906 15.2879 0.378906H11.9565C11.8558 0.378906 11.7741 0.460639 11.7741 0.56133V1.33135C11.7741 1.43204 11.8558 1.51378 11.9565 1.51378H13.6947L11.5446 4.16914C11.5184 4.20161 11.5039 4.24211 11.5039 4.28387Z"
-                    fill="black"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="flex flex-col w-[25%] gap-[0.3vw]">
-              <h5>Followers</h5>
-              <div
-                className={`${styles.changeOrder} `}
-                onClick={() => {
-                  setengagementOrder(!engagementOrder);
-                }}
-              >
-                <p>{engagementOrder ? "Ascend" : "Descend"}</p>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721067 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139324 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139324 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
-                    fill="#2A2B2A"
-                  />
-                </svg>
-              </div>
-            </div>
 
-            <div className={`flex flex-col w-[25%] gap-[0.3vw] `}>
-              <h5>Engagement</h5>
-              <div
-                className={`${styles.changeOrder} `}
-                onClick={() => {
-                  setsubscriberOrder(!subscriberOrder);
-                }}
-              >
-                <p>{subscriberOrder ? "Ascend" : "Descend"}</p>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721067 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139324 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139324 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
-                    fill="#2A2B2A"
-                  />
-                </svg>
-              </div>
+      <div className="flex justify-between w-full pageHeader">
+        <div
+          className={`${styles.filters} flex-grow flex items-center gap-[0.75vw]`}
+        >
+          <div className="flex flex-col w-[15%] gap-[0.3vw]">
+            <h5>Account Name</h5>
+            <div
+              className={`${styles.changeOrder} `}
+              onClick={() => {
+                handleSortChange("accountName");
+              }}
+            >
+              <p>{getSortLabel("accountName")}</p>
+              {sortIcon}
             </div>
+          </div>
+
+          <div className="flex flex-col w-[15%] gap-[0.3vw]">
+            <h5>Username</h5>
+            <div
+              className={`${styles.changeOrder} `}
+              onClick={() => {
+                handleSortChange("userName");
+              }}
+            >
+              <p>{getSortLabel("userName")}</p>
+              {sortIcon}
+            </div>
+          </div>
+
+          <div className="flex flex-col w-[15%] gap-[0.3vw]">
+            <h5>Comments</h5>
+            <div
+              className={`${styles.changeOrder} `}
+              onClick={() => {
+                handleSortChange("comments");
+              }}
+            >
+              <p>{getSortLabel("comments")}</p>
+              {sortIcon}
+            </div>
+          </div>
+
+          <div className="flex flex-col w-[15%] gap-[0.3vw]">
+            <h5>Status</h5>
+            <CustomSelectInput
+              label="All"
+              options={[
+                "All",
+                ...new Set(
+                  twitterAccountsData?.map((item) => item.status) || []
+                ),
+              ]}
+              getValue={(value: string) =>
+                setFilterBy((prev) => ({
+                  ...prev,
+                  status: value === "All" ? "" : value,
+                }))
+              }
+            />
+          </div>
+
+          <div className="flex flex-col w-[15%] gap-[0.3vw]">
+            <h5>Campaign Type</h5>
+            <CustomSelectInput
+              label="All"
+              options={[
+                "All",
+                ...new Set(
+                  twitterAccountsData?.map((item) => item.campaignType) || []
+                ),
+              ]}
+              getValue={(value: string) =>
+                setFilterBy((prev) => ({
+                  ...prev,
+                  campaignType: value === "All" ? "" : value,
+                }))
+              }
+            />
           </div>
         </div>
       </div>

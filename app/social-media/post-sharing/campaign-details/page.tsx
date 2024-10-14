@@ -1,23 +1,154 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./ShareCampaign.module.css";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { backIcon, editPenIcon, reGenerateIcon } from "@/app/_utils/svgIcons";
 import SuggestionCard from "@/app/_components/SocialMedia/SuggestionCard/SuggestionCard";
+import DateAndTimePicker from "@/app/_components/DateAndTimePicker/DateAndTimePicker";
+import { socialMediaPostSharingContext } from "../_context/socialMediaPostSharingContext";
+import { globalContext } from "@/app/_context/store";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-const sharingListOptions = [
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-  "Subreddit | Mega Projects",
-];
-
-const TimeRange = ["1 min", "5 min", "10 min", "15 min", "20 min"];
+const sharingListOptions = ["Reddit", "Telegram", "Facebook"];
 
 const ShareCampaign = () => {
-  const [PostText, setPostText] = useState<string>("");
+  const router = useRouter();
+  const { authState, handleSignOut, brandMap } = useContext(globalContext);
+  const { handleGeneratePosts, selectedContent, setSelectedContent } =
+    useContext(socialMediaPostSharingContext);
+  const [pageState, setPageState] = useState<any>({
+    scheduledTime: null,
+    postText: "",
+    generatedPosts: [],
+    sharingList: "",
+  });
+
+  function getDateTimeValue(value: any) {
+    setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+  }
+
+  useEffect(() => {
+    if (pageState.generatedPosts.length === 0) {
+      handleGeneratePosts().then((posts) => {
+        if (posts) {
+          setPageState((prev: any) => ({ ...prev, generatedPosts: posts }));
+        }
+      });
+    }
+  }, [pageState.generatedPosts]);
+
+  useEffect(() => {
+    if (selectedContent === null) {
+      router.replace("/social-media/post-sharing");
+    }
+  }, [selectedContent]);
+
+  async function handleAddFacebookPost() {
+    if (!pageState.postText) {
+      toast.error("No post caption provided!");
+      return;
+    } else if (!selectedContent.brand) {
+      toast.error("No brand selected!");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://facebook-api.machinegenius.io/api/v1/groups/create-post`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            brandId: brandMap[selectedContent.brand],
+            postContent: pageState.postText,
+            // "scheduleDate": "1728562848870"
+            // "delayTime": 5,
+            // "numberOfJobsPerDelay": 1
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.message) {
+        toast(json.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleAddFacebookPost:", error);
+    }
+  }
+
+  async function handleAddTelegramPost() {
+    if (!pageState.postText) {
+      toast.error("No post caption provided!");
+      return;
+    } else if (!selectedContent.brand) {
+      toast.error("No brand selected!");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/social-media/telegram/campaign-brand/${
+          brandMap[selectedContent.brand]
+        }`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            message: pageState.postText,
+            // ...(pageState.scheduledTime !== null && {
+            //   starttime: pageState.scheduledTime,
+            // }),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json = await res.json();
+      if (json && json.chatIds) {
+        toast.success("Message is sent!");
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleAddTelegramPost:", error);
+    }
+  }
+
+  async function handlePublishCampaign() {
+    if (pageState.sharingList === "") {
+      toast.error("Please select a sharing list!");
+      return;
+    } else if (pageState.sharingList === "Facebook") {
+      await handleAddFacebookPost();
+    } else if (pageState.sharingList === "Telegram") {
+      await handleAddTelegramPost();
+    } else if (pageState.sharingList === "Reddit") {
+      toast.error("Reddit account is not available!");
+    }
+  }
 
   return (
     <div
@@ -25,12 +156,18 @@ const ShareCampaign = () => {
         "flex flex-col w-full h-[80vh] py-[1vw] " + styles.add_post_wrapper
       }
     >
-      <Link href={"/social-media/post-sharing"}>
+      <div>
         <h6 className="flex items-center gap-[0.5vw] !mb-[--sy-20px]">
-          {backIcon}
+          <span
+            onClick={() => {
+              setSelectedContent(null);
+            }}
+          >
+            {backIcon}
+          </span>
           Pacific Allies ABANDO...
         </h6>
-      </Link>
+      </div>
 
       <div className="grid grid-cols-2 gap-[5vw] w-full h-full">
         {/* Col (1) */}
@@ -42,10 +179,15 @@ const ShareCampaign = () => {
               id=""
               maxLength={500}
               rows={2}
-              value={PostText}
-              onChange={(e) => setPostText(e.target.value)}
+              value={pageState.postText}
+              onChange={(e) =>
+                setPageState((prev: any) => ({
+                  ...prev,
+                  postText: e.target.value,
+                }))
+              }
             ></textarea>
-            <span>{PostText?.length}/500</span>
+            <span>{pageState.postText?.length}/500</span>
           </div>
 
           <div
@@ -62,17 +204,39 @@ const ShareCampaign = () => {
                   word="Re-Generate"
                   icon={reGenerateIcon}
                   paddingVal="py-[--10px] px-[--22px]"
+                  onClick={() => {
+                    setPageState((prev: any) => ({
+                      ...prev,
+                      generatedPosts: [],
+                    }));
+                  }}
                 />
               </div>
 
               <div className="space-y-[--sy-14px] overflow-y-auto max-h-[45vh] pr-[--6px] pb-[--5px]">
-                {Array.from({ length: 8 }).map((_, index) => (
-                  <SuggestionCard
-                    icon={editPenIcon}
-                    key={index}
-                    text={`Stocks, the heartbeat of the market! Whether you're a seasoned investor or just getting started, understanding trends and staying informed is key to navigating this thrilling financial landscape. `}
-                  />
-                ))}
+                {pageState.generatedPosts &&
+                Array.isArray(pageState.generatedPosts) &&
+                pageState.generatedPosts.length > 0 ? (
+                  pageState.generatedPosts.map(
+                    (post: string, index: number) => (
+                      <SuggestionCard
+                        icon={editPenIcon}
+                        key={index}
+                        text={post}
+                        onClick={() => {
+                          setPageState((prev: any) => ({
+                            ...prev,
+                            postText: post,
+                          }));
+                        }}
+                      />
+                    )
+                  )
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <span className="custom-loader"></span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -92,7 +256,16 @@ const ShareCampaign = () => {
               {/* Sharing List */}
               <div>
                 <label htmlFor="">Sharing List</label>
-                <CustomSelectInput options={sharingListOptions} />
+                <CustomSelectInput
+                  label="Select Sharing List"
+                  options={sharingListOptions}
+                  getValue={(value: string) => {
+                    setPageState((prev: any) => ({
+                      ...prev,
+                      sharingList: value,
+                    }));
+                  }}
+                />
               </div>
 
               {/* Settings */}
@@ -106,8 +279,14 @@ const ShareCampaign = () => {
                     <h5 className="text-[--20px] font-medium">
                       Time between posts
                     </h5>
-                    <div className="w-[20%]">
-                      <CustomSelectInput options={TimeRange} />
+                    <div className="w-[40%] flex items-center gap-[--4px]">
+                      <CustomSelectInput
+                        options={Array.from(
+                          { length: 20 },
+                          (_, index) => index + 1
+                        )}
+                      />
+                      <span>min.</span>
                     </div>
                   </div>
 
@@ -115,8 +294,14 @@ const ShareCampaign = () => {
                     <h5 className="text-[--20px] font-medium">
                       Time between batches
                     </h5>
-                    <div className="w-[20%]">
-                      <CustomSelectInput options={TimeRange} />
+                    <div className="w-[40%] flex items-center gap-[--4px]">
+                      <CustomSelectInput
+                        options={Array.from(
+                          { length: 20 },
+                          (_, index) => index + 1
+                        )}
+                      />
+                      <span>min.</span>
                     </div>
                   </div>
 
@@ -124,7 +309,7 @@ const ShareCampaign = () => {
                     <h5 className="text-[--20px] font-medium">
                       Number of batches
                     </h5>
-                    <div className="w-[20%]">
+                    <div className="w-[40%]">
                       <CustomSelectInput
                         options={Array.from(
                           { length: 20 },
@@ -150,25 +335,23 @@ const ShareCampaign = () => {
               {/* Sharing List */}
               <div>
                 <label htmlFor="">Posting Time</label>
-                <CustomSelectInput
-                  options={["10:00 AM", "11:00 AM"]}
-                  label={"8:30 PM GMT"}
-                />
+                <DateAndTimePicker getDateTimeValue={getDateTimeValue} />
               </div>
             </div>
           </div>
 
           {/* 03- Buttons */}
           <div className="flex justify-end gap-[--20px]">
-            <CustomBtn
+            {/* <CustomBtn
               word="Schadule"
               btnColor="black"
               paddingVal="py-[--10px] px-[--22px]"
-            />
+            /> */}
             <CustomBtn
               btnColor="black"
-              word="Publish Now"
+              word="Publish"
               paddingVal="py-[--10px] px-[--22px]"
+              onClick={handlePublishCampaign}
             />
           </div>
         </div>

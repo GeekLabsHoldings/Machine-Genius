@@ -189,9 +189,10 @@ const useChat = () => {
     const handleMessage = (event: { [key: string]: any }) => {
       console.log("Hellllooooo");
       let data = null;
-      if (event[0]) {
+      console.log("Event", event);
+      if (event.chat) {
         console.log(event);
-        data = event[0];
+        data = event;
       }
       if (!data) return;
       console.log("User", getUserId());
@@ -223,6 +224,7 @@ const useChat = () => {
           sender: {
             _id: data.sender,
           },
+          createdAt: data.createdAt,
         },
       ]);
     };

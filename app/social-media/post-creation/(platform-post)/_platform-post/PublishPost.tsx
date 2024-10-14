@@ -17,6 +17,7 @@ interface IProps {
   uploadedAsset: string | null | File;
   handleAddPost: () => void;
   setPageState?: React.Dispatch<React.SetStateAction<any>>;
+  handleFacebookLogin?: () => void;
 }
 
 export default function PublishPost({
@@ -24,6 +25,7 @@ export default function PublishPost({
   uploadedAsset,
   handleAddPost,
   setPageState,
+  handleFacebookLogin,
 }: IProps) {
   const { selectedPlatform } = useContext(socialMediaPostCreationContext);
   const uploadImageRef = useRef<HTMLInputElement>(null);
@@ -150,7 +152,18 @@ export default function PublishPost({
           btnColor="white"
           href="/social-media/post-creation/linkedin-post/"
         />
-        <CustomBtn word="Publish" btnColor="black" onClick={handleAddPost} />
+
+        <div className="flex gap-[--20px]">
+          {selectedPlatform === "FACEBOOK" && (
+            <CustomBtn
+              word="Update Access Token"
+              btnColor="black"
+              onClick={handleFacebookLogin}
+              paddingVal="py-[--10px] px-[--18px]"
+            />
+          )}
+          <CustomBtn word="Publish" btnColor="black" onClick={handleAddPost} />
+        </div>
       </div>
     </div>
   );

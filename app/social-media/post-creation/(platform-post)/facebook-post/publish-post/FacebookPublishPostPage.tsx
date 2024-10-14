@@ -1,25 +1,30 @@
 "use client";
-import { useContext, useState } from "react"; // React's useState hook
+import { useContext, useEffect, useState } from "react"; // React's useState hook
 import { socialMediaPostCreationContext } from "@/app/social-media/post-creation/_context/socialMediaPostCreationContext";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import PublishPost from "../../_platform-post/PublishPost";
+import useSessionStorage from "@/app/_hooks/useSessionStorage";
+import { v4 as uuidv4 } from "uuid";
+import { useSearchParams } from "next/navigation";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
-interface IPublishPostResponse {
-  result: {
-    platform: "FACEBOOK";
-    brandId: string;
-    content: string;
-    postId: string;
-    employeeId: string;
-    _id: string;
-    __v: number;
-  };
-  facebookPost: {
-    id: string;
-    post_id?: string;
-  };
-}
+// interface IPublishPostResponse {
+//   result: {
+//     platform: "FACEBOOK";
+//     brandId: string;
+//     content: string;
+//     postId: string;
+//     employeeId: string;
+//     _id: string;
+//     __v: number;
+//   };
+//   facebookPost: {
+//     id: string;
+//     post_id?: string;
+//   };
+// }
 
 interface IUploadImagePresignedURLData {
   message: string;
@@ -29,16 +34,129 @@ interface IUploadImagePresignedURLData {
 }
 
 const FacebookPublishPostPage = () => {
+  const searchParams = useSearchParams();
   const { authState, handleSignOut, selectedBrandId } =
     useContext(globalContext);
   const { postCaption } = useContext(socialMediaPostCreationContext);
   const [pageState, setPageState] = useState<{
     presignedURLData: IUploadImagePresignedURLData | null;
     uploadedAsset: string | null;
+    isPublished: boolean;
   }>({
     presignedURLData: null,
     uploadedAsset: null,
+    isPublished: false,
   });
+
+  const [tokenState, setTokenState] = useSessionStorage<{
+    clientId: string;
+    clientSecret: string;
+  } | null>("tokenState", null);
+
+  const handleFacebookLogin = () => {
+    if (!tokenState) {
+      toast.error("No token state found!");
+      return;
+    }
+    const redirectUri = encodeURIComponent(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/social-media/post-creation/facebook-post/publish-post`
+    );
+    const scope = "pages_show_list,pages_read_engagement";
+    const state = uuidv4(); // For security, you should generate a random string here
+    const responseType = "code";
+
+    const facebookOAuthUrl = `https://www.facebook.com/v16.0/dialog/oauth?client_id=${tokenState?.clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}&state=${state}`;
+
+    // Redirect the user to Facebook's OAuth dialog
+    window.location.href = facebookOAuthUrl;
+  };
+
+  useEffect(() => {
+    const code: any = searchParams.get("code");
+    const state: any = searchParams.get("state");
+    // if (typeof window !== "undefined") {
+    //   window.localStorage.setItem("code", code);
+    //   window.localStorage.setItem("state", state);
+    // }
+    if (code && tokenState !== null) {
+      // Send the code to your server to exchange it for an access token
+      fetch("/api/social-media/facebook/exchange-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          state,
+          clientId: tokenState?.clientId,
+          clientSecret: tokenState?.clientSecret,
+          redirectUri: `${process.env.NEXT_PUBLIC_BASE_URL}/social-media/post-creation/facebook-post/publish-post`,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            setTokenState(null);
+            // Access token received and stored successfully
+            // You can redirect or update the UI as needed
+            handleUpdateToken(data?.access_token);
+            // window.localStorage.setItem("access_token", data.access_token);
+            // console.log("Access token:", data.access_token);
+          } else {
+            // Handle errors
+            console.error(
+              "Error exchanging code for access token:",
+              data.error
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Network error:", error);
+        });
+    }
+  }, [searchParams, tokenState]);
+
+  async function handleUpdateToken(accessToken: string) {
+    setTokenState(null);
+    if (!selectedBrandId) {
+      toast.error("No brand selected!");
+      return;
+    }
+    if (!accessToken) {
+      toast.error("No access token provided!");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/facebook/update-token`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            brandId: selectedBrandId,
+            longAccessToken: accessToken,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: any = await res.json();
+      if (json && json.message) {
+        toast(json.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleUpdateToken:", error);
+    }
+  }
 
   async function handleAddPost() {
     if (!postCaption) {
@@ -76,11 +194,19 @@ const FacebookPublishPostPage = () => {
       if (res.status === 401) {
         handleSignOut();
       }
-      const json: IPublishPostResponse = await res.json();
-      if (json && json.result && json.facebookPost) {
-        toast.success("Post is published!");
-      } else {
-        toast.error("Something went wrong!");
+      const json: any = await res.json();
+      if (
+        json &&
+        json.message.toLowerCase() === "facebook token expired" &&
+        json.status === 400
+      ) {
+        setTokenState({
+          clientId: json.data.client_id,
+          clientSecret: json.data.client_secret,
+        });
+      } else if (json && json.message) {
+        toast(json.message);
+        setPageState((prev) => ({ ...prev, isPublished: true }));
       }
     } catch (error) {
       toast.error("Something went wrong!");
@@ -179,11 +305,28 @@ const FacebookPublishPostPage = () => {
     }
   }
 
+  if (pageState.isPublished) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={"genuisWorking flex flex-col items-center gap-[--22px]"}>
+          <LogoAndTitle needTxt={false} title={"Post Published!"} />
+          <CustomBtn
+            btnColor="black"
+            word="Dashboard"
+            href="/social-media/dashboard"
+            paddingVal="py-[--10px] px-[--22px]"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <PublishPost
       handleUploadImage={handleUploadImage}
       uploadedAsset={pageState.uploadedAsset}
       handleAddPost={handleAddPost}
+      handleFacebookLogin={handleFacebookLogin}
     />
   );
 };
