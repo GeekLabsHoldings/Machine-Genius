@@ -682,7 +682,8 @@ newsletter/email-list
 }
 /* ===== End loader ===== */
 
+/* ===== Start quill ===== */
 .ql-formats {
   display: none;
 }
-
+/* ===== End quill ===== */

@@ -97,6 +97,7 @@ const TwitterCommentsList = ({
                       forWhat={"edit_account1"}
                       dataToEdit={oneAccount}
                       getData={getTwitterAccountsData}
+                      brandsOptions={brandsOptions}
                     />
                   </a>
                 </li>
