@@ -5,6 +5,7 @@ import { globalContext } from "@/app/_context/store";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import convertTimestampToDate from "@/app/_utils/convertTimestampToDate";
+import { truncateText } from "@/app/_utils/text";
 
 interface IPost {
   _id: string;
@@ -199,7 +200,7 @@ const Page = () => {
             pageState.fetchedPosts.length > 0 ? (
               pageState.fetchedPosts.map((ele) => (
                 <ul className="w-[100%]" key={ele._id}>
-                  <li className="w-[30%]">{ele.content}</li>
+                  <li className="w-[30%]">{truncateText(ele.content, 100)}</li>
                   <li className="w-[20%]">
                     {convertTimestampToDate(ele.timestamp)}
                   </li>
