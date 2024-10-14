@@ -7,11 +7,13 @@ interface CustomCheckBoxProps
   value?: string;
   accentColor?: string;
   indeterminate?: boolean; // Added indeterminate prop
+  type?: string;
 }
 
 const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({
   indeterminate = false, // Default to false
   className,
+  type = "checkbox",
   ...props
 }) => {
   const checkboxRef = useRef<HTMLInputElement>(null);
@@ -26,7 +28,7 @@ const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({
     <input
       ref={checkboxRef}
       className={`${styles.custom_checkbox} ${className ?? ""}`}
-      type="checkbox"
+      type={type}
       style={
         {
           "--module-color": props.accentColor ?? "var(--dark)",
