@@ -35,6 +35,7 @@ interface IGetTweetsMustApprove {
 
 interface IHandleAddReplyToTweetErrorResponse {
   status: number;
+  statusCode?: number;
   message: string;
   data: Record<string, never>;
 }
@@ -246,6 +247,22 @@ const AutoPostNotifications = ({
       } else if ("message" in json) {
         toast.error(json.message);
         console.error("Error:", json?.message);
+      } else if (
+        "statusCode" in json &&
+        json.statusCode === 429 &&
+        "data" in json
+      ) {
+        let errorMessage = "Too Many Requests";
+        if (typeof json.data === "string") {
+          try {
+            const parsedData = JSON.parse(json.data);
+            errorMessage =
+              parsedData.detail || parsedData.title || errorMessage;
+          } catch (e) {
+            errorMessage = json.data;
+          }
+        }
+        toast.error(errorMessage);
       } else if (
         json &&
         "result" in json &&
