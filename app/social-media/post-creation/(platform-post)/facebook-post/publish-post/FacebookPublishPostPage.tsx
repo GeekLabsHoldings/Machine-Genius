@@ -7,6 +7,8 @@ import PublishPost from "../../_platform-post/PublishPost";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 import { v4 as uuidv4 } from "uuid";
 import { useSearchParams } from "next/navigation";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 // interface IPublishPostResponse {
 //   result: {
@@ -39,9 +41,11 @@ const FacebookPublishPostPage = () => {
   const [pageState, setPageState] = useState<{
     presignedURLData: IUploadImagePresignedURLData | null;
     uploadedAsset: string | null;
+    isPublished: boolean;
   }>({
     presignedURLData: null,
     uploadedAsset: null,
+    isPublished: false,
   });
 
   const [tokenState, setTokenState] = useSessionStorage<{
@@ -202,6 +206,7 @@ const FacebookPublishPostPage = () => {
         });
       } else if (json && json.message) {
         toast(json.message);
+        setPageState((prev) => ({ ...prev, isPublished: true }));
       }
     } catch (error) {
       toast.error("Something went wrong!");
@@ -298,6 +303,22 @@ const FacebookPublishPostPage = () => {
       toast.error("Something went wrong!");
       console.error("Error in uploadImage:", error);
     }
+  }
+
+  if (pageState.isPublished) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={"genuisWorking flex flex-col items-center gap-[--22px]"}>
+          <LogoAndTitle needTxt={false} title={"Post Published!"} />
+          <CustomBtn
+            btnColor="black"
+            word="Dashboard"
+            href="/social-media/dashboard"
+            paddingVal="py-[--10px] px-[--22px]"
+          />
+        </div>
+      </div>
+    );
   }
 
   return (
