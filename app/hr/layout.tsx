@@ -9,6 +9,7 @@ const SideNav = dynamic(() => import("../_components/SideNav/SideNav"), {
   ssr: false,
 });
 import TitleOfPage from "../_components/TitleOfPage/TitleOfPage";
+import HrStepContextProvider from "../_context/hrStepContext";
 // import { usePathname } from 'next/navigation';
 
   // Array of side nav links
@@ -232,6 +233,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
   // Return the layout component
   return (
+    <HrStepContextProvider>
     <div className="module-layout">
       {/* Side nav wrapper */}
       <div className={`Side_Nav_Wrapper ${isSideNavOpen ? "" : "close"}`}>
@@ -250,6 +252,7 @@ const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         <div className="h-full">{children}</div>
       </div>
     </div>
+    </HrStepContextProvider>
   );
 };
 

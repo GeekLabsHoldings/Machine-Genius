@@ -391,7 +391,7 @@ const Page = () => {
                 title: "Questions",
                 description: questions.map((q, i) => ({
                   question: questionsRef.current[i],
-                  type: typesRef.current[i] == "Yes or No" ? "0" : "1",
+                  type: typesRef.current[i] == "Yes or No" ? 0 : 1,
                   answer: answersRef.current[i],
                 })),
               },

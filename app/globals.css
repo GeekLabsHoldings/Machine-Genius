@@ -689,3 +689,14 @@ newsletter/email-list
 }
 /* ===== End quill ===== */
 
+
+
+
+/* ===== Start prospects-preview ===== */
+#toolbar {
+  background: transparent !important;
+}
+#viewer {
+  border-radius: var(--14px) !important;
+}
+/* ===== End prospects-preview ===== */
