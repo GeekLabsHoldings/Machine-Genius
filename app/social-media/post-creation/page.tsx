@@ -1,7 +1,7 @@
 "use client";
 import CustomSelectInput from "../../_components/CustomSelectInput/CustomSelectInput"; // Custom select input component
 import CustomBtn from "../../_components/Button/CustomBtn"; // Custom button component
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import {
   PlatformEnum,
   socialMediaPostCreationContext,
@@ -23,7 +23,7 @@ const platformsOptions = [
 // Post component
 const Post = () => {
   const router = useRouter();
-  const { selectedPlatform, setSelectedPlatform } = useContext(
+  const { selectedPlatform, setSelectedPlatform, setPostCaption } = useContext(
     socialMediaPostCreationContext
   );
 
@@ -31,6 +31,15 @@ const Post = () => {
   const getValue = useCallback((value: string) => {
     setSelectedPlatform(value.toUpperCase() as PlatformEnum);
   }, []); // No dependencies, function reference is stable
+
+   // reset all the data
+   useEffect(() => {
+    function resetStateAndSessionStorage() {
+      setSelectedPlatform("");
+      setPostCaption("");
+    }
+    resetStateAndSessionStorage();
+  }, []);
 
   return (
     <div className="flex flex-col h-full">

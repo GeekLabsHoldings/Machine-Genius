@@ -1,11 +1,10 @@
 "use client";
 import styles from "./reddit.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import { ArticleNames, Brands, Posts } from "@/app/_data/data";
 import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import Link from "next/link";
-import { addIcon, backIcon, redditIcon } from "@/app/_utils/svgIcons";
+import { addIcon, backIcon, redditIcon, sortIcon } from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 
@@ -34,14 +33,90 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
   }>({
     brandDetails: null,
   });
-  // for storing the order of subscribers and engagement (descending or ascending)
-  const [subscriberOrder, setsubscriberOrder] = useState<boolean>(true);
-  const [engagementOrder, setengagementOrder] = useState<boolean>(true);
+
+  const [filterBy, setFilterBy] = useState({
+    groupName: "none",
+    niche: "",
+    subscribers: "none",
+    brand: "",
+    engagement: "none",
+  });
+
+  const filteredAndSortedPosts = useMemo(() => {
+    if (
+      !Array.isArray(pageState.brandDetails) ||
+      pageState.brandDetails.length === 0
+    ) {
+      return [];
+    }
+
+    return pageState.brandDetails
+      .filter((item) => {
+        return (
+          (filterBy.niche === "" ||
+            item.niche.toLowerCase() === filterBy.niche.toLowerCase()) &&
+          (filterBy.brand === "" ||
+            (item.brand && brandIdMap[item.brand] === filterBy.brand))
+        );
+      })
+      .sort((a, b) => {
+        if (filterBy.groupName === "asc") {
+          return a.group_name.localeCompare(b.group_name);
+        }
+        if (filterBy.groupName === "desc") {
+          return b.group_name.localeCompare(a.group_name);
+        }
+        if (filterBy.subscribers === "asc") {
+          return a.subscribers - b.subscribers;
+        }
+        if (filterBy.subscribers === "desc") {
+          return b.subscribers - a.subscribers;
+        }
+        if (filterBy.engagement === "asc") {
+          return (a.engagement || 0) - (b.engagement || 0);
+        }
+        if (filterBy.engagement === "desc") {
+          return (b.engagement || 0) - (a.engagement || 0);
+        }
+        return 0;
+      });
+  }, [pageState.brandDetails, filterBy]);
+
+  const handleSortChange = (
+    field: "groupName" | "subscribers" | "engagement"
+  ) => {
+    setFilterBy((prev) => {
+      // Determine the next sort order for the selected field
+      let newSortOrder: "asc" | "desc" | "none" = "asc";
+      if (prev[field] === "asc") newSortOrder = "desc";
+      else if (prev[field] === "desc") newSortOrder = "none";
+
+      // Reset all sort fields except the one being toggled
+      return {
+        ...prev,
+        groupName: field === "groupName" ? newSortOrder : "none",
+        subscribers: field === "subscribers" ? newSortOrder : "none",
+        engagement: field === "engagement" ? newSortOrder : "none",
+      };
+    });
+  };
+
+  // Helper function to get sort label
+  const getSortLabel = (field: "groupName" | "subscribers" | "engagement") => {
+    switch (filterBy[field]) {
+      case "asc":
+        return "Ascending";
+      case "desc":
+        return "Descending";
+      default:
+        return "Not sorted";
+    }
+  };
 
   const renderBodyRows =
-    Array.isArray(pageState.brandDetails) &&
-    pageState.brandDetails.length > 0 ? (
-      pageState.brandDetails?.map((onePost, idx) => (
+    Array.isArray(filteredAndSortedPosts) &&
+    filteredAndSortedPosts.length > 0 ? (
+      filteredAndSortedPosts?.map((onePost, idx) => (
         <ul key={idx} className={`${styles.tableBody} borderBottom articleRow`}>
           <li className="w-2/12">{onePost.group_name}</li>
           <li className="w-3/12 ">
@@ -135,80 +210,86 @@ const Reddit = ({ params }: { params: { brandId: string } }) => {
 
         {/* 01-2 Filters options & Add to list */}
         <div className="flex justify-between items-end">
-          <div className={`${styles.filters} w-8/12 flex gap-[1vw]`}>
-            <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Sub Reddit</h5>
-              <CustomSelectInput
-                label="All"
-                options={ArticleNames}
-                paddingVal="py-[0.2vw] px-[0.5vw]"
-              />
+          <div
+            className={`${styles.filters} flex-grow flex items-center gap-[1vw]`}
+          >
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
+              <h5>SubReddit</h5>
+              <div
+                className={`${styles.changeOrder} `}
+                onClick={() => {
+                  handleSortChange("groupName");
+                }}
+              >
+                <p>{getSortLabel("groupName")}</p>
+                {sortIcon}
+              </div>
             </div>
-            <div className="flex flex-col w-1/3 gap-[0.3vw]">
+
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
               <h5>Niche</h5>
               <CustomSelectInput
                 label="All"
-                options={Brands}
-                paddingVal="py-[0.2vw] px-[0.5vw]"
-              />
-            </div>
-            <div className="flex flex-col w-1/3 gap-[0.3vw]">
-              <h5>Brand</h5>
-              <CustomSelectInput
-                label="All"
-                options={Brands}
-                paddingVal="py-[0.2vw] px-[0.5vw]"
+                options={[
+                  "All",
+                  ...new Set(
+                    pageState.brandDetails?.map((item) => item.niche) || []
+                  ),
+                ]}
+                getValue={(value: string) =>
+                  setFilterBy((prev) => ({
+                    ...prev,
+                    niche: value === "All" ? "" : value,
+                  }))
+                }
               />
             </div>
 
-            <div className={`flex flex-col w-[25%] gap-[0.3vw] `}>
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
               <h5>Subscribers</h5>
               <div
                 className={`${styles.changeOrder} `}
                 onClick={() => {
-                  setsubscriberOrder(!subscriberOrder);
+                  handleSortChange("subscribers");
                 }}
               >
-                <p>{subscriberOrder ? "Ascend" : "Descend"}</p>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721067 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139324 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139324 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
-                    fill="#2A2B2A"
-                  />
-                </svg>
+                <p>{getSortLabel("subscribers")}</p>
+                {sortIcon}
               </div>
             </div>
-            <div className="flex flex-col w-[25%] gap-[0.3vw]">
+
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
+              <h5>Brand</h5>
+              <CustomSelectInput
+                label="All"
+                options={[
+                  "All",
+                  ...new Set(
+                    pageState.brandDetails?.map((item) => {
+                      const brandKey = item.brand;
+                      return brandKey ? brandIdMap[brandKey] || "" : "";
+                    }) || []
+                  ),
+                ]}
+                getValue={(value: string) =>
+                  setFilterBy((prev) => ({
+                    ...prev,
+                    brand: value === "All" ? "" : value,
+                  }))
+                }
+              />
+            </div>
+
+            <div className="flex flex-col w-[15%] gap-[0.3vw]">
               <h5>Engagement</h5>
               <div
                 className={`${styles.changeOrder} `}
                 onClick={() => {
-                  setengagementOrder(!engagementOrder);
+                  handleSortChange("engagement");
                 }}
               >
-                <p>{engagementOrder ? "Ascend" : "Descend"}</p>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M8.80002 10.2959C8.7281 10.1444 8.61483 10.0164 8.47327 9.92664C8.33171 9.83684 8.16764 9.78889 8 9.78834H5.33327V0.889318C5.33327 0.653584 5.23961 0.427504 5.07291 0.260815C4.90621 0.0941257 4.68011 0.000481606 4.44436 0.000481606C4.2086 0.000481606 3.9825 0.0941257 3.8158 0.260815C3.6491 0.427504 3.55544 0.653584 3.55544 0.889318V9.78834H0.888709C0.721067 9.78889 0.556998 9.83684 0.41544 9.92664C0.273883 10.0164 0.160607 10.1444 0.0886892 10.2959C0.0155567 10.4455 -0.0132581 10.613 0.00564103 10.7785C0.0245402 10.944 0.0903656 11.1007 0.195359 11.23L3.751 15.6795C3.83646 15.78 3.94272 15.8607 4.06244 15.916C4.18215 15.9713 4.31247 16 4.44436 16C4.57624 16 4.70656 15.9713 4.82627 15.916C4.94599 15.8607 5.05225 15.78 5.13771 15.6795L8.69335 11.23C8.79834 11.1007 8.86417 10.944 8.88307 10.7785C8.90197 10.613 8.87315 10.4455 8.80002 10.2959ZM15.9113 5.70414C15.8394 5.85556 15.7261 5.98356 15.5846 6.07336C15.443 6.16316 15.2789 6.21111 15.1113 6.21166H12.4446V15.1107C12.4446 15.3464 12.3509 15.5725 12.1842 15.7392C12.0175 15.9059 11.7914 15.9995 11.5556 15.9995C11.3199 15.9995 11.0938 15.9059 10.9271 15.7392C10.7604 15.5725 10.6667 15.3464 10.6667 15.1107V6.21166H8C7.83236 6.21111 7.66829 6.16316 7.52673 6.07336C7.38517 5.98356 7.2719 5.85556 7.19998 5.70414C7.12685 5.55446 7.09803 5.387 7.11693 5.22148C7.13583 5.05597 7.20166 4.89931 7.30665 4.76997L10.8623 0.320463C10.9477 0.22001 11.054 0.139324 11.1737 0.083992C11.2934 0.0286589 11.4238 0 11.5556 0C11.6875 0 11.8178 0.0286589 11.9376 0.083992C12.0573 0.139324 12.1635 0.22001 12.249 0.320463L15.8046 4.76997C15.9096 4.89931 15.9755 5.05597 15.9944 5.22148C16.0133 5.387 15.9844 5.55446 15.9113 5.70414Z"
-                    fill="#2A2B2A"
-                  />
-                </svg>
+                <p>{getSortLabel("engagement")}</p>
+                {sortIcon}
               </div>
             </div>
           </div>

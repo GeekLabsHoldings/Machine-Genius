@@ -5,6 +5,8 @@ import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import PublishPost from "../../_platform-post/PublishPost";
 import convertFileToBase64 from "@/app/_utils/convertFileToBase64";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 interface IPublishPostResponse {
   result?: {
@@ -39,9 +41,11 @@ const LinkedInPublishPostPage = () => {
   const [pageState, setPageState] = useState<{
     assetId: string | null;
     uploadedAsset: string | null | File;
+    isPublished: boolean;
   }>({
     assetId: null,
     uploadedAsset: null,
+    isPublished: false,
   });
 
   async function handleAddPost() {
@@ -77,6 +81,7 @@ const LinkedInPublishPostPage = () => {
       const json: any = await res.json();
       if (json && json.message) {
         toast(json.message);
+        setPageState((prev) => ({ ...prev, isPublished: true }));
       }
     } catch (error) {
       toast.error("Something went wrong!");
@@ -181,6 +186,22 @@ const LinkedInPublishPostPage = () => {
       toast.error("Something went wrong!");
       console.error("Error in uploadImage:", error);
     }
+  }
+
+  if (pageState.isPublished) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={"genuisWorking flex flex-col items-center gap-[--22px]"}>
+          <LogoAndTitle needTxt={false} title={"Post Published!"} />
+          <CustomBtn
+            btnColor="black"
+            word="Dashboard"
+            href="/social-media/dashboard"
+            paddingVal="py-[--10px] px-[--22px]"
+          />
+        </div>
+      </div>
+    );
   }
 
   return (
