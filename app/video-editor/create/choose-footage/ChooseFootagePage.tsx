@@ -10,10 +10,7 @@ import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
-import { on } from "node:events";
 import { Box, Modal } from "@mui/material";
-import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import CheckBox from "@/app/_components/CheckBox/CheckBox";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
@@ -109,6 +106,121 @@ function TitleEdit({
     </form>
   );
 }
+
+const VideoTimestampInput = () => {
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [error, setError] = useState("");
+
+  const formatTime = (input: string) => {
+    const digits = input.replace(/\D/g, "").slice(0, 6);
+    const parts = [];
+    for (let i = 0; i < digits.length; i += 2) {
+      parts.push(digits.slice(i, i + 2));
+    }
+    return parts.join(":");
+  };
+
+  const validateTime = (time: string) => {
+    const parts = time.split(":");
+    if (parts.length !== 2 && parts.length !== 3) return false;
+
+    const [hours, minutes, seconds] =
+      parts.length === 2 ? [0, ...parts] : parts;
+    const [h, m, s] = [hours, minutes, seconds].map(Number);
+
+    return (
+      !isNaN(h) &&
+      !isNaN(m) &&
+      !isNaN(s) &&
+      h >= 0 &&
+      h < 100 &&
+      m >= 0 &&
+      m < 60 &&
+      s >= 0 &&
+      s < 60
+    );
+  };
+
+  const calculateTimestamp = (time: string) => {
+    const parts = time.split(":");
+    const [hours, minutes, seconds] =
+      parts.length === 2 ? [0, ...parts] : parts;
+    return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
+  };
+
+  const handleTimeChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setTime: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    const input = e.target.value.replace(/[^\d:]/g, "");
+    const formattedTime = formatTime(input.replace(/:/g, ""));
+    setTime(formattedTime);
+    setError("");
+  };
+
+  const handleBlur = (time: string) => {
+    if (time.length > 0) {
+      const parts = time.split(":");
+      const [minutes, seconds] = parts.length === 2 ? parts : parts.slice(1);
+      if (Number(minutes) >= 60 || Number(seconds) >= 60) {
+        setError(`Invalid: minutes and seconds must be less than 60`);
+      } else if (!validateTime(time)) {
+        setError(`Invalid format. Please use MM:SS or HH:MM:SS`);
+      } else {
+        setError("");
+      }
+    } else {
+      setError("");
+    }
+  };
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex items-center space-x-[--10px]">
+        <input
+          type="text"
+          value={startTime}
+          onChange={(e) => handleTimeChange(e, setStartTime)}
+          onBlur={() => handleBlur(startTime)}
+          placeholder="HH:MM:SS"
+          className="border-[--2px] border-gray-300 rounded px-[--10px] py-[--7px] w-[--102px] text-center focus:outline-none focus:border-[--dark]"
+        />
+        <svg
+          width="20"
+          height="4"
+          viewBox="0 0 20 4"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2 2H18"
+            stroke="#ACACAC"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+
+        <input
+          type="text"
+          value={endTime}
+          onChange={(e) => handleTimeChange(e, setEndTime)}
+          onBlur={() => handleBlur(endTime)}
+          placeholder="HH:MM:SS"
+          className="border-[--2px] border-gray-300 rounded px-[--10px] py-[--7px] w-[--102px] text-center focus:outline-none focus:border-[--dark]"
+        />
+      </div>
+      {error && <p className="mt-[--2px] text-red-500 text-sm">{error}</p>}
+      {!error && startTime && endTime && (
+        <p className="text-green-500 text-sm">
+          Duration:
+          {calculateTimestamp(endTime)} - {calculateTimestamp(startTime)}{" "}
+          seconds
+        </p>
+      )}
+    </div>
+  );
+};
 
 function AddChips({
   currentIndex,
@@ -342,130 +454,89 @@ function InsertSourceModel({
             {/* Modal Body */}
             <div className="flex gap-[3vw]">
               {/* Form fields for adding a post */}
-              <div className="flex grow flex-col gap-[0.7vw]">
-                <div className="flex flex-col gap-[2vw]">
-                  <div className="flex flex-col gap-[0.2vw]">
-                    {/* Bank Details Section */}
-                    <h3 className="text-[--30px] mb-[--20px] font-bold">
-                      Footage Details
-                    </h3>
-                    <div className={`flex flex-col gap-[0.2vw]`}>
+              <div className="flex grow flex-col gap-[--40px]">
+                <div className="flex flex-col gap-[0.2vw]">
+                  {/* Bank Details Section */}
+                  <h3 className="text-[--30px] mb-[--20px] font-bold">
+                    Footage Details
+                  </h3>
+                  <div className={`flex flex-col gap-[0.2vw]`}>
+                    <label htmlFor="tiketDescription" className="text-[--20px]">
+                      URL
+                    </label>
+                    <input
+                      type="text"
+                      id="subjectLine"
+                      required
+                      className={`${styles.input}`}
+                      value={accountName}
+                      onChange={(e) => setAccountName(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className={`flex flex-col gap-[0.2vw]`}>
+                  {/* Bank Details Section */}
+                  <h3 className="text-[--20px] mb-[--20px] font-bold">
+                    Insert Clip
+                  </h3>
+                  <div className={`flex flex-col gap-[0.2vw]`}>
+                    <div className="flex items-center gap-[--2px] ">
                       <label
-                        htmlFor="tiketDescription"
-                        className="text-[--16px]"
+                        htmlFor="beforeParagraph"
+                        className="flex items-center gap-[--2px] text-[--16px]"
                       >
-                        URL
+                        <CustomCheckBox
+                          name="insertClip"
+                          type="radio"
+                          id="beforeParagraph"
+                          value="Before paragraph"
+                          className="w-[--5px]! h-[--5px]!"
+                        />
+                        Before paragraph
                       </label>
-                      <input
-                        type="text"
-                        id="subjectLine"
-                        required
-                        className={`${styles.input}`}
-                        value={accountName}
-                        onChange={(e) => setAccountName(e.target.value)}
-                      />
+                    </div>
+
+                    <div className="flex items-center gap-[--2px]">
+                      <label
+                        htmlFor="afterParagraph"
+                        className="flex items-center gap-[--2px] text-[--16px]"
+                      >
+                        <CustomCheckBox
+                          type="radio"
+                          name="insertClip"
+                          id="afterParagraph"
+                          value="After paragraph"
+                        />
+                        After paragraph
+                      </label>
                     </div>
                   </div>
                 </div>
                 <div className={`flex flex-col gap-[0.2vw]`}>
-                  <div className="flex flex-col gap-[0.2vw]">
-                    {/* Bank Details Section */}
-                    <h3 className="text-[--16px] mb-[--20px] font-bold">
-                      Insert Clip
-                    </h3>
-                    <div className={`flex flex-col gap-[0.2vw]`}>
-                      <CustomCheckBox
-                        name="insertClip"
-                        type="radio"
-                        value="Before paragraph"
-                      />
-                      <CustomCheckBox
-                        type="radio"
-                        name="insertClip"
-                        value="After paragraph"
-                      />
-                    </div>
+                  {/* Bank Details Section */}
+                  <h3 className="text-[--20px] mb-[--10px] font-bold">
+                    Cut Clip
+                  </h3>
+                  <div className={`flex flex-col gap-[0.2vw]`}>
+                    <VideoTimestampInput />
                   </div>
-                </div>
-                <div className={`flex flex-col gap-[0.2vw]`}>
-                  <label htmlFor="tiketDescription" className="text-xl">
-                    SWIFT Code*
-                  </label>
-                  <input
-                    type="text"
-                    id="subjectLine"
-                    required
-                    className={`${styles.input}`}
-                    value={SWIFTCode}
-                    onChange={(e) => setSWIFTCode(e.target.value)}
-                  />
-                </div>
-                <div className={`flex flex-col gap-[0.2vw]`}>
-                  <label htmlFor="tiketDescription" className="text-xl">
-                    Country*
-                  </label>
-                  <CustomSelectInput
-                    options={["Egypt", "USA", "UK"]}
-                    getValue={(e: string) => setCountry(e)}
-                  />
                 </div>
               </div>
 
               {/* Login Details Section */}
               <div className="flex grow flex-col gap-[0.7vw]">
+                <h3 className="text-[--30px] mb-[--15px] font-bold">
+                  Footage Preview
+                </h3>
                 <div className="flex flex-col gap-[0.7vw]">
-                  <div className="flex flex-col gap-[0.2vw]">
-                    <h3 className="text-2xl mb-1">Login</h3>
-                    <label htmlFor="subjectLine" className="text-xl">
-                      Username*
-                    </label>
-                    <input
-                      type="text"
-                      id="subjectLine"
-                      required
-                      className={`${styles.input}`}
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                    />
-                  </div>
-                  <div className={`flex flex-col gap-[0.2vw]`}>
-                    <label htmlFor="tiketDescription" className="text-xl">
-                      Password*
-                    </label>
-                    <input
-                      type="password"
-                      id="subjectLine"
-                      required
-                      className={`${styles.input}`}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-                  <div className={`flex flex-col gap-[0.2vw]`}>
-                    <label htmlFor="tiketDescription" className="text-xl">
-                      API connect*
-                    </label>
-                    <input
-                      type="text"
-                      id="subjectLine"
-                      required
-                      className={`${styles.input}`}
-                      value={ApiConnect}
-                      onChange={(e) => setApiConnect(e.target.value)}
-                    />
-                  </div>
+                  <iframe
+                    src="https://www.youtube.com/embed/tgbNymZ7vqY"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-[100%] h-[20vw] rounded-2xl"
+                  ></iframe>
 
-                  {/* More Details Section */}
-                  <div className={`flex flex-col gap-[0.2vw]`}>
-                    <h3 className="text-2xl mb-1">More Details</h3>
-                    <span className="text-xl font-bold">Brand Tag</span>
-                    <div className="w-[40%] min-w-56">
-                      <CustomSelectInput
-                        options={["Brand 1", "Brand 2", "Brand 3"]}
-                        getValue={(e: string) => setBrand(e)}
-                      />
-                    </div>
-                  </div>
                   <div className="flex mt-24 justify-end">
                     {/* Button to add bank account */}
                     {loading ? (
