@@ -1,5 +1,22 @@
+/* ==== Start Brands Slider ==== */
 .brands .slick-track {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    margin: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin: 0 !important;
 }
+.brands .custom_arrows.slick-next {
+  right: 1vw;
+}
+.brands .custom_arrows.slick-prev {
+  left: unset !important;
+  right: 3.5vw;
+}
+/* Hide the default previous and next arrows */
+.brands .slick-prev:before,
+.brands .slick-next:before {
+  content: none; /* or use content: ''; */
+}
+.brands .custom-slider-container .custom_arrows.slick-arrow {
+  top: calc(var(--sy-40px) * -1) !important;
+}
+/* ==== End Brands Slider ==== */
