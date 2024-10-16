@@ -4,6 +4,8 @@ import { socialMediaPostCreationContext } from "@/app/social-media/post-creation
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import PublishPost from "../../_platform-post/PublishPost";
+import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
+import CustomBtn from "@/app/_components/Button/CustomBtn";
 
 interface ChatGroup {
   _id: string;
@@ -38,10 +40,12 @@ const TelegramPublishPostPage = () => {
     presignedURLData: IUploadImagePresignedURLData | null;
     uploadedAsset: string | null;
     scheduledTime: string | null;
+    isPublished: boolean;
   }>({
     presignedURLData: null,
     uploadedAsset: null,
     scheduledTime: null,
+    isPublished: false,
   });
 
   async function handleAddPost() {
@@ -86,6 +90,7 @@ const TelegramPublishPostPage = () => {
       const json: IPublishPostResponse = await res.json();
       if (json && json.chatIds) {
         toast.success("Message is sent!");
+        setPageState((prev) => ({ ...prev, isPublished: true }));
       } else {
         toast.error("Something went wrong!");
       }
@@ -184,6 +189,22 @@ const TelegramPublishPostPage = () => {
       toast.error("Something went wrong!");
       console.error("Error in uploadImage:", error);
     }
+  }
+
+  if (pageState.isPublished) {
+    return (
+      <div className="flex flex-col justify-center items-center mx-auto h-[75vh] py-[1.5vw]">
+        <div className={"genuisWorking flex flex-col items-center gap-[--22px]"}>
+          <LogoAndTitle needTxt={false} title={"Post Published!"} />
+          <CustomBtn
+            btnColor="black"
+            word="Dashboard"
+            href="/social-media/dashboard"
+            paddingVal="py-[--10px] px-[--22px]"
+          />
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -682,21 +682,17 @@ newsletter/email-list
 }
 /* ===== End loader ===== */
 
-
 /* ===== Start quill ===== */
 .ql-formats {
   display: none;
 }
 /* ===== End quill ===== */
 
-
-
-
-/* ===== Start prospects-preview ===== */
+/* ===== Start app\_components\HR\00Hiring\01JobOpenings\03InProcessHiring\ProspectsPreviewTable.tsx ===== */
 #toolbar {
   background: transparent !important;
 }
 #viewer {
   border-radius: var(--14px) !important;
 }
-/* ===== End prospects-preview ===== */
+/* ===== End app\_components\HR\00Hiring\01JobOpenings\03InProcessHiring\ProspectsPreviewTable.tsx ===== */

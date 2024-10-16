@@ -186,7 +186,7 @@ const sideNavLinks = [
 const layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   // State variables to manage side nav and current page
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false);
-  const [CurrentPage, setCurrentPage] = useState<string>("Customer Service");
+  const [CurrentPage, setCurrentPage] = useState<string>("Operations");
 
   // Return the layout component
   return (
