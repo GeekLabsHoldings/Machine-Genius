@@ -102,6 +102,14 @@ export default function AllHiringTable() {
     } else if (ele?.currentStep === HiringStepsEnum.Get_Job_Candidates) {
       console.log("3");
       router.push(`/hr/hiring/job-openings/prospects`);
+    } else if (ele?.currentStep === HiringStepsEnum.Schedule_Interview_Call) {
+      router.push(`/hr/hiring/job-openings/short-list`);
+    } else if (
+      ele?.currentStep === HiringStepsEnum.Interview_Call_Question
+    ) {
+      router.push(`/hr/hiring/job-openings/phone-interview-questionnaire`);
+    } else if (ele?.currentStep === HiringStepsEnum.Tasks) {
+      router.push(`/hr/hiring/job-openings/send-task`);
     }
   }, [step, ele]);
 

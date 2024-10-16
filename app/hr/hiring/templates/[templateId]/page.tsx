@@ -162,6 +162,7 @@ export default function TemplateDetails({
       qualifications: data?.details[3]?.description,
     });
     setSkills(data?.details[5]?.description);
+    setQuestions(data?.details[4]?.description);
     if (templateDet?.title.split(" ").join("_") != "Job_Listings") {
       setEditorVal(data?.details[0]?.description);
     }

@@ -1,11 +1,128 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./phone-interview-questionnaire.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ShortListTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ShortListTable";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
+import { StepContext } from "@/app/_context/hrStepContext";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+const [data, setData] = useState<any>(null);
+const [recievedId, setRecievedId] = useState<any>(null);
+const { handleSignOut } = useContext(globalContext);
+const { step, setStep } = useContext(StepContext);
+const [questions, setQuestions] = useState<any>(null);
+const router = useRouter();
+  const fetchData = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/current-step-template/${step}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      setData(result);
+      setRecievedId(result.candidates[0]._id);
+      const questions = result.template.details[0].description.replaceAll(/data-list="bullet"/gi, "")
+      .replaceAll(
+        /<span class="ql-ui" contenteditable="false"><\/span>/gi,
+        ""
+      )
+      .replaceAll(/data-list="ordered"/gi, "").replaceAll(/<ol>/gi, "").replaceAll(/<\/ol>/gi, "").replaceAll(/<li >/gi, "").replaceAll(/<\/li>/gi, "").split("?");
+      questions.pop();
+      setQuestions(questions);
+      console.log(result);
+
+      
+      console.log("result", result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const rejectCandidate = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/reject/${recievedId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log("resultReject", result);
+      if (result.stepsStatus[4].status == "Rejected") {
+        setRecievedId(null)
+        fetchData()
+        toast.success("Candidate Rejected Successfully")
+      }
+    } catch (error) {
+      console.error("Error rejecting candidate:", error);
+    }
+  }
+  const shortListCandidate = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/next-hiring-step/${recievedId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log("resultTaskList", result);
+      fetchData()
+      toast.success("Candidate Task Listed Successfully")
+    } catch (error) {
+      console.error("Error Task listing candidate:", error);
+    }
+  }
+
+  async function updateNextStep() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/next-step/${step}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/send-task`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [step]);
+  useEffect(() => {
+    console.log(questions);
+  }, [questions]);
+
   return (
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}
@@ -17,7 +134,7 @@ export default function Page() {
 
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
-          <ShortListTable />
+          <ShortListTable data={data} setRecievedId={setRecievedId} recievedId={recievedId} stepIdx={4}/>
         </div>
 
         {/* Question Container */}
@@ -32,64 +149,23 @@ export default function Page() {
 
           {/* Questions List */}
           <div className="space-y-6 max-h-[55vh] overflow-y-auto">
-            {/* Question 1 */}
-            <div className="flex flex-col">
+            {questions?.map((question: any, index: number) => (
+              <div className="flex flex-col">
               <label
                 className="font-bold mb-[1.5vh] block"
                 htmlFor="tell-me-about-yourself"
               >
-                1. Tell me more about yourself:
+                {index + 1}. {question}:
               </label>
               {/* Textarea for answering question 1 */}
               <textarea
-                name="tell-me-about-yourself"
-                id="tell-me-about-yourself"
+                name={`question-${index}`}
+                id={`question-${index}`}
                 cols={30}
                 rows={5}
               ></textarea>
             </div>
-
-            {/* Question 2 */}
-            <div className="flex flex-col">
-              <label
-                className="font-bold mb-[1.5vh] block"
-                htmlFor="where-do-you-see-yourself"
-              >
-                2. Where do you see yourself in 5 years?
-              </label>
-              {/* Textarea for answering question 2 */}
-              <textarea
-                name="where-do-you-see-yourself"
-                id="where-do-you-see-yourself"
-                cols={30}
-                rows={5}
-              ></textarea>
-            </div>
-
-            {/* Question 3 */}
-            <div className="flex flex-col">
-              <label className="font-bold mb-[1.5vh] block" htmlFor="exp-in-pr">
-                3. Do you have experience in PR?
-              </label>
-              {/* Input field for answering question 3 */}
-              <input name="exp-in-pr" id="exp-in-pr" type="text"></input>
-            </div>
-
-            {/* Question 4 */}
-            <div className="flex flex-col">
-              <label
-                className="font-bold mb-[1.5vh] block"
-                htmlFor="exp-in-after-effects"
-              >
-                4. Do you have experience in Adobe After Effects?
-              </label>
-              {/* Input field for answering question 4 */}
-              <input
-                name="exp-in-after-effects"
-                id="exp-in-after-effects"
-                type="text"
-              ></input>
-            </div>
+            ))}
           </div>
           <hr className={styles.divider + " my-[2.5vh]"} />
           {/* Action Buttons */}
@@ -98,11 +174,15 @@ export default function Page() {
               word={"Reject"}
               btnColor="white"
               width="w-full"
+              disabled={!recievedId}
+              onClick={rejectCandidate}
             />
             <CustomBtn
               word={"Task List"}
               btnColor="black"
               width="w-full"
+              disabled={!recievedId}
+              onClick={shortListCandidate}
             />
           </div>
         </div>
@@ -117,7 +197,7 @@ export default function Page() {
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href="/hr/hiring/job-openings/send-task"
+          onClick={updateNextStep}
         />
       </div>
     </section>
