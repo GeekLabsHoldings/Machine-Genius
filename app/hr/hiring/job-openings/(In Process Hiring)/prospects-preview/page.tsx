@@ -1,13 +1,52 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./ProspectsPreview.module.css";
 import Link from "next/link";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ProspectsPreviewTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsPreviewTable";
-
+import { globalContext } from "@/app/_context/store";
+import { StepContext } from "@/app/_context/hrStepContext";
 export default function Page() {
+  const [candidateId, setCandidateId] = useState<string>("");
+  const { handleSignOut } = useContext(globalContext);
+  const [data, setData] = useState<any>({});
+  const [data2, setData2] = useState<any>({});
+  const {step, setStep} = useContext(StepContext);
+
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/current-step-template/${step}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      setData(result);
+      console.log("result", result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    console.log(step);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [step]);
+
   return (
-    <section className="w-[90vw]">
+    <section className="w-[90vw] prospects-preview">
       {/* Back To In Process Hiring Table Button */}
       <div className="flex items-center gap-4 my-[15px]">
         <Link href="/hr/hiring/job-openings/prospects">
@@ -31,92 +70,13 @@ export default function Page() {
         <div className="w-[49%] h-full">
           <ProspectsPreviewTable />
         </div>
-        <div className={styles.prospectsPreview + " w-[49%] h-full border p-7 flex flex-col justify-between"}>
-          {/* Personal Info */}
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <div className="grid grid-cols-2">
-                <div>
-                  <span className="font-bold">First Name: </span>
-                  <span>John</span>
-                </div>
-                <div>
-                  <span className="font-bold">Age: </span>
-                  <span>24</span>
-                </div>
-              </div>
-              <div>
-                <span className="font-bold">Last Name: </span>
-                <span>Doe</span>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div>
-                <span className="font-bold">Number: </span>
-                <span>+0202123456789</span>
-              </div>
-              <div>
-                <span className="font-bold">Email: </span>
-                <span>johndoe@gmail.com</span>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div>
-                <span className="font-bold">CV: </span>
-                <Link href="#">
-                  <span className="text-[#0066FF] underline">JohnDoeCV.pdf</span>
-                </Link>
-              </div>
-              <div>
-                <span className="font-bold">Portfolio Link: </span>
-                <Link href="#">
-                  <span className="text-[#0066FF] underline">https://www.linkedin.comjogndoe</span>
-                </Link>
-              </div>
-              <div>
-                <span className="font-bold">LinkedIn: </span>
-                <Link href="#">
-                  <span className="text-[#0066FF] underline">https://www.linkedin.comjogndoe</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <hr className={styles.divider} />
-          {/* Answered Questions: */}
-          <div className="space-y-4">
-            <h3 className="font-bold">Answered Questions:</h3>
-            <div>
-              <p className="font-bold text-[15px]">
-                1. What’s your salary expectations for the role?
-              </p>
-              <span className="text-[13px]">7000 EGP</span>
-            </div>
-            <div>
-              <p className="font-bold text-[15px]">
-                2. How many years of experience do you have in video editing?
-              </p>
-              <span className="text-[13px]">2 years</span>
-            </div>
-            <div>
-              <p className="font-bold text-[15px]">
-                3. Are you able to start immediately?
-              </p>
-              <span className="text-[13px]">Yes</span>
-            </div>
-            <div>
-              <p className="font-bold text-[15px]">
-                4. Are you able to start immediately?
-              </p>
-              <span className="text-[13px]">Yes</span>
-            </div>
-            <div>
-              <p className="font-bold text-[15px]">
-                5. Are you able to start immediately?
-              </p>
-              <span className="text-[13px]">Yes</span>
-            </div>
-          </div>
-          <hr className={styles.divider} />
+        <div
+          className={
+            styles.prospectsPreview +
+            " w-[49%] h-full border p-7 flex flex-col justify-between"
+          }
+        >
+          <iframe width="100%" height="100%" className="mb-[--sy-30px]" src="https://machine-genius.s3.amazonaws.com/cv/ramymakrameyd%40outlook.com-1728980953043.pdf"></iframe>
           {/* Action Buttons */}
           <div className="flex justify-between gap-3">
             <CustomBtn word={"Reject"} btnColor="white" width="w-full" />
@@ -126,7 +86,11 @@ export default function Page() {
       </div>
 
       <div className="flex justify-end mt-4">
-        <CustomBtn word={"Next"} btnColor="black" href="/hr/hiring/job-openings/short-list" />
+        <CustomBtn
+          word={"Next"}
+          btnColor="black"
+          href="/hr/hiring/job-openings/short-list"
+        />
       </div>
     </section>
   );

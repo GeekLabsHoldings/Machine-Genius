@@ -6,9 +6,12 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { globalContext } from "@/app/_context/store";
+import { Editor } from "primereact/editor";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { handleSignOut } = useContext(globalContext);
+  const [editorVal, setEditorVal] = useState("");
+
   const [data, setData] = useState<any>({});
   const [isEditing, setIsEditing] = useState(false);
   const textRef = useRef<(HTMLParagraphElement | null)[]>([]);
@@ -52,15 +55,49 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   async function publishJobPost() {
     try {
+      console.log(params.slug);
+
+      console.log({
+        contract: vacancyType,
+        template: data?.template?.details
+          ?.map((item: any, idx: number) => {
+            if (idx > 3) return "";
+            return `<p><strong>${item.title}</strong></p>${item.description}`;
+          })
+          .join("")
+          .replaceAll(/data-list="bullet"/gi, "")
+          .replaceAll(
+            /<span class="ql-ui" contenteditable="false"><\/span>/gi,
+            ""
+          )
+          .replaceAll(/data-list="ordered"/gi, ""),
+        role: data.role,
+        skills: data?.template?.details[5].description,
+        questions: data?.template?.details[4].description,
+      });
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/publish-job/${params.slug}`,
         {
           method: "PUT",
           body: JSON.stringify({
-            contract: vacancyType,
-            template: data.details[1].description,
-            role: data.role,
-            skills: ["css", "html"],
+            details: {
+              contract: vacancyType,
+              template: data?.template?.details
+                ?.map((item: any, idx: number) => {
+                  if (idx > 3) return "";
+                  return `<p><strong>${item.title}</strong></p>${item.description}`;
+                })
+                .join("")
+                .replaceAll(/data-list="bullet"/gi, "")
+                .replaceAll(
+                  /<span class="ql-ui" contenteditable="false"><\/span>/gi,
+                  ""
+                )
+                .replaceAll(/data-list="ordered"/gi, ""),
+              role: data.role,
+              skills: data?.template?.details[5].description,
+              questions: data?.template?.details[4].description,
+            },
           }),
           headers: {
             "Content-Type": "application/json",
@@ -74,7 +111,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       const result = await res.json();
       console.log(result);
       // navigate to the next page
-      router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
+      // router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
     } catch (error) {
       console.error("Error updating next step:");
     }
@@ -97,6 +134,8 @@ export default function Page({ params }: { params: { slug: string } }) {
     textContent.current[index] = e.target.innerHTML;
     console.log(textContent.current);
   };
+
+  const toolbarOptions = [[{ list: "ordered" }, { list: "bullet" }], ["bold"]];
 
   const handleEdit = () => {
     if (isEditing) {
@@ -324,30 +363,17 @@ export default function Page({ params }: { params: { slug: string } }) {
           <div className="space-y-6">
             {/* Job Position & Description */}
             <div className="border border-[#2A2B2A] rounded-[11px] px-[1.25vw] py-[1.5vw] bg-[#DBDBD73D]">
-              {data?.details?.map((item: any, index: number) => {
-                {
-                  /* Job Description */
-                }
-                return (
-                  <div key={index}>
-                    <span className="font-bold mb-[10px] mt-[16px] block">
-                      {item.title}:
-                    </span>
-                    <p
-                      className="outline-none"
-                      ref={(el: HTMLParagraphElement | null) => {
-                        if (el) {
-                          textRef.current[index] = el;
-                        }
-                      }}
-                      onInput={(e) => handleOnChange(e, index)}
-                      onBlur={handleBlur}
-                      contentEditable={isEditing}
-                      dangerouslySetInnerHTML={{ __html: arrText[index] }}
-                    ></p>
-                  </div>
-                );
-              })}
+              <Editor
+                formats={["list", "bold"]} // Allowed formats
+                modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+                value={data?.template?.details
+                  ?.map((item: any, idx: number) => {
+                    if (idx > 3) return "";
+                    return `<p><strong>${item.title}</strong></p>${item.description}`;
+                  })
+                  .join("")}
+                onTextChange={(e: any) => setEditorVal(e.htmlValue)}
+              />
             </div>
             {/* Platform */}
             <div className="w-[75%] space-y-4">
