@@ -632,7 +632,8 @@ export default function ThumbnailCanvas() {
     "SvJ2oUgreLTtiLk2TdAxYg1Y",
     "8oYvEhDZrcpSFete1nVGwFJ7",
     "YyyZpAY5PMeLUgPeurEVBVRx",
-    "u1tFJKSGvnJMbVyEgC3Axy22"
+    "u1tFJKSGvnJMbVyEgC3Axy22",
+    "LoSDaN5JgH7c4BrjPeDFyMpR"
   ];
 
   async function handleRemoveBg(img, type) {
