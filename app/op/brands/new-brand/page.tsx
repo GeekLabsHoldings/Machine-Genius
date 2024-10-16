@@ -1,113 +1,99 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./newBrand.module.css";
 import "./newBrand.css";
-import { useRouter } from "next/navigation";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { addIcon, backIcon } from "@/app/_utils/svgIcons";
+import { useRouter } from "next/navigation";
+import CustomDatePicker from "@/app/_components/DatePicker/CustomDatePicker";
+import AddSubBrandModal from "./_AddSubBrandModal/AddSubBrandModal";
+
+const subBrands = Array.from(
+  { length: 20 },
+  (_, index) => `Sub-brand ${index + 1}`
+);
 
 const Page = () => {
   const router = useRouter();
+  const [pageState, setPageState] = useState<{
+    isLoading: boolean;
+  }>({
+    isLoading: false,
+  });
+
+  function getDateTimeValue(value: any) {
+    if (setPageState) {
+      setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+    }
+  }
+
   return (
-    <div className={`${styles.newBrand} newBrand pt-[1.5vw]`}>
-      {/* // Container div for the back button with a click handler */}
-      <div
-        onClick={() => router.back()} // Function to navigate back when clicked
-        className="flex items-center cursor-pointer mb-[1vw]" // CSS classes for styling the div
-      >
-        {/* // SVG icon used for the back button */}
-        <svg
-          className="mr-[0.6vw]" // Margin-right styling for the SVG
-          width="11" // Width of the SVG
-          height="22" // Height of the SVG
-          viewBox="0 0 11 22" // SVG viewbox dimensions
-          fill="none" // No fill color
-          xmlns="http://www.w3.org/2000/svg" // SVG namespace
-        >
-          {/* // Path element defining the arrow shape */}
-          <path
-            d="M11 20.8993L11 1.09878C10.9996 0.898304 10.9627 0.701801 10.8932 0.530416C10.8237 0.359031 10.7244 0.219253 10.6058 0.126133C10.4873 0.03301 10.354 -0.00993011 10.2203 0.0019317C10.0867 0.0137935 9.95773 0.080009 9.84734 0.19345L0.296979 10.0937C-0.0989937 10.504 -0.0989937 11.4919 0.296979 11.9033L9.84734 21.8036C9.9575 21.9182 10.0865 21.9854 10.2204 21.9979C10.3543 22.0104 10.4879 21.9677 10.6067 21.8745C10.7255 21.7813 10.825 21.6411 10.8943 21.4692C10.9637 21.2973 11.0002 21.1002 11 20.8993Z"
-            fill="#2A2B2A" // Fill color for the path
-          />
-        </svg>
-        {/* // Heading for the add new brand section */}
+    <div className={`${styles.newBrand} newBrand`}>
+      <div className="flex items-center gap-[--10px] my-[1vw]">
+        <span onClick={() => router.replace("/op/brands")}>{backIcon}</span>
         <h3>Add New Brand</h3>
       </div>
-      <div className=" grid grid-cols-5 w-full gap-[5vw] px-[1vw] mb-[0.8vw]">
+
+      <div className="grid grid-cols-5 w-full gap-[5vw] px-[1vw]">
         <div className={`${styles.form} col-span-2`}>
-          <h4 className=" mb-[1vw]">Brand Details</h4>
-          <label htmlFor="">Brand Name*</label>
+          <h4 className="mb-[1vw]">Brand Details</h4>
+
+          <label htmlFor="brand_name">Brand Name*</label>
           <input
             type="text"
+            id="brand_name"
+            name="brand_name"
             placeholder="Juice Box"
             className=" py-[0.6vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
           />
-          <label className=" mb-[0.7vw] inline-block" htmlFor="">
-            Niche
+
+          <label className="mb-[0.7vw] inline-block" htmlFor="brand_niche">
+            Niche*
           </label>
           <div className=" w-[15vw] mb-[1.2vw]">
             <CustomSelectInput label={"All"} options={["Niche", "Niches"]} />
           </div>
-          <label htmlFor="">Description*</label>
+
+          <label htmlFor="brand_description">Description*</label>
           <input
             type="text"
+            id="brand_description"
+            name="brand_description"
             placeholder="51640615651463254"
             className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
           />
-          <label htmlFor="">Acquisition Date*</label>
-          <input
-            type="text"
-            placeholder="20 April 2024"
-            className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-          />
-          <div className=" flex justify-between">
-            {" "}
-            <h4>Sub-brand</h4>
-            <CustomBtn
-              btnColor="black"
-              paddingVal="py-[0.2vw] px-[0.2vw]"
-              icon={
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+
+          <label htmlFor="brand_acquisition_date">Acquisition Date*</label>
+          <CustomDatePicker getDateTimeValue={getDateTimeValue} />
+
+          {/* Sub-brands */}
+          <div className="rounded-2xl p-2 shadow-sm mt-[1.2vw] border-[--2px] border-[#DBDBD7]">
+            <div className="flex justify-between py-[--sy-10px] px-[--50px]">
+              <h4>Sub-brand</h4>
+
+              <AddSubBrandModal
+                btnColor="black"
+                modalTitle="Add Sub-brand"
+                btnIcon={addIcon}
+              />
+            </div>
+            <div className="h-[20vh] overflow-y-auto overflow-x-hidden space-y-2 py-[--sy-5px]">
+              {subBrands.map((brand, index) => (
+                <div
+                  key={index}
+                  className="w-[95%] m-auto flex items-center p-4 bg-gray-100 rounded-lg transition hover:outline outline-2 outline-[--dark] cursor-pointer"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M7.58333 16.5C7.58333 17.3284 8.21757 18 9 18C9.78242 18 10.4167 17.3284 10.4167 16.5V10.5H16.0833C16.8658 10.5 17.5 9.82845 17.5 9C17.5 8.17155 16.8658 7.5 16.0833 7.5H10.4167V1.5C10.4167 0.671565 9.78242 0 9 0C8.21757 0 7.58333 0.671565 7.58333 1.5V7.5H1.91667C1.13427 7.5 0.5 8.17155 0.5 9C0.5 9.82845 1.13427 10.5 1.91667 10.5H7.58333V16.5Z"
-                    fill="#FFFFFB"
-                  />
-                </svg>
-              }
-            />
+                  <span className="text-gray-800">{brand}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+
         <div className={`${styles.socialAccordions} col-span-3`}>
           <div className=" flex justify-between items-center mb-[1vw]">
             <h4>Social Media</h4>
-            <CustomBtn
-              btnColor="black"
-              paddingVal="py-[0.2vw] px-[0.2vw]"
-              icon={
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M7.58333 16.5C7.58333 17.3284 8.21757 18 9 18C9.78242 18 10.4167 17.3284 10.4167 16.5V10.5H16.0833C16.8658 10.5 17.5 9.82845 17.5 9C17.5 8.17155 16.8658 7.5 16.0833 7.5H10.4167V1.5C10.4167 0.671565 9.78242 0 9 0C8.21757 0 7.58333 0.671565 7.58333 1.5V7.5H1.91667C1.13427 7.5 0.5 8.17155 0.5 9C0.5 9.82845 1.13427 10.5 1.91667 10.5H7.58333V16.5Z"
-                    fill="#FFFFFB"
-                  />
-                </svg>
-              }
-            />
           </div>
           <div className=" flex justify-between h-[62vh] overflow-y-scroll px-[0.5vw] gap-[1.5vw]">
             <div className=" w-full">
@@ -625,7 +611,8 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className=" w-fit ms-auto">
+
+      <div className="w-fit ms-auto">
         <CustomBtn btnColor="black" word="Save" />
       </div>
     </div>
