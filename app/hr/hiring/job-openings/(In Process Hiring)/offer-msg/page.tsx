@@ -15,7 +15,7 @@ export default function Page() {
 
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
-          <ShortListTable />
+          <ShortListTable data={[]} setRecievedId={() => {}} recievedId={0} stepIdx={0} />
         </div>
 
         <div
