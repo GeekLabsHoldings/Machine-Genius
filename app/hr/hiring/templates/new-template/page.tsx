@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { Editor } from "primereact/editor";
+import { LevelAndPositionEnum } from "@/app/_components/HR/00Hiring/01JobOpenings/01AllHiring/AllHiringTable";
 
 const addIcon = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 11" fill="none">
@@ -33,11 +34,7 @@ const positions = {
   CEO: "CEO",
 };
 
-const templatesWithPositionAndLevel = [
-  "Job_Listings",
-  "Interview_Call_Question",
-];
-
+const templatesWithPositionAndLevel: string[] = Object.values(LevelAndPositionEnum);
 const levels = {
   FRESH: "FreshGraduation",
   JUNIOR: "Junior",
