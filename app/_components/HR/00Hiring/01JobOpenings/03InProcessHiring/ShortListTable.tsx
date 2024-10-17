@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "./ShortListTable.module.css";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
-export default function ShortListTable() {
+export default function ShortListTable({data, setRecievedId, recievedId, stepIdx}: {data: any, setRecievedId: any, recievedId: any, stepIdx: number}) {
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -194,15 +194,15 @@ export default function ShortListTable() {
           <li className="w-[20%]">
             <span>LinkedIn</span>
           </li>
-          <li className="w-[20%]">
+          {/* <li className="w-[20%]">
             <span>Portfolio</span>
-          </li>
+          </li> */}
         </ul>
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
-            <ul key={idx} className={``}>
+          {data?.candidates?.map((e:any, idx:number) => (
+            <ul key={idx} className={`${e.stepsStatus[stepIdx].status == "Rejected" ? "opacity-50" : ""}`} onClick={() => setRecievedId(e._id)}>
               <li className="candidateSelection w-[4%]">
                 <CustomCheckBox
                   accentColor="#2A2B2A"
@@ -217,21 +217,21 @@ export default function ShortListTable() {
                 <span>{e.lastName}</span>
               </li>
               <li className="w-[15%]">
-                <span>{e.mobile}</span>
+                <span>{e.phoneNumber}</span>
               </li>
               <li className="w-[20%]">
                 <span>{e.email}</span>
               </li>
               <li className="w-[20%]">
-                <Link href={e.linkedin} target="_blank">
-                  <span>{truncateText(e.linkedin, 20)}</span>
+                <Link href={e.linkedIn} target="_blank">
+                  <span>{truncateText(e.linkedIn, 20)}</span>
                 </Link>
               </li>
-              <li className="w-[20%]">
+              {/* <li className="w-[20%]">
                 <Link href={e.portfolio} target="_blank">
                   <span>{truncateText(e.portfolio, 20)}</span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           ))}
         </div>

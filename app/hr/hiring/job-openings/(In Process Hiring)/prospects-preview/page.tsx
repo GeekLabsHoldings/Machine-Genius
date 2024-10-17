@@ -6,13 +6,17 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ProspectsPreviewTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsPreviewTable";
 import { globalContext } from "@/app/_context/store";
 import { StepContext } from "@/app/_context/hrStepContext";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 export default function Page() {
   const [candidateId, setCandidateId] = useState<string>("");
   const { handleSignOut } = useContext(globalContext);
   const [data, setData] = useState<any>({});
   const [data2, setData2] = useState<any>({});
-  const {step, setStep} = useContext(StepContext);
-
+  const { step, setStep } = useContext(StepContext);
+  const [selectedCandidateCV, setSelectedCandidateCV] = useState<any>(null);
+  const [selectedCandidateId, setSelectedCandidateId] = useState<any>(null);
+  const router = useRouter()
 
   const fetchData = async () => {
     try {
@@ -36,10 +40,80 @@ export default function Page() {
     }
   };
 
+  const rejectCandidate = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/reject/${selectedCandidateId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log("resultReject", result);
+      if (result.stepsStatus[2].status == "Rejected") {
+        setSelectedCandidateCV(null)
+        setSelectedCandidateId(null)
+        fetchData()
+        toast.success("Candidate Rejected Successfully")
+      }
+    } catch (error) {
+      console.error("Error rejecting candidate:", error);
+    }
+  }
+  const shortListCandidate = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/next-hiring-step/${selectedCandidateId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log("resultShortList", result);
+      fetchData()
+      toast.success("Candidate Short Listed Successfully")
+    } catch (error) {
+      console.error("Error short listing candidate:", error);
+    }
+  }
+
+  async function updateNextStep() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/next-step/${step}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/short-list`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
 
   useEffect(() => {
     console.log(step);
   }, []);
+  useEffect(()=>{
+    console.log(selectedCandidateCV);
+    
+  },[selectedCandidateCV])
 
   useEffect(() => {
     fetchData();
@@ -68,7 +142,11 @@ export default function Page() {
 
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
-          <ProspectsPreviewTable />
+          <ProspectsPreviewTable
+            data={data}
+            setSelectedCandidateCV={setSelectedCandidateCV}
+            setSelectedCandidateId={setSelectedCandidateId}
+          />
         </div>
         <div
           className={
@@ -76,11 +154,23 @@ export default function Page() {
             " w-[49%] h-full border p-7 flex flex-col justify-between"
           }
         >
-          <iframe width="100%" height="100%" className="mb-[--sy-30px]" src="https://machine-genius.s3.amazonaws.com/cv/ramymakrameyd%40outlook.com-1728980953043.pdf"></iframe>
+          {!selectedCandidateCV ? (
+            <div className="w-full h-full flex items-center justify-center text-center text-[20px] font-bold">
+              Not Available
+            </div>
+            
+          ) : (
+            <iframe
+              width="100%"
+              height="100%"
+              className="mb-[--sy-30px]"
+              src={`${selectedCandidateCV}`}
+            ></iframe>
+          )}
           {/* Action Buttons */}
           <div className="flex justify-between gap-3">
-            <CustomBtn word={"Reject"} btnColor="white" width="w-full" />
-            <CustomBtn word={"Short List"} btnColor="black" width="w-full" />
+            <CustomBtn word={"Reject"} btnColor="white" width="w-full" disabled={!selectedCandidateCV} onClick={rejectCandidate}/>
+            <CustomBtn word={"Short List"} btnColor="black" width="w-full" disabled={!selectedCandidateCV} onClick={shortListCandidate}/>
           </div>
         </div>
       </div>
@@ -89,7 +179,8 @@ export default function Page() {
         <CustomBtn
           word={"Next"}
           btnColor="black"
-          href="/hr/hiring/job-openings/short-list"
+          onClick={()=>updateNextStep()}
+          // href="/hr/hiring/job-openings/short-list"
         />
       </div>
     </section>
