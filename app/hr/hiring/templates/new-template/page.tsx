@@ -48,6 +48,51 @@ interface Template {
   description: string;
   isEditable: boolean;
 }
+enum DepartmentEnum {
+  HR = "hr",
+  ContentCreator = "content-creation",
+  SocialMedia = "social-media",
+  Administrative = "administrative",
+  Accounting = "accounting",
+  CEO = "ceo",
+  VideoEditing = "video-editing",
+  CustomerService = 'customer-service',
+  Development = 'development',
+}
+enum RoleEnum {
+  ContentWriter = "Content Writer",
+  Payroll = "Payroll",
+  CEO = "CEO",
+  SocialMedia = "Social Media",
+  Administrative = "Administrative",
+  VideoEditor = "Video Editor",
+  CustomerService = 'Customer Service',
+  BackEndPhp = 'Back End PHP Developer',
+  BackEndDotNet = 'Back End .NET Developer',
+  MeanStack = 'MEAN Stack Developer',
+  DevOps = 'DevOps',
+  FrontEnd = 'Front End Developer',
+  ReactNative = 'React Native Developer'
+}
+
+enum LevelEnum {
+  FRESH = "FreshGraduation",
+  JUNIOR = "Junior",
+  MID = "Mid-level",
+  SENIOR = "Senior",
+  EXPERT = "Expert"
+}
+const DepartmentRoles = {
+  'hr': ["Recruiter", "Training", "Employee Relations"],
+  "content-creation": ["Content Writer"],
+  ceo: ['CEO'],
+  "social-media": ["Social Media"],
+  administrative: ['Administrative'],
+  accounting: ['Payroll'],
+  "video-editing": ['Video Editor'],
+  'customer-service': ['Customer Service'],
+  development: ['Back End Php', 'Back End .Net', 'Mean Stack', 'DevOps', 'Front End', 'React Native'],
+} as const;
 
 const options: { [key: string]: string } = {
   Job_Listings: "Job Listings",
@@ -389,12 +434,8 @@ const Page = () => {
                 description: questions.map((q, i) => ({
                   question: questionsRef.current[i],
                   type: typesRef.current[i] == "Yes or No" ? 0 : 1,
-                  answer: answersRef.current[i],
+                  answer: answersRef.current[i] == "Yes" ? 1 : 0,
                 })),
-              },
-              {
-                title: "Skills",
-                description: skills,
               },
             ],
           }),
@@ -568,7 +609,7 @@ const Page = () => {
                               {/* <p>{templateDet.role}</p> */}
                               <CustomSelectInput
                                 getValue={(val: string) => setPosition(val)}
-                                options={Object.values(positions)}
+                                options={Object.values(RoleEnum)}
                                 // label={templateDet.role}
                               />
                             </div>
@@ -583,7 +624,7 @@ const Page = () => {
                               {/* <p>{templateDet.level}</p> */}
                               <CustomSelectInput
                                 getValue={(val: string) => setLevel(val)}
-                                options={Object.values(levels)}
+                                options={Object.values(LevelEnum)}
                                 // label={templateDet.level}
                               />
                             </div>
@@ -819,7 +860,7 @@ const Page = () => {
                             {/* <p>{templateDet.role}</p> */}
                             <CustomSelectInput
                               getValue={(val: string) => setPosition(val)}
-                              options={Object.values(positions)}
+                              options={Object.values(RoleEnum)}
                               // label={templateDet.role}
                             />
                           </div>
@@ -834,7 +875,7 @@ const Page = () => {
                             {/* <p>{templateDet.level}</p> */}
                             <CustomSelectInput
                               getValue={(val: string) => setLevel(val)}
-                              options={Object.values(levels)}
+                              options={Object.values(LevelEnum)}
                               // label={templateDet.level}
                             />
                           </div>

@@ -115,6 +115,12 @@ export default function AllHiringTable() {
       router.push(`/hr/hiring/job-openings/phone-interview-questionnaire`);
     } else if (ele?.currentStep === HiringStepsEnum.Tasks) {
       router.push(`/hr/hiring/job-openings/send-task`);
+    } else if (ele?.currentStep === HiringStepsEnum.Schedule_Face_To_Face_Interview) {
+      router.push(`/hr/hiring/job-openings/face-to-face-interview-msg`);
+    } else if (ele?.currentStep === HiringStepsEnum.Job_Offer) {
+      router.push(`/hr/hiring/job-openings/offer-msg`);
+    } else if (ele?.currentStep === HiringStepsEnum.Required_Documents) {
+      router.push(`/hr/hiring/job-openings/required-documents`);
     }
   }, [step, ele]);
 
