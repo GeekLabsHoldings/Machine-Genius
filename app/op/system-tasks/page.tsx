@@ -71,7 +71,7 @@ const Page = () => {
         isLoading: true,
       }));
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/tasks/get-all-tasks`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/tasks/get-all-tasks?limit=9999`,
         {
           headers: {
             Authorization: `barrer ${
