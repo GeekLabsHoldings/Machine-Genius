@@ -56,6 +56,30 @@ interface templateDet {
   __v: number;
 }
 
+enum RoleEnum {
+  ContentWriter = "Content Writer",
+  Payroll = "Payroll",
+  CEO = "CEO",
+  SocialMedia = "Social Media",
+  Administrative = "Administrative",
+  VideoEditor = "Video Editor",
+  CustomerService = 'Customer Service',
+  BackEndPhp = 'Back End PHP',
+  BackEndDotNet = 'Back End .NET',
+  MeanStack = 'MEAN Stack',
+  DevOps = 'DevOps',
+  FrontEnd = 'Front End',
+  ReactNative = 'React Native'
+}
+
+enum LevelEnum {
+  FRESH = "FreshGraduation",
+  JUNIOR = "Junior",
+  MID = "Mid-level",
+  SENIOR = "Senior",
+  EXPERT = "Expert"
+}
+
 const templatesWithPositionAndLevel = [
   "Job_Listings",
   "Interview_Call_Question",
@@ -482,7 +506,7 @@ export default function TemplateDetails({
                         {/* <p>{templateDet.role}</p> */}
                         <CustomSelectInput
                           getValue={(val: string) => setPosition(val)}
-                          options={Object.values(positions)}
+                          options={Object.values(RoleEnum)}
                           label={templateDet?.role}
                         />
                       </div>
@@ -497,7 +521,7 @@ export default function TemplateDetails({
                         {/* <p>{templateDet.level}</p> */}
                         <CustomSelectInput
                           getValue={(val: string) => setLevel(val)}
-                          options={Object.values(levels)}
+                          options={Object.values(LevelEnum)}
                           label={templateDet?.level}
                         />
                       </div>
@@ -727,7 +751,7 @@ export default function TemplateDetails({
                       {/* <p>{templateDet.role}</p> */}
                       <CustomSelectInput
                         getValue={(val: string) => setPosition(val)}
-                        options={Object.values(positions)}
+                        options={Object.values(RoleEnum)}
                         label={templateDet?.role}
                       />
                     </div>
@@ -742,7 +766,7 @@ export default function TemplateDetails({
                       {/* <p>{templateDet.level}</p> */}
                       <CustomSelectInput
                         getValue={(val: string) => setLevel(val)}
-                        options={Object.values(levels)}
+                        options={Object.values(LevelEnum)}
                         label={templateDet?.level}
                       />
                     </div>

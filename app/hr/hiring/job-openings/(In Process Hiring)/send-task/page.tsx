@@ -12,6 +12,7 @@ import useWebSocket from "react-use-websocket";
 import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { QRCodeSVG } from "qrcode.react";
+import { GoBack } from "../utility/GoBack";
 
 export default function Page() {
   const [data, setData] = useState<any>(null);
@@ -30,6 +31,9 @@ export default function Page() {
     "wss://linkedin-scrape.machinegenius.io"
   );
 
+  const handleGoBack = async () => {
+    await GoBack(router, "Tasks", step, "phone-interview-questionnaire");
+  };
 
   const sendWhatsappMessage = async () => {
     try {
@@ -193,7 +197,7 @@ export default function Page() {
           <div>
             <span className="font-bold mb-[15px] block">Message Preview:</span>
             <div className="border border-[#2A2B2A] bg-[#DBDBD73D] p-4 rounded-[11px]">
-            <Editor
+              <Editor
                 value={returnedTemplate}
                 onTextChange={(e: any) => setReturnedTemplate(e.htmlValue)}
                 style={{ height: "320px" }}
@@ -219,13 +223,10 @@ export default function Page() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href="/hr/hiring/job-openings/phone-interview-questionnaire"
+          // href="/hr/hiring/job-openings/phone-interview-questionnaire"
+          onClick={handleGoBack}
         />
-        <CustomBtn
-          word={"Next"}
-          btnColor="black"
-          onClick={updateNextStep}
-        />
+        <CustomBtn word={"Next"} btnColor="black" onClick={updateNextStep} />
       </div>
       <Modal
         className={`${styles.modal}`}

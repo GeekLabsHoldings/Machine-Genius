@@ -1,11 +1,20 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./face-to-face-interview-msg.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ShortListTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ShortListTable";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { GoBack } from "../utility/GoBack";
+import { useRouter } from "next/navigation";
+import { StepContext } from "@/app/_context/hrStepContext";
 
 export default function Page() {
+  const router = useRouter();
+  const { step, setStep } = useContext(StepContext);
+  const handleGoBack = async () => {
+    await GoBack(router, "Schedule_Face_To_Face_Interview", step, "send-task");
+  };
+
   return (
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}
@@ -56,7 +65,7 @@ export default function Page() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href="/hr/hiring/job-openings/accepted-tasks"
+          onClick={handleGoBack}
         />
         <CustomBtn
           word={"Next"}
