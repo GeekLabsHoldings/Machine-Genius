@@ -34,11 +34,6 @@
   padding-bottom: clamp(10px, calc(0.5vw + 0.1rem), 60px);
   border-bottom: 1px solid var(--dark);
 }
-.customInput {
-  padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
-  border-bottom: 1px solid var(--dark);
-  color: var(--dark);
-}
 .inputWrapper {
   position: relative;
 }
@@ -53,6 +48,12 @@
   width: clamp(14px, calc(1.1vw + 0.1rem), 70px);
   height: clamp(10px, calc(0.7vw + 0.1rem), 60px);
 }
+.customInput {
+  padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
+  border-bottom: 1px solid var(--dark);
+  color: var(--dark);
+}
+
 .customInput:focus {
   outline: none;
 }
