@@ -15,8 +15,13 @@ interface HiringData {
   hiringStatus: string;
   currentStep: HiringStepsEnum;
 }
-
-enum HiringStepsEnum {
+export enum LevelAndPositionEnum {
+  Job_Listings = "Job_Listings",
+  Interview_Call_Question = "Interview_Call_Question",
+  Tasks = "Tasks",
+  Job_Offer = "Job_Offer",
+}
+export enum HiringStepsEnum {
   REQUEST_HIRING = "REQUEST_HIRING",
   Job_Listings = "Job_Listings",
   Get_Job_Candidates = "Get_Job_Candidates",
