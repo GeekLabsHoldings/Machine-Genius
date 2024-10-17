@@ -210,10 +210,56 @@ const Page = () => {
         " flex flex-col justify-center items-center w-full h-full"
       }
     >
+      <ol className="flex justify-center items-center gap-10 w-full my-[--sy-60px]">
+        {/* Step 1 */}
+        <li
+          className={`flex items-center space-x-2.5 ${
+            pageState.formStep === 1
+              ? "text-[--dark]"
+              : "text-gray-500"
+          }`}
+        >
+          <span
+            className={`flex items-center justify-center w-8 h-8 rounded-full shrink-0 ${
+              pageState.formStep === 1
+                ? "border-[--2px] border-[--dark] font-bold"
+                : "border border-gray-500 font-medium"
+            }`}
+          >
+            1
+          </span>
+          <span>
+            <h3 className={pageState.formStep === 1 ? "font-bold" : "font-medium" + " leading-tight font-sans"}>User Info</h3>
+          </span>
+        </li>
+
+        {/* Step 2 */}
+        <li
+          className={`flex items-center space-x-2.5 ${
+            pageState.formStep === 2
+              ? "text-[--dark]"
+              : "text-gray-500"
+          }`}
+        >
+          <span
+            className={`flex items-center justify-center w-8 h-8 rounded-full shrink-0 ${
+              pageState.formStep === 2
+                ? "border-[--2px] border-[--dark] font-bold"
+                : "border border-gray-500 font-medium"
+            }`}
+          >
+            2
+          </span>
+          <span>
+            <h3 className={pageState.formStep === 2 ? "font-bold" : "font-medium" + " leading-tight font-sans"}>Zoho Credentials</h3>
+          </span>
+        </li>
+      </ol>
+
       {pageState.formStep === 1 && (
         <>
           <div
-            className={`flex justify-between gap-[3vw] !min-w-[40vw] h-[75vh]`}
+            className={`flex justify-between gap-[3vw] !min-w-[40vw] h-[55vh]`}
           >
             {/* ===== Start Col (1) ===== */}
             <div className="flex flex-col gap-[1vw] w-1/2">
@@ -475,7 +521,7 @@ const Page = () => {
 
       {pageState.formStep === 2 && (
         <>
-          <div className={`!min-w-[40vw] h-[75vh]`}>
+          <div className={`!min-w-[40vw] h-[55vh]`}>
             {/* ===== Start Col (1) ===== */}
             <div className="flex flex-col gap-[1vw]">
               {/* clientId* */}
