@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "./ProspectsTable.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 
-export default function ProspectsTable() {
+export default function ProspectsTable({ data }: { data: any }) {
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -119,9 +119,9 @@ export default function ProspectsTable() {
           <li className="w-[20%]">
             <span>LinkedIn</span>
           </li>
-          <li className="w-[20%]">
+          {/* <li className="w-[20%]">
             <span>Portfolio</span>
-          </li>
+          </li> */}
           <li className="w-[10%]">
             <span>Preview</span>
           </li>
@@ -129,7 +129,7 @@ export default function ProspectsTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
+          {data?.candidates?.map((e: any, idx: number) => (
             <ul key={idx} className={`space-x-2`}>
               <li className="w-[10%]">
                 <span>{e.firstName}</span>
@@ -138,21 +138,21 @@ export default function ProspectsTable() {
                 <span>{e.lastName}</span>
               </li>
               <li className="w-[15%]">
-                <span>{e.mobile}</span>
+                <span>{e.phoneNumber}</span>
               </li>
               <li className="w-[20%]">
                 <span>{e.email}</span>
               </li>
               <li className="w-[20%]">
-                <Link href={e.linkedin} target="_blank">
-                  <span>{truncateText(e.linkedin, 20)}</span>
+                <Link href={e.linkedIn} target="_blank">
+                  <span>{truncateText(e.linkedIn, 20)}</span>
                 </Link>
               </li>
-              <li className="w-[20%]">
+              {/* <li className="w-[20%]">
                 <Link href={e.portfolio} target="_blank">
                   <span>{truncateText(e.portfolio, 20)}</span>
                 </Link>
-              </li>
+              </li> */}
               <li className="w-[10%]">
                 <CustomBtn
                   word="Preview"

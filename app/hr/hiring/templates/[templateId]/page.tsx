@@ -59,6 +59,7 @@ interface templateDet {
 const templatesWithPositionAndLevel = [
   "Job_Listings",
   "Interview_Call_Question",
+  
 ];
 
 const defaultTemplateDet: templateDet = {
@@ -94,7 +95,6 @@ export default function TemplateDetails({
 }: {
   params: { templateId: string };
 }) {
-
   const [inputs, setInputs] = useState<any>({
     jobDescription: "",
     responsibilities: "",
@@ -102,7 +102,6 @@ export default function TemplateDetails({
     qualifications: "",
   });
   const [editorVal, setEditorVal] = useState("");
-
 
   const [questions, setQuestions] = useState<any[]>([]);
   const questionsRef = useRef<any>([]);
@@ -313,13 +312,13 @@ export default function TemplateDetails({
     getGroups();
     if (templateDet?.group_id) {
       console.log(templateDet?.group_id);
-      
+
       setGroupID(templateDet.group_id._id);
       setTempKey(templateDet?.group_id?.step);
       console.log(templateDet?.group_id?._id);
     } else {
       setTempKey(templateDet.title.replace(" ", "_"));
-    }    
+    }
   }, [templateDet]);
 
   async function getGroups() {
@@ -401,7 +400,6 @@ export default function TemplateDetails({
     console.log(templatesWithPositionAndLevel);
     console.log(tempKey);
   }, [tempKey]);
-  
 
   return (
     <div className="flex flex-col h-full">
@@ -469,7 +467,6 @@ export default function TemplateDetails({
           {templateDet?.title.split(" ").join("_") == "Job_Listings" ? (
             <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
               <div className="flex flex-col gap-[1.5vw]">
-
                 {templatesWithPositionAndLevel.includes(tempKey) && (
                   <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
                     <div className={`${styles.card} h-fit`}>
@@ -513,7 +510,6 @@ export default function TemplateDetails({
                   </div>
                   <div className={styles.card_body}>
                     <Editor
-
                       value={inputs.jobDescription}
                       onTextChange={(e: any) =>
                         setInputs({
@@ -521,7 +517,6 @@ export default function TemplateDetails({
                           jobDescription: e.htmlValue,
                         })
                       }
-
                       style={{ height: "320px" }}
                       formats={["list", "bold"]} // Allowed formats
                       modules={{ toolbar: toolbarOptions }} // Toolbar configuration
@@ -571,10 +566,13 @@ export default function TemplateDetails({
                             ref={(el) => {
                               if (el) questionsRef.current[i] = el?.value;
                             }}
+                            defaultValue={questions[i]?.question || ""}
                             onChange={(e: any) => {
                               if (questionsRef.current) {
                                 questionsRef.current[i] = e.target.value;
                                 console.log(questionsRef.current);
+                              } else {
+                                questionsRef.current[i] = questions[i]?.question || "";
                               }
                             }}
                             type="text"
@@ -587,10 +585,12 @@ export default function TemplateDetails({
                                 if (typesRef.current) {
                                   typesRef.current[i] = val;
                                   console.log(typesRef.current);
+                                } else {
+                                  typesRef.current[i] = questions[i]?.type || "Numeric";
                                 }
                               }}
                               options={["Numeric", "Yes or No"]}
-                              label={"Numeric"}
+                              label={questions[i]?.type != 0 ? "Numeric" : "Yes or No"}
                             />
                           </div>
                           <label
@@ -604,8 +604,11 @@ export default function TemplateDetails({
                               if (answersRef.current) {
                                 answersRef.current[i] = e.target.value;
                                 console.log(answersRef.current);
+                              } else {
+                                answersRef.current[i] = questions[i]?.answer || "";
                               }
                             }}
+                            defaultValue={questions[i]?.answer || ""}
                             type="text"
                             id="answer"
                             ref={(el) => {
@@ -748,7 +751,9 @@ export default function TemplateDetails({
               )}
               <div className={`${styles.card} min-h-[--167px] w-[49%]`}>
                 <div className={styles.card_header}>
-                  <h6 className="text-[--20px] font-bold">{templateDet?.title}</h6>
+                  <h6 className="text-[--20px] font-bold">
+                    {templateDet?.title}
+                  </h6>
                 </div>
                 <div
                   className={`${styles.card_body} text-[--16px] outline-none`}
@@ -763,7 +768,6 @@ export default function TemplateDetails({
                 </div>
               </div>
             </>
-
           )}
         </div>
       </div>
@@ -774,9 +778,7 @@ export default function TemplateDetails({
           btnColor="black"
           paddingVal="p-[0.5vw]"
           width="w-[9vw]"
-
           onClick={createTemplate}
-
         />
       </div>
       <Modal

@@ -1,10 +1,40 @@
 "use client";
-import React from 'react';
+import React, { useContext, useState } from 'react';
 // import styles from "./Prospects.module.css";
 import Link from 'next/link';
 import ProspectsTable from '@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsTable';
+import { StepContext } from '@/app/_context/hrStepContext';
+import { globalContext } from '@/app/_context/store';
 
 export default function Page() {
+  const [data, setData] = useState<any>(null);
+  const { step } = useContext(StepContext);
+  const { handleSignOut } = useContext(globalContext);
+
+  
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/current-step-template/${step}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      setData(result);
+      console.log("result", result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <section>
       {/* Back To In Process Hiring Table Button */}
@@ -26,7 +56,7 @@ export default function Page() {
         <span className="text-[32px] font-bold ">Prospects</span>
       </div>
 
-      <ProspectsTable />
+      <ProspectsTable data={data} />
     </section>
   )
 }
