@@ -12,6 +12,7 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
+import VideoPlayer from "@/app/_components/ContentCreator/VideoPlayer/VideoPlayer";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
 
@@ -23,8 +24,9 @@ interface KeywordsAndImage {
 interface ScriptSegment {
   index: number;
   title?: string;
-  text: string;
-  keywordsAndImages: KeywordsAndImage[];
+  text?: string;
+  keywordsAndImages?: KeywordsAndImage[];
+  videoPath?: string;
   audioPath: {
     index: number;
     url: string;
@@ -107,7 +109,13 @@ function TitleEdit({
   );
 }
 
-const VideoTimestampInput = () => {
+const VideoTimestampInput = ({
+  setEnd,
+  setStart,
+}: {
+  setEnd: React.Dispatch<React.SetStateAction<string>>;
+  setStart: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState("");
@@ -120,6 +128,11 @@ const VideoTimestampInput = () => {
     }
     return parts.join(":");
   };
+
+  useEffect(() => {
+    setEnd(endTime);
+    setStart(startTime);
+  }, [startTime, endTime]);
 
   const validateTime = (time: string) => {
     const parts = time.split(":");
@@ -140,13 +153,6 @@ const VideoTimestampInput = () => {
       s >= 0 &&
       s < 60
     );
-  };
-
-  const calculateTimestamp = (time: string) => {
-    const parts = time.split(":");
-    const [hours, minutes, seconds] =
-      parts.length === 2 ? [0, ...parts] : parts;
-    return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
   };
 
   const handleTimeChange = (
@@ -211,13 +217,6 @@ const VideoTimestampInput = () => {
         />
       </div>
       {error && <p className="mt-[--2px] text-red-500 text-sm">{error}</p>}
-      {!error && startTime && endTime && (
-        <p className="text-green-500 text-sm">
-          Duration:
-          {calculateTimestamp(endTime)} - {calculateTimestamp(startTime)}{" "}
-          seconds
-        </p>
-      )}
     </div>
   );
 };
@@ -293,7 +292,13 @@ interface IProps {
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
-  setBankAccounts: (value: React.SetStateAction<BankAccount[]>) => void; // Function to set the bank accounts state.
+  setSplitedContent: (
+    content:
+      | import("/mnt/d/Dev/Machine-Genius/app/_context/videoEditingContext").ScriptSegment[]
+      | null
+  ) => void;
+  currentIndex: number;
+  totalIntroSlides: number;
 }
 
 function InsertSourceModel({
@@ -301,7 +306,9 @@ function InsertSourceModel({
   btnWord,
   btnColor,
   btnIcon,
-  setBankAccounts,
+  setSplitedContent,
+  currentIndex,
+  totalIntroSlides,
 }: IProps) {
   // State for controlling the modal open/close state
   const [open, setOpen] = useState(false);
@@ -312,85 +319,122 @@ function InsertSourceModel({
   // Function to handle modal close
   const handleClose = () => setOpen(false);
 
-  const [bankName, setBankName] = useState("");
-  const [accountName, setAccountName] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [IBANumber, setIBANumber] = useState("");
-  const [SWIFTCode, setSWIFTCode] = useState("");
-  const [country, setCountry] = useState("");
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [ApiConnect, setApiConnect] = useState("");
-  const [brand, setBrand] = useState("");
-  const [brandTag, setBrandTag] = useState("");
-
   const [loading, setLoading] = useState(false);
-  const productTypeOptions: string[] = ["Snacks", "Cleaning", "Drinks"];
+  const [videoUrl, setVideoUrl] = useState("");
+  const [isValidYoutubeUrl, setIsValidYoutubeUrl] = useState<boolean>(false);
+  const [start, setStart] = useState<string>("");
+  const [end, setEnd] = useState<string>("");
+  const [isBeforeParagraph, setIsBeforeParagraph] = useState<boolean>(false);
+  const [isAfterParagraph, setIsAfterParagraph] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsValidYoutubeUrl(() => {
+      // return true if the videoUrl is a valid youtube url
+      return videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be");
+    });
+  }, [videoUrl]);
+
+  const calculateTimestamp = (time: string) => {
+    const parts = time.split(":");
+    const [hours, minutes, seconds] =
+      parts.length === 2 ? [0, ...parts] : parts;
+    return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
+  };
 
   function clearFields() {
-    setBankName("");
-    setAccountName("");
-    setAccountNumber("");
-    setIBANumber("");
-    setSWIFTCode("");
-    setCountry("");
-    setUserName("");
-    setPassword("");
-    setApiConnect("");
-    setBrand("");
+    setVideoUrl("");
+    setIsValidYoutubeUrl(false);
+    setStart("");
+    setEnd("");
+  }
+
+  /*
+  output -- https://www.youtube.com/watch?v=xvFZjo5PgG0
+  */
+
+  function getVideoIdFromUrl(url: string) {
+    if (url.includes("watch?v=")) {
+      return url.match(/watch\?v=([^&]+)/)?.[1];
+    }
+    if (url.includes("embed/")) {
+      return url.match(/embed\/([^&]+)/)?.[1];
+    }
+    return null;
+  }
+
+  function convertRegularURLtoEmbedURL(url: string) {
+    // convert the embedUrl to a regular url
+    if (url.includes("watch?v=")) {
+      //input -- https://www.youtube.com/embed/xvFZjo5PgG0?si=t0JQqIyXnedYaREJ
+      // get uses regexs groups video id from input
+      const videoId = getVideoIdFromUrl(url);
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+    }
+    return url;
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // check if
-    if (
-      brand === "" ||
-      ApiConnect === "" ||
-      password === "" ||
-      userName === "" ||
-      country === "" ||
-      SWIFTCode === "" ||
-      IBANumber === "" ||
-      accountNumber === "" ||
-      accountName === "" ||
-      bankName === ""
-    ) {
+    if (!isValidYoutubeUrl) {
       toast.error("Please fill all fields");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounting/bank-accounts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            bankName,
-            accountName,
-            accountNumber,
-            IBANumber,
-            SWIFTCode,
-            country,
-            userName,
-            password,
-            ApiConnect,
-            brand,
-          }),
-        }
-      );
-      const data: BankAccount = await response.json();
+      // const response = await fetch(
+      //   `https://trim.machinegenius.io/trimming/video/`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //     },
+      //     body: JSON.stringify({
+      //       url_id: getVideoIdFromUrl(videoUrl),
+      //       start_time: calculateTimestamp(start),
+      //       end_time: calculateTimestamp(end),
+      //     }),
+      //   }
+      // );
+      // const data = await response.json();
+
+      const data = {
+        message: {
+          trimmed_video:
+            "https://street-suite.s3.amazonaws.com/trimmed_videos/HqtNiWNgRj.mp4",
+        },
+      };
 
       // check if the data is of type Subscription
-      if (data.bankName) {
-        toast.success("New Bank Account Has Been Added");
+      console.log(`data`, data);
+      if (data?.message?.trimmed_video) {
+        console.log(`data`, data);
+        toast.success("New Footage Has Been Added");
+        //@ts-ignore
+        setSplitedContent((prev: ScriptSegment[]) => {
+          const newContent = [...prev];
+          newContent.splice(
+            isBeforeParagraph ? currentIndex : currentIndex + 1,
+            0,
+            {
+              index: currentIndex + 1 - totalIntroSlides,
+              videoPath: data?.message?.trimmed_video,
+              audioPath: {
+                index: uuidv4(),
+                url: "",
+                duration: calculateTimestamp(end) - calculateTimestamp(start),
+              },
+            }
+          );
+          return newContent;
+        });
         handleClose();
-        setBankAccounts((prev: BankAccount[]) => [...prev, data]);
+        // setFootages((prev: Footage[]) => [...prev, data]);
         clearFields();
       }
     } catch (error) {
@@ -452,9 +496,9 @@ function InsertSourceModel({
             </div>
 
             {/* Modal Body */}
-            <div className="flex gap-[3vw]">
+            <div className="flex gap-[2vw]">
               {/* Form fields for adding a post */}
-              <div className="flex grow flex-col gap-[--40px]">
+              <div className="flex grow flex-col gap-[--40px] w-[50%]">
                 <div className="flex flex-col gap-[0.2vw]">
                   {/* Bank Details Section */}
                   <h3 className="text-[--30px] mb-[--20px] font-bold">
@@ -469,8 +513,14 @@ function InsertSourceModel({
                       id="subjectLine"
                       required
                       className={`${styles.input}`}
-                      value={accountName}
-                      onChange={(e) => setAccountName(e.target.value)}
+                      value={videoUrl}
+                      onChange={(e) => setVideoUrl(e.target.value)}
+                      onBlur={() => {
+                        if (videoUrl && !isValidYoutubeUrl) {
+                          toast.error("Please enter a valid youtube url");
+                        }
+                      }}
+                      placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     />
                   </div>
                 </div>
@@ -486,6 +536,11 @@ function InsertSourceModel({
                         className="flex items-center gap-[--2px] text-[--16px]"
                       >
                         <CustomCheckBox
+                          checked={isBeforeParagraph}
+                          onChange={() => {
+                            setIsBeforeParagraph(!isBeforeParagraph);
+                            setIsAfterParagraph(false);
+                          }}
                           name="insertClip"
                           type="radio"
                           id="beforeParagraph"
@@ -502,6 +557,11 @@ function InsertSourceModel({
                         className="flex items-center gap-[--2px] text-[--16px]"
                       >
                         <CustomCheckBox
+                          checked={isAfterParagraph}
+                          onChange={() => {
+                            setIsBeforeParagraph(false);
+                            setIsAfterParagraph(!isAfterParagraph);
+                          }}
                           type="radio"
                           name="insertClip"
                           id="afterParagraph"
@@ -518,24 +578,49 @@ function InsertSourceModel({
                     Cut Clip
                   </h3>
                   <div className={`flex flex-col gap-[0.2vw]`}>
-                    <VideoTimestampInput />
+                    <VideoTimestampInput setStart={setStart} setEnd={setEnd} />
                   </div>
                 </div>
               </div>
 
               {/* Login Details Section */}
-              <div className="flex grow flex-col gap-[0.7vw]">
+              <div className="flex grow flex-col gap-[0.7vw] w-[50%]">
                 <h3 className="text-[--30px] mb-[--15px] font-bold">
                   Footage Preview
                 </h3>
                 <div className="flex flex-col gap-[0.7vw]">
-                  <iframe
-                    src="https://www.youtube.com/embed/tgbNymZ7vqY"
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-[100%] h-[20vw] rounded-2xl"
-                  ></iframe>
+                  {videoUrl && isValidYoutubeUrl ? (
+                    <iframe
+                      className="w-[100%] aspect-video rounded-2xl"
+                      src={convertRegularURLtoEmbedURL(videoUrl)}
+                      title="YouTube video player"
+                      // @ts-ignore
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin"
+                      allowfullscreen
+                    ></iframe>
+                  ) : (
+                    <div className="w-[100%] aspect-video rounded-2xl border-gray-300 border-dashed border-[--2px]">
+                      {/* add a plus icon in the center of the div */}
+                      <div className="flex items-center justify-center h-full">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          version="1.1"
+                          id="Layer_1"
+                          viewBox="0 0 461.001 461.001"
+                          className="w-[--102px] h-[--102px]"
+                        >
+                          <g>
+                            <path
+                              className="fill-gray-300"
+                              d="M365.257,67.393H95.744C42.866,67.393,0,110.259,0,163.137v134.728   c0,52.878,42.866,95.744,95.744,95.744h269.513c52.878,0,95.744-42.866,95.744-95.744V163.137   C461.001,110.259,418.135,67.393,365.257,67.393z M300.506,237.056l-126.06,60.123c-3.359,1.602-7.239-0.847-7.239-4.568V168.607   c0-3.774,3.982-6.22,7.348-4.514l126.06,63.881C304.363,229.873,304.298,235.248,300.506,237.056z"
+                            />
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="flex mt-24 justify-end">
                     {/* Button to add bank account */}
@@ -546,23 +631,7 @@ function InsertSourceModel({
                       </div>
                     ) : (
                       <CustomBtn
-                        word="Add Bank Account"
-                        icon={
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="11"
-                            height="11"
-                            viewBox="0 0 11 11"
-                            fill="none"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M4.58333 10.0833C4.58333 10.5896 4.99373 11 5.5 11C6.00628 11 6.41667 10.5896 6.41667 10.0833V6.41667H10.0833C10.5896 6.41667 11 6.00628 11 5.5C11 4.99373 10.5896 4.58333 10.0833 4.58333H6.41667V0.916667C6.41667 0.410401 6.00628 0 5.5 0C4.99373 0 4.58333 0.410401 4.58333 0.916667V4.58333H0.916667C0.41041 4.58333 0 4.99373 0 5.5C0 6.00628 0.41041 6.41667 0.916667 6.41667H4.58333V10.0833Z"
-                              fill="#FFFFFB"
-                            />
-                          </svg>
-                        }
+                        word="Insert Source"
                         btnColor="black"
                         style={{ width: "max-content" }}
                         paddingVal="py-[0.5vw] px-[0.8vw]"
@@ -580,6 +649,17 @@ function InsertSourceModel({
   );
 }
 
+/*
+  TODO:
+  - add a button to remove the selected footage
+  - add a button to remove the selected footage
+  - add a button to remove the selected footage
+  - add a button to remove the selected footage
+  - add a button to remove the selected footage
+  - add a button to remove the selected footage
+  - add a button to remove the selected footage
+  - add a button to remove the selected footage
+*/
 const ChooseFootagePage = () => {
   const { handleSignOut } = useContext(globalContext);
   const router = useRouter();
@@ -610,30 +690,9 @@ const ChooseFootagePage = () => {
   const [searchFootage, setSearchFootage] = useState<string[]>([]);
 
   // State to hold selected footage
-  function selectedFootageInitValue() {
-    if (typeof window !== "undefined") {
-      const selectedFootageInitValue = sessionStorage.getItem(
-        "VideoEditing-selectedFootage"
-      );
-      return selectedFootageInitValue
-        ? JSON.parse(selectedFootageInitValue)
-        : [];
-    } else {
-      return [];
-    }
-  }
-
-  const [selectedFootage, setSelectedFootage] = useState<SelectedFootage[]>(
-    selectedFootageInitValue
-  );
-
-  useEffect(() => {
-    sessionStorage.setItem(
-      "VideoEditing-selectedFootage",
-      JSON.stringify(selectedFootage)
-    );
-    console.log("VideoEditing-selectedFootage:", selectedFootage);
-  }, [selectedFootage]);
+  const [selectedFootage, setSelectedFootage] = useSessionStorage<
+    SelectedFootage[]
+  >("VideoEditing-selectedFootage", []);
 
   useEffect(() => {
     if (pageState.selectedScriptSegment !== null) {
@@ -999,56 +1058,6 @@ const ChooseFootagePage = () => {
     console.log(`selectedFootage`, selectedFootage);
   }, [selectedFootage]);
 
-  // Function to handle navigating to the next page
-  // const handleNextPage = () => {
-  //   if (splitedContent) {
-  //     const updatedParagraphJson: ScriptSegment[] = splitedContent.map(
-  //       (paragraph) => {
-  //         const selectedFootageItem = selectedFootage.find(
-  //           (sf) => sf.index === paragraph.index
-  //         );
-
-  //         // Copy the existing keywordsAndImages
-  //         let updatedKeywordsAndImages = [...paragraph.keywordsAndImages];
-
-  //         if (selectedFootageItem) {
-  //           // Update the imageUrl of the first keyword
-  //           updatedKeywordsAndImages = updatedKeywordsAndImages.map(
-  //             (kwi, idx) => {
-  //               if (idx === 0) {
-  //                 return {
-  //                   ...kwi,
-  //                   imageUrl: selectedFootageItem.imageUrl,
-  //                 };
-  //               }
-  //               return kwi;
-  //             }
-  //           );
-  //         }
-
-  //         return {
-  //           ...paragraph,
-  //           keywordsAndImages: updatedKeywordsAndImages,
-  //         };
-  //       }
-  //     );
-
-  // Update the context with the new content including selected images
-  // setSplitedContent(updatedParagraphJson);
-  //     console.log(`updatedParagraphJson`, updatedParagraphJson);
-
-  //     // Navigate to the next page
-  //     // router.push("/video-editor/create/video-preview");
-  //     sessionStorage.setItem(
-  //       "VideoEditing-splitedContent",
-  //       JSON.stringify(updatedParagraphJson)
-  //     );
-  //     router.replace("/video-editor/create/video-preview");
-  //   } else {
-  //     toast.error("No data available!");
-  //   }
-  // };
-
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!search) {
@@ -1128,6 +1137,8 @@ const ChooseFootagePage = () => {
     );
   }
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   return (
     <div className={`w-full h-full flex flex-col ${styles.footagePreview}`}>
       <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
@@ -1161,27 +1172,30 @@ const ChooseFootagePage = () => {
                         </div>
                       )}
 
-                      <div
-                        className={`${styles.articleContent} cursor-pointer mb-[--10px] group`}
-                        key={scriptSegment.index}
-                      >
-                        <p
-                          className={`transition-none ${
-                            pageState.selectedScriptSegment?.audioPath.index ===
-                            scriptSegment.audioPath.index
-                              ? styles.active
-                              : ""
-                          }`}
-                          onClick={() => {
-                            setPageState((prevState) => ({
-                              ...prevState,
-                              index,
-                              selectedScriptSegment: scriptSegment,
-                            }));
-                            setSearchFootage([]);
-                          }}
-                        >
-                          {/* {scriptSegment.text.split(" ").map((word, idx) => (
+                      {scriptSegment?.keywordsAndImages &&
+                      scriptSegment?.keywordsAndImages[0] ? (
+                        <>
+                          <div
+                            className={`${styles.articleContent} cursor-pointer mb-[--10px] group`}
+                            key={scriptSegment.index}
+                          >
+                            <p
+                              className={`transition-none ${
+                                pageState.selectedScriptSegment?.audioPath
+                                  .index === scriptSegment.audioPath.index
+                                  ? styles.active
+                                  : ""
+                              }`}
+                              onClick={() => {
+                                setPageState((prevState) => ({
+                                  ...prevState,
+                                  index,
+                                  selectedScriptSegment: scriptSegment,
+                                }));
+                                setSearchFootage([]);
+                              }}
+                            >
+                              {/* {scriptSegment.text.split(" ").map((word, idx) => (
                             <span key={idx}>
                               {scriptSegment.keywordsAndImages[0].keyword ===
                               word ? (
@@ -1193,14 +1207,14 @@ const ChooseFootagePage = () => {
                               )}
                             </span>
                           ))} */}
-                          {scriptSegment.text}
-                        </p>
-                        <div
-                          className={`flex flex-col justify-center gap-[--10px] w-[95%] ${
-                            totalIntroSlides > index
-                              ? "group-hover:h-[--120px]"
-                              : "group-hover:h-[--50px]"
-                          }
+                              {scriptSegment.text}
+                            </p>
+                            <div
+                              className={`flex flex-col justify-center gap-[--10px] w-[95%] ${
+                                totalIntroSlides > index
+                                  ? "group-hover:h-[--120px]"
+                                  : "group-hover:h-[--50px]"
+                              }
                             px-[--10px] rounded-b-md bg-gray-100 shadow-md overflow-clip
                             ${
                               pageState.selectedScriptSegment?.audioPath
@@ -1210,28 +1224,28 @@ const ChooseFootagePage = () => {
                                   : "h-[--50px]"
                                 : "h-0"
                             }`}
-                        >
-                          {totalIntroSlides > index ? (
-                            <>
-                              <TitleEdit
-                                title={scriptSegment?.title!}
-                                onSubmit={(title: string) => {
-                                  // @ts-ignore
-                                  setSplitedContent((prev) => {
-                                    const updatedContent = [...prev];
-                                    updatedContent[index].title = title;
-                                    return updatedContent;
-                                  });
-                                }}
-                              />
-                              <hr className="w-full" />
-                            </>
-                          ) : null}
+                            >
+                              {totalIntroSlides > index ? (
+                                <>
+                                  <TitleEdit
+                                    title={scriptSegment?.title!}
+                                    onSubmit={(title: string) => {
+                                      // @ts-ignore
+                                      setSplitedContent((prev) => {
+                                        const updatedContent = [...prev];
+                                        updatedContent[index].title = title;
+                                        return updatedContent;
+                                      });
+                                    }}
+                                  />
+                                  <hr className="w-full" />
+                                </>
+                              ) : null}
 
-                          {/* add chips */}
-                          <div className="flex gap-[--10px]">
-                            <div
-                              className={`w-fit grow-0 border group-hover:opacity-100
+                              {/* add chips */}
+                              <div className="flex gap-[--10px]">
+                                <div
+                                  className={`w-fit grow-0 border group-hover:opacity-100
                           ${
                             pageState.selectedScriptSegment?.audioPath.index ===
                             scriptSegment.audioPath.index
@@ -1239,12 +1253,70 @@ const ChooseFootagePage = () => {
                               : "opacity-0"
                           }
                           aborder-indigo-300 bg-[#dbeafe] flex justify-center items-center gap-[--10px] rounded-md px-[--8px] py-[--4px]`}
-                            >
-                              <span className="font-semibold text-[--15px] text-[#1e40af]">
-                                {scriptSegment.keywordsAndImages[0].keyword}
-                              </span>
-                              <span>
-                                {/* close / x icon */}
+                                >
+                                  <span className="font-semibold text-[--15px] text-[#1e40af]">
+                                    {scriptSegment.keywordsAndImages[0].keyword}
+                                  </span>
+                                  <span>
+                                    {/* close / x icon */}
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      stroke-width="2"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      className="w-[--14px] h-[--14px] stroke-[#1e40af]"
+                                    >
+                                      <path d="M18 6 6 18"></path>
+                                      <path d="m6 6 12 12"></path>
+                                    </svg>
+                                  </span>
+                                </div>
+                                <AddChips
+                                  currentIndex={
+                                    pageState.selectedScriptSegment?.audioPath
+                                      .index as number
+                                  }
+                                  index={
+                                    scriptSegment.audioPath.index! as number
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      ) : scriptSegment?.videoPath ? (
+                        <div
+                          className={`cursor-pointer mb-[--10px] group`}
+                          key={scriptSegment.index}
+                        >
+                          <p
+                            className={`rounded-[--10px] mx-auto border-[--3px] border-solid border-[#424242] flex gap-[--10px] ${
+                              pageState.selectedScriptSegment?.audioPath
+                                .index === scriptSegment.audioPath.index
+                                ? "bg-[#2a2b2a] text-white w-[90%]"
+                                : "w-[80%]"
+                            }
+                             group-hover:bg-[#2a2b2a] group-hover:text-white hover:w-[90%]
+                              `}
+                            onClick={() => {
+                              setPageState((prevState) => ({
+                                ...prevState,
+                                index,
+                                selectedScriptSegment: scriptSegment,
+                              }));
+                              setSearchFootage([]);
+                            }}
+                          >
+                            <div className="relative w-32 h-24 flex-shrink-0">
+                              <img
+                                src="http://nextunicorn.ventures/wp-content/uploads/2024/06/nvidia-rise-to-the-top.jpg"
+                                alt="Video thumbnail"
+                                className="w-full h-full object-cover rounded"
+                              />
+                              <div className="absolute inset-0 flex bg-black bg-opacity-50 items-center justify-center">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   viewBox="0 0 24 24"
@@ -1253,23 +1325,40 @@ const ChooseFootagePage = () => {
                                   stroke-width="2"
                                   stroke-linecap="round"
                                   stroke-linejoin="round"
-                                  className="w-[--14px] h-[--14px] stroke-[#1e40af]"
+                                  className="text-white w-[--24px] h-[--24px] opacity-90"
                                 >
-                                  <path d="M18 6 6 18"></path>
-                                  <path d="m6 6 12 12"></path>
+                                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
                                 </svg>
-                              </span>
+                              </div>
                             </div>
-                            <AddChips
-                              currentIndex={
-                                pageState.selectedScriptSegment?.audioPath
-                                  .index as number
-                              }
-                              index={scriptSegment.audioPath.index! as number}
-                            />
-                          </div>
+                            <div className="flex-grow py-[--10px]">
+                              <h3 className="text-lg font-semibold">
+                                Nvidia's Impact on AI and Education
+                              </h3>
+                              <p
+                                className={`text-sm text-gray-600 mb-[--10px] group-hover:text-white ${
+                                  pageState.selectedScriptSegment?.audioPath
+                                    .index === scriptSegment.audioPath.index
+                                    ? "text-white"
+                                    : ""
+                                }`}
+                              >
+                                Click to play video
+                              </p>
+                              <div
+                                className={`text-xs text-gray-500 truncate group-hover:text-white ${
+                                  pageState.selectedScriptSegment?.audioPath
+                                    .index === scriptSegment.audioPath.index
+                                    ? "text-white"
+                                    : ""
+                                }`}
+                              >
+                                {scriptSegment.videoPath}
+                              </div>
+                            </div>
+                          </p>
                         </div>
-                      </div>
+                      ) : null}
                     </>
                   )
                 )
@@ -1283,111 +1372,149 @@ const ChooseFootagePage = () => {
         </div>
 
         <div className="w-1/2 flex flex-col gap-[1vw]">
-          <div className="flex justify-between">
-            <h3 className="font-bold text-[--24px]">Footage Found</h3>
-            <CustomBtn
-              icon={
-                <svg
-                  viewBox="0 0 14 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-[--14px] h-[--13px]"
-                >
-                  <path
-                    d="M1.26254 6.49635C0.81827 6.55953 0.509357 6.97089 0.572489 7.41516C0.765701 8.77361 1.38385 10.0362 2.33838 11.0219C3.29298 12.0075 4.53497 12.6659 5.88657 12.9026C7.23816 13.1392 8.62998 12.9421 9.86269 12.3394C10.1497 12.1991 10.4247 12.0385 10.6858 11.8593C11.1298 11.5546 11.74 11.5579 12.1208 11.9387C12.6326 12.4506 13.5078 12.088 13.5078 11.3642V9.12498C13.5078 8.57269 13.0601 8.12498 12.5078 8.12498H10.2686C9.54474 8.12498 9.18223 9.00013 9.69408 9.51201C10.0176 9.83548 10.0074 10.3701 9.62118 10.6153C9.46934 10.7117 9.31173 10.8 9.14895 10.8796C8.22442 11.3316 7.18056 11.4794 6.16687 11.3019C5.1532 11.1244 4.22167 10.6307 3.50578 9.89137C2.7898 9.15207 2.32619 8.20527 2.18132 7.18636C2.11811 6.7421 1.70674 6.43317 1.26254 6.49635ZM4.15293 0.660543C3.86389 0.801857 3.58708 0.963766 3.32436 1.14447C2.88225 1.44855 2.27425 1.44537 1.89483 1.06594C1.38296 0.554093 0.507812 0.916605 0.507812 1.64047V3.875C0.507812 4.42729 0.955528 4.875 1.50781 4.875H3.74238C4.46623 4.875 4.82877 3.99983 4.31689 3.48799C3.99455 3.16564 4.00455 2.63303 4.38905 2.38813C4.54255 2.29037 4.70195 2.20093 4.86663 2.1204C5.79121 1.6684 6.83507 1.52056 7.84876 1.69807C8.86245 1.87558 9.79396 2.36934 10.5099 3.10861C11.2258 3.84788 11.6894 4.79476 11.8343 5.81363C11.8975 6.25789 12.3089 6.56681 12.7531 6.50363C13.1974 6.44045 13.5063 6.02909 13.4431 5.58483C13.2499 4.22635 12.6318 2.96385 11.6772 1.97815C10.7227 0.992452 9.48064 0.334114 8.12905 0.0974319C6.77747 -0.139249 5.38565 0.0578646 4.15293 0.660543Z"
-                    fill="#FFFFFB"
-                  />
-                </svg>
-              }
-              word="Load More"
-              btnColor="black"
-              paddingVal="py-[--8px] px-[--24px]"
-            />
-          </div>
-          {/* holds sample of footage */}
-          {/* Search bar */}
-          <form
-            className="flex w-full border border-solid border-[#ACACAC] rounded-[--10px]"
-            onSubmit={(e) => {
-              handleSearch(e);
-            }}
-          >
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search"
-              className="outline-none flex-1 pl-[--16px]"
-            />
-            <CustomBtn
-              icon={
-                <svg
-                  className="w-[--24px] h-[--24px] text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeWidth={2}
-                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-              }
-              btnColor="black"
-              paddingVal="py-[--8px] px-[--20px]"
-              type="submit"
-            />
-          </form>
+          {selectedSegment?.keywordsAndImages ? (
+            <>
+              <div className="flex justify-between">
+                <h3 className="font-bold text-[--24px]">Footage Found</h3>
+                <CustomBtn
+                  icon={
+                    <svg
+                      viewBox="0 0 14 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-[--14px] h-[--13px]"
+                    >
+                      <path
+                        d="M1.26254 6.49635C0.81827 6.55953 0.509357 6.97089 0.572489 7.41516C0.765701 8.77361 1.38385 10.0362 2.33838 11.0219C3.29298 12.0075 4.53497 12.6659 5.88657 12.9026C7.23816 13.1392 8.62998 12.9421 9.86269 12.3394C10.1497 12.1991 10.4247 12.0385 10.6858 11.8593C11.1298 11.5546 11.74 11.5579 12.1208 11.9387C12.6326 12.4506 13.5078 12.088 13.5078 11.3642V9.12498C13.5078 8.57269 13.0601 8.12498 12.5078 8.12498H10.2686C9.54474 8.12498 9.18223 9.00013 9.69408 9.51201C10.0176 9.83548 10.0074 10.3701 9.62118 10.6153C9.46934 10.7117 9.31173 10.8 9.14895 10.8796C8.22442 11.3316 7.18056 11.4794 6.16687 11.3019C5.1532 11.1244 4.22167 10.6307 3.50578 9.89137C2.7898 9.15207 2.32619 8.20527 2.18132 7.18636C2.11811 6.7421 1.70674 6.43317 1.26254 6.49635ZM4.15293 0.660543C3.86389 0.801857 3.58708 0.963766 3.32436 1.14447C2.88225 1.44855 2.27425 1.44537 1.89483 1.06594C1.38296 0.554093 0.507812 0.916605 0.507812 1.64047V3.875C0.507812 4.42729 0.955528 4.875 1.50781 4.875H3.74238C4.46623 4.875 4.82877 3.99983 4.31689 3.48799C3.99455 3.16564 4.00455 2.63303 4.38905 2.38813C4.54255 2.29037 4.70195 2.20093 4.86663 2.1204C5.79121 1.6684 6.83507 1.52056 7.84876 1.69807C8.86245 1.87558 9.79396 2.36934 10.5099 3.10861C11.2258 3.84788 11.6894 4.79476 11.8343 5.81363C11.8975 6.25789 12.3089 6.56681 12.7531 6.50363C13.1974 6.44045 13.5063 6.02909 13.4431 5.58483C13.2499 4.22635 12.6318 2.96385 11.6772 1.97815C10.7227 0.992452 9.48064 0.334114 8.12905 0.0974319C6.77747 -0.139249 5.38565 0.0578646 4.15293 0.660543Z"
+                        fill="#FFFFFB"
+                      />
+                    </svg>
+                  }
+                  word="Load More"
+                  btnColor="black"
+                  paddingVal="py-[--8px] px-[--24px]"
+                />
+              </div>
+              {/* holds sample of footage */}
+              {/* Search bar */}
+              <form
+                className="flex w-full border border-solid border-[#ACACAC] rounded-[--10px]"
+                onSubmit={(e) => {
+                  handleSearch(e);
+                }}
+              >
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search"
+                  className="outline-none flex-1 pl-[--16px]"
+                />
+                <CustomBtn
+                  icon={
+                    <svg
+                      className="w-[--24px] h-[--24px] text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeWidth={2}
+                        d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                      />
+                    </svg>
+                  }
+                  btnColor="black"
+                  paddingVal="py-[--8px] px-[--20px]"
+                  type="submit"
+                />
+              </form>
 
-          <div className="relative">
-            <div
-              className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
-            >
-              <div className="flex gap-[1.25vw] pb-[--sy-5px]">
-                {selectedSegment ? (
-                  searchFootage.length > 0 ? (
-                    searchFootage.map((imageUrl: string, idx) => (
-                      <div className="!w-[194px]" key={uuidv4()}>
-                        <ImageCard
-                          inputName="select-footage"
-                          imgSrc={imageUrl}
-                          checked={selectedFootage.some((sf) => {
-                            return (
-                              sf.index ===
-                                pageState.selectedScriptSegmentIndex &&
-                              sf.imageUrl.includes(imageUrl)
-                            );
-                          })}
-                          onChange={(e) => {
-                            if (pageState.selectedScriptSegmentIndex !== null) {
-                              handleSelectFootage(
-                                e,
-                                pageState.selectedScriptSegmentIndex
-                              );
-                            } else {
-                              toast.error("Please select a paragraph!");
-                            }
-                          }}
-                        />
-                      </div>
-                    ))
-                  ) : selectedSegment.keywordsAndImages.length > 0 &&
-                    selectedSegment.keywordsAndImages[0].imageUrl.length > 0 ? (
-                    selectedSegment.keywordsAndImages[0].imageUrl.map(
-                      (imageUrl: string) => (
+              <div className="relative">
+                <div
+                  className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
+                >
+                  <div className="flex gap-[1.25vw] pb-[--sy-5px]">
+                    {selectedSegment ? (
+                      searchFootage.length > 0 ? (
+                        searchFootage.map((imageUrl: string, idx) => (
+                          <div className="!w-[194px]" key={uuidv4()}>
+                            <ImageCard
+                              inputName="select-footage"
+                              imgSrc={imageUrl}
+                              checked={selectedFootage.some((sf) => {
+                                return (
+                                  sf.index ===
+                                    pageState.selectedScriptSegmentIndex &&
+                                  sf.imageUrl.includes(imageUrl)
+                                );
+                              })}
+                              onChange={(e) => {
+                                if (
+                                  pageState.selectedScriptSegmentIndex !== null
+                                ) {
+                                  handleSelectFootage(
+                                    e,
+                                    pageState.selectedScriptSegmentIndex
+                                  );
+                                } else {
+                                  toast.error("Please select a paragraph!");
+                                }
+                              }}
+                            />
+                          </div>
+                        ))
+                      ) : selectedSegment.keywordsAndImages.length > 0 &&
+                        selectedSegment.keywordsAndImages[0].imageUrl.length >
+                          0 ? (
+                        selectedSegment.keywordsAndImages[0].imageUrl.map(
+                          (imageUrl: string) => (
+                            <div className="!w-[194px]" key={uuidv4()}>
+                              <ImageCard
+                                inputName="select-footage"
+                                imgSrc={imageUrl}
+                                checked={selectedFootage.some(
+                                  (sf) =>
+                                    sf.index ===
+                                      pageState.selectedScriptSegmentIndex &&
+                                    sf.imageUrl.includes(imageUrl)
+                                )}
+                                onChange={(e) => {
+                                  if (
+                                    pageState.selectedScriptSegmentIndex !==
+                                    null
+                                  ) {
+                                    handleSelectFootage(
+                                      e,
+                                      pageState.selectedScriptSegmentIndex
+                                    );
+                                  }
+                                }}
+                              />
+                            </div>
+                          )
+                        )
+                      ) : (
+                        <div>
+                          <p>No footage found!</p>
+                        </div>
+                      )
+                    ) : searchFootage.length > 0 ? (
+                      searchFootage.map((imageUrl: string) => (
                         <div className="!w-[194px]" key={uuidv4()}>
                           <ImageCard
                             inputName="select-footage"
                             imgSrc={imageUrl}
-                            checked={selectedFootage.some(
-                              (sf) =>
+                            checked={selectedFootage.some((sf) => {
+                              return (
                                 sf.index ===
                                   pageState.selectedScriptSegmentIndex &&
                                 sf.imageUrl.includes(imageUrl)
-                            )}
+                              );
+                            })}
                             onChange={(e) => {
                               if (
                                 pageState.selectedScriptSegmentIndex !== null
@@ -1396,145 +1523,133 @@ const ChooseFootagePage = () => {
                                   e,
                                   pageState.selectedScriptSegmentIndex
                                 );
+                              } else {
+                                toast.error("Please select a paragraph!");
                               }
                             }}
                           />
                         </div>
-                      )
-                    )
-                  ) : (
-                    <div>
-                      <p>No footage found!</p>
-                    </div>
-                  )
-                ) : searchFootage.length > 0 ? (
-                  searchFootage.map((imageUrl: string) => (
-                    <div className="!w-[194px]" key={uuidv4()}>
-                      <ImageCard
-                        inputName="select-footage"
-                        imgSrc={imageUrl}
-                        checked={selectedFootage.some((sf) => {
-                          return (
-                            sf.index === pageState.selectedScriptSegmentIndex &&
-                            sf.imageUrl.includes(imageUrl)
-                          );
-                        })}
-                        onChange={(e) => {
-                          if (pageState.selectedScriptSegmentIndex !== null) {
-                            handleSelectFootage(
-                              e,
-                              pageState.selectedScriptSegmentIndex
-                            );
-                          } else {
-                            toast.error("Please select a paragraph!");
-                          }
-                        }}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div>
-                    <p>Please select a paragraph!</p>
-                  </div>
-                )}
-              </div>
-            </div>
-            {enhancableLoading ? (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#000000ab] z-30 rounded-[--10px]">
-                <p className="text-[--20px] text-white font-bold text-shadow-lg">
-                  Enhancing...
-                </p>
-              </div>
-            ) : null}
-          </div>
-          <div className="flex w-full flex-col gap-[--sy-10px] mt-[--sy-10px]">
-            <div className="flex justify-between">
-              <h3 className="font-bold text-[--24px]">Selected Footage</h3>
-
-              <div className="rounded-full bg-[--dark] text-[--white] font-bold text-[--16px] px-[--10px] py-[--5px]">
-                {selectedFootage.length > 0 &&
-                selectedFootage[pageState.index!]?.imageUrl.length > 0
-                  ? selectedFootage[pageState.index!]?.imageUrl.length
-                  : 0}
-              </div>
-            </div>
-            <div
-              className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
-            >
-              <div className="flex gap-[1.25vw] pb-[--sy-5px]">
-                {selectedSegment?.keywordsAndImages[0].imageUrl &&
-                selectedSegment?.keywordsAndImages[0].imageUrl?.filter(
-                  (imageUrl) =>
-                    selectedFootage.some((sf) => sf.imageUrl.includes(imageUrl))
-                ).length > 0 ? (
-                  selectedSegment?.keywordsAndImages[0].imageUrl
-                    ?.filter((imageUrl) =>
-                      selectedFootage.some((sf) =>
-                        sf.imageUrl.includes(imageUrl)
-                      )
-                    )
-                    .map((imageUrl, idx) => (
-                      <div
-                        className="!w-[194px] h-[--102px] flex-shrink-0 relative rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden"
-                        key={uuidv4()}
-                      >
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            backgroundImage: `url(${imageUrl})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                          }}
-                        >
-                          <div
-                            className="absolute cursor-pointer top-[--5px] right-[--10px] bg-[--white] opacity-75 w-[--20px] h-[--20px] rounded-full flex items-center justify-center"
-                            onClick={() => {
-                              handleRemoveFootage(imageUrl);
-                            }}
-                          >
-                            <svg
-                              fill="#000000"
-                              height="200px"
-                              width="200px"
-                              version="1.1"
-                              id="Layer_1"
-                              xmlns="http://www.w3.org/2000/svg"
-                              // xmlns:="http://www.w3.org/1999/xlink"
-                              viewBox="0 0 1792 1792"
-                              // xml:space="preserve"
-                              className="w-[--15px] h-[--15px]"
-                            >
-                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                              <g
-                                id="SVGRepo_tracerCarrier"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              ></g>
-                              <g id="SVGRepo_iconCarrier">
-                                {" "}
-                                <path d="M1082.2,896.6l410.2-410c51.5-51.5,51.5-134.6,0-186.1s-134.6-51.5-186.1,0l-410.2,410L486,300.4 c-51.5-51.5-134.6-51.5-186.1,0s-51.5,134.6,0,186.1l410.2,410l-410.2,410c-51.5,51.5-51.5,134.6,0,186.1 c51.6,51.5,135,51.5,186.1,0l410.2-410l410.2,410c51.5,51.5,134.6,51.5,186.1,0c51.1-51.5,51.1-134.6-0.5-186.2L1082.2,896.6z"></path>{" "}
-                              </g>
-                            </svg>
-                          </div>
-                        </div>
+                      ))
+                    ) : (
+                      <div>
+                        <p>Please select a paragraph!</p>
                       </div>
-                    ))
-                ) : (
-                  <div>
-                    <p className="pl-[--30px]">No footage selected!</p>
+                    )}
                   </div>
-                )}
+                </div>
+                {enhancableLoading ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#000000ab] z-30 rounded-[--10px]">
+                    <p className="text-[--20px] text-white font-bold text-shadow-lg">
+                      Enhancing...
+                    </p>
+                  </div>
+                ) : null}
               </div>
+              <div className="flex w-full flex-col gap-[--sy-10px] mt-[--sy-10px]">
+                <div className="flex justify-between">
+                  <h3 className="font-bold text-[--24px]">Selected Footage</h3>
+
+                  <div className="rounded-full bg-[--dark] text-[--white] font-bold text-[--16px] px-[--10px] py-[--5px]">
+                    {selectedFootage.length > 0 &&
+                    selectedFootage[pageState.index!]?.imageUrl.length > 0
+                      ? selectedFootage[pageState.index!]?.imageUrl.length
+                      : 0}
+                  </div>
+                </div>
+                <div
+                  className={`${styles.custom_scrollbar} w-full overflow-x-auto select-none`}
+                >
+                  <div className="flex gap-[1.25vw] pb-[--sy-5px]">
+                    {selectedSegment?.keywordsAndImages[0].imageUrl &&
+                    selectedSegment?.keywordsAndImages[0].imageUrl?.filter(
+                      (imageUrl) =>
+                        selectedFootage.some((sf) =>
+                          sf.imageUrl.includes(imageUrl)
+                        )
+                    ).length > 0 ? (
+                      selectedSegment?.keywordsAndImages[0].imageUrl
+                        ?.filter((imageUrl) =>
+                          selectedFootage.some((sf) =>
+                            sf.imageUrl.includes(imageUrl)
+                          )
+                        )
+                        .map((imageUrl, idx) => (
+                          <div
+                            className="!w-[194px] h-[--102px] flex-shrink-0 relative rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden"
+                            key={uuidv4()}
+                          >
+                            <div
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                backgroundImage: `url(${imageUrl})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                              }}
+                            >
+                              <div
+                                className="absolute cursor-pointer top-[--5px] right-[--10px] bg-[--white] opacity-75 w-[--20px] h-[--20px] rounded-full flex items-center justify-center"
+                                onClick={() => {
+                                  handleRemoveFootage(imageUrl);
+                                }}
+                              >
+                                <svg
+                                  fill="#000000"
+                                  height="200px"
+                                  width="200px"
+                                  version="1.1"
+                                  id="Layer_1"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  // xmlns:="http://www.w3.org/1999/xlink"
+                                  viewBox="0 0 1792 1792"
+                                  // xml:space="preserve"
+                                  className="w-[--15px] h-[--15px]"
+                                >
+                                  <g
+                                    id="SVGRepo_bgCarrier"
+                                    stroke-width="0"
+                                  ></g>
+                                  <g
+                                    id="SVGRepo_tracerCarrier"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></g>
+                                  <g id="SVGRepo_iconCarrier">
+                                    {" "}
+                                    <path d="M1082.2,896.6l410.2-410c51.5-51.5,51.5-134.6,0-186.1s-134.6-51.5-186.1,0l-410.2,410L486,300.4 c-51.5-51.5-134.6-51.5-186.1,0s-51.5,134.6,0,186.1l410.2,410l-410.2,410c-51.5,51.5-51.5,134.6,0,186.1 c51.6,51.5,135,51.5,186.1,0l410.2-410l410.2,410c51.5,51.5,134.6,51.5,186.1,0c51.1-51.5,51.1-134.6-0.5-186.2L1082.2,896.6z"></path>{" "}
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                    ) : (
+                      <div>
+                        <p className="pl-[--30px]">No footage selected!</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : selectedSegment?.videoPath ? (
+            <div className="w-full mt-[--51px] rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden">
+              <VideoPlayer
+                src={selectedSegment.videoPath}
+                highlightTime={[]}
+                videoRef={videoRef}
+              />
             </div>
-          </div>
+          ) : null}
           <div className="flex items-center justify-between">
             <p className="font-bold text-[--24px]">Out Sourced Footage</p>
             <InsertSourceModel
               modalTitle="Out Sourced Footage"
               btnWord="Insert Source"
               btnColor="black"
-              setBankAccounts={console.log}
+              setSplitedContent={setSplitedContent}
+              currentIndex={pageState.index!}
+              totalIntroSlides={totalIntroSlides}
             />
           </div>
         </div>

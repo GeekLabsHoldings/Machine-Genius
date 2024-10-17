@@ -113,8 +113,7 @@
   font-weight: 400;
   user-select: none;
 }
-.articleContent:hover p,
-.articleContent p.active {
+.articleContent:hover p .articleContent p.active {
   font-weight: 700;
   background-color: #2a2b2a;
   color: white;
@@ -171,6 +170,12 @@
   padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
   border-bottom: 1px solid var(--dark);
   color: var(--dark);
+}
+
+.modalBox div label input[type="radio"] {
+  font-size: var(--5px);
+  width: var(--5px);
+  height: var(--5px);
 }
 
 .input:focus {
