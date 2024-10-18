@@ -18,7 +18,7 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
-import VideoPlayer from "@/app/_components/ContentCreator/VideoPlayer/VideoPlayer";
+import CustomVideoPlayer from "@/app/_components/VideoEditing/CustomVideoPlayer/CustomVideoPlayer";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -1707,10 +1707,8 @@ const ChooseFootagePage = () => {
             </>
           ) : selectedSegment?.videoPath ? (
             <div className="w-full mt-[--51px] rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden">
-              <VideoPlayer
-                src={selectedSegment.videoPath}
-                highlightTime={[]}
-                videoRef={videoRef}
+              <CustomVideoPlayer
+                videoUrl={selectedSegment.videoPath}
               />
             </div>
           ) : null}

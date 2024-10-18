@@ -9,7 +9,7 @@ interface videoProps {
   setVideo?: (videoUrl: string) => void;
   video?: string;
 }
-const VideoPlayer = ({
+const CustomVideoPlayer = ({
   videoUrl,
   autoplay = true,
   setVideo,
@@ -46,4 +46,4 @@ const VideoPlayer = ({
   );
 };
 
-export default VideoPlayer;
+export default CustomVideoPlayer;
