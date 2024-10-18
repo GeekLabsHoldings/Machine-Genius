@@ -8,7 +8,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { videoEditingContext } from "@/app/_context/videoEditingContext";
+import {
+  videoEditingContext,
+  ScriptSegment,
+} from "@/app/_context/videoEditingContext";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
@@ -23,24 +26,6 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
-
-interface KeywordsAndImage {
-  keyword: string;
-  imageUrl: string[];
-}
-
-interface ScriptSegment {
-  index: number;
-  title?: string;
-  text?: string;
-  keywordsAndImages?: KeywordsAndImage[];
-  videoPath?: string;
-  audioPath: {
-    index: number;
-    url: string;
-    duration: number;
-  };
-}
 
 interface SelectedFootage {
   index: number;
@@ -430,7 +415,7 @@ function InsertSourceModel({
               videoPath: data?.message?.trimmed_video,
               title: data?.message?.title,
               audioPath: {
-                index: uuidv4(),
+                index: Date.now(),
                 url: "",
                 duration: calculateTimestamp(end) - calculateTimestamp(start),
               },
@@ -753,8 +738,8 @@ const ChooseFootagePage = () => {
       }
       if (!isEnhancable.ok) {
         // remove the image from selectedSegment.keywordsAndImages
-        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
-          (kwi) => {
+        const updatedKeywordsAndImages =
+          selectedSegment?.keywordsAndImages?.map((kwi) => {
             if (kwi.imageUrl.includes(imageUrl)) {
               return {
                 ...kwi,
@@ -762,8 +747,7 @@ const ChooseFootagePage = () => {
               };
             }
             return kwi;
-          }
-        );
+          }) ?? []; // Default to an empty array if undefined
         console.log(`
                   -------------------------------------
                   -------------------------------------
@@ -804,8 +788,8 @@ const ChooseFootagePage = () => {
           );
         }
         // replce the imageUrl with the new data.imgurl
-        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
-          (kwi) => {
+        const updatedKeywordsAndImages =
+          selectedSegment!.keywordsAndImages?.map((kwi) => {
             if (index === pageState.selectedScriptSegmentIndex) {
               if (kwi.imageUrl.includes(imageUrl)) {
                 return {
@@ -825,8 +809,7 @@ const ChooseFootagePage = () => {
               };
             }
             return kwi;
-          }
-        );
+          });
 
         console.log(`
           -------------------------------------
@@ -847,7 +830,8 @@ const ChooseFootagePage = () => {
 
           console.log(`updatedContent`, updatedContent[pageState.index!]);
           updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
-            updatedKeywordsAndImages[0].imageUrl;
+            // @ts-ignore
+            updatedKeywordsAndImages[0]?.imageUrl;
 
           console.log(`updatedContent`, updatedContent);
 
@@ -862,8 +846,8 @@ const ChooseFootagePage = () => {
         });
       } else {
         // remove the image from selectedSegment.keywordsAndImages
-        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
-          (kwi) => {
+        const updatedKeywordsAndImages =
+          selectedSegment!.keywordsAndImages?.map((kwi) => {
             if (kwi.imageUrl.includes(imageUrl)) {
               return {
                 ...kwi,
@@ -871,13 +855,13 @@ const ChooseFootagePage = () => {
               };
             }
             return kwi;
-          }
-        );
+          });
         console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
         // @ts-ignore
         setSplitedContent((prev) => {
           const updatedContent = [...prev];
           updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
+            // @ts-ignore
             updatedKeywordsAndImages[0].imageUrl;
           return updatedContent;
         });
@@ -962,25 +946,30 @@ const ChooseFootagePage = () => {
 
     // check if the imageUrl includes the imageUrl from selectedFootage don't use index
     introSlides = introSlides?.map((slide) => {
-      const selectedFootageItem = selectedFootage.find((sf) =>
-        sf.imageUrl.some((url) =>
-          slide.keywordsAndImages[0].imageUrl.includes(url)
-        )
-      );
-      return {
-        ...slide,
-        keywordsAndImages: [
-          {
-            ...slide.keywordsAndImages[0],
-            imageUrl: selectedFootageItem?.imageUrl || [],
-          },
-        ],
-      };
+      if (slide.keywordsAndImages && slide.keywordsAndImages[0]) {
+        const selectedFootageItem = selectedFootage.find((sf) =>
+          sf.imageUrl.some((url) =>
+            slide.keywordsAndImages![0]!.imageUrl.includes(url)
+          )
+        );
+        return {
+          ...slide,
+          keywordsAndImages: [
+            {
+              ...slide.keywordsAndImages[0],
+              imageUrl: selectedFootageItem?.imageUrl || [],
+            },
+          ],
+        };
+      }
+      // Handle the case where keywordsAndImages is undefined
+      return slide;
     });
 
     bodySlides = bodySlides?.map((slide) => {
       const selectedFootageItem = selectedFootage.find((sf) =>
         sf.imageUrl.some((url) =>
+          // @ts-ignore
           slide.keywordsAndImages[0].imageUrl.includes(url)
         )
       );
@@ -988,6 +977,7 @@ const ChooseFootagePage = () => {
         ...slide,
         keywordsAndImages: [
           {
+            // @ts-ignore
             ...slide.keywordsAndImages[0],
             imageUrl: selectedFootageItem?.imageUrl || [],
           },
@@ -1198,7 +1188,11 @@ const ChooseFootagePage = () => {
 
     return (
       <div
-        ref={(node) => drag(drop(node))}
+        ref={(node) => {
+          if (node) {
+            drag(drop(node));
+          }
+        }}
         className="cursor-move mb-[--10px] group"
       >
         <p
@@ -1707,9 +1701,7 @@ const ChooseFootagePage = () => {
             </>
           ) : selectedSegment?.videoPath ? (
             <div className="w-full mt-[--51px] rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden">
-              <CustomVideoPlayer
-                videoUrl={selectedSegment.videoPath}
-              />
+              <CustomVideoPlayer videoUrl={selectedSegment.videoPath} />
             </div>
           ) : null}
           <div className="flex items-center justify-between">
