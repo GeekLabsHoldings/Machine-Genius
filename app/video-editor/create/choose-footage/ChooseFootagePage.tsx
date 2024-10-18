@@ -300,11 +300,7 @@ interface IProps {
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
-  setSplitedContent: (
-    content:
-      | import("/mnt/d/Dev/Machine-Genius/app/_context/videoEditingContext").ScriptSegment[]
-      | null
-  ) => void;
+  setSplitedContent: (content: ScriptSegment[] | null) => void;
   currentIndex: number;
   totalIntroSlides: number;
 }
