@@ -901,9 +901,9 @@ const Page = () => {
                           <div className={styles.card_body}>
                             {/* <p>{templateDet?.role}</p> */}
                             <CustomSelectInput
-                              getValue={(val: string) => setPosition(val)}
-                              options={Object.values(RoleEnum)}
-                              // label={templateDet?.role}
+                              getValue={(val: string) => setPosition(rolesData?.filter((r:any,idx:number)=>r.roleName == val)[0]?._id)}
+                              options={allRoles}
+                              label={allRoles[0]}
                             />
                           </div>
                         </div>

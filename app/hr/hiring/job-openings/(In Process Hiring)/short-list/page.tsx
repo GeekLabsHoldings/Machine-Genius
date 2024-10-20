@@ -46,7 +46,7 @@ export default function Page() {
           body: JSON.stringify({
             message: returnedTemplate
               .replaceAll(/<strong>/gi, "*")
-              .replaceAll(/<\/strong>/gi, "*")
+              .replaceAll(/<\/strong>/gi, "* ")
               .replaceAll(/<[^>]*>/gi, "")
               .replaceAll(/<\/[^>]*>/g, "\n"),
             candidate_id: recievedId,
