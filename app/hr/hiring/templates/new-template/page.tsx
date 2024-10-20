@@ -502,6 +502,7 @@ const Page = () => {
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
+              step: tempKey,
               title: templates.value,
               level:
                 templatesWithPositionAndLevel.includes(String(tempKey)) &&
