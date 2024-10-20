@@ -7,7 +7,7 @@ import { backIcon } from "@/app/_utils/svgIcons";
 import { useRouter } from "next/navigation";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
-import CustomSelectInputWithLabelAndValue from "@/app/_components/CustomSelectInput/CustomSelectInputWithLabelAndValue"
+import CustomSelectInputWithLabelAndValue from "@/app/_components/CustomSelectInput/CustomSelectInputWithLabelAndValue";
 
 enum DepartmentEnum {
   HR = "hr",
@@ -29,10 +29,6 @@ interface IEmployee {
   type: string;
   phoneNumber: string;
   department: string[];
-  role:{
-_id?:string,
-roleName?:string
-};
   cv: string;
   linkedIn: string;
 }
