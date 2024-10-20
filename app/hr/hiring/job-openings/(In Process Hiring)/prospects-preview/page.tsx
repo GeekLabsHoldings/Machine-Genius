@@ -34,6 +34,7 @@ export default function Page() {
       }
       const result = await res.json();
       setData(result);
+      setSelectedCandidateCV(result?.candidates[0]?.cvLink)
       console.log("result", result);
     } catch (error) {
       console.error("Error fetching data:", error);

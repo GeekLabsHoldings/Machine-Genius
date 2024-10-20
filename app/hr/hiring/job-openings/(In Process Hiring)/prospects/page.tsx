@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 // import styles from "./Prospects.module.css";
 import Link from 'next/link';
 import ProspectsTable from '@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsTable';
@@ -34,6 +34,10 @@ export default function Page() {
       console.error("Error fetching data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <section>

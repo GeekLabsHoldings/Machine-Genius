@@ -131,7 +131,7 @@ export default function Page() {
       setEmployees(data);
       setShownEmployees(data);
       console.log(data);
-      setRoles([...new Set(data.map((e: any) => e.role))]);
+      setRoles([...new Set(data.map((e: any) => e.role.roleName))]);
     } catch (error) {
       console.log(error);
     }
@@ -143,7 +143,7 @@ export default function Page() {
     console.log(roles);
   }, [roles]);
   useEffect(() => {
-    const filteredEmployees = employees.filter((e: any) => e.role == filter);
+    const filteredEmployees = employees.filter((e: any) => e.role.roleName == filter);
     setShownEmployees(filteredEmployees);
   }, [filter]);
 

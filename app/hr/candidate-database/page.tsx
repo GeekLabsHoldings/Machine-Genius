@@ -4,19 +4,13 @@ import React, { useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 
 export default function Page() {
-  // options for roles
-  const rolesOptions: { [key: string]: string } = {
-    Backend: "Backend",
-    Frontend: "Frontend",
-    Full_Stack: "Full Stack",
-    ContentWriter: "Content Writer",
-    Payroll: "Payroll",
-    CEO: "CEO",
-  };
+const [allRoles, setAllRoles] = useState<any[]>([]);
+const [rolesData, setRolesData] = useState<any[]>([]);
+
 
   const [fillColorLeft, setFillColorLeft] = useState("#D9D9D9");
   const [fillColorRight, setFillColorRight] = useState("#2A2B2A");
-  const [filter, setFilter] = useState({
+  const [filter, setFilter] = useState<any>({
     role: "",
   });
 
@@ -106,7 +100,24 @@ export default function Page() {
     }
   }
 
+async function getAllRoles() {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`,{
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await response.json();
+  setRolesData(data);
+  setAllRoles(data?.map((role: any) => role.roleName));
+  console.log(data);
+}
+
+
   useEffect(() => {
+    getAllRoles();
     // Retrieve the table element by its ID from the document and cast it to HTMLTableElement or null if not found.
     const table = document.getElementById("table") as HTMLTableElement | null;
     // Add an event listener to the table element for the "scroll" event, calling the updateFillColor function.
@@ -117,6 +128,10 @@ export default function Page() {
       table?.removeEventListener("scroll", updateFillColor);
     };
   }, []);
+
+  useEffect(() => {
+    console.log(filter);
+  }, [filter]);
 
   return (
     <>
@@ -135,15 +150,16 @@ export default function Page() {
               <div className="flex flex-col w-1/4 gap-[0.3vw]">
                 {/* Custom Select Input */}
                 <CustomSelectInput
-                  label={filter.role || "All Roles"}
-                  options={Object.values(rolesOptions)}
+                  label={filter?.role?.roleName || "All Roles"}
+                  options={allRoles}
                   getValue={(value: string) => {
                     setFilter({
                       ...filter,
-                      role:
-                        Object.keys(rolesOptions).find(
-                          (key) => rolesOptions[key] === value
-                        ) || "",
+                      role: {
+                        _id: rolesData.find(
+                          (role: any) => role.roleName === value
+                        )?._id || "",
+                      },
                     });
                   }}
                 />

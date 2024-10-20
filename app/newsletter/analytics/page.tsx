@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import styles from "./analytics.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 const TasksChart = dynamic(
-  () => import("@/app/_components/graph/ComparisonChart"),
+  () => import("./ComparisonChart"),
   {
     ssr: false,
   }

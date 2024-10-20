@@ -54,6 +54,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   }, [data]);
 
   async function publishJobPost() {
+    const token = localStorage.getItem("token");
     try {
       console.log(params.slug);
 
@@ -71,8 +72,8 @@ export default function Page({ params }: { params: { slug: string } }) {
             ""
           )
           .replaceAll(/data-list="ordered"/gi, ""),
-        role: data.role,
-        skills: data?.template?.details[5].description,
+        role: data?.role?.roleName ? data?.role?.roleName : "",
+        skills: ["React"],
         questions: data?.template?.details[4].description,
       });
       const res = await fetch(
@@ -94,14 +95,14 @@ export default function Page({ params }: { params: { slug: string } }) {
                   ""
                 )
                 .replaceAll(/data-list="ordered"/gi, ""),
-              role: data.role,
-              skills: data?.template?.details[5].description,
+              role: data.role.roleName,
+              skills: ["React"],
               questions: data?.template?.details[4].description,
             },
           }),
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -110,9 +111,13 @@ export default function Page({ params }: { params: { slug: string } }) {
       }
       const result = await res.json();
       console.log(result);
+      if (result == "Job Published Successfully") {
+        router.push(`/hr/hiring/job-openings/start-hiring/${params.slug}/templateDetails`);
+      }
       // navigate to the next page
       // router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
     } catch (error) {
+      console.error("Error updating next step:", error);
       console.error("Error updating next step:");
     }
   }
@@ -156,29 +161,6 @@ export default function Page({ params }: { params: { slug: string } }) {
     setArrText(newArr);
   };
 
-  async function updateNextStep() {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/next-step/${data._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
-      const result = await res.json();
-      console.log(result);
-      // navigate to the next page
-      router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
-    } catch (error) {
-      console.error("Error updating next step:", error);
-    }
-  }
 
   return (
     <section>
@@ -232,7 +214,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                   " rotate-90 relative top-[50%] -translate-y-[50%]"
                 }
               />
-              <span>{data.role}</span>
+              <span>{data?.role?.roleName ? data?.role?.roleName : ""}</span>
             </div>
             {/* Level */}
             <div className="flex justify-between items-center">

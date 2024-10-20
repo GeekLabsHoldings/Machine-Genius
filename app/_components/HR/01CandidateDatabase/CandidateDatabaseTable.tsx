@@ -13,7 +13,10 @@ interface Candidate {
   email: string;
   phoneNumber: string;
   linkedIn: string;
-  role: string;
+  role: {
+    roleName?: string;
+    _id?: string;
+  };
   department: string;
   cvLink: string;
   portfolio: string;
@@ -31,7 +34,7 @@ interface Candidate {
 export default function CandidateDatabaseTable({
   filter,
 }: {
-  filter: { role: string };
+  filter: any;
 }) {
   const { handleSignOut } = useContext(globalContext);
   // An array of objects representing the rows of the table body.
@@ -44,7 +47,7 @@ export default function CandidateDatabaseTable({
       email: "",
       phoneNumber: "",
       linkedIn: "",
-      role: "",
+      role: {},
       department: "",
       cvLink: "",
       portfolio: "",
@@ -56,9 +59,11 @@ export default function CandidateDatabaseTable({
   ]);
 
   useEffect(() => {
+    console.log(filter?.role?._id);
+    
     // Fetch the candidate data from the server.
     fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/all-candidate?role=${filter.role}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/all-candidate?role=${filter?.role?._id ? filter?.role?._id : ""}&limit=10000`,
       {
         method: "GET",
         headers: {
@@ -138,7 +143,7 @@ export default function CandidateDatabaseTable({
                   </Link>
                 </li>
                 <li className="w-[12%]">
-                  <span>{e.role}</span>
+                  <span>{e?.role?.roleName ? e?.role?.roleName : "-"}</span>
                 </li>
                 <li className="w-[17%]">
                   <Link

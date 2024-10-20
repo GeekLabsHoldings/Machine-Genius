@@ -13,6 +13,7 @@ import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { QRCodeSVG } from "qrcode.react";
 import { GoBack } from "../utility/GoBack";
+import { NavigatingBackContext } from "../../navigatingBackContext";
 
 export default function Page() {
   const [data, setData] = useState<any>(null);
@@ -31,8 +32,10 @@ export default function Page() {
     "wss://linkedin-scrape.machinegenius.io"
   );
 
+  const { navigatingBackData, setNavigatingBackData } = useContext(NavigatingBackContext);
+
   const handleGoBack = async () => {
-    await GoBack(router, "Tasks", step, "phone-interview-questionnaire");
+    await GoBack(router, "Tasks", step, "phone-interview-questionnaire", setNavigatingBackData);
   };
 
   const sendWhatsappMessage = async () => {
@@ -82,12 +85,12 @@ export default function Page() {
       }
       const result = await res.json();
       setData(result);
-      setRecievedId(result.candidates[0]._id);
-      setOldTemplate(result.template.details[0].description);
+      setRecievedId(result?.candidates[0]?._id);
+      setOldTemplate(result?.template?.details[0]?.description);
       setReturnedTemplate(
-        result.template.details[0].description
-          .replace(/\[firstName\]/g, result.candidates[0].firstName)
-          .replace(/\[lastName\]/g, result.candidates[0].lastName)
+        result?.template?.details[0]?.description
+          .replace(/\[firstName\]/g, result?.candidates[0]?.firstName)
+          .replace(/\[lastName\]/g, result?.candidates[0]?.lastName)
       );
 
       console.log("result", result);
@@ -152,11 +155,14 @@ export default function Page() {
         oldTemplate
           .replace(/\[firstName\]/g, candidateData.firstName)
           .replace(/\[lastName\]/g, candidateData.lastName)
-          .replace(/\[role\]/g, candidateData.role)
+          .replace(/\[role\]/g, candidateData.role.roleName)
           .replace(/\[link\]/g, "https://www.google.com")
       );
     }
   }, [candidateData]);
+  useEffect(() => {
+    console.log(navigatingBackData);
+  },[navigatingBackData])
 
   return (
     <section className="w-[90vw]">
@@ -168,7 +174,7 @@ export default function Page() {
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
           <ShortListTable
-            data={data}
+            data={data?.candidates?.length > 0 ? data : navigatingBackData}
             setRecievedId={setRecievedId}
             recievedId={recievedId}
             stepIdx={5}

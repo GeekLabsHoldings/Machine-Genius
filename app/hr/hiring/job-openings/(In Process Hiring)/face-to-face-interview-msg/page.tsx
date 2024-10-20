@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./face-to-face-interview-msg.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ShortListTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ShortListTable";
@@ -9,10 +9,11 @@ import { useRouter } from "next/navigation";
 import { StepContext } from "@/app/_context/hrStepContext";
 
 export default function Page() {
+  const [navigatingBackData, setNavigatingBackData] = useState<any>(null);
   const router = useRouter();
   const { step, setStep } = useContext(StepContext);
   const handleGoBack = async () => {
-    await GoBack(router, "Schedule_Face_To_Face_Interview", step, "send-task");
+    await GoBack(router, "Schedule_Face_To_Face_Interview", step, "send-task", setNavigatingBackData);
   };
 
   return (

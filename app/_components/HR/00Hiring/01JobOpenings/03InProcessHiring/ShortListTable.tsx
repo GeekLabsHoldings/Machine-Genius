@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { truncateText } from "../../../../../_utils/text";
 import Link from "next/link";
 import styles from "./ShortListTable.module.css";
@@ -152,6 +152,10 @@ export default function ShortListTable({data, setRecievedId, recievedId, stepIdx
       }
     });
   }
+
+  useEffect(() => {
+    console.log(data);
+  },[data])
 
   return (
     <div className={`${styles.tableContainer} h-full`}>
