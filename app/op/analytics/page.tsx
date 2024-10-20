@@ -1,8 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { globalContext } from "@/app/_context/store";
 import styles from "./analytics.module.css";
 import "./analytics.css";
 import dynamic from "next/dynamic";
+import toast from "react-hot-toast";
 // ===== 01- Start God View =====
 import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
 import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
@@ -14,7 +16,17 @@ import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06Youtube
 // ===== 02- Start Brands =====
 import Slider from "react-slick";
 import SocialMediaAccountCard from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCard";
-import { IBrandWithGroups } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
+import {
+  IBrandPlatformSubscribers,
+  IBrandWithGroups,
+  IGroupInsightsChart,
+  ICommentsCountChart,
+  IPostsCountChart,
+  ISubscriberGains,
+  IPostInsights,
+  IGroup,
+} from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
+
 const TasksChart = dynamic(
   () => import("@/app/_components/OP/Analytics/02Brands/graph/AreaChart"),
   {
@@ -107,15 +119,349 @@ const settings: any = {
 // ====== End react-slick Slider =====
 
 function Page() {
+  const { authState, handleSignOut } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     activePageTab: "GodView" | "Brands";
     activeAnalyticsTimeframe: "Daily" | "Weekly" | "Monthly" | "Yearly";
-    selectedSocialMediaAccount: IBrandWithGroups | null;
+    selectedSocialMediaAccount: IGroup | null;
+    fetchedSocialMediaAccounts: IGroup[];
+    fetchedTotalSubscribers: IBrandPlatformSubscribers[];
+    fetchedSubscribersGains: ISubscriberGains | null;
+    fetchedPostsCountChart: IPostsCountChart[];
+    fetchedCommentsCountChart: ICommentsCountChart[];
+    fetchedGroupInsightsChart: IGroupInsightsChart[];
+    fetchedPostInsights: IPostInsights[];
   }>({
     activePageTab: "Brands",
     activeAnalyticsTimeframe: "Daily",
     selectedSocialMediaAccount: null,
+    fetchedSocialMediaAccounts: [],
+    fetchedTotalSubscribers: [],
+    fetchedSubscribersGains: null,
+    fetchedPostsCountChart: [],
+    fetchedCommentsCountChart: [],
+    fetchedGroupInsightsChart: [],
+    fetchedPostInsights: [],
   });
+
+  const getSocialMediaAccounts = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-groups`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch social media accounts!");
+        return;
+      }
+      const data: IBrandWithGroups[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedSocialMediaAccounts: data.flatMap((ele) => ele.groups),
+        }));
+      } else {
+        toast.error("Failed to fetch social media accounts!");
+      }
+    } catch (error) {
+      console.error("Error fetching social media accounts:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch social media accounts!"
+      );
+    }
+  };
+
+  const getTotalSubscribers = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-subscripers`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch total subscribers!");
+        return;
+      }
+      const data: IBrandPlatformSubscribers[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedTotalSubscribers: data,
+        }));
+      } else {
+        toast.error("Failed to fetch total subscribers!");
+      }
+    } catch (error) {
+      console.error("Error fetching total subscribers:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch total subscribers!"
+      );
+    }
+  };
+
+  const getSubscribersGains = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/analytics/subs-gains?platform=${pageState.selectedSocialMediaAccount?.platform}&group=${pageState.selectedSocialMediaAccount?.group_id}`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch subscribers gains!");
+        return;
+      }
+      const data: ISubscriberGains = await res.json();
+      if (data) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedSubscribersGains: data,
+        }));
+      } else {
+        toast.error("Failed to fetch subscribers gains!");
+      }
+    } catch (error) {
+      console.error("Error fetching subscribers gains:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch subscribers gains!"
+      );
+    }
+  };
+
+  const getPostsCountChart = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/post-count?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=10&sign=-1&brand=${
+          pageState.selectedSocialMediaAccount?.brand
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch posts count chart!");
+        return;
+      }
+      const data: IPostsCountChart[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedPostsCountChart: data,
+        }));
+      } else {
+        toast.error("Failed to fetch posts count chart!");
+      }
+    } catch (error) {
+      console.error("Error fetching posts count chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch posts count chart!"
+      );
+    }
+  };
+
+  const getCommentsCountChart = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/comments-count?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=10&sign=-1&brand=${
+          pageState.selectedSocialMediaAccount?.brand
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch comments count chart!");
+        return;
+      }
+      const data: ICommentsCountChart[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedCommentsCountChart: data,
+        }));
+      } else {
+        toast.error("Failed to fetch comments count chart!");
+      }
+    } catch (error) {
+      console.error("Error fetching comments count chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch comments count chart!"
+      );
+    }
+  };
+
+  const getGroupInsightsChart = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/group-insights?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=10&sign=-1&brand=${
+          pageState.selectedSocialMediaAccount?.brand
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch group insights chart!");
+        return;
+      }
+      const data: IGroupInsightsChart[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedGroupInsightsChart: data,
+        }));
+      } else {
+        toast.error("Failed to fetch group insights chart!");
+      }
+    } catch (error) {
+      console.error("Error fetching group insights chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch group insights chart!"
+      );
+    }
+  };
+
+  const getPostInsights = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/post-insights?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=10&sign=-1&brand=${
+          pageState.selectedSocialMediaAccount?.brand
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch post insights chart!");
+        return;
+      }
+      const data: IPostInsights[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedPostInsights: data,
+        }));
+      } else {
+        toast.error("Failed to fetch post insights chart!");
+      }
+    } catch (error) {
+      console.error("Error fetching post insights chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch post insights chart!"
+      );
+    }
+  };
 
   return (
     <section className={`overflow-hidden op__analytics__container`}>

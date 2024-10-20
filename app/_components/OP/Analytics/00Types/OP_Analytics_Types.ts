@@ -20,7 +20,7 @@ export interface IGroup {
   group_id: string;
   subscribers: number;
   niche?: string;
-  platform: "TELEGRAM" | "FACEBOOK" | "REDDIT";
+  platform: "TELEGRAM" | "FACEBOOK" | "REDDIT" | "TWITTER";
   brand: string;
   engagement: number;
   __v: number;
