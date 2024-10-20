@@ -4,7 +4,7 @@ social-media/settings/get-groups:
 - followers.
 - engagement.
 */
-interface IBrand {
+export interface IBrand {
   _id: string;
   brand_name: string;
   description: string;
@@ -13,7 +13,7 @@ interface IBrand {
   __v: number;
 }
 
-interface IGroup {
+export interface IGroup {
   _id: string;
   group_name: string;
   link: string;
@@ -27,7 +27,7 @@ interface IGroup {
   personal: boolean;
 }
 
-interface IBrandWithGroups {
+export interface IBrandWithGroups {
   brand: IBrand;
   groups: IGroup[];
 }
@@ -36,7 +36,7 @@ interface IBrandWithGroups {
 social-media/settings/get-subscripers:
 - total subscribers.
 */
-interface IBrandPlatformSubscribers {
+export interface IBrandPlatformSubscribers {
   brand: string;
   platforms: {
     [key in "FACEBOOK" | "TELEGRAM" | "REDDIT"]: {
@@ -49,7 +49,7 @@ interface IBrandPlatformSubscribers {
 ceo/analytics/subs-gains:
 - subscribers gains.
 */
-interface ISubscriberGains {
+export interface ISubscriberGains {
   daily: {
     gain: number;
   };
@@ -65,7 +65,7 @@ interface ISubscriberGains {
 ceo/analytics/post-count:
 - posts count chart.
 */
-interface IPostsCountChart {
+export interface IPostsCountChart {
   date: number;
   data: number;
 }
@@ -74,7 +74,7 @@ interface IPostsCountChart {
 ceo/analytics/comments-count:
 - comments count chart.
 */
-interface ICommentsCountChart {
+export interface ICommentsCountChart {
   day: number;
   data: number;
 }
@@ -83,7 +83,7 @@ interface ICommentsCountChart {
 ceo/analytics/group-insights:
 - group insights chart.
 */
-interface IGroupInsightsChart {
+export interface IGroupInsightsChart {
   date: number;
   result: number;
 }
@@ -95,7 +95,7 @@ ceo/analytics/post-insights:
     - comments count.
     - retweet count.
 */
-interface IPostInsights {
+export interface IPostInsights {
   date: string;
   data: {
     like_count: number;
