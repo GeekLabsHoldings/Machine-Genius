@@ -1,8 +1,17 @@
 "use client";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import styles from "./ChooseFootagePage.module.css";
-import { useContext, useEffect, useRef, useState } from "react";
-import { videoEditingContext } from "@/app/_context/videoEditingContext";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  videoEditingContext,
+  ScriptSegment,
+} from "@/app/_context/videoEditingContext";
 import dynamic from "next/dynamic";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
@@ -12,27 +21,11 @@ import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 import { Box, Modal } from "@mui/material";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
-import VideoPlayer from "@/app/_components/ContentCreator/VideoPlayer/VideoPlayer";
+import CustomVideoPlayer from "@/app/_components/VideoEditing/CustomVideoPlayer/CustomVideoPlayer";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const ImageCard = dynamic(() => import("./ImageCard"), { ssr: false });
-
-interface KeywordsAndImage {
-  keyword: string;
-  imageUrl: string[];
-}
-
-interface ScriptSegment {
-  index: number;
-  title?: string;
-  text?: string;
-  keywordsAndImages?: KeywordsAndImage[];
-  videoPath?: string;
-  audioPath: {
-    index: number;
-    url: string;
-    duration: number;
-  };
-}
 
 interface SelectedFootage {
   index: number;
@@ -292,11 +285,7 @@ interface IProps {
   btnIcon?: React.ReactElement; // Optional button icon.
   btnColor: "black" | "white"; // Button color.
   modalTitle: string; // Modal title text.
-  setSplitedContent: (
-    content:
-      | import("/mnt/d/Dev/Machine-Genius/app/_context/videoEditingContext").ScriptSegment[]
-      | null
-  ) => void;
+  setSplitedContent: (content: ScriptSegment[] | null) => void;
   currentIndex: number;
   totalIntroSlides: number;
 }
@@ -386,29 +375,29 @@ function InsertSourceModel({
 
     setLoading(true);
     try {
-      // const response = await fetch(
-      //   `https://trim.machinegenius.io/trimming/video/`,
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-      //     },
-      //     body: JSON.stringify({
-      //       url_id: getVideoIdFromUrl(videoUrl),
-      //       start_time: calculateTimestamp(start),
-      //       end_time: calculateTimestamp(end),
-      //     }),
-      //   }
-      // );
-      // const data = await response.json();
+      const response = await fetch(
+        `https://trim.machinegenius.io/trimming/video/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            url_id: videoUrl,
+            start_time: calculateTimestamp(start),
+            end_time: calculateTimestamp(end),
+          }),
+        }
+      );
+      const data = await response.json();
 
-      const data = {
-        message: {
-          trimmed_video:
-            "https://street-suite.s3.amazonaws.com/trimmed_videos/HqtNiWNgRj.mp4",
-        },
-      };
+      // const data = {
+      //   message: {
+      //     trimmed_video:
+      //       "https://street-suite.s3.amazonaws.com/trimmed_videos/HqtNiWNgRj.mp4",
+      //   },
+      // };
 
       // check if the data is of type Subscription
       console.log(`data`, data);
@@ -424,8 +413,9 @@ function InsertSourceModel({
             {
               index: currentIndex + 1 - totalIntroSlides,
               videoPath: data?.message?.trimmed_video,
+              title: data?.message?.title,
               audioPath: {
-                index: uuidv4(),
+                index: Date.now(),
                 url: "",
                 duration: calculateTimestamp(end) - calculateTimestamp(start),
               },
@@ -748,8 +738,8 @@ const ChooseFootagePage = () => {
       }
       if (!isEnhancable.ok) {
         // remove the image from selectedSegment.keywordsAndImages
-        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
-          (kwi) => {
+        const updatedKeywordsAndImages =
+          selectedSegment?.keywordsAndImages?.map((kwi) => {
             if (kwi.imageUrl.includes(imageUrl)) {
               return {
                 ...kwi,
@@ -757,8 +747,7 @@ const ChooseFootagePage = () => {
               };
             }
             return kwi;
-          }
-        );
+          }) ?? []; // Default to an empty array if undefined
         console.log(`
                   -------------------------------------
                   -------------------------------------
@@ -799,8 +788,8 @@ const ChooseFootagePage = () => {
           );
         }
         // replce the imageUrl with the new data.imgurl
-        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
-          (kwi) => {
+        const updatedKeywordsAndImages =
+          selectedSegment!.keywordsAndImages?.map((kwi) => {
             if (index === pageState.selectedScriptSegmentIndex) {
               if (kwi.imageUrl.includes(imageUrl)) {
                 return {
@@ -820,8 +809,7 @@ const ChooseFootagePage = () => {
               };
             }
             return kwi;
-          }
-        );
+          });
 
         console.log(`
           -------------------------------------
@@ -842,7 +830,8 @@ const ChooseFootagePage = () => {
 
           console.log(`updatedContent`, updatedContent[pageState.index!]);
           updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
-            updatedKeywordsAndImages[0].imageUrl;
+            // @ts-ignore
+            updatedKeywordsAndImages[0]?.imageUrl;
 
           console.log(`updatedContent`, updatedContent);
 
@@ -857,8 +846,8 @@ const ChooseFootagePage = () => {
         });
       } else {
         // remove the image from selectedSegment.keywordsAndImages
-        const updatedKeywordsAndImages = selectedSegment!.keywordsAndImages.map(
-          (kwi) => {
+        const updatedKeywordsAndImages =
+          selectedSegment!.keywordsAndImages?.map((kwi) => {
             if (kwi.imageUrl.includes(imageUrl)) {
               return {
                 ...kwi,
@@ -866,13 +855,13 @@ const ChooseFootagePage = () => {
               };
             }
             return kwi;
-          }
-        );
+          });
         console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
         // @ts-ignore
         setSplitedContent((prev) => {
           const updatedContent = [...prev];
           updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
+            // @ts-ignore
             updatedKeywordsAndImages[0].imageUrl;
           return updatedContent;
         });
@@ -957,25 +946,30 @@ const ChooseFootagePage = () => {
 
     // check if the imageUrl includes the imageUrl from selectedFootage don't use index
     introSlides = introSlides?.map((slide) => {
-      const selectedFootageItem = selectedFootage.find((sf) =>
-        sf.imageUrl.some((url) =>
-          slide.keywordsAndImages[0].imageUrl.includes(url)
-        )
-      );
-      return {
-        ...slide,
-        keywordsAndImages: [
-          {
-            ...slide.keywordsAndImages[0],
-            imageUrl: selectedFootageItem?.imageUrl || [],
-          },
-        ],
-      };
+      if (slide.keywordsAndImages && slide.keywordsAndImages[0]) {
+        const selectedFootageItem = selectedFootage.find((sf) =>
+          sf.imageUrl.some((url) =>
+            slide.keywordsAndImages![0]!.imageUrl.includes(url)
+          )
+        );
+        return {
+          ...slide,
+          keywordsAndImages: [
+            {
+              ...slide.keywordsAndImages[0],
+              imageUrl: selectedFootageItem?.imageUrl || [],
+            },
+          ],
+        };
+      }
+      // Handle the case where keywordsAndImages is undefined
+      return slide;
     });
 
     bodySlides = bodySlides?.map((slide) => {
       const selectedFootageItem = selectedFootage.find((sf) =>
         sf.imageUrl.some((url) =>
+          // @ts-ignore
           slide.keywordsAndImages[0].imageUrl.includes(url)
         )
       );
@@ -983,6 +977,7 @@ const ChooseFootagePage = () => {
         ...slide,
         keywordsAndImages: [
           {
+            // @ts-ignore
             ...slide.keywordsAndImages[0],
             imageUrl: selectedFootageItem?.imageUrl || [],
           },
@@ -1139,6 +1134,137 @@ const ChooseFootagePage = () => {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const moveSegment = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      // @ts-ignore
+      setSplitedContent((prevSegments) => {
+        const dragSegment = prevSegments[dragIndex];
+        const updatedSegments = [...prevSegments];
+        updatedSegments.splice(dragIndex, 1);
+        updatedSegments.splice(hoverIndex, 0, dragSegment);
+        return updatedSegments;
+      });
+    },
+    [setSplitedContent]
+  );
+
+  /**
+   * DraggableVideoSegment component allows for the dragging and dropping of video segments.
+   * It uses the `useDrag` and `useDrop` hooks from the react-dnd library to handle the drag-and-drop functionality.
+   *
+   * @param {Object} props - The properties object.
+   * @param {string} props.id - The unique identifier for the video segment.
+   * @param {Object} props.segment - The video segment data.
+   * @param {number} props.index - The index of the video segment in the list.
+   * @param {Function} props.moveSegment - The function to move the segment to a new position.
+   *
+   * @returns {JSX.Element} The rendered draggable video segment component.
+   */
+  const DraggableVideoSegment = ({
+    id,
+    segment,
+    index,
+    moveSegment,
+  }: {
+    id: string;
+    segment: ScriptSegment;
+    index: number;
+    moveSegment: (dragIndex: number, hoverIndex: number) => void;
+  }) => {
+    const [, drag] = useDrag({
+      type: "VIDEO_SEGMENT",
+      item: { id, index },
+    });
+
+    const [, drop] = useDrop({
+      accept: "VIDEO_SEGMENT",
+      hover: (draggedItem: any) => {
+        if (draggedItem.index !== index) {
+          moveSegment(draggedItem.index, index);
+          draggedItem.index = index;
+        }
+      },
+    });
+
+    return (
+      <div
+        ref={(node) => {
+          if (node) {
+            drag(drop(node));
+          }
+        }}
+        className="cursor-move mb-[--10px] group"
+      >
+        <p
+          className={`rounded-[--10px] mx-auto border-[--3px] border-solid border-[#424242] flex gap-[--10px] ${
+            pageState.selectedScriptSegment?.audioPath.index ===
+            segment.audioPath.index
+              ? "bg-[#2a2b2a] text-white w-[90%]"
+              : "w-[80%]"
+          } group-hover:bg-[#2a2b2a] group-hover:text-white hover:w-[90%]`}
+          onClick={() => {
+            setPageState((prevState) => ({
+              ...prevState,
+              index,
+              selectedScriptSegment: segment,
+            }));
+            setSearchFootage([]);
+          }}
+        >
+          {/* ... (rest of the video segment content) */}
+          <div className="relative w-32 h-24 flex-shrink-0">
+            <img
+              src="http://nextunicorn.ventures/wp-content/uploads/2024/06/nvidia-rise-to-the-top.jpg"
+              alt="Video thumbnail"
+              className="w-full h-full object-cover rounded"
+            />
+            <div className="absolute inset-0 flex bg-black bg-opacity-50 items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                className="text-white w-[--24px] h-[--24px] opacity-90"
+              >
+                <polygon points="6 3 20 12 6 21 6 3"></polygon>
+              </svg>
+            </div>
+          </div>
+          <div className="flex-grow py-[--10px]">
+            <h3 className="text-lg font-semibold">
+              {segment?.title
+                ? segment?.title
+                : "Nvidia's Impact on AI and Education"}
+            </h3>
+            <p
+              className={`text-sm text-gray-600 mb-[--10px] group-hover:text-white ${
+                pageState.selectedScriptSegment?.audioPath.index ===
+                segment.audioPath.index
+                  ? "text-white"
+                  : ""
+              }`}
+            >
+              Click to play video
+            </p>
+            <div
+              className={`text-xs text-gray-500 truncate group-hover:text-white ${
+                pageState.selectedScriptSegment?.audioPath.index ===
+                segment.audioPath.index
+                  ? "text-white"
+                  : ""
+              }`}
+            >
+              {segment.videoPath}
+            </div>
+          </div>
+        </p>
+      </div>
+    );
+  };
+
   return (
     <div className={`w-full h-full flex flex-col ${styles.footagePreview}`}>
       <div className="flex gap-[2vw] h-[75vh] py-[1.5vw]">
@@ -1154,48 +1280,49 @@ const ChooseFootagePage = () => {
                 <h1 className="mx-auto pb-[--sy-15px]">Script Title</h1>
                 <div className="cursor-pointer h-max"></div>
               </div>
-              {Array.isArray(splitedContent) && splitedContent.length > 0 ? (
-                splitedContent.map(
-                  (scriptSegment: ScriptSegment, index: number) => (
-                    <>
-                      {index === 0 && (
-                        <div className="mb-[--10px]">
-                          <h1 className="text-[--24px] font-bold">Intro</h1>
-                        </div>
-                      )}
-                      {index === totalIntroSlides && (
-                        <div className="mb-[--10px]">
-                          <hr />
-                          <h1 className="mt-[--sy-20px] text-[--24px] font-bold">
-                            Body
-                          </h1>
-                        </div>
-                      )}
+              <DndProvider backend={HTML5Backend}>
+                {Array.isArray(splitedContent) && splitedContent.length > 0 ? (
+                  splitedContent.map(
+                    (scriptSegment: ScriptSegment, index: number) => (
+                      <React.Fragment key={scriptSegment.index}>
+                        {index === 0 && (
+                          <div className="mb-[--10px]">
+                            <h1 className="text-[--24px] font-bold">Intro</h1>
+                          </div>
+                        )}
+                        {index === totalIntroSlides && (
+                          <div className="mb-[--10px]">
+                            <hr />
+                            <h1 className="mt-[--sy-20px] text-[--24px] font-bold">
+                              Body
+                            </h1>
+                          </div>
+                        )}
 
-                      {scriptSegment?.keywordsAndImages &&
-                      scriptSegment?.keywordsAndImages[0] ? (
-                        <>
-                          <div
-                            className={`${styles.articleContent} cursor-pointer mb-[--10px] group`}
-                            key={scriptSegment.index}
-                          >
-                            <p
-                              className={`transition-none ${
-                                pageState.selectedScriptSegment?.audioPath
-                                  .index === scriptSegment.audioPath.index
-                                  ? styles.active
-                                  : ""
-                              }`}
-                              onClick={() => {
-                                setPageState((prevState) => ({
-                                  ...prevState,
-                                  index,
-                                  selectedScriptSegment: scriptSegment,
-                                }));
-                                setSearchFootage([]);
-                              }}
+                        {scriptSegment?.keywordsAndImages &&
+                        scriptSegment?.keywordsAndImages[0] ? (
+                          <>
+                            <div
+                              className={`${styles.articleContent} cursor-pointer mb-[--10px] group`}
+                              key={scriptSegment.index}
                             >
-                              {/* {scriptSegment.text.split(" ").map((word, idx) => (
+                              <p
+                                className={`transition-none ${
+                                  pageState.selectedScriptSegment?.audioPath
+                                    .index === scriptSegment.audioPath.index
+                                    ? styles.active
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  setPageState((prevState) => ({
+                                    ...prevState,
+                                    index,
+                                    selectedScriptSegment: scriptSegment,
+                                  }));
+                                  setSearchFootage([]);
+                                }}
+                              >
+                                {/* {scriptSegment.text.split(" ").map((word, idx) => (
                             <span key={idx}>
                               {scriptSegment.keywordsAndImages[0].keyword ===
                               word ? (
@@ -1207,14 +1334,14 @@ const ChooseFootagePage = () => {
                               )}
                             </span>
                           ))} */}
-                              {scriptSegment.text}
-                            </p>
-                            <div
-                              className={`flex flex-col justify-center gap-[--10px] w-[95%] ${
-                                totalIntroSlides > index
-                                  ? "group-hover:h-[--120px]"
-                                  : "group-hover:h-[--50px]"
-                              }
+                                {scriptSegment.text}
+                              </p>
+                              <div
+                                className={`flex flex-col justify-center gap-[--10px] w-[95%] ${
+                                  totalIntroSlides > index
+                                    ? "group-hover:h-[--120px]"
+                                    : "group-hover:h-[--50px]"
+                                }
                             px-[--10px] rounded-b-md bg-gray-100 shadow-md overflow-clip
                             ${
                               pageState.selectedScriptSegment?.audioPath
@@ -1224,28 +1351,28 @@ const ChooseFootagePage = () => {
                                   : "h-[--50px]"
                                 : "h-0"
                             }`}
-                            >
-                              {totalIntroSlides > index ? (
-                                <>
-                                  <TitleEdit
-                                    title={scriptSegment?.title!}
-                                    onSubmit={(title: string) => {
-                                      // @ts-ignore
-                                      setSplitedContent((prev) => {
-                                        const updatedContent = [...prev];
-                                        updatedContent[index].title = title;
-                                        return updatedContent;
-                                      });
-                                    }}
-                                  />
-                                  <hr className="w-full" />
-                                </>
-                              ) : null}
+                              >
+                                {totalIntroSlides > index ? (
+                                  <>
+                                    <TitleEdit
+                                      title={scriptSegment?.title!}
+                                      onSubmit={(title: string) => {
+                                        // @ts-ignore
+                                        setSplitedContent((prev) => {
+                                          const updatedContent = [...prev];
+                                          updatedContent[index].title = title;
+                                          return updatedContent;
+                                        });
+                                      }}
+                                    />
+                                    <hr className="w-full" />
+                                  </>
+                                ) : null}
 
-                              {/* add chips */}
-                              <div className="flex gap-[--10px]">
-                                <div
-                                  className={`w-fit grow-0 border group-hover:opacity-100
+                                {/* add chips */}
+                                <div className="flex gap-[--10px]">
+                                  <div
+                                    className={`w-fit grow-0 border group-hover:opacity-100
                           ${
                             pageState.selectedScriptSegment?.audioPath.index ===
                             scriptSegment.audioPath.index
@@ -1253,120 +1380,60 @@ const ChooseFootagePage = () => {
                               : "opacity-0"
                           }
                           aborder-indigo-300 bg-[#dbeafe] flex justify-center items-center gap-[--10px] rounded-md px-[--8px] py-[--4px]`}
-                                >
-                                  <span className="font-semibold text-[--15px] text-[#1e40af]">
-                                    {scriptSegment.keywordsAndImages[0].keyword}
-                                  </span>
-                                  <span>
-                                    {/* close / x icon */}
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      stroke-width="2"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      className="w-[--14px] h-[--14px] stroke-[#1e40af]"
-                                    >
-                                      <path d="M18 6 6 18"></path>
-                                      <path d="m6 6 12 12"></path>
-                                    </svg>
-                                  </span>
+                                  >
+                                    <span className="font-semibold text-[--15px] text-[#1e40af]">
+                                      {
+                                        scriptSegment.keywordsAndImages[0]
+                                          .keyword
+                                      }
+                                    </span>
+                                    <span>
+                                      {/* close / x icon */}
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        className="w-[--14px] h-[--14px] stroke-[#1e40af]"
+                                      >
+                                        <path d="M18 6 6 18"></path>
+                                        <path d="m6 6 12 12"></path>
+                                      </svg>
+                                    </span>
+                                  </div>
+                                  <AddChips
+                                    currentIndex={
+                                      pageState.selectedScriptSegment?.audioPath
+                                        .index as number
+                                    }
+                                    index={
+                                      scriptSegment.audioPath.index! as number
+                                    }
+                                  />
                                 </div>
-                                <AddChips
-                                  currentIndex={
-                                    pageState.selectedScriptSegment?.audioPath
-                                      .index as number
-                                  }
-                                  index={
-                                    scriptSegment.audioPath.index! as number
-                                  }
-                                />
                               </div>
                             </div>
-                          </div>
-                        </>
-                      ) : scriptSegment?.videoPath ? (
-                        <div
-                          className={`cursor-pointer mb-[--10px] group`}
-                          key={scriptSegment.index}
-                        >
-                          <p
-                            className={`rounded-[--10px] mx-auto border-[--3px] border-solid border-[#424242] flex gap-[--10px] ${
-                              pageState.selectedScriptSegment?.audioPath
-                                .index === scriptSegment.audioPath.index
-                                ? "bg-[#2a2b2a] text-white w-[90%]"
-                                : "w-[80%]"
-                            }
-                             group-hover:bg-[#2a2b2a] group-hover:text-white hover:w-[90%]
-                              `}
-                            onClick={() => {
-                              setPageState((prevState) => ({
-                                ...prevState,
-                                index,
-                                selectedScriptSegment: scriptSegment,
-                              }));
-                              setSearchFootage([]);
-                            }}
-                          >
-                            <div className="relative w-32 h-24 flex-shrink-0">
-                              <img
-                                src="http://nextunicorn.ventures/wp-content/uploads/2024/06/nvidia-rise-to-the-top.jpg"
-                                alt="Video thumbnail"
-                                className="w-full h-full object-cover rounded"
-                              />
-                              <div className="absolute inset-0 flex bg-black bg-opacity-50 items-center justify-center">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  className="text-white w-[--24px] h-[--24px] opacity-90"
-                                >
-                                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
-                                </svg>
-                              </div>
-                            </div>
-                            <div className="flex-grow py-[--10px]">
-                              <h3 className="text-lg font-semibold">
-                                Nvidia's Impact on AI and Education
-                              </h3>
-                              <p
-                                className={`text-sm text-gray-600 mb-[--10px] group-hover:text-white ${
-                                  pageState.selectedScriptSegment?.audioPath
-                                    .index === scriptSegment.audioPath.index
-                                    ? "text-white"
-                                    : ""
-                                }`}
-                              >
-                                Click to play video
-                              </p>
-                              <div
-                                className={`text-xs text-gray-500 truncate group-hover:text-white ${
-                                  pageState.selectedScriptSegment?.audioPath
-                                    .index === scriptSegment.audioPath.index
-                                    ? "text-white"
-                                    : ""
-                                }`}
-                              >
-                                {scriptSegment.videoPath}
-                              </div>
-                            </div>
-                          </p>
-                        </div>
-                      ) : null}
-                    </>
+                          </>
+                        ) : scriptSegment?.videoPath ? (
+                          <DraggableVideoSegment
+                            id={scriptSegment.audioPath.index.toString()}
+                            segment={scriptSegment}
+                            index={index}
+                            moveSegment={moveSegment}
+                          />
+                        ) : null}
+                      </React.Fragment>
+                    )
                   )
-                )
-              ) : (
-                <div>
-                  <p>No data available!</p>
-                </div>
-              )}
+                ) : (
+                  <div>
+                    <p>No data available!</p>
+                  </div>
+                )}
+              </DndProvider>
             </div>
           </div>
         </div>
@@ -1634,11 +1701,7 @@ const ChooseFootagePage = () => {
             </>
           ) : selectedSegment?.videoPath ? (
             <div className="w-full mt-[--51px] rounded-[--10px] border border-solid border-[#ACACAC] overflow-hidden">
-              <VideoPlayer
-                src={selectedSegment.videoPath}
-                highlightTime={[]}
-                videoRef={videoRef}
-              />
+              <CustomVideoPlayer videoUrl={selectedSegment.videoPath} />
             </div>
           ) : null}
           <div className="flex items-center justify-between">

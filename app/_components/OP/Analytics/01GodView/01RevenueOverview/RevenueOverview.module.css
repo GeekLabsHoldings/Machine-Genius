@@ -1,0 +1,42 @@
+.RevenueOverView_Container {
+  height: 100%; /* 100% of 50vh */
+  overflow: hidden;
+  box-shadow: 0.88px 2.64px 5.8px 0px #00000026;
+  border: 0.88px solid #dfdfdf;
+  border-radius: 9px;
+  padding: 1rem;
+}
+
+.RevenueOverView_Title {
+  font-weight: 700;
+  font-size: clamp(15px, calc(0.775vw + 0.1rem), 100px);
+  margin-bottom: 0.2vh;
+}
+
+.RevenueOverView_Header {
+  margin-bottom: 1vh;
+}
+
+.RevenueOverView_Header > div > div > label {
+  font-weight: 700;
+  font-size: clamp(13px, calc(0.66vw + 0.1rem), 100px);
+}
+
+.RevenueOverView_Header > div > div > div > div > span {
+  font-weight: 700;
+  font-size: clamp(14px, calc(0.71vw + 0.1rem), 100px);
+}
+
+.chartLegend > div > span:nth-child(2) {
+  font-weight: 500;
+  font-size: clamp(12px, calc(0.6vw + 0.1rem), 50px);
+}
+
+.RevenueOverView_Body {
+  overflow-y: auto;
+  height: 40vh; /* 40vh of 50vh */
+}
+
+.RevenueOverView_Body::-webkit-scrollbar {
+  width: 2px;
+}

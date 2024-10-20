@@ -26,8 +26,6 @@ div.collapse-title {
   border: 1px solid #dbdbd7;
   background-color: #fffffb;
   color: black;
-}
-.newBrand .accordion:not(:last-child) {
   margin-bottom: 0.7vw;
 }
 
@@ -39,3 +37,48 @@ div.collapse-title {
   font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
   font-weight: 800;
 }
+/* ==== Start Main Card ==== */
+.card {
+  border: 2px solid #dbdbd7;
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+}
+.card h3 {
+  font-size: clamp(16px, calc(1vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+.card h4 {
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+.card h5 {
+  font-size: clamp(16px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+
+.card p {
+  font-size: clamp(10px, calc(0.6vw + 0.1rem), 100px);
+  font-weight: 400;
+}
+/* ==== End Main Card ==== */
+/* ==== Start Info Inner card ==== */
+.info {
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  border: 1px solid #dbdbd7;
+  margin-bottom: 0.7vw;
+}
+.dateSpan {
+  font-size: clamp(8px, calc(0.6vw + 0.1rem), 50px);
+}
+.info h4 {
+  font-size: clamp(16px, calc(0.8vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+.info h5 {
+  font-size: clamp(16px, calc(0.7vw + 0.1rem), 100px);
+  font-weight: 700;
+}
+.info p {
+  font-size: clamp(10px, calc(0.6vw + 0.1rem), 100px);
+  font-weight: 400;
+}
+/* ==== End Info Inner card ==== */

@@ -1,24 +1,33 @@
 "use client";
-import Slider from "react-slick";
 import React, { useState } from "react";
 import styles from "./analytics.module.css";
 import "./analytics.css";
 import dynamic from "next/dynamic";
-import RevenueOverview from "@/app/_components/OP/Analytics/01RevenueOverview/RevenueOverview";
-import BrandKPIs from "@/app/_components/OP/Analytics/02BrandKPIs/BrandKPIs";
-import BrandAccounts from "@/app/_components/OP/Analytics/03BrandAccounts/BrandAccounts";
-import ActivityOverview from "@/app/_components/OP/Analytics/04ActivityOverview/ActivityOverview";
-import FollowersOverview from "@/app/_components/OP/Analytics/05FollowersOverview/FollowersOverview";
-import YoutubeWatchtime from "@/app/_components/OP/Analytics/06YoutubeWatchtime/YoutubeWatchtime";
+// ===== 01- Start God View =====
+import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
+import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
+import BrandAccounts from "@/app/_components/OP/Analytics/01GodView/03BrandAccounts/BrandAccounts";
+import ActivityOverview from "@/app/_components/OP/Analytics/01GodView/04ActivityOverview/ActivityOverview";
+import FollowersOverview from "@/app/_components/OP/Analytics/01GodView/05FollowersOverview/FollowersOverview";
+import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06YoutubeWatchtime/YoutubeWatchtime";
+// ===== 01- End God View =====
+// ===== 02- Start Brands =====
+import Slider from "react-slick";
+const TasksChart = dynamic(
+  () => import("@/app/_components/OP/Analytics/02Brands/graph/AreaChart"),
+  {
+    ssr: false,
+  }
+);
+const LineCharts = dynamic(
+  () => import("@/app/_components/OP/Analytics/02Brands/graph/LineCharts"),
+  {
+    ssr: false,
+  }
+);
+// ===== 02- End Brands =====
 
-const TasksChart = dynamic(() => import("@/app/_components/graph/AreaChart"), {
-  ssr: false,
-});
-
-const LineCharts = dynamic(() => import("@/app/_components/graph/LineCharts"), {
-  ssr: false,
-});
-
+// ====== Start react-slick Slider =====
 function SampleNextArrow(props: any) {
   const { onClick, className } = props;
   return (
@@ -49,78 +58,97 @@ function SamplePrevArrow(props: any) {
   );
 }
 
+const settings: any = {
+  infinite: false,
+  speed: 500,
+  slidesToShow: 5,
+  slidesToScroll: 5,
+  responsive: [
+    {
+      breakpoint: 1425,
+      settings: {
+        slidesToShow: 3.5,
+        slidesToScroll: 3,
+        infinite: true,
+        dots: true,
+      },
+    },
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        infinite: true,
+        dots: true,
+      },
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        initialSlide: 2,
+      },
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+  centerPadding: 30,
+  nextArrow: <SampleNextArrow />,
+  prevArrow: <SamplePrevArrow />,
+};
+// ====== End react-slick Slider =====
+
 function Page() {
-  const settings: any = {
-    infinite: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 5,
-    responsive: [
-      {
-        breakpoint: 1425,
-        settings: {
-          slidesToShow: 3.5,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-    centerPadding: 30,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-  };
-  const [activeTab, setActiveTab] = useState<number>(1);
+  const [pageState, setPageState] = useState<{
+    activePageTab: number;
+    activeAnalyticsTab: number;
+  }>({
+    activePageTab: 2,
+    activeAnalyticsTab: 1,
+  });
 
   return (
-    <div className={`overflow-hidden op__analytics__container`}>
+    <section className={`overflow-hidden op__analytics__container`}>
       {/* Tabs */}
       <div role="tablist" className={`${styles.tabs} flex`}>
         <a
           role="tab"
-          className={`${styles.tab} ${activeTab === 1 ? styles.activeTab : ""}`}
-          onClick={() => setActiveTab(1)}
+          className={`${styles.tab} ${
+            pageState.activePageTab === 1 ? styles.activeTab : ""
+          }`}
+          onClick={() =>
+            setPageState((prev) => ({ ...prev, activePageTab: 1 }))
+          }
         >
           God View
         </a>
         <a
           role="tab"
-          className={`${styles.tab} ${activeTab === 2 ? styles.activeTab : ""}`}
-          onClick={() => setActiveTab(2)}
+          className={`${styles.tab} ${
+            pageState.activePageTab === 2 ? styles.activeTab : ""
+          }`}
+          onClick={() =>
+            setPageState((prev) => ({ ...prev, activePageTab: 2 }))
+          }
         >
           Brands
         </a>
       </div>
 
-      {activeTab === 1 && (
+      {/* ===== 01- Start God View ===== */}
+      {pageState.activePageTab === 1 && (
         <div className={styles.dashboard}>
           <div className={styles.mainContent}>
             {/* ===== Start First Row ===== */}
-            <div className={styles.firstRow + " flex justify-between gap-[1vw]"}>
+            <div
+              className={styles.firstRow + " flex justify-between gap-[1vw]"}
+            >
               {/* Revenue Over View */}
               <div className="flex-grow">
                 <RevenueOverview />
@@ -130,7 +158,6 @@ function Page() {
               <BrandKPIs />
             </div>
             {/* ===== End First Row ===== */}
-
 
             {/* ==== Start Second Row ==== */}
             <div className={styles.secondRow + " flex gap-[0.75vw]"}>
@@ -157,55 +184,63 @@ function Page() {
           </div>
         </div>
       )}
+      {/* ===== 01- End God View ===== */}
 
-      {activeTab === 2 && (
-        <div className={`relative`}>
+      {/* ===== 02- Start Brands ===== */}
+      {pageState.activePageTab === 2 && (
+        <div className={`relative op_analytics_brands`}>
+          {/* ===== 02-00 Start Social Media Accounts ===== */}
           <div>
             <h2 className="text-2xl mb-4 font-bold">Social Media Accounts</h2>
-            <div className="">
-              <div className="sliderAudience w-[86vw]">
-                <div className={`slider-container card ${styles.card} py-6`}>
-                  <Slider {...settings}>
-                    {Array(12)
-                      .fill(0)
-                      .map((_, i) => (
-                        <div
-                          className={`${styles.card} px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl group hover:bg-[var(--dark)] hover:text-[var(--white)]`}
-                        >
-                          <div className="flex justify-between items-center pb-[0.5vw] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[0.5vw]">
-                            <h3 className="grow font-bold text-center">
-                              Twitter
-                            </h3>
-                          </div>
-                          <div className="grid mx-auto w-fit grid-cols-2 ">
-                            <span className="font-bold">Name:</span>
-                            <span>Mega Dose</span>
-                            <span className="font-bold">Username:</span>
-                            <span>@MEGADOSE</span>
-                            <span className="font-bold">Followers:</span>
-                            <span>20.1 K</span>
-                          </div>
+            <div className="sliderAudience w-[86vw]">
+              <div className={`slider-container card ${styles.card} py-6`}>
+                <Slider {...settings}>
+                  {Array(12)
+                    .fill(0)
+                    .map((_, i) => (
+                      <div
+                        className={`${styles.card} px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl group hover:bg-[var(--dark)] hover:text-[var(--white)]`}
+                      >
+                        <div className="flex justify-between items-center pb-[0.5vw] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[0.5vw]">
+                          <h3 className="grow font-bold text-center">
+                            Twitter
+                          </h3>
                         </div>
-                      ))}
-                  </Slider>
-                </div>
+                        <div className="grid mx-auto w-fit grid-cols-2 ">
+                          <span className="font-bold">Name:</span>
+                          <span>Mega Dose</span>
+                          <span className="font-bold">Username:</span>
+                          <span>@MEGADOSE</span>
+                          <span className="font-bold">Followers:</span>
+                          <span>20.1 K</span>
+                        </div>
+                      </div>
+                    ))}
+                </Slider>
               </div>
             </div>
           </div>
-
+          {/* ===== 02-00 End Social Media Accounts ===== */}
+          {/* ===== 02-01 Start Analytics ===== */}
           <div className="grid grid-cols-4 grid-rows-4 gap-4 mt-9">
+            {/* ===== 02-01-01 Start Analytics Tabs ===== */}
             <div className="col-span-2 row-span-2">
               <h3 className="text-2xl font-bold">Analytics</h3>
-              <div className={"tabs " + styles.tab}>
+              <div className={`tabs ${styles.tabs} ${styles.analyticsTabs}`}>
                 <input
                   type="radio"
                   name="tab"
-                  className="tab"
+                  className={`tab ${styles.tab} ${
+                    pageState.activeAnalyticsTab === 1 ? styles.activeTab : ""
+                  }`}
                   aria-label="Daily"
-                  defaultChecked
+                  checked={pageState.activeAnalyticsTab === 1}
+                  onChange={() =>
+                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 1 }))
+                  }
                 />
-                <div className={`tab-content `}>
-                  <div className="flex gap-3 mt-5">
+                <div className={`tab-content`}>
+                  <div className="flex gap-3">
                     <div
                       className={`${styles.card} w-1/2 card h-fit grow px-[1vw] py-[0.6vw] rounded-xl group hover:bg-[var(--dark)] `}
                     >
@@ -274,47 +309,53 @@ function Page() {
                     </div>
                   </div>
                 </div>
-
                 <input
                   type="radio"
                   name="tab"
-                  className="tab"
+                  className={`tab ${styles.tab} ${
+                    pageState.activeAnalyticsTab === 2 ? styles.activeTab : ""
+                  }`}
                   aria-label="Weekly"
+                  checked={pageState.activeAnalyticsTab === 2}
+                  onChange={() =>
+                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 2 }))
+                  }
                 />
                 <div className={`tab-content relative`}></div>
                 <input
                   type="radio"
                   name="tab"
-                  className="tab"
+                  className={`tab ${styles.tab} ${
+                    pageState.activeAnalyticsTab === 3 ? styles.activeTab : ""
+                  }`}
                   aria-label="Monthly"
+                  checked={pageState.activeAnalyticsTab === 3}
+                  onChange={() =>
+                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 3 }))
+                  }
                 />
                 <div className={`tab-content relative`}></div>
                 <input
                   type="radio"
                   name="tab"
-                  className="tab"
-                  aria-label="Quarterly"
-                />
-                <div className={`tab-content relative`}></div>
-                <input
-                  type="radio"
-                  name="tab"
-                  className="tab"
+                  className={`tab ${styles.tab} ${
+                    pageState.activeAnalyticsTab === 4 ? styles.activeTab : ""
+                  }`}
                   aria-label="Yearly"
-                />
-                <div className={`tab-content relative`}></div>
-                <input
-                  type="radio"
-                  name="tab"
-                  className="tab"
-                  aria-label="Life-time"
+                  checked={pageState.activeAnalyticsTab === 4}
+                  onChange={() =>
+                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 4 }))
+                  }
                 />
                 <div className={`tab-content relative`}></div>
               </div>
             </div>
+            {/* ===== 02-01-01 End Analytics Tabs ===== */}
+
+            {/* ===== 02-01-02 Start Analytics Card ===== */}
             <div className="col-span-2 row-span-2 col-start-3">
               <div
-                className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-[24vh] bg-[var(--dark)] `}
+                className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
               >
                 <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
                   <div className="w-full place-self-end">
@@ -342,11 +383,14 @@ function Page() {
                 </div>
               </div>
             </div>
+            {/* ===== 02-01-02 End Analytics Card ===== */}
+
+            {/* ===== 02-01-03 Start Engagement ===== */}
             <div
               className={`col-span-4 row-span-2 row-start-3 ${styles.engagement}`}
             >
               <div
-                className={`${styles.card} flex gap-[3vw]  grow px-[1vw] py-[0.6vw] rounded-xl h-[20vh] bg-[var(--dark)] `}
+                className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)] `}
               >
                 <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
                   <div className="w-1/2 h-full flex flex-col">
@@ -416,10 +460,13 @@ function Page() {
                 </div>
               </div>
             </div>
+            {/* ===== 02-01-03 End Engagement ===== */}
           </div>
+          {/* ===== 02-01 End Analytics ===== */}
         </div>
       )}
-    </div>
+      {/* ===== 02- End Brands ===== */}
+    </section>
   );
 }
 

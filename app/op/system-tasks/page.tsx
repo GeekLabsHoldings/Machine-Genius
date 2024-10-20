@@ -7,7 +7,6 @@ import { globalContext } from "@/app/_context/store";
 import { truncateText } from "@/app/_utils/text";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { addIcon } from "@/app/_utils/svgIcons";
-import { useRouter } from "next/navigation";
 
 interface IUser {
   _id: string;
@@ -37,7 +36,6 @@ interface ITask {
 }
 
 const Page = () => {
-  const router = useRouter();
   const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
   const [sorting, setSorting] = useState("Ascend");
   const [pageState, setPageState] = useState<{

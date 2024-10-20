@@ -142,7 +142,7 @@ const Comments = () => {
           }`}
           onClick={() => setPageState((prev) => ({ ...prev, activeTab: 3 }))}
         >
-          Auto Post Notifications
+          Must Approve Comments Notifications
         </a>
       </div>
 

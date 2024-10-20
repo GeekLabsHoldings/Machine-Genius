@@ -13,8 +13,8 @@ import { useDispatch } from "react-redux";
 import { contentCreatorActions } from "@/app/_redux/contentCreator/contentCreatorSlice";
 import toast from "react-hot-toast";
 
-const VideoPlayer = dynamic(
-  () => import("@/app/_components/ContentCreator/VideoPlayer/VideoPlayer"),
+const MovieMythVideoPlayer = dynamic(
+  () => import("@/app/_components/ContentCreator/MovieMythVideoPlayer/MovieMythVideoPlayer"),
   {
     ssr: false,
   }
@@ -332,7 +332,7 @@ const CreateMovie = () => {
           <div
             className={`${styles.box} flex justify-center items-center ${styles.movieWrapper}`}
           >
-            <VideoPlayer
+            <MovieMythVideoPlayer
               src={uploadMoviePresignedURLData?.movieUrl}
               highlightTime={highlightTime}
               videoRef={videoRef}

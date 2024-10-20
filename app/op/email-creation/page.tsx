@@ -372,7 +372,7 @@ const Page = () => {
               {/* Brand */}
               <div>
                 <label htmlFor="brand" className="!mb-[0.30vw] block">
-                  Brand
+                  Brand*
                 </label>
                 <div className={`${styles.inputWrapper}`}>
                   {Array.isArray(globalBrands) && globalBrands.length > 0 ? (
