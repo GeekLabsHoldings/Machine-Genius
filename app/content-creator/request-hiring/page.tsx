@@ -4,7 +4,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import React, { useEffect, useState, useContext } from "react";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
-import { DepartmentEnum } from "@/app/hr/hiring/templates/new-template/page";
+
 
 export default function page() {
   const [requestHiringData, setRequestHiringData] = useState<any>({
@@ -26,6 +26,19 @@ export default function page() {
       ...requestHiringData,
       level: value,
     });
+  }
+
+
+  enum DepartmentEnum {
+    HR = "hr",
+    ContentCreator = "content-creation",
+    SocialMedia = "social-media",
+    Administrative = "administrative",
+    Accounting = "accounting",
+    CEO = "ceo",
+    VideoEditing = "video-editing",
+    CustomerService = "customer-service",
+    Development = "development",
   }
 
   async function getAllRoles() {

@@ -49,7 +49,7 @@ interface Template {
   description: string;
   isEditable: boolean;
 }
-export enum DepartmentEnum {
+enum DepartmentEnum {
   HR = "hr",
   ContentCreator = "content-creation",
   SocialMedia = "social-media",
@@ -60,6 +60,8 @@ export enum DepartmentEnum {
   CustomerService = "customer-service",
   Development = "development",
 }
+
+
 enum RoleEnum {
   ContentWriter = "Content Writer",
   Payroll = "Payroll",
