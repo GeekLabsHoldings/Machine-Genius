@@ -1,5 +1,5 @@
 .op__analytics__container .card * {
-  transition: all 150ms;
+  transition: none !important;
 }
 /* ===== Start Slick Slider ===== */
 .op__analytics__container .slick-slide > div {
