@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./newBrand.module.css";
 import "./newBrand.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
@@ -8,29 +8,104 @@ import { addIcon, backIcon } from "@/app/_utils/svgIcons";
 import { useRouter } from "next/navigation";
 import CustomDatePicker from "@/app/_components/DatePicker/CustomDatePicker";
 import AddSubBrandModal from "./_AddSubBrandModal/AddSubBrandModal";
+import { globalContext } from "@/app/_context/store";
+import toast from "react-hot-toast";
+import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
 const subBrands = Array.from(
   { length: 20 },
   (_, index) => `Sub-brand ${index + 1}`
 );
 
+function InnerInfoCard({}: {}) {
+  return (
+    <div className={`${styles.info} p-[1vw] rounded-3xl`}>
+      <div className="flex justify-between items-center pb-[0.6vw] mb-[0.5vw] border-b-[var(--dark)] border-b-[1px]">
+        <h4>subBrandTitle</h4>
+        <span className={`px-[0.4vw] py-[0.1vw] font-medium rounded-[--4px]`}>
+          subBrandNiche
+        </span>
+      </div>
+      <h5 className=" mb-[0.5vw]">Description</h5>
+      <p className=" mb-[0.5vw]">subBrandDescription</p>
+      <div className=" flex justify-between items-center">
+        <h5>Acquisition Date</h5>
+        <span className={`${styles.dateSpan} text-[#ACACAC]`}>
+          subBrandAcquisitionDate
+        </span>
+      </div>
+    </div>
+  );
+}
+
 const Page = () => {
+  const { authState, handleSignOut } = useContext(globalContext);
+
   const router = useRouter();
-  const [pageState, setPageState] = useState<{
+  const [pageState, setPageState] = useSessionStorage<{
     isLoading: boolean;
-  }>({
+    brandName: string;
+    brandDescription: string;
+    brandNiche: string;
+    brandAquisitionDate: number;
+    accounts: any[];
+  }>("OP-addNewBrand", {
     isLoading: false,
+    brandName: "",
+    brandDescription: "",
+    brandNiche: "",
+    brandAquisitionDate: new Date().getTime(),
+    accounts: [],
   });
 
-  function getDateTimeValue(value: any) {
-    if (setPageState) {
-      setPageState((prev: any) => ({ ...prev, scheduledTime: value }));
+  async function handleAddNewBrand() {
+    // if (!postCaption) {
+    //   toast.error("No post caption provided!");
+    //   return;
+    // } else if (!selectedBrandId) {
+    //   toast.error("No brand selected!");
+    //   return;
+    // }
+    setPageState((prev) => ({ ...prev, isLoading: true }));
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/add-brand-all-data`,
+        {
+          method: "POST",
+          body: JSON.stringify({}),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const json: any = await res.json();
+      if (json && json.brand_name) {
+        toast.success("Brand added successfully!", {
+          duration: 5000,
+        });
+        router.replace("/op/brands");
+      } else {
+        toast.error("Something went wrong!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error handleAddNewBrand:", error);
+      setPageState((prev) => ({ ...prev, isLoading: false }));
     }
   }
 
   return (
     <div className={`${styles.newBrand} newBrand`}>
-      <div className="flex items-center gap-[--10px] my-[1vw]">
+      <div className="flex items-center gap-[--10px] my-[0.8vw]">
         <span onClick={() => router.replace("/op/brands")}>{backIcon}</span>
         <h3>Add New Brand</h3>
       </div>
@@ -52,7 +127,16 @@ const Page = () => {
             Niche*
           </label>
           <div className=" w-[15vw] mb-[1.2vw]">
-            <CustomSelectInput label={"All"} options={["Niche", "Niches"]} />
+            <CustomSelectInput
+              label={"All"}
+              options={["Politics", "Entertainment", "Finance"]}
+              getValue={(value: any) => {
+                setPageState((prev: any) => ({
+                  ...prev,
+                  brandNiche: value.toLowerCase(),
+                }));
+              }}
+            />
           </div>
 
           <label htmlFor="brand_description">Description*</label>
@@ -65,109 +149,70 @@ const Page = () => {
           />
 
           <label htmlFor="brand_acquisition_date">Acquisition Date*</label>
-          <CustomDatePicker getDateTimeValue={getDateTimeValue} />
+          <CustomDatePicker
+            getDateTimeValue={(value: any) => {
+              setPageState((prev: any) => ({
+                ...prev,
+                brandAquisitionDate: value,
+              }));
+            }}
+          />
 
           {/* Sub-brands */}
-          <div className="rounded-2xl p-2 shadow-sm mt-[1.2vw] border-[--2px] border-[#DBDBD7]">
-            <div className="flex justify-between py-[--sy-10px] px-[--50px]">
-              <h4>Sub-brand</h4>
-
+          <div
+            className={`${styles.card} px-[1vw] pt-[0.8vw] rounded-3xl mt-[0.9vw]`}
+          >
+            <div className="flex justify-between items-center pb-[0.7vw] border-b-[1px] border-b-[#2A2B2A] mb-[0.8vw]">
+              <h3>Sub-brand</h3>
               <AddSubBrandModal
                 btnColor="black"
                 modalTitle="Add Sub-brand"
                 btnIcon={addIcon}
               />
             </div>
-            <div className="h-[20vh] overflow-y-auto overflow-x-hidden space-y-2 py-[--sy-5px]">
+
+            <div className=" overflow-y-scroll h-[23vh] pr-2 py-[0.2vw]">
               {subBrands.map((brand, index) => (
-                <div
-                  key={index}
-                  className="w-[95%] m-auto flex items-center p-4 bg-gray-100 rounded-lg transition hover:outline outline-2 outline-[--dark] cursor-pointer"
-                >
-                  <span className="text-gray-800">{brand}</span>
-                </div>
+                <InnerInfoCard key={index} />
               ))}
             </div>
           </div>
         </div>
 
         <div className={`${styles.socialAccordions} col-span-3`}>
-          <div className=" flex justify-between items-center mb-[1vw]">
+          <div className="flex justify-between items-center mb-[1vw]">
             <h4>Social Media</h4>
           </div>
-          <div className=" flex justify-between h-[62vh] overflow-y-scroll px-[0.5vw] gap-[1.5vw]">
-            <div className=" w-full">
-              {/* // Container div for the accordion component with additional
-              styles and classes */}
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`} // CSS classes for styling the accordion
-              >
-                {/* // Input element for the radio button to control the accordion
-                state */}
-                <input type="radio" name="my-accordion-2" />
-                {/* // Div for the accordion title */}
-                <div
-                  className={`${styles.collapseTitle} collapse-title text-xl font-semibold`}
-                >
-                  {/* // Title of the accordion section */}
-                  Website
-                </div>
-                {/* // Div for the accordion content */}
-                <div className="collapse-content">
-                  {/* // Label for the Username input field */}
-                  <label
-                    htmlFor=""
-                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block" // CSS classes for styling the label
-                  >
-                    {/* // Label text */}
-                    Username*
-                  </label>
-                  {/* // Input field for the Username */}
-                  <input
-                    type="text"
-                    placeholder="username" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
-                  />
-                  {/* // Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* // Input field for the Password */}
-                  <input
-                    type="text"
-                    placeholder="username" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
-                  />
-                  {/* // Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* // Input field for the Link */}
-                  <input
-                    type="text"
-                    placeholder="Account url" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
-                  />
-                  {/* // Label for the Handle input field */}
-                  <label htmlFor="">Handle*</label>
-                  {/* // Input field for the Handle */}
-                  <input
-                    type="text"
-                    placeholder="@username" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
-                  />
-                </div>
-              </div>
-              {/* // Main container div for the accordion component with additional
-              styling classes */}
+          <div className="flex justify-between h-[62vh] overflow-y-scroll px-[0.5vw] gap-[1.5vw]">
+            <div className="w-full">
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
-                {/* // Input element for the radio button to control the accordion
-                state */}
                 <input type="radio" name="my-accordion-2" />
-                {/* // Div for the accordion title */}
+                <div
+                  className={`${styles.collapseTitle} collapse-title text-xl font-semibold`}
+                >
+                  Website
+                </div>
+                <div className="collapse-content">
+                  <label htmlFor="">Link*</label>
+
+                  <input
+                    type="text"
+                    placeholder="Account url"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2" />
+
                 <div className="collapse-title text-xl font-semibold">
-                  {/* // Title of the accordion section */}
                   Twitter
                 </div>
-                {/* // Div for the accordion content */}
+
                 <div className="collapse-content">
                   {/* // Label for the Username input field */}
                   <label
@@ -180,37 +225,35 @@ const Page = () => {
                   {/* // Input field for the Username */}
                   <input
                     type="text"
-                    placeholder="username" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
+                    placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                   {/* // Label for the Password input field */}
                   <label htmlFor="">Password*</label>
                   {/* // Input field for the Password */}
                   <input
                     type="text"
-                    placeholder="username" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
+                    placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                   {/* // Label for the Link input field */}
                   <label htmlFor="">Link*</label>
                   {/* // Input field for the Link */}
                   <input
                     type="text"
-                    placeholder="Account url" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
+                    placeholder="Account url"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
-                  {/* // Label for the Handle input field */}
+
                   <label htmlFor="">Handle*</label>
-                  {/* // Input field for the Handle */}
+
                   <input
                     type="text"
-                    placeholder="@username" // Placeholder text for the input field
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]" // CSS classes for styling the input field
+                    placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
               </div>
-              {/* // Main container div for the accordion component with specific
-              styling classes */}
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
@@ -220,10 +263,9 @@ const Page = () => {
                 {/* // Div for the accordion title with styling for font size and
                 weight */}
                 <div className="collapse-title text-xl font-semibold">
-                  {/* // Title of the accordion section */}
                   Instagram
                 </div>
-                {/* // Div for the accordion content */}
+
                 <div className="collapse-content">
                   {/* // Label for the Username input field with styling for
                   padding, border, width, and display */}
@@ -260,7 +302,7 @@ const Page = () => {
                     placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
-                  {/* // Label for the Handle input field */}
+
                   <label htmlFor="">Handle*</label>
                   {/* // Input field for the Handle with placeholder and styling
                   similar to the previous input fields */}
@@ -326,7 +368,6 @@ const Page = () => {
                   />
                 </div>
               </div>
-
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
@@ -383,7 +424,8 @@ const Page = () => {
                 </div>
               </div>
             </div>
-            <div className=" w-full">
+
+            <div className="w-full">
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
@@ -439,7 +481,6 @@ const Page = () => {
                   />
                 </div>
               </div>
-
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
@@ -495,7 +536,6 @@ const Page = () => {
                   />
                 </div>
               </div>
-
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
@@ -551,7 +591,6 @@ const Page = () => {
                   />
                 </div>
               </div>
-
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
@@ -613,7 +652,12 @@ const Page = () => {
       </div>
 
       <div className="w-fit ms-auto">
-        <CustomBtn btnColor="black" word="Save" />
+        <CustomBtn
+          btnColor="black"
+          word="Save"
+          onClick={handleAddNewBrand}
+          disabled={pageState.isLoading}
+        />
       </div>
     </div>
   );

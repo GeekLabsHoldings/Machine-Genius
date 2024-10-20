@@ -10,8 +10,10 @@ interface KeywordsAndImage {
 
 export interface ScriptSegment {
   index: number;
-  text: string;
-  keywordsAndImages: KeywordsAndImage[];
+  title?: string;
+  text?: string;
+  keywordsAndImages?: KeywordsAndImage[];
+  videoPath?: string;
   audioPath: {
     index: number;
     url: string;

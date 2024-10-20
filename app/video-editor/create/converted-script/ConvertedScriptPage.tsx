@@ -166,6 +166,7 @@ const ConvertedScriptPage = () => {
         ) {
           return {
             index: segment.audioPath.index,
+            // @ts-ignore
             selectedContent: segment.text.replace(
               pageState.selectedIncorrectWord ?? "",
               pageState.selectedToBeCorrectedWord

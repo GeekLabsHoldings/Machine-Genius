@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import "./VideoPlayer.css";
+import "./MovieMythVideoPlayer.css";
 
 const formatTime = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
@@ -61,7 +61,7 @@ interface VideoPlayerProps {
   - highlightTime: { id: number; start: number; end: number }[]
   - videoRef: React.RefObject<HTMLVideoElement>
 */
-const VideoPlayer = ({ src, highlightTime, videoRef }: VideoPlayerProps) => {
+const MovieMythVideoPlayer = ({ src, highlightTime, videoRef }: VideoPlayerProps) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [percentage, setPercentage] = useState(0);
@@ -230,4 +230,4 @@ const VideoPlayer = ({ src, highlightTime, videoRef }: VideoPlayerProps) => {
   );
 };
 
-export default VideoPlayer;
+export default MovieMythVideoPlayer;
