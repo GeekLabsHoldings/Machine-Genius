@@ -2,21 +2,30 @@
 import React, { useState } from "react";
 import styles from "./analytics.module.css";
 import "./analytics.css";
-import Slider from "react-slick";
+import dynamic from "next/dynamic";
+// ===== 01- Start God View =====
 import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
 import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
 import BrandAccounts from "@/app/_components/OP/Analytics/01GodView/03BrandAccounts/BrandAccounts";
 import ActivityOverview from "@/app/_components/OP/Analytics/01GodView/04ActivityOverview/ActivityOverview";
 import FollowersOverview from "@/app/_components/OP/Analytics/01GodView/05FollowersOverview/FollowersOverview";
 import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06YoutubeWatchtime/YoutubeWatchtime";
-import dynamic from "next/dynamic";
-
-const TasksChart = dynamic(() => import("@/app/_components/graph/AreaChart"), {
-  ssr: false,
-});
-const LineCharts = dynamic(() => import("@/app/_components/graph/LineCharts"), {
-  ssr: false,
-});
+// ===== 01- End God View =====
+// ===== 02- Start Brands =====
+import Slider from "react-slick";
+const TasksChart = dynamic(
+  () => import("@/app/_components/OP/Analytics/02Brands/graph/AreaChart"),
+  {
+    ssr: false,
+  }
+);
+const LineCharts = dynamic(
+  () => import("@/app/_components/OP/Analytics/02Brands/graph/LineCharts"),
+  {
+    ssr: false,
+  }
+);
+// ===== 02- End Brands =====
 
 // ====== Start react-slick Slider =====
 function SampleNextArrow(props: any) {
@@ -132,6 +141,7 @@ function Page() {
         </a>
       </div>
 
+      {/* ===== 01- Start God View ===== */}
       {pageState.activePageTab === 1 && (
         <div className={styles.dashboard}>
           <div className={styles.mainContent}>
@@ -174,7 +184,9 @@ function Page() {
           </div>
         </div>
       )}
+      {/* ===== 01- End God View ===== */}
 
+      {/* ===== 02- Start Brands ===== */}
       {pageState.activePageTab === 2 && (
         <div className={`relative op_analytics_brands`}>
           {/* ===== 02-00 Start Social Media Accounts ===== */}
@@ -453,6 +465,7 @@ function Page() {
           {/* ===== 02-01 End Analytics ===== */}
         </div>
       )}
+      {/* ===== 02- End Brands ===== */}
     </section>
   );
 }
