@@ -32,7 +32,7 @@ interface IEmployee {
   role:{
 _id?:string,
 roleName?:string
-};;
+};
   cv: string;
   linkedIn: string;
 }
