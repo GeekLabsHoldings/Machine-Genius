@@ -92,6 +92,9 @@ export default function AllHiringTable() {
   useEffect(() => {
     console.log(data);
   }, [data]);
+  useEffect(() => {
+    console.log(ele);
+  }, [ele]);
 
   useEffect(() => {
     if (
@@ -103,7 +106,7 @@ export default function AllHiringTable() {
         updateNextStep(ele.hiringStatus)}
     else if (ele?.currentStep === HiringStepsEnum.Job_Listings) {
       console.log("2");
-      router.push(`/hr/hiring/job-openings/job-listing-published`);
+      router.push(`/hr/hiring/job-openings/start-hiring/${ele._id}`);
     } else if (ele?.currentStep === HiringStepsEnum.Get_Job_Candidates) {
       console.log("3");
       router.push(`/hr/hiring/job-openings/prospects`);
@@ -243,7 +246,7 @@ export default function AllHiringTable() {
                   btnColor="black"
                   word={ele.hiringStatus}
                   onClick={() => {
-                    setStep(ele._id);
+                    setStep(ele?._id);
                     setEle(ele);
                   }}
                 />

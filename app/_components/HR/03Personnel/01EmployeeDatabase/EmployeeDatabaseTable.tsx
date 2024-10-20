@@ -35,7 +35,7 @@ export default function EmployeeDatabaseTable({employees}:any) {
             <span>LinkedIn</span>
           </li> */}
           <li className="w-[12%]">
-            <span>Role</span>
+            <span>Depa</span>
           </li>
           {/* <li className="w-[7%]">
             <span>CV</span>
@@ -73,7 +73,7 @@ export default function EmployeeDatabaseTable({employees}:any) {
                 </Link>
               </li> */}
               <li className="w-[12%]">
-                <span>{e.role}</span>
+                <span>{e.department.join(", ")}</span>
               </li>
               {/* <li className="w-[7%]">
                 <Link href="#" target="_blank">

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { NextRouter } from "next/router";
 
-export const GoBack = async (router: any, currentStep: string, jobId: string, path: string) => {
+export const GoBack = async (router: any, currentStep: string, jobId: string, path: string, setNavigatingBackData: any) => {
   console.log(currentStep);
   try {
     const HiringStepsArray = Object.values(HiringStepsEnum);
@@ -37,6 +37,8 @@ export const GoBack = async (router: any, currentStep: string, jobId: string, pa
 
       const data = await response.json();
       console.log(data);
+      setNavigatingBackData(data.candidates);
+      typeof window !== "undefined" && localStorage.setItem("navigatingBackData", JSON.stringify(data));
       console.log(getPreviousStep);
       console.log(HiringStepsArray);
       console.log(HiringStepsArray[getPreviousStep - 1]);

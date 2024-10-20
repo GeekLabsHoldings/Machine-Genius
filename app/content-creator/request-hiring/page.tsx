@@ -4,6 +4,7 @@ import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectI
 import React, { useEffect, useState, useContext } from "react";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
+import { DepartmentEnum } from "@/app/hr/hiring/templates/new-template/page";
 
 export default function page() {
   const [requestHiringData, setRequestHiringData] = useState<any>({
@@ -11,6 +12,7 @@ export default function page() {
     level: "",
   });
   const { authState, handleSignOut } = useContext(globalContext);
+  const [allRoles, setAllRoles] = useState<any>([]);
 
   function getTitleValue(value: string) {
     setRequestHiringData({
@@ -25,6 +27,31 @@ export default function page() {
       level: value,
     });
   }
+
+  async function getAllRoles() {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("token")
+        : authState.token;
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getByDepartment/${DepartmentEnum.ContentCreator}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const json = await res.json();
+    console.log(json);
+
+    setAllRoles(json?.map((role: {
+      roleName:string
+    }) => role.roleName));
+  }
+  useEffect(() => {
+    getAllRoles();
+  }, []);
 
   async function handlePostHiringRequest() {
     if (requestHiringData.title === "" || requestHiringData.level === "") {
@@ -74,7 +101,7 @@ export default function page() {
         <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw] gap-[6vh]">
           <CustomSelectInput
             label="Select Title"
-            options={["ContentWriter"]}
+            options={allRoles ? allRoles : []}
             getValue={getTitleValue}
           />
           <CustomSelectInput

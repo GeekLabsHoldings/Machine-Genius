@@ -51,7 +51,10 @@ interface templateDet {
   department: string;
   level: string;
   details: Detail[];
-  role: string;
+  role: {
+    _id?: string;
+    roleName?: string;
+  };
   group_id: { _id: string; step: string };
   __v: number;
 }
@@ -63,13 +66,13 @@ enum RoleEnum {
   SocialMedia = "Social Media",
   Administrative = "Administrative",
   VideoEditor = "Video Editor",
-  CustomerService = 'Customer Service',
-  BackEndPhp = 'Back End PHP',
-  BackEndDotNet = 'Back End .NET',
-  MeanStack = 'MEAN Stack',
-  DevOps = 'DevOps',
-  FrontEnd = 'Front End',
-  ReactNative = 'React Native'
+  CustomerService = "Customer Service",
+  BackEndPhp = "Back End PHP",
+  BackEndDotNet = "Back End .NET",
+  MeanStack = "MEAN Stack",
+  DevOps = "DevOps",
+  FrontEnd = "Front End",
+  ReactNative = "React Native",
 }
 
 enum LevelEnum {
@@ -77,13 +80,12 @@ enum LevelEnum {
   JUNIOR = "Junior",
   MID = "Mid-level",
   SENIOR = "Senior",
-  EXPERT = "Expert"
+  EXPERT = "Expert",
 }
 
 const templatesWithPositionAndLevel = [
   "Job_Listings",
   "Interview_Call_Question",
-  
 ];
 
 const defaultTemplateDet: templateDet = {
@@ -92,7 +94,7 @@ const defaultTemplateDet: templateDet = {
   department: "",
   level: "",
   details: [],
-  role: "",
+  role: {},
   group_id: { _id: "", step: "" },
   __v: 0,
 };
@@ -163,7 +165,7 @@ export default function TemplateDetails({
     const token = localStorage.getItem("token");
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/one-template/${params.templateId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/one-template/${params?.templateId}`,
       {
         method: "get",
         headers: {
@@ -218,7 +220,7 @@ export default function TemplateDetails({
         toast.error("Questions are required");
         return;
       }
-      if (skills.length == 0) {
+      if (skills?.length == 0) {
         toast.error("Skills are required");
         return;
       }
@@ -246,7 +248,7 @@ export default function TemplateDetails({
             title: templateDet?.title,
             level: level,
             role: position,
-            group_id: templateDet?.group_id?._id,
+            group_id: groupID || templateDet?.group_id?._id,
             details: [
               {
                 title: "Job Description",
@@ -268,8 +270,12 @@ export default function TemplateDetails({
                 title: "Questions",
                 description: questions.map((q, i) => ({
                   question: questionsRef.current[i],
-                  type: typesRef.current[i] == "Yes or No" ? "0" : "1",
-                  answer: answersRef.current[i],
+                  type:
+                    typesRef.current[i].toLowerCase() == "yes or no"
+                      ? "0"
+                      : "1",
+                  answer:
+                    answersRef.current[i].toLowerCase() == "yes" ? "1" : "0",
                 })),
               },
               {
@@ -306,7 +312,7 @@ export default function TemplateDetails({
               title: templateDet?.title,
               level: level,
               role: position,
-              group_id: templateDet?.group_id?._id,
+              group_id: groupID || templateDet?.group_id?._id,
               details: [
                 {
                   title: templateDet?.title.replaceAll(/_/gi, " "),
@@ -329,19 +335,19 @@ export default function TemplateDetails({
   useEffect(() => {
     console.log(templateDet);
     const newArr =
-      templateDet.details?.map((item: any) => item?.description) || [];
+      templateDet?.details?.map((item: any) => item?.description) || [];
     setTempDetails(newArr);
-    setLevel(templateDet.level);
-    setPosition(templateDet.role);
+    setLevel(templateDet?.level);
+    setPosition(templateDet?.role?.roleName ? templateDet?.role?.roleName : "");
     getGroups();
     if (templateDet?.group_id) {
       console.log(templateDet?.group_id);
 
-      setGroupID(templateDet.group_id._id);
+      setGroupID(templateDet?.group_id._id);
       setTempKey(templateDet?.group_id?.step);
       console.log(templateDet?.group_id?._id);
     } else {
-      setTempKey(templateDet.title.replace(" ", "_"));
+      setTempKey(templateDet?.title?.replace(" ", "_"));
     }
   }, [templateDet]);
 
@@ -458,7 +464,7 @@ export default function TemplateDetails({
               />
             </svg> */}
             <div className="text-[--32px] font-bold underline">
-              {`${templateDet.title} Template`}
+              {`${templateDet?.title} Template`}
             </div>
           </div>
 
@@ -488,7 +494,7 @@ export default function TemplateDetails({
 
         <div className="flex flex-col flex-wrap gap-[1.5vw] w-full h-full overflow-auto">
           {/* Job position & Level */}
-          {templateDet?.title.split(" ").join("_") == "Job_Listings" ? (
+          {templateDet?.title?.split(" ").join("_") == "Job_Listings" ? (
             <div className="grid grid-cols-2 gap-[1.5vw] grow-0">
               <div className="flex flex-col gap-[1.5vw]">
                 {templatesWithPositionAndLevel.includes(tempKey) && (
@@ -503,11 +509,13 @@ export default function TemplateDetails({
                         </span>
                       </div>
                       <div className={styles.card_body}>
-                        {/* <p>{templateDet.role}</p> */}
+                        {/* <p>{templateDet?.role}</p> */}
                         <CustomSelectInput
-                          getValue={(val: string) => setPosition(val)}
+                          getValue={(val: string) => {
+                            setPosition(val);
+                          }}
                           options={Object.values(RoleEnum)}
-                          label={templateDet?.role}
+                          label={templateDet?.role.roleName}
                         />
                       </div>
                     </div>
@@ -518,7 +526,7 @@ export default function TemplateDetails({
                         </h6>
                       </div>
                       <div className={styles.card_body}>
-                        {/* <p>{templateDet.level}</p> */}
+                        {/* <p>{templateDet?.level}</p> */}
                         <CustomSelectInput
                           getValue={(val: string) => setLevel(val)}
                           options={Object.values(LevelEnum)}
@@ -596,7 +604,8 @@ export default function TemplateDetails({
                                 questionsRef.current[i] = e.target.value;
                                 console.log(questionsRef.current);
                               } else {
-                                questionsRef.current[i] = questions[i]?.question || "";
+                                questionsRef.current[i] =
+                                  questions[i]?.question || "";
                               }
                             }}
                             type="text"
@@ -610,11 +619,16 @@ export default function TemplateDetails({
                                   typesRef.current[i] = val;
                                   console.log(typesRef.current);
                                 } else {
-                                  typesRef.current[i] = questions[i]?.type || "Numeric";
+                                  typesRef.current[i] =
+                                    questions[i]?.type || "Numeric";
                                 }
                               }}
                               options={["Numeric", "Yes or No"]}
-                              label={questions[i]?.type != 0 ? "Numeric" : "Yes or No"}
+                              label={
+                                questions[i]?.type != 0
+                                  ? "Numeric"
+                                  : "Yes or No"
+                              }
                             />
                           </div>
                           <label
@@ -629,7 +643,8 @@ export default function TemplateDetails({
                                 answersRef.current[i] = e.target.value;
                                 console.log(answersRef.current);
                               } else {
-                                answersRef.current[i] = questions[i]?.answer || "";
+                                answersRef.current[i] =
+                                  questions[i]?.answer || "";
                               }
                             }}
                             defaultValue={questions[i]?.answer || ""}
@@ -748,11 +763,11 @@ export default function TemplateDetails({
                       </span>
                     </div>
                     <div className={styles.card_body}>
-                      {/* <p>{templateDet.role}</p> */}
+                      {/* <p>{templateDet?.role}</p> */}
                       <CustomSelectInput
                         getValue={(val: string) => setPosition(val)}
                         options={Object.values(RoleEnum)}
-                        label={templateDet?.role}
+                        label={templateDet?.role?.roleName ? templateDet?.role?.roleName : ""}
                       />
                     </div>
                   </div>
@@ -763,7 +778,7 @@ export default function TemplateDetails({
                       </h6>
                     </div>
                     <div className={styles.card_body}>
-                      {/* <p>{templateDet.level}</p> */}
+                      {/* <p>{templateDet?.level}</p> */}
                       <CustomSelectInput
                         getValue={(val: string) => setLevel(val)}
                         options={Object.values(LevelEnum)}

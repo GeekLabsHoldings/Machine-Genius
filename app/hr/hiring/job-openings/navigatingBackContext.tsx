@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const NavigatingBackContext = React.createContext<any>(null);
 
@@ -8,7 +8,15 @@ const NavigatingBackContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [navigatingBackData, setNavigatingBackData] = useState(false);
+  const [navigatingBackData, setNavigatingBackData] = useState<any>(null);
+  useEffect(() => { 
+    setNavigatingBackData(JSON.parse(localStorage.getItem("navigatingBackData") || "[]"));
+    console.log(JSON.parse(localStorage.getItem("navigatingBackData") || "[]"));
+  },[])
+
+  useEffect(() => {
+    console.log(navigatingBackData);
+  },[navigatingBackData])
 
   return (
     <NavigatingBackContext.Provider

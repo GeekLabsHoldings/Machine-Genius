@@ -254,7 +254,7 @@ export default function OnBoardingTable() {
                 </Link>
               </li>
               <li className="w-[12%]">
-                <span>{e.role}</span>
+                {/* <span>{e.role.roleName}</span> */}
               </li>
               <li className="w-[7%]">
                 <Link href="#" target="_blank">

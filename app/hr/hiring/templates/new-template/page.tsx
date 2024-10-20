@@ -34,7 +34,8 @@ const positions = {
   CEO: "CEO",
 };
 
-const templatesWithPositionAndLevel: string[] = Object.values(LevelAndPositionEnum);
+const templatesWithPositionAndLevel: string[] =
+  Object.values(LevelAndPositionEnum);
 const levels = {
   FRESH: "FreshGraduation",
   JUNIOR: "Junior",
@@ -48,7 +49,7 @@ interface Template {
   description: string;
   isEditable: boolean;
 }
-enum DepartmentEnum {
+export enum DepartmentEnum {
   HR = "hr",
   ContentCreator = "content-creation",
   SocialMedia = "social-media",
@@ -56,8 +57,8 @@ enum DepartmentEnum {
   Accounting = "accounting",
   CEO = "ceo",
   VideoEditing = "video-editing",
-  CustomerService = 'customer-service',
-  Development = 'development',
+  CustomerService = "customer-service",
+  Development = "development",
 }
 enum RoleEnum {
   ContentWriter = "Content Writer",
@@ -66,13 +67,13 @@ enum RoleEnum {
   SocialMedia = "Social Media",
   Administrative = "Administrative",
   VideoEditor = "Video Editor",
-  CustomerService = 'Customer Service',
-  BackEndPhp = 'Back End PHP Developer',
-  BackEndDotNet = 'Back End .NET Developer',
-  MeanStack = 'MEAN Stack Developer',
-  DevOps = 'DevOps',
-  FrontEnd = 'Front End Developer',
-  ReactNative = 'React Native Developer'
+  CustomerService = "Customer Service",
+  BackEndPhp = "Back End PHP Developer",
+  BackEndDotNet = "Back End .NET Developer",
+  MeanStack = "MEAN Stack Developer",
+  DevOps = "DevOps",
+  FrontEnd = "Front End Developer",
+  ReactNative = "React Native Developer",
 }
 
 enum LevelEnum {
@@ -80,18 +81,25 @@ enum LevelEnum {
   JUNIOR = "Junior",
   MID = "Mid-level",
   SENIOR = "Senior",
-  EXPERT = "Expert"
+  EXPERT = "Expert",
 }
 const DepartmentRoles = {
-  'hr': ["Recruiter", "Training", "Employee Relations"],
+  hr: ["Recruiter", "Training", "Employee Relations"],
   "content-creation": ["Content Writer"],
-  ceo: ['CEO'],
+  ceo: ["CEO"],
   "social-media": ["Social Media"],
-  administrative: ['Administrative'],
-  accounting: ['Payroll'],
-  "video-editing": ['Video Editor'],
-  'customer-service': ['Customer Service'],
-  development: ['Back End Php', 'Back End .Net', 'Mean Stack', 'DevOps', 'Front End', 'React Native'],
+  administrative: ["Administrative"],
+  accounting: ["Payroll"],
+  "video-editing": ["Video Editor"],
+  "customer-service": ["Customer Service"],
+  development: [
+    "Back End Php",
+    "Back End .Net",
+    "Mean Stack",
+    "DevOps",
+    "Front End",
+    "React Native",
+  ],
 } as const;
 
 const options: { [key: string]: string } = {
@@ -197,6 +205,8 @@ const Page = () => {
   const [position, setPosition] = useState("Backend");
   const [level, setLevel] = useState("FreshGraduation");
   const [tempDetails, setTempDetails] = useState<any>([]);
+  const [rolesData, setRolesData] = useState<any>([]);
+  const [allRoles, setAllRoles] = useState<any>([]);
   const [tempKey, setTempKey] = useState<TemplateKey>("Job_Listings");
   const [newGroup, setNewGroup] = useState<any>({
     title: "",
@@ -259,6 +269,32 @@ const Page = () => {
     });
     setTempDetails(newArr);
   };
+
+  async function getAllRoles() {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data, "all roles");
+    setAllRoles(
+      data?.map(
+        (
+          r: {
+            roleName: string;
+          },
+          idx: number
+        ) => r.roleName
+      )
+    );
+    setRolesData(data);
+  }
 
   async function getGroups() {
     const token = localStorage.getItem("token");
@@ -433,8 +469,8 @@ const Page = () => {
                 title: "Questions",
                 description: questions.map((q, i) => ({
                   question: questionsRef.current[i],
-                  type: typesRef.current[i] == "Yes or No" ? 0 : 1,
-                  answer: answersRef.current[i] == "Yes" ? 1 : 0,
+                  type: typesRef.current[i].toLowerCase() == "yes or no" ? 0 : 1,
+                  answer: answersRef.current[i].toLowerCase() == "yes" ? 1 : 0,
                 })),
               },
             ],
@@ -500,6 +536,7 @@ const Page = () => {
 
   useEffect(() => {
     setTempKey(templates.key);
+    getAllRoles();
   }, []);
 
   useEffect(() => {
@@ -564,24 +601,26 @@ const Page = () => {
             </div>
           </div>
 
-          {templatesWithPositionAndLevel.includes(String(tempKey)) && <div className={styles.choose_group}>
-            Add to{" "}
-            <CustomSelectInput
-              getValue={(val: string) =>
-                setGroupID(groups.find((e: any) => e?.title === val)?._id)
-              }
-              options={groups.map((e: any, i: any) => e?.title)}
-            >
-              <CustomBtn
-                btnColor="black"
-                word="Add New Group"
-                icon={addIcon}
-                width="w-full"
-                onClick={handleOpen}
-              />
-            </CustomSelectInput>{" "}
-            group
-          </div>}
+          {templatesWithPositionAndLevel.includes(String(tempKey)) && (
+            <div className={styles.choose_group}>
+              Add to{" "}
+              <CustomSelectInput
+                getValue={(val: string) =>
+                  setGroupID(groups.find((e: any) => e?.title === val)?._id)
+                }
+                options={groups.map((e: any, i: any) => e?.title)}
+              >
+                <CustomBtn
+                  btnColor="black"
+                  word="Add New Group"
+                  icon={addIcon}
+                  width="w-full"
+                  onClick={handleOpen}
+                />
+              </CustomSelectInput>{" "}
+              group
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col flex-wrap gap-[1.5vw] w-full h-full overflow-auto">
@@ -606,11 +645,11 @@ const Page = () => {
                               </span>
                             </div>
                             <div className={styles.card_body}>
-                              {/* <p>{templateDet.role}</p> */}
+                              {/* <p>{templateDet?.role}</p> */}
                               <CustomSelectInput
-                                getValue={(val: string) => setPosition(val)}
-                                options={Object.values(RoleEnum)}
-                                // label={templateDet.role}
+                                getValue={(val: string) => setPosition(rolesData?.filter((r:any,idx:number)=>r.roleName == val)[0]?._id)}
+                                options={allRoles}
+                                label={allRoles[0]}
                               />
                             </div>
                           </div>
@@ -621,11 +660,11 @@ const Page = () => {
                               </h6>
                             </div>
                             <div className={styles.card_body}>
-                              {/* <p>{templateDet.level}</p> */}
+                              {/* <p>{templateDet?.level}</p> */}
                               <CustomSelectInput
                                 getValue={(val: string) => setLevel(val)}
                                 options={Object.values(LevelEnum)}
-                                // label={templateDet.level}
+                                // label={templateDet?.level}
                               />
                             </div>
                           </div>
@@ -857,11 +896,11 @@ const Page = () => {
                             </span>
                           </div>
                           <div className={styles.card_body}>
-                            {/* <p>{templateDet.role}</p> */}
+                            {/* <p>{templateDet?.role}</p> */}
                             <CustomSelectInput
                               getValue={(val: string) => setPosition(val)}
                               options={Object.values(RoleEnum)}
-                              // label={templateDet.role}
+                              // label={templateDet?.role}
                             />
                           </div>
                         </div>
@@ -872,11 +911,11 @@ const Page = () => {
                             </h6>
                           </div>
                           <div className={styles.card_body}>
-                            {/* <p>{templateDet.level}</p> */}
+                            {/* <p>{templateDet?.level}</p> */}
                             <CustomSelectInput
                               getValue={(val: string) => setLevel(val)}
                               options={Object.values(LevelEnum)}
-                              // label={templateDet.level}
+                              // label={templateDet?.level}
                             />
                           </div>
                         </div>

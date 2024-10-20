@@ -7,7 +7,10 @@ import { globalContext } from "@/app/_context/store";
 interface Attendance {
   firstName: string;
   lastName: string;
-  role: string;
+  role: {
+    _id?: string;
+    roleName?: string;
+  };
   department: string[];
   checkedIn: string;
   checkedOut: string;
@@ -34,7 +37,10 @@ export default function AttendanceTable({
     {
       firstName: "",
       lastName: "",
-      role: "",
+      role: {
+        _id: "",
+        roleName: "",
+      },
       department: [],
       checkedIn: "",
       checkedOut: "",

@@ -34,7 +34,10 @@ interface GroupTemplate {
     department: string;
     group_id: string;
     level: string;
-    role: string;
+    role: {
+      _id?: string;
+      roleName?: string;
+    };
     title: string;
     _id: string;
   }[];
@@ -45,7 +48,10 @@ interface unattchedTemplates {
   department: string;
   level: string;
   details: {}[];
-  role: string;
+  role: {
+    _id?: string;
+    roleName?: string;
+  };
   group_id: string | null;
   __v: number;
 }
@@ -124,20 +130,23 @@ const Page = () => {
 
   async function createGroup() {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          title: newGroup.title,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            title: newGroup.title,
 
-          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-          description: newGroup.description,
-          step: setp,
-        }),
-      });
+            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+            description: newGroup.description,
+            step: setp,
+          }),
+        }
+      );
       if (res.status === 401) {
         handleSignOut();
       }
@@ -270,7 +279,10 @@ const Page = () => {
               groupTemplates.length &&
               groupTemplates?.map((e, i) => {
                 return (
-                  <div className={` ${styles.box} max-w-[400px] shrink-0`} key={i}>
+                  <div
+                    className={` ${styles.box} max-w-[400px] shrink-0`}
+                    key={i}
+                  >
                     <div className={`${styles.header}`}>
                       <div className="flex items-center gap-[1vw]">
                         <img
@@ -300,7 +312,7 @@ const Page = () => {
                         return (
                           <div className={styles.item} key={i}>
                             <div className={styles.item_header}>
-                              <p>{t.role}</p>
+                              <p>{t.role.roleName}</p>
                               <span>{t.level}</span>
                             </div>
                             <div className={styles.item_body}>

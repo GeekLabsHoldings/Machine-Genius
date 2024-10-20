@@ -99,7 +99,7 @@ export default function Page() {
         result.template.details[0].description
           .replace(/\[firstName\]/g, result.candidates[0].firstName)
           .replace(/\[lastName\]/g, result.candidates[0].lastName)
-          .replace(/\[role\]/g, result.candidates[0].role)
+          .replace(/\[role\]/g, result.candidates[0].role.roleName)
           .replace(/\[link\]/g, "https://www.google.com")
       );
       setOldTemplate(result.template.details[0].description);
@@ -111,7 +111,7 @@ export default function Page() {
           .replace(/<[^>]+>/g, "")
           .replace(/\[firstName\]/g, result.candidates[0].firstName)
           .replace(/\[lastName\]/g, result.candidates[0].lastName)
-          .replace(/\[role\]/g, result.candidates[0].role)
+          .replace(/\[role\]/g, result.candidates[0].role.roleName)
           .replace(/\[link\]/g, "https://www.google.com")
       );
       console.log("result", result);
@@ -163,7 +163,7 @@ export default function Page() {
         oldTemplate
           .replace(/\[firstName\]/g, candidateData.firstName)
           .replace(/\[lastName\]/g, candidateData.lastName)
-          .replace(/\[role\]/g, candidateData.role)
+          .replace(/\[role\]/g, candidateData.role.roleName)
           .replace(/\[link\]/g, "https://www.google.com")
       );
     }

@@ -29,7 +29,10 @@ interface IEmployee {
   type: string;
   phoneNumber: string;
   department: string[];
-  role: string;
+  role:{
+_id?:string,
+roleName?:string
+};;
   cv: string;
   linkedIn: string;
 }
