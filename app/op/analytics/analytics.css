@@ -2,46 +2,13 @@
   transition: all 150ms;
 }
 /* ===== Start Slick Slider ===== */
-/* .slick-dots {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 10px !important;
-} */
-.email__preview .slick-dots {
-  bottom: -35px;
-}
-.email__preview .slick-dots li {
-  width: clamp(5px, 55px, 55px); /* Width of the rectangle */
-  height: 5px !important;
-}
-
-/* .slick-dots li button::before {
-    all: unset !important;
-}  */
-
-.email__preview .slick-dots li button:before {
-  color: #000; /* Color of the dots */
-  content: ""; /* Remove default content */
-  width: clamp(5px, 55px, 55px); /* Width of the rectangle */
-  height: 5px; /* Height of the rectangle */
-  border-radius: 3px; /* Remove border radius to make it rectangular */
-  background-color: #acacac; /* Background color of the dots */
-  border: 1px solid var(--dark); /* Border color of the dots */
-  display: inline-block;
-}
-
-.email__preview .slick-dots li.slick-active button:before {
-  background-color: #2a2b2a; /* Change the color of the active dot */
-}
-
 .op__analytics__container .slick-slide > div {
   margin: 0 1rem; /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
 
 .op__analytics__container .custom_arrows {
-  top: -67% !important;
+  top: calc(-2.5rem + -26%) !important;
 }
 /* ===== End Slick Slider ===== */
 
@@ -108,3 +75,10 @@ input[type="radio"]:checked ~ .collapse-title svg {
   /* padding-top: 1rem; */
 }
 /* ===== End Brand KPIs Accordion ===== */
+
+/* ===== Start Hide the default previous and next arrows ===== */
+.op_analytics_brands .slick-prev:before,
+.op_analytics_brands .slick-next:before {
+  content: none; /* or use content: ''; */
+}
+/* ===== End Hide the default previous and next arrows ===== */

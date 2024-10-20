@@ -176,7 +176,7 @@ function Page() {
       )}
 
       {pageState.activePageTab === 2 && (
-        <div className={`relative`}>
+        <div className={`relative op_analytics_brands`}>
           {/* ===== 02-00 Start Social Media Accounts ===== */}
           <div>
             <h2 className="text-2xl mb-4 font-bold">Social Media Accounts</h2>
