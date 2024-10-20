@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import styles from "./analytics.module.css";
 import "./analytics.css";
@@ -16,6 +16,7 @@ import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06Youtube
 // ===== 02- Start Brands =====
 import Slider from "react-slick";
 import SocialMediaAccountCard from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCard";
+import SocialMediaAccountCardSkeleton from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCardSkeleton";
 import {
   IBrandPlatformSubscribers,
   IBrandWithGroups,
@@ -75,7 +76,7 @@ function SamplePrevArrow(props: any) {
 const settings: any = {
   infinite: false,
   speed: 500,
-  slidesToShow: 5,
+  slidesToShow: 4,
   slidesToScroll: 5,
   responsive: [
     {
@@ -119,7 +120,7 @@ const settings: any = {
 // ====== End react-slick Slider =====
 
 function Page() {
-  const { authState, handleSignOut } = useContext(globalContext);
+  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     activePageTab: "GodView" | "Brands";
     activeAnalyticsTimeframe: "Daily" | "Weekly" | "Monthly" | "Yearly";
@@ -463,6 +464,12 @@ function Page() {
     }
   };
 
+  useEffect(() => {
+    if (pageState.activePageTab === "Brands") {
+      getSocialMediaAccounts();
+    }
+  }, [pageState.activePageTab]);
+
   return (
     <section className={`overflow-hidden op__analytics__container`}>
       {/* Tabs */}
@@ -545,24 +552,36 @@ function Page() {
             <div className="sliderAudience w-[86vw]">
               <div className={`slider-container card ${styles.card} py-6`}>
                 <Slider {...settings}>
-                  {Array(12)
-                    .fill(0)
-                    .map((_, i) => (
-                      <SocialMediaAccountCard
-                        key={i}
-                        platformName="TELEGRAM"
-                        brandName="Mega Dose"
-                        username="MEGADOSE"
-                        followersCount={20.1}
-                        isActive={true}
-                        onClick={() =>
-                          setPageState((prev) => ({
-                            ...prev,
-                            // selectedSocialMediaAccount: ele,
-                          }))
-                        }
-                      />
-                    ))}
+                  {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                  pageState.fetchedSocialMediaAccounts.length > 0
+                    ? pageState.fetchedSocialMediaAccounts.map((ele) => (
+                        <SocialMediaAccountCard
+                          key={ele._id}
+                          platformName={ele.platform}
+                          brandName={brandIdMap[ele.brand]}
+                          username={
+                            ele?.link
+                              ?.match(/[^/]+\/?$/)?.[0]
+                              ?.replace(/\/$/, "") ?? ""
+                          }
+                          followersCount={ele.subscribers}
+                          isActive={
+                            ele._id ===
+                            pageState.selectedSocialMediaAccount?._id
+                          }
+                          onClick={() =>
+                            setPageState((prev) => ({
+                              ...prev,
+                              selectedSocialMediaAccount: ele,
+                            }))
+                          }
+                        />
+                      ))
+                    : Array(4)
+                        .fill(0)
+                        .map((_, index) => (
+                          <SocialMediaAccountCardSkeleton key={index} />
+                        ))}
                 </Slider>
               </div>
             </div>

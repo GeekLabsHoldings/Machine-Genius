@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./SocialMediaAccountCard.module.css";
 
 interface IProps {
-  platformName: "TELEGRAM" | "FACEBOOK" | "REDDIT";
+  platformName: "TELEGRAM" | "FACEBOOK" | "REDDIT" | "TWITTER";
   brandName: string;
   username: string;
   followersCount: number;
@@ -22,7 +22,7 @@ export default function SocialMediaAccountCard({
     <div
       className={`${
         styles.card
-      } px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl group ${
+      } px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl group overflow-hidden ${
         isActive ? "bg-[var(--dark)] text-[var(--white)]" : ""
       } hover:bg-[var(--dark)] hover:text-[var(--white)] cursor-pointer`}
       onClick={onClick}
@@ -32,7 +32,9 @@ export default function SocialMediaAccountCard({
           isActive ? "border-b-[var(--white)]" : "border-b-[#2A2B2A]"
         } group-hover:border-b-[var(--white)] mb-[0.5vw]`}
       >
-        <h3 className="grow font-bold text-center">{platformName}</h3>
+        <h3 className="grow font-bold text-center">
+          {platformName[0] + platformName.slice(1).toLowerCase()}
+        </h3>
       </div>
       <div className="grid mx-auto w-full grid-cols-2">
         <span className="font-bold text-left">Name:</span>
