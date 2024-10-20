@@ -13,6 +13,8 @@ import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06Youtube
 // ===== 01- End God View =====
 // ===== 02- Start Brands =====
 import Slider from "react-slick";
+import SocialMediaAccountCard from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCard";
+import { IBrandWithGroups } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 const TasksChart = dynamic(
   () => import("@/app/_components/OP/Analytics/02Brands/graph/AreaChart"),
   {
@@ -106,11 +108,13 @@ const settings: any = {
 
 function Page() {
   const [pageState, setPageState] = useState<{
-    activePageTab: number;
-    activeAnalyticsTab: number;
+    activePageTab: "GodView" | "Brands";
+    activeAnalyticsTimeframe: "Daily" | "Weekly" | "Monthly" | "Yearly";
+    selectedSocialMediaAccount: IBrandWithGroups | null;
   }>({
-    activePageTab: 2,
-    activeAnalyticsTab: 1,
+    activePageTab: "Brands",
+    activeAnalyticsTimeframe: "Daily",
+    selectedSocialMediaAccount: null,
   });
 
   return (
@@ -120,10 +124,10 @@ function Page() {
         <a
           role="tab"
           className={`${styles.tab} ${
-            pageState.activePageTab === 1 ? styles.activeTab : ""
+            pageState.activePageTab === "GodView" ? styles.activeTab : ""
           }`}
           onClick={() =>
-            setPageState((prev) => ({ ...prev, activePageTab: 1 }))
+            setPageState((prev) => ({ ...prev, activePageTab: "GodView" }))
           }
         >
           God View
@@ -131,10 +135,10 @@ function Page() {
         <a
           role="tab"
           className={`${styles.tab} ${
-            pageState.activePageTab === 2 ? styles.activeTab : ""
+            pageState.activePageTab === "Brands" ? styles.activeTab : ""
           }`}
           onClick={() =>
-            setPageState((prev) => ({ ...prev, activePageTab: 2 }))
+            setPageState((prev) => ({ ...prev, activePageTab: "Brands" }))
           }
         >
           Brands
@@ -142,7 +146,7 @@ function Page() {
       </div>
 
       {/* ===== 01- Start God View ===== */}
-      {pageState.activePageTab === 1 && (
+      {pageState.activePageTab === "GodView" && (
         <div className={styles.dashboard}>
           <div className={styles.mainContent}>
             {/* ===== Start First Row ===== */}
@@ -187,7 +191,7 @@ function Page() {
       {/* ===== 01- End God View ===== */}
 
       {/* ===== 02- Start Brands ===== */}
-      {pageState.activePageTab === 2 && (
+      {pageState.activePageTab === "Brands" && (
         <div className={`relative op_analytics_brands`}>
           {/* ===== 02-00 Start Social Media Accounts ===== */}
           <div>
@@ -198,23 +202,20 @@ function Page() {
                   {Array(12)
                     .fill(0)
                     .map((_, i) => (
-                      <div
-                        className={`${styles.card} px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl group hover:bg-[var(--dark)] hover:text-[var(--white)]`}
-                      >
-                        <div className="flex justify-between items-center pb-[0.5vw] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[0.5vw]">
-                          <h3 className="grow font-bold text-center">
-                            Twitter
-                          </h3>
-                        </div>
-                        <div className="grid mx-auto w-fit grid-cols-2 ">
-                          <span className="font-bold">Name:</span>
-                          <span>Mega Dose</span>
-                          <span className="font-bold">Username:</span>
-                          <span>@MEGADOSE</span>
-                          <span className="font-bold">Followers:</span>
-                          <span>20.1 K</span>
-                        </div>
-                      </div>
+                      <SocialMediaAccountCard
+                        key={i}
+                        platformName="TELEGRAM"
+                        brandName="Mega Dose"
+                        username="MEGADOSE"
+                        followersCount={20.1}
+                        isActive={true}
+                        onClick={() =>
+                          setPageState((prev) => ({
+                            ...prev,
+                            // selectedSocialMediaAccount: ele,
+                          }))
+                        }
+                      />
                     ))}
                 </Slider>
               </div>
@@ -231,12 +232,17 @@ function Page() {
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 1 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Daily"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Daily"
-                  checked={pageState.activeAnalyticsTab === 1}
+                  checked={pageState.activeAnalyticsTimeframe === "Daily"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 1 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Daily",
+                    }))
                   }
                 />
                 <div className={`tab-content`}>
@@ -313,12 +319,17 @@ function Page() {
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 2 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Weekly"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Weekly"
-                  checked={pageState.activeAnalyticsTab === 2}
+                  checked={pageState.activeAnalyticsTimeframe === "Weekly"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 2 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Weekly",
+                    }))
                   }
                 />
                 <div className={`tab-content relative`}></div>
@@ -326,12 +337,17 @@ function Page() {
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 3 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Monthly"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Monthly"
-                  checked={pageState.activeAnalyticsTab === 3}
+                  checked={pageState.activeAnalyticsTimeframe === "Monthly"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 3 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Monthly",
+                    }))
                   }
                 />
                 <div className={`tab-content relative`}></div>
@@ -339,12 +355,17 @@ function Page() {
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 4 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Yearly"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Yearly"
-                  checked={pageState.activeAnalyticsTab === 4}
+                  checked={pageState.activeAnalyticsTimeframe === "Yearly"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 4 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Yearly",
+                    }))
                   }
                 />
                 <div className={`tab-content relative`}></div>
