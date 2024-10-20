@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import KPIsTable from "@/app/_components/OP/KPIsTable";
+import KPIsTable from "@/app/_components/OP/KPIs/KPIsTable";
 
 export default function Page() {
   // options

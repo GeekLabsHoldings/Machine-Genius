@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import styles from "./analytics.module.css";
 import "./analytics.css";
 import Slider from "react-slick";
-import RevenueOverview from "@/app/_components/OP/Analytics/01RevenueOverview/RevenueOverview";
-import BrandKPIs from "@/app/_components/OP/Analytics/02BrandKPIs/BrandKPIs";
-import BrandAccounts from "@/app/_components/OP/Analytics/03BrandAccounts/BrandAccounts";
-import ActivityOverview from "@/app/_components/OP/Analytics/04ActivityOverview/ActivityOverview";
-import FollowersOverview from "@/app/_components/OP/Analytics/05FollowersOverview/FollowersOverview";
-import YoutubeWatchtime from "@/app/_components/OP/Analytics/06YoutubeWatchtime/YoutubeWatchtime";
+import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
+import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
+import BrandAccounts from "@/app/_components/OP/Analytics/01GodView/03BrandAccounts/BrandAccounts";
+import ActivityOverview from "@/app/_components/OP/Analytics/01GodView/04ActivityOverview/ActivityOverview";
+import FollowersOverview from "@/app/_components/OP/Analytics/01GodView/05FollowersOverview/FollowersOverview";
+import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06YoutubeWatchtime/YoutubeWatchtime";
 import dynamic from "next/dynamic";
 
 const TasksChart = dynamic(() => import("@/app/_components/graph/AreaChart"), {
