@@ -1,57 +1,17 @@
-.tabs input[type="radio"] {
-  outline: none;
-  font-size: clamp(16px, calc(1.2vw + 0.1rem), 1000px);
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  padding: clamp(3px, calc(0.1vw + 0.1rem), 1000px)
-    clamp(10px, calc(0.9vw + 0.1rem), 1000px);
-  height: auto;
-  width: max-content;
+/* ===== Start Tabs ===== */
+.tabs .tab:not(:last-of-type) {
+  border-right: 1px solid #2a2b2a;
+  padding-right: 10px;
 }
-
-.tabs input[type="radio"]:first-child {
-  padding-left: 0;
+.tabs .tab:not(:first-child) {
+  padding-left: 10px;
 }
-
-.tabs input[type="radio"]::after {
-  color: #acacac;
-  transition: all 0.2s;
-}
-
-.tabs input[type="radio"]:not(:last-of-type)::before {
-  content: "";
-  height: 100%;
-  width: 1px;
-  position: absolute;
-  top: 0;
-  left: 100%;
-  background: var(--dark);
-}
-
-.tabs input[type="radio"]:checked::after {
-  color: var(--dark);
-}
-
-.tabs input[type="radio"] + div {
-  display: none;
-}
-
-.tabs input[type="radio"]:checked + div {
-  display: block;
-}
-
-.card {
-  border: 2px solid #dbdbd7;
-  box-shadow: 1px 3px 6.6px 0px #00000026;
-  border-radius: 20px;
-}
-
 .tab {
-  margin-block: 1vh;
+  margin: 1vh 0;
+  color: #acacac;
+  cursor: pointer;
 }
-
-.tab input[type="radio"] {
+.tabs input[type="radio"] {
   outline: none;
   font-size: clamp(16px, calc(0.85vw + 0.1rem), 1000px);
   font-style: normal;
@@ -62,17 +22,20 @@
   height: auto;
   width: max-content;
 }
-
-.tab input[type="radio"]:first-child {
+.tabs input[type="radio"]:focus {
+  outline: none !important;
+}
+.tabs input[type="radio"]:focus-visible {
+  outline: none !important;
+}
+.tabs input[type="radio"]:first-child {
   padding-left: 0;
 }
-
-.tab input[type="radio"]::after {
+.tabs input[type="radio"]::after {
   color: #acacac;
   transition: all 0.2s;
 }
-
-.tab input[type="radio"]:not(:last-of-type)::before {
+.tabs input[type="radio"]:not(:last-of-type)::before {
   content: "";
   height: 100%;
   width: 1px;
@@ -81,49 +44,30 @@
   left: 100%;
   background: var(--dark);
 }
-
-.tab input[type="radio"]:checked::after {
+.tabs input[type="radio"]:checked::after {
   color: var(--dark);
 }
-
-.tab input[type="radio"] + div {
+.tabs input[type="radio"] + div {
   display: none;
 }
-
-.tab input[type="radio"]:checked + div {
+.tabs input[type="radio"]:checked + div {
   display: block;
 }
-
-.engagement ul li {
-  padding: 0.4vw 0;
-}
-.engagement ul li:not(:last-child) {
-  border-bottom: 2px solid #acacac;
-}
-
 .tab,
 .cardsTitle {
   font-size: 24px;
   font-weight: 700;
 }
-
-.tab {
-  color: #acacac;
-  cursor: pointer;
-}
 .activeTab {
   color: #2a2b2a;
 }
-
-/* Tabs */
-.tabs .tab:not(:last-child) {
-  border-right: 1px solid #2a2b2a;
-  padding-right: 10px;
+.tabs.analyticsTabs .tab {
+  font-size: var(--20px);
+  margin: var(--sy-25px) 0;
 }
-.tabs .tab:not(:first-child) {
-  padding-left: 10px;
-}
+/* ===== End Tabs ===== */
 
+/* ===== Start Tab(1) ===== */
 /* Define the grid container */
 .dashboard {
   display: grid;
@@ -185,3 +129,18 @@
 .sidebar section::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
+/* ===== Start Tab(1) ===== */
+
+/* ===== Start Tab(2) ===== */
+.card {
+  border: 2px solid #dbdbd7;
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  border-radius: 20px;
+}
+.engagement ul li {
+  padding: 0.4vw 0;
+}
+.engagement ul li:not(:last-child) {
+  border-bottom: 2px solid #acacac;
+}
+/* ===== End Tab(2) ===== */

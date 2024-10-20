@@ -1,10 +1,13 @@
+.op__analytics__container .card * {
+  transition: all 150ms;
+}
+/* ===== Start Slick Slider ===== */
 /* .slick-dots {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   gap: 10px !important;
 } */
-/* ===== Start Slick Slider ===== */
 .email__preview .slick-dots {
   bottom: -35px;
 }
@@ -36,15 +39,11 @@
   margin: 0 1rem; /* Adjust the value as needed */
   box-sizing: border-box; /* Ensure padding/margin are included in the width calculations */
 }
-/* ===== Start Slick Slider ===== */
-
-.op__analytics__container .card * {
-  transition: all 150ms;
-}
 
 .op__analytics__container .custom_arrows {
   top: -67% !important;
 }
+/* ===== End Slick Slider ===== */
 
 /* ===== Start Accordion General Rules ===== */
 input[type="radio"]:checked ~ .collapse-title svg {
