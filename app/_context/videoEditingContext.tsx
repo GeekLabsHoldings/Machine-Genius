@@ -12,6 +12,7 @@ export interface ScriptSegment {
   index: number;
   title?: string;
   text?: string;
+  thumbnail?: string;
   keywordsAndImages?: KeywordsAndImage[];
   videoPath?: string;
   audioPath: {

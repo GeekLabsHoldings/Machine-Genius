@@ -265,21 +265,6 @@ function AddChips({
   );
 }
 
-interface BankAccount {
-  _id: string;
-  bankName: string;
-  accountNumber: string;
-  accountName: string;
-  ApiConnect: string;
-  brand: string;
-  country: string;
-  IBANumber: string;
-  password: string;
-  SWIFTCode: string;
-  userName: string;
-  createdAt: number; // Unix timestamp in milliseconds
-}
-
 interface IProps {
   btnWord: string; // Button text.
   btnIcon?: React.ReactElement; // Optional button icon.
@@ -315,6 +300,7 @@ function InsertSourceModel({
   const [end, setEnd] = useState<string>("");
   const [isBeforeParagraph, setIsBeforeParagraph] = useState<boolean>(false);
   const [isAfterParagraph, setIsAfterParagraph] = useState<boolean>(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     setIsValidYoutubeUrl(() => {
@@ -376,7 +362,7 @@ function InsertSourceModel({
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trim.machinegenius.io/trimming/video/`,
+        `https://video.machinegenius.io/download-trim-video/`,
         {
           method: "POST",
           headers: {
@@ -384,7 +370,7 @@ function InsertSourceModel({
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({
-            url_id: videoUrl,
+            url: videoUrl,
             start_time: calculateTimestamp(start),
             end_time: calculateTimestamp(end),
           }),
@@ -401,7 +387,7 @@ function InsertSourceModel({
 
       // check if the data is of type Subscription
       console.log(`data`, data);
-      if (data?.message?.trimmed_video) {
+      if (data?.success) {
         console.log(`data`, data);
         toast.success("New Footage Has Been Added");
         //@ts-ignore
@@ -412,8 +398,9 @@ function InsertSourceModel({
             0,
             {
               index: currentIndex + 1 - totalIntroSlides,
-              videoPath: data?.message?.trimmed_video,
-              title: data?.message?.title,
+              videoPath: data?.trimmed_video,
+              title: data?.title,
+              thumbnail: data?.cover_picture,
               audioPath: {
                 index: Date.now(),
                 url: "",
@@ -720,35 +707,36 @@ const ChooseFootagePage = () => {
     if (isChecked) {
       // call endpoint to check if the image is enhancable
       setEnhancableLoading(true);
-      const isEnhancable = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/enhance-img`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ input: imageUrl }),
-        }
-      );
+      try {
+        const isEnhancable = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/enhance-img`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ input: imageUrl }),
+          }
+        );
 
-      if (isEnhancable.status === 401) {
-        handleSignOut();
-        return;
-      }
-      if (!isEnhancable.ok) {
-        // remove the image from selectedSegment.keywordsAndImages
-        const updatedKeywordsAndImages =
-          selectedSegment?.keywordsAndImages?.map((kwi) => {
-            if (kwi.imageUrl.includes(imageUrl)) {
-              return {
-                ...kwi,
-                imageUrl: kwi.imageUrl.filter((url) => url !== imageUrl),
-              };
-            }
-            return kwi;
-          }) ?? []; // Default to an empty array if undefined
-        console.log(`
+        if (isEnhancable.status === 401) {
+          handleSignOut();
+          return;
+        }
+        if (!isEnhancable.ok) {
+          // remove the image from selectedSegment.keywordsAndImages
+          const updatedKeywordsAndImages =
+            selectedSegment?.keywordsAndImages?.map((kwi) => {
+              if (kwi.imageUrl.includes(imageUrl)) {
+                return {
+                  ...kwi,
+                  imageUrl: kwi.imageUrl.filter((url) => url !== imageUrl),
+                };
+              }
+              return kwi;
+            }) ?? []; // Default to an empty array if undefined
+          console.log(`
                   -------------------------------------
                   -------------------------------------
                   -------------------------------------
@@ -760,58 +748,58 @@ const ChooseFootagePage = () => {
                   -------------------------------------
                   -------------------------------------
                 `);
-        console.log(updatedKeywordsAndImages);
-        // @ts-ignore
-        // setSplitedContent((prev) => {
-        //   const updatedContent = [...prev];
-        //   updatedContent[
-        //     pageState.selectedScriptSegmentIndex!
-        //   ].keywordsAndImages = updatedKeywordsAndImages;
-        //   return updatedContent;
-        // });
-        setEnhancableLoading(false);
-        toast.error("Image is not enhancable");
-        return;
-      }
-
-      const data = await isEnhancable.json();
-      if (data.imgurl) {
-        if (searchFootage.length > 0) {
-          console.log(`searchFootage`, searchFootage);
-          setSearchFootage((prev) =>
-            prev.map((url) => {
-              if (url === imageUrl) {
-                return data.imgurl;
-              }
-              return url;
-            })
-          );
+          console.log(updatedKeywordsAndImages);
+          // @ts-ignore
+          // setSplitedContent((prev) => {
+          //   const updatedContent = [...prev];
+          //   updatedContent[
+          //     pageState.selectedScriptSegmentIndex!
+          //   ].keywordsAndImages = updatedKeywordsAndImages;
+          //   return updatedContent;
+          // });
+          setEnhancableLoading(false);
+          toast.error("Image is not enhancable");
+          return;
         }
-        // replce the imageUrl with the new data.imgurl
-        const updatedKeywordsAndImages =
-          selectedSegment!.keywordsAndImages?.map((kwi) => {
-            if (index === pageState.selectedScriptSegmentIndex) {
-              if (kwi.imageUrl.includes(imageUrl)) {
+
+        const data = await isEnhancable.json();
+        if (data.imgurl) {
+          if (searchFootage.length > 0) {
+            console.log(`searchFootage`, searchFootage);
+            setSearchFootage((prev) =>
+              prev.map((url) => {
+                if (url === imageUrl) {
+                  return data.imgurl;
+                }
+                return url;
+              })
+            );
+          }
+          // replce the imageUrl with the new data.imgurl
+          const updatedKeywordsAndImages =
+            selectedSegment!.keywordsAndImages?.map((kwi) => {
+              if (index === pageState.selectedScriptSegmentIndex) {
+                if (kwi.imageUrl.includes(imageUrl)) {
+                  return {
+                    ...kwi,
+                    imageUrl: kwi.imageUrl.map((url) => {
+                      if (url === imageUrl) {
+                        return data.imgurl;
+                      }
+                      return url;
+                    }),
+                  };
+                }
+
                 return {
                   ...kwi,
-                  imageUrl: kwi.imageUrl.map((url) => {
-                    if (url === imageUrl) {
-                      return data.imgurl;
-                    }
-                    return url;
-                  }),
+                  imageUrl: [...kwi.imageUrl, data.imgurl],
                 };
               }
+              return kwi;
+            });
 
-              return {
-                ...kwi,
-                imageUrl: [...kwi.imageUrl, data.imgurl],
-              };
-            }
-            return kwi;
-          });
-
-        console.log(`
+          console.log(`
           -------------------------------------
           -------------------------------------
           -------------------------------------
@@ -822,85 +810,89 @@ const ChooseFootagePage = () => {
           -------------------------------------
           -------------------------------------
           `);
-        console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
-        // @ts-ignore
-        setSplitedContent((prev) => {
-          const updatedContent = [...prev];
-          // console.log("pageState.selectedScriptSegmentIndex", pageState
+          console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
+          // @ts-ignore
+          setSplitedContent((prev) => {
+            const updatedContent = [...prev];
+            // console.log("pageState.selectedScriptSegmentIndex", pageState
 
-          console.log(`updatedContent`, updatedContent[pageState.index!]);
-          updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
-            // @ts-ignore
-            updatedKeywordsAndImages[0]?.imageUrl;
+            console.log(`updatedContent`, updatedContent[pageState.index!]);
+            updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
+              // @ts-ignore
+              updatedKeywordsAndImages[0]?.imageUrl;
 
-          console.log(`updatedContent`, updatedContent);
+            console.log(`updatedContent`, updatedContent);
 
-          // setPageState((prev) => {
-          //   return {
-          //     ...prev,
-          //     selectedScriptSegment:
-          //       updatedContent[pageState.selectedScriptSegment?.index!],
-          //   };
-          // });
-          return updatedContent;
-        });
-      } else {
-        // remove the image from selectedSegment.keywordsAndImages
-        const updatedKeywordsAndImages =
-          selectedSegment!.keywordsAndImages?.map((kwi) => {
-            if (kwi.imageUrl.includes(imageUrl)) {
-              return {
-                ...kwi,
-                imageUrl: kwi.imageUrl.filter((url) => url !== imageUrl),
-              };
-            }
-            return kwi;
+            // setPageState((prev) => {
+            //   return {
+            //     ...prev,
+            //     selectedScriptSegment:
+            //       updatedContent[pageState.selectedScriptSegment?.index!],
+            //   };
+            // });
+            return updatedContent;
           });
-        console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
-        // @ts-ignore
-        setSplitedContent((prev) => {
-          const updatedContent = [...prev];
-          updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
-            // @ts-ignore
-            updatedKeywordsAndImages[0].imageUrl;
-          return updatedContent;
-        });
-        setEnhancableLoading(false);
-        toast.error("Image is not enhancable");
-        return;
-      }
-
-      setSelectedFootage((prevSelectedFootage) => {
-        // Find if there is already an entry for this index
-        const existingIndex = prevSelectedFootage.findIndex(
-          (sf) => sf.index === index
-        );
-
-        if (existingIndex !== -1) {
-          const existing = prevSelectedFootage[existingIndex];
-          let updatedImageUrls: string[];
-          // Add imageUrl if not already included
-          if (!existing.imageUrl.includes(imageUrl || data.imgurl)) {
-            updatedImageUrls = [...existing.imageUrl, data.imgurl];
-          } else {
-            updatedImageUrls = existing.imageUrl;
-          }
-
-          const updatedFootage = { ...existing, imageUrl: updatedImageUrls };
-          const newSelectedFootage = [...prevSelectedFootage];
-          newSelectedFootage[existingIndex] = updatedFootage;
-          return newSelectedFootage;
         } else {
-          // Create new SelectedFootage for this index
-          const newSelectedFootageItem: SelectedFootage = {
-            index,
-            imageUrl: [data.imgurl],
-          };
-          return [...prevSelectedFootage, newSelectedFootageItem];
+          // remove the image from selectedSegment.keywordsAndImages
+          const updatedKeywordsAndImages =
+            selectedSegment!.keywordsAndImages?.map((kwi) => {
+              if (kwi.imageUrl.includes(imageUrl)) {
+                return {
+                  ...kwi,
+                  imageUrl: kwi.imageUrl.filter((url) => url !== imageUrl),
+                };
+              }
+              return kwi;
+            });
+          console.log(`updatedKeywordsAndImages`, updatedKeywordsAndImages);
+          // @ts-ignore
+          setSplitedContent((prev) => {
+            const updatedContent = [...prev];
+            updatedContent[pageState.index!].keywordsAndImages[0].imageUrl =
+              // @ts-ignore
+              updatedKeywordsAndImages[0].imageUrl;
+            return updatedContent;
+          });
+          setEnhancableLoading(false);
+          toast.error("Image is not enhancable");
+          return;
         }
-      });
 
-      setEnhancableLoading(false);
+        setSelectedFootage((prevSelectedFootage) => {
+          // Find if there is already an entry for this index
+          const existingIndex = prevSelectedFootage.findIndex(
+            (sf) => sf.index === index
+          );
+
+          if (existingIndex !== -1) {
+            const existing = prevSelectedFootage[existingIndex];
+            let updatedImageUrls: string[];
+            // Add imageUrl if not already included
+            if (!existing.imageUrl.includes(imageUrl || data.imgurl)) {
+              updatedImageUrls = [...existing.imageUrl, data.imgurl];
+            } else {
+              updatedImageUrls = existing.imageUrl;
+            }
+
+            const updatedFootage = { ...existing, imageUrl: updatedImageUrls };
+            const newSelectedFootage = [...prevSelectedFootage];
+            newSelectedFootage[existingIndex] = updatedFootage;
+            return newSelectedFootage;
+          } else {
+            // Create new SelectedFootage for this index
+            const newSelectedFootageItem: SelectedFootage = {
+              index,
+              imageUrl: [data.imgurl],
+            };
+            return [...prevSelectedFootage, newSelectedFootageItem];
+          }
+        });
+
+        setEnhancableLoading(false);
+      } catch (error) {
+        setEnhancableLoading(false);
+        toast.error("Failed to enhance image");
+      }
     } else {
       setSelectedFootage((prevSelectedFootage) => {
         // Find if there is already an entry for this index
@@ -929,6 +921,20 @@ const ChooseFootagePage = () => {
     }
   };
 
+  const getVideoDuration = async (videoPath: string): Promise<number> => {
+    return new Promise((resolve) => {
+      var video = document.createElement("video");
+      video.src = videoPath;
+      video.preload = "metadata";
+      video.addEventListener("loadedmetadata", () => {
+        resolve(Math.round(video.duration));
+      });
+      video.addEventListener("error", () => {
+        resolve(0);
+      });
+    });
+  };
+
   async function handleCreateVideo() {
     setPageState((prev) => ({ ...prev, createVideoLoading: true }));
 
@@ -945,45 +951,72 @@ const ChooseFootagePage = () => {
     console.log(`bodySlides`, bodySlides);
 
     // check if the imageUrl includes the imageUrl from selectedFootage don't use index
-    introSlides = introSlides?.map((slide) => {
-      if (slide.keywordsAndImages && slide.keywordsAndImages[0]) {
-        const selectedFootageItem = selectedFootage.find((sf) =>
-          sf.imageUrl.some((url) =>
-            slide.keywordsAndImages![0]!.imageUrl.includes(url)
-          )
-        );
-        return {
-          ...slide,
-          keywordsAndImages: [
-            {
-              ...slide.keywordsAndImages[0],
-              imageUrl: selectedFootageItem?.imageUrl || [],
-            },
-          ],
-        };
-      }
-      // Handle the case where keywordsAndImages is undefined
-      return slide;
-    });
+    //@ts-ignore
+    introSlides = await Promise.all(
+      introSlides?.map(async (slide) => {
+        if (slide.keywordsAndImages && slide.keywordsAndImages[0]) {
+          const selectedFootageItem = selectedFootage.find((sf) =>
+            sf.imageUrl.some((url) =>
+              slide.keywordsAndImages![0]!.imageUrl.includes(url)
+            )
+          );
+          return {
+            ...slide,
+            keywordsAndImages: [
+              {
+                ...slide.keywordsAndImages[0],
+                imageUrl: selectedFootageItem?.imageUrl || [],
+              },
+            ],
+          };
+        } else if (slide.videoPath) {
+          const videoDuration = await getVideoDuration(slide.videoPath);
 
-    bodySlides = bodySlides?.map((slide) => {
-      const selectedFootageItem = selectedFootage.find((sf) =>
-        sf.imageUrl.some((url) =>
-          // @ts-ignore
-          slide.keywordsAndImages[0].imageUrl.includes(url)
-        )
-      );
-      return {
-        ...slide,
-        keywordsAndImages: [
-          {
-            // @ts-ignore
-            ...slide.keywordsAndImages[0],
-            imageUrl: selectedFootageItem?.imageUrl || [],
-          },
-        ],
-      };
-    });
+          return {
+            videoPath: slide.videoPath,
+            audioPath: {
+              index: null,
+              url: null,
+              duration: videoDuration,
+            },
+          };
+        }
+      })
+    );
+
+    //@ts-ignore
+    bodySlides = await Promise.all(
+      bodySlides?.map(async (slide) => {
+        if (slide.keywordsAndImages && slide.keywordsAndImages[0]) {
+          const selectedFootageItem = selectedFootage.find((sf) =>
+            sf.imageUrl.some((url) =>
+              // @ts-ignore
+              slide.keywordsAndImages[0].imageUrl.includes(url)
+            )
+          );
+          return {
+            ...slide,
+            keywordsAndImages: [
+              {
+                // @ts-ignore
+                ...slide.keywordsAndImages[0],
+                imageUrl: selectedFootageItem?.imageUrl || [],
+              },
+            ],
+          };
+        } else if (slide.videoPath) {
+          const videoDuration = await getVideoDuration(slide.videoPath);
+          return {
+            videoPath: slide.videoPath,
+            audioPath: {
+              index: null,
+              url: null,
+              duration: videoDuration,
+            },
+          };
+        }
+      })
+    );
 
     console.log(`introSlides`, introSlides);
     console.log(`bodySlides`, bodySlides);
@@ -1007,7 +1040,7 @@ const ChooseFootagePage = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/render-video`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/render-stp-video`,
         {
           method: "POST",
           headers: {
@@ -1124,16 +1157,6 @@ const ChooseFootagePage = () => {
     );
   };
 
-  if (pageState.createVideoLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
-        <LogoAndTitle needTxt={false} title="Generating Video..." />
-      </div>
-    );
-  }
-
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   const moveSegment = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       // @ts-ignore
@@ -1214,7 +1237,10 @@ const ChooseFootagePage = () => {
           {/* ... (rest of the video segment content) */}
           <div className="relative w-32 h-24 flex-shrink-0">
             <img
-              src="http://nextunicorn.ventures/wp-content/uploads/2024/06/nvidia-rise-to-the-top.jpg"
+              src={
+                segment?.thumbnail ||
+                "http://nextunicorn.ventures/wp-content/uploads/2024/06/nvidia-rise-to-the-top.jpg"
+              }
               alt="Video thumbnail"
               className="w-full h-full object-cover rounded"
             />
@@ -1264,6 +1290,14 @@ const ChooseFootagePage = () => {
       </div>
     );
   };
+
+  if (pageState.createVideoLoading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-w-[24rem] gap-[2vw] h-[75vh] py-[1.5vw]">
+        <LogoAndTitle needTxt={false} title="Generating Video..." />
+      </div>
+    );
+  }
 
   return (
     <div className={`w-full h-full flex flex-col ${styles.footagePreview}`}>
