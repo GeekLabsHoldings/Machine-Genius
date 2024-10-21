@@ -32,8 +32,9 @@ const router = useRouter();
       }
       const result = await res.json();
       setData(result);
-      setRecievedId(result.candidates[0]._id);
-      const questions = result.template.details[0].description.replaceAll(/data-list="bullet"/gi, "")
+
+      result?.candidates.length > 0 && setRecievedId(result?.candidates[0]._id);
+      const questions = result?.template.details[0].description.replaceAll(/data-list="bullet"/gi, "")
       .replaceAll(
         /<span class="ql-ui" contenteditable="false"><\/span>/gi,
         ""
@@ -115,6 +116,29 @@ const router = useRouter();
       console.error("Error updating next step:", error);
     }
   }
+  async function goPreviousStep() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/previous-step/${step}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/short-list`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
 
   useEffect(() => {
     fetchData();
@@ -192,7 +216,7 @@ const router = useRouter();
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href="/hr/hiring/job-openings/short-list"
+          onClick={goPreviousStep}
         />
         <CustomBtn
           word={"Next"}

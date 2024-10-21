@@ -12,8 +12,6 @@ import useWebSocket from "react-use-websocket";
 import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { QRCodeSVG } from "qrcode.react";
-import { GoBack } from "../utility/GoBack";
-import { NavigatingBackContext } from "../../navigatingBackContext";
 
 export default function Page() {
   const [data, setData] = useState<any>(null);
@@ -31,12 +29,6 @@ export default function Page() {
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "wss://linkedin-scrape.machinegenius.io"
   );
-
-  const { navigatingBackData, setNavigatingBackData } = useContext(NavigatingBackContext);
-
-  const handleGoBack = async () => {
-    await GoBack(router, "Tasks", step, "phone-interview-questionnaire", setNavigatingBackData);
-  };
 
   const sendWhatsappMessage = async () => {
     try {
@@ -122,6 +114,29 @@ export default function Page() {
       console.error("Error updating next step:", error);
     }
   }
+  async function goPreviousStep() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/previous-step/${step}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/phone-interview-questionnaire`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
 
   useEffect(() => {
     if (lastMessage) {
@@ -160,9 +175,6 @@ export default function Page() {
       );
     }
   }, [candidateData]);
-  useEffect(() => {
-    console.log(navigatingBackData);
-  },[navigatingBackData])
 
   return (
     <section className="w-[90vw]">
@@ -174,7 +186,7 @@ export default function Page() {
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
           <ShortListTable
-            data={data?.candidates?.length > 0 ? data : navigatingBackData}
+            data={data}
             setRecievedId={setRecievedId}
             recievedId={recievedId}
             stepIdx={5}
@@ -229,8 +241,7 @@ export default function Page() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          // href="/hr/hiring/job-openings/phone-interview-questionnaire"
-          onClick={handleGoBack}
+          onClick={goPreviousStep}
         />
         <CustomBtn word={"Next"} btnColor="black" onClick={updateNextStep} />
       </div>

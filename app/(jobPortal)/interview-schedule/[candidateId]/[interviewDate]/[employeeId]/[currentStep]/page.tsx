@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { format, addMonths, subMonths, startOfDay, isSameDay } from "date-fns";
 import { useParams } from "next/navigation";
 
-export enum HiringStepsEnum {
+enum HiringStepsEnum {
   Schedule_Interview_Call = "PhoneCall",
   Schedule_Face_To_Face_Interview = "FaceToFace",
 }
@@ -34,7 +34,7 @@ const PhoneScheduler = () => {
       );
       const data = await response.json();
       setTimeSlots(
-        data.map((slot) => ({
+        data.map((slot: { startTime: number; endTime: number }) => ({
           startTime: new Date(slot.startTime),
           endTime: new Date(slot.endTime),
         }))
@@ -94,17 +94,17 @@ const PhoneScheduler = () => {
     1
   ).getDay();
 
-  const hasTimeSlots = (date) => {
+  const hasTimeSlots = (date: Date) => {
     return timeSlots.some((slot) => isSameDay(new Date(slot.startTime), date));
   };
 
-  const getAvailableTimesForDate = (date) => {
-    return timeSlots.filter((slot) =>
+  const getAvailableTimesForDate = (date: Date) => {
+    return timeSlots.filter((slot: { startTime: Date }) =>
       isSameDay(new Date(slot.startTime), date)
     );
   };
 
-  const handleTimeSelect = (time) => {
+  const handleTimeSelect = (time: Date) => {
     setSelectedTime(time);
   };
 

@@ -34,8 +34,8 @@ export default function ProspectsPreviewTable({data, setSelectedCandidateCV, set
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {data?.candidates?.filter((e:any)=>e.stepsStatus[2].status !== "Rejected").map((e:any, idx:number) => (
-            <ul key={idx} className={`space-x-2`} onClick={()=>{setSelectedCandidateCV(e.cvLink); setSelectedCandidateId(e._id)}}>
+          {data?.candidates?.map((e:any, idx:number) => (
+            <ul key={idx} className={`space-x-2 ${e.stepsStatus[2].status == "Rejected" && "opacity-50"}`} onClick={()=>{setSelectedCandidateCV(e.cvLink); setSelectedCandidateId(e._id)}}>
               <li className="w-[10%]">
                 <span>{e.firstName}</span>
               </li>
