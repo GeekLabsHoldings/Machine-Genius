@@ -94,7 +94,7 @@ const PhoneScheduler = () => {
     1
   ).getDay();
 
-  const hasTimeSlots = (date) => {
+  const hasTimeSlots = (date: Date) => {
     return timeSlots.some((slot) => isSameDay(new Date(slot.startTime), date));
   };
 
@@ -104,7 +104,7 @@ const PhoneScheduler = () => {
     );
   };
 
-  const handleTimeSelect = (time) => {
+  const handleTimeSelect = (time: Date) => {
     setSelectedTime(time);
   };
 
