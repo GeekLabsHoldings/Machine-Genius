@@ -27,15 +27,10 @@ import {
   IPostInsights,
   IGroup,
 } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
+import AnalyticsCard from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCard";
 
-const TasksChart = dynamic(
-  () => import("@/app/_components/OP/Analytics/02Brands/graph/AreaChart"),
-  {
-    ssr: false,
-  }
-);
 const LineCharts = dynamic(
-  () => import("@/app/_components/OP/Analytics/02Brands/graph/LineCharts"),
+  () => import("@/app/_components/OP/Analytics/02Brands/Charts/AreaChart"),
   {
     ssr: false,
   }
@@ -470,6 +465,14 @@ function Page() {
     }
   }, [pageState.activePageTab]);
 
+  useEffect(() => {
+    if (pageState.activePageTab === "Brands") {
+      if (pageState.selectedSocialMediaAccount !== null) {
+        getSubscribersGains();
+      }
+    }
+  }, [pageState.selectedSocialMediaAccount]);
+
   return (
     <section className={`overflow-hidden op__analytics__container`}>
       {/* Tabs */}
@@ -612,72 +615,8 @@ function Page() {
                 />
                 <div className={`tab-content`}>
                   <div className="flex gap-3">
-                    <div
-                      className={`${styles.card} w-1/2 card h-fit grow px-[1vw] py-[0.6vw] rounded-xl group hover:bg-[var(--dark)] `}
-                    >
-                      <div className="flex justify-center items-center gap-[1.5vw]">
-                        <div className="group-hover:text-[var(--white)]">
-                          <div className="flex justify-between items-center w-fit h-[5vh] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[1vw]">
-                            <h3 className="font-bold text-center pr-2">
-                              Followers
-                            </h3>
-                          </div>
-                          <div className="w-fit flex justify-center items-center gap-3 ">
-                            <div className="text-4xl font-bold">22k</div>
-                            <div>
-                              <svg
-                                width="18"
-                                height="10"
-                                viewBox="0 0 18 10"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M0.900543 9.19922L17.101 9.19922C17.265 9.19887 17.4258 9.16866 17.566 9.11183C17.7062 9.05501 17.8206 8.97372 17.8968 8.87671C17.973 8.7797 18.0081 8.67066 17.9984 8.56131C17.9887 8.45196 17.9345 8.34645 17.8417 8.25613L9.74149 0.4422C9.40578 0.118223 8.59756 0.118223 8.26095 0.442201L0.160722 8.25614C0.066962 8.34626 0.0119789 8.45183 0.00174654 8.56136C-0.00848579 8.67089 0.0264241 8.7802 0.102683 8.87741C0.178943 8.97462 0.293634 9.05602 0.434298 9.11275C0.574961 9.16949 0.736217 9.19939 0.900543 9.19922Z"
-                                  fill="#5FA85B"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="h-full place-self-end">
-                          <TasksChart />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`${styles.card} w-1/2 card h-fit grow px-[1vw] py-[0.6vw] rounded-xl group hover:bg-[var(--dark)] `}
-                    >
-                      <div className="flex justify-center items-center gap-[1.5vw]">
-                        <div className="group-hover:text-[var(--white)]">
-                          <div className="flex justify-between items-center w-fit h-[5vh] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[1vw]">
-                            <h3 className="font-bold text-center pr-2">
-                              Activities
-                            </h3>
-                          </div>
-                          <div className="w-fit flex justify-center items-center gap-3 ">
-                            <div className="text-4xl font-bold">22k</div>
-                            <div>
-                              <svg
-                                width="18"
-                                height="10"
-                                viewBox="0 0 18 10"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M0.900543 9.19922L17.101 9.19922C17.265 9.19887 17.4258 9.16866 17.566 9.11183C17.7062 9.05501 17.8206 8.97372 17.8968 8.87671C17.973 8.7797 18.0081 8.67066 17.9984 8.56131C17.9887 8.45196 17.9345 8.34645 17.8417 8.25613L9.74149 0.4422C9.40578 0.118223 8.59756 0.118223 8.26095 0.442201L0.160722 8.25614C0.066962 8.34626 0.0119789 8.45183 0.00174654 8.56136C-0.00848579 8.67089 0.0264241 8.7802 0.102683 8.87741C0.178943 8.97462 0.293634 9.05602 0.434298 9.11275C0.574961 9.16949 0.736217 9.19939 0.900543 9.19922Z"
-                                  fill="#5FA85B"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="h-full place-self-end">
-                          <TasksChart />
-                        </div>
-                      </div>
-                    </div>
+                    <AnalyticsCard title="Followers" value={0} />
+                    <AnalyticsCard title="Engagement" value={2022550} />
                   </div>
                 </div>
                 <input
@@ -738,16 +677,17 @@ function Page() {
             </div>
             {/* ===== 02-01-01 End Analytics Tabs ===== */}
 
-            {/* ===== 02-01-02 Start Analytics Card ===== */}
+            {/* ===== 02-01-02 Start Analytics ===== */}
             <div className="col-span-2 row-span-2 col-start-3">
               <div
                 className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
               >
                 <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
-                  <div className="w-full place-self-end">
+                  <div className="w-full place-self-end bg-red-500">
                     <LineCharts />
                   </div>
-                  <div className="flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
+
+                  <div className="bg-blue-500 flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
                     <span>Average Reach</span>
                     <span>|</span>
                     <span className="font-bold">200k</span>
@@ -769,7 +709,7 @@ function Page() {
                 </div>
               </div>
             </div>
-            {/* ===== 02-01-02 End Analytics Card ===== */}
+            {/* ===== 02-01-02 End Analytics ===== */}
 
             {/* ===== 02-01-03 Start Engagement ===== */}
             <div

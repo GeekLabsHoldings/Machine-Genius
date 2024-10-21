@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./SocialMediaAccountCard.module.css";
+import styles from "../CardStyles.module.css";
 
 interface IProps {
   platformName: "TELEGRAM" | "FACEBOOK" | "REDDIT" | "TWITTER";
