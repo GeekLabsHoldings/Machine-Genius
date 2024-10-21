@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import styles from "./analytics.module.css";
 import "./analytics.css";
@@ -11,6 +11,17 @@ const AreaChart = dynamic(
     ssr: false,
   }
 );
+import {
+  IBrandPlatformSubscribers,
+  IBrandWithGroups,
+  IGroupInsightsChart,
+  ICommentsCountChart,
+  IPostsCountChart,
+  ISubscriberGains,
+  IPostInsights,
+  IGroup,
+  IKPIData,
+} from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 // ===== 01- Start God View =====
 import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
 import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
@@ -23,16 +34,6 @@ import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06Youtube
 import Slider from "react-slick";
 import SocialMediaAccountCard from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCard";
 import SocialMediaAccountCardSkeleton from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCardSkeleton";
-import {
-  IBrandPlatformSubscribers,
-  IBrandWithGroups,
-  IGroupInsightsChart,
-  ICommentsCountChart,
-  IPostsCountChart,
-  ISubscriberGains,
-  IPostInsights,
-  IGroup,
-} from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 import AnalyticsCard from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCard";
 import AnalyticsCardSkeleton from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCardSkeleton";
 // ===== 02- End Brands =====
@@ -115,7 +116,9 @@ const settings: any = {
 // ====== End react-slick Slider =====
 
 function Page() {
-  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
+  const { authState, handleSignOut, globalBrands, brandIdMap } =
+    useContext(globalContext);
+  const isFirstRender = useRef(true);
   const [pageState, setPageState] = useState<{
     activePageTab: "GodView" | "Brands";
     activeAnalyticsTimeframe: "Daily" | "Weekly" | "Monthly" | "Yearly";
@@ -127,6 +130,7 @@ function Page() {
     fetchedCommentsCountChart: ICommentsCountChart[];
     fetchedGroupInsightsChart: IGroupInsightsChart[];
     fetchedPostInsights: IPostInsights[];
+    fetchedKPIData: IKPIData[];
   }>({
     activePageTab: "GodView",
     activeAnalyticsTimeframe: "Daily",
@@ -138,6 +142,7 @@ function Page() {
     fetchedCommentsCountChart: [],
     fetchedGroupInsightsChart: [],
     fetchedPostInsights: [],
+    fetchedKPIData: [],
   });
 
   const getSocialMediaAccounts = async () => {
@@ -477,11 +482,68 @@ function Page() {
     return "-";
   };
 
+  const getKPIData = async (brandId: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/analytics/kpi/${brandId}`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch KPI data!");
+        return;
+      }
+      const data: IKPIData = await res.json();
+      if (data) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedKPIData: [...(prevState.fetchedKPIData || []), data],
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch KPI data!");
+      // }
+    } catch (error) {
+      console.error("Error fetching KPI data:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to fetch KPI data!"
+      );
+    }
+  };
+
   useEffect(() => {
     if (pageState.activePageTab === "GodView") {
       getTotalSubscribers();
+      const fetchDataForAllBrands = async () => {
+        try {
+          await Promise.all(
+            globalBrands.map((brand) => getKPIData(brand.brandId))
+          );
+        } catch (error) {
+          console.error("Error fetching data for all brands:", error);
+        }
+      };
+      if (isFirstRender.current) {
+        fetchDataForAllBrands();
+        isFirstRender.current = false;
+      }
     }
   }, [pageState.activePageTab]);
+
+  // useEffect(() => {
+  //   console.log(pageState.fetchedKPIData);
+  // }, [pageState.fetchedKPIData]);
 
   useEffect(() => {
     if (pageState.activePageTab === "Brands") {
@@ -543,7 +605,9 @@ function Page() {
               </div>
 
               {/* Brand KPIs */}
-              <BrandKPIs />
+              <div className="w-1/3">
+                <BrandKPIs fetchedKPIData={pageState.fetchedKPIData} />
+              </div>
             </div>
             {/* ===== End First Row ===== */}
 
