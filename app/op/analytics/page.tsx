@@ -476,7 +476,7 @@ function Page() {
     }
     return "-";
   };
-  
+
   useEffect(() => {
     if (pageState.activePageTab === "GodView") {
       getTotalSubscribers();
@@ -549,17 +549,19 @@ function Page() {
 
             {/* ==== Start Second Row ==== */}
             <div className={styles.secondRow + " flex gap-[0.75vw]"}>
-              {/* Activity Over View */}
+              {/* Activity OverView */}
               <div className="ActivityOverView w-[40%]">
                 <ActivityOverview />
               </div>
 
-              {/* Followers Over View */}
+              {/* Followers OverView */}
               <div className="FollowersOverView w-[32.5%]">
-                <FollowersOverview />
+                <FollowersOverview
+                  fetchedTotalSubscribers={pageState.fetchedTotalSubscribers}
+                />
               </div>
 
-              {/* Youtube Watch time */}
+              {/* Youtube Watchtime */}
               <div className="YoutubeWatchTime w-[27.5%]">
                 <YoutubeWatchtime />
               </div>
