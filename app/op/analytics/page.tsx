@@ -476,6 +476,12 @@ function Page() {
     }
     return "-";
   };
+  
+  useEffect(() => {
+    if (pageState.activePageTab === "GodView") {
+      getTotalSubscribers();
+    }
+  }, [pageState.activePageTab]);
 
   useEffect(() => {
     if (pageState.activePageTab === "Brands") {
@@ -562,7 +568,9 @@ function Page() {
           </div>
 
           <div className={styles.sidebar}>
-            <BrandAccounts />
+            <BrandAccounts
+              fetchedTotalSubscribers={pageState.fetchedTotalSubscribers}
+            />
           </div>
         </div>
       )}
