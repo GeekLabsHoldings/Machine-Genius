@@ -169,9 +169,10 @@ function Page() {
           ...prevState,
           fetchedSocialMediaAccounts: data.flatMap((ele) => ele.groups),
         }));
-      } else {
-        toast.error("Failed to fetch social media accounts!");
       }
+      // else {
+      //   toast.error("Failed to fetch social media accounts!");
+      // }
     } catch (error) {
       console.error("Error fetching social media accounts:", error);
       toast.error(
@@ -210,9 +211,10 @@ function Page() {
           ...prevState,
           fetchedTotalSubscribers: data,
         }));
-      } else {
-        toast.error("Failed to fetch total subscribers!");
       }
+      // else {
+      //   toast.error("Failed to fetch total subscribers!");
+      // }
     } catch (error) {
       console.error("Error fetching total subscribers:", error);
       toast.error(
@@ -300,9 +302,10 @@ function Page() {
           ...prevState,
           fetchedPostsCountChart: data,
         }));
-      } else {
-        toast.error("Failed to fetch posts count chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch posts count chart!");
+      // }
     } catch (error) {
       console.error("Error fetching posts count chart:", error);
       toast.error(
@@ -349,9 +352,10 @@ function Page() {
           ...prevState,
           fetchedCommentsCountChart: data,
         }));
-      } else {
-        toast.error("Failed to fetch comments count chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch comments count chart!");
+      // }
     } catch (error) {
       console.error("Error fetching comments count chart:", error);
       toast.error(
@@ -371,8 +375,8 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
-          pageState.selectedSocialMediaAccount?.brand
+        }&limit=20&sign=-1&group=${
+          pageState.selectedSocialMediaAccount?.group_id
         }`,
         {
           headers: {
@@ -398,9 +402,10 @@ function Page() {
           ...prevState,
           fetchedGroupInsightsChart: data,
         }));
-      } else {
-        toast.error("Failed to fetch group insights chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch group insights chart!");
+      // }
     } catch (error) {
       console.error("Error fetching group insights chart:", error);
       toast.error(
@@ -447,9 +452,10 @@ function Page() {
           ...prevState,
           fetchedPostInsights: data,
         }));
-      } else {
-        toast.error("Failed to fetch post insights chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch post insights chart!");
+      // }
     } catch (error) {
       console.error("Error fetching post insights chart:", error);
       toast.error(
@@ -470,6 +476,7 @@ function Page() {
     if (pageState.activePageTab === "Brands") {
       if (pageState.selectedSocialMediaAccount !== null) {
         getSubscribersGains();
+        getGroupInsightsChart();
       }
     }
   }, [pageState.selectedSocialMediaAccount]);
@@ -592,7 +599,7 @@ function Page() {
           </div>
           {/* ===== 02-00 End Social Media Accounts ===== */}
           {/* ===== 02-01 Start Analytics ===== */}
-          <div className="grid grid-cols-4 grid-rows-4 gap-4 mt-9">
+          <div className="grid grid-cols-4 grid-rows-4 gap-[--sy-20px] mt-[--sy-20px]">
             {/* ===== 02-01-01 Start Analytics Tabs ===== */}
             <div className="col-span-2 row-span-2">
               <h3 className="text-2xl font-bold">Analytics</h3>
@@ -616,25 +623,35 @@ function Page() {
                 />
                 <div className={`tab-content`}>
                   <div className="flex gap-3">
-                    {/* <AnalyticsCard
-                      title="Followers"
-                      value={
-                        pageState.fetchedSubscribersGains?.[
-                          pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
-                        ]?.gain ?? 0
-                      }
-                      chartData={[]}
-                    /> */}
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
 
-                    <AnalyticsCardSkeleton />
-
-                    <AnalyticsCard
-                      title="Engagement"
-                      value={
-                        pageState.selectedSocialMediaAccount?.engagement ?? 0
-                      }
-                      chartData={[]}
-                    />
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
                   </div>
                 </div>
                 <input
