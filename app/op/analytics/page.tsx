@@ -3,8 +3,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import styles from "./analytics.module.css";
 import "./analytics.css";
-import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
+import dynamic from "next/dynamic";
+const AreaChart = dynamic(
+  () => import("@/app/_components/OP/Analytics/00Charts/AreaChart"),
+  {
+    ssr: false,
+  }
+);
 // ===== 01- Start God View =====
 import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
 import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
@@ -29,13 +35,6 @@ import {
 } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 import AnalyticsCard from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCard";
 import AnalyticsCardSkeleton from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCardSkeleton";
-
-const LineCharts = dynamic(
-  () => import("@/app/_components/OP/Analytics/02Brands/Charts/AreaChart"),
-  {
-    ssr: false,
-  }
-);
 // ===== 02- End Brands =====
 
 // ====== Start react-slick Slider =====
@@ -129,7 +128,7 @@ function Page() {
     fetchedGroupInsightsChart: IGroupInsightsChart[];
     fetchedPostInsights: IPostInsights[];
   }>({
-    activePageTab: "Brands",
+    activePageTab: "GodView",
     activeAnalyticsTimeframe: "Daily",
     selectedSocialMediaAccount: null,
     fetchedSocialMediaAccounts: [],
@@ -169,9 +168,10 @@ function Page() {
           ...prevState,
           fetchedSocialMediaAccounts: data.flatMap((ele) => ele.groups),
         }));
-      } else {
-        toast.error("Failed to fetch social media accounts!");
       }
+      // else {
+      //   toast.error("Failed to fetch social media accounts!");
+      // }
     } catch (error) {
       console.error("Error fetching social media accounts:", error);
       toast.error(
@@ -210,9 +210,10 @@ function Page() {
           ...prevState,
           fetchedTotalSubscribers: data,
         }));
-      } else {
-        toast.error("Failed to fetch total subscribers!");
       }
+      // else {
+      //   toast.error("Failed to fetch total subscribers!");
+      // }
     } catch (error) {
       console.error("Error fetching total subscribers:", error);
       toast.error(
@@ -273,7 +274,7 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
+        }&limit=30&sign=-1&brand=${
           pageState.selectedSocialMediaAccount?.brand
         }`,
         {
@@ -300,9 +301,10 @@ function Page() {
           ...prevState,
           fetchedPostsCountChart: data,
         }));
-      } else {
-        toast.error("Failed to fetch posts count chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch posts count chart!");
+      // }
     } catch (error) {
       console.error("Error fetching posts count chart:", error);
       toast.error(
@@ -322,7 +324,7 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
+        }&limit=30&sign=-1&brand=${
           pageState.selectedSocialMediaAccount?.brand
         }`,
         {
@@ -349,9 +351,10 @@ function Page() {
           ...prevState,
           fetchedCommentsCountChart: data,
         }));
-      } else {
-        toast.error("Failed to fetch comments count chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch comments count chart!");
+      // }
     } catch (error) {
       console.error("Error fetching comments count chart:", error);
       toast.error(
@@ -371,8 +374,8 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
-          pageState.selectedSocialMediaAccount?.brand
+        }&limit=30&sign=-1&group=${
+          pageState.selectedSocialMediaAccount?.group_id
         }`,
         {
           headers: {
@@ -398,9 +401,10 @@ function Page() {
           ...prevState,
           fetchedGroupInsightsChart: data,
         }));
-      } else {
-        toast.error("Failed to fetch group insights chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch group insights chart!");
+      // }
     } catch (error) {
       console.error("Error fetching group insights chart:", error);
       toast.error(
@@ -420,7 +424,7 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
+        }&limit=30&sign=-1&brand=${
           pageState.selectedSocialMediaAccount?.brand
         }`,
         {
@@ -447,9 +451,10 @@ function Page() {
           ...prevState,
           fetchedPostInsights: data,
         }));
-      } else {
-        toast.error("Failed to fetch post insights chart!");
       }
+      // else {
+      //   toast.error("Failed to fetch post insights chart!");
+      // }
     } catch (error) {
       console.error("Error fetching post insights chart:", error);
       toast.error(
@@ -458,6 +463,18 @@ function Page() {
           : "Failed to fetch post insights chart!"
       );
     }
+  };
+
+  const renderAvgValue = () => {
+    if (
+      Array.isArray(pageState.fetchedGroupInsightsChart) &&
+      pageState.fetchedGroupInsightsChart.length > 0
+    ) {
+      const data = pageState.fetchedGroupInsightsChart.map((e) => e.result);
+      const avg = data.reduce((acc, curr) => acc + curr, 0) / data.length;
+      return Math.abs(avg) > 999 ? `${(avg / 1000).toFixed(1)}K` : avg;
+    }
+    return "-";
   };
 
   useEffect(() => {
@@ -470,6 +487,10 @@ function Page() {
     if (pageState.activePageTab === "Brands") {
       if (pageState.selectedSocialMediaAccount !== null) {
         getSubscribersGains();
+        getGroupInsightsChart();
+        getPostsCountChart();
+        getCommentsCountChart();
+        getPostInsights();
       }
     }
   }, [pageState.selectedSocialMediaAccount]);
@@ -592,7 +613,7 @@ function Page() {
           </div>
           {/* ===== 02-00 End Social Media Accounts ===== */}
           {/* ===== 02-01 Start Analytics ===== */}
-          <div className="grid grid-cols-4 grid-rows-4 gap-4 mt-9">
+          <div className="grid grid-cols-4 grid-rows-4 gap-[--sy-20px] mt-[--sy-20px]">
             {/* ===== 02-01-01 Start Analytics Tabs ===== */}
             <div className="col-span-2 row-span-2">
               <h3 className="text-2xl font-bold">Analytics</h3>
@@ -616,25 +637,35 @@ function Page() {
                 />
                 <div className={`tab-content`}>
                   <div className="flex gap-3">
-                    {/* <AnalyticsCard
-                      title="Followers"
-                      value={
-                        pageState.fetchedSubscribersGains?.[
-                          pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
-                        ]?.gain ?? 0
-                      }
-                      chartData={[]}
-                    /> */}
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
 
-                    <AnalyticsCardSkeleton />
-
-                    <AnalyticsCard
-                      title="Engagement"
-                      value={
-                        pageState.selectedSocialMediaAccount?.engagement ?? 0
-                      }
-                      chartData={[]}
-                    />
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
                   </div>
                 </div>
                 <input
@@ -654,7 +685,39 @@ function Page() {
                     }))
                   }
                 />
-                <div className={`tab-content relative`}></div>
+                <div className={`tab-content`}>
+                  <div className="flex gap-3">
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+                  </div>
+                </div>
                 <input
                   type="radio"
                   name="tab"
@@ -672,7 +735,39 @@ function Page() {
                     }))
                   }
                 />
-                <div className={`tab-content relative`}></div>
+                <div className={`tab-content`}>
+                  <div className="flex gap-3">
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+                  </div>
+                </div>
                 <input
                   type="radio"
                   name="tab"
@@ -690,121 +785,272 @@ function Page() {
                     }))
                   }
                 />
-                <div className={`tab-content relative`}></div>
+                <div className={`tab-content`}>
+                  <div className="flex gap-3">
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
             {/* ===== 02-01-01 End Analytics Tabs ===== */}
 
             {/* ===== 02-01-02 Start Analytics ===== */}
             <div className="col-span-2 row-span-2 col-start-3">
-              <div
-                className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
-              >
-                <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
-                  <div className="w-full place-self-end bg-red-500">
-                    <LineCharts chartData={[]} />
-                  </div>
+              {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+              pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                <div
+                  className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
+                >
+                  <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
+                    <div className="w-full place-self-end">
+                      <AreaChart
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    </div>
 
-                  <div className="bg-blue-500 flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
-                    <span>Average Reach</span>
-                    <span>|</span>
-                    <span className="font-bold">200k</span>
-                    <span>
-                      <svg
-                        width="18"
-                        height="9"
-                        viewBox="0 0 18 9"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.900543 9L17.101 9C17.265 8.99965 17.4258 8.96944 17.566 8.91261C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242982C9.40578 -0.0809961 8.59756 -0.080996 8.26095 0.242982L0.160722 8.05692C0.066962 8.14705 0.0119789 8.25261 0.00174654 8.36214C-0.00848579 8.47167 0.0264241 8.58098 0.102683 8.67819C0.178943 8.7754 0.293634 8.8568 0.434298 8.91353C0.574961 8.97027 0.736217 9.00017 0.900543 9Z"
-                          fill="#5FA85B"
-                        />
-                      </svg>
-                    </span>
+                    <div className="flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
+                      <span>Average</span>
+                      <span>|</span>
+                      <span className="font-bold">{renderAvgValue()}</span>
+                      {/* <span>
+                            <svg
+                              width="18"
+                              height="9"
+                              viewBox="0 0 18 9"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0.900543 9L17.101 9C17.265 8.99965 17.4258 8.96944 17.566 8.91261C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242982C9.40578 -0.0809961 8.59756 -0.080996 8.26095 0.242982L0.160722 8.05692C0.066962 8.14705 0.0119789 8.25261 0.00174654 8.36214C-0.00848579 8.47167 0.0264241 8.58098 0.102683 8.67819C0.178943 8.7754 0.293634 8.8568 0.434298 8.91353C0.574961 8.97027 0.736217 9.00017 0.900543 9Z"
+                                fill="#5FA85B"
+                              />
+                            </svg>
+                          </span> */}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div
+                  className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
+                >
+                  <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
+                    <div className="w-full place-self-end">
+                      {/* Loading Skeleton for the AreaChart */}
+                      <div className="bg-gray-300 animate-pulse h-40 w-full rounded"></div>
+                    </div>
+
+                    <div className="flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
+                      {/* Loading Skeleton for the "Average" text */}
+                      <span className="bg-gray-300 animate-pulse h-4 w-16 block rounded"></span>
+                      <span>|</span>
+                      <span className="bg-gray-300 animate-pulse h-4 w-12 block rounded"></span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             {/* ===== 02-01-02 End Analytics ===== */}
 
-            {/* ===== 02-01-03 Start Engagement ===== */}
+            {/* ===== 02-01-03 Start Posts & Comments Insights ===== */}
             <div
               className={`col-span-4 row-span-2 row-start-3 ${styles.engagement}`}
             >
-              <div
-                className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)] `}
-              >
-                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
-                  <div className="w-1/2 h-full flex flex-col">
-                    <h3 className="text-xl font-bold">Tweets</h3>
-                    <ul className="text-sm list-none">
-                      <li className="flex justify-between items-center">
-                        <span>Tweets Created</span>
-                        <span>1</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Impressions</span>
-                        <span>24</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Likes</span>
-                        <span>34</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Retweets</span>
-                        <span>12</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
-                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
-                      <h3 className="text-sm pt-3 pl-5  font-bold">
-                        Tweets Created
+              {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+              pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                <div
+                  className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)] `}
+                >
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    <div className="w-1/2 h-full flex flex-col">
+                      <h3 className="text-xl font-bold">
+                        {pageState.selectedSocialMediaAccount?.platform ===
+                        "TWITTER"
+                          ? "Tweets"
+                          : "Posts"}
                       </h3>
-                      <div className="text-[var(--dark)]">
-                        <LineCharts chartData={[]} />
+                      <ul className="text-sm list-none">
+                        <li className="flex justify-between items-center">
+                          <span>
+                            {pageState.selectedSocialMediaAccount?.platform ===
+                            "TWITTER"
+                              ? "Tweets "
+                              : "Posts "}
+                            Created
+                          </span>
+                          <span>
+                            {pageState.fetchedPostsCountChart
+                              .map((e) => e.data)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
+                        </li>
+                        <li className="flex justify-between items-center">
+                          <span>Likes</span>
+                          <span>
+                            {pageState.fetchedPostInsights
+                              .map((e) => e.data.like_count)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
+                        </li>
+                        <li className="flex justify-between items-center">
+                          <span>
+                            {pageState.selectedSocialMediaAccount?.platform ===
+                            "TWITTER"
+                              ? "Retweets"
+                              : "Shares"}
+                          </span>
+                          <span>
+                            {pageState.fetchedPostInsights
+                              .map((e) => e.data.retweet_count)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <h3 className="text-sm pt-3 pl-5 font-bold">
+                          {pageState.selectedSocialMediaAccount?.platform ===
+                          "TWITTER"
+                            ? "Tweets "
+                            : "Posts "}
+                          Created
+                        </h3>
+                        <div className="text-[var(--dark)]">
+                          <AreaChart
+                            chartData={pageState.fetchedPostsCountChart.map(
+                              (e) => e.data
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    <div className="w-1/2 h-full flex flex-col">
+                      <h3 className="text-xl font-bold">Comments</h3>
+                      <ul className="text-sm list-none">
+                        <li className="flex justify-between items-center">
+                          <span>Comments Created</span>
+                          <span>
+                            {
+                              pageState.fetchedCommentsCountChart
+                                .map((e) => e.data)
+                                .reduce((acc, curr) => acc + curr, 0)
+                              // +
+                              // pageState.fetchedPostInsights
+                              //   .map((e) => e.data.num_comments)
+                              //   .reduce((acc, curr) => acc + curr, 0)
+                            }
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <h3 className="text-sm pt-3 pl-5 font-bold">
+                          Comments Created
+                        </h3>
+                        <div className="text-[var(--dark)]">
+                          <AreaChart
+                            chartData={pageState.fetchedCommentsCountChart.map(
+                              (e) => e.data
+                            )}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
-                  <div className="w-1/2 h-full flex flex-col">
-                    <h3 className="text-xl font-bold">Tweets</h3>
-                    <ul className="text-sm list-none">
-                      <li className="flex justify-between items-center">
-                        <span>Tweets Created</span>
-                        <span>1</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Impressions</span>
-                        <span>24</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Likes</span>
-                        <span>34</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Retweets</span>
-                        <span>12</span>
-                      </li>
-                    </ul>
+              ) : (
+                <div
+                  className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)]`}
+                >
+                  {/* Left Section */}
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    {/* Text Content Placeholder */}
+                    <div className="w-1/2 h-full flex flex-col">
+                      <div className="h-6 bg-gray-300 animate-pulse rounded-md mb-4"></div>
+                      <ul className="space-y-2">
+                        {[...Array(4)].map((_, i) => (
+                          <li
+                            key={i}
+                            className="flex justify-between items-center"
+                          >
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/2"></div>
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/4"></div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {/* Chart Placeholder */}
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <div className="h-4 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                        <div className="h-24 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
-                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
-                      <h3 className="text-sm pt-3 pl-5  font-bold">
-                        Tweets Created
-                      </h3>
-                      <div className="text-[var(--dark)]">
-                        <LineCharts chartData={[]} />
+
+                  {/* Right Section */}
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    {/* Text Content Placeholder */}
+                    <div className="w-1/2 h-full flex flex-col">
+                      <div className="h-6 bg-gray-300 animate-pulse rounded-md mb-4"></div>
+                      <ul className="space-y-2">
+                        {[...Array(4)].map((_, i) => (
+                          <li
+                            key={i}
+                            className="flex justify-between items-center"
+                          >
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/2"></div>
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/4"></div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {/* Chart Placeholder */}
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <div className="h-4 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                        <div className="h-24 bg-gray-300 animate-pulse rounded-md m-4"></div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-            {/* ===== 02-01-03 End Engagement ===== */}
+            {/* ===== 02-01-03 End Posts & Comments Insights ===== */}
           </div>
           {/* ===== 02-01 End Analytics ===== */}
         </div>

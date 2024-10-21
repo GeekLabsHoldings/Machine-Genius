@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import styles from "../CardStyles.module.css";
 
 const AreaChart = dynamic(
-  () => import("@/app/_components/OP/Analytics/02Brands/Charts/AreaChart"),
+  () => import("@/app/_components/OP/Analytics/00Charts/AreaChart"),
   {
     ssr: false,
   }
