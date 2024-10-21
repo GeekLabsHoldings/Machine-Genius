@@ -1,6 +1,3 @@
-.op__analytics__container .card * {
-  transition: all 150ms;
-}
 /* ===== Start Slick Slider ===== */
 .op__analytics__container .slick-slide > div {
   margin: 0 1rem; /* Adjust the value as needed */
