@@ -100,7 +100,7 @@ export default function Page() {
           .replace(/\[firstName\]/g, result?.candidates[0].firstName)
           .replace(/\[lastName\]/g, result?.candidates[0].lastName)
           .replace(/\[role\]/g, result?.candidates[0].role.roleName)
-          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+          .replace(/\[link\]/g, `https://recruitment.geeklabs.agency/interview-schedule/${recievedId}/${Date.now()}/${
               typeof window !== "undefined" &&
               localStorage.getItem("decodedToken") &&
               JSON.parse(localStorage.getItem("decodedToken") as string)._id
@@ -118,7 +118,7 @@ export default function Page() {
           .replace(/\[role\]/g, result.candidates[0].role.roleName)
           .replace(
             /\[link\]/g,
-            `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+            `https://recruitment.geeklabs.agency/interview-schedule/${recievedId}/${Date.now()}/${
               typeof window !== "undefined" &&
               localStorage.getItem("decodedToken") &&
               JSON.parse(localStorage.getItem("decodedToken") as string)._id
@@ -199,7 +199,7 @@ export default function Page() {
           .replace(/\[firstName\]/g, candidateData?.firstName)
           .replace(/\[lastName\]/g, candidateData?.lastName)
           .replace(/\[role\]/g, candidateData?.role?.roleName)
-          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+          .replace(/\[link\]/g, `https://recruitment.geeklabs.agency/interview-schedule/${recievedId}/${Date.now()}/${
               typeof window !== "undefined" &&
               localStorage.getItem("decodedToken") &&
               JSON.parse(localStorage.getItem("decodedToken") as string)._id

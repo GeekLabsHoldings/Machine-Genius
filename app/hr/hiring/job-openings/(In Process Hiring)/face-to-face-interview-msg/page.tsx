@@ -84,7 +84,7 @@ export default function Page() {
         result?.template?.details[0]?.description
           .replace(/\[firstName\]/g, result?.candidates[0]?.firstName)
           .replace(/\[lastName\]/g, result?.candidates[0]?.lastName)
-          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+          .replace(/\[link\]/g, `https://recruitment.geeklabs.agency/interview-schedule/${recievedId}/${Date.now()}/${
             typeof window !== "undefined" &&
             localStorage.getItem("decodedToken") &&
             JSON.parse(localStorage.getItem("decodedToken") as string)._id
@@ -165,7 +165,7 @@ export default function Page() {
           .replace(/\[firstName\]/g, candidateData.firstName)
           .replace(/\[lastName\]/g, candidateData.lastName)
           .replace(/\[role\]/g, candidateData.role.roleName)
-          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+          .replace(/\[link\]/g, `https://recruitment.geeklabs.agency/interview-schedule/${recievedId}/${Date.now()}/${
             typeof window !== "undefined" &&
             localStorage.getItem("decodedToken") &&
             JSON.parse(localStorage.getItem("decodedToken") as string)._id
