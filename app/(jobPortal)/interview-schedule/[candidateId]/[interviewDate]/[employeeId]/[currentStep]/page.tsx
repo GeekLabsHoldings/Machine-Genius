@@ -98,8 +98,8 @@ const PhoneScheduler = () => {
     return timeSlots.some((slot) => isSameDay(new Date(slot.startTime), date));
   };
 
-  const getAvailableTimesForDate = (date) => {
-    return timeSlots.filter((slot) =>
+  const getAvailableTimesForDate = (date: Date) => {
+    return timeSlots.filter((slot: { startTime: Date }) =>
       isSameDay(new Date(slot.startTime), date)
     );
   };
