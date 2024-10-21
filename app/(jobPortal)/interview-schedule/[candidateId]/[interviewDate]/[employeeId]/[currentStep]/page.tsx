@@ -34,7 +34,7 @@ const PhoneScheduler = () => {
       );
       const data = await response.json();
       setTimeSlots(
-        data.map((slot) => ({
+        data.map((slot: { startTime: number; endTime: number }) => ({
           startTime: new Date(slot.startTime),
           endTime: new Date(slot.endTime),
         }))
