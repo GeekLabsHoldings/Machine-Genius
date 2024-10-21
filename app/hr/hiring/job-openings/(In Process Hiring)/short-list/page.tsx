@@ -100,7 +100,11 @@ export default function Page() {
           .replace(/\[firstName\]/g, result?.candidates[0].firstName)
           .replace(/\[lastName\]/g, result?.candidates[0].lastName)
           .replace(/\[role\]/g, result?.candidates[0].role.roleName)
-          .replace(/\[link\]/g, "https://www.google.com")
+          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+              typeof window !== "undefined" &&
+              localStorage.getItem("decodedToken") &&
+              JSON.parse(localStorage.getItem("decodedToken") as string)._id
+            }/Schedule_Interview_Call`)
       );
       setOldTemplate(result.template.details[0].description);
       console.log(result.template.details[0].description);
@@ -112,7 +116,14 @@ export default function Page() {
           .replace(/\[firstName\]/g, result.candidates[0].firstName)
           .replace(/\[lastName\]/g, result.candidates[0].lastName)
           .replace(/\[role\]/g, result.candidates[0].role.roleName)
-          .replace(/\[link\]/g, "https://www.google.com")
+          .replace(
+            /\[link\]/g,
+            `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+              typeof window !== "undefined" &&
+              localStorage.getItem("decodedToken") &&
+              JSON.parse(localStorage.getItem("decodedToken") as string)._id
+            }/Schedule_Interview_Call`
+          )
       );
       console.log("result", result);
     } catch (error) {
@@ -149,6 +160,30 @@ export default function Page() {
     }
   }
 
+  async function goPreviousStep() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/previous-step/${step}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/prospects-preview`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
+
   useEffect(() => {
     if (recievedId) {
       setCandidateData(
@@ -164,7 +199,11 @@ export default function Page() {
           .replace(/\[firstName\]/g, candidateData?.firstName)
           .replace(/\[lastName\]/g, candidateData?.lastName)
           .replace(/\[role\]/g, candidateData?.role?.roleName)
-          .replace(/\[link\]/g, "https://www.google.com")
+          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
+              typeof window !== "undefined" &&
+              localStorage.getItem("decodedToken") &&
+              JSON.parse(localStorage.getItem("decodedToken") as string)._id
+            }/Schedule_Interview_Call`)
       );
     }
   }, [candidateData]);
@@ -229,11 +268,7 @@ export default function Page() {
       </div>
 
       <div className="flex justify-between mt-4">
-        <CustomBtn
-          word={"Back"}
-          btnColor="white"
-          href="/hr/hiring/job-openings/prospects-preview"
-        />
+        <CustomBtn word={"Back"} btnColor="white" onClick={goPreviousStep} />
         <CustomBtn word={"Next"} btnColor="black" onClick={updateNextStep} />
       </div>
       <Modal

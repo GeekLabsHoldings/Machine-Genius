@@ -87,7 +87,7 @@ export default function page() {
           body: JSON.stringify({
             title: requestHiringData.title,
             level: requestHiringData.level,
-            department: DepartmentEnum.ContentCreator,
+            department: DepartmentEnum.Accounting,
           }),
         }
       );
