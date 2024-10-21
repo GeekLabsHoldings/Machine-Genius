@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { format, addMonths, subMonths, startOfDay, isSameDay } from "date-fns";
 import { useParams } from "next/navigation";
 
-export enum HiringStepsEnum {
+enum HiringStepsEnum {
   Schedule_Interview_Call = "PhoneCall",
   Schedule_Face_To_Face_Interview = "FaceToFace",
 }
