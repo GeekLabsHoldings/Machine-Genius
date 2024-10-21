@@ -692,9 +692,12 @@ function Page() {
               {/* Youtube Watchtime */}
               <div className="YoutubeWatchTime w-[27.5%]">
                 <YoutubeWatchtime
-                  fetchedYoutubeData={pageState.fetchedYoutubeData?.data.map(
-                    (e: any) => e[4]
-                  )}
+                  fetchedYoutubeData={
+                    Array.isArray(pageState.fetchedYoutubeData?.data) &&
+                    pageState.fetchedYoutubeData?.data.length > 0
+                      ? pageState.fetchedYoutubeData?.data.map((e: any) => e[4])
+                      : []
+                  }
                 />
               </div>
             </div>

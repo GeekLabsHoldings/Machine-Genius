@@ -135,29 +135,54 @@ export default function YoutubeWatchtime({
 
               {/* Table Body */}
               <div className={styles.table_body}>
-                {/* {fetchedYoutubeData?.map((e: any, idx: number) => { */}
-                {/* return ( */}
-                <ul
-                // key={idx}
-                >
-                  <li className="w-[30%]">
-                    <span>Investocrasy</span>
-                  </li>
-                  <li className={`w-[70%] ${styles.center}`}>
-                    <span className={styles.chart}>
-                      <div className="h-[80%]">
-                        <AreaChart chartData={fetchedYoutubeData} chartOptions={options} />
-                      </div>
-                    </span>
-                    <span className={styles.dailyAverage}>
-                      <span>{avgValue}</span>
-                      <span>{sidewaysIcon}</span>
-                    </span>
-                  </li>
-                </ul>
-                
-                {/* ); */}
-                {/* })} */}
+                {!fetchedYoutubeData || fetchedYoutubeData.length === 0 ? (
+                  <div className={styles.table_body}>
+                    {/* Skeleton Rows */}
+                    {[...Array(2)].map((_, index) => (
+                      <ul
+                        key={index}
+                        className="flex items-center justify-between gap-[15px] py-[15px] px-[15px] border-b border-[#dfdfdf] last:border-none"
+                      >
+                        <li className="w-[30%]">
+                          <span className="block bg-gray-300 h-[15px] w-24 rounded animate-pulse"></span>
+                        </li>
+                        <li className="w-[70%] flex items-center justify-between">
+                          <div
+                            className={`${styles.chart} flex items-center justify-center`}
+                            style={{ width: "60%", height: "40px" }} // Adjusted height and width to match CSS
+                          >
+                            <span className="block bg-gray-300 h-full w-full rounded animate-pulse"></span>
+                          </div>
+                          <div
+                            className={`${styles.dailyAverage} flex items-center`}
+                          >
+                            <span className="block bg-gray-300 h-[15px] w-16 rounded animate-pulse"></span>
+                          </div>
+                        </li>
+                      </ul>
+                    ))}
+                  </div>
+                ) : (
+                  <ul>
+                    <li className="w-[30%]">
+                      <span>Investocrasy</span>
+                    </li>
+                    <li className={`w-[70%] ${styles.center}`}>
+                      <span className={styles.chart}>
+                        <div className="h-[80%]">
+                          <AreaChart
+                            chartData={fetchedYoutubeData}
+                            chartOptions={options}
+                          />
+                        </div>
+                      </span>
+                      <span className={styles.dailyAverage}>
+                        <span>{avgValue}</span>
+                        <span>{sidewaysIcon}</span>
+                      </span>
+                    </li>
+                  </ul>
+                )}
               </div>
             </div>
           </div>
