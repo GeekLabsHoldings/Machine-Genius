@@ -275,7 +275,7 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
+        }&limit=30&sign=-1&brand=${
           pageState.selectedSocialMediaAccount?.brand
         }`,
         {
@@ -325,7 +325,7 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
+        }&limit=30&sign=-1&brand=${
           pageState.selectedSocialMediaAccount?.brand
         }`,
         {
@@ -375,7 +375,7 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=20&sign=-1&group=${
+        }&limit=30&sign=-1&group=${
           pageState.selectedSocialMediaAccount?.group_id
         }`,
         {
@@ -425,7 +425,7 @@ function Page() {
           pageState.activeAnalyticsTimeframe
         }&day=${new Date().toISOString().split("T")[0]}&platform=${
           pageState.selectedSocialMediaAccount?.platform
-        }&limit=10&sign=-1&brand=${
+        }&limit=30&sign=-1&brand=${
           pageState.selectedSocialMediaAccount?.brand
         }`,
         {
@@ -879,82 +879,146 @@ function Page() {
             </div>
             {/* ===== 02-01-02 End Analytics ===== */}
 
-            {/* ===== 02-01-03 Start Engagement ===== */}
+            {/* ===== 02-01-03 Start Posts & Comments Insights ===== */}
             <div
               className={`col-span-4 row-span-2 row-start-3 ${styles.engagement}`}
             >
-              <div
-                className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)] `}
-              >
-                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
-                  <div className="w-1/2 h-full flex flex-col">
-                    <h3 className="text-xl font-bold">Tweets</h3>
-                    <ul className="text-sm list-none">
-                      <li className="flex justify-between items-center">
-                        <span>Tweets Created</span>
-                        <span>1</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Impressions</span>
-                        <span>24</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Likes</span>
-                        <span>34</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Retweets</span>
-                        <span>12</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
-                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
-                      <h3 className="text-sm pt-3 pl-5  font-bold">
-                        Tweets Created
+              {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+              pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                <div
+                  className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)] `}
+                >
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    <div className="w-1/2 h-full flex flex-col">
+                      <h3 className="text-xl font-bold">
+                        {pageState.selectedSocialMediaAccount?.platform ===
+                        "TWITTER"
+                          ? "Tweets"
+                          : "Posts"}
                       </h3>
-                      <div className="text-[var(--dark)]">
-                        <AreaChart chartData={[]} />
+                      <ul className="text-sm list-none">
+                        <li className="flex justify-between items-center">
+                          <span>
+                            {pageState.selectedSocialMediaAccount?.platform ===
+                            "TWITTER"
+                              ? "Tweets "
+                              : "Posts "}
+                            Created
+                          </span>
+                          <span>1</span>
+                        </li>
+                        <li className="flex justify-between items-center">
+                          <span>Likes</span>
+                          <span>34</span>
+                        </li>
+                        <li className="flex justify-between items-center">
+                          <span>
+                            {pageState.selectedSocialMediaAccount?.platform ===
+                            "TWITTER"
+                              ? "Retweets"
+                              : "Shares"}
+                          </span>
+                          <span>12</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <h3 className="text-sm pt-3 pl-5 font-bold">
+                          {pageState.selectedSocialMediaAccount?.platform ===
+                          "TWITTER"
+                            ? "Tweets "
+                            : "Posts "}
+                          Created
+                        </h3>
+                        <div className="text-[var(--dark)]">
+                          <AreaChart chartData={[]} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    <div className="w-1/2 h-full flex flex-col">
+                      <h3 className="text-xl font-bold">Comments</h3>
+                      <ul className="text-sm list-none">
+                        <li className="flex justify-between items-center">
+                          <span>Comments Created</span>
+                          <span>1</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <h3 className="text-sm pt-3 pl-5 font-bold">
+                          Comments Created
+                        </h3>
+                        <div className="text-[var(--dark)]">
+                          <AreaChart chartData={[]} />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
-                  <div className="w-1/2 h-full flex flex-col">
-                    <h3 className="text-xl font-bold">Tweets</h3>
-                    <ul className="text-sm list-none">
-                      <li className="flex justify-between items-center">
-                        <span>Tweets Created</span>
-                        <span>1</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Impressions</span>
-                        <span>24</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Likes</span>
-                        <span>34</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Retweets</span>
-                        <span>12</span>
-                      </li>
-                    </ul>
+              ) : (
+                <div
+                  className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)]`}
+                >
+                  {/* Left Section */}
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    {/* Text Content Placeholder */}
+                    <div className="w-1/2 h-full flex flex-col">
+                      <div className="h-6 bg-gray-300 animate-pulse rounded-md mb-4"></div>
+                      <ul className="space-y-2">
+                        {[...Array(4)].map((_, i) => (
+                          <li
+                            key={i}
+                            className="flex justify-between items-center"
+                          >
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/2"></div>
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/4"></div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {/* Chart Placeholder */}
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <div className="h-4 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                        <div className="h-24 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
-                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
-                      <h3 className="text-sm pt-3 pl-5  font-bold">
-                        Tweets Created
-                      </h3>
-                      <div className="text-[var(--dark)]">
-                        <AreaChart chartData={[]} />
+
+                  {/* Right Section */}
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    {/* Text Content Placeholder */}
+                    <div className="w-1/2 h-full flex flex-col">
+                      <div className="h-6 bg-gray-300 animate-pulse rounded-md mb-4"></div>
+                      <ul className="space-y-2">
+                        {[...Array(4)].map((_, i) => (
+                          <li
+                            key={i}
+                            className="flex justify-between items-center"
+                          >
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/2"></div>
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/4"></div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {/* Chart Placeholder */}
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <div className="h-4 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                        <div className="h-24 bg-gray-300 animate-pulse rounded-md m-4"></div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-            {/* ===== 02-01-03 End Engagement ===== */}
+            {/* ===== 02-01-03 End Posts & Comments Insights ===== */}
           </div>
           {/* ===== 02-01 End Analytics ===== */}
         </div>
