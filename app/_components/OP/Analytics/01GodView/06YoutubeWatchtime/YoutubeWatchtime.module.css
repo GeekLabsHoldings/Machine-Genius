@@ -54,7 +54,7 @@
   flex-direction: column;
   height: 20.75vh;
   overflow-y: auto;
-  padding: 15px;
+  /* padding: 15px; */
 }
 
 .table .table_body::-webkit-scrollbar {
@@ -66,32 +66,20 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
-  padding-top: 10px;
+  /* padding-top: 10px;
   padding-bottom: 10px;
-  transition: all 0.2s;
+  transition: all 0.2s; */
+  padding: 15px;
+  border-bottom: 1px solid #dfdfdf;
 }
 
-.table .table_body ul:first-child {
+/* .table .table_body ul:first-child {
   padding-top: 0;
-}
+} */
 
 .table .table_body ul:last-child {
-  padding-bottom: 0;
-}
-
-.table .table_body ul::after {
-  /* Border Bottom */
-  content: "";
-  width: 100%;
-  height: 1px;
-  background-color: #ddd;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-}
-
-.table .table_body ul:last-child:after {
-  content: none;
+  /* padding-bottom: 0; */
+  border-bottom: none;
 }
 
 .table .table_body ul li {
@@ -102,20 +90,23 @@
 
 .table .table_body li.center {
   justify-content: center;
+  gap: var(--20px);
 }
 
-.table .table_body ul li:nth-child(2) {
+.chart {
+  width: 60%;
+  height: var(--sy-40px);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  background-size: cover;
-  vertical-align: middle;
 }
 
-.table .table_body ul li:nth-child(2) .dailyAverage {
+.table .dailyAverage {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
+}
+.dailyAverage span:first-child {
+  font-weight: 600;
 }

@@ -131,6 +131,7 @@ function Page() {
     fetchedGroupInsightsChart: IGroupInsightsChart[];
     fetchedPostInsights: IPostInsights[];
     fetchedKPIData: IKPIData[];
+    fetchedYoutubeData: any | null;
   }>({
     activePageTab: "GodView",
     activeAnalyticsTimeframe: "Daily",
@@ -143,6 +144,7 @@ function Page() {
     fetchedGroupInsightsChart: [],
     fetchedPostInsights: [],
     fetchedKPIData: [],
+    fetchedYoutubeData: null,
   });
 
   const getSocialMediaAccounts = async () => {
@@ -522,6 +524,67 @@ function Page() {
     }
   };
 
+  const getYoutubeData = async (brandId: string) => {
+    try {
+      // Get the current date
+      const currentDate = new Date();
+
+      // Calculate the first day of the current month
+      const firstDayOfMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      )
+        .toISOString()
+        .split("T")[0]; // Format as YYYY-MM-DD
+
+      // Calculate the last day of the current month
+      const lastDayOfMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        0
+      )
+        .toISOString()
+        .split("T")[0]; // Format as YYYY-MM-DD
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/yt_analytics/get-data?brand=${brandId}&startDate=${firstDayOfMonth}&endDate=${lastDayOfMonth}&duration=day`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch Youtube data!");
+        return;
+      }
+      const data: any = await res.json();
+      if (data) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedYoutubeData: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch KPI data!");
+      // }
+    } catch (error) {
+      console.error("Error fetching Youtube data:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to fetch Youtube data!"
+      );
+    }
+  };
+
   useEffect(() => {
     if (pageState.activePageTab === "GodView") {
       getTotalSubscribers();
@@ -538,6 +601,7 @@ function Page() {
         fetchDataForAllBrands();
         isFirstRender.current = false;
       }
+      getYoutubeData("66fcfb8c57531aaf2dca2686");
     }
   }, [pageState.activePageTab]);
 
@@ -627,7 +691,11 @@ function Page() {
 
               {/* Youtube Watchtime */}
               <div className="YoutubeWatchTime w-[27.5%]">
-                <YoutubeWatchtime />
+                <YoutubeWatchtime
+                  fetchedYoutubeData={pageState.fetchedYoutubeData?.data.map(
+                    (e: any) => e[4]
+                  )}
+                />
               </div>
             </div>
             {/* ==== End Second Row ==== */}
