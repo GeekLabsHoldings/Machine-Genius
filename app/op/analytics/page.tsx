@@ -28,6 +28,7 @@ import {
   IGroup,
 } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 import AnalyticsCard from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCard";
+import AnalyticsCardSkeleton from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCardSkeleton";
 
 const LineCharts = dynamic(
   () => import("@/app/_components/OP/Analytics/02Brands/Charts/AreaChart"),
@@ -615,8 +616,25 @@ function Page() {
                 />
                 <div className={`tab-content`}>
                   <div className="flex gap-3">
-                    <AnalyticsCard title="Followers" value={0} />
-                    <AnalyticsCard title="Engagement" value={2022550} />
+                    {/* <AnalyticsCard
+                      title="Followers"
+                      value={
+                        pageState.fetchedSubscribersGains?.[
+                          pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                        ]?.gain ?? 0
+                      }
+                      chartData={[]}
+                    /> */}
+
+                    <AnalyticsCardSkeleton />
+
+                    <AnalyticsCard
+                      title="Engagement"
+                      value={
+                        pageState.selectedSocialMediaAccount?.engagement ?? 0
+                      }
+                      chartData={[]}
+                    />
                   </div>
                 </div>
                 <input
@@ -684,7 +702,7 @@ function Page() {
               >
                 <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
                   <div className="w-full place-self-end bg-red-500">
-                    <LineCharts />
+                    <LineCharts chartData={[]} />
                   </div>
 
                   <div className="bg-blue-500 flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
@@ -746,7 +764,7 @@ function Page() {
                         Tweets Created
                       </h3>
                       <div className="text-[var(--dark)]">
-                        <LineCharts />
+                        <LineCharts chartData={[]} />
                       </div>
                     </div>
                   </div>
@@ -779,7 +797,7 @@ function Page() {
                         Tweets Created
                       </h3>
                       <div className="text-[var(--dark)]">
-                        <LineCharts />
+                        <LineCharts chartData={[]} />
                       </div>
                     </div>
                   </div>
