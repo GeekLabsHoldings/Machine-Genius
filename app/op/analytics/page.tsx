@@ -1,8 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { globalContext } from "@/app/_context/store";
 import styles from "./analytics.module.css";
 import "./analytics.css";
+import toast from "react-hot-toast";
 import dynamic from "next/dynamic";
+const AreaChart = dynamic(
+  () => import("@/app/_components/OP/Analytics/00Charts/AreaChart"),
+  {
+    ssr: false,
+  }
+);
 // ===== 01- Start God View =====
 import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
 import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
@@ -13,18 +21,20 @@ import YoutubeWatchtime from "@/app/_components/OP/Analytics/01GodView/06Youtube
 // ===== 01- End God View =====
 // ===== 02- Start Brands =====
 import Slider from "react-slick";
-const TasksChart = dynamic(
-  () => import("@/app/_components/OP/Analytics/02Brands/graph/AreaChart"),
-  {
-    ssr: false,
-  }
-);
-const LineCharts = dynamic(
-  () => import("@/app/_components/OP/Analytics/02Brands/graph/LineCharts"),
-  {
-    ssr: false,
-  }
-);
+import SocialMediaAccountCard from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCard";
+import SocialMediaAccountCardSkeleton from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCardSkeleton";
+import {
+  IBrandPlatformSubscribers,
+  IBrandWithGroups,
+  IGroupInsightsChart,
+  ICommentsCountChart,
+  IPostsCountChart,
+  ISubscriberGains,
+  IPostInsights,
+  IGroup,
+} from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
+import AnalyticsCard from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCard";
+import AnalyticsCardSkeleton from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCardSkeleton";
 // ===== 02- End Brands =====
 
 // ====== Start react-slick Slider =====
@@ -61,7 +71,7 @@ function SamplePrevArrow(props: any) {
 const settings: any = {
   infinite: false,
   speed: 500,
-  slidesToShow: 5,
+  slidesToShow: 4,
   slidesToScroll: 5,
   responsive: [
     {
@@ -105,13 +115,391 @@ const settings: any = {
 // ====== End react-slick Slider =====
 
 function Page() {
+  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
-    activePageTab: number;
-    activeAnalyticsTab: number;
+    activePageTab: "GodView" | "Brands";
+    activeAnalyticsTimeframe: "Daily" | "Weekly" | "Monthly" | "Yearly";
+    selectedSocialMediaAccount: IGroup | null;
+    fetchedSocialMediaAccounts: IGroup[];
+    fetchedTotalSubscribers: IBrandPlatformSubscribers[];
+    fetchedSubscribersGains: ISubscriberGains | null;
+    fetchedPostsCountChart: IPostsCountChart[];
+    fetchedCommentsCountChart: ICommentsCountChart[];
+    fetchedGroupInsightsChart: IGroupInsightsChart[];
+    fetchedPostInsights: IPostInsights[];
   }>({
-    activePageTab: 2,
-    activeAnalyticsTab: 1,
+    activePageTab: "GodView",
+    activeAnalyticsTimeframe: "Daily",
+    selectedSocialMediaAccount: null,
+    fetchedSocialMediaAccounts: [],
+    fetchedTotalSubscribers: [],
+    fetchedSubscribersGains: null,
+    fetchedPostsCountChart: [],
+    fetchedCommentsCountChart: [],
+    fetchedGroupInsightsChart: [],
+    fetchedPostInsights: [],
   });
+
+  const getSocialMediaAccounts = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-groups`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch social media accounts!");
+        return;
+      }
+      const data: IBrandWithGroups[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedSocialMediaAccounts: data.flatMap((ele) => ele.groups),
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch social media accounts!");
+      // }
+    } catch (error) {
+      console.error("Error fetching social media accounts:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch social media accounts!"
+      );
+    }
+  };
+
+  const getTotalSubscribers = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-subscripers`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch total subscribers!");
+        return;
+      }
+      const data: IBrandPlatformSubscribers[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedTotalSubscribers: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch total subscribers!");
+      // }
+    } catch (error) {
+      console.error("Error fetching total subscribers:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch total subscribers!"
+      );
+    }
+  };
+
+  const getSubscribersGains = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/analytics/subs-gains?platform=${pageState.selectedSocialMediaAccount?.platform}&group=${pageState.selectedSocialMediaAccount?.group_id}`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch subscribers gains!");
+        return;
+      }
+      const data: ISubscriberGains = await res.json();
+      if (data) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedSubscribersGains: data,
+        }));
+      } else {
+        toast.error("Failed to fetch subscribers gains!");
+      }
+    } catch (error) {
+      console.error("Error fetching subscribers gains:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch subscribers gains!"
+      );
+    }
+  };
+
+  const getPostsCountChart = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/post-count?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=30&sign=-1&brand=${
+          pageState.selectedSocialMediaAccount?.brand
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch posts count chart!");
+        return;
+      }
+      const data: IPostsCountChart[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedPostsCountChart: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch posts count chart!");
+      // }
+    } catch (error) {
+      console.error("Error fetching posts count chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch posts count chart!"
+      );
+    }
+  };
+
+  const getCommentsCountChart = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/comments-count?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=30&sign=-1&brand=${
+          pageState.selectedSocialMediaAccount?.brand
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch comments count chart!");
+        return;
+      }
+      const data: ICommentsCountChart[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedCommentsCountChart: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch comments count chart!");
+      // }
+    } catch (error) {
+      console.error("Error fetching comments count chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch comments count chart!"
+      );
+    }
+  };
+
+  const getGroupInsightsChart = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/group-insights?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=30&sign=-1&group=${
+          pageState.selectedSocialMediaAccount?.group_id
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch group insights chart!");
+        return;
+      }
+      const data: IGroupInsightsChart[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedGroupInsightsChart: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch group insights chart!");
+      // }
+    } catch (error) {
+      console.error("Error fetching group insights chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch group insights chart!"
+      );
+    }
+  };
+
+  const getPostInsights = async () => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/ceo/analytics/post-insights?duration=${
+          pageState.activeAnalyticsTimeframe
+        }&day=${new Date().toISOString().split("T")[0]}&platform=${
+          pageState.selectedSocialMediaAccount?.platform
+        }&limit=30&sign=-1&brand=${
+          pageState.selectedSocialMediaAccount?.brand
+        }`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch post insights chart!");
+        return;
+      }
+      const data: IPostInsights[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedPostInsights: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch post insights chart!");
+      // }
+    } catch (error) {
+      console.error("Error fetching post insights chart:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch post insights chart!"
+      );
+    }
+  };
+
+  const renderAvgValue = () => {
+    if (
+      Array.isArray(pageState.fetchedGroupInsightsChart) &&
+      pageState.fetchedGroupInsightsChart.length > 0
+    ) {
+      const data = pageState.fetchedGroupInsightsChart.map((e) => e.result);
+      const avg = data.reduce((acc, curr) => acc + curr, 0) / data.length;
+      return Math.abs(avg) > 999 ? `${(avg / 1000).toFixed(1)}K` : avg;
+    }
+    return "-";
+  };
+
+  useEffect(() => {
+    if (pageState.activePageTab === "GodView") {
+      getTotalSubscribers();
+    }
+  }, [pageState.activePageTab]);
+
+  useEffect(() => {
+    if (pageState.activePageTab === "Brands") {
+      getSocialMediaAccounts();
+    }
+  }, [pageState.activePageTab]);
+
+  useEffect(() => {
+    if (pageState.activePageTab === "Brands") {
+      if (pageState.selectedSocialMediaAccount !== null) {
+        getSubscribersGains();
+        getGroupInsightsChart();
+        getPostsCountChart();
+        getCommentsCountChart();
+        getPostInsights();
+      }
+    }
+  }, [pageState.selectedSocialMediaAccount]);
 
   return (
     <section className={`overflow-hidden op__analytics__container`}>
@@ -120,10 +508,10 @@ function Page() {
         <a
           role="tab"
           className={`${styles.tab} ${
-            pageState.activePageTab === 1 ? styles.activeTab : ""
+            pageState.activePageTab === "GodView" ? styles.activeTab : ""
           }`}
           onClick={() =>
-            setPageState((prev) => ({ ...prev, activePageTab: 1 }))
+            setPageState((prev) => ({ ...prev, activePageTab: "GodView" }))
           }
         >
           God View
@@ -131,10 +519,10 @@ function Page() {
         <a
           role="tab"
           className={`${styles.tab} ${
-            pageState.activePageTab === 2 ? styles.activeTab : ""
+            pageState.activePageTab === "Brands" ? styles.activeTab : ""
           }`}
           onClick={() =>
-            setPageState((prev) => ({ ...prev, activePageTab: 2 }))
+            setPageState((prev) => ({ ...prev, activePageTab: "Brands" }))
           }
         >
           Brands
@@ -142,7 +530,7 @@ function Page() {
       </div>
 
       {/* ===== 01- Start God View ===== */}
-      {pageState.activePageTab === 1 && (
+      {pageState.activePageTab === "GodView" && (
         <div className={styles.dashboard}>
           <div className={styles.mainContent}>
             {/* ===== Start First Row ===== */}
@@ -161,17 +549,19 @@ function Page() {
 
             {/* ==== Start Second Row ==== */}
             <div className={styles.secondRow + " flex gap-[0.75vw]"}>
-              {/* Activity Over View */}
+              {/* Activity OverView */}
               <div className="ActivityOverView w-[40%]">
                 <ActivityOverview />
               </div>
 
-              {/* Followers Over View */}
+              {/* Followers OverView */}
               <div className="FollowersOverView w-[32.5%]">
-                <FollowersOverview />
+                <FollowersOverview
+                  fetchedTotalSubscribers={pageState.fetchedTotalSubscribers}
+                />
               </div>
 
-              {/* Youtube Watch time */}
+              {/* Youtube Watchtime */}
               <div className="YoutubeWatchTime w-[27.5%]">
                 <YoutubeWatchtime />
               </div>
@@ -180,14 +570,16 @@ function Page() {
           </div>
 
           <div className={styles.sidebar}>
-            <BrandAccounts />
+            <BrandAccounts
+              fetchedTotalSubscribers={pageState.fetchedTotalSubscribers}
+            />
           </div>
         </div>
       )}
       {/* ===== 01- End God View ===== */}
 
       {/* ===== 02- Start Brands ===== */}
-      {pageState.activePageTab === 2 && (
+      {pageState.activePageTab === "Brands" && (
         <div className={`relative op_analytics_brands`}>
           {/* ===== 02-00 Start Social Media Accounts ===== */}
           <div>
@@ -195,34 +587,43 @@ function Page() {
             <div className="sliderAudience w-[86vw]">
               <div className={`slider-container card ${styles.card} py-6`}>
                 <Slider {...settings}>
-                  {Array(12)
-                    .fill(0)
-                    .map((_, i) => (
-                      <div
-                        className={`${styles.card} px-[1vw] pt-[0.6vw] pb-[1vw] rounded-xl group hover:bg-[var(--dark)] hover:text-[var(--white)]`}
-                      >
-                        <div className="flex justify-between items-center pb-[0.5vw] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[0.5vw]">
-                          <h3 className="grow font-bold text-center">
-                            Twitter
-                          </h3>
-                        </div>
-                        <div className="grid mx-auto w-fit grid-cols-2 ">
-                          <span className="font-bold">Name:</span>
-                          <span>Mega Dose</span>
-                          <span className="font-bold">Username:</span>
-                          <span>@MEGADOSE</span>
-                          <span className="font-bold">Followers:</span>
-                          <span>20.1 K</span>
-                        </div>
-                      </div>
-                    ))}
+                  {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                  pageState.fetchedSocialMediaAccounts.length > 0
+                    ? pageState.fetchedSocialMediaAccounts.map((ele) => (
+                        <SocialMediaAccountCard
+                          key={ele._id}
+                          platformName={ele.platform}
+                          brandName={brandIdMap[ele.brand]}
+                          username={
+                            ele?.link
+                              ?.match(/[^/]+\/?$/)?.[0]
+                              ?.replace(/\/$/, "") ?? ""
+                          }
+                          followersCount={ele.subscribers}
+                          isActive={
+                            ele._id ===
+                            pageState.selectedSocialMediaAccount?._id
+                          }
+                          onClick={() =>
+                            setPageState((prev) => ({
+                              ...prev,
+                              selectedSocialMediaAccount: ele,
+                            }))
+                          }
+                        />
+                      ))
+                    : Array(4)
+                        .fill(0)
+                        .map((_, index) => (
+                          <SocialMediaAccountCardSkeleton key={index} />
+                        ))}
                 </Slider>
               </div>
             </div>
           </div>
           {/* ===== 02-00 End Social Media Accounts ===== */}
           {/* ===== 02-01 Start Analytics ===== */}
-          <div className="grid grid-cols-4 grid-rows-4 gap-4 mt-9">
+          <div className="grid grid-cols-4 grid-rows-4 gap-[--sy-20px] mt-[--sy-20px]">
             {/* ===== 02-01-01 Start Analytics Tabs ===== */}
             <div className="col-span-2 row-span-2">
               <h3 className="text-2xl font-bold">Analytics</h3>
@@ -231,236 +632,435 @@ function Page() {
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 1 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Daily"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Daily"
-                  checked={pageState.activeAnalyticsTab === 1}
+                  checked={pageState.activeAnalyticsTimeframe === "Daily"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 1 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Daily",
+                    }))
                   }
                 />
                 <div className={`tab-content`}>
                   <div className="flex gap-3">
-                    <div
-                      className={`${styles.card} w-1/2 card h-fit grow px-[1vw] py-[0.6vw] rounded-xl group hover:bg-[var(--dark)] `}
-                    >
-                      <div className="flex justify-center items-center gap-[1.5vw]">
-                        <div className="group-hover:text-[var(--white)]">
-                          <div className="flex justify-between items-center w-fit h-[5vh] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[1vw]">
-                            <h3 className="font-bold text-center pr-2">
-                              Followers
-                            </h3>
-                          </div>
-                          <div className="w-fit flex justify-center items-center gap-3 ">
-                            <div className="text-4xl font-bold">22k</div>
-                            <div>
-                              <svg
-                                width="18"
-                                height="10"
-                                viewBox="0 0 18 10"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M0.900543 9.19922L17.101 9.19922C17.265 9.19887 17.4258 9.16866 17.566 9.11183C17.7062 9.05501 17.8206 8.97372 17.8968 8.87671C17.973 8.7797 18.0081 8.67066 17.9984 8.56131C17.9887 8.45196 17.9345 8.34645 17.8417 8.25613L9.74149 0.4422C9.40578 0.118223 8.59756 0.118223 8.26095 0.442201L0.160722 8.25614C0.066962 8.34626 0.0119789 8.45183 0.00174654 8.56136C-0.00848579 8.67089 0.0264241 8.7802 0.102683 8.87741C0.178943 8.97462 0.293634 9.05602 0.434298 9.11275C0.574961 9.16949 0.736217 9.19939 0.900543 9.19922Z"
-                                  fill="#5FA85B"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="h-full place-self-end">
-                          <TasksChart />
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className={`${styles.card} w-1/2 card h-fit grow px-[1vw] py-[0.6vw] rounded-xl group hover:bg-[var(--dark)] `}
-                    >
-                      <div className="flex justify-center items-center gap-[1.5vw]">
-                        <div className="group-hover:text-[var(--white)]">
-                          <div className="flex justify-between items-center w-fit h-[5vh] border-b-[1px] border-b-[#2A2B2A] group-hover:border-b-[var(--white)] mb-[1vw]">
-                            <h3 className="font-bold text-center pr-2">
-                              Activities
-                            </h3>
-                          </div>
-                          <div className="w-fit flex justify-center items-center gap-3 ">
-                            <div className="text-4xl font-bold">22k</div>
-                            <div>
-                              <svg
-                                width="18"
-                                height="10"
-                                viewBox="0 0 18 10"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M0.900543 9.19922L17.101 9.19922C17.265 9.19887 17.4258 9.16866 17.566 9.11183C17.7062 9.05501 17.8206 8.97372 17.8968 8.87671C17.973 8.7797 18.0081 8.67066 17.9984 8.56131C17.9887 8.45196 17.9345 8.34645 17.8417 8.25613L9.74149 0.4422C9.40578 0.118223 8.59756 0.118223 8.26095 0.442201L0.160722 8.25614C0.066962 8.34626 0.0119789 8.45183 0.00174654 8.56136C-0.00848579 8.67089 0.0264241 8.7802 0.102683 8.87741C0.178943 8.97462 0.293634 9.05602 0.434298 9.11275C0.574961 9.16949 0.736217 9.19939 0.900543 9.19922Z"
-                                  fill="#5FA85B"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="h-full place-self-end">
-                          <TasksChart />
-                        </div>
-                      </div>
-                    </div>
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
                   </div>
                 </div>
                 <input
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 2 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Weekly"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Weekly"
-                  checked={pageState.activeAnalyticsTab === 2}
+                  checked={pageState.activeAnalyticsTimeframe === "Weekly"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 2 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Weekly",
+                    }))
                   }
                 />
-                <div className={`tab-content relative`}></div>
+                <div className={`tab-content`}>
+                  <div className="flex gap-3">
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+                  </div>
+                </div>
                 <input
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 3 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Monthly"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Monthly"
-                  checked={pageState.activeAnalyticsTab === 3}
+                  checked={pageState.activeAnalyticsTimeframe === "Monthly"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 3 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Monthly",
+                    }))
                   }
                 />
-                <div className={`tab-content relative`}></div>
+                <div className={`tab-content`}>
+                  <div className="flex gap-3">
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+                  </div>
+                </div>
                 <input
                   type="radio"
                   name="tab"
                   className={`tab ${styles.tab} ${
-                    pageState.activeAnalyticsTab === 4 ? styles.activeTab : ""
+                    pageState.activeAnalyticsTimeframe === "Yearly"
+                      ? styles.activeTab
+                      : ""
                   }`}
                   aria-label="Yearly"
-                  checked={pageState.activeAnalyticsTab === 4}
+                  checked={pageState.activeAnalyticsTimeframe === "Yearly"}
                   onChange={() =>
-                    setPageState((prev) => ({ ...prev, activeAnalyticsTab: 4 }))
+                    setPageState((prev) => ({
+                      ...prev,
+                      activeAnalyticsTimeframe: "Yearly",
+                    }))
                   }
                 />
-                <div className={`tab-content relative`}></div>
+                <div className={`tab-content`}>
+                  <div className="flex gap-3">
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Followers"
+                        value={
+                          pageState.fetchedSubscribersGains?.[
+                            pageState.activeAnalyticsTimeframe.toLowerCase() as keyof ISubscriberGains
+                          ]?.gain ?? 0
+                        }
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+
+                    {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+                    pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                      <AnalyticsCard
+                        title="Engagement"
+                        value={
+                          pageState.selectedSocialMediaAccount?.engagement ?? 0
+                        }
+                        chartData={[]}
+                      />
+                    ) : (
+                      <AnalyticsCardSkeleton />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
             {/* ===== 02-01-01 End Analytics Tabs ===== */}
 
-            {/* ===== 02-01-02 Start Analytics Card ===== */}
+            {/* ===== 02-01-02 Start Analytics ===== */}
             <div className="col-span-2 row-span-2 col-start-3">
-              <div
-                className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
-              >
-                <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
-                  <div className="w-full place-self-end">
-                    <LineCharts />
-                  </div>
-                  <div className="flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
-                    <span>Average Reach</span>
-                    <span>|</span>
-                    <span className="font-bold">200k</span>
-                    <span>
-                      <svg
-                        width="18"
-                        height="9"
-                        viewBox="0 0 18 9"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.900543 9L17.101 9C17.265 8.99965 17.4258 8.96944 17.566 8.91261C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242982C9.40578 -0.0809961 8.59756 -0.080996 8.26095 0.242982L0.160722 8.05692C0.066962 8.14705 0.0119789 8.25261 0.00174654 8.36214C-0.00848579 8.47167 0.0264241 8.58098 0.102683 8.67819C0.178943 8.7754 0.293634 8.8568 0.434298 8.91353C0.574961 8.97027 0.736217 9.00017 0.900543 9Z"
-                          fill="#5FA85B"
-                        />
-                      </svg>
-                    </span>
+              {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+              pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                <div
+                  className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
+                >
+                  <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
+                    <div className="w-full place-self-end">
+                      <AreaChart
+                        chartData={pageState.fetchedGroupInsightsChart.map(
+                          (e) => e.result
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
+                      <span>Average</span>
+                      <span>|</span>
+                      <span className="font-bold">{renderAvgValue()}</span>
+                      {/* <span>
+                            <svg
+                              width="18"
+                              height="9"
+                              viewBox="0 0 18 9"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M0.900543 9L17.101 9C17.265 8.99965 17.4258 8.96944 17.566 8.91261C17.7062 8.85579 17.8206 8.7745 17.8968 8.67749C17.973 8.58049 18.0081 8.47144 17.9984 8.36209C17.9887 8.25274 17.9345 8.14723 17.8417 8.05692L9.74149 0.242982C9.40578 -0.0809961 8.59756 -0.080996 8.26095 0.242982L0.160722 8.05692C0.066962 8.14705 0.0119789 8.25261 0.00174654 8.36214C-0.00848579 8.47167 0.0264241 8.58098 0.102683 8.67819C0.178943 8.7754 0.293634 8.8568 0.434298 8.91353C0.574961 8.97027 0.736217 9.00017 0.900543 9Z"
+                                fill="#5FA85B"
+                              />
+                            </svg>
+                          </span> */}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* ===== 02-01-02 End Analytics Card ===== */}
+              ) : (
+                <div
+                  className={`${styles.card} card grow px-[1vw] py-[0.6vw] rounded-xl h-full bg-[var(--dark)] `}
+                >
+                  <div className="relative flex justify-center h-full items-center gap-[1.5vw]">
+                    <div className="w-full place-self-end">
+                      {/* Loading Skeleton for the AreaChart */}
+                      <div className="bg-gray-300 animate-pulse h-40 w-full rounded"></div>
+                    </div>
 
-            {/* ===== 02-01-03 Start Engagement ===== */}
+                    <div className="flex justify-center items-center gap-3 absolute right-3 top-2 text-sm border border-[var(--dark)] shadow-[2px_2.18px_5.5px_0px_#00000075] py-2 px-3 text-[var(--white)] rounded-[5px]">
+                      {/* Loading Skeleton for the "Average" text */}
+                      <span className="bg-gray-300 animate-pulse h-4 w-16 block rounded"></span>
+                      <span>|</span>
+                      <span className="bg-gray-300 animate-pulse h-4 w-12 block rounded"></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* ===== 02-01-02 End Analytics ===== */}
+
+            {/* ===== 02-01-03 Start Posts & Comments Insights ===== */}
             <div
               className={`col-span-4 row-span-2 row-start-3 ${styles.engagement}`}
             >
-              <div
-                className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)] `}
-              >
-                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
-                  <div className="w-1/2 h-full flex flex-col">
-                    <h3 className="text-xl font-bold">Tweets</h3>
-                    <ul className="text-sm list-none">
-                      <li className="flex justify-between items-center">
-                        <span>Tweets Created</span>
-                        <span>1</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Impressions</span>
-                        <span>24</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Likes</span>
-                        <span>34</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Retweets</span>
-                        <span>12</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
-                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
-                      <h3 className="text-sm pt-3 pl-5  font-bold">
-                        Tweets Created
+              {Array.isArray(pageState.fetchedSocialMediaAccounts) &&
+              pageState.fetchedSocialMediaAccounts.length > 0 ? (
+                <div
+                  className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)] `}
+                >
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    <div className="w-1/2 h-full flex flex-col">
+                      <h3 className="text-xl font-bold">
+                        {pageState.selectedSocialMediaAccount?.platform ===
+                        "TWITTER"
+                          ? "Tweets"
+                          : "Posts"}
                       </h3>
-                      <div className="text-[var(--dark)]">
-                        <LineCharts />
+                      <ul className="text-sm list-none">
+                        <li className="flex justify-between items-center">
+                          <span>
+                            {pageState.selectedSocialMediaAccount?.platform ===
+                            "TWITTER"
+                              ? "Tweets "
+                              : "Posts "}
+                            Created
+                          </span>
+                          <span>
+                            {pageState.fetchedPostsCountChart
+                              .map((e) => e.data)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
+                        </li>
+                        <li className="flex justify-between items-center">
+                          <span>Likes</span>
+                          <span>
+                            {pageState.fetchedPostInsights
+                              .map((e) => e.data.like_count)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
+                        </li>
+                        <li className="flex justify-between items-center">
+                          <span>
+                            {pageState.selectedSocialMediaAccount?.platform ===
+                            "TWITTER"
+                              ? "Retweets"
+                              : "Shares"}
+                          </span>
+                          <span>
+                            {pageState.fetchedPostInsights
+                              .map((e) => e.data.retweet_count)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <h3 className="text-sm pt-3 pl-5 font-bold">
+                          {pageState.selectedSocialMediaAccount?.platform ===
+                          "TWITTER"
+                            ? "Tweets "
+                            : "Posts "}
+                          Created
+                        </h3>
+                        <div className="text-[var(--dark)]">
+                          <AreaChart
+                            chartData={pageState.fetchedPostsCountChart.map(
+                              (e) => e.data
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    <div className="w-1/2 h-full flex flex-col">
+                      <h3 className="text-xl font-bold">Comments</h3>
+                      <ul className="text-sm list-none">
+                        <li className="flex justify-between items-center">
+                          <span>Comments Created</span>
+                          <span>
+                            {
+                              pageState.fetchedCommentsCountChart
+                                .map((e) => e.data)
+                                .reduce((acc, curr) => acc + curr, 0)
+                              // +
+                              // pageState.fetchedPostInsights
+                              //   .map((e) => e.data.num_comments)
+                              //   .reduce((acc, curr) => acc + curr, 0)
+                            }
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <h3 className="text-sm pt-3 pl-5 font-bold">
+                          Comments Created
+                        </h3>
+                        <div className="text-[var(--dark)]">
+                          <AreaChart
+                            chartData={pageState.fetchedCommentsCountChart.map(
+                              (e) => e.data
+                            )}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
-                  <div className="w-1/2 h-full flex flex-col">
-                    <h3 className="text-xl font-bold">Tweets</h3>
-                    <ul className="text-sm list-none">
-                      <li className="flex justify-between items-center">
-                        <span>Tweets Created</span>
-                        <span>1</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Impressions</span>
-                        <span>24</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Likes</span>
-                        <span>34</span>
-                      </li>
-                      <li className="flex justify-between items-center">
-                        <span>Retweets</span>
-                        <span>12</span>
-                      </li>
-                    </ul>
+              ) : (
+                <div
+                  className={`${styles.card} flex gap-[3vw] grow px-[1vw] py-[0.6vw] rounded-xl bg-[var(--dark)]`}
+                >
+                  {/* Left Section */}
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    {/* Text Content Placeholder */}
+                    <div className="w-1/2 h-full flex flex-col">
+                      <div className="h-6 bg-gray-300 animate-pulse rounded-md mb-4"></div>
+                      <ul className="space-y-2">
+                        {[...Array(4)].map((_, i) => (
+                          <li
+                            key={i}
+                            className="flex justify-between items-center"
+                          >
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/2"></div>
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/4"></div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {/* Chart Placeholder */}
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <div className="h-4 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                        <div className="h-24 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-1/2 py-2 h-full flex justify-center items-center">
-                    <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
-                      <h3 className="text-sm pt-3 pl-5  font-bold">
-                        Tweets Created
-                      </h3>
-                      <div className="text-[var(--dark)]">
-                        <LineCharts />
+
+                  {/* Right Section */}
+                  <div className="flex items-center w-1/2 h-full gap-[1.5vw] text-[var(--white)]">
+                    {/* Text Content Placeholder */}
+                    <div className="w-1/2 h-full flex flex-col">
+                      <div className="h-6 bg-gray-300 animate-pulse rounded-md mb-4"></div>
+                      <ul className="space-y-2">
+                        {[...Array(4)].map((_, i) => (
+                          <li
+                            key={i}
+                            className="flex justify-between items-center"
+                          >
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/2"></div>
+                            <div className="h-4 bg-gray-300 animate-pulse rounded-md w-1/4"></div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {/* Chart Placeholder */}
+                    <div className="w-1/2 py-2 h-full flex justify-center items-center">
+                      <div className="bg-[#0F0F0F] h-full w-full rounded-2xl overflow-hidden">
+                        <div className="h-4 bg-gray-300 animate-pulse rounded-md m-4"></div>
+                        <div className="h-24 bg-gray-300 animate-pulse rounded-md m-4"></div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-            {/* ===== 02-01-03 End Engagement ===== */}
+            {/* ===== 02-01-03 End Posts & Comments Insights ===== */}
           </div>
           {/* ===== 02-01 End Analytics ===== */}
         </div>

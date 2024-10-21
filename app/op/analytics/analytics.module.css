@@ -63,7 +63,7 @@
 }
 .tabs.analyticsTabs .tab {
   font-size: var(--20px);
-  margin: var(--sy-25px) 0;
+  margin: var(--sy-10px) 0;
 }
 /* ===== End Tabs ===== */
 

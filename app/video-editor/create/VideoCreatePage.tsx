@@ -119,7 +119,7 @@ const VideoCreatePage = () => {
       // router.replace("/video-editor/create/converted-script");
       setPageState((prev) => ({ ...prev, createVideoLoading: true }));
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/split-content`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/video-editing/split-content-stp`,
         {
           method: "POST",
           body: JSON.stringify(parseParagraph(selectedContent)),

@@ -104,7 +104,8 @@ const ConvertedScriptPage = () => {
     useState(false);
 
   const router = useRouter();
-  function getAudioDuration(audioPath: string): Promise<number> {
+  function getAudioDuration(audioPath: string | undefined): Promise<number> {
+    if (!audioPath) return new Promise((resolve) => resolve(0));
     return new Promise((resolve) => {
       const audio = new Audio(audioPath);
       audio.addEventListener("loadedmetadata", () => {
@@ -123,8 +124,8 @@ const ConvertedScriptPage = () => {
 
       const updatedSplitedContent = await Promise.all(
         splitedContent.map(async (segment) => {
-          console.log(segment.audioPath.url);
-          const duration = await getAudioDuration(segment.audioPath.url);
+          console.log(segment.audioPath?.url);
+          const duration = await getAudioDuration(segment.audioPath?.url);
           console.log(duration);
           return {
             ...segment,
@@ -161,11 +162,11 @@ const ConvertedScriptPage = () => {
     const updatedSplitedContent = splitedContent
       ?.map((segment) => {
         if (
-          segment.audioPath.index ===
-          pageState.selectedScriptSegment?.audioPath.index
+          segment.audioPath?.index ===
+          pageState.selectedScriptSegment?.audioPath?.index
         ) {
           return {
-            index: segment.audioPath.index,
+            index: segment.audioPath?.index,
             // @ts-ignore
             selectedContent: segment.text.replace(
               pageState.selectedIncorrectWord ?? "",
@@ -216,7 +217,7 @@ const ConvertedScriptPage = () => {
 
     if (data.success) {
       setPageState((prevState) => {
-        if (prevState.selectedScriptSegment?.audioPath.index === index) {
+        if (prevState.selectedScriptSegment?.audioPath?.index === index) {
           return {
             ...prevState,
             selectedScriptSegment: {
@@ -231,8 +232,8 @@ const ConvertedScriptPage = () => {
       setSplitedContent((prevState: ScriptSegment[]) => {
         return prevState.map((segment: ScriptSegment) => {
           if (
-            segment.audioPath.index ===
-            pageState.selectedScriptSegment?.audioPath.index
+            segment.audioPath?.index ===
+            pageState.selectedScriptSegment?.audioPath?.index
           ) {
             return {
               ...segment,
@@ -360,7 +361,7 @@ const ConvertedScriptPage = () => {
 
       if (data.success) {
         const audio = new Audio(
-          `${data.audioPath.url}?t=${new Date().getTime()}`
+          `${data.audioPath?.url}?t=${new Date().getTime()}`
         );
         audio.play();
       } else {
@@ -408,12 +409,12 @@ const ConvertedScriptPage = () => {
 
                         <div
                           className={`${styles.articleContent} cursor-pointer`}
-                          key={scriptSegment.audioPath.index}
+                          key={scriptSegment.audioPath?.index}
                         >
                           <p
                             className={`${
                               pageState.selectedScriptSegment?.audioPath
-                                .index === scriptSegment.audioPath.index
+                                ?.index === scriptSegment.audioPath?.index
                                 ? styles.active
                                 : ""
                             }`}
@@ -450,8 +451,8 @@ const ConvertedScriptPage = () => {
           <div className={styles.audio_player + " mb-[2vw]"}>
             <CustomAudioPlayer
               audioSrc={
-                pageState.selectedScriptSegment?.audioPath.url
-                  ? pageState.selectedScriptSegment?.audioPath.url
+                pageState.selectedScriptSegment?.audioPath?.url
+                  ? pageState.selectedScriptSegment?.audioPath?.url
                   : ""
               }
             />
