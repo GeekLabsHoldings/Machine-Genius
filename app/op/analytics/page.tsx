@@ -3,8 +3,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { globalContext } from "@/app/_context/store";
 import styles from "./analytics.module.css";
 import "./analytics.css";
-import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
+import dynamic from "next/dynamic";
+const AreaChart = dynamic(
+  () => import("@/app/_components/OP/Analytics/00Charts/AreaChart"),
+  {
+    ssr: false,
+  }
+);
 // ===== 01- Start God View =====
 import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
 import BrandKPIs from "@/app/_components/OP/Analytics/01GodView/02BrandKPIs/BrandKPIs";
@@ -29,13 +35,6 @@ import {
 } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 import AnalyticsCard from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCard";
 import AnalyticsCardSkeleton from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCardSkeleton";
-
-const AreaChart = dynamic(
-  () => import("@/app/_components/OP/Analytics/02Brands/Charts/AreaChart"),
-  {
-    ssr: false,
-  }
-);
 // ===== 02- End Brands =====
 
 // ====== Start react-slick Slider =====
@@ -129,7 +128,7 @@ function Page() {
     fetchedGroupInsightsChart: IGroupInsightsChart[];
     fetchedPostInsights: IPostInsights[];
   }>({
-    activePageTab: "Brands",
+    activePageTab: "GodView",
     activeAnalyticsTimeframe: "Daily",
     selectedSocialMediaAccount: null,
     fetchedSocialMediaAccounts: [],
@@ -489,6 +488,9 @@ function Page() {
       if (pageState.selectedSocialMediaAccount !== null) {
         getSubscribersGains();
         getGroupInsightsChart();
+        getPostsCountChart();
+        getCommentsCountChart();
+        getPostInsights();
       }
     }
   }, [pageState.selectedSocialMediaAccount]);
@@ -905,11 +907,19 @@ function Page() {
                               : "Posts "}
                             Created
                           </span>
-                          <span>1</span>
+                          <span>
+                            {pageState.fetchedPostsCountChart
+                              .map((e) => e.data)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
                         </li>
                         <li className="flex justify-between items-center">
                           <span>Likes</span>
-                          <span>34</span>
+                          <span>
+                            {pageState.fetchedPostInsights
+                              .map((e) => e.data.like_count)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
                         </li>
                         <li className="flex justify-between items-center">
                           <span>
@@ -918,7 +928,11 @@ function Page() {
                               ? "Retweets"
                               : "Shares"}
                           </span>
-                          <span>12</span>
+                          <span>
+                            {pageState.fetchedPostInsights
+                              .map((e) => e.data.retweet_count)
+                              .reduce((acc, curr) => acc + curr, 0)}
+                          </span>
                         </li>
                       </ul>
                     </div>
@@ -932,7 +946,11 @@ function Page() {
                           Created
                         </h3>
                         <div className="text-[var(--dark)]">
-                          <AreaChart chartData={[]} />
+                          <AreaChart
+                            chartData={pageState.fetchedPostsCountChart.map(
+                              (e) => e.data
+                            )}
+                          />
                         </div>
                       </div>
                     </div>
@@ -944,7 +962,17 @@ function Page() {
                       <ul className="text-sm list-none">
                         <li className="flex justify-between items-center">
                           <span>Comments Created</span>
-                          <span>1</span>
+                          <span>
+                            {
+                              pageState.fetchedCommentsCountChart
+                                .map((e) => e.data)
+                                .reduce((acc, curr) => acc + curr, 0)
+                              // +
+                              // pageState.fetchedPostInsights
+                              //   .map((e) => e.data.num_comments)
+                              //   .reduce((acc, curr) => acc + curr, 0)
+                            }
+                          </span>
                         </li>
                       </ul>
                     </div>
@@ -954,7 +982,11 @@ function Page() {
                           Comments Created
                         </h3>
                         <div className="text-[var(--dark)]">
-                          <AreaChart chartData={[]} />
+                          <AreaChart
+                            chartData={pageState.fetchedCommentsCountChart.map(
+                              (e) => e.data
+                            )}
+                          />
                         </div>
                       </div>
                     </div>
