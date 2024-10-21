@@ -62,9 +62,15 @@ interface IProps {
   title: string;
   value: number;
   change?: number;
+  chartData: number[];
 }
 
-export default function AnalyticsCard({ title, value, change }: IProps) {
+export default function AnalyticsCard({
+  title,
+  value,
+  change,
+  chartData,
+}: IProps) {
   return (
     <div
       className={`${styles.card} w-1/2 card h-[200px] px-[1vw] rounded-xl group hover:bg-[var(--dark)] overflow-hidden`}
@@ -91,7 +97,7 @@ export default function AnalyticsCard({ title, value, change }: IProps) {
         </div>
 
         <div className="h-full flex justify-center items-center w-[60%]">
-          <AreaChart />
+          <AreaChart chartData={chartData} />
         </div>
       </div>
     </div>

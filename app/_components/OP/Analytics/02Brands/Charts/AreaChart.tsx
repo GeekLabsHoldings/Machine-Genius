@@ -1,6 +1,7 @@
 "use client";
 import ReactApexChart from "react-apexcharts";
 
+// todo: change the colors based on the trend
 const options: any = {
   chart: {
     zoom: {
@@ -46,14 +47,14 @@ const options: any = {
   },
 };
 
-const series = [
-  {
-    // name: "This Month",
-    data: [28, 39, 25, 45, 50, 40, 50, 49, 54, 50, 70, 54],
-  },
-];
+const AreaChart = ({ chartData }: { chartData: number[] }) => {
+  const series = [
+    {
+      // name: "This Month",
+      data: chartData,
+    },
+  ];
 
-const AreaChart = () => {
   return (
     <ReactApexChart
       type="area"
