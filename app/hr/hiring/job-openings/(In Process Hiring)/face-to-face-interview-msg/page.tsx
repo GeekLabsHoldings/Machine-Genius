@@ -84,11 +84,11 @@ export default function Page() {
         result?.template?.details[0]?.description
           .replace(/\[firstName\]/g, result?.candidates[0]?.firstName)
           .replace(/\[lastName\]/g, result?.candidates[0]?.lastName)
-          .replace(/\[link\]/g, `https://recruitment.geeklabs.agency/interview-schedule/${recievedId}/${Date.now()}/${
+          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
             typeof window !== "undefined" &&
             localStorage.getItem("decodedToken") &&
             JSON.parse(localStorage.getItem("decodedToken") as string)._id
-          }/Schedule_Interview_Call`)
+          }/Schedule_Face_To_Face_Interview'`)
       );
 
       console.log("result", result);
@@ -165,11 +165,11 @@ export default function Page() {
           .replace(/\[firstName\]/g, candidateData.firstName)
           .replace(/\[lastName\]/g, candidateData.lastName)
           .replace(/\[role\]/g, candidateData.role.roleName)
-          .replace(/\[link\]/g, `https://recruitment.geeklabs.agency/interview-schedule/${recievedId}/${Date.now()}/${
+          .replace(/\[link\]/g, `https://development.machinegenius.io/interview-schedule/${recievedId}/${Date.now()}/${
             typeof window !== "undefined" &&
             localStorage.getItem("decodedToken") &&
             JSON.parse(localStorage.getItem("decodedToken") as string)._id
-          }/Schedule_Interview_Call`)
+          }/Schedule_Face_To_Face_Interview'`)
       );
     }
   }, [candidateData]);
@@ -183,7 +183,7 @@ export default function Page() {
 
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
-          <ShortListTable data={data} setRecievedId={setRecievedId} recievedId={recievedId} stepIdx={5} />
+          <ShortListTable data={data} setRecievedId={setRecievedId} recievedId={recievedId} stepIdx={6} />
         </div>
 
         <div

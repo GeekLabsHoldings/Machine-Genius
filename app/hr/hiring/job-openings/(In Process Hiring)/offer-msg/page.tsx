@@ -174,7 +174,7 @@ export default function Page() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href="/hr/hiring/job-openings/face-to-face-interview-msg"
+          onClick={goPreviousStep}
         />
         <CustomBtn word={"Dashboard"} btnColor="black" href="/hr/dashboard" />
       </div>
