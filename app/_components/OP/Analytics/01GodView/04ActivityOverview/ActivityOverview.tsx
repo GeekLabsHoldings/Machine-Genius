@@ -21,7 +21,7 @@ export default function ActivityOverview({
 }) {
   return (
     <section className={styles.ActivityOverview}>
-      <p className={styles.ActivityOverviewTitle}>Engagements Overview</p>
+      <p className={styles.ActivityOverviewTitle}>Engagement Overview</p>
       <div className={styles.ActivityOverviewContainer}>
         <div className={styles.ActivityBody}>
           {/* ===== Start Table ===== */}
@@ -33,7 +33,7 @@ export default function ActivityOverview({
                   <span>Brand</span>
                 </li>
                 <li className={`w-[25%] ${styles.center}`}>
-                  <span>Engagements</span>
+                  <span>Engagement</span>
                 </li>
               </ul>
               {/* Table Body */}
