@@ -238,16 +238,20 @@ export default function GlobalContextProvider({
   );
 
   useEffect(() => {
-    if (authState.token) {
+    const isPublicPath = publicPaths.some(
+      (publicPath) => path === publicPath || path.startsWith(`${publicPath}/`)
+    );
+    if (authState.token && !isPublicPath) {
       console.log("=+==+==There is Token=+==+==");
       debouncedCheckAuth();
     } else {
-      console.log("=x==x==There is No Token==x==x=");
-      const isPublicPath = publicPaths.some(
-        (publicPath) => path === publicPath || path.startsWith(`${publicPath}/`)
-      );
-      if (!isPublicPath) {
-        console.log("It's Not Public Path, Redirecting to signin...");
+      // console.log("=x==x==There is No Token==x==x=");
+      console.log("=x==x==Token missing or path is public==x==x=");
+      if (!isPublicPath && !authState.token) {
+        // console.log("It's Not Public Path, Redirecting to signin...");
+        console.log(
+          "It's Not Public Path and No Token, Redirecting to signin..."
+        );
         router.replace("/");
       }
     }
@@ -280,9 +284,9 @@ export default function GlobalContextProvider({
   // ===== 00. End Authentication =====
 
   // ===== 01. Start Global Brands =====
-  const [globalBrands, setGlobalBrands] = useSessionStorage<
+  const [globalBrands, setGlobalBrands] = useState<
     { brandId: string; brandName: string }[]
-  >("MG-globalBrands", [
+  >([
     { brandId: "66fcfb7157531aaf2dca2685", brandName: "Street Politics" },
     { brandId: "66fcfb8c57531aaf2dca2686", brandName: "Investorcracy" },
     { brandId: "66fcfbf557531aaf2dca2688", brandName: "Movie Myth" },
@@ -322,13 +326,16 @@ export default function GlobalContextProvider({
   }, [globalBrands]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    const isPublicPath = publicPaths.some(
+      (publicPath) => path === publicPath || path.startsWith(`${publicPath}/`)
+    );
+    if (typeof window !== "undefined" && !isPublicPath) {
       const brands = sessionStorage.getItem("MG-globalBrands");
       if (!brands) {
         getBrands();
       }
     }
-  }, []);
+  }, [path]);
 
   async function getBrands() {
     try {
@@ -356,6 +363,7 @@ export default function GlobalContextProvider({
           };
         });
         setGlobalBrands(brands);
+        sessionStorage.setItem("MG-globalBrands", JSON.stringify(brands));
       } else {
         // toast.error("Something went wrong!");
       }
