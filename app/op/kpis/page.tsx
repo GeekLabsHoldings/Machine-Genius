@@ -1,21 +1,222 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./KPIsTable.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
+import { globalContext } from "@/app/_context/store";
+import { IKPIData } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
+import toast from "react-hot-toast";
 
-// options
-const brandOptions: string[] = [
-  "Street Politics",
-  "Street Politics",
-  "Street Politics",
-  "Street Politics",
-  "Street Politics",
-  "Street Politics",
-  "Street Politics",
-];
+interface PlatformData {
+  platformName: string;
+  kpiMetrics: string[]; // List of KPI metric names
+  data: {
+    [kpiMetric: string]: {
+      [month: number]: {
+        required: number | undefined;
+        met: number | undefined;
+      };
+    };
+  };
+}
+
+interface IKPIData {
+  kpis: KPI[];
+  achievedKPIs: AchievedKPI[];
+}
+
+interface KPI {
+  _id: {
+    year: number;
+    month: number;
+  };
+  platforms: PlatformKPI[];
+}
+
+interface PlatformKPI {
+  platform: string;
+  postsPerDay: number;
+  postsPerWeek: number;
+  postsPerMonth: number;
+}
+
+interface AchievedKPI {
+  date: {
+    year: number;
+    month: number;
+  };
+  platforms: AchievedPlatformKPI[];
+}
+
+interface AchievedPlatformKPI {
+  platform: string;
+  Day: number;
+  Week: number;
+  Month: number;
+}
 
 export default function Page() {
+  const { authState, handleSignOut, brandOptions, brandMap } =
+    useContext(globalContext);
+
+  const [pageState, setPageState] = useState<{
+    fetchedKPIData: IKPIData | null;
+    selectedBrand: string;
+  }>({
+    fetchedKPIData: null,
+    selectedBrand: "",
+  });
+
+  const [platformDataMap, setPlatformDataMap] = useState<{
+    [platformName: string]: PlatformData;
+  }>({});
+
+  const kpiMetricNames: { [key: string]: string } = {
+    postsPerDay: "Posts Per Day",
+    postsPerWeek: "Posts Per Week",
+    postsPerMonth: "Posts Per Month",
+  };
+
+  const getMonthName = (monthNumber: number) => {
+    const date = new Date();
+    date.setDate(1);
+    date.setMonth(monthNumber - 1);
+    return date.toLocaleString("default", { month: "long" });
+  };
+
+  const getKPIData = async (brandId: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/analytics/kpi/${brandId}`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch KPI data!");
+        return;
+      }
+      const data: IKPIData = await res.json();
+      if (data) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedKPIData: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch KPI data!");
+      // }
+    } catch (error) {
+      console.error("Error fetching KPI data:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to fetch KPI data!"
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (pageState.selectedBrand !== "") {
+      getKPIData(pageState.selectedBrand);
+    }
+  }, [pageState.selectedBrand]);
+
+  useEffect(() => {
+    if (pageState.fetchedKPIData) {
+      const platformDataMap: { [platformName: string]: PlatformData } = {};
+
+      // Process kpis
+      for (const kpi of pageState.fetchedKPIData.kpis) {
+        const { year, month } = kpi._id;
+        for (const platformKPI of kpi.platforms) {
+          const platformName = platformKPI.platform;
+          if (!platformDataMap[platformName]) {
+            platformDataMap[platformName] = {
+              platformName,
+              kpiMetrics: [],
+              data: {},
+            };
+          }
+          const platformData = platformDataMap[platformName];
+
+          const metrics = ["postsPerDay", "postsPerWeek", "postsPerMonth"];
+
+          for (const metric of metrics) {
+            const requiredValue = platformKPI[metric];
+            if (!platformData.kpiMetrics.includes(metric)) {
+              platformData.kpiMetrics.push(metric);
+            }
+            if (!platformData.data[metric]) {
+              platformData.data[metric] = {};
+            }
+            if (!platformData.data[metric][month]) {
+              platformData.data[metric][month] = {
+                required: requiredValue,
+                met: undefined,
+              };
+            } else {
+              platformData.data[metric][month].required = requiredValue;
+            }
+          }
+        }
+      }
+
+      // Process achievedKPIs
+      for (const achievedKPI of pageState.fetchedKPIData.achievedKPIs) {
+        const { year, month } = achievedKPI.date;
+        for (const achievedPlatformKPI of achievedKPI.platforms) {
+          const platformName = achievedPlatformKPI.platform;
+          if (!platformDataMap[platformName]) {
+            platformDataMap[platformName] = {
+              platformName,
+              kpiMetrics: [],
+              data: {},
+            };
+          }
+          const platformData = platformDataMap[platformName];
+
+          const metricsMap = {
+            Day: "postsPerDay",
+            Week: "postsPerWeek",
+            Month: "postsPerMonth",
+          };
+
+          for (const [achievedMetric, requiredMetric] of Object.entries(
+            metricsMap
+          )) {
+            const metValue = achievedPlatformKPI[achievedMetric];
+
+            if (!platformData.kpiMetrics.includes(requiredMetric)) {
+              platformData.kpiMetrics.push(requiredMetric);
+            }
+            if (!platformData.data[requiredMetric]) {
+              platformData.data[requiredMetric] = {};
+            }
+            if (!platformData.data[requiredMetric][month]) {
+              platformData.data[requiredMetric][month] = {
+                required: undefined,
+                met: metValue,
+              };
+            } else {
+              platformData.data[requiredMetric][month].met = metValue;
+            }
+          }
+        }
+      }
+
+      setPlatformDataMap(platformDataMap);
+    }
+  }, [pageState.fetchedKPIData]);
+
   return (
     <section>
       {/* ===== Start Page Header ===== */}
@@ -32,16 +233,15 @@ export default function Page() {
                 Select Brands
               </label>
               <CustomSelectInput
-                label="Street Politics"
+                label="Select Brand"
                 options={brandOptions}
+                getValue={(value: string) => {
+                  setPageState((prevState: any) => ({
+                    ...prevState,
+                    selectedBrand: brandMap[value],
+                  }));
+                }}
               />
-            </div>
-            <div className="flex flex-col w-1/4 gap-[0.3vw]">
-              <label className="font-bold" htmlFor="">
-                Select Sub-Brand
-              </label>
-
-              <CustomSelectInput label="Canada" options={["Canada"]} />
             </div>
           </div>
         </div>
@@ -55,462 +255,83 @@ export default function Page() {
             <thead>
               <tr>
                 <th className="w-[15vw]">Platform</th>
-                <th colSpan={2}>KPI</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
-                <th>KPI Required</th>
-                <th>KPI Met</th>
+                <th>KPI Metric</th>
+                {/* For each month */}
+                {Array.from({ length: 12 }).map((_, idx) => (
+                  <th colSpan={2} key={`month-${idx + 1}`}>
+                    {getMonthName(idx + 1)}
+                  </th>
+                ))}
+              </tr>
+              <tr>
+                <th></th>
+                <th></th>
+                {/* For each month */}
+                {Array.from({ length: 12 }).flatMap((_, idx) => [
+                  <th key={`kr-${idx + 1}`}>KPI Required</th>,
+                  <th key={`km-${idx + 1}`}>KPI Met</th>,
+                ])}
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td rowSpan={9} className="platform-header">
-                  YouTube
-                </td>
-                <td colSpan={2} rowSpan={2}>
-                  Video Watch %
-                </td>
-                <td colSpan={2}>January</td>
-                <td colSpan={2}>February</td>
-                <td colSpan={2}>March</td>
-                <td colSpan={2}>April</td>
-                <td colSpan={2}>May</td>
-                <td colSpan={2}>June</td>
-                <td colSpan={2}>July</td>
-                <td colSpan={2}>August</td>
-                <td colSpan={2}>September</td>
-                <td colSpan={2}>October</td>
-                <td colSpan={2}>November</td>
-                <td colSpan={2}>December</td>
-              </tr>
-              <tr>
-                <td>50%</td>
-                <td>
-                  50% <span className="arrow-up">&#9650;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>No. Of Videos/Day</td>
-                <td>3</td>
-                <td>
-                  3 <span className="arrow-up">&#9650;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>Minimum CTR/Per Video 24Hrs</td>
-                <td>60%</td>
-                <td>
-                  60% <span className="arrow-up">&#9650;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>Minimum Views/Video</td>
-                <td>3000</td>
-                <td>
-                  3000 <span className="arrow-down">&#9660;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>Posted on Time</td>
-                <td>2</td>
-                <td>
-                  2 <span className="arrow-up">&#9650;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>No. of Shorts/Day</td>
-                <td>2</td>
-                <td>
-                  2 <span className="arrow-down">&#9660;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>Community Posts</td>
-                <td>1</td>
-                <td>
-                  1 <span className="arrow-up">&#9650;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>Channel Subscribers</td>
-                <td>26K</td>
-                <td>
-                  26K <span className="arrow-up">&#9650;</span>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              {/* <tr>
-                
-            </tr> */}
-              <tr>
-                <td rowSpan={4} className="platform-header">
-                  Twitter
-                </td>
-                <td colSpan={1} rowSpan={2}>
-                  No. of Comments/Day
-                </td>
-                <td>No of Comments</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>No of Comments</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={1} rowSpan={2}>
-                  Posts/Day
-                </td>
-                <td>No of Comments</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>No of Comments</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td rowSpan={2} className="platform-header">
-                  Telegram
-                </td>
-                <td colSpan={2}>Channel</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={2}>Group</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
+              {Object.values(platformDataMap).map((platformData) =>
+                platformData.kpiMetrics.map((kpiMetric, metricIdx) => (
+                  <tr key={`${platformData.platformName}-${kpiMetric}`}>
+                    {metricIdx === 0 && (
+                      <td
+                        rowSpan={platformData.kpiMetrics.length}
+                        className={styles.platform_header}
+                      >
+                        {platformData.platformName[0] +
+                          platformData.platformName.slice(1).toLowerCase()}
+                      </td>
+                    )}
+                    <td>{kpiMetricNames[kpiMetric] || kpiMetric}</td>
+                    {/* Now for each month */}
+                    {Array.from({ length: 12 }).flatMap((_, idx) => {
+                      const month = idx + 1;
+                      const dataForMetric = platformData.data[kpiMetric] || {};
+                      const monthData = dataForMetric[month] || {};
+                      const required =
+                        monthData.required !== undefined
+                          ? monthData.required
+                          : "-";
+                      const met =
+                        monthData.met !== undefined ? monthData.met : "-";
+
+                      // Compute arrow
+                      let arrow = null;
+                      if (
+                        typeof required === "number" &&
+                        typeof met === "number"
+                      ) {
+                        if (met >= required) {
+                          arrow = (
+                            <span className={styles.arrow_up}>&#9650;</span> // Up arrow
+                          );
+                        } else {
+                          arrow = (
+                            <span className={styles.arrow_down}>&#9660;</span> // Down arrow
+                          );
+                        }
+                      }
+
+                      return [
+                        <td
+                          key={`req-${platformData.platformName}-${kpiMetric}-${month}`}
+                        >
+                          {required}
+                        </td>,
+                        <td
+                          key={`met-${platformData.platformName}-${kpiMetric}-${month}`}
+                        >
+                          {met} {arrow}
+                        </td>,
+                      ];
+                    })}
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

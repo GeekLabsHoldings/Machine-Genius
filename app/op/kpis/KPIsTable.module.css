@@ -1,67 +1,67 @@
 .kpis_table .table_container {
-    display: flex;
-    overflow-x: auto;
-    border-radius: 20px;
-    border: 2px solid #DBDBD7;
-    background: #FFFFFB;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  overflow-x: auto;
+  border-radius: 20px;
+  border: 2px solid #dbdbd7;
+  background: #fffffb;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .kpis_table .table_container table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
 }
 
 .kpis_table .table_container th,
 .kpis_table .table_container td {
-    border: 1px solid #ddd;
-    padding: clamp(0.4rem, calc(0.3vw + 0.1rem), 10rem) clamp(1.5rem, calc(1vw + 0.1rem), 10rem);
-    text-align: center;
-    white-space: nowrap;
-    font-size: clamp(1rem, calc(0.vw + 0.1rem), 10rem);
-    /* Prevent text from wrapping */
-
+  border: 1px solid #ddd;
+  padding: clamp(0.4rem, calc(0.3vw + 0.1rem), 10rem)
+    clamp(1.5rem, calc(1vw + 0.1rem), 10rem);
+  text-align: center;
+  white-space: nowrap;
+  font-size: clamp(1rem, calc(0vw + 0.1rem), 10rem);
+  /* Prevent text from wrapping */
 }
 .kpis_table .table_container th:hover,
 .kpis_table .table_container td:hover {
-    background-color: #ececec;
+  background-color: #ececec;
 }
 
 .kpis_table .table_container thead th {
-    padding: clamp(1rem, calc(1vw + 0.1rem), 10rem);
-    background-color: var(--white);
+  padding: var(--15px);
+  background-color: var(--white);
 }
 
-.kpis_table .table_container thead th:hover {    
-    background-color: var(--white);
+.kpis_table .table_container thead th:hover {
+  background-color: var(--white);
 }
 
 .kpis_table .table_container thead th,
 .kpis_table .table_container thead td {
-    border: 0px solid #ddd;
+  border: 0px solid #ddd;
 }
 
 .kpis_table .table_container th {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
-.kpis_table .table_container .platform-header {
-    background-color: var(--white);
-    color: var(--dark);
-    font-weight: bold;
-    text-align: center;
+.kpis_table .table_container .platform_header {
+  background-color: var(--white);
+  color: var(--dark);
+  font-weight: bold;
+  text-align: center;
 }
 
-.kpis_table .table_container .arrow-up {
-    color: green;
+.kpis_table .table_container .arrow_up {
+  color: green;
 }
 
-.kpis_table .table_container .arrow-down {
-    color: red;
+.kpis_table .table_container .arrow_down {
+  color: red;
 }
 
-.kpis_table .table_container .platform-header:hover{
-    background-color: var(--dark);
-    color: var(--white);
+.kpis_table .table_container .platform_header:hover {
+  background-color: var(--dark);
+  color: var(--white);
 }
