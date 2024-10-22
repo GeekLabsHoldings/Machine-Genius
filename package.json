@@ -37,6 +37,7 @@
     "gsap": "^3.12.5",
     "jquery": "^3.5.0",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.453.0",
     "next": "^14.2.6",
     "oauth-1.0a": "^2.2.6",
     "primereact": "^10.8.3",
