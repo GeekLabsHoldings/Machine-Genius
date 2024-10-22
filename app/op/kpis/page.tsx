@@ -289,7 +289,7 @@ export default function Page() {
               ) : pageState.isLoading === true ? (
                 <tr>
                   <td colSpan={26} className="animate-pulse py-4">
-                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-300 rounded"></div>
                   </td>
                 </tr>
               ) : pageState.selectedBrand !== "" &&
