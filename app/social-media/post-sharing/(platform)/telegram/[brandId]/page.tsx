@@ -1,7 +1,7 @@
 "use client";
 import styles from "./reddit.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
+import SocialMediaModal from "@/app/_components/SocialMedia/SocialMediaModal/SocialMediaModal";
 import { useEffect, useState, useContext, useMemo } from "react";
 import Link from "next/link";
 import {
@@ -292,7 +292,7 @@ const Telegram = ({ params }: { params: { brandId: string } }) => {
             </div>
           </div>
           <div>
-            <BasicModal
+            <SocialMediaModal
               btnWord="Add To List"
               btnIcon={addIcon}
               btnColor={"black"}
