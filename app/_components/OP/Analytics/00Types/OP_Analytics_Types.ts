@@ -109,22 +109,42 @@ ceo/analytics/kpi:
 - KPIs.
 - Achieved KPIs.
 */
-export interface IKPI {
-  _id: {
-    year: number;
-    month: number;
-    brand: string;
-  };
-  totalPostsPerDay: number;
-  totalPostsPerWeek: number;
-  totalPostsPerMonth: number;
-  platforms: string[];
-}
-export interface IAchievedKPI {
+
+export interface PlatformKPI {
+  _id: string;
+  brand: string;
+  platform: string;
+  timeStamp: number;
   postsPerDay: number;
   postsPerWeek: number;
   postsPerMonth: number;
+  year: number;
+  month: number;
 }
+
+export interface AchievedPlatformKPI {
+  platform: string;
+  Day: number;
+  Week: number;
+  Month: number;
+}
+
+export interface DateBrand {
+  year: number;
+  month: number;
+  brand: string;
+}
+
+export interface IKPI {
+  _id: DateBrand;
+  platforms: PlatformKPI[];
+}
+
+export interface IAchievedKPI {
+  date: DateBrand;
+  platforms: AchievedPlatformKPI[];
+}
+
 export interface IKPIData {
   kpis: IKPI[];
   achievedKPIs: IAchievedKPI[];

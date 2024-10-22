@@ -124,6 +124,7 @@ function Page() {
     activeAnalyticsTimeframe: "Daily" | "Weekly" | "Monthly" | "Yearly";
     selectedSocialMediaAccount: IGroup | null;
     fetchedSocialMediaAccounts: IGroup[];
+    fetchedSocialMediaAccountsWithoutFlatMap: IBrandWithGroups[];
     fetchedTotalSubscribers: IBrandPlatformSubscribers[];
     fetchedSubscribersGains: ISubscriberGains | null;
     fetchedPostsCountChart: IPostsCountChart[];
@@ -137,6 +138,7 @@ function Page() {
     activeAnalyticsTimeframe: "Daily",
     selectedSocialMediaAccount: null,
     fetchedSocialMediaAccounts: [],
+    fetchedSocialMediaAccountsWithoutFlatMap: [],
     fetchedTotalSubscribers: [],
     fetchedSubscribersGains: null,
     fetchedPostsCountChart: [],
@@ -174,6 +176,7 @@ function Page() {
         setPageState((prevState: any) => ({
           ...prevState,
           fetchedSocialMediaAccounts: data.flatMap((ele) => ele.groups),
+          fetchedSocialMediaAccountsWithoutFlatMap: data,
         }));
       }
       // else {
@@ -602,6 +605,7 @@ function Page() {
         isFirstRender.current = false;
       }
       getYoutubeData("66fcfb8c57531aaf2dca2686");
+      getSocialMediaAccounts();
     }
   }, [pageState.activePageTab]);
 
@@ -679,7 +683,11 @@ function Page() {
             <div className={styles.secondRow + " flex gap-[0.75vw]"}>
               {/* Activity OverView */}
               <div className="ActivityOverView w-[40%]">
-                <ActivityOverview />
+                <ActivityOverview
+                  fetchedSocialMediaAccountsWithoutFlatMap={
+                    pageState.fetchedSocialMediaAccountsWithoutFlatMap
+                  }
+                />
               </div>
 
               {/* Followers OverView */}
