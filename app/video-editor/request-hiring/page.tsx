@@ -10,14 +10,17 @@ export default function page() {
   const [requestHiringData, setRequestHiringData] = useState<any>({
     title: "",
     level: "",
+    _id: ""
   });
   const { authState, handleSignOut } = useContext(globalContext);
   const [allRoles, setAllRoles] = useState<any>([]);
+  const [data, setData] = useState<any>([]);
 
-  function getTitleValue(value: string) {
+  function getTitleValue(value: string , data:any) {
     setRequestHiringData({
       ...requestHiringData,
       title: value,
+      _id: data?.filter((role:any) => role.roleName == value)?._id
     });
   }
 
@@ -47,7 +50,7 @@ export default function page() {
         ? localStorage.getItem("token")
         : authState.token;
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getByDepartment/${DepartmentEnum.ContentCreator}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getByDepartment/${DepartmentEnum.VideoEditing}`,
       {
         method: "GET",
         headers: {
@@ -57,7 +60,7 @@ export default function page() {
     );
     const json = await res.json();
     console.log(json);
-
+    setData(json);
     setAllRoles(json?.map((role: {
       roleName:string
     }) => role.roleName));
@@ -86,6 +89,7 @@ export default function page() {
           },
           body: JSON.stringify({
             title: requestHiringData.title,
+            role: requestHiringData._id,
             level: requestHiringData.level,
             department: DepartmentEnum.VideoEditing,
           }),
@@ -116,7 +120,7 @@ export default function page() {
           <CustomSelectInput
             label="Select Title"
             options={allRoles ? allRoles : []}
-            getValue={getTitleValue}
+            getValue={(value:string)=>getTitleValue(value, data)}
           />
           <CustomSelectInput
             label="Select Level"

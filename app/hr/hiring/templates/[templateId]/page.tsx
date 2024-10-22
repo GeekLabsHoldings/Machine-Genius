@@ -86,6 +86,9 @@ enum LevelEnum {
 const templatesWithPositionAndLevel = [
   "Job_Listings",
   "Interview_Call_Question",
+  "Tasks",
+  "Job_Offer"
+
 ];
 
 const defaultTemplateDet: templateDet = {
@@ -128,6 +131,8 @@ export default function TemplateDetails({
     qualifications: "",
   });
   const [editorVal, setEditorVal] = useState("");
+  const [allRoles, setAllRoles] = useState<any>([]);
+  const [rolesData, setRolesData] = useState<any>([]);
 
   const [questions, setQuestions] = useState<any[]>([]);
   const questionsRef = useRef<any>([]);
@@ -160,6 +165,32 @@ export default function TemplateDetails({
   const router = useRouter();
   const [templateDet, setTemplateDet] =
     useState<templateDet>(defaultTemplateDet);
+
+    async function getAllRoles() {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data, "all roles");
+      setAllRoles(
+        data?.map(
+          (
+            r: {
+              roleName: string;
+            },
+            idx: number
+          ) => r.roleName
+        )
+      );
+      setRolesData(data);
+    }
 
   async function getTemplate() {
     const token = localStorage.getItem("token");
@@ -194,6 +225,7 @@ export default function TemplateDetails({
   }
   useEffect(() => {
     getTemplate();
+    getAllRoles();
   }, []);
 
   async function createTemplate() {
@@ -338,7 +370,7 @@ export default function TemplateDetails({
       templateDet?.details?.map((item: any) => item?.description) || [];
     setTempDetails(newArr);
     setLevel(templateDet?.level);
-    setPosition(templateDet?.role?.roleName ? templateDet?.role?.roleName : "");
+    setPosition(templateDet?.role?._id ? templateDet?.role?._id : "");
     getGroups();
     if (templateDet?.group_id) {
       console.log(templateDet?.group_id);
@@ -347,7 +379,7 @@ export default function TemplateDetails({
       setTempKey(templateDet?.group_id?.step);
       console.log(templateDet?.group_id?._id);
     } else {
-      setTempKey(templateDet?.title?.replace(" ", "_"));
+      setTempKey(templateDet?.title?.replaceAll(" ", "_"));
     }
   }, [templateDet]);
 
@@ -765,8 +797,8 @@ export default function TemplateDetails({
                     <div className={styles.card_body}>
                       {/* <p>{templateDet?.role}</p> */}
                       <CustomSelectInput
-                        getValue={(val: string) => setPosition(val)}
-                        options={Object.values(RoleEnum)}
+                        getValue={(val: string) => setPosition(rolesData?.filter((r:any,idx:number)=>r.roleName == val)[0]?._id)}
+                        options={allRoles}
                         label={templateDet?.role?.roleName ? templateDet?.role?.roleName : ""}
                       />
                     </div>
