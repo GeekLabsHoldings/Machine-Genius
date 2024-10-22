@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 interface PlatformData {
   platformName: string;
-  kpiMetrics: string[]; // List of KPI metric names
+  kpiMetrics: string[]; // list of KPI metric names
   data: {
     [kpiMetric: string]: {
       [month: number]: {
@@ -20,40 +20,27 @@ interface PlatformData {
   };
 }
 
-interface IKPIData {
-  kpis: KPI[];
-  achievedKPIs: AchievedKPI[];
-}
+const alertIcon = (
+  <svg
+    className="w-[29px] h-[29px] iconify iconify--emojione"
+    viewBox="0 0 64 64"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    role="img"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <path
+      d="M5.9 62c-3.3 0-4.8-2.4-3.3-5.3L29.3 4.2c1.5-2.9 3.9-2.9 5.4 0l26.7 52.5c1.5 2.9 0 5.3-3.3 5.3H5.9z"
+      fill="#ffce31"
+    ></path>
 
-interface KPI {
-  _id: {
-    year: number;
-    month: number;
-  };
-  platforms: PlatformKPI[];
-}
+    <g fill="#231f20">
+      <path d="M27.8 23.6l2.8 18.5c.3 1.8 2.6 1.8 2.9 0l2.7-18.5c.5-7.2-8.9-7.2-8.4 0"></path>
 
-interface PlatformKPI {
-  platform: string;
-  postsPerDay: number;
-  postsPerWeek: number;
-  postsPerMonth: number;
-}
-
-interface AchievedKPI {
-  date: {
-    year: number;
-    month: number;
-  };
-  platforms: AchievedPlatformKPI[];
-}
-
-interface AchievedPlatformKPI {
-  platform: string;
-  Day: number;
-  Week: number;
-  Month: number;
-}
+      <circle cx="32" cy="49.6" r="4.2"></circle>
+    </g>
+  </svg>
+);
 
 export default function Page() {
   const { authState, handleSignOut, brandOptions, brandMap } =
@@ -62,9 +49,11 @@ export default function Page() {
   const [pageState, setPageState] = useState<{
     fetchedKPIData: IKPIData | null;
     selectedBrand: string;
+    isLoading: boolean;
   }>({
     fetchedKPIData: null,
     selectedBrand: "",
+    isLoading: false,
   });
 
   const [platformDataMap, setPlatformDataMap] = useState<{
@@ -86,6 +75,10 @@ export default function Page() {
 
   const getKPIData = async (brandId: string) => {
     try {
+      setPageState((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/analytics/kpi/${brandId}`,
         {
@@ -121,6 +114,11 @@ export default function Page() {
       toast.error(
         error instanceof Error ? error.message : "Failed to fetch KPI data!"
       );
+    } finally {
+      setPageState((prevState) => ({
+        ...prevState,
+        isLoading: false,
+      }));
     }
   };
 
@@ -148,7 +146,9 @@ export default function Page() {
           }
           const platformData = platformDataMap[platformName];
 
-          const metrics = ["postsPerDay", "postsPerWeek", "postsPerMonth"];
+          const metrics: Array<
+            "postsPerDay" | "postsPerWeek" | "postsPerMonth"
+          > = ["postsPerDay", "postsPerWeek", "postsPerMonth"];
 
           for (const metric of metrics) {
             const requiredValue = platformKPI[metric];
@@ -184,17 +184,20 @@ export default function Page() {
           }
           const platformData = platformDataMap[platformName];
 
-          const metricsMap = {
+          const metricsMap: Record<
+            "Day" | "Week" | "Month",
+            "postsPerDay" | "postsPerWeek" | "postsPerMonth"
+          > = {
             Day: "postsPerDay",
             Week: "postsPerWeek",
             Month: "postsPerMonth",
           };
 
-          for (const [achievedMetric, requiredMetric] of Object.entries(
-            metricsMap
-          )) {
+          for (const achievedMetric of Object.keys(metricsMap) as Array<
+            "Day" | "Week" | "Month"
+          >) {
+            const requiredMetric = metricsMap[achievedMetric];
             const metValue = achievedPlatformKPI[achievedMetric];
-
             if (!platformData.kpiMetrics.includes(requiredMetric)) {
               platformData.kpiMetrics.push(requiredMetric);
             }
@@ -236,7 +239,7 @@ export default function Page() {
                 label="Select Brand"
                 options={brandOptions}
                 getValue={(value: string) => {
-                  setPageState((prevState: any) => ({
+                  setPageState((prevState) => ({
                     ...prevState,
                     selectedBrand: brandMap[value],
                   }));
@@ -274,63 +277,91 @@ export default function Page() {
               </tr>
             </thead>
             <tbody>
-              {Object.values(platformDataMap).map((platformData) =>
-                platformData.kpiMetrics.map((kpiMetric, metricIdx) => (
-                  <tr key={`${platformData.platformName}-${kpiMetric}`}>
-                    {metricIdx === 0 && (
-                      <td
-                        rowSpan={platformData.kpiMetrics.length}
-                        className={styles.platform_header}
-                      >
-                        {platformData.platformName[0] +
-                          platformData.platformName.slice(1).toLowerCase()}
-                      </td>
-                    )}
-                    <td>{kpiMetricNames[kpiMetric] || kpiMetric}</td>
-                    {/* Now for each month */}
-                    {Array.from({ length: 12 }).flatMap((_, idx) => {
-                      const month = idx + 1;
-                      const dataForMetric = platformData.data[kpiMetric] || {};
-                      const monthData = dataForMetric[month] || {};
-                      const required =
-                        monthData.required !== undefined
-                          ? monthData.required
-                          : "-";
-                      const met =
-                        monthData.met !== undefined ? monthData.met : "-";
+              {pageState.selectedBrand === "" ? (
+                <tr>
+                  <td colSpan={26} className="!text-left py-4 font-semibold">
+                    <div className="flex items-center gap-[10px]">
+                      {alertIcon}
+                      <span>Please select a brand to view KPI data!</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : pageState.isLoading === true ? (
+                <tr>
+                  <td colSpan={26} className="animate-pulse py-4">
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                  </td>
+                </tr>
+              ) : pageState.selectedBrand !== "" &&
+                pageState.fetchedKPIData?.kpis.length === 0 ? (
+                <tr>
+                  <td colSpan={26} className="!text-left py-4 font-semibold">
+                    <div className="flex items-center gap-[10px]">
+                      {alertIcon}
+                      <span>No KPI data found for this brand!</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                Object.values(platformDataMap).map((platformData) =>
+                  platformData.kpiMetrics.map((kpiMetric, metricIdx) => (
+                    <tr key={`${platformData.platformName}-${kpiMetric}`}>
+                      {metricIdx === 0 && (
+                        <td
+                          rowSpan={platformData.kpiMetrics.length}
+                          className={styles.platform_header}
+                        >
+                          {platformData.platformName[0] +
+                            platformData.platformName.slice(1).toLowerCase()}
+                        </td>
+                      )}
+                      <td>{kpiMetricNames[kpiMetric] || kpiMetric}</td>
+                      {/* Now for each month */}
+                      {Array.from({ length: 12 }).flatMap((_, idx) => {
+                        const month = idx + 1;
+                        const dataForMetric =
+                          platformData.data[kpiMetric] || {};
+                        const monthData = dataForMetric[month] || {};
+                        const required =
+                          monthData.required !== undefined
+                            ? monthData.required
+                            : "-";
+                        const met =
+                          monthData.met !== undefined ? monthData.met : "-";
 
-                      // Compute arrow
-                      let arrow = null;
-                      if (
-                        typeof required === "number" &&
-                        typeof met === "number"
-                      ) {
-                        if (met >= required) {
-                          arrow = (
-                            <span className={styles.arrow_up}>&#9650;</span> // Up arrow
-                          );
-                        } else {
-                          arrow = (
-                            <span className={styles.arrow_down}>&#9660;</span> // Down arrow
-                          );
+                        // Compute arrow
+                        let arrow = null;
+                        if (
+                          typeof required === "number" &&
+                          typeof met === "number"
+                        ) {
+                          if (met >= required) {
+                            arrow = (
+                              <span className={styles.arrow_up}>&#9650;</span> // Up arrow
+                            );
+                          } else {
+                            arrow = (
+                              <span className={styles.arrow_down}>&#9660;</span> // Down arrow
+                            );
+                          }
                         }
-                      }
 
-                      return [
-                        <td
-                          key={`req-${platformData.platformName}-${kpiMetric}-${month}`}
-                        >
-                          {required}
-                        </td>,
-                        <td
-                          key={`met-${platformData.platformName}-${kpiMetric}-${month}`}
-                        >
-                          {met} {arrow}
-                        </td>,
-                      ];
-                    })}
-                  </tr>
-                ))
+                        return [
+                          <td
+                            key={`req-${platformData.platformName}-${kpiMetric}-${month}`}
+                          >
+                            {required}
+                          </td>,
+                          <td
+                            key={`met-${platformData.platformName}-${kpiMetric}-${month}`}
+                          >
+                            {met} {arrow}
+                          </td>,
+                        ];
+                      })}
+                    </tr>
+                  ))
+                )
               )}
             </tbody>
           </table>
