@@ -103,3 +103,29 @@ export interface IPostInsights {
     retweet_count: number;
   };
 }
+// =================================================================================
+/*
+ceo/analytics/kpi:
+- KPIs.
+- Achieved KPIs.
+*/
+export interface IKPI {
+  _id: {
+    year: number;
+    month: number;
+    brand: string;
+  };
+  totalPostsPerDay: number;
+  totalPostsPerWeek: number;
+  totalPostsPerMonth: number;
+  platforms: string[];
+}
+export interface IAchievedKPI {
+  postsPerDay: number;
+  postsPerWeek: number;
+  postsPerMonth: number;
+}
+export interface IKPIData {
+  kpis: IKPI[];
+  achievedKPIs: IAchievedKPI[];
+}

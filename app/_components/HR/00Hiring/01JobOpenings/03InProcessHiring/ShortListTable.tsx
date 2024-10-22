@@ -1,11 +1,21 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { truncateText } from "../../../../../_utils/text";
 import Link from "next/link";
 import styles from "./ShortListTable.module.css";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
-export default function ShortListTable({data, setRecievedId, recievedId, stepIdx}: {data: any, setRecievedId: any, recievedId: any, stepIdx: number}) {
+export default function ShortListTable({
+  data,
+  setRecievedId,
+  recievedId,
+  stepIdx,
+}: {
+  data: any;
+  setRecievedId: any;
+  recievedId: any;
+  stepIdx: number;
+}) {
   // An array of objects representing the rows of the table body.
   const bodyRow = [
     {
@@ -153,9 +163,20 @@ export default function ShortListTable({data, setRecievedId, recievedId, stepIdx
     });
   }
 
+  const [selectedCandidates, setSelectedCandidates] = useState<any[]>([]);
+
   useEffect(() => {
     console.log(data);
-  },[data])
+  }, [data]);
+
+  useEffect(() => {
+    if (recievedId) {
+      document.querySelectorAll("input[type='checkbox']").forEach((e: any) => {
+        e.checked = false;
+      });
+      (document.getElementById(recievedId) as HTMLInputElement).checked = true;
+    }
+  }, [recievedId]);
 
   return (
     <div className={`${styles.tableContainer} h-full`}>
@@ -205,13 +226,64 @@ export default function ShortListTable({data, setRecievedId, recievedId, stepIdx
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {data?.candidates?.map((e:any, idx:number) => (
-            <ul key={idx} className={`${e.stepsStatus[stepIdx].status == "Rejected" ? "opacity-50" : ""}`} onClick={() => setRecievedId(e._id)}>
+          {data?.candidates?.map((e: any, idx: number) => (
+            <ul
+              key={idx}
+              className={`${
+                e.stepsStatus[stepIdx].status == "Rejected"
+                  ? "opacity-50"
+                  : e.messageStatus[stepIdx].status == "Approved"
+                  ? "bg-[#5fa06d]"
+                  : ""
+              }`}
+              onClick={() => {
+                if (
+                  (document.getElementById(e._id) as HTMLInputElement)
+                    .checked == true
+                ) {
+                  if (
+                    document.querySelectorAll("input[type='checkbox']:checked")
+                      .length == 1
+                  ) {
+                    setRecievedId("");
+                  }
+                  (document.getElementById(e._id) as HTMLInputElement).checked =
+                    false;
+                } else {
+                  (document.getElementById(e._id) as HTMLInputElement).checked =
+                    true;
+                  setRecievedId(e._id);
+                }
+              }}
+            >
               <li className="candidateSelection w-[4%]">
                 <CustomCheckBox
                   accentColor="#2A2B2A"
                   name="candidateSelection"
-                  onChange={handleCheck}
+                  onClick={() => {
+                    if (
+                      (document.getElementById(e._id) as HTMLInputElement)
+                        .checked == true
+                    ) {
+                      if (
+                        document.querySelectorAll(
+                          "input[type='checkbox']:checked"
+                        ).length == 1
+                      ) {
+                        setRecievedId("");
+                      }
+                      (
+                        document.getElementById(e._id) as HTMLInputElement
+                      ).checked = false;
+                    } else {
+                      (
+                        document.getElementById(e._id) as HTMLInputElement
+                      ).checked = true;
+                      setRecievedId(e._id);
+                    }
+                  }}
+                  // checked={selectedCandidates?.includes(e._id)}
+                  id={e._id}
                 />
               </li>
               <li className="w-[10%]">

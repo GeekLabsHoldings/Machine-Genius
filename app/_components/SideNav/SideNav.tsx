@@ -280,6 +280,37 @@ const SideNav = ({
                     : null}
                 </ul>
               </li>
+
+              {index === sideNavLinks.length - 2 && (
+                <li
+                  key="JobCandidates"
+                  // className={ele.subLinks ? styles.has_sub_menu : ""}
+                  onClick={(e) => handleToggleSubMenu(e)}
+                >
+                  <Link
+                    href={`/${
+                      sideNavLinks[0].path?.split("/")[1]
+                    }/job-candidates`}
+                    onClick={() =>
+                      handleCurrentPageTitle((prev: any) => "Job Candidates")
+                    }
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="25"
+                      height="15"
+                      viewBox="0 0 25 15"
+                      fill="none"
+                    >
+                      <path
+                        d="M25 5.0645V2.11167C25 0.945411 24.0546 1.8913e-09 22.8885 1.8913e-09H2.11143C0.945361 -4.88262e-05 0 0.945361 0 2.11162V5.08418C1.07212 5.23818 1.89717 6.15781 1.89717 7.27261C1.89717 8.3874 1.07212 9.30713 0 9.46074V12.4337C0 13.5996 0.945361 14.545 2.11143 14.545H22.8885C24.0545 14.545 25 13.5996 25 12.4337V9.48042C23.8268 9.42554 22.8919 8.45957 22.8919 7.27266C22.8919 6.08579 23.8269 5.11982 25 5.0645ZM5.93335 13.2127H5.20693V11.3181H5.93335V13.2127ZM5.93335 9.88403H5.20693V7.98945H5.93335V9.88403ZM5.93335 6.55547H5.20693V4.66045H5.93335V6.55547ZM5.93335 3.2269H5.20693V1.33228H5.93335V3.2269Z"
+                        fill="#FFFFFB"
+                      />
+                    </svg>
+                    <p>Job Candidates</p>
+                  </Link>
+                </li>
+              )}
               {index === sideNavLinks.length - 2 && (
                 <li
                   key="Chat"

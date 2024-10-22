@@ -20,6 +20,7 @@ const publicPaths = [
   "/privacy-security",
   "/disclaimer",
   "/careers",
+  "/interview-schedule",
 ];
 
 // ===== 00. Start Authentication =====
@@ -165,7 +166,7 @@ export default function GlobalContextProvider({
     const departments = decodedToken?.department;
 
     // Get all allowed route paths for the user's departments
-    const allowedRoutePaths = departments.map((role:string) => {
+    const allowedRoutePaths = departments.map((role: string) => {
       const route = handleSetRouteToDirect(role);
       return route.split("/")[1]; // Extract the path segment
     });
@@ -344,7 +345,7 @@ export default function GlobalContextProvider({
         }
       );
       if (res.status === 401) {
-        handleSignOut();
+        // handleSignOut();
       }
       const json: IBrand[] = await res.json();
       if (json && json.length > 0) {

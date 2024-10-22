@@ -1,11 +1,127 @@
 "use client";
-import React from "react";
+import React, { useContext , useEffect, useState } from "react";
 import styles from "./offer-msg.module.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import ShortListTable from "@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ShortListTable";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
+import { StepContext } from "@/app/_context/hrStepContext";
+import { useRouter } from "next/navigation";
+import { Editor } from "primereact/editor";
+
 
 export default function Page() {
+  const [data, setData] = useState<any>(null);
+  const [recievedId, setRecievedId] = useState<any>(null);
+  const { handleSignOut } = useContext(globalContext);
+  const { step, setStep } = useContext(StepContext);
+  const [returnedTemplate, setReturnedTemplate] = useState<any>("");
+  const [oldTemplate, setOldTemplate] = useState<any>("");
+  const [candidateData, setCandidateData] = useState<any>(null);
+  const router = useRouter();
+  const toolbarOptions = [[{ list: "ordered" }, { list: "bullet" }], ["bold"]];
+
+  async function sendEmail() {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/message/email/send-message`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          candidate_id:recievedId,
+          subject:"Offer",
+          emailContent:returnedTemplate
+        })
+      });
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  }
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/current-step-template/${step}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      setData(result);
+      setRecievedId(result?.candidates[0]?._id);
+      setOldTemplate(result?.template?.details[0]?.description);
+      setReturnedTemplate(
+        result?.template?.details[0]?.description
+          .replace(/\[firstName\]/g, result?.candidates[0]?.firstName)
+          .replace(/\[lastName\]/g, result?.candidates[0]?.lastName)
+          .replace(/\[role\]/g, result?.candidates[0]?.role?.roleName)
+      );
+
+      console.log("result", result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  async function goPreviousStep() {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/hiring/previous-step/${step}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log(result);
+      // navigate to the next page
+      router.push(`/hr/hiring/job-openings/face-to-face-interview-msg`);
+    } catch (error) {
+      console.error("Error updating next step:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [step]);
+
+  useEffect(() => {
+    if (recievedId) {
+      setCandidateData(
+        data.candidates.find((candidate: any) => candidate._id === recievedId)
+      );
+    }
+  }, [recievedId, data]);
+
+  useEffect(() => {
+    if (candidateData) {
+      setReturnedTemplate(
+        oldTemplate
+          .replace(/\[firstName\]/g, candidateData?.firstName)
+          .replace(/\[lastName\]/g, candidateData?.lastName)
+          .replace(/\[role\]/g, candidateData?.role?.roleName)
+          .replace(/\[link\]/g, "https://www.google.com")
+      );
+    }
+  }, [candidateData]);
+
   return (
     <section className="w-[90vw]">
       {/* Back To In Process Hiring Table Button */}
@@ -15,7 +131,7 @@ export default function Page() {
 
       <div className="h-[70vh] flex align-center justify-between w-full">
         <div className="w-[49%] h-full">
-          <ShortListTable data={[]} setRecievedId={() => {}} recievedId={0} stepIdx={0} />
+          <ShortListTable data={data} setRecievedId={setRecievedId} recievedId={recievedId} stepIdx={7} />
         </div>
 
         <div
@@ -39,46 +155,17 @@ export default function Page() {
           </div>
           <div>
             <span className="font-bold mb-[15px] block">Message Preview:</span>
-            <div className="border border-[#2A2B2A] bg-[#DBDBD73D] p-4 rounded-[11px]">
-              <div className="font-medium max-h-[35vh] overflow-y-auto">
-                <p className="mb-3">Subject: Job Offer: Video Editor Position at [Company Name]</p>
-                <p className="my-3">Dear [Candidate's Name],</p>
-                <p className="my-3">
-                  I am delighted to extend this offer to you for the position of
-                  Video Editor at [Company Name]. After careful consideration of
-                  your qualifications and experience, we are confident that you
-                  will make a valuable addition to our team.
-                </p>
-                <p className="my-3">Position Details:</p>
-                <p className="my-3">
-                  <strong>Job Title:</strong> Video Editor
-                  <br />
-                  <strong>Company:</strong> [Company Name]
-                  <br />
-                  <strong>Location:</strong> [Location]
-                  <br />
-                  <strong>Start Date:</strong> [Start Date]
-                  <br />
-                  <strong>Salary:</strong> [Salary]
-                  <br />
-                  <strong>Benefits:</strong> [List of Benefits]
-                </p>
-                <p className="my-3">
-                  <strong>Responsibilities:</strong>
-                  <br />
-                  As a Video Editor, you will be responsible for editing and
-                  enhancing video content to create engaging narratives that
-                  align with our brand identity. You will collaborate closely
-                  with our creative team to produce high-quality video content
-                  that captivates our audience and supports our organizational
-                  objectives.
-                </p>
-              </div>
-            </div>
+            <Editor
+                value={returnedTemplate}
+                onTextChange={(e: any) => setReturnedTemplate(e.htmlValue)}
+                style={{ height: "320px" }}
+                formats={["list", "bold"]} // Allowed formats
+                modules={{ toolbar: toolbarOptions }} // Toolbar configuration
+              />
           </div>
           {/* Action Button */}
           <div>
-            <CustomBtn word={"Send Email"} btnColor="black" width="w-full" />
+            <CustomBtn word={"Send Email"} btnColor="black" width="w-full" onClick={sendEmail} />
           </div>
         </div>
       </div>
@@ -87,7 +174,7 @@ export default function Page() {
         <CustomBtn
           word={"Back"}
           btnColor="white"
-          href="/hr/hiring/job-openings/interview-acceptance-sheet"
+          href="/hr/hiring/job-openings/face-to-face-interview-msg"
         />
         <CustomBtn word={"Dashboard"} btnColor="black" href="/hr/dashboard" />
       </div>

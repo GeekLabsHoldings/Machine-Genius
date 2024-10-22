@@ -47,7 +47,13 @@ const options: any = {
   },
 };
 
-const AreaChart = ({ chartData }: { chartData: number[] }) => {
+const AreaChart = ({
+  chartData,
+  chartOptions,
+}: {
+  chartData: number[];
+  chartOptions?: any;
+}) => {
   const series = [
     {
       // name: "This Month",
@@ -58,7 +64,7 @@ const AreaChart = ({ chartData }: { chartData: number[] }) => {
   return (
     <ReactApexChart
       type="area"
-      options={options}
+      options={chartOptions ? chartOptions : options}
       series={series}
       height={"100%"}
       width={"100%"}
