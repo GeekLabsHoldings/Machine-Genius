@@ -388,6 +388,7 @@ const Page = () => {
   }
 
   async function createTemplate() {
+    
     if (tempKey === "") return;
     const body = {
       title: templates.value,
@@ -446,6 +447,7 @@ const Page = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
+            step: tempKey,
             title: templates.value,
             level: level,
             role: position,
@@ -758,7 +760,7 @@ const Page = () => {
                                       }
                                     }}
                                     options={["Numeric", "Yes or No"]}
-                                    label={"Numeric"}
+                                    label={"choose type"}
                                   />
                                 </div>
                                 <label
