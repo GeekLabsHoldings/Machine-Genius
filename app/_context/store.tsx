@@ -345,7 +345,7 @@ export default function GlobalContextProvider({
         }
       );
       if (res.status === 401) {
-        handleSignOut();
+        // handleSignOut();
       }
       const json: IBrand[] = await res.json();
       if (json && json.length > 0) {
