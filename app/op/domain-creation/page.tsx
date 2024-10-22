@@ -6,13 +6,12 @@ import { globalContext } from "@/app/_context/store";
 import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import { v4 as uuidv4 } from "uuid";
 
 const steps = [
   { number: 1, title: "Check Domain Availability" },
-  { number: 2, title: "User Info" },
-  { number: 3, title: "Zoho Credentials" },
-  // You can add more steps here
+  { number: 2, title: "Register Domain" },
+  { number: 3, title: "Domain Email Verification" },
+  { number: 4, title: "Activate Domain" },
 ];
 
 // ===== Start Step 2 =====
@@ -28,14 +27,14 @@ interface IStep2FormState {
   ZipCode: string;
   PhoneNumber: string;
   Email: string;
-  domainName: string;
+  domainName?: string;
   DurationInYears: number;
   AutoRenew: boolean;
 }
 // ===== End Step 2 =====
 
 const Page = () => {
-  const { authState, handleSignOut, globalBrands, brandMap } =
+  const { authState, handleSignOut, globalBrands, brandMap, brandIdMap } =
     useContext(globalContext);
   const router = useRouter();
   const [pageState, setPageState] = useState<{
@@ -48,6 +47,9 @@ const Page = () => {
     // ===== Start Step 2 =====
     step2FormState: IStep2FormState;
     // ===== End Step 2 =====
+    // ===== Start Step 3 =====
+    isEmailVerified: boolean;
+    // ===== End Step 3 =====
   }>({
     isLoading: false,
     formStep: 1,
@@ -68,11 +70,13 @@ const Page = () => {
       ZipCode: "",
       PhoneNumber: "",
       Email: "",
-      domainName: "",
       DurationInYears: 1,
       AutoRenew: true,
     },
     // ===== End Step 2 =====
+    // ===== Start Step 3 =====
+    isEmailVerified: false,
+    // ===== End Step 3 =====
   });
 
   // ===== Start Step 1 =====
@@ -115,8 +119,8 @@ const Page = () => {
           isLoading: false,
           formStep: 2,
           // Reset Step 1
-          domainName: "",
-          domainSuggestions: [],
+          // domainName: "",
+          // domainSuggestions: [],
         }));
         return;
       } else if (json && json.isAvailable === false) {
@@ -141,7 +145,7 @@ const Page = () => {
     } catch (error) {
       setPageState((prev) => ({ ...prev, isLoading: false }));
       toast.error("Something went wrong!");
-      console.error("Error handleAddEmail:", error);
+      console.error("Error checkDomainAvailability:", error);
     }
   }
   // ===== End Step 1 =====
@@ -160,6 +164,7 @@ const Page = () => {
           method: "POST",
           body: JSON.stringify({
             ...pageState.step2FormState,
+            domainName: pageState.domainName,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -179,40 +184,115 @@ const Page = () => {
         setPageState((prev) => ({ ...prev, isLoading: false }));
         return;
       } else {
-        toast.success("Domain registered successfully!");
+        toast.success("Domain registered successfully! Please verify email.");
         setPageState((prev) => ({
           ...prev,
           isLoading: false,
           formStep: 3,
         }));
       }
-
-      const json: any = await res.json();
-      if (json && json._id) {
-        setPageState((prev) => ({
-          ...prev,
-          isLoading: false,
-          formStep: 2,
-          zohoCredentials: {
-            ...prev.zohoCredentials,
-            acc_id: json._id,
-          },
-        }));
-      } else {
-        toast.error("Something went wrong!");
-        setPageState((prev) => ({ ...prev, isLoading: false }));
-      }
-
-
-
-      
     } catch (error) {
       setPageState((prev) => ({ ...prev, isLoading: false }));
       toast.error("Something went wrong!");
-      console.error("Error handleAddEmail:", error);
+      console.error("Error handleRegisterDomain:", error);
     }
   }
   // ===== End Step 2 =====
+
+  // ===== Start Step 3 =====
+  async function handleCheckEmailVerification() {
+    if (!pageState.domainName || !pageState.isEmailVerified) {
+      toast.error("Please fill all required fields!");
+      return;
+    }
+    try {
+      setPageState((prev) => ({ ...prev, isLoading: true }));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/check-domain-email-verification`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            domainName: pageState.domainName,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      if (!res.ok) {
+        toast.error(
+          "Something went wrong! Please make sure you have verified the email."
+        );
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      } else {
+        toast.success("Email verified successfully!");
+        setPageState((prev) => ({
+          ...prev,
+          isLoading: false,
+          formStep: 4,
+        }));
+      }
+    } catch (error) {
+      setPageState((prev) => ({ ...prev, isLoading: false }));
+      toast.error("Something went wrong!");
+      console.error("Error handleCheckEmailVerification:", error);
+    }
+  }
+  // ===== End Step 3 =====
+
+  // ===== Start Step 4 =====
+  async function handleActivateDomain() {
+    if (!pageState.domainName || !pageState.step2FormState.brand) {
+      toast.error("Please fill all required fields!");
+      return;
+    }
+    try {
+      setPageState((prev) => ({ ...prev, isLoading: true }));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/activate-domain`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            domainName: pageState.domainName,
+            brand: pageState.step2FormState.brand,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `barrer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      if (!res.ok) {
+        toast.error("Something went wrong!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      } else {
+        toast.success("Domain activated successfully!");
+        router.push("/op/dashboard");
+      }
+    } catch (error) {
+      setPageState((prev) => ({ ...prev, isLoading: false }));
+      toast.error("Something went wrong!");
+      console.error("Error handleActivateDomain:", error);
+    }
+  }
+  // ===== End Step 4 =====
 
   return (
     <section
@@ -278,14 +358,18 @@ const Page = () => {
                   />
                 </div>
               </div>
+
+              {/* Domain Suggestions */}
               {pageState.domainSuggestions.length > 0 && (
-                <div>
-                  <p>Suggestions:</p>
-                  <ul>
+                <div className="mt-4 p-4 bg-white rounded-lg shadow-md">
+                  <p className="text-gray-700 font-semibold mb-2">
+                    Suggestions:
+                  </p>
+                  <ul className="space-y-2">
                     {pageState.domainSuggestions.map((suggestion) => (
                       <li
                         key={suggestion}
-                        className="cursor-pointer"
+                        className="px-3 py-2 bg-gray-50 rounded-md hover:bg-blue-100 cursor-pointer transition-colors duration-200"
                         onClick={() => {
                           setPageState((prev) => ({
                             ...prev,
@@ -293,7 +377,9 @@ const Page = () => {
                           }));
                         }}
                       >
-                        {suggestion}
+                        <span className="text-blue-600 hover:underline">
+                          {suggestion}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -305,43 +391,39 @@ const Page = () => {
 
           <div className="flex justify-end items-center w-full">
             <CustomBtn
-              word="Next"
+              word="Check Domain Availability"
               btnColor="black"
               onClick={checkDomainAvailability}
               disabled={pageState.isLoading}
+              paddingVal="py-[--10px] px-[--22px]"
             />
           </div>
         </>
       )}
 
-      {pageState.formStep === 1 && (
+      {pageState.formStep === 2 && (
         <>
           <div
             className={`flex justify-between gap-[3vw] !min-w-[40vw] h-[55vh]`}
           >
             {/* ===== Start Col (1) ===== */}
             <div className="flex flex-col gap-[1vw] w-1/2">
-              {/* Primary Email Address* */}
+              {/* Email Address* */}
               <div>
-                <label htmlFor="primary-email-address">
-                  Primary Email Address*
-                </label>
+                <label htmlFor="email-address">Email Address*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="primary-email-address"
+                    id="email-address"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.primaryEmailAddress}
+                    value={pageState.step2FormState.Email}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            primaryEmailAddress: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          Email: e.target.value,
                         },
                       }));
                     }}
@@ -358,16 +440,13 @@ const Page = () => {
                     id="first-name"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.firstName}
+                    value={pageState.step2FormState.FirstName}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            firstName: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          FirstName: e.target.value,
                         },
                       }));
                     }}
@@ -375,25 +454,22 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Display Name* */}
+              {/* Contact Type* */}
               <div>
-                <label htmlFor="display-name">Display Name*</label>
+                <label htmlFor="contact-type">Contact Type*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="display-name"
+                    id="contact-type"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.displayName}
+                    value={pageState.step2FormState.ContactType}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            displayName: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          ContactType: e.target.value,
                         },
                       }));
                     }}
@@ -401,25 +477,68 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Department */}
+              {/* City */}
               <div>
-                <label htmlFor="department">Department*</label>
+                <label htmlFor="city">City*</label>
+                <div className={`${styles.inputWrapper}`}>
+                  <input
+                    type="text"
+                    id="city"
+                    required
+                    className={`${styles.customInput}`}
+                    value={pageState.step2FormState.City}
+                    onChange={(e) => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          City: e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* CountryCode */}
+              <div>
+                <label htmlFor="country-code">Country Code*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
                     id="department"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.department}
+                    value={pageState.step2FormState.CountryCode}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            department: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          CountryCode: e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Duration In Years */}
+              <div>
+                <label htmlFor="duration-in-years">Duration In Years*</label>
+                <div className={`${styles.inputWrapper}`}>
+                  <input
+                    type="number"
+                    id="duration-in-years"
+                    required
+                    className={`${styles.customInput}`}
+                    value={pageState.step2FormState.DurationInYears}
+                    onChange={(e) => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          DurationInYears: Number(e.target.value),
                         },
                       }));
                     }}
@@ -442,8 +561,8 @@ const Page = () => {
                       getValue={(value: string) => {
                         setPageState((prev) => ({
                           ...prev,
-                          formState: {
-                            ...prev.formState,
+                          step2FormState: {
+                            ...prev.step2FormState,
                             brand: brandMap[value],
                           },
                         }));
@@ -459,25 +578,22 @@ const Page = () => {
 
             {/* ===== Start Col (2) ===== */}
             <div className="flex flex-col gap-[1vw] w-1/2">
-              {/* Password* */}
+              {/* Phone Number* */}
               <div>
-                <label htmlFor="password">Password*</label>
+                <label htmlFor="phone-number">Phone Number*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="password"
+                    id="phone-number"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.password}
+                    value={pageState.step2FormState.PhoneNumber}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            password: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          PhoneNumber: e.target.value,
                         },
                       }));
                     }}
@@ -494,16 +610,13 @@ const Page = () => {
                     id="last-name"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.lastName}
+                    value={pageState.step2FormState.LastName}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            lastName: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          LastName: e.target.value,
                         },
                       }));
                     }}
@@ -511,25 +624,22 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Mobile Number* */}
+              {/* Address Line 1* */}
               <div>
-                <label htmlFor="mobile-number">Mobile Number*</label>
+                <label htmlFor="address-line-1">Address Line (1)*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="mobile-number"
+                    id="address-line-1"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.mobileNumber}
+                    value={pageState.step2FormState.AddressLine1}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            mobileNumber: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          AddressLine1: e.target.value,
                         },
                       }));
                     }}
@@ -537,30 +647,71 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Designation */}
+              {/* State */}
               <div>
-                <label htmlFor="designation">Designation*</label>
+                <label htmlFor="state">State*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="designation"
+                    id="state"
                     required
                     className={`${styles.customInput}`}
-                    value={pageState.formState.userData.designation}
+                    value={pageState.step2FormState.State}
                     onChange={(e) => {
                       setPageState((prev) => ({
                         ...prev,
-                        formState: {
-                          ...prev.formState,
-                          userData: {
-                            ...prev.formState.userData,
-                            designation: e.target.value,
-                          },
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          State: e.target.value,
                         },
                       }));
                     }}
                   />
                 </div>
+              </div>
+
+              {/* ZipCode */}
+              <div>
+                <label htmlFor="zip-code">Zip Code*</label>
+                <div className={`${styles.inputWrapper}`}>
+                  <input
+                    type="text"
+                    id="zip-code"
+                    required
+                    className={`${styles.customInput}`}
+                    value={pageState.step2FormState.ZipCode}
+                    onChange={(e) => {
+                      setPageState((prev) => ({
+                        ...prev,
+                        step2FormState: {
+                          ...prev.step2FormState,
+                          ZipCode: e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* AutoRenew */}
+              <div className="flex items-center gap-[--20px]">
+                <label htmlFor="auto-renew">Auto Renew*</label>
+                <input
+                  type="checkbox"
+                  id="auto-renew"
+                  required
+                  className="w-[--20px] h-[--20px]"
+                  checked={pageState.step2FormState.AutoRenew}
+                  onChange={(e) => {
+                    setPageState((prev) => ({
+                      ...prev,
+                      step2FormState: {
+                        ...prev.step2FormState,
+                        AutoRenew: e.target.checked,
+                      },
+                    }));
+                  }}
+                />
               </div>
             </div>
             {/* ===== End Col (2) ===== */}
@@ -568,85 +719,113 @@ const Page = () => {
 
           <div className="flex justify-end items-center w-full">
             <CustomBtn
-              word="Next"
+              word="Register Domain"
               btnColor="black"
-              onClick={handleAddEmail}
+              onClick={handleRegisterDomain}
               disabled={pageState.isLoading}
+              paddingVal="py-[--10px] px-[--22px]"
             />
           </div>
         </>
       )}
 
-      {pageState.formStep === 2 && (
+      {pageState.formStep === 3 && (
         <>
           <div className={`!min-w-[40vw] h-[55vh]`}>
             {/* ===== Start Col (1) ===== */}
-            <div className="flex flex-col gap-[1vw]">
-              {/* clientId* */}
+            <div className="flex flex-col gap-[3vw]">
+              {/* Domain Name* */}
               <div>
-                <label htmlFor="clientId">clientId*</label>
+                <label htmlFor="domainName">Domain Name*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="clientId"
+                    id="domainName"
                     required
+                    readOnly
                     className={`${styles.customInput}`}
-                    value={pageState.zohoCredentials.clientId}
-                    onChange={(e) => {
-                      setPageState((prev) => ({
-                        ...prev,
-                        zohoCredentials: {
-                          ...prev.zohoCredentials,
-                          clientId: e.target.value,
-                        },
-                      }));
-                    }}
+                    value={pageState.domainName}
+                    // onChange={(e) => {
+                    //   setPageState((prev) => ({
+                    //     ...prev,
+                    //     domainName: e.target.value,
+                    //   }));
+                    // }}
                   />
                 </div>
               </div>
+              {/* AutoRenew */}
+              <div className="flex items-center gap-[--12px]">
+                <input
+                  type="checkbox"
+                  id="verified-email"
+                  required
+                  className="w-[--20px] h-[--20px]"
+                  checked={pageState.isEmailVerified}
+                  onChange={(e) => {
+                    setPageState((prev) => ({
+                      ...prev,
+                      isEmailVerified: e.target.checked,
+                    }));
+                  }}
+                />
 
-              {/* clientSecret* */}
+                <label htmlFor="verified-email">
+                  I have verified the email*
+                </label>
+              </div>
+            </div>
+            {/* ===== End Col (1) ===== */}
+          </div>
+
+          <div className="flex justify-end items-center w-full">
+            <CustomBtn
+              word="Check Email Verification"
+              btnColor="black"
+              onClick={handleCheckEmailVerification}
+              disabled={pageState.isLoading}
+              paddingVal="py-[--10px] px-[--22px]"
+            />
+          </div>
+        </>
+      )}
+
+      {pageState.formStep === 4 && (
+        <>
+          <div className={`!min-w-[40vw] h-[55vh]`}>
+            {/* ===== Start Col (1) ===== */}
+            <div className="flex flex-col gap-[3vw]">
+              {/* Domain Name* */}
               <div>
-                <label htmlFor="clientSecret">clientSecret*</label>
+                <label htmlFor="domainName">Domain Name*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="clientSecret"
+                    id="domainName"
                     required
+                    readOnly
                     className={`${styles.customInput}`}
-                    value={pageState.zohoCredentials.clientSecret}
-                    onChange={(e) => {
-                      setPageState((prev) => ({
-                        ...prev,
-                        zohoCredentials: {
-                          ...prev.zohoCredentials,
-                          clientSecret: e.target.value,
-                        },
-                      }));
-                    }}
+                    value={pageState.domainName}
+                    // onChange={(e) => {
+                    //   setPageState((prev) => ({
+                    //     ...prev,
+                    //     domainName: e.target.value,
+                    //   }));
+                    // }}
                   />
                 </div>
               </div>
-
-              {/* code */}
+              {/* Brand* */}
               <div>
-                <label htmlFor="code">code*</label>
+                <label htmlFor="brand">Brand*</label>
                 <div className={`${styles.inputWrapper}`}>
                   <input
                     type="text"
-                    id="code"
+                    id="brand"
                     required
+                    readOnly
                     className={`${styles.customInput}`}
-                    value={pageState.zohoCredentials.code}
-                    onChange={(e) => {
-                      setPageState((prev) => ({
-                        ...prev,
-                        zohoCredentials: {
-                          ...prev.zohoCredentials,
-                          code: e.target.value,
-                        },
-                      }));
-                    }}
+                    value={brandIdMap[pageState.step2FormState.brand]}
                   />
                 </div>
               </div>
@@ -656,10 +835,11 @@ const Page = () => {
 
           <div className="flex justify-end items-center w-full">
             <CustomBtn
-              word="All Done"
+              word="Activate Domain"
               btnColor="black"
-              onClick={handleUpdateAccessToken}
+              onClick={handleActivateDomain}
               disabled={pageState.isLoading}
+              paddingVal="py-[--10px] px-[--22px]"
             />
           </div>
         </>
