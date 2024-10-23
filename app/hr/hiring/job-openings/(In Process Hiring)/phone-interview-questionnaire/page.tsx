@@ -101,13 +101,13 @@ export default function Page() {
           /<span class="ql-ui" contenteditable="false"><\/span>/gi,
           ""
         )
-        .replaceAll(/data-list="ordered"/gi, "")
-        .replaceAll(/<ol>/gi, "")
-        .replaceAll(/<\/ol>/gi, "")
-        .replaceAll(/<li >/gi, "")
-        .replaceAll(/<\/li>/gi, "")
-        .split("?");
-      questions.pop();
+        .replaceAll(/data-list="ordered"/gi, "").split("</li><li >").map((item:any)=>item.replaceAll(/<ol>/gi, "").replaceAll(/<\/ol>/gi, "").replaceAll(/<li >/gi, "").replaceAll(/<\/li>/gi, ""))
+        // .replaceAll(/<ol>/gi, "")
+        // .replaceAll(/<\/ol>/gi, "")
+        // .replaceAll(/<li >/gi, "")
+        // .replaceAll(/<\/li>/gi, "")
+        // .split("?");
+      // questions.pop();
       setQuestions(questions);
       console.log(result);
 

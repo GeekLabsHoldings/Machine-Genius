@@ -12,6 +12,8 @@ import useWebSocket from "react-use-websocket";
 import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { QRCodeSVG } from "qrcode.react";
+import { toast } from "react-hot-toast";
+
 
 export default function Page() {
   const [data, setData] = useState<any>(null);
@@ -114,6 +116,27 @@ export default function Page() {
       console.error("Error updating next step:", error);
     }
   }
+
+  const skipTask = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/next-hiring-step/${recievedId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      if (res.status === 401) {
+        handleSignOut();
+      }
+      const result = await res.json();
+      console.log("skipTask", result);
+      fetchData()
+      toast.success("Candidate Skiped To Next Step Successfully")
+    } catch (error) {
+      console.error("Error skipping task:", error);
+    }
+  }
+
   async function goPreviousStep() {
     try {
       const res = await fetch(
@@ -225,12 +248,19 @@ export default function Page() {
             </div>
           </div>
           {/* Action Button */}
-          <div>
+          <div className="flex gap-[--20px]">
             <CustomBtn
               word={"Send Whatsapp Message"}
               btnColor="black"
               width="w-full"
               onClick={sendWhatsappMessage}
+              disabled={!recievedId}
+            />
+            <CustomBtn
+              word={"Skip"}
+              btnColor="white"
+              width="w-full"
+              onClick={skipTask}
               disabled={!recievedId}
             />
           </div>
