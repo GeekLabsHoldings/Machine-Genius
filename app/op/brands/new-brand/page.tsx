@@ -91,6 +91,28 @@ interface IAccount {
     | IYoutubeAccountData;
 }
 // ===== End Account Data Types =====
+// ===== Start SubBrand Data Types =====
+interface ISubBrandData {
+  brand_name: string;
+  description: string;
+  aquisition_date: number;
+}
+
+interface ISubBrand {
+  subbrand: ISubBrandData;
+  accounts: IAccount[];
+}
+// ===== End SubBrand Data Types =====
+// ===== Start Brand Data Types =====
+interface IBrandData {
+  brand_name: string;
+  description: string;
+  niche: "" | "politics" | "entertainment" | "finance";
+  aquisition_date: number;
+  accounts: IAccount[];
+  subBrands: ISubBrand[];
+}
+// ===== End Brand Data Types =====
 
 const Page = () => {
   const { authState, handleSignOut } = useContext(globalContext);
@@ -102,6 +124,7 @@ const Page = () => {
     brandNiche: "" | "politics" | "entertainment" | "finance";
     brandAquisitionDate: number;
     accounts: IAccount[];
+    subBrands: ISubBrand[];
   }>("OP-addNewBrand", {
     isLoading: false,
     brandName: "",
@@ -109,7 +132,20 @@ const Page = () => {
     brandNiche: "",
     brandAquisitionDate: new Date().getTime(),
     accounts: [],
+    subBrands: [],
   });
+
+  const [brandData, setBrandData] = useSessionStorage<IBrandData>(
+    "OP-brandData",
+    {
+      brand_name: pageState.brandName,
+      description: pageState.brandDescription,
+      niche: pageState.brandNiche,
+      aquisition_date: pageState.brandAquisitionDate,
+      accounts: pageState.accounts,
+      subBrands: pageState.subBrands,
+    }
+  );
 
   async function handleAddNewBrand() {
     // if (!postCaption) {
@@ -125,7 +161,7 @@ const Page = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/add-brand-all-data`,
         {
           method: "POST",
-          body: JSON.stringify({}),
+          body: JSON.stringify(brandData),
           headers: {
             "Content-Type": "application/json",
             Authorization: `barrer ${
@@ -179,6 +215,10 @@ const Page = () => {
             name="brand_name"
             // placeholder="Juice Box"
             className=" py-[0.6vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+            value={pageState.brandName}
+            onChange={(e) => {
+              setPageState((prev) => ({ ...prev, brandName: e.target.value }));
+            }}
           />
 
           <label className="mb-[0.7vw] inline-block" htmlFor="brand_niche">
@@ -204,6 +244,13 @@ const Page = () => {
             name="brand_description"
             // placeholder="51640615651463254"
             className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+            value={pageState.brandDescription}
+            onChange={(e) => {
+              setPageState((prev) => ({
+                ...prev,
+                brandDescription: e.target.value,
+              }));
+            }}
           />
 
           <label htmlFor="brand_acquisition_date">Acquisition Date*</label>
