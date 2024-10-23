@@ -67,7 +67,6 @@ interface IFacebookInAccountData {
   client_secret?: string;
   email?: string;
   password?: string;
-  cookies?: string;
 }
 interface IYoutubeAccountData {
   client_id: string;
@@ -256,39 +255,43 @@ const Page = () => {
 
                 <div className="collapse-content">
                   <label
-                    htmlFor=""
+                    htmlFor="reddit_app_id"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    Username*
+                    App ID*
                   </label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="reddit_app_id"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Password*</label>
+                  <label htmlFor="reddit_app_secret">App Secret*</label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="reddit_app_secret"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Link*</label>
+                  <label htmlFor="reddit_username">Username*</label>
 
                   <input
                     type="text"
-                    placeholder="Account url"
+                    id="reddit_username"
+                    // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Handle*</label>
+                  <label htmlFor="reddit_password">Password*</label>
 
                   <input
                     type="text"
-                    placeholder="@username"
+                    id="reddit_password"
+                    // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
@@ -300,44 +303,21 @@ const Page = () => {
                 <input type="radio" name="my-accordion-2" />
 
                 <div className="collapse-title text-xl font-semibold">
-                  Reddit
+                  Telegram
                 </div>
 
                 <div className="collapse-content">
                   <label
-                    htmlFor=""
+                    htmlFor="telegram_token"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    Username*
+                    Token*
                   </label>
 
                   <input
                     type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  <label htmlFor="">Password*</label>
-
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  <label htmlFor="">Link*</label>
-
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  <label htmlFor="">Handle*</label>
-
-                  <input
-                    type="text"
-                    placeholder="@username"
+                    id="telegram_token"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
@@ -349,44 +329,59 @@ const Page = () => {
                 <input type="radio" name="my-accordion-2" />
 
                 <div className="collapse-title text-xl font-semibold">
-                  Reddit
+                  Twitter
                 </div>
 
                 <div className="collapse-content">
                   <label
-                    htmlFor=""
+                    htmlFor="twitter_consumer_key"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    Username*
+                    Consumer Key*
                   </label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="twitter_consumer_key"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Password*</label>
+                  <label htmlFor="twitter_consumer_secret">
+                    Consumer Secret*
+                  </label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="twitter_consumer_secret"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Link*</label>
+                  <label htmlFor="twitter_access_token">Access Token*</label>
 
                   <input
                     type="text"
-                    placeholder="Account url"
+                    id="twitter_access_token"
+                    // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Handle*</label>
+                  <label htmlFor="twitter_token_secret">Token Secret*</label>
 
                   <input
                     type="text"
-                    placeholder="@username"
+                    id="twitter_token_secret"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="twitter_bearer_token">Bearer Token*</label>
+
+                  <input
+                    type="text"
+                    id="twitter_bearer_token"
+                    // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
@@ -400,44 +395,30 @@ const Page = () => {
                 <input type="radio" name="my-accordion-2" />
 
                 <div className="collapse-title text-xl font-semibold">
-                  Reddit
+                  LinkedIn
                 </div>
 
                 <div className="collapse-content">
                   <label
-                    htmlFor=""
+                    htmlFor="linkedin_token"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    Username*
+                    Token*
                   </label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="linkedin_token"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Password*</label>
+                  <label htmlFor="linkedin_owner">Owner*</label>
 
                   <input
                     type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  <label htmlFor="">Link*</label>
-
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  <label htmlFor="">Handle*</label>
-
-                  <input
-                    type="text"
-                    placeholder="@username"
+                    id="linkedin_owner"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
@@ -449,44 +430,77 @@ const Page = () => {
                 <input type="radio" name="my-accordion-2" />
 
                 <div className="collapse-title text-xl font-semibold">
-                  Reddit
+                  Facebook
                 </div>
 
                 <div className="collapse-content">
                   <label
-                    htmlFor=""
+                    htmlFor="facebook_token_page"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    Username*
+                    Token Page*
                   </label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="facebook_token_page"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Password*</label>
+                  <label htmlFor="facebook_long_access_token">
+                    Long Access Token*
+                  </label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="facebook_long_access_token"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Link*</label>
+                  <label htmlFor="facebook_page_id">Page ID*</label>
 
                   <input
                     type="text"
-                    placeholder="Account url"
+                    id="facebook_page_id"
+                    // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Handle*</label>
+                  <label htmlFor="facebook_client_id">Client ID*</label>
 
                   <input
                     type="text"
-                    placeholder="@username"
+                    id="facebook_client_id"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_client_secret">Client Secret*</label>
+
+                  <input
+                    type="text"
+                    id="facebook_client_secret"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_email">Email*</label>
+
+                  <input
+                    type="email"
+                    id="facebook_email"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_password">Password*</label>
+
+                  <input
+                    type="password"
+                    id="facebook_password"
+                    // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
@@ -498,44 +512,39 @@ const Page = () => {
                 <input type="radio" name="my-accordion-2" />
 
                 <div className="collapse-title text-xl font-semibold">
-                  Reddit
+                  Youtube
                 </div>
 
                 <div className="collapse-content">
                   <label
-                    htmlFor=""
+                    htmlFor="youtube_client_id"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    Username*
+                    Client ID*
                   </label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="youtube_client_id"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Password*</label>
+                  <label htmlFor="youtube_client_secret">Client Secret*</label>
 
                   <input
                     type="text"
-                    placeholder="username"
+                    id="youtube_client_secret"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Link*</label>
+                  <label htmlFor="youtube_redirect_uris">Redirect URIs*</label>
 
                   <input
                     type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  <label htmlFor="">Handle*</label>
-
-                  <input
-                    type="text"
-                    placeholder="@username"
+                    id="youtube_redirect_uris"
+                    // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
