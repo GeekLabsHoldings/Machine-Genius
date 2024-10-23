@@ -557,7 +557,7 @@ export default function TemplateDetails({
                           getValue={(val: string) => {
                             setPosition(val);
                           }}
-                          options={Object.values(RoleEnum)}
+                          options={allRoles}
                           label={templateDet?.role.roleName}
                         />
                       </div>
