@@ -17,8 +17,11 @@ export default function Page() {
   const [questions, setQuestions] = useState<string[]>([]);
   const router = useRouter();
   const answerRef = useRef<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchingDataLoading, setFetchingDataLoading] = useState(true);
 
   const submitCandidateAnswersAndNextStep = async () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
@@ -48,6 +51,7 @@ export default function Page() {
     }
   };
   const submitCandidateAnswersAndReject = async () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     try {
       const res = await fetch(
@@ -91,6 +95,7 @@ export default function Page() {
       if (res.status === 401) {
         handleSignOut();
       }
+      console.log(res.status);
       const result = await res.json();
       setData(result);
 
@@ -101,12 +106,20 @@ export default function Page() {
           /<span class="ql-ui" contenteditable="false"><\/span>/gi,
           ""
         )
-        .replaceAll(/data-list="ordered"/gi, "").split("</li><li >").map((item:any)=>item.replaceAll(/<ol>/gi, "").replaceAll(/<\/ol>/gi, "").replaceAll(/<li >/gi, "").replaceAll(/<\/li>/gi, ""))
-        // .replaceAll(/<ol>/gi, "")
-        // .replaceAll(/<\/ol>/gi, "")
-        // .replaceAll(/<li >/gi, "")
-        // .replaceAll(/<\/li>/gi, "")
-        // .split("?");
+        .replaceAll(/data-list="ordered"/gi, "")
+        .split("</li><li >")
+        .map((item: any) =>
+          item
+            .replaceAll(/<ol>/gi, "")
+            .replaceAll(/<\/ol>/gi, "")
+            .replaceAll(/<li >/gi, "")
+            .replaceAll(/<\/li>/gi, "")
+        );
+      // .replaceAll(/<ol>/gi, "")
+      // .replaceAll(/<\/ol>/gi, "")
+      // .replaceAll(/<li >/gi, "")
+      // .replaceAll(/<\/li>/gi, "")
+      // .split("?");
       // questions.pop();
       setQuestions(questions);
       console.log(result);
@@ -114,6 +127,9 @@ export default function Page() {
       console.log("result", result);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setFetchingDataLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -162,7 +178,7 @@ export default function Page() {
       toast.success("Candidate Task Listed Successfully");
     } catch (error) {
       console.error("Error Task listing candidate:", error);
-    }
+    } 
   };
 
   async function updateNextStep() {
@@ -281,17 +297,17 @@ export default function Page() {
           {/* Action Buttons */}
           <div className="flex justify-between gap-4">
             <CustomBtn
-              word={"Reject"}
+              word={isLoading ? "Loading..." : "Reject"}
               btnColor="white"
               width="w-full"
-              disabled={!recievedId}
+              disabled={!recievedId || isLoading}
               onClick={submitCandidateAnswersAndReject}
             />
             <CustomBtn
-              word={"Task List"}
+              word={isLoading ? "Loading..." : "Task List"}
               btnColor="black"
               width="w-full"
-              disabled={!recievedId}
+              disabled={!recievedId || isLoading}
               onClick={submitCandidateAnswersAndNextStep}
             />
           </div>
@@ -299,8 +315,12 @@ export default function Page() {
       </div>
 
       <div className="flex justify-between mt-4">
-        <CustomBtn word={"Back"} btnColor="white" onClick={goPreviousStep} />
-        <CustomBtn word={"Next"} btnColor="black" onClick={updateNextStep} />
+        {!fetchingDataLoading && (
+          <CustomBtn word={"Back"} btnColor="white" onClick={goPreviousStep} />
+        )}
+        {!fetchingDataLoading && (
+          <CustomBtn word={"Next"} btnColor="black" onClick={updateNextStep} />
+        )}
       </div>
     </section>
   );

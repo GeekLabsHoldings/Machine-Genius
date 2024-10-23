@@ -16,6 +16,8 @@ export default function Page() {
   const { step, setStep } = useContext(StepContext);
   const [selectedCandidateCV, setSelectedCandidateCV] = useState<any>(null);
   const [selectedCandidateId, setSelectedCandidateId] = useState<any>(null);
+  const [fetchingDataLoading, setFetchingDataLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter()
 
   const fetchData = async () => {
@@ -38,10 +40,14 @@ export default function Page() {
       console.log("result", result);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setFetchingDataLoading(false);
+      setIsLoading(false);
     }
   };
 
   const rejectCandidate = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/reject/${selectedCandidateId}`, {
         method: "PUT",
@@ -62,9 +68,10 @@ export default function Page() {
       }
     } catch (error) {
       console.error("Error rejecting candidate:", error);
-    }
+    } 
   }
   const shortListCandidate = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/candidate/next-hiring-step/${selectedCandidateId}`, {
         method: "PUT",
@@ -170,19 +177,19 @@ export default function Page() {
           )}
           {/* Action Buttons */}
           <div className="flex justify-between gap-3">
-            <CustomBtn word={"Reject"} btnColor="white" width="w-full" disabled={!selectedCandidateCV} onClick={rejectCandidate}/>
-            <CustomBtn word={"Short List"} btnColor="black" width="w-full" disabled={!selectedCandidateCV} onClick={shortListCandidate}/>
+            <CustomBtn word={"Reject"} btnColor="white" width="w-full" disabled={!selectedCandidateCV || isLoading} onClick={rejectCandidate}/>
+            <CustomBtn word={"Short List"} btnColor="black" width="w-full" disabled={!selectedCandidateCV || isLoading} onClick={shortListCandidate}/>
           </div>
         </div>
       </div>
 
       <div className="flex justify-end mt-4">
-        <CustomBtn
+        {!fetchingDataLoading && <CustomBtn
           word={"Next"}
           btnColor="black"
           onClick={()=>updateNextStep()}
           // href="/hr/hiring/job-openings/short-list"
-        />
+        />}
       </div>
     </section>
   );

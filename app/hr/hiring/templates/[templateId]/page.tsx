@@ -87,8 +87,7 @@ const templatesWithPositionAndLevel = [
   "Job_Listings",
   "Interview_Call_Question",
   "Tasks",
-  "Job_Offer"
-
+  "Job_Offer",
 ];
 
 const defaultTemplateDet: templateDet = {
@@ -166,31 +165,31 @@ export default function TemplateDetails({
   const [templateDet, setTemplateDet] =
     useState<templateDet>(defaultTemplateDet);
 
-    async function getAllRoles() {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
+  async function getAllRoles() {
+    const token = localStorage.getItem("token");
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data, "all roles");
+    setAllRoles(
+      data?.map(
+        (
+          r: {
+            roleName: string;
           },
-        }
-      );
-      const data = await response.json();
-      console.log(data, "all roles");
-      setAllRoles(
-        data?.map(
-          (
-            r: {
-              roleName: string;
-            },
-            idx: number
-          ) => r.roleName
-        )
-      );
-      setRolesData(data);
-    }
+          idx: number
+        ) => r.roleName
+      )
+    );
+    setRolesData(data);
+  }
 
   async function getTemplate() {
     const token = localStorage.getItem("token");
@@ -252,10 +251,6 @@ export default function TemplateDetails({
         toast.error("Questions are required");
         return;
       }
-      if (skills?.length == 0) {
-        toast.error("Skills are required");
-        return;
-      }
       if (
         questions.some(
           (_, i) => !questionsRef.current[i] || !answersRef.current[i]
@@ -290,13 +285,14 @@ export default function TemplateDetails({
                 title: "Responsibilities",
                 description: inputs.responsibilities,
               },
-              {
-                title: "Benefits",
-                description: inputs.benefits,
-              },
+
               {
                 title: "Qualifications",
                 description: inputs.qualifications,
+              },
+              {
+                title: "Benefits",
+                description: inputs.benefits,
               },
               {
                 title: "Questions",
@@ -797,9 +793,19 @@ export default function TemplateDetails({
                     <div className={styles.card_body}>
                       {/* <p>{templateDet?.role}</p> */}
                       <CustomSelectInput
-                        getValue={(val: string) => setPosition(rolesData?.filter((r:any,idx:number)=>r.roleName == val)[0]?._id)}
+                        getValue={(val: string) =>
+                          setPosition(
+                            rolesData?.filter(
+                              (r: any, idx: number) => r.roleName == val
+                            )[0]?._id
+                          )
+                        }
                         options={allRoles}
-                        label={templateDet?.role?.roleName ? templateDet?.role?.roleName : ""}
+                        label={
+                          templateDet?.role?.roleName
+                            ? templateDet?.role?.roleName
+                            : ""
+                        }
                       />
                     </div>
                   </div>
