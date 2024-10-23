@@ -12,11 +12,6 @@ import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
-const subBrands = Array.from(
-  { length: 20 },
-  (_, index) => `Sub-brand ${index + 1}`
-);
-
 function InnerInfoCard({ brand }: { brand: ISubBrand }) {
   return (
     <div className={`${styles.info} p-[1vw] rounded-3xl`}>
