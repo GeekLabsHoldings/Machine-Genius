@@ -14,6 +14,29 @@ const steps = [
   { number: 4, title: "Activate Domain" },
 ];
 
+// ===== Start Step 1 =====
+interface ICheckDomainWithPricesResponse {
+  available: boolean;
+  prices?: IPriceInfo;
+  message?: string;
+  suggestions?: IDomainSuggestion[];
+}
+
+interface IPriceInfo {
+  registrationPrice: Price;
+  renewalPrice: Price;
+}
+
+interface Price {
+  Currency: string;
+  Price: number;
+}
+
+interface IDomainSuggestion {
+  DomainName: string;
+  prices: IPriceInfo;
+}
+// ===== End Step 1 =====
 // ===== Start Step 2 =====
 interface IStep2FormState {
   brand: string;
@@ -42,7 +65,8 @@ const Page = () => {
     formStep: number;
     // ===== Start Step 1 =====
     domainName: string;
-    domainSuggestions: string[];
+    domainSuggestions: IDomainSuggestion[];
+    domainPrices: IPriceInfo | null;
     // ===== End Step 1 =====
     // ===== Start Step 2 =====
     step2FormState: IStep2FormState;
@@ -56,6 +80,7 @@ const Page = () => {
     // ===== Start Step 1 =====
     domainName: "",
     domainSuggestions: [],
+    domainPrices: null,
     // ===== End Step 1 =====
     // ===== Start Step 2 =====
     step2FormState: {
@@ -88,7 +113,7 @@ const Page = () => {
     try {
       setPageState((prev) => ({ ...prev, isLoading: true }));
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/check-domain-availability`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/check-domain-with-prices`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -112,19 +137,21 @@ const Page = () => {
         setPageState((prev) => ({ ...prev, isLoading: false }));
         return;
       }
-      const json: any = await res.json();
-      if (json && json.isAvailable === true) {
+      const json: ICheckDomainWithPricesResponse = await res.json();
+      if (json && json.available === true) {
         toast.success("Domain is available!");
         setPageState((prev) => ({
           ...prev,
           isLoading: false,
-          formStep: 2,
+          // formStep: 2,
+          domainPrices: json.prices || null,
+          domainSuggestions: [],
           // Reset Step 1
           // domainName: "",
           // domainSuggestions: [],
         }));
         return;
-      } else if (json && json.isAvailable === false) {
+      } else if (json && json.available === false) {
         toast.error("Domain is already taken!");
         if (
           json &&
@@ -134,11 +161,16 @@ const Page = () => {
           setPageState((prev) => ({
             ...prev,
             isLoading: false,
-            domainSuggestions: json.suggestions,
+            domainSuggestions: json.suggestions || [],
+            domainPrices: null,
           }));
           return;
         }
-        setPageState((prev) => ({ ...prev, isLoading: false }));
+        setPageState((prev) => ({
+          ...prev,
+          isLoading: false,
+          domainPrices: null,
+        }));
         return;
       } else {
         toast.error("Something went wrong!");
@@ -359,34 +391,102 @@ const Page = () => {
                     }}
                   />
                 </div>
-                <span className="text-gray-500 text-[--12px]">
-                  e.g. example.com
-                </span>
+
+                <div className="mt-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500 text-sm block mb-1">
+                      Allowed Domain Extensions:
+                    </span>
+                    <span className="text-gray-500 text-[--12px]">
+                      e.g. example.com
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {["com", "net", "org", "info", "biz", "us", "co", "io"].map(
+                      (tld) => (
+                        <span
+                          key={tld}
+                          className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-xs hover:bg-gray-300 transition"
+                          title={`Top-level domain: .${tld}`}
+                          aria-label={`Allowed domain extension: .${tld}`}
+                        >
+                          .{tld}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
               </div>
+
+              {/* Display domainPrices if domain is available */}
+              {pageState.domainPrices && (
+                <div className="mt-4 p-4 bg-white rounded-lg shadow-md">
+                  <p className="text-green-600 font-semibold mb-2">
+                    Domain is available!
+                  </p>
+                  <div className="text-gray-700">
+                    <p>
+                      Registration Price:{" "}
+                      <span className="font-semibold">
+                        {pageState.domainPrices.registrationPrice.Currency}{" "}
+                        {pageState.domainPrices.registrationPrice.Price}
+                      </span>
+                    </p>
+                    <p>
+                      Renewal Price:{" "}
+                      <span className="font-semibold">
+                        {pageState.domainPrices.renewalPrice.Currency}{" "}
+                        {pageState.domainPrices.renewalPrice.Price}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <CustomBtn
+                      word="Proceed to Registration"
+                      btnColor="black"
+                      onClick={() =>
+                        setPageState((prev) => ({
+                          ...prev,
+                          formStep: 2,
+                        }))
+                      }
+                      paddingVal="py-[--10px] px-[--22px]"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Domain Suggestions */}
               {pageState.domainSuggestions.length > 0 && (
-                <div className="mt-4 p-4 bg-white rounded-lg shadow-md">
+                <div className="mt-4 p-4 bg-red rounded-lg shadow-md overflow-hidden">
                   <p className="text-gray-700 font-semibold mb-2">
                     Suggestions:
                   </p>
-                  <ul className="space-y-2">
-                    {pageState.domainSuggestions.map((suggestion) => (
-                      <li
-                        key={suggestion}
-                        className="px-3 py-2 bg-gray-50 rounded-md hover:bg-blue-100 cursor-pointer transition-colors duration-200"
-                        onClick={() => {
-                          setPageState((prev) => ({
-                            ...prev,
-                            domainName: suggestion,
-                          }));
-                        }}
-                      >
-                        <span className="text-blue-600 hover:underline">
-                          {suggestion}
-                        </span>
-                      </li>
-                    ))}
+                  <ul className="space-y-2 max-h-[30vh] overflow-y-auto">
+                    {pageState.domainSuggestions
+                      .filter(Boolean)
+                      .map((suggestion) => (
+                        <li
+                          key={suggestion.DomainName}
+                          className="px-3 py-2 bg-gray-50 rounded-md hover:bg-blue-100 cursor-pointer transition-colors duration-200 flex justify-between items-center"
+                          onClick={() => {
+                            setPageState((prev) => ({
+                              ...prev,
+                              domainName: suggestion.DomainName,
+                              domainPrices: suggestion.prices,
+                              domainSuggestions: [],
+                            }));
+                          }}
+                        >
+                          <span className="text-blue-600 hover:underline">
+                            {suggestion.DomainName}
+                          </span>
+                          <span className="text-gray-500">
+                            {suggestion.prices.registrationPrice.Currency}{" "}
+                            {suggestion.prices.registrationPrice.Price}
+                          </span>
+                        </li>
+                      ))}
                   </ul>
                 </div>
               )}
@@ -535,6 +635,7 @@ const Page = () => {
                   <input
                     type="number"
                     id="duration-in-years"
+                    max={10}
                     required
                     className={`${styles.customInput}`}
                     value={pageState.step2FormState.DurationInYears}
@@ -549,6 +650,9 @@ const Page = () => {
                     }}
                   />
                 </div>
+                <span className="text-gray-500 text-[--12px]">
+                  max duration: 10 years
+                </span>
               </div>
 
               {/* Brand */}
