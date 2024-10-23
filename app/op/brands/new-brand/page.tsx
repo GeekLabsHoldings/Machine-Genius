@@ -17,21 +17,18 @@ const subBrands = Array.from(
   (_, index) => `Sub-brand ${index + 1}`
 );
 
-function InnerInfoCard({}: {}) {
+function InnerInfoCard({ brand }: { brand: ISubBrand }) {
   return (
     <div className={`${styles.info} p-[1vw] rounded-3xl`}>
       <div className="flex justify-between items-center pb-[0.6vw] mb-[0.5vw] border-b-[var(--dark)] border-b-[1px]">
-        <h4>subBrandTitle</h4>
-        <span className={`px-[0.4vw] py-[0.1vw] font-medium rounded-[--4px]`}>
-          subBrandNiche
-        </span>
+        <h4>{brand.subbrand.brand_name}</h4>
       </div>
       <h5 className=" mb-[0.5vw]">Description</h5>
-      <p className=" mb-[0.5vw]">subBrandDescription</p>
+      <p className=" mb-[0.5vw]">{brand.subbrand.description}</p>
       <div className=" flex justify-between items-center">
         <h5>Acquisition Date</h5>
         <span className={`${styles.dateSpan} text-[#ACACAC]`}>
-          subBrandAcquisitionDate
+          {new Date(brand.subbrand.aquisition_date).toLocaleDateString()}
         </span>
       </div>
     </div>
@@ -207,18 +204,6 @@ const Page = () => {
       }
     );
   // ===== End Social Media Accounts Data =====
-
-  // const [brandData, setBrandData] = useSessionStorage<IBrandData>(
-  //   "OP-brandData",
-  //   {
-  //     brand_name: pageState.brandName,
-  //     description: pageState.brandDescription,
-  //     niche: pageState.brandNiche,
-  //     aquisition_date: pageState.brandAquisitionDate,
-  //     accounts: pageState.accounts,
-  //     subBrands: pageState.subBrands,
-  //   }
-  // );
 
   // ===== Start Validation Functions =====
   function isRedditAccountDataValid(data: IRedditAccountData) {
@@ -460,9 +445,15 @@ const Page = () => {
             </div>
 
             <div className=" overflow-y-scroll h-[23vh] pr-2 py-[0.2vw]">
-              {subBrands.map((brand, index) => (
-                <InnerInfoCard key={index} />
-              ))}
+              {pageState.subBrands.length > 0 ? (
+                pageState.subBrands.map((brand, index) => (
+                  <InnerInfoCard key={index} brand={brand} />
+                ))
+              ) : (
+                <span className="text-center block w-full">
+                  No sub-brands found!
+                </span>
+              )}
             </div>
           </div>
         </div>
