@@ -227,6 +227,7 @@ export default function TemplateDetails({
     getAllRoles();
   }, []);
   useEffect(() => {
+    console.log(questions);
     questions.map((q, i) => {
       if (q?.type == 0) {
         typesRef.current[i] = "Yes or No";
@@ -518,7 +519,9 @@ export default function TemplateDetails({
                 console.log(val);
                 console.log(groups.find((e: any) => e.title === val)?._id);
 
-                setGroupID(groups.find((e: any) => e.title.trim() === val)?._id);
+                setGroupID(
+                  groups.find((e: any) => e.title.trim() === val)?._id
+                );
               }}
               options={groups.map((e: any, i: any) => e.title)}
               label={groups.find((e: any) => e._id === groupID)?.title}
@@ -554,9 +557,13 @@ export default function TemplateDetails({
                       <div className={styles.card_body}>
                         {/* <p>{templateDet?.role}</p> */}
                         <CustomSelectInput
-                          getValue={(val: string) => {
-                            setPosition(val);
-                          }}
+                          getValue={(val: string) =>
+                            setPosition(
+                              rolesData?.filter(
+                                (r: any, idx: number) => r.roleName == val
+                              )[0]?._id
+                            )
+                          }
                           options={allRoles}
                           label={templateDet?.role.roleName}
                         />
@@ -690,7 +697,15 @@ export default function TemplateDetails({
                                   questions[i]?.answer || "";
                               }
                             }}
-                            defaultValue={questions[i]?.answer}
+                            defaultValue={
+                              questions[i]?.answer == 0 &&
+                              questions[i]?.type == 0
+                                ? "no"
+                                : questions[i]?.answer == 1 &&
+                                  questions[i]?.type == 0
+                                ? "yes"
+                                : questions[i]?.answer
+                            }
                             type="text"
                             id="answer"
                             ref={(el) => {
