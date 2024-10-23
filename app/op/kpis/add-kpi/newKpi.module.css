@@ -1,0 +1,25 @@
+.container h3 {
+  font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+
+.inputWrapper {
+  position: relative;
+}
+.inputWrapper input {
+  width: 100%;
+}
+.customInput {
+  padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
+  border-bottom: 1px solid var(--dark);
+  color: var(--dark);
+}
+.customInput:focus {
+  outline: none;
+}
+.container label {
+  display: block;
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 1000px);
+  font-weight: 700;
+  margin-bottom: 0.05vw;
+}

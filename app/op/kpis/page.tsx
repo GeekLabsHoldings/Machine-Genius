@@ -6,6 +6,7 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import { globalContext } from "@/app/_context/store";
 import { IKPIData } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 import toast from "react-hot-toast";
+import { addIcon } from "@/app/_utils/svgIcons";
 
 interface PlatformData {
   platformName: string;
@@ -247,6 +248,14 @@ export default function Page() {
               />
             </div>
           </div>
+
+          <CustomBtn
+            btnColor="black"
+            word={"Add KPI"}
+            icon={addIcon}
+            paddingVal="py-[0.4vw] px-[0.9vw]"
+            href="/op/kpis/add-kpi"
+          />
         </div>
       </div>
       {/* ===== End Page Header ===== */}

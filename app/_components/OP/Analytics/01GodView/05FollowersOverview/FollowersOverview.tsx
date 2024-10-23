@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext } from "react";
 import styles from "./FollowersOverview.module.css";
-import { IBrandPlatformSubscribers } from "../../00Types/OP_Analytics_Types";
+import { IFollowersOverview } from "../../00Types/OP_Analytics_Types";
 import { globalContext } from "@/app/_context/store";
 
 const upArrow = (
@@ -64,9 +64,9 @@ const formatSubscribers = (num: number) => {
 };
 
 export default function FollowersOverview({
-  fetchedTotalSubscribers,
+  fetchedFollowersOverview,
 }: {
-  fetchedTotalSubscribers: IBrandPlatformSubscribers[];
+  fetchedFollowersOverview: IFollowersOverview[];
 }) {
   const { brandIdMap } = useContext(globalContext);
 
@@ -93,30 +93,30 @@ export default function FollowersOverview({
 
               {/* Table Body */}
               <div className={styles.table_body}>
-                {Array.isArray(fetchedTotalSubscribers) &&
-                fetchedTotalSubscribers.length > 0
-                  ? fetchedTotalSubscribers.map((item, index) => {
-                      // Calculate total subscribers for the current brand
-                      const totalFollowers = Object.values(
-                        item.platforms
-                      ).reduce(
-                        (sum, platform) => sum + platform.totalSubscribers,
-                        0
-                      );
-
+                {Array.isArray(fetchedFollowersOverview) &&
+                fetchedFollowersOverview.length > 0
+                  ? fetchedFollowersOverview.map((item, index) => {
                       return (
                         <ul key={index}>
                           <li className="w-[33.3%]">
                             <span>{brandIdMap[item.brand]}</span>
                           </li>
                           <li className={`w-[33.3%] ${styles.center}`}>
-                            <span>{formatSubscribers(totalFollowers)}</span>
+                            <span>{formatSubscribers(item.followers)}</span>
                           </li>
                           <li
                             className={`w-[33.3%] ${styles.center} ${styles.percentage}`}
                           >
-                            <span>-</span>
-                            <span>{sidewaysIcon}</span>
+                            <span>
+                              {item.percentages.monthly.toFixed(1) + "%"}
+                            </span>
+                            <span>
+                              {item.percentages.monthly === 0
+                                ? sidewaysIcon
+                                : item.percentages.monthly > 0
+                                ? upArrow
+                                : downArrow}
+                            </span>
                           </li>
                         </ul>
                       );

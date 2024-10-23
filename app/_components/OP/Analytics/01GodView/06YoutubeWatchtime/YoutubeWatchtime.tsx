@@ -111,9 +111,11 @@ export default function YoutubeWatchtime({
 }: {
   fetchedYoutubeData: any;
 }) {
-  const avgValue =
-    fetchedYoutubeData?.reduce((a: number, b: number) => a + b, 0) /
-    fetchedYoutubeData?.length;
+  const avgDailyValue =
+    Array.isArray(fetchedYoutubeData?.data?.data) &&
+    fetchedYoutubeData?.data?.data?.length > 0
+      ? fetchedYoutubeData?.data?.data?.slice(-1)[0][4]
+      : 0;
 
   return (
     <section className={styles.YoutubeWatchTime}>
@@ -177,8 +179,14 @@ export default function YoutubeWatchtime({
                         </div>
                       </span>
                       <span className={styles.dailyAverage}>
-                        <span>{avgValue}</span>
-                        <span>{sidewaysIcon}</span>
+                        <span>{avgDailyValue}</span>
+                        <span>
+                          {avgDailyValue === 0
+                            ? sidewaysIcon
+                            : avgDailyValue > 0
+                            ? upArrow
+                            : downArrow}
+                        </span>
                       </span>
                     </li>
                   </ul>

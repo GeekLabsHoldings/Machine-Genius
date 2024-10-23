@@ -33,15 +33,31 @@ export interface IBrandWithGroups {
 }
 // =================================================================================
 /*
-social-media/settings/get-subscripers:
+social-media/settings/subscribers:
 - total subscribers.
 */
 export interface IBrandPlatformSubscribers {
   brand: string;
   platforms: {
-    [key in "FACEBOOK" | "TELEGRAM" | "REDDIT"]: {
+    [key in 'TWITTER' | 'FACEBOOK' | 'LINKEDIN' | 'REDDIT' | 'TELEGRAM' | 'YOUTUBE']: {
       totalSubscribers: number;
     };
+  };
+}
+// =================================================================================
+/*
+ceo/analytics/percentage:
+- Followers Overview.
+  - followers.
+  - percentage.
+*/
+export interface IFollowersOverview {
+  brand: string;
+  followers: number;
+  percentages: {
+    daily: number;
+    weekly: number;
+    monthly: number;
   };
 }
 // =================================================================================

@@ -12,26 +12,18 @@ import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 import useSessionStorage from "@/app/_hooks/useSessionStorage";
 
-const subBrands = Array.from(
-  { length: 20 },
-  (_, index) => `Sub-brand ${index + 1}`
-);
-
-function InnerInfoCard({}: {}) {
+function InnerInfoCard({ brand }: { brand: ISubBrand }) {
   return (
     <div className={`${styles.info} p-[1vw] rounded-3xl`}>
       <div className="flex justify-between items-center pb-[0.6vw] mb-[0.5vw] border-b-[var(--dark)] border-b-[1px]">
-        <h4>subBrandTitle</h4>
-        <span className={`px-[0.4vw] py-[0.1vw] font-medium rounded-[--4px]`}>
-          subBrandNiche
-        </span>
+        <h4>{brand.subbrand.brand_name}</h4>
       </div>
       <h5 className=" mb-[0.5vw]">Description</h5>
-      <p className=" mb-[0.5vw]">subBrandDescription</p>
+      <p className=" mb-[0.5vw]">{brand.subbrand.description}</p>
       <div className=" flex justify-between items-center">
         <h5>Acquisition Date</h5>
         <span className={`${styles.dateSpan} text-[#ACACAC]`}>
-          subBrandAcquisitionDate
+          {new Date(brand.subbrand.aquisition_date).toLocaleDateString()}
         </span>
       </div>
     </div>
@@ -39,27 +31,27 @@ function InnerInfoCard({}: {}) {
 }
 
 // ===== Start Account Data Types =====
-interface IRedditAccountData {
+export interface IRedditAccountData {
   appID: string;
   appSecret: string;
   username: string;
   password: string;
 }
-interface ITelegramAccountData {
+export interface ITelegramAccountData {
   token: string;
 }
-interface ITwetterAccountData {
+export interface ITwetterAccountData {
   ConsumerKey: string;
   ConsumerSecret: string;
   AccessToken: string;
   TokenSecret: string;
   BearerToken: string;
 }
-interface ILinkedInAccountData {
+export interface ILinkedInAccountData {
   token: string;
   owner: string;
 }
-interface IFacebookInAccountData {
+export interface IFacebookInAccountData {
   tokenPage?: string;
   longAccessToken?: string;
   pageID?: string;
@@ -68,13 +60,13 @@ interface IFacebookInAccountData {
   email?: string;
   password?: string;
 }
-interface IYoutubeAccountData {
+export interface IYoutubeAccountData {
   client_id: string;
   client_secret: string;
   redirect_uris: string;
   token?: string;
 }
-interface IAccount {
+export interface IAccount {
   platform:
     | "REDDIT"
     | "TELEGRAM"
@@ -92,19 +84,19 @@ interface IAccount {
 }
 // ===== End Account Data Types =====
 // ===== Start SubBrand Data Types =====
-interface ISubBrandData {
+export interface ISubBrandData {
   brand_name: string;
   description: string;
   aquisition_date: number;
 }
 
-interface ISubBrand {
+export interface ISubBrand {
   subbrand: ISubBrandData;
   accounts: IAccount[];
 }
 // ===== End SubBrand Data Types =====
 // ===== Start Brand Data Types =====
-interface IBrandData {
+export interface IBrandData {
   brand_name: string;
   description: string;
   niche: "" | "politics" | "entertainment" | "finance";
@@ -113,55 +105,231 @@ interface IBrandData {
   subBrands: ISubBrand[];
 }
 // ===== End Brand Data Types =====
+// ===== Start Page State Data Types =====
+export interface IAddNewBrandPageState {
+  isLoading: boolean;
+  brandName: string;
+  brandDescription: string;
+  brandNiche: "" | "politics" | "entertainment" | "finance";
+  brandAquisitionDate: number;
+  accounts: IAccount[];
+  subBrands: ISubBrand[];
+}
+// ===== End Page State Data Types =====
 
 const Page = () => {
   const { authState, handleSignOut } = useContext(globalContext);
   const router = useRouter();
-  const [pageState, setPageState] = useSessionStorage<{
-    isLoading: boolean;
-    brandName: string;
-    brandDescription: string;
-    brandNiche: "" | "politics" | "entertainment" | "finance";
-    brandAquisitionDate: number;
-    accounts: IAccount[];
-    subBrands: ISubBrand[];
-  }>("OP-addNewBrand", {
-    isLoading: false,
-    brandName: "",
-    brandDescription: "",
-    brandNiche: "",
-    brandAquisitionDate: new Date().getTime(),
-    accounts: [],
-    subBrands: [],
-  });
-
-  const [brandData, setBrandData] = useSessionStorage<IBrandData>(
-    "OP-brandData",
+  const [pageState, setPageState] = useSessionStorage<IAddNewBrandPageState>(
+    "OP-addNewBrand",
     {
-      brand_name: pageState.brandName,
-      description: pageState.brandDescription,
-      niche: pageState.brandNiche,
-      aquisition_date: pageState.brandAquisitionDate,
-      accounts: pageState.accounts,
-      subBrands: pageState.subBrands,
+      isLoading: false,
+      brandName: "",
+      brandDescription: "",
+      brandNiche: "",
+      brandAquisitionDate: new Date().getTime(),
+      accounts: [],
+      subBrands: [],
     }
   );
 
+  // ===== Start Social Media Accounts Data =====
+  // Reddit account data
+  const [redditAccountData, setRedditAccountData] =
+    useSessionStorage<IRedditAccountData>(
+      "OP-addNewBrand-mainBrand-redditAccountData",
+      {
+        appID: "",
+        appSecret: "",
+        username: "",
+        password: "",
+      }
+    );
+
+  // Telegram account data
+  const [telegramAccountData, setTelegramAccountData] =
+    useSessionStorage<ITelegramAccountData>(
+      "OP-addNewBrand-mainBrand-telegramAccountData",
+      {
+        token: "",
+      }
+    );
+
+  // Twitter account data
+  const [twitterAccountData, setTwitterAccountData] =
+    useSessionStorage<ITwetterAccountData>(
+      "OP-addNewBrand-mainBrand-twitterAccountData",
+      {
+        ConsumerKey: "",
+        ConsumerSecret: "",
+        AccessToken: "",
+        TokenSecret: "",
+        BearerToken: "",
+      }
+    );
+
+  // LinkedIn account data
+  const [linkedInAccountData, setLinkedInAccountData] =
+    useSessionStorage<ILinkedInAccountData>(
+      "OP-addNewBrand-mainBrand-linkedInAccountData",
+      {
+        token: "",
+        owner: "",
+      }
+    );
+
+  // Facebook account data
+  const [facebookAccountData, setFacebookAccountData] =
+    useSessionStorage<IFacebookInAccountData>(
+      "OP-addNewBrand-mainBrand-facebookAccountData",
+      {
+        tokenPage: "",
+        longAccessToken: "",
+        pageID: "",
+        client_id: "",
+        client_secret: "",
+        email: "",
+        password: "",
+      }
+    );
+
+  // YouTube account data
+  const [youtubeAccountData, setYoutubeAccountData] =
+    useSessionStorage<IYoutubeAccountData>(
+      "OP-addNewBrand-mainBrand-youtubeAccountData",
+      {
+        client_id: "",
+        client_secret: "",
+        redirect_uris: "",
+        token: "",
+      }
+    );
+  // ===== End Social Media Accounts Data =====
+
+  // ===== Start Validation Functions =====
+  function isRedditAccountDataValid(data: IRedditAccountData) {
+    return !!(data.appID && data.appSecret && data.username && data.password);
+  }
+
+  function isTelegramAccountDataValid(data: ITelegramAccountData) {
+    return !!data.token;
+  }
+
+  function isTwitterAccountDataValid(data: ITwetterAccountData) {
+    return !!(
+      data.ConsumerKey &&
+      data.ConsumerSecret &&
+      data.AccessToken &&
+      data.TokenSecret &&
+      data.BearerToken
+    );
+  }
+
+  function isLinkedInAccountDataValid(data: ILinkedInAccountData) {
+    return !!(data.token && data.owner);
+  }
+
+  function isFacebookAccountDataValid(data: IFacebookInAccountData) {
+    return !!(
+      data.tokenPage &&
+      data.longAccessToken &&
+      data.pageID &&
+      data.client_id &&
+      data.client_secret &&
+      data.email &&
+      data.password
+    );
+  }
+
+  function isYoutubeAccountDataValid(data: IYoutubeAccountData) {
+    return !!(data.client_id && data.client_secret && data.redirect_uris);
+  }
+  // ===== End Validation Functions =====
+
   async function handleAddNewBrand() {
-    // if (!postCaption) {
-    //   toast.error("No post caption provided!");
-    //   return;
-    // } else if (!selectedBrandId) {
-    //   toast.error("No brand selected!");
-    //   return;
-    // }
     setPageState((prev) => ({ ...prev, isLoading: true }));
     try {
+      // ===== Start Validation =====
+      if (!pageState.brandName) {
+        toast.error("Brand name is required!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      }
+      if (!pageState.brandNiche) {
+        toast.error("Brand niche is required!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      }
+      if (!pageState.brandDescription) {
+        toast.error("Brand description is required!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      }
+
+      // Build accounts array
+      let accounts: IAccount[] = [];
+
+      if (isRedditAccountDataValid(redditAccountData)) {
+        accounts.push({
+          platform: "REDDIT",
+          account: redditAccountData,
+        });
+      }
+
+      if (isTelegramAccountDataValid(telegramAccountData)) {
+        accounts.push({
+          platform: "TELEGRAM",
+          account: telegramAccountData,
+        });
+      }
+
+      if (isTwitterAccountDataValid(twitterAccountData)) {
+        accounts.push({
+          platform: "TWETTER",
+          account: twitterAccountData,
+        });
+      }
+
+      if (isLinkedInAccountDataValid(linkedInAccountData)) {
+        accounts.push({
+          platform: "LINKEDIN",
+          account: linkedInAccountData,
+        });
+      }
+
+      if (isFacebookAccountDataValid(facebookAccountData)) {
+        accounts.push({
+          platform: "FACEBOOK",
+          account: facebookAccountData,
+        });
+      }
+
+      if (isYoutubeAccountDataValid(youtubeAccountData)) {
+        accounts.push({
+          platform: "YOUTUBE",
+          account: youtubeAccountData,
+        });
+      }
+
+      // Build brandData object
+      const brandData: IBrandData = {
+        brand_name: pageState.brandName,
+        description: pageState.brandDescription,
+        niche: pageState.brandNiche,
+        aquisition_date: pageState.brandAquisitionDate,
+        accounts: accounts,
+        subBrands: pageState.subBrands,
+      };
+
+      // ===== End Validation =====
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/add-brand-all-data`,
         {
           method: "POST",
-          body: JSON.stringify(brandData),
+          body: JSON.stringify({
+            brandData,
+          }),
           headers: {
             "Content-Type": "application/json",
             Authorization: `barrer ${
@@ -186,6 +354,7 @@ const Page = () => {
           duration: 3000,
         });
         router.replace("/op/brands");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
       } else {
         toast.error("Something went wrong!");
         setPageState((prev) => ({ ...prev, isLoading: false }));
@@ -273,13 +442,20 @@ const Page = () => {
                 btnColor="black"
                 modalTitle="Add Sub-brand"
                 btnIcon={addIcon}
+                setSubBrandInPageState={setPageState}
               />
             </div>
 
             <div className=" overflow-y-scroll h-[23vh] pr-2 py-[0.2vw]">
-              {subBrands.map((brand, index) => (
-                <InnerInfoCard key={index} />
-              ))}
+              {pageState.subBrands.length > 0 ? (
+                pageState.subBrands.map((brand, index) => (
+                  <InnerInfoCard key={index} brand={brand} />
+                ))
+              ) : (
+                <span className="text-center block w-full">
+                  No sub-brands found!
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -313,6 +489,13 @@ const Page = () => {
                     id="reddit_app_id"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={redditAccountData.appID}
+                    onChange={(e) => {
+                      setRedditAccountData((prev) => ({
+                        ...prev,
+                        appID: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="reddit_app_secret">App Secret*</label>
@@ -322,6 +505,13 @@ const Page = () => {
                     id="reddit_app_secret"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={redditAccountData.appSecret}
+                    onChange={(e) => {
+                      setRedditAccountData((prev) => ({
+                        ...prev,
+                        appSecret: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="reddit_username">Username*</label>
@@ -331,6 +521,13 @@ const Page = () => {
                     id="reddit_username"
                     // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={redditAccountData.username}
+                    onChange={(e) => {
+                      setRedditAccountData((prev) => ({
+                        ...prev,
+                        username: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="reddit_password">Password*</label>
@@ -340,6 +537,13 @@ const Page = () => {
                     id="reddit_password"
                     // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={redditAccountData.password}
+                    onChange={(e) => {
+                      setRedditAccountData((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -366,6 +570,13 @@ const Page = () => {
                     id="telegram_token"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={telegramAccountData.token}
+                    onChange={(e) => {
+                      setTelegramAccountData((prev) => ({
+                        ...prev,
+                        token: e.target.value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -392,6 +603,13 @@ const Page = () => {
                     id="twitter_consumer_key"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={twitterAccountData.ConsumerKey}
+                    onChange={(e) => {
+                      setTwitterAccountData((prev) => ({
+                        ...prev,
+                        ConsumerKey: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="twitter_consumer_secret">
@@ -403,6 +621,13 @@ const Page = () => {
                     id="twitter_consumer_secret"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={twitterAccountData.ConsumerSecret}
+                    onChange={(e) => {
+                      setTwitterAccountData((prev) => ({
+                        ...prev,
+                        ConsumerSecret: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="twitter_access_token">Access Token*</label>
@@ -412,6 +637,13 @@ const Page = () => {
                     id="twitter_access_token"
                     // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={twitterAccountData.AccessToken}
+                    onChange={(e) => {
+                      setTwitterAccountData((prev) => ({
+                        ...prev,
+                        AccessToken: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="twitter_token_secret">Token Secret*</label>
@@ -421,6 +653,13 @@ const Page = () => {
                     id="twitter_token_secret"
                     // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={twitterAccountData.TokenSecret}
+                    onChange={(e) => {
+                      setTwitterAccountData((prev) => ({
+                        ...prev,
+                        TokenSecret: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="twitter_bearer_token">Bearer Token*</label>
@@ -430,6 +669,13 @@ const Page = () => {
                     id="twitter_bearer_token"
                     // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={twitterAccountData.BearerToken}
+                    onChange={(e) => {
+                      setTwitterAccountData((prev) => ({
+                        ...prev,
+                        BearerToken: e.target.value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -458,6 +704,13 @@ const Page = () => {
                     id="linkedin_token"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={linkedInAccountData.token}
+                    onChange={(e) => {
+                      setLinkedInAccountData((prev) => ({
+                        ...prev,
+                        token: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="linkedin_owner">Owner*</label>
@@ -467,6 +720,13 @@ const Page = () => {
                     id="linkedin_owner"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={linkedInAccountData.owner}
+                    onChange={(e) => {
+                      setLinkedInAccountData((prev) => ({
+                        ...prev,
+                        owner: e.target.value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -493,6 +753,13 @@ const Page = () => {
                     id="facebook_token_page"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={facebookAccountData.tokenPage}
+                    onChange={(e) => {
+                      setFacebookAccountData((prev) => ({
+                        ...prev,
+                        tokenPage: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="facebook_long_access_token">
@@ -504,6 +771,13 @@ const Page = () => {
                     id="facebook_long_access_token"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={facebookAccountData.longAccessToken}
+                    onChange={(e) => {
+                      setFacebookAccountData((prev) => ({
+                        ...prev,
+                        longAccessToken: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="facebook_page_id">Page ID*</label>
@@ -513,6 +787,13 @@ const Page = () => {
                     id="facebook_page_id"
                     // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={facebookAccountData.pageID}
+                    onChange={(e) => {
+                      setFacebookAccountData((prev) => ({
+                        ...prev,
+                        pageID: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="facebook_client_id">Client ID*</label>
@@ -522,6 +803,13 @@ const Page = () => {
                     id="facebook_client_id"
                     // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={facebookAccountData.client_id}
+                    onChange={(e) => {
+                      setFacebookAccountData((prev) => ({
+                        ...prev,
+                        client_id: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="facebook_client_secret">Client Secret*</label>
@@ -531,6 +819,13 @@ const Page = () => {
                     id="facebook_client_secret"
                     // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={facebookAccountData.client_secret}
+                    onChange={(e) => {
+                      setFacebookAccountData((prev) => ({
+                        ...prev,
+                        client_secret: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="facebook_email">Email*</label>
@@ -540,6 +835,13 @@ const Page = () => {
                     id="facebook_email"
                     // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={facebookAccountData.email}
+                    onChange={(e) => {
+                      setFacebookAccountData((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="facebook_password">Password*</label>
@@ -549,6 +851,13 @@ const Page = () => {
                     id="facebook_password"
                     // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={facebookAccountData.password}
+                    onChange={(e) => {
+                      setFacebookAccountData((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }));
+                    }}
                   />
                 </div>
               </div>
@@ -575,6 +884,13 @@ const Page = () => {
                     id="youtube_client_id"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={youtubeAccountData.client_id}
+                    onChange={(e) => {
+                      setYoutubeAccountData((prev) => ({
+                        ...prev,
+                        client_id: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="youtube_client_secret">Client Secret*</label>
@@ -584,6 +900,13 @@ const Page = () => {
                     id="youtube_client_secret"
                     // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={youtubeAccountData.client_secret}
+                    onChange={(e) => {
+                      setYoutubeAccountData((prev) => ({
+                        ...prev,
+                        client_secret: e.target.value,
+                      }));
+                    }}
                   />
 
                   <label htmlFor="youtube_redirect_uris">Redirect URIs*</label>
@@ -593,6 +916,13 @@ const Page = () => {
                     id="youtube_redirect_uris"
                     // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                    value={youtubeAccountData.redirect_uris}
+                    onChange={(e) => {
+                      setYoutubeAccountData((prev) => ({
+                        ...prev,
+                        redirect_uris: e.target.value,
+                      }));
+                    }}
                   />
                 </div>
               </div>

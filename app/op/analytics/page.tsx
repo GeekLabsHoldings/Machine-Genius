@@ -21,6 +21,7 @@ import {
   IPostInsights,
   IGroup,
   IKPIData,
+  IFollowersOverview,
 } from "@/app/_components/OP/Analytics/00Types/OP_Analytics_Types";
 // ===== 01- Start God View =====
 import RevenueOverview from "@/app/_components/OP/Analytics/01GodView/01RevenueOverview/RevenueOverview";
@@ -126,6 +127,7 @@ function Page() {
     fetchedSocialMediaAccounts: IGroup[];
     fetchedSocialMediaAccountsWithoutFlatMap: IBrandWithGroups[];
     fetchedTotalSubscribers: IBrandPlatformSubscribers[];
+    fetchedFollowersOverview: IFollowersOverview[];
     fetchedSubscribersGains: ISubscriberGains | null;
     fetchedPostsCountChart: IPostsCountChart[];
     fetchedCommentsCountChart: ICommentsCountChart[];
@@ -140,6 +142,7 @@ function Page() {
     fetchedSocialMediaAccounts: [],
     fetchedSocialMediaAccountsWithoutFlatMap: [],
     fetchedTotalSubscribers: [],
+    fetchedFollowersOverview: [],
     fetchedSubscribersGains: null,
     fetchedPostsCountChart: [],
     fetchedCommentsCountChart: [],
@@ -195,7 +198,7 @@ function Page() {
   const getTotalSubscribers = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/get-subscripers`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/settings/subscribers`,
         {
           headers: {
             Authorization: `bearer ${
@@ -234,6 +237,48 @@ function Page() {
     }
   };
 
+  const getFollowersOverview = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/analytics/percentage`,
+        {
+          headers: {
+            Authorization: `bearer ${
+              typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : authState.token
+            }`,
+          },
+        }
+      );
+      if (res.status === 401) {
+        handleSignOut();
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to fetch followers overview!");
+        return;
+      }
+      const data: IFollowersOverview[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setPageState((prevState: any) => ({
+          ...prevState,
+          fetchedFollowersOverview: data,
+        }));
+      }
+      // else {
+      //   toast.error("Failed to fetch total subscribers!");
+      // }
+    } catch (error) {
+      console.error("Error fetching followers overview:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch followers overview!"
+      );
+    }
+  };
+
   const getSubscribersGains = async () => {
     try {
       const res = await fetch(
@@ -256,11 +301,11 @@ function Page() {
         toast.error("Failed to fetch subscribers gains!");
         return;
       }
-      const data: ISubscriberGains = await res.json();
-      if (data) {
+      const data: ISubscriberGains[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
         setPageState((prevState: any) => ({
           ...prevState,
-          fetchedSubscribersGains: data,
+          fetchedSubscribersGains: data[0],
         }));
       } else {
         toast.error("Failed to fetch subscribers gains!");
@@ -591,6 +636,7 @@ function Page() {
   useEffect(() => {
     if (pageState.activePageTab === "GodView") {
       getTotalSubscribers();
+      getFollowersOverview();
       const fetchDataForAllBrands = async () => {
         try {
           await Promise.all(
@@ -693,7 +739,7 @@ function Page() {
               {/* Followers OverView */}
               <div className="FollowersOverView w-[32.5%]">
                 <FollowersOverview
-                  fetchedTotalSubscribers={pageState.fetchedTotalSubscribers}
+                  fetchedFollowersOverview={pageState.fetchedFollowersOverview}
                 />
               </div>
 
@@ -701,9 +747,11 @@ function Page() {
               <div className="YoutubeWatchTime w-[27.5%]">
                 <YoutubeWatchtime
                   fetchedYoutubeData={
-                    Array.isArray(pageState.fetchedYoutubeData?.data) &&
-                    pageState.fetchedYoutubeData?.data.length > 0
-                      ? pageState.fetchedYoutubeData?.data.map((e: any) => e[4])
+                    Array.isArray(pageState.fetchedYoutubeData?.data?.data) &&
+                    pageState.fetchedYoutubeData?.data?.data?.length > 0
+                      ? pageState.fetchedYoutubeData?.data?.data?.map(
+                          (e: any) => e[4]
+                        )
                       : []
                   }
                 />
