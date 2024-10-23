@@ -7,145 +7,55 @@ import { backIcon } from "@/app/_utils/svgIcons";
 import { useRouter } from "next/navigation";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
-import CustomSelectInputWithLabelAndValue from "@/app/_components/CustomSelectInput/CustomSelectInputWithLabelAndValue";
 
-enum DepartmentEnum {
-  HR = "hr",
-  ContentCreator = "content-creation",
-  SocialMedia = "social-media",
-  Administrative = "administrative",
-  Accounting = "accounting",
-  CEO = "ceo",
-  VideoEditing = "video-editing",
-  CustomerService = "customer-service",
-  Development = "development",
-}
-
-interface IEmployee {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  type: string;
-  phoneNumber: string;
-  department: string[];
-  cv: string;
-  linkedIn: string;
-}
-
-const departmentOptions = Object.keys(DepartmentEnum).map((key) => key);
+const platformsOptions = [
+  "Facebook",
+  "Reddit",
+  "Telegram",
+  "Twitter",
+  "LinkedIn",
+  "Youtube",
+  // "Instagram",
+];
 
 const Page = () => {
   const { authState, handleSignOut, globalBrands, brandMap } =
     useContext(globalContext);
   const router = useRouter();
   const [pageState, setPageState] = useState<{
-    fetchedEmployees: IEmployee[];
     isLoading: boolean;
-    formState: {
-      taskData: {
-        assignedTo: string;
-        brand: string;
-        title: string;
-        department: string;
-        startNumber: number;
-        endNumber: number;
-      };
-    };
+    platform: string;
+    brand: string;
+    postsPerDay: number | "";
   }>({
-    fetchedEmployees: [],
     isLoading: false,
-    formState: {
-      taskData: {
-        assignedTo: "",
-        brand: "",
-        title: "",
-        department: "",
-        startNumber: new Date().getTime(),
-        endNumber: new Date().getTime() + 1000 * 60 * 60 * 24,
-      },
-    },
+    platform: "",
+    brand: "",
+    postsPerDay: "",
   });
 
-  async function getEmployees() {
-    try {
-      setPageState((prev) => ({
-        ...prev,
-        isLoading: true,
-      }));
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/tasks/get-all-employees?limit=9999`,
-        {
-          headers: {
-            Authorization: `barrer ${
-              typeof window !== "undefined"
-                ? localStorage.getItem("token")
-                : authState.token
-            }`,
-          },
-        }
-      );
-      if (res.status === 401) {
-        handleSignOut();
-      }
-      if (!res.ok) {
-        toast.error("Something went wrong!");
-        console.error("Error getEmployees:");
-        return;
-      }
-      const json: IEmployee[] = await res.json();
-      if (!json) {
-        toast.error("Something went wrong!");
-        return;
-      } else if (json && Array.isArray(json) && json.length > 0) {
-        setPageState((prev) => ({
-          ...prev,
-          fetchedEmployees: json,
-        }));
-      } else {
-        toast.error("Something went wrong!");
-        return;
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      console.error("Error getEmployees:", error);
-    } finally {
-      setPageState((prev) => ({
-        ...prev,
-        isLoading: false,
-      }));
-    }
-  }
-
-  useEffect(() => {
-    getEmployees();
-  }, []);
-
-  async function handleAddNewTask() {
-    if (
-      !pageState.formState.taskData.title ||
-      !pageState.formState.taskData.department ||
-      !pageState.formState.taskData.brand ||
-      !pageState.formState.taskData.assignedTo
-    ) {
+  async function handleAddKpi() {
+    if (!pageState.platform || !pageState.brand || !pageState.postsPerDay) {
       toast.error("Please fill all required fields!");
       return;
     }
     try {
       setPageState((prev) => ({ ...prev, isLoading: true }));
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/tasks/add-task`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/analytics/kpi-add`,
         {
           method: "POST",
           body: JSON.stringify({
-            taskData: {
-              assignedTo: pageState.formState.taskData.assignedTo,
-              brand: pageState.formState.taskData.brand,
-              title: pageState.formState.taskData.title,
-              department: pageState.formState.taskData.department,
-              startNumber: pageState.formState.taskData.startNumber,
-              endNumber: pageState.formState.taskData.endNumber,
-            },
+            kpis: [
+              {
+                platform: pageState.platform,
+                brand: pageState.brand,
+                postsPerDay: pageState.postsPerDay,
+                postsPerWeek: 0,
+                postsPerMonth: 0,
+                timeStamp: Date.now(),
+              },
+            ],
           }),
           headers: {
             "Content-Type": "application/json",
@@ -162,87 +72,48 @@ const Page = () => {
       }
       if (!res.ok) {
         toast.error("Something went wrong!");
-        return;
-      }
-      const json: any = await res.json();
-      if (json && json.title) {
-        toast.success("Task added successfully!");
-        router.replace("/op/system-tasks/");
-      } else {
-        toast.error("Something went wrong!");
         setPageState((prev) => ({ ...prev, isLoading: false }));
+
+        return;
+      } else {
+        toast.success("KPI added successfully!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+
+        router.replace("/op/kpis");
       }
     } catch (error) {
       setPageState((prev) => ({ ...prev, isLoading: false }));
       toast.error("Something went wrong!");
-      console.error("Error handleAddNewTask:", error);
+      console.error("Error handleAddKpi:", error);
     }
   }
 
   return (
     <section className={`${styles.container}`}>
       <div className="flex items-center gap-[--10px] my-[1vw]">
-        <span onClick={() => router.replace("/op/system-tasks/")}>
-          {backIcon}
-        </span>
-        <h3>Add New Task</h3>
+        <span onClick={() => router.replace("/op/kpis/")}>{backIcon}</span>
+        <h3>Add KPI</h3>
       </div>
 
       <div className={`!w-[25vw] h-[65vh]`}>
         <div className="flex flex-col gap-[1vw]">
-          {/* Title* */}
+          {/* Platform */}
           <div>
-            <label htmlFor="title">Title*</label>
+            <label htmlFor="platform" className="!mb-[0.30vw] block">
+              Platform*
+            </label>
             <div className={`${styles.inputWrapper}`}>
-              <input
-                type="text"
-                id="title"
-                required
-                className={`${styles.customInput}`}
-                value={pageState.formState.taskData.title}
-                onChange={(e) => {
+              <CustomSelectInput
+                label="Select Platform"
+                options={platformsOptions}
+                hoverColor="hover:bg-[#E1C655]"
+                getValue={(value: string) => {
                   setPageState((prev) => ({
                     ...prev,
-                    formState: {
-                      ...prev.formState,
-                      taskData: {
-                        ...prev.formState.taskData,
-                        title: e.target.value,
-                      },
-                    },
+                    platform: value.toUpperCase(),
                   }));
                 }}
               />
-            </div>
-          </div>
-
-          {/* Department */}
-          <div>
-            <label htmlFor="department" className="!mb-[0.30vw] block">
-              Department*
-            </label>
-            <div className={`${styles.inputWrapper}`}>
-              {Array.isArray(departmentOptions) &&
-              departmentOptions.length > 0 ? (
-                <CustomSelectInput
-                  label={"Select Department"}
-                  options={departmentOptions}
-                  getValue={(value: string) => {
-                    setPageState((prev) => ({
-                      ...prev,
-                      formState: {
-                        ...prev.formState,
-                        taskData: {
-                          ...prev.formState.taskData,
-                          department: value,
-                        },
-                      },
-                    }));
-                  }}
-                />
-              ) : (
-                <span className="custom-loader"></span>
-              )}
             </div>
           </div>
 
@@ -259,13 +130,7 @@ const Page = () => {
                   getValue={(value: string) => {
                     setPageState((prev) => ({
                       ...prev,
-                      formState: {
-                        ...prev.formState,
-                        taskData: {
-                          ...prev.formState.taskData,
-                          brand: brandMap[value],
-                        },
-                      },
+                      brand: brandMap[value],
                     }));
                   }}
                 />
@@ -275,38 +140,23 @@ const Page = () => {
             </div>
           </div>
 
-          {/* Assigned To */}
+          {/* Posts Per Day* */}
           <div>
-            <label htmlFor="assignedTo" className="!mb-[0.30vw] block">
-              Assigned To*
-            </label>
+            <label htmlFor="postsPerDay">Posts Per Day*</label>
             <div className={`${styles.inputWrapper}`}>
-              {Array.isArray(pageState.fetchedEmployees) &&
-              pageState.fetchedEmployees.length > 0 ? (
-                <CustomSelectInputWithLabelAndValue
-                  label={"Select Assigned To"}
-                  options={
-                    pageState.fetchedEmployees.map((employee) => ({
-                      value: employee._id,
-                      label: `${employee.firstName} ${employee.lastName}`,
-                    })) || []
-                  }
-                  getValue={(value: string) => {
-                    setPageState((prev) => ({
-                      ...prev,
-                      formState: {
-                        ...prev.formState,
-                        taskData: {
-                          ...prev.formState.taskData,
-                          assignedTo: value,
-                        },
-                      },
-                    }));
-                  }}
-                />
-              ) : (
-                <span className="custom-loader"></span>
-              )}
+              <input
+                type="number"
+                id="postsPerDay"
+                required
+                className={`${styles.customInput}`}
+                value={pageState.postsPerDay}
+                onChange={(e) => {
+                  setPageState((prev) => ({
+                    ...prev,
+                    postsPerDay: Number(e.target.value),
+                  }));
+                }}
+              />
             </div>
           </div>
         </div>
@@ -315,9 +165,10 @@ const Page = () => {
       <div className="w-fit ms-auto">
         <CustomBtn
           btnColor="black"
-          word="Save"
-          onClick={handleAddNewTask}
+          word="Add"
+          onClick={handleAddKpi}
           disabled={pageState.isLoading}
+          paddingVal="py-[--10px] px-[--32px]"
         />
       </div>
     </section>
