@@ -301,11 +301,11 @@ function Page() {
         toast.error("Failed to fetch subscribers gains!");
         return;
       }
-      const data: ISubscriberGains = await res.json();
-      if (data) {
+      const data: ISubscriberGains[] = await res.json();
+      if (data && Array.isArray(data) && data.length > 0) {
         setPageState((prevState: any) => ({
           ...prevState,
-          fetchedSubscribersGains: data,
+          fetchedSubscribersGains: data[0],
         }));
       } else {
         toast.error("Failed to fetch subscribers gains!");
