@@ -203,7 +203,7 @@ const Page = () => {
   const [tempOptions, setTempOptions] = useState<any>([]);
   const { templates } = useContext(templatesContext);
   const templateContentRef = useRef<(HTMLDivElement | null)[]>([]);
-  const [position, setPosition] = useState("Backend");
+  const [position, setPosition] = useState("");
   const [level, setLevel] = useState("FreshGraduation");
   const [tempDetails, setTempDetails] = useState<any>([]);
   const [rolesData, setRolesData] = useState<any>([]);
@@ -404,6 +404,10 @@ const Page = () => {
         toast.error("Job Description is required");
         return;
       }
+      if (position == "") {
+        toast.error("Position is required");
+        return;
+      }
       if (inputs.responsibilities == "") {
         toast.error("Responsibilities are required");
         return;
@@ -431,6 +435,10 @@ const Page = () => {
 
       const token = localStorage.getItem("token");
       console.log(inputs);
+      console.log({
+        title: "Benefits",
+        description: inputs.benefits,
+      });
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`,
@@ -470,7 +478,12 @@ const Page = () => {
                   question: questionsRef.current[i],
                   type:
                     typesRef.current[i].toLowerCase() == "yes or no" ? 0 : 1,
-                  answer: answersRef.current[i].toLowerCase() == "yes" ? 1 : 0,
+                  answer:
+                    answersRef.current[i].toLowerCase() == "yes"
+                      ? 1
+                      : answersRef.current[i].toLowerCase() == "no"
+                      ? 0
+                      : answersRef.current[i],
                 })),
               },
             ],
@@ -607,7 +620,7 @@ const Page = () => {
               Add to{" "}
               <CustomSelectInput
                 getValue={(val: string) =>
-                  setGroupID(groups.find((e: any) => e?.title === val)?._id)
+                  setGroupID(groups.find((e: any) => e?.title.trim() === val)?._id)
                 }
                 options={groups.map((e: any, i: any) => e?.title)}
               >
@@ -656,7 +669,7 @@ const Page = () => {
                                   )
                                 }
                                 options={allRoles}
-                                label={allRoles[0]}
+                                label={"choose position"}
                               />
                             </div>
                           </div>
@@ -913,7 +926,7 @@ const Page = () => {
                                 )
                               }
                               options={allRoles}
-                              label={allRoles[0]}
+                              label={"choose position"}
                             />
                           </div>
                         </div>

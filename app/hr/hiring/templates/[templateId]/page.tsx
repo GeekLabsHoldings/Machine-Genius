@@ -213,8 +213,8 @@ export default function TemplateDetails({
     setInputs({
       jobDescription: data?.details[0]?.description,
       responsibilities: data?.details[1]?.description,
-      benefits: data?.details[2]?.description,
-      qualifications: data?.details[3]?.description,
+      qualifications: data?.details[2]?.description,
+      benefits: data?.details[3]?.description,
     });
     setSkills(data?.details[5]?.description);
     setQuestions(data?.details[4]?.description);
@@ -314,10 +314,11 @@ export default function TemplateDetails({
                       ? "0"
                       : "1",
                   answer:
-                    answersRef.current[i].toLowerCase() == "yes" ||
-                    answersRef.current[i].toLowerCase() == "1"
-                      ? "1"
-                      : "0",
+                    answersRef.current[i].toLowerCase() == "yes"
+                      ? 1
+                      : answersRef.current[i].toLowerCase() == "no"
+                      ? 0
+                      : answersRef.current[i],
                 })),
               },
               {
@@ -517,7 +518,7 @@ export default function TemplateDetails({
                 console.log(val);
                 console.log(groups.find((e: any) => e.title === val)?._id);
 
-                setGroupID(groups.find((e: any) => e.title === val)?._id);
+                setGroupID(groups.find((e: any) => e.title.trim() === val)?._id);
               }}
               options={groups.map((e: any, i: any) => e.title)}
               label={groups.find((e: any) => e._id === groupID)?.title}
