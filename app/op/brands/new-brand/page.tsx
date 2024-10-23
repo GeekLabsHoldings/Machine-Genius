@@ -31,27 +31,27 @@ function InnerInfoCard({ brand }: { brand: ISubBrand }) {
 }
 
 // ===== Start Account Data Types =====
-interface IRedditAccountData {
+export interface IRedditAccountData {
   appID: string;
   appSecret: string;
   username: string;
   password: string;
 }
-interface ITelegramAccountData {
+export interface ITelegramAccountData {
   token: string;
 }
-interface ITwetterAccountData {
+export interface ITwetterAccountData {
   ConsumerKey: string;
   ConsumerSecret: string;
   AccessToken: string;
   TokenSecret: string;
   BearerToken: string;
 }
-interface ILinkedInAccountData {
+export interface ILinkedInAccountData {
   token: string;
   owner: string;
 }
-interface IFacebookInAccountData {
+export interface IFacebookInAccountData {
   tokenPage?: string;
   longAccessToken?: string;
   pageID?: string;
@@ -60,13 +60,13 @@ interface IFacebookInAccountData {
   email?: string;
   password?: string;
 }
-interface IYoutubeAccountData {
+export interface IYoutubeAccountData {
   client_id: string;
   client_secret: string;
   redirect_uris: string;
   token?: string;
 }
-interface IAccount {
+export interface IAccount {
   platform:
     | "REDDIT"
     | "TELEGRAM"
@@ -84,19 +84,19 @@ interface IAccount {
 }
 // ===== End Account Data Types =====
 // ===== Start SubBrand Data Types =====
-interface ISubBrandData {
+export interface ISubBrandData {
   brand_name: string;
   description: string;
   aquisition_date: number;
 }
 
-interface ISubBrand {
+export interface ISubBrand {
   subbrand: ISubBrandData;
   accounts: IAccount[];
 }
 // ===== End SubBrand Data Types =====
 // ===== Start Brand Data Types =====
-interface IBrandData {
+export interface IBrandData {
   brand_name: string;
   description: string;
   niche: "" | "politics" | "entertainment" | "finance";
@@ -105,27 +105,33 @@ interface IBrandData {
   subBrands: ISubBrand[];
 }
 // ===== End Brand Data Types =====
+// ===== Start Page State Data Types =====
+export interface IAddNewBrandPageState {
+  isLoading: boolean;
+  brandName: string;
+  brandDescription: string;
+  brandNiche: "" | "politics" | "entertainment" | "finance";
+  brandAquisitionDate: number;
+  accounts: IAccount[];
+  subBrands: ISubBrand[];
+}
+// ===== End Page State Data Types =====
 
 const Page = () => {
   const { authState, handleSignOut } = useContext(globalContext);
   const router = useRouter();
-  const [pageState, setPageState] = useSessionStorage<{
-    isLoading: boolean;
-    brandName: string;
-    brandDescription: string;
-    brandNiche: "" | "politics" | "entertainment" | "finance";
-    brandAquisitionDate: number;
-    accounts: IAccount[];
-    subBrands: ISubBrand[];
-  }>("OP-addNewBrand", {
-    isLoading: false,
-    brandName: "",
-    brandDescription: "",
-    brandNiche: "",
-    brandAquisitionDate: new Date().getTime(),
-    accounts: [],
-    subBrands: [],
-  });
+  const [pageState, setPageState] = useSessionStorage<IAddNewBrandPageState>(
+    "OP-addNewBrand",
+    {
+      isLoading: false,
+      brandName: "",
+      brandDescription: "",
+      brandNiche: "",
+      brandAquisitionDate: new Date().getTime(),
+      accounts: [],
+      subBrands: [],
+    }
+  );
 
   // ===== Start Social Media Accounts Data =====
   // Reddit account data
@@ -436,6 +442,7 @@ const Page = () => {
                 btnColor="black"
                 modalTitle="Add Sub-brand"
                 btnIcon={addIcon}
+                setSubBrandInPageState={setPageState}
               />
             </div>
 
