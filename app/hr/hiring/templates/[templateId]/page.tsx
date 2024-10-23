@@ -226,8 +226,19 @@ export default function TemplateDetails({
     getTemplate();
     getAllRoles();
   }, []);
+  useEffect(() => {
+    questions.map((q, i) => {
+      if (q?.type == 0) {
+        typesRef.current[i] = "Yes or No";
+      } else {
+        typesRef.current[i] = "Numeric";
+      }
+    });
+  }, [questions]);
 
   async function createTemplate() {
+    console.log(questions);
+
     if (tempKey === "") return;
 
     if (templateDet?.title.split(" ").join("_") == "Job_Listings") {
@@ -303,7 +314,10 @@ export default function TemplateDetails({
                       ? "0"
                       : "1",
                   answer:
-                    answersRef.current[i].toLowerCase() == "yes" ? "1" : "0",
+                    answersRef.current[i].toLowerCase() == "yes" ||
+                    answersRef.current[i].toLowerCase() == "1"
+                      ? "1"
+                      : "0",
                 })),
               },
               {
@@ -675,7 +689,7 @@ export default function TemplateDetails({
                                   questions[i]?.answer || "";
                               }
                             }}
-                            defaultValue={questions[i]?.answer || ""}
+                            defaultValue={questions[i]?.answer}
                             type="text"
                             id="answer"
                             ref={(el) => {
