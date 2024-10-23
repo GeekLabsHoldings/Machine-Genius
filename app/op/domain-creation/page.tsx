@@ -357,6 +357,9 @@ const Page = () => {
                     }}
                   />
                 </div>
+                <span className="text-gray-500 text-[--12px]">
+                  e.g. example.com
+                </span>
               </div>
 
               {/* Domain Suggestions */}
