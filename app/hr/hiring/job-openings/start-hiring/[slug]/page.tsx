@@ -36,6 +36,14 @@ export default function Page({ params }: { params: { slug: string } }) {
         }
         const result = await res.json();
         setData(result);
+        setEditorVal(
+          result?.template?.details
+            ?.map((item: any, idx: number) => {
+              if (idx > 3) return "";
+              return `<p><strong>${item.title}</strong></p>${item.description}`;
+            })
+            .join("")
+        );
         console.log("result", result);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -60,12 +68,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
       console.log({
         contract: vacancyType,
-        template: data?.template?.details
-          ?.map((item: any, idx: number) => {
-            if (idx > 3) return "";
-            return `<p><strong>${item.title}</strong></p>${item.description}`;
-          })
-          .join("")
+        template: editorVal
           .replaceAll(/data-list="bullet"/gi, "")
           .replaceAll(
             /<span class="ql-ui" contenteditable="false"><\/span>/gi,
@@ -83,19 +86,14 @@ export default function Page({ params }: { params: { slug: string } }) {
           body: JSON.stringify({
             details: {
               contract: vacancyType,
-              template: data?.template?.details
-                ?.map((item: any, idx: number) => {
-                  if (idx > 3) return "";
-                  return `<p><strong>${item.title}</strong></p>${item.description}`;
-                })
-                .join("")
+              template: editorVal
                 .replaceAll(/data-list="bullet"/gi, "")
                 .replaceAll(
                   /<span class="ql-ui" contenteditable="false"><\/span>/gi,
                   ""
                 )
                 .replaceAll(/data-list="ordered"/gi, ""),
-              role: data.role.roleName,
+              role: data?.role.roleName,
               skills: ["React"],
               questions: data?.template?.details[4].description,
             },
@@ -112,10 +110,12 @@ export default function Page({ params }: { params: { slug: string } }) {
       const result = await res.json();
       console.log(result);
       if (result == "Job Published Successfully") {
-        router.push(`/hr/hiring/job-openings/start-hiring/${params.slug}/templateDetails`);
+        router.push(
+          `/hr/hiring/job-openings/start-hiring/${params.slug}/templateDetails`
+        );
       }
       // navigate to the next page
-      // router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
+      router.push(`/hr/hiring/job-openings/start-hiring/job-listing-published`);
     } catch (error) {
       console.error("Error updating next step:", error);
       console.error("Error updating next step:");
@@ -160,7 +160,6 @@ export default function Page({ params }: { params: { slug: string } }) {
     });
     setArrText(newArr);
   };
-
 
   return (
     <section>
@@ -348,12 +347,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               <Editor
                 formats={["list", "bold"]} // Allowed formats
                 modules={{ toolbar: toolbarOptions }} // Toolbar configuration
-                value={data?.template?.details
-                  ?.map((item: any, idx: number) => {
-                    if (idx > 3) return "";
-                    return `<p><strong>${item.title}</strong></p>${item.description}`;
-                  })
-                  .join("")}
+                value={editorVal}
                 onTextChange={(e: any) => setEditorVal(e.htmlValue)}
               />
             </div>
