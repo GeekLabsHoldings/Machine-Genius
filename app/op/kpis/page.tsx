@@ -251,7 +251,7 @@ export default function Page() {
 
           <CustomBtn
             btnColor="black"
-            word={"Create New Task"}
+            word={"Add KPI"}
             icon={addIcon}
             paddingVal="py-[0.4vw] px-[0.9vw]"
             href="/op/kpis/add-kpi"
