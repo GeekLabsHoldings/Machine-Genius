@@ -219,7 +219,7 @@ const Page = () => {
           {/* Department */}
           <div>
             <label htmlFor="department" className="!mb-[0.30vw] block">
-              Department
+              Department*
             </label>
             <div className={`${styles.inputWrapper}`}>
               {Array.isArray(departmentOptions) &&
@@ -249,7 +249,7 @@ const Page = () => {
           {/* Brand */}
           <div>
             <label htmlFor="brand" className="!mb-[0.30vw] block">
-              Brand
+              Brand*
             </label>
             <div className={`${styles.inputWrapper}`}>
               {Array.isArray(globalBrands) && globalBrands.length > 0 ? (
@@ -278,7 +278,7 @@ const Page = () => {
           {/* Assigned To */}
           <div>
             <label htmlFor="assignedTo" className="!mb-[0.30vw] block">
-              Assigned To
+              Assigned To*
             </label>
             <div className={`${styles.inputWrapper}`}>
               {Array.isArray(pageState.fetchedEmployees) &&
