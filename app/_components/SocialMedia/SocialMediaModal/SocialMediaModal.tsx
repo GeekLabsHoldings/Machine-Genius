@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
-import styles from "./modal.module.css";
+import styles from "./SocialMediaModal.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import { AccountsData, ArticleNames, Brands } from "@/app/_data/data";
 import { addIcon, chainIcon, closeIcon } from "@/app/_utils/svgIcons";
@@ -94,7 +94,7 @@ type IAddAccountResponse =
   | DuplicateAccountResponse;
 // ===== End add_account1 Types =====
 
-export default function BasicModal({
+export default function SocialMediaModal({
   btnWord,
   btnIcon,
   btnColor,

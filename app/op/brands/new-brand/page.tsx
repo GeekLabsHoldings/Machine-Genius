@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import styles from "./newBrand.module.css";
 import "./newBrand.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
@@ -38,17 +38,93 @@ function InnerInfoCard({}: {}) {
   );
 }
 
+// ===== Start Account Data Types =====
+interface IRedditAccountData {
+  appID: string;
+  appSecret: string;
+  username: string;
+  password: string;
+}
+interface ITelegramAccountData {
+  token: string;
+}
+interface ITwetterAccountData {
+  ConsumerKey: string;
+  ConsumerSecret: string;
+  AccessToken: string;
+  TokenSecret: string;
+  BearerToken: string;
+}
+interface ILinkedInAccountData {
+  token: string;
+  owner: string;
+}
+interface IFacebookInAccountData {
+  tokenPage?: string;
+  longAccessToken?: string;
+  pageID?: string;
+  client_id?: string;
+  client_secret?: string;
+  email?: string;
+  password?: string;
+}
+interface IYoutubeAccountData {
+  client_id: string;
+  client_secret: string;
+  redirect_uris: string;
+  token?: string;
+}
+interface IAccount {
+  platform:
+    | "REDDIT"
+    | "TELEGRAM"
+    | "TWETTER"
+    | "LINKEDIN"
+    | "FACEBOOK"
+    | "YOUTUBE";
+  account:
+    | IRedditAccountData
+    | ITelegramAccountData
+    | ITwetterAccountData
+    | ILinkedInAccountData
+    | IFacebookInAccountData
+    | IYoutubeAccountData;
+}
+// ===== End Account Data Types =====
+// ===== Start SubBrand Data Types =====
+interface ISubBrandData {
+  brand_name: string;
+  description: string;
+  aquisition_date: number;
+}
+
+interface ISubBrand {
+  subbrand: ISubBrandData;
+  accounts: IAccount[];
+}
+// ===== End SubBrand Data Types =====
+// ===== Start Brand Data Types =====
+interface IBrandData {
+  brand_name: string;
+  description: string;
+  niche: "" | "politics" | "entertainment" | "finance";
+  aquisition_date: number;
+  accounts: IAccount[];
+  subBrands: ISubBrand[];
+}
+// ===== End Brand Data Types =====
+
 const Page = () => {
   const { authState, handleSignOut } = useContext(globalContext);
-
   const router = useRouter();
   const [pageState, setPageState] = useSessionStorage<{
     isLoading: boolean;
     brandName: string;
     brandDescription: string;
-    brandNiche: string;
+    brandNiche: "" | "politics" | "entertainment" | "finance";
     brandAquisitionDate: number;
-    accounts: any[];
+    accounts: IAccount[];
+    subBrands: ISubBrand[];
   }>("OP-addNewBrand", {
     isLoading: false,
     brandName: "",
@@ -56,7 +132,20 @@ const Page = () => {
     brandNiche: "",
     brandAquisitionDate: new Date().getTime(),
     accounts: [],
+    subBrands: [],
   });
+
+  const [brandData, setBrandData] = useSessionStorage<IBrandData>(
+    "OP-brandData",
+    {
+      brand_name: pageState.brandName,
+      description: pageState.brandDescription,
+      niche: pageState.brandNiche,
+      aquisition_date: pageState.brandAquisitionDate,
+      accounts: pageState.accounts,
+      subBrands: pageState.subBrands,
+    }
+  );
 
   async function handleAddNewBrand() {
     // if (!postCaption) {
@@ -72,7 +161,7 @@ const Page = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/ceo/brand/add-brand-all-data`,
         {
           method: "POST",
-          body: JSON.stringify({}),
+          body: JSON.stringify(brandData),
           headers: {
             "Content-Type": "application/json",
             Authorization: `barrer ${
@@ -86,10 +175,15 @@ const Page = () => {
       if (res.status === 401) {
         handleSignOut();
       }
+      if (!res.ok) {
+        toast.error("Something went wrong!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+        return;
+      }
       const json: any = await res.json();
       if (json && json.brand_name) {
         toast.success("Brand added successfully!", {
-          duration: 5000,
+          duration: 3000,
         });
         router.replace("/op/brands");
       } else {
@@ -119,8 +213,12 @@ const Page = () => {
             type="text"
             id="brand_name"
             name="brand_name"
-            placeholder="Juice Box"
+            // placeholder="Juice Box"
             className=" py-[0.6vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+            value={pageState.brandName}
+            onChange={(e) => {
+              setPageState((prev) => ({ ...prev, brandName: e.target.value }));
+            }}
           />
 
           <label className="mb-[0.7vw] inline-block" htmlFor="brand_niche">
@@ -128,7 +226,7 @@ const Page = () => {
           </label>
           <div className=" w-[15vw] mb-[1.2vw]">
             <CustomSelectInput
-              label={"All"}
+              label={"Select Niche"}
               options={["Politics", "Entertainment", "Finance"]}
               getValue={(value: any) => {
                 setPageState((prev: any) => ({
@@ -144,8 +242,15 @@ const Page = () => {
             type="text"
             id="brand_description"
             name="brand_description"
-            placeholder="51640615651463254"
+            // placeholder="51640615651463254"
             className=" py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+            value={pageState.brandDescription}
+            onChange={(e) => {
+              setPageState((prev) => ({
+                ...prev,
+                brandDescription: e.target.value,
+              }));
+            }}
           />
 
           <label htmlFor="brand_acquisition_date">Acquisition Date*</label>
@@ -183,27 +288,88 @@ const Page = () => {
           <div className="flex justify-between items-center mb-[1vw]">
             <h4>Social Media</h4>
           </div>
+
           <div className="flex justify-between h-[62vh] overflow-y-scroll px-[0.5vw] gap-[1.5vw]">
             <div className="w-full">
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
                 <input type="radio" name="my-accordion-2" />
-                <div
-                  className={`${styles.collapseTitle} collapse-title text-xl font-semibold`}
-                >
-                  Website
+
+                <div className="collapse-title text-xl font-semibold">
+                  Reddit
                 </div>
+
                 <div className="collapse-content">
-                  <label htmlFor="">Link*</label>
+                  <label
+                    htmlFor="reddit_app_id"
+                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
+                  >
+                    App ID*
+                  </label>
 
                   <input
                     type="text"
-                    placeholder="Account url"
+                    id="reddit_app_id"
+                    // placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="reddit_app_secret">App Secret*</label>
+
+                  <input
+                    type="text"
+                    id="reddit_app_secret"
+                    // placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="reddit_username">Username*</label>
+
+                  <input
+                    type="text"
+                    id="reddit_username"
+                    // placeholder="Account url"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="reddit_password">Password*</label>
+
+                  <input
+                    type="text"
+                    id="reddit_password"
+                    // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
               </div>
+
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2" />
+
+                <div className="collapse-title text-xl font-semibold">
+                  Telegram
+                </div>
+
+                <div className="collapse-content">
+                  <label
+                    htmlFor="telegram_token"
+                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
+                  >
+                    Token*
+                  </label>
+
+                  <input
+                    type="text"
+                    id="telegram_token"
+                    // placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
@@ -214,211 +380,55 @@ const Page = () => {
                 </div>
 
                 <div className="collapse-content">
-                  {/* // Label for the Username input field */}
                   <label
-                    htmlFor=""
-                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block" // CSS classes for styling the label
-                  >
-                    {/* // Label text indicating a required field */}
-                    Username*
-                  </label>
-                  {/* // Input field for the Username */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  {/* // Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* // Input field for the Password */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  {/* // Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* // Input field for the Link */}
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  <label htmlFor="">Handle*</label>
-
-                  <input
-                    type="text"
-                    placeholder="@username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                {/* // Input element for the radio button to control the accordion
-                state */}
-                <input type="radio" name="my-accordion-2" />
-                {/* // Div for the accordion title with styling for font size and
-                weight */}
-                <div className="collapse-title text-xl font-semibold">
-                  Instagram
-                </div>
-
-                <div className="collapse-content">
-                  {/* // Label for the Username input field with styling for
-                  padding, border, width, and display */}
-                  <label
-                    htmlFor=""
+                    htmlFor="twitter_consumer_key"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    {/* // Label text indicating a required field */}
-                    Username*
+                    Consumer Key*
                   </label>
-                  {/* // Input field for the Username with placeholder and styling
-                  for padding, border, width, outline, display, placeholder text
-                  color, and margin-bottom */}
+
                   <input
                     type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  {/* // Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* // Input field for the Password with placeholder and styling
-                  similar to the Username input */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                  {/* // Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* // Input field for the Link with placeholder and styling
-                  similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="Account url"
+                    id="twitter_consumer_key"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  <label htmlFor="">Handle*</label>
-                  {/* // Input field for the Handle with placeholder and styling
-                  similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="@username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                {/* Input element for the radio button to control the accordion state */}
-                <input type="radio" name="my-accordion-2" />
-
-                {/* Div for the accordion title with styling for font size and weight */}
-                <div className="collapse-title text-xl font-semibold">
-                  Telegram
-                </div>
-
-                {/* Div for the accordion content */}
-                <div className="collapse-content">
-                  {/* Label for the Username input field */}
-                  <label
-                    htmlFor=""
-                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
-                  >
-                    Username*
+                  <label htmlFor="twitter_consumer_secret">
+                    Consumer Secret*
                   </label>
-                  {/* Input field for the Username with placeholder and styling for padding, border, width, outline, display, placeholder text color, and margin-bottom */}
+
                   <input
                     type="text"
-                    placeholder="username"
+                    id="twitter_consumer_secret"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  {/* Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* Input field for the Password with placeholder and styling similar to the Username input */}
+                  <label htmlFor="twitter_access_token">Access Token*</label>
+
                   <input
                     type="text"
-                    placeholder="username"
+                    id="twitter_access_token"
+                    // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  {/* Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* Input field for the Link with placeholder and styling similar to the previous input fields */}
+                  <label htmlFor="twitter_token_secret">Token Secret*</label>
+
                   <input
                     type="text"
-                    placeholder="Account url"
+                    id="twitter_token_secret"
+                    // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  {/* Label for the Handle input field */}
-                  <label htmlFor="">Handle*</label>
-                  {/* Input field for the Handle with placeholder and styling similar to the previous input fields */}
+                  <label htmlFor="twitter_bearer_token">Bearer Token*</label>
+
                   <input
                     type="text"
-                    placeholder="@username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                {/* Input element for the radio button to control the accordion state */}
-                <input type="radio" name="my-accordion-2" />
-
-                {/* Div for the accordion title with styling for font size and weight */}
-                <div className="collapse-title text-xl font-semibold">
-                  Facebook
-                </div>
-
-                {/* Div for the accordion content */}
-                <div className="collapse-content">
-                  {/* Label for the Username input field */}
-                  <label
-                    htmlFor=""
-                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
-                  >
-                    Username*
-                  </label>
-                  {/* Input field for the Username with placeholder and styling for padding, border, width, outline, display, placeholder text color, and margin-bottom */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* Input field for the Password with placeholder and styling similar to the Username input */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* Input field for the Link with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Handle input field */}
-                  <label htmlFor="">Handle*</label>
-                  {/* Input field for the Handle with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="@username"
+                    id="twitter_bearer_token"
+                    // placeholder="@username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
@@ -429,219 +439,159 @@ const Page = () => {
               <div
                 className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
               >
-                {/* Input element for the radio button to control the accordion state */}
                 <input type="radio" name="my-accordion-2" />
 
-                {/* Div for the accordion title with styling for font size and weight */}
+                <div className="collapse-title text-xl font-semibold">
+                  LinkedIn
+                </div>
+
+                <div className="collapse-content">
+                  <label
+                    htmlFor="linkedin_token"
+                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
+                  >
+                    Token*
+                  </label>
+
+                  <input
+                    type="text"
+                    id="linkedin_token"
+                    // placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="linkedin_owner">Owner*</label>
+
+                  <input
+                    type="text"
+                    id="linkedin_owner"
+                    // placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2" />
+
+                <div className="collapse-title text-xl font-semibold">
+                  Facebook
+                </div>
+
+                <div className="collapse-content">
+                  <label
+                    htmlFor="facebook_token_page"
+                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
+                  >
+                    Token Page*
+                  </label>
+
+                  <input
+                    type="text"
+                    id="facebook_token_page"
+                    // placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_long_access_token">
+                    Long Access Token*
+                  </label>
+
+                  <input
+                    type="text"
+                    id="facebook_long_access_token"
+                    // placeholder="username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_page_id">Page ID*</label>
+
+                  <input
+                    type="text"
+                    id="facebook_page_id"
+                    // placeholder="Account url"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_client_id">Client ID*</label>
+
+                  <input
+                    type="text"
+                    id="facebook_client_id"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_client_secret">Client Secret*</label>
+
+                  <input
+                    type="text"
+                    id="facebook_client_secret"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_email">Email*</label>
+
+                  <input
+                    type="email"
+                    id="facebook_email"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+
+                  <label htmlFor="facebook_password">Password*</label>
+
+                  <input
+                    type="password"
+                    id="facebook_password"
+                    // placeholder="@username"
+                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
+                  />
+                </div>
+              </div>
+
+              <div
+                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
+              >
+                <input type="radio" name="my-accordion-2" />
+
                 <div className="collapse-title text-xl font-semibold">
                   Youtube
                 </div>
 
-                {/* Div for the accordion content */}
                 <div className="collapse-content">
-                  {/* Label for the Username input field */}
                   <label
-                    htmlFor=""
+                    htmlFor="youtube_client_id"
                     className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
                   >
-                    Username*
+                    Client ID*
                   </label>
-                  {/* Input field for the Username with placeholder and styling for padding, border, width, outline, display, placeholder text color, and margin-bottom */}
+
                   <input
                     type="text"
-                    placeholder="username"
+                    id="youtube_client_id"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  {/* Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* Input field for the Password with placeholder and styling similar to the Username input */}
+                  <label htmlFor="youtube_client_secret">Client Secret*</label>
+
                   <input
                     type="text"
-                    placeholder="username"
+                    id="youtube_client_secret"
+                    // placeholder="username"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
 
-                  {/* Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* Input field for the Link with placeholder and styling similar to the previous input fields */}
+                  <label htmlFor="youtube_redirect_uris">Redirect URIs*</label>
+
                   <input
                     type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Handle input field */}
-                  <label htmlFor="">Handle*</label>
-                  {/* Input field for the Handle with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="@username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                {/* Input element for the radio button to control the accordion state */}
-                <input type="radio" name="my-accordion-2" />
-
-                {/* Div for the accordion title with styling for font size and weight */}
-                <div className="collapse-title text-xl font-semibold">
-                  Reddit
-                </div>
-
-                {/* Div for the accordion content */}
-                <div className="collapse-content">
-                  {/* Label for the Username input field */}
-                  <label
-                    htmlFor=""
-                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
-                  >
-                    Username*
-                  </label>
-                  {/* Input field for the Username with placeholder and styling for padding, border, width, outline, display, placeholder text color, and margin-bottom */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* Input field for the Password with placeholder and styling similar to the Username input */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* Input field for the Link with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Handle input field */}
-                  <label htmlFor="">Handle*</label>
-                  {/* Input field for the Handle with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="@username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                {/* Input element for the radio button to control the accordion state */}
-                <input type="radio" name="my-accordion-2" />
-
-                {/* Div for the accordion title with styling for font size and weight */}
-                <div className="collapse-title text-xl font-semibold">
-                  Discord
-                </div>
-
-                {/* Div for the accordion content */}
-                <div className="collapse-content">
-                  {/* Label for the Username input field */}
-                  <label
-                    htmlFor=""
-                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
-                  >
-                    Username*
-                  </label>
-                  {/* Input field for the Username with placeholder and styling for padding, border, width, outline, display, placeholder text color, and margin-bottom */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* Input field for the Password with placeholder and styling similar to the Username input */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* Input field for the Link with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Handle input field */}
-                  <label htmlFor="">Handle*</label>
-                  {/* Input field for the Handle with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="@username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-                </div>
-              </div>
-              <div
-                className={`${styles.accordion} collapse collapse-arrow bg-base-200`}
-              >
-                {/* Input element for the radio button to control the accordion state */}
-                <input type="radio" name="my-accordion-2" />
-
-                {/* Div for the accordion title with styling for font size and weight */}
-                <div className="collapse-title text-xl font-semibold">
-                  Tiktok
-                </div>
-
-                {/* Div for the accordion content */}
-                <div className="collapse-content">
-                  {/* Label for the Username input field */}
-                  <label
-                    htmlFor=""
-                    className="pt-[0.8vw] border-t-[1px] border-t-[var(--dark)] w-full block"
-                  >
-                    Username*
-                  </label>
-                  {/* Input field for the Username with placeholder and styling for padding, border, width, outline, display, placeholder text color, and margin-bottom */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Password input field */}
-                  <label htmlFor="">Password*</label>
-                  {/* Input field for the Password with placeholder and styling similar to the Username input */}
-                  <input
-                    type="text"
-                    placeholder="username"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Link input field */}
-                  <label htmlFor="">Link*</label>
-                  {/* Input field for the Link with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="Account url"
-                    className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
-                  />
-
-                  {/* Label for the Handle input field */}
-                  <label htmlFor="">Handle*</label>
-                  {/* Input field for the Handle with placeholder and styling similar to the previous input fields */}
-                  <input
-                    type="text"
-                    placeholder="@username"
+                    id="youtube_redirect_uris"
+                    // placeholder="Account url"
                     className="py-[0.4vw] border-b-[1px] w-full border-b-[var(--dark)] outline-none block placeholder:text-black mb-[1.2vw]"
                   />
                 </div>
