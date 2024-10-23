@@ -109,6 +109,7 @@ const Page = () => {
       }
       if (!res.ok) {
         toast.error("Something went wrong!");
+        setPageState((prev) => ({ ...prev, isLoading: false }));
         return;
       }
       const json: any = await res.json();
@@ -137,6 +138,7 @@ const Page = () => {
           }));
           return;
         }
+        setPageState((prev) => ({ ...prev, isLoading: false }));
         return;
       } else {
         toast.error("Something went wrong!");
