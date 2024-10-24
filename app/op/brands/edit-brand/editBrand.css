@@ -1,0 +1,32 @@
+.newBrand .collapse-arrow > .collapse-title::after {
+  box-shadow: none;
+  border: 10px solid black;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  border-left-color: transparent;
+  content: "";
+  display: block;
+  transform: rotate(0);
+  top: 59%;
+  transform: translateY(-50%);
+}
+
+.newBrand
+  .collapse-arrow:not(.collapse-close)
+  > input[type="radio"]:checked
+  ~ .collapse-title:after {
+  --tw-translate-y: -50%;
+  --tw-rotate: 0deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+    rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
+    scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.newBrand div.collapse-title {
+  font-size: clamp(16px, calc(1vw + 0.1rem), 100px);
+}
+
+.newBrand svg {
+  width: clamp(10px, calc(0.8vw + 00.1rem), 100px);
+  height: clamp(10px, calc(0.8vw + 00.1rem), 100px);
+}
