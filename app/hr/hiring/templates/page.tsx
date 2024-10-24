@@ -241,7 +241,7 @@ const Page = () => {
   const settings2: any = {
     infinite: false,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 3,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
@@ -286,7 +286,7 @@ const Page = () => {
                     <div className={`${styles.header}`}>
                       <div className="flex items-center gap-[1vw]">
                         <img
-                          src={e.icon}
+                          src={e?.icon}
                           alt=""
                           className="w-[2.5vw] h-[2.5vw] object-cover"
                         />
@@ -312,8 +312,8 @@ const Page = () => {
                         return (
                           <div className={styles.item} key={i}>
                             <div className={styles.item_header}>
-                              <p>{t.role.roleName}</p>
-                              <span>{t.level}</span>
+                              <p className="flex items-center gap-[--sy-4px]">{t?.role?.roleName} <span className="text-[--14px] text-[#535353]">({t?.level})</span></p>
+                              <span>{t?.title}</span>
                             </div>
                             <div className={styles.item_body}>
                               <div className={styles.line}></div>
@@ -321,7 +321,7 @@ const Page = () => {
                                 btnColor="black"
                                 word="View Template"
                                 width="w-full"
-                                href={`/hr/hiring/templates/${t._id}`}
+                                href={`/hr/hiring/templates/${t?._id}`}
                               />
                             </div>
                           </div>
@@ -378,8 +378,8 @@ const Page = () => {
                       key={i}
                     >
                       <div className={styles.item_header}>
-                        <p className="text-[--17px] font-bold">{e.title}</p>
-                        <span className="text-[--14px] block">{e.level}</span>
+                        <p className="text-[--17px] font-bold flex items-center justify-between">{e?.role?.roleName} <span className="text-[--14px] text-[#535353]">({e?.level})</span></p>
+                        <span className="text-[--14px] block">{e?.title}</span>
                       </div>
                       <div className={styles.item_body}>
                         <div

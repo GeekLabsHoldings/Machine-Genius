@@ -150,6 +150,7 @@ export default function TemplateDetails({
     title: "",
     description: "",
   });
+  const [questionChange, setQuestionChange] = useState(false);
   const [tempKey, setTempKey] = useState("");
 
   const toolbarOptions = [[{ list: "ordered" }, { list: "bullet" }], ["bold"]];
@@ -167,15 +168,12 @@ export default function TemplateDetails({
 
   async function getAllRoles() {
     const token = localStorage.getItem("token");
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await response.json();
     console.log(data, "all roles");
     setAllRoles(
@@ -221,23 +219,60 @@ export default function TemplateDetails({
     if (templateDet?.title.split(" ").join("_") != "Job_Listings") {
       setEditorVal(data?.details[0]?.description);
     }
+    answersRef.current = data?.details[4]?.description?.map(
+      (q: any) => q?.answer
+    );
+    typesRef.current = data?.details[4]?.description?.map((q: any) => q?.type);
+    questionsRef.current = data?.details[4]?.description?.map(
+      (q: any) => q?.question
+    );
   }
   useEffect(() => {
     getTemplate();
     getAllRoles();
   }, []);
-  useEffect(() => {
-    console.log(questions);
-    questions.map((q, i) => {
-      if (q?.type == 0) {
-        typesRef.current[i] = "Yes or No";
-      } else {
-        typesRef.current[i] = "Numeric";
-      }
-    });
-  }, [questions]);
 
   async function createTemplate() {
+    console.log(
+      JSON.stringify({
+        title: templateDet?.title,
+        level: level,
+        role: position,
+        group_id: groupID || templateDet?.group_id?._id,
+        details: [
+          {
+            title: "Job Description",
+            description: inputs.jobDescription,
+          },
+          {
+            title: "Responsibilities",
+            description: inputs.responsibilities,
+          },
+
+          {
+            title: "Qualifications",
+            description: inputs.qualifications,
+          },
+          {
+            title: "Benefits",
+            description: inputs.benefits,
+          },
+          {
+            title: "Questions",
+            description: questions.map((q, i) => ({
+              question: questionsRef.current[i],
+              type: typesRef.current[i],
+              answer: answersRef.current[i],
+            })),
+          },
+          {
+            title: "Skills",
+            description: skills,
+          },
+        ],
+      })
+    );
+
     console.log(questions);
 
     if (tempKey === "") return;
@@ -265,7 +300,10 @@ export default function TemplateDetails({
       }
       if (
         questions.some(
-          (_, i) => !questionsRef.current[i] || !answersRef.current[i]
+          (_, i) =>
+            !questionsRef.current[i] ||
+            !answersRef.current[i] ||
+            !typesRef.current[i]
         )
       ) {
         toast.error("Complete your questions");
@@ -310,16 +348,8 @@ export default function TemplateDetails({
                 title: "Questions",
                 description: questions.map((q, i) => ({
                   question: questionsRef.current[i],
-                  type:
-                    typesRef.current[i].toLowerCase() == "yes or no"
-                      ? "0"
-                      : "1",
-                  answer:
-                    answersRef.current[i].toLowerCase() == "yes"
-                      ? 1
-                      : answersRef.current[i].toLowerCase() == "no"
-                      ? 0
-                      : answersRef.current[i],
+                  type: typesRef.current[i],
+                  answer: answersRef.current[i],
                 })),
               },
               {
@@ -431,23 +461,20 @@ export default function TemplateDetails({
     const step =
       templateDet?.group_id?.step || templateDet?.title.replace(" ", "_");
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`,
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            title: newGroup.title,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: newGroup.title,
 
-            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-            description: newGroup.description,
-            step: step,
-          }),
-        }
-      );
+          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+          description: newGroup.description,
+          step: step,
+        }),
+      });
       if (res.status === 401) {
         handleSignOut();
       }
@@ -627,7 +654,7 @@ export default function TemplateDetails({
                   </div>
                 </div>
                 <div className={`${styles.card} h-fit`}>
-                  <div className={styles.card_header}>
+                  <div className={`${styles.card_header} mb-[--sy-30px]`}>
                     <div className="flex justify-between w-full items-center">
                       <h6 className="text-[--20px] font-bold">Questions</h6>
                       <button
@@ -643,79 +670,77 @@ export default function TemplateDetails({
                   <div className={styles.card_body}>
                     {questions.map((q, i) => {
                       return (
-                        <div className="p-[--12px] border-[--1px] border-[#878787] rounded-[--8px] mb-[--sy-12px]">
+                        <div className="p-[--12px] border-[--1px] border-[#878787] rounded-[--8px] mb-[--sy-40px] relative">
                           <input
                             ref={(el) => {
                               if (el) questionsRef.current[i] = el?.value;
                             }}
                             defaultValue={questions[i]?.question || ""}
                             onChange={(e: any) => {
-                              if (questionsRef.current) {
-                                questionsRef.current[i] = e.target.value;
-                                console.log(questionsRef.current);
-                              } else {
-                                questionsRef.current[i] =
-                                  questions[i]?.question || "";
-                              }
+                              questionsRef.current[i] = e.target.value;
                             }}
                             type="text"
                             className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--sy-12px]"
                             placeholder="Question"
                           />
-                          <div className="mb-[--sy-12px]">
+                          <div className=" flex justify-between gap-[--22px]">
+                          <div className="mb-[--sy-12px] w-1/2">
                             <CustomSelectInput
                               getValue={(val: string) => {
-                                if (typesRef.current) {
-                                  typesRef.current[i] = val;
-                                  console.log(typesRef.current);
-                                } else {
-                                  typesRef.current[i] =
-                                    questions[i]?.type || "Numeric";
+                                typesRef.current[i] = val;
+                                setQuestionChange((prev: any) => !prev);
+                                if (val === "Numeric" || val === "Yes or No") {
+                                  answersRef.current[i] = "";
                                 }
                               }}
                               options={["Numeric", "Yes or No"]}
-                              label={
-                                questions[i]?.type != 0
-                                  ? "Numeric"
-                                  : "Yes or No"
-                              }
+                              label={typesRef.current[i] || "Choose Type"}
                             />
                           </div>
-                          <label
-                            htmlFor="answer"
-                            className="text-[--16px] text-[#878787] font-medium mb-[--sy-8px] inline-block"
-                          >
-                            Answer
-                          </label>
-                          <input
-                            onChange={(e: any) => {
-                              if (answersRef.current) {
-                                answersRef.current[i] = e.target.value;
-                                console.log(answersRef.current);
-                              } else {
-                                answersRef.current[i] =
-                                  questions[i]?.answer || "";
-                              }
+                          {typesRef.current[i] == "Numeric" ? (
+                            <input
+                              onChange={(e: any) => {
+                                const value = e.target.value.replace(
+                                  /[^0-9]/g,
+                                  ""
+                                ); // Remove non-numeric characters
+                                e.target.value = value; // Update input value
+                                answersRef.current[i] = value;
+                              }}
+                              defaultValue={answersRef.current[i] || ""}
+                              type="text"
+                              id="answer"
+                              ref={(el) => {
+                                if (el) {
+                                  answersRef.current[i] = el?.value;
+                                }
+                              }}
+                              className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--12px]"
+                              placeholder="Answer"
+                            />
+                          ) : (
+                            <CustomSelectInput
+                              getValue={(val: string) => {
+                                answersRef.current[i] = val;
+                              }}
+                              options={["Yes", "No"]}
+                              label={answersRef?.current[i] || "Choose Ideal Answer"}
+                            />
+                          )}
+                          </div>
+                          <span className="text-[--16px] text-red-500 font-medium cursor-pointer absolute -top-[--sy-25px] right-[--sy-12px]"
+                            onClick={() => {
+                              setQuestions(questions.filter((q, index) => index !== i));
+                              typesRef.current = typesRef.current.filter(
+                                (_: any, index: number) => index !== i
+                              );
+                              answersRef.current = answersRef.current.filter(
+                                (_: any, index: number) => index !== i
+                              );
+                              console.log(typesRef.current);
+                              console.log(answersRef.current);
                             }}
-                            defaultValue={
-                              questions[i]?.answer == 0 &&
-                              questions[i]?.type == 0
-                                ? "no"
-                                : questions[i]?.answer == 1 &&
-                                  questions[i]?.type == 0
-                                ? "yes"
-                                : questions[i]?.answer
-                            }
-                            type="text"
-                            id="answer"
-                            ref={(el) => {
-                              if (el) {
-                                answersRef.current[i] = el?.value;
-                              }
-                            }}
-                            className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--12px]"
-                            placeholder="Answer"
-                          />
+                          >Delete Question</span>
                         </div>
                       );
                     })}
