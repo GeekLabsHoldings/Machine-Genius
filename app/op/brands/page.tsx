@@ -5,7 +5,7 @@ import "./brands.css";
 import CustomBtn from "@/app/_components/Button/CustomBtn";
 import Slider from "react-slick";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import { addIcon } from "@/app/_utils/svgIcons";
+import { addIcon, editPenIcon } from "@/app/_utils/svgIcons";
 import { globalContext } from "@/app/_context/store";
 import toast from "react-hot-toast";
 
@@ -380,13 +380,29 @@ const Page = () => {
       </div>
 
       {/* 04- Container for the "New Brand" button, aligned to the right */}
-      <div className="w-fit ms-auto mt-[--sy-15px]">
+      <div className="w-fit ms-auto mt-[--sy-15px] flex gap-[--15px]">
         <CustomBtn
           href="/op/brands/new-brand"
           paddingVal="py-[0.4vw] px-[0.9vw]"
           btnColor="black"
           icon={addIcon}
           word="New Brand"
+        />
+
+        <CustomBtn
+          href="/op/brands/edit-brand"
+          paddingVal="py-[0.4vw] px-[0.9vw]"
+          btnColor="black"
+          icon={editPenIcon}
+          word="Edit Brand"
+        />
+
+        <CustomBtn
+          href="/op/brands/add-edit-account"
+          paddingVal="py-[0.4vw] px-[0.9vw]"
+          btnColor="black"
+          icon={editPenIcon}
+          word="Add/Edit Account"
         />
       </div>
     </section>
