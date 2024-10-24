@@ -75,7 +75,7 @@ function Page() {
       );
 
       setTimeout(() => {
-        router.replace("/content-creator/create/choose-brand");
+        router.replace("/newsletter/create/choose-brand");
       }, 1500);
     }
   }, [collectedData, router]);
@@ -120,7 +120,7 @@ function Page() {
 
   useEffect(() => {
     setGeneralTitles(
-      collectedData.reduce((matches: any, item: any) => {
+      collectedData?.reduce((matches: any, item: any) => {
         if (!item.articleJson || item.articleJson.length === 0) {
           return matches; // Skip items with no articleJson
         }

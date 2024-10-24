@@ -3,13 +3,14 @@ import CustomBtn from "@/app/_components/Button/CustomBtn";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 import LogoAndTitle from "@/app/_components/LogoAndTitle/LogoAndTitle";
 import styles from "@/app/newsletter/create/newsletter-subjectline/newsletter-subjectline.module.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { createNewsletterContext } from "../_context/createNewsletterContext";
 
 function Page() {
   // state to handle content while page is loading its content
   const [IsLoading, setIsLoading] = useState(false);
   // to handle loading content before navigation to next page
+  const [brands, setBrands] = useState<any>([]);
 
   const {
     selectedContentTitle,
@@ -21,6 +22,29 @@ function Page() {
     setOpeningLine,
     selectedBrand,
   } = useContext(createNewsletterContext);
+
+  const [brandId, setBrandId] = useState<any>("");
+
+  const getBrands = async () => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/brand/get-all-brands?limit=999`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `barrer ${token}`,
+        },
+      }
+    );
+    const json = await res.json();
+    console.log(json);
+    setBrands(json);
+  };
+
+  useEffect(() => {
+    getBrands();
+  }, []);
 
   const handleSchedule = async () => {
     const response = await fetch(
@@ -36,7 +60,7 @@ function Page() {
           subjectLine: subjectLine,
           openingLine: openingLine,
           articles: generalTitles,
-          brand: "test",
+          brand: brandId,
           uploadTime: 1726725120000,
         }),
       }
@@ -151,7 +175,13 @@ function Page() {
                       Email List
                     </span>
                     <CustomSelectInput
-                      options={["PST | Asia", "EST | Europe", "CST | Africa"]}
+                      options={brands?.map((brand: any) => brand.brand_name)}
+                      getValue={(value: string | number) => {
+                        setBrandId(
+                          brands?.find((brand: any) => brand.brand_name === value)
+                            ?._id || ""
+                        );
+                      }}
                     />
                   </div>
                 </div>

@@ -19,8 +19,12 @@ import FormControl from "@mui/material/FormControl";
 import toast from "react-hot-toast";
 import { globalContext } from "@/app/_context/store";
 import { createNewsletterContext } from "../_context/createNewsletterContext";
+import { NewsletterIdBrandContext } from "../_context/newsletterIdBrand";
 
 export default function ChooseBrandPage() {
+  const [brands, setBrands] = useState<any>([]);
+  const { setNewsletterIdBrand } = useContext(NewsletterIdBrandContext);
+
   const router = useRouter();
   const abortControllerRef = useRef<AbortController | null>(null); // Store the AbortController in a ref
   const { authState, handleSignOut } = useContext(globalContext);
@@ -124,6 +128,23 @@ export default function ChooseBrandPage() {
     return;
   }
 
+  const getBrands = async () => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/user/brand/get-all-brands?limit=999`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `barrer ${token}`,
+        },
+      }
+    );
+    const json = await res.json();
+    console.log(json);
+    setBrands(json);
+  };
+
   async function getCollectedData() {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -144,7 +165,9 @@ export default function ChooseBrandPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/get-generated-news-letter?brand=${
+        `${
+          process.env.NEXT_PUBLIC_API_BASE_URL
+        }/social-media/news-letter/get-generated-news-letter?brand=${
           postBody.brandName
         }${
           selectedBrand === "Investorcracy"
@@ -198,6 +221,10 @@ export default function ChooseBrandPage() {
   }
 
   useEffect(() => {
+    getBrands();
+  }, []);
+
+  useEffect(() => {
     if (pageState.triggerNav === true) {
       router.replace("/newsletter/create/choose-newsletter");
     } else if (pageState.triggerNav === false) {
@@ -249,8 +276,28 @@ export default function ChooseBrandPage() {
 
         <CustomSelectInput
           label="Select Brand"
-          options={options}
-          getValue={getValue}
+          options={brands?.map((brand: any) => brand.brand_name)}
+          getValue={(value: string | number) => {
+            console.log(value);
+
+            setSelectedBrand(value);
+            setNewsletterIdBrand(
+              brands?.find((brand: any) => brand.brand_name === value)?._id ||
+                ""
+            );
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem(
+                "Newsletter-idBrand",
+                JSON.stringify(
+                  brands?.find((brand: any) => brand.brand_name === value)
+                    ?._id || ""
+                )
+              );
+            }
+            console.log(
+              brands?.find((brand: any) => brand.brand_name === value)._id
+            );
+          }}
         />
 
         {selectedBrand === "Investorcracy" && (
