@@ -110,7 +110,9 @@ const Comments = () => {
     if (pageState.activeTab === 1 || pageState.activeTab === 2) {
       getTwitterAccountsData();
     }
-    handleGetBrandsPlatform("TWITTER");
+    if (pageState.activeTab === 1) {
+      handleGetBrandsPlatform("TWITTER");
+    }
   }, [pageState.activeTab]);
 
   return (
@@ -170,7 +172,7 @@ const Comments = () => {
         {/* Tab (3): Auto Post Notifications */}
         {pageState.activeTab === 3 && (
           <div className="h-[75vh]">
-            <AutoPostNotifications brandsOptions={pageState.brandsOptions} />
+            <AutoPostNotifications />
           </div>
         )}
       </div>

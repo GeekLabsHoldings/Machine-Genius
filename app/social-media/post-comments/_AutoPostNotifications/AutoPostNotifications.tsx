@@ -57,13 +57,10 @@ type IHandleAddReplyToTweet =
   | IHandleAddReplyToTweetErrorResponse
   | IHandleAddReplyToTweetSuccessResponse;
 
-const AutoPostNotifications = ({
-  brandsOptions,
-}: {
-  brandsOptions: string[];
-}) => {
+const AutoPostNotifications = () => {
   const queryClient = useQueryClient();
-  const { authState, handleSignOut, brandMap } = useContext(globalContext);
+  const { authState, handleSignOut } =
+    useContext(globalContext);
   const [pageState, setPageState] = useState<{
     // tweetsMustApprove: ITweet[] | null;
     selectedTweet: ITweet | null;
@@ -189,6 +186,12 @@ const AutoPostNotifications = ({
       setPageState((prev: any) => ({
         ...prev,
         commentsSuggestions: pageState.selectedTweet?.comment,
+      }));
+    }
+    if (pageState.selectedTweet && pageState.selectedTweet.brand) {
+      setPageState((prev: any) => ({
+        ...prev,
+        selectedBrandId: pageState.selectedTweet?.brand,
       }));
     }
   }, [pageState.selectedTweet]);
@@ -389,8 +392,8 @@ const AutoPostNotifications = ({
           </div>
         </div>
 
-        <div className="w-full flex justify-between items-center">
-          <div className="w-1/2">
+        <div className="w-full flex justify-end items-center">
+          {/* <div className="w-1/2">
             {Array.isArray(brandsOptions) && brandsOptions.length > 0 ? (
               <CustomSelectInput
                 label={"Select Brand"}
@@ -405,13 +408,15 @@ const AutoPostNotifications = ({
             ) : (
               <span className="custom-loader"></span>
             )}
-          </div>
+          </div> */}
 
-          <CustomBtn
-            btnColor="black"
-            word="Post"
-            onClick={handleAddReplyToTweet}
-          />
+          <div className="w-full flex justify-end">
+            <CustomBtn
+              btnColor="black"
+              word="Post"
+              onClick={handleAddReplyToTweet}
+            />
+          </div>
         </div>
       </div>
     </div>
