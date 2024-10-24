@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { globalContext } from "@/app/_context/store";
 import { Editor } from "primereact/editor";
+import toast from "react-hot-toast";
 
 export default function Page({ params }: { params: { slug: string } }) {
   const { handleSignOut } = useContext(globalContext);
@@ -109,9 +110,10 @@ export default function Page({ params }: { params: { slug: string } }) {
       }
       const result = await res.json();
       console.log(result);
-      if (result == "Job Published Successfully") {
+      if (res.status === 200) {
+        toast.success("Template Published Successfully");
         router.push(
-          `/hr/hiring/job-openings/start-hiring/${params.slug}/templateDetails`
+          `/hr/hiring/job-openings/`
         );
       }
       // navigate to the next page

@@ -213,6 +213,7 @@ const Page = () => {
     title: "",
     description: "",
   });
+  const [questionChange, setQuestionChange] = useState<any>(true);
   const router = useRouter();
   const toolbarOptions = [[{ list: "ordered" }, { list: "bullet" }], ["bold"]];
 
@@ -273,15 +274,12 @@ const Page = () => {
 
   async function getAllRoles() {
     const token = localStorage.getItem("token");
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/role/getAll`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await response.json();
     console.log(data, "all roles");
     setAllRoles(
@@ -349,23 +347,20 @@ const Page = () => {
   }
   async function createGroup() {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`,
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            title: newGroup.title,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/group/create`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          title: newGroup.title,
 
-            icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
-            description: newGroup.description,
-            step: templates.key,
-          }),
-        }
-      );
+          icon: "https://www.logodesignlove.com/wp-content/uploads/2012/08/microsoft-logo-02.jpeg",
+          description: newGroup.description,
+          step: templates.key,
+        }),
+      });
       if (res.status === 401) {
         handleSignOut();
       }
@@ -388,16 +383,42 @@ const Page = () => {
 
   async function createTemplate() {
     if (tempKey === "") return;
-    const body = {
-      title: templates.value,
-      details: templateContent[tempKey].map((item, idx) => ({
-        title: item.title,
-        description: tempDetails[idx],
-      })),
-      group_id: groupID,
-      role: position,
-      level: level,
-    };
+    console.log(
+      JSON.stringify({
+        step: tempKey,
+        title: templates.value,
+        level: level,
+        role: position,
+        group_id: groupID,
+        details: [
+          {
+            title: "Job Description",
+            description: inputs.jobDescription,
+          },
+          {
+            title: "Responsibilities",
+            description: inputs.responsibilities,
+          },
+
+          {
+            title: "Qualifications",
+            description: inputs.qualifications,
+          },
+          {
+            title: "Benefits",
+            description: inputs.benefits,
+          },
+          {
+            title: "Questions",
+            description: questions.map((q, i) => ({
+              question: questionsRef.current[i],
+              type: typesRef.current[i],
+              answer: answersRef.current[i],
+            })),
+          },
+        ],
+      })
+    );
 
     if (tempKey == "Job_Listings") {
       if (inputs.jobDescription == "") {
@@ -426,7 +447,10 @@ const Page = () => {
       }
       if (
         questions.some(
-          (_, i) => !questionsRef.current[i] || !answersRef.current[i]
+          (_, i) =>
+            !questionsRef.current[i] ||
+            !answersRef.current[i] ||
+            !typesRef.current[i]
         )
       ) {
         toast.error("Complete your questions");
@@ -440,56 +464,47 @@ const Page = () => {
         description: inputs.benefits,
       });
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`,
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            step: tempKey,
-            title: templates.value,
-            level: level,
-            role: position,
-            group_id: groupID,
-            details: [
-              {
-                title: "Job Description",
-                description: inputs.jobDescription,
-              },
-              {
-                title: "Responsibilities",
-                description: inputs.responsibilities,
-              },
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          step: tempKey,
+          title: templates.value,
+          level: level,
+          role: position,
+          group_id: groupID,
+          details: [
+            {
+              title: "Job Description",
+              description: inputs.jobDescription,
+            },
+            {
+              title: "Responsibilities",
+              description: inputs.responsibilities,
+            },
 
-              {
-                title: "Qualifications",
-                description: inputs.qualifications,
-              },
-              {
-                title: "Benefits",
-                description: inputs.benefits,
-              },
-              {
-                title: "Questions",
-                description: questions.map((q, i) => ({
-                  question: questionsRef.current[i],
-                  type:
-                    typesRef.current[i].toLowerCase() == "yes or no" ? 0 : 1,
-                  answer:
-                    answersRef.current[i].toLowerCase() == "yes"
-                      ? 1
-                      : answersRef.current[i].toLowerCase() == "no"
-                      ? 0
-                      : answersRef.current[i],
-                })),
-              },
-            ],
-          }),
-        }
-      );
+            {
+              title: "Qualifications",
+              description: inputs.qualifications,
+            },
+            {
+              title: "Benefits",
+              description: inputs.benefits,
+            },
+            {
+              title: "Questions",
+              description: questions.map((q, i) => ({
+                question: questionsRef.current[i],
+                type: typesRef.current[i],
+                answer: answersRef.current[i],
+              })),
+            },
+          ],
+        }),
+      });
       const data = await res.json();
       console.log(data);
       if (data) {
@@ -504,33 +519,29 @@ const Page = () => {
         const token = localStorage.getItem("token");
         console.log(inputs);
 
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`,
-          {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              step: tempKey,
-              title: templates.value,
-              level:
-                templatesWithPositionAndLevel.includes(String(tempKey)) &&
-                level,
-              role:
-                templatesWithPositionAndLevel.includes(String(tempKey)) &&
-                position,
-              group_id: groupID,
-              details: [
-                {
-                  title: templateContent[tempKey][0].title,
-                  description: editorVal,
-                },
-              ],
-            }),
-          }
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hr/template/create`, {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            step: tempKey,
+            title: templates.value,
+            level:
+              templatesWithPositionAndLevel.includes(String(tempKey)) && level,
+            role:
+              templatesWithPositionAndLevel.includes(String(tempKey)) &&
+              position,
+            group_id: groupID,
+            details: [
+              {
+                title: templateContent[tempKey][0].title,
+                description: editorVal,
+              },
+            ],
+          }),
+        });
         const data = await res.json();
         console.log(data);
         if (data) {
@@ -620,7 +631,9 @@ const Page = () => {
               Add to{" "}
               <CustomSelectInput
                 getValue={(val: string) =>
-                  setGroupID(groups.find((e: any) => e?.title.trim() === val)?._id)
+                  setGroupID(
+                    groups.find((e: any) => e?.title.trim() === val)?._id
+                  )
                 }
                 options={groups.map((e: any, i: any) => e?.title)}
               >
@@ -733,7 +746,7 @@ const Page = () => {
                         </div>
                       </div>
                       <div className={`${styles.card} h-fit`}>
-                        <div className={styles.card_header}>
+                        <div className={`${styles.card_header} mb-[--sy-30px]`}>
                           <div className="flex justify-between w-full items-center">
                             <h6 className="text-[--20px] font-bold">
                               Questions
@@ -751,7 +764,7 @@ const Page = () => {
                         <div className={styles.card_body}>
                           {questions.map((q, i) => {
                             return (
-                              <div className="p-[--12px] border-[--1px] border-[#878787] rounded-[--8px] mb-[--sy-12px]">
+                              <div className="p-[--12px] border-[--1px] border-[#878787] rounded-[--8px] mb-[--sy-40px] relative">
                                 <input
                                   ref={(el) => {
                                     if (el) questionsRef.current[i] = el?.value;
@@ -766,41 +779,85 @@ const Page = () => {
                                   className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--sy-12px]"
                                   placeholder="Question"
                                 />
-                                <div className="mb-[--sy-12px]">
-                                  <CustomSelectInput
-                                    getValue={(val: string) => {
-                                      if (typesRef.current) {
-                                        typesRef.current[i] = val;
-                                        console.log(typesRef.current);
-                                      }
-                                    }}
-                                    options={["Numeric", "Yes or No"]}
-                                    label={"choose type"}
-                                  />
+                                <div className=" flex justify-between gap-[--sy-22px]">
+                                  <div className="mb-[--sy-12px] w-1/2">
+                                    <CustomSelectInput
+                                      getValue={(val: string) => {
+                                        if (typesRef.current) {
+                                          typesRef.current[i] = val;
+                                          console.log(typesRef.current);
+                                        }
+                                        if (val === "Numeric") {
+                                          answersRef.current[i] = "";
+                                        } else if (val === "Yes or No") {
+                                          answersRef.current[i] = "";
+                                        }
+                                        setQuestionChange((prev: any) => !prev);
+                                      }}
+                                      options={["Numeric", "Yes or No"]}
+                                      label={"choose type"}
+                                    />
+                                  </div>
+                                  {typesRef.current[i] === "Numeric" &&
+                                  typesRef.current[i] ? (
+                                    <input
+                                      onChange={(e: any) => {
+                                        const value = e.target.value.replace(
+                                          /[^0-9]/g,
+                                          ""
+                                        ); // Remove non-numeric characters
+                                        e.target.value = value; // Update input value
+                                        if (answersRef.current) {
+                                          answersRef.current[i] = value;
+                                          console.log(answersRef.current);
+                                        }
+                                      }}
+                                      type="text"
+                                      id="answer"
+                                      ref={(el) => {
+                                        if (el) {
+                                          answersRef.current[i] = el?.value;
+                                        }
+                                      }}
+                                      className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--12px]"
+                                      placeholder="Answer"
+                                    />
+                                  ) : (
+                                    <CustomSelectInput
+                                      getValue={(val: string) => {
+                                        if (answersRef.current) {
+                                          answersRef.current[i] = val;
+                                          console.log(answersRef.current);
+                                        } else {
+                                          answersRef.current[i] == "";
+                                        }
+                                      }}
+                                      options={["Yes", "No"]}
+                                      label={"Choose Ideal Answer"}
+                                    />
+                                  )}
                                 </div>
-                                <label
-                                  htmlFor="answer"
-                                  className="text-[--16px] text-[#878787] font-medium mb-[--sy-8px] inline-block"
+                                <span
+                                  className="text-[--16px] text-red-500 font-medium cursor-pointer absolute -top-[--sy-25px] right-[--sy-12px]"
+                                  onClick={() => {
+                                    setQuestions(
+                                      questions.filter(
+                                        (q, index) => index !== i
+                                      )
+                                    );
+                                    typesRef.current = typesRef.current.filter(
+                                      (_: any, index: number) => index !== i
+                                    );
+                                    answersRef.current =
+                                      answersRef.current.filter(
+                                        (_: any, index: number) => index !== i
+                                      );
+                                    console.log(typesRef.current);
+                                    console.log(answersRef.current);
+                                  }}
                                 >
-                                  Answer
-                                </label>
-                                <input
-                                  onChange={(e: any) => {
-                                    if (answersRef.current) {
-                                      answersRef.current[i] = e.target.value;
-                                      console.log(answersRef.current);
-                                    }
-                                  }}
-                                  type="text"
-                                  id="answer"
-                                  ref={(el) => {
-                                    if (el) {
-                                      answersRef.current[i] = el?.value;
-                                    }
-                                  }}
-                                  className="w-full px-[--12px] py-[--8px] rounded-[--8px] border-[--1px] border-[#878787] mb-[--12px]"
-                                  placeholder="Answer"
-                                />
+                                  Delete Question
+                                </span>
                               </div>
                             );
                           })}
