@@ -1,7 +1,7 @@
+/* ===== Start Modal ===== */
 .modal {
   background-color: rgba(255, 255, 251, 0.58);
 }
-
 .modalBox {
   position: absolute;
   top: 50%;
@@ -35,12 +35,46 @@
   padding-bottom: clamp(10px, calc(0.5vw + 0.1rem), 60px);
   border-bottom: 1px solid var(--dark);
 }
-.input {
-  padding: clamp(5px, calc(0.1vw + 0.1rem), 60px) 0;
-  border-bottom: 1px solid var(--dark);
-  color: var(--dark);
+/* ===== End Modal ===== */
+
+/* ===== Start Form ===== */
+.newBrand h3 {
+  font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+div.collapse-title {
+  font-size: clamp(16px, calc(1.2vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+.newBrand input::placeholder {
+  font-size: clamp(16px, calc(0.7vw + 0.1rem), 100px);
+}
+.newBrand h4 {
+  font-size: clamp(16px, calc(1vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+.newBrand label {
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+.newBrand a {
+  align-self: start;
 }
 
-.input:focus {
-  outline: none;
+.newBrand .accordion {
+  box-shadow: 1px 3px 6.6px 0px #00000026;
+  border: 1px solid #dbdbd7;
+  background-color: #fffffb;
+  color: black;
+  margin-bottom: 0.7vw;
 }
+
+.accordion h4 {
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+.accordion label {
+  font-size: clamp(16px, calc(0.9vw + 0.1rem), 100px);
+  font-weight: 800;
+}
+/* ===== End Form ===== */

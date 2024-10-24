@@ -33,15 +33,31 @@ export interface IBrandWithGroups {
 }
 // =================================================================================
 /*
-social-media/settings/get-subscripers:
+social-media/settings/subscribers:
 - total subscribers.
 */
 export interface IBrandPlatformSubscribers {
   brand: string;
   platforms: {
-    [key in "FACEBOOK" | "TELEGRAM" | "REDDIT"]: {
+    [key in 'TWITTER' | 'FACEBOOK' | 'LINKEDIN' | 'REDDIT' | 'TELEGRAM' | 'YOUTUBE']: {
       totalSubscribers: number;
     };
+  };
+}
+// =================================================================================
+/*
+ceo/analytics/percentage:
+- Followers Overview.
+  - followers.
+  - percentage.
+*/
+export interface IFollowersOverview {
+  brand: string;
+  followers: number;
+  percentages: {
+    daily: number;
+    weekly: number;
+    monthly: number;
   };
 }
 // =================================================================================
@@ -109,22 +125,42 @@ ceo/analytics/kpi:
 - KPIs.
 - Achieved KPIs.
 */
-export interface IKPI {
-  _id: {
-    year: number;
-    month: number;
-    brand: string;
-  };
-  totalPostsPerDay: number;
-  totalPostsPerWeek: number;
-  totalPostsPerMonth: number;
-  platforms: string[];
-}
-export interface IAchievedKPI {
+
+export interface PlatformKPI {
+  _id: string;
+  brand: string;
+  platform: string;
+  timeStamp: number;
   postsPerDay: number;
   postsPerWeek: number;
   postsPerMonth: number;
+  year: number;
+  month: number;
 }
+
+export interface AchievedPlatformKPI {
+  platform: string;
+  Day: number;
+  Week: number;
+  Month: number;
+}
+
+export interface DateBrand {
+  year: number;
+  month: number;
+  brand: string;
+}
+
+export interface IKPI {
+  _id: DateBrand;
+  platforms: PlatformKPI[];
+}
+
+export interface IAchievedKPI {
+  date: DateBrand;
+  platforms: AchievedPlatformKPI[];
+}
+
 export interface IKPIData {
   kpis: IKPI[];
   achievedKPIs: IAchievedKPI[];

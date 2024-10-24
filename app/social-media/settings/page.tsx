@@ -2,7 +2,7 @@
 // import { useRouter } from "next/navigation";
 import { useState, useContext, useEffect, useMemo } from "react";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
-import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
+import SocialMediaModal from "@/app/_components/SocialMedia/SocialMediaModal/SocialMediaModal";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 import styles from "./setting.module.css";
 import { addIcon, sortIcon } from "@/app/_utils/svgIcons";
@@ -308,7 +308,7 @@ const Setting = () => {
 
           <div className="flex gap-[0.5vw]">
             {/* open modal to enable you to add account  */}
-            <BasicModal
+            <SocialMediaModal
               btnWord={"Add Account"}
               btnIcon={addIcon}
               btnColor={"black"}
@@ -317,7 +317,7 @@ const Setting = () => {
               getData={getAccounts}
             />
             {/* open modal to enable you to remove selected accounts  */}
-            <BasicModal
+            <SocialMediaModal
               btnWord={"Remove Accounts"}
               btnColor={"white"}
               modalTitle={"Remove Accounts?"}

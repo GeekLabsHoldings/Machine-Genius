@@ -39,24 +39,42 @@ export default function BrandKPIs({
     // Generate table rows based on platforms
     const tableRows =
       kpi && kpi.platforms && kpi.platforms.length > 0 ? (
-        kpi.platforms.map((platform: string, idx: number) => (
-          <tr key={idx}>
-            <td>{platform[0] + platform.slice(1).toLowerCase()}</td>
-            <td>
-              {kpi.totalPostsPerDay} Posts
-              <span className="font-bold">/Day</span>
-            </td>
-            <td
-              className={
-                achievedKpi?.postsPerDay === kpi.totalPostsPerDay
-                  ? styles.kpiMet
-                  : styles.kpiNotMet
-              }
-            >
-              {achievedKpi?.postsPerDay ?? 0}/{kpi.totalPostsPerDay}
-            </td>
-          </tr>
-        ))
+        kpi.platforms.map((platformObj, idx) => {
+          const platformName =
+            platformObj.platform[0] +
+            platformObj.platform.slice(1).toLowerCase();
+
+          // Find the achieved platform data
+          const achievedPlatform = achievedKpi?.platforms?.find(
+            (p) => p.platform === platformObj.platform
+          );
+
+          // Get the required and achieved KPIs
+          const postsPerDayRequired = platformObj.postsPerDay;
+
+          const achievedPostsPerDay = achievedPlatform
+            ? achievedPlatform.Day
+            : 0;
+
+          return (
+            <tr key={idx}>
+              <td>{platformName}</td>
+              <td>
+                {postsPerDayRequired} Posts
+                <span className="font-bold">/Day</span>
+              </td>
+              <td
+                className={
+                  achievedPostsPerDay >= postsPerDayRequired
+                    ? styles.kpiMet
+                    : styles.kpiNotMet
+                }
+              >
+                {achievedPostsPerDay}/{postsPerDayRequired}
+              </td>
+            </tr>
+          );
+        })
       ) : (
         <tr>
           <td colSpan={3}>No data available</td>

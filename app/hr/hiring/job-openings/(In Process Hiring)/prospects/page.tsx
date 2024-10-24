@@ -5,12 +5,13 @@ import Link from 'next/link';
 import ProspectsTable from '@/app/_components/HR/00Hiring/01JobOpenings/03InProcessHiring/ProspectsTable';
 import { StepContext } from '@/app/_context/hrStepContext';
 import { globalContext } from '@/app/_context/store';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [data, setData] = useState<any>(null);
   const { step } = useContext(StepContext);
   const { handleSignOut } = useContext(globalContext);
-
+  const router = useRouter();
   
 
   const fetchData = async () => {
@@ -37,7 +38,12 @@ export default function Page() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [step]);
+  useEffect(()=>{
+    if(data?.candidates?.length == 0){
+      router.replace("/hr/hiring/job-openings/prospects-preview")
+    }
+  },[data])
 
   return (
     <section>

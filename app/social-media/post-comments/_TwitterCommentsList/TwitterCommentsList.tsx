@@ -1,6 +1,6 @@
 "use client";
 import { useState, useContext, useMemo } from "react";
-import BasicModal from "@/app/_components/SocialMedia/Modal/modal";
+import SocialMediaModal from "@/app/_components/SocialMedia/SocialMediaModal/SocialMediaModal";
 import styles from "./TwitterCommentsList.module.css";
 import { globalContext } from "@/app/_context/store";
 import { addIcon, sortIcon } from "@/app/_utils/svgIcons";
@@ -144,7 +144,7 @@ const TwitterCommentsList = ({
               >
                 <li>
                   <a>
-                    <BasicModal
+                    <SocialMediaModal
                       btnWord={"Edit"}
                       btnColor={"black"}
                       modalTitle={"Edit Account"}
@@ -156,7 +156,7 @@ const TwitterCommentsList = ({
                   </a>
                 </li>
                 {/* <li>
-                  <BasicModal
+                  <SocialMediaModal
                     btnWord={"Delete"}
                     btnColor={"black"}
                     modalTitle={"Delete Account"}
@@ -277,7 +277,7 @@ const TwitterCommentsList = ({
         </div>
 
         <div className="flex gap-[0.5vw] items-end ">
-          <BasicModal
+          <SocialMediaModal
             btnWord={"Add Account"}
             btnIcon={addIcon}
             btnColor={"black"}

@@ -3,8 +3,9 @@ import React from "react";
 import styles from "./AcceptedTasksTable.module.css";
 import CustomCheckBox from "@/app/_components/CustomCheckBox/CustomCheckBox";
 
-export default function AcceptedTasksTable() {
+export default function AcceptedTasksTable({ data }: { data: any }) {
   // An array of objects representing the rows of the table body.
+  console.log("data", data);
   const bodyRow = [
     {
       firstName: "John",
@@ -127,7 +128,7 @@ export default function AcceptedTasksTable() {
 
         {/* Table Body */}
         <div className={styles.table_body}>
-          {bodyRow.map((e, idx) => (
+          {data?.map((e: any, idx: number) => (
             <ul key={idx} className={`space-x-2`}>
               <li className="candidateSelection w-[6%]">
                 <CustomCheckBox
@@ -137,27 +138,27 @@ export default function AcceptedTasksTable() {
                 />
               </li>
               <li className="w-[10%]">
-                <span>{e.firstName}</span>
+                <span>{e.candidate.firstName}</span>
               </li>
               <li className="w-[10%]">
-                <span>{e.lastName}</span>
+                <span>{e.candidate.lastName}</span>
               </li>
               <li className="w-[15%]">
-                <span>{e.mobile}</span>
+                <span>{e.candidate.phoneNumber}</span>
               </li>
               <li className="w-[20%]">
-                <span>{e.email}</span>
+                <span>{e.candidate.email}</span>
               </li>
               <li className="w-[15%]">
-                <span>{e.taskReceived}</span>
+                <span>{e.taskLink ? "Received" : "Not Received"}</span>
               </li>
               <li className="w-[15%]">
                 <span
                   style={{
-                    ...(e.taskApproved === "Approved" && { color: "#5FA85B" }),
+                    ...(e.taskApprove === "Approved" && { color: "#5FA85B" }),
                   }}
                 >
-                  {e.taskApproved}
+                  {e.taskApprove}
                 </span>
               </li>
             </ul>
