@@ -1,10 +1,20 @@
 "use client";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useContext, useState } from "react";
 import styles from "./RevenueOverview.module.css";
 import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
+import { globalContext } from "@/app/_context/store";
 
 export default function RevenueOverview() {
+  const { brandOptions, brandMap } = useContext(globalContext);
+  const [pageState, setPageState] = useState<{
+    selectedBrand: string;
+    isLoading: boolean;
+  }>({
+    selectedBrand: "",
+    isLoading: false,
+  });
+
   const Chart1 = dynamic(() => import("./Chart1"), {
     ssr: false,
   });
@@ -14,9 +24,17 @@ export default function RevenueOverview() {
       <div className={styles.RevenueOverView_Header}>
         <p className={styles.RevenueOverView_Title}>Revenue Overview</p>
         <div className="flex justify-between">
-          <div className="min-w-[270px]">
-            <label>Select Brands</label>
-            <CustomSelectInput label="Street Politics/PST USA" options={[]} />
+          <div className="w-[12vw]">
+            <CustomSelectInput
+              label="Select Brand"
+              options={brandOptions}
+              getValue={(value: string) => {
+                setPageState((prevState) => ({
+                  ...prevState,
+                  selectedBrand: brandMap[value],
+                }));
+              }}
+            />
           </div>
 
           <div className={styles.chartLegend + " flex flex-col"}>

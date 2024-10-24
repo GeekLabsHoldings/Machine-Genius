@@ -37,6 +37,7 @@ import SocialMediaAccountCard from "@/app/_components/OP/Analytics/02Brands/Soci
 import SocialMediaAccountCardSkeleton from "@/app/_components/OP/Analytics/02Brands/SocialMediaAccountCard/SocialMediaAccountCardSkeleton";
 import AnalyticsCard from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCard";
 import AnalyticsCardSkeleton from "@/app/_components/OP/Analytics/02Brands/AnalyticsCard/AnalyticsCardSkeleton";
+import CustomSelectInput from "@/app/_components/CustomSelectInput/CustomSelectInput";
 // ===== 02- End Brands =====
 
 // ====== Start react-slick Slider =====
@@ -117,11 +118,18 @@ const settings: any = {
 // ====== End react-slick Slider =====
 
 function Page() {
-  const { authState, handleSignOut, globalBrands, brandIdMap } =
-    useContext(globalContext);
+  const {
+    authState,
+    handleSignOut,
+    globalBrands,
+    brandIdMap,
+    brandOptions,
+    brandMap,
+  } = useContext(globalContext);
   const isFirstRender = useRef(true);
   const [pageState, setPageState] = useState<{
     activePageTab: "GodView" | "Brands";
+    selectedBrand: string;
     activeAnalyticsTimeframe: "Daily" | "Weekly" | "Monthly" | "Yearly";
     selectedSocialMediaAccount: IGroup | null;
     fetchedSocialMediaAccounts: IGroup[];
@@ -137,6 +145,7 @@ function Page() {
     fetchedYoutubeData: any | null;
   }>({
     activePageTab: "GodView",
+    selectedBrand: "",
     activeAnalyticsTimeframe: "Daily",
     selectedSocialMediaAccount: null,
     fetchedSocialMediaAccounts: [],
@@ -774,7 +783,21 @@ function Page() {
         <div className={`relative op_analytics_brands`}>
           {/* ===== 02-00 Start Social Media Accounts ===== */}
           <div>
-            <h2 className="text-2xl mb-4 font-bold">Social Media Accounts</h2>
+            <div className="mb-4 flex gap-[--25px] items-center">
+              <h2 className="text-2xl font-bold">Social Media Accounts</h2>
+              <div className="w-[12vw]">
+                <CustomSelectInput
+                  label="Select Brand"
+                  options={brandOptions}
+                  getValue={(value: string) => {
+                    setPageState((prevState) => ({
+                      ...prevState,
+                      selectedBrand: brandMap[value],
+                    }));
+                  }}
+                />
+              </div>
+            </div>
             <div className="sliderAudience w-[86vw]">
               <div className={`slider-container card ${styles.card} py-6`}>
                 <Slider {...settings}>
