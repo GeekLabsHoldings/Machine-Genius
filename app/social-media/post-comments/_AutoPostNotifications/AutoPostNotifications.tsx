@@ -59,8 +59,7 @@ type IHandleAddReplyToTweet =
 
 const AutoPostNotifications = () => {
   const queryClient = useQueryClient();
-  const { authState, handleSignOut } =
-    useContext(globalContext);
+  const { authState, handleSignOut, brandIdMap } = useContext(globalContext);
   const [pageState, setPageState] = useState<{
     // tweetsMustApprove: ITweet[] | null;
     selectedTweet: ITweet | null;
@@ -409,6 +408,15 @@ const AutoPostNotifications = () => {
               <span className="custom-loader"></span>
             )}
           </div> */}
+
+          {pageState.selectedTweet && pageState.selectedTweet?.brand && (
+            <div className="flex items-center gap-[--5px] space-x-3 p-4 bg-white rounded-lg shadow-sm border border-gray-100 w-1/2">
+              <span className="text-gray-500 font-medium">Brand:</span>
+              <span className="text-gray-900 font-semibold capitalize">
+                {brandIdMap[pageState.selectedTweet?.brand]}
+              </span>
+            </div>
+          )}
 
           <div className="w-full flex justify-end">
             <CustomBtn
