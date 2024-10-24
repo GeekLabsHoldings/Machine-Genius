@@ -63,8 +63,9 @@ const ShareCampaign = () => {
             brandId: brandMap[selectedContent.brand],
             postContent: pageState.postText,
             // "scheduleDate": "1728562848870"
-            // "delayTime": 5,
-            // "numberOfJobsPerDelay": 1
+            // delayTimePerJobOrPost: 5,
+            // delayTimeBetweenBatches: 2,
+            // numberOfBatchesJobs: 1,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -279,11 +280,13 @@ const ShareCampaign = () => {
                     <h5 className="text-[--20px] font-medium">
                       Time between posts
                     </h5>
+
                     <div className="w-[40%] flex items-center gap-[--4px]">
                       <CustomSelectInput
+                        label="0"
                         options={Array.from(
-                          { length: 20 },
-                          (_, index) => index + 1
+                          { length: 61 },
+                          (_, index) => index
                         )}
                       />
                       <span>min.</span>
@@ -296,9 +299,10 @@ const ShareCampaign = () => {
                     </h5>
                     <div className="w-[40%] flex items-center gap-[--4px]">
                       <CustomSelectInput
+                        label="0"
                         options={Array.from(
-                          { length: 20 },
-                          (_, index) => index + 1
+                          { length: 61 },
+                          (_, index) => index
                         )}
                       />
                       <span>min.</span>
@@ -311,9 +315,10 @@ const ShareCampaign = () => {
                     </h5>
                     <div className="w-[40%]">
                       <CustomSelectInput
+                        label="0"
                         options={Array.from(
-                          { length: 20 },
-                          (_, index) => index + 1
+                          { length: 21 },
+                          (_, index) => index
                         )}
                       />
                     </div>
