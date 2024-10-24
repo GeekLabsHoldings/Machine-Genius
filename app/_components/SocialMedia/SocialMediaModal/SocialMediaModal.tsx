@@ -737,7 +737,7 @@ export default function SocialMediaModal({
                             <div className="w-[40%] flex items-center gap-[--4px]">
                               <CustomSelectInput
                                 options={Array.from(
-                                  { length: 20 },
+                                  { length: 60 },
                                   (_, index) => index + 1
                                 )}
                                 getValue={(value: number) => {
@@ -758,7 +758,7 @@ export default function SocialMediaModal({
                             <div className="w-[40%] flex items-center gap-[--4px]">
                               <CustomSelectInput
                                 options={Array.from(
-                                  { length: 20 },
+                                  { length: 60 },
                                   (_, index) => index + 1
                                 )}
                                 getValue={(value: number) => {
@@ -774,7 +774,7 @@ export default function SocialMediaModal({
 
                           <div className="flex items-center justify-between">
                             <h5 className="text-[--20px] font-medium">
-                              Number of batches
+                              Number of posts/batch
                             </h5>
                             <div className="w-[40%]">
                               <CustomSelectInput
