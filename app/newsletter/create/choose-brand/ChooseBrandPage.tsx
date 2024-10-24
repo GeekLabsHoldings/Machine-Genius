@@ -32,7 +32,7 @@ export default function ChooseBrandPage() {
     setGeneratedTitles,
     setLockedGeneratedTitles,
   } = useContext(createNewsletterContext);
-
+  const { brandMap, brandOptions } = useContext(globalContext);
   // reset all the data
   useEffect(() => {
     function resetStateAndSessionStorage() {
@@ -79,16 +79,16 @@ export default function ChooseBrandPage() {
 
   const [stockNameValue, setStockNameValue] = useState("PLTR");
   // select options
-  const options = useMemo(
-    () => [
-      "Street Politics Canada",
-      "Street Politics UK",
-      "Street Politics Africa",
-      "Investorcracy",
-      "Movie Myth",
-    ],
-    []
-  );
+  // const options = useMemo(
+  //   () => [
+  //     "Street Politics Canada",
+  //     "Street Politics UK",
+  //     "Street Politics Africa",
+  //     "Investorcracy",
+  //     "Movie Myth",
+  //   ],
+  //   []
+  // );
   const stockOptions = useMemo(
     () => [
       { value: "NVDA", label: "NVIDIA" },
@@ -141,18 +141,10 @@ export default function ChooseBrandPage() {
       postBody.brandName = "investocracy";
       postBody.stockName = stockNameValue;
     }
-
+    //
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/get-generated-news-letter?brand=${
-          postBody.brandName
-        }${
-          selectedBrand === "Investorcracy"
-            ? `&stockName=${stockNameValue}`
-            : ""
-        }
-      
-        `,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/social-media/news-letter/get-generated-news-letter?brand=investocracy`,
         {
           method: "GET",
           headers: {
@@ -245,14 +237,18 @@ export default function ChooseBrandPage() {
     <div className="flex flex-col h-full">
       {/* choose brand select */}
       <div className="flex flex-col justify-center items-center w-[30vw] min-w-[20rem] mx-auto h-[75vh] py-[1.5vw] ">
-        <label className={styles.select_label}>For This Brand</label>
-
-        <CustomSelectInput
-          label="Select Brand"
-          options={options}
-          getValue={getValue}
-        />
-
+        <label className={styles.select_label}>
+          I am creating a newsletter for
+        </label>
+        {Array.isArray(brandOptions) && brandOptions.length > 0 ? (
+          <CustomSelectInput
+            label={"Select Brand"}
+            options={brandOptions || []}
+            getValue={(value: string) => setSelectedBrand(value)}
+          />
+        ) : (
+          <span className="custom-loader"></span>
+        )}
         {selectedBrand === "Investorcracy" && (
           <FormControl sx={{ marginTop: "2vh" }}>
             <RadioGroup
