@@ -347,16 +347,11 @@ const Page = () => {
         toast.error("Something went wrong!");
         setPageState((prev) => ({ ...prev, isLoading: false }));
         return;
-      }
-      const json: any = await res.json();
-      if (json && json.brand_name) {
-        toast.success("Brand added successfully!", {
+      } else {
+        toast.success("Account added successfully!", {
           duration: 3000,
         });
         router.replace("/op/brands");
-        setPageState((prev) => ({ ...prev, isLoading: false }));
-      } else {
-        toast.error("Something went wrong!");
         setPageState((prev) => ({ ...prev, isLoading: false }));
       }
     } catch (error) {
